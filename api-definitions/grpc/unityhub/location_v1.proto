@@ -1,0 +1,361 @@
+syntax = "proto3";
+package location;
+
+option csharp_namespace = "Api.Shared.Services.Grpc.UnityHub.Location.V1";
+
+service LocationService {
+    rpc Admin_Add (Admin_AddInput) returns (Location);
+    rpc Admin_GetPaginatedLocations (Admin_GetPaginatedLocationsInput) returns (LocationConnection);
+    rpc Admin_Get (Admin_GetInput) returns (Location);
+    rpc Admin_AddTag (Admin_AddTagInput) returns (Tag);
+    rpc Admin_AddDesk (Admin_AddDeskInput) returns (Desk);
+    rpc Admin_UpdateMembers (Admin_UpdateMembersInput) returns (Location);
+
+    rpc GetVersion (VersionInput) returns (Version);
+    rpc Get (GetInput) returns (Location);
+    rpc GetPaginatedLocations (GetPaginatedLocationsInput) returns (LocationConnection);
+    rpc GetPermissions (GetPermissionsInput) returns (Permissions);
+    rpc Add (AddInput) returns (Location);
+    rpc Update (UpdateInput) returns (Location);
+    rpc Remove (RemoveInput) returns (Location);
+    rpc GetPaginatedTags (GetPaginatedTagsInput) returns (TagConnection);
+    rpc GetPaginatedDesks (GetPaginatedDesksInput) returns (DeskConnection);
+    rpc GetTag (GetTagInput) returns (Tag);
+    rpc AddTag (AddTagInput) returns (Tag);
+    rpc UpdateTag (UpdateTagInput) returns (Tag);
+    rpc RemoveTag (RemoveTagInput) returns (Tag);
+    rpc GetDesk (GetDeskInput) returns (Desk);
+    rpc AddDesk (AddDeskInput) returns (Desk);
+    rpc BulkAddDesks (BulkAddDesksInput) returns (BulkAddDesksResponse);
+    rpc UpdateDesk (UpdateDeskInput) returns (Desk);
+    rpc RemoveDesk (RemoveDeskInput) returns (Desk);
+}
+
+message VersionInput {
+}
+
+message Version {
+    int32 major = 1;
+    int32 minor = 2;
+    int32 build = 3;
+    int32 revision = 4;
+}
+
+enum OrderDirection {
+    Ascending = 0;
+    Descending = 1;
+}
+
+message PageInfo {
+    bool hasNextPage = 1;
+    bool hasPreviousPage =2;
+    string startCursor =3;
+    string endCursor =4;
+}
+
+message Admin_UpdateMembersInput {
+    string id = 1;
+    repeated Member members = 2;
+}
+
+enum MembershipType {
+    MembershipTypeOwner = 0;
+    MembershipTypeAdministrator = 1;
+    MembershipTypeMember = 2;
+}
+
+message Member {
+    string id = 1;
+    Customer customer = 2;
+    MembershipType membershipType = 3;
+}
+
+message Customer {
+    string id = 1;
+    string name = 2;
+    string givenName = 3;
+    string middleName = 4;
+    string familyName = 5;
+    string photoUrl = 6;
+    string photoUrl24 = 7;
+    string photoUrl32 = 8;
+    string photoUrl48 = 9;
+    string photoUrl72 = 10;
+    string photoUrl192 = 11;
+    string photoUrl512 = 12;
+    repeated Identity identities = 13;
+}
+
+message Identity {
+    string id = 1;
+    string email = 2;
+    bool emailVerified = 3;
+}
+
+message Admin_AddInput {
+    string id = 1;
+    string name = 2;
+    string about = 3;
+    string organizationId = 4;
+    string timezone = 5;
+}
+
+message LocationConnection {
+    PageInfo pageInfo = 1;
+    repeated LocationEdge edges = 2;
+    int32 totalCount = 3;
+}
+
+message LocationEdge {
+    Location node = 1;
+    string cursor = 2;
+}
+
+message Location {
+    string id = 1;
+    string name = 2;
+    string about = 3;
+    string organizationId = 4;
+    string timezone = 5;
+    repeated Tag tags = 6;
+    repeated Desk desks = 7;
+    bool hasFutureBooking = 8;
+    Permissions permissions = 9;
+    repeated Member members = 10;
+}
+
+message Admin_GetInput {
+    string id = 1;
+}
+
+message GetInput {
+    string id = 1;
+}
+
+message Admin_GetPaginatedLocationsInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    LocationWhereInput where = 5;
+    repeated LocationOrderInput orderBy = 6;
+}
+
+message GetPaginatedLocationsInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    LocationWhereInput where = 5;
+    repeated LocationOrderInput orderBy = 6;
+}
+
+message LocationWhereInput {
+    string organizationId = 1;
+    string nameContains = 2;
+}
+
+message LocationOrderInput {
+    OrderDirection direction = 1;
+    LocationOrderField field = 2;
+}
+
+enum LocationOrderField {
+    Name = 0;
+}
+
+message Tag {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string type = 4;
+}
+
+message Desk {
+    string id = 1;
+    string name = 2;
+    repeated Tag tags = 3;
+    bool deactivated = 4;
+    bool requireBookingApproval = 5;
+}
+
+message GetPermissionsInput {
+    string id = 1;
+}
+
+message Permissions {
+    bool canView = 1;
+    bool canModify = 2;
+    bool canDelete = 3;
+    bool canInvitePeople = 4;
+    bool canCancelPeopleExistingInvitations = 5;
+    bool canViewAnalytics = 6;
+}
+
+message AddInput {
+    string id = 1;
+    string name = 2;
+    string about = 3;
+    string organizationId = 4;
+    string timezone = 5;
+}
+
+message UpdateInput {
+    string id = 1;
+    string name = 2;
+    string about = 3;
+    string organizationId = 4;
+    string timezone = 5;
+}
+
+message RemoveInput {
+    string id = 1;
+}
+
+message TagConnection {
+    PageInfo pageInfo = 1;
+    repeated TagEdge edges = 2;
+    int32 totalCount = 3;
+}
+
+message TagEdge {
+    Tag node = 1;
+    string cursor = 2;
+}
+
+message GetPaginatedTagsInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    TagWhereInput where = 5;
+    repeated TagOrderInput orderBy = 6;
+}
+
+message TagWhereInput {
+    string locationId = 1;
+    string nameContains = 2;
+    string type = 3;
+}
+
+message TagOrderInput {
+    OrderDirection direction = 1;
+    TagOrderField field = 2;
+}
+
+enum TagOrderField {
+    TagName = 0;
+}
+
+message DeskConnection {
+    PageInfo pageInfo = 1;
+    repeated DeskEdge edges = 2;
+    int32 totalCount = 3;
+}
+
+message DeskEdge {
+    Desk node = 1;
+    string cursor = 2;
+}
+
+message GetPaginatedDesksInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    DeskWhereInput where = 5;
+    repeated DeskOrderInput orderBy = 6;
+}
+
+message DeskWhereInput {
+    string locationId = 1;
+    string nameContains = 2;
+}
+
+message DeskOrderInput {
+    OrderDirection direction = 1;
+    DeskOrderField field = 2;
+}
+
+enum DeskOrderField {
+    DeskName = 0;
+}
+
+message GetTagInput {
+    string id = 1;
+}
+
+message Admin_AddTagInput {
+    string id = 1;
+    string locationId = 2;
+    string name = 3;
+    string description = 4;
+    string type = 5;
+}
+
+message AddTagInput {
+    string id = 1;
+    string locationId = 2;
+    string name = 3;
+    string description = 4;
+    string type = 5;
+}
+
+message UpdateTagInput {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string type = 4;
+}
+
+message RemoveTagInput {
+    string id = 1;
+}
+
+message GetDeskInput {
+    string id = 1;
+}
+
+message BulkAddDesksInput {
+    string id = 1;
+    string locationId = 2;
+    string namePrefix = 3;
+    int32 count = 4;
+    repeated string tagIds = 5;
+    bool deactivated = 6;
+    bool requireBookingApproval = 7;
+}
+
+message BulkAddDesksResponse {
+    repeated Desk desks = 1;
+}
+
+message Admin_AddDeskInput {
+    string id = 1;
+    string locationId = 2;
+    string name = 3;
+    bool deactivated = 4;
+    bool requireBookingApproval = 5;
+    repeated string tagIds = 6;
+}
+
+message AddDeskInput {
+    string id = 1;
+    string locationId = 2;
+    string name = 3;
+    bool deactivated = 4;
+    bool requireBookingApproval = 5;
+    repeated string tagIds = 6;
+}
+
+message UpdateDeskInput {
+    string id = 1;
+    string name = 2;
+    bool deactivated = 3;
+    bool requireBookingApproval = 4;
+    repeated string tagIds = 5;
+}
+
+message RemoveDeskInput {
+    string id = 1;
+}

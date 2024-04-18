@@ -1,0 +1,55 @@
+namespace Enterprise.Shared.Exceptions;
+
+public class Unauthorized() : Exception("Unauthorized");
+
+public class CustomerNotFound() : Exception("Customer not found");
+
+public class OrganizationNotFound() : Exception("Organization not found");
+
+public class OrganizationMemberNotFound() : Exception("Organization member not found");
+
+public class OrganizationJoinInvitationNotFound() : Exception("Organization join invitation not found");
+
+public class LocationNotFound() : Exception("Location not found");
+
+public class LocationTagNotFound() : Exception("location tag not found");
+
+public class LocationMemberNotFound() : Exception("Location member not found");
+
+public class LocationJoinInvitationNotFound() : Exception("Location join invitation not found");
+
+public class TeamNotFound() : Exception("Team not found");
+
+public class TeamMemberNotFound() : Exception("Team member ot found");
+
+public class TeamJoinInvitationNotFound() : Exception("Team join invitation not found");
+
+public class DeskNotFound() : Exception("Desk not found");
+
+public class DeskWithSameNameExist() : Exception("Desk with same name exist");
+
+public class LocationTagWithSameNameExist() : Exception("Location tag with same name exist");
+
+public class OrganizationTermsOfUseAgreementMissing() : Exception("Organization terms of use agreement missing");
+
+public class OrganizationLatestTermsOfUseAgreementMissing()
+    : Exception("Organization latest terms of use agreement missing");
+
+public class PaymentMethodRequired() : Exception("Payment method required");
+
+public class BookingNotFound() : Exception("Booking not found");
+
+public class CrossLocationDeskBookingNotAllowed() : Exception("Cross location desk booking not allowed");
+
+public class DeskBelongToDifferentLocationBookingNotAllowed()
+    : Exception("Desk belong to different location booking not allowed");
+
+public class NoMoreInteractionAllowed()
+    : Exception(
+        "You have exceeded your free tier limit, please upgrade to 'Pay as you go' tier to have full access to all features.");
+
+public class DeskNotAvailable() : Exception("Desk not available");
+
+public class SlackWorkspaceNotFound() : Exception("Slack workspace not found");
+
+public class SlackWorkspaceMemberTypeNotSupported() : Exception("Slack workspace member type not supported");

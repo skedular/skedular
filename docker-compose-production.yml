@@ -1,0 +1,342 @@
+networks:
+  unityhubio_network:
+
+volumes:
+  unityhubio_postgres_data:
+  unityhubio_kafka_data:
+  unityhubio_zookeeper_data:
+  unityhubio_zookeeper_log:
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    command: postgres -c 'max_connections=10000'
+    restart: unless-stopped
+    volumes:
+      - unityhubio_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${UNITYHUBIO_POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${UNITYHUBIO_POSTGRES_PASSWORD}
+    ports:
+      - "13450:5432"
+    networks:
+      unityhubio_network:
+        aliases:
+          - postgres.localhost
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - unityhubio_zookeeper_data:/var/lib/zookeeper/data
+      - unityhubio_zookeeper_log:/var/lib/zookeeper/log
+    networks:
+      - unityhubio_network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    volumes:
+      - unityhubio_kafka_data:/var/lib/kafka/data
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_LISTENERS: "LISTENER_DOCKER_INTERNAL://kafka:9092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-kafka.localhost}:19092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "LISTENER_DOCKER_INTERNAL"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_LOG4J_ROOT_LOGLEVEL: "WARN"
+      KAFKA_TOOLS_LOG4J_LOGLEVEL: "ERROR"
+      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: "http://schema-registry.localhost:9100"
+    networks:
+      unityhubio_network:
+        aliases:
+          - kafka.localhost
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    restart: unless-stopped
+    depends_on:
+      - kafka
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka.localhost:19092"
+      SCHEMA_REGISTRY_HOST_NAME: "schema-registry"
+      SCHEMA_REGISTRY_LISTENERS: "http://schema-registry:9100"
+    networks:
+      unityhubio_network:
+        aliases:
+          - schema-registry.localhost
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    restart: unless-stopped
+    networks:
+      unityhubio_network:
+        aliases:
+          - zipkin.localhost
+
+  staging-infra-provision:
+    image: ghcr.io/unityhubio/allinfra:latest
+    restart: on-failure
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
+      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Application__Environment: staging
+      Kafka__IncomingTopicPrefix: staging
+      Kafka__OutgoingTopicPrefix: staging
+    depends_on:
+      - zookeeper
+      - kafka
+      - schema-registry
+      - postgres
+    networks:
+      - unityhubio_network
+
+  staging-processors-01:
+    image: ghcr.io/unityhubio/allprocessors:latest
+    restart: unless-stopped
+    depends_on:
+      staging-infra-provision:
+        condition: service_completed_successfully
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Application__Environment: staging
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp
+      Application__IdentityProviders__Cognito__Audiences: 7369u947e21plbor9hc4n1r15n,b7lr0dm0454j4df2g6u6l2al
+      Application__IdentityProviders__Google__ApplicationId: 661765198440-lgar8febodjaudbn3ij5tgngqiv0qioi.apps.googleusercontent.com
+      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
+      Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
+      Application__WebAppBaseDomain: https://app.staging.unityhub.io
+      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
+      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__IncomingTopicPrefix: staging
+      Kafka__OutgoingTopicPrefix: staging
+      Billing__ApiKey: ${STAGING_UNITYHUBIO_BILLING_APIKEY}
+      Billing__GrpcUrl: http://staging-apis-01:10802
+      Booking__ApiKey: ${STAGING_UNITYHUBIO_BOOKING_APIKEY}
+      Booking__GrpcUrl: http://staging-apis-01:10302
+      Customer__ApiKey: ${STAGING_UNITYHUBIO_CUSTOMER_APIKEY}
+      Customer__GrpcUrl: http://staging-apis-01:10002
+      Location__ApiKey: ${STAGING_UNITYHUBIO_LOCATION_APIKEY}
+      Location__GrpcUrl: http://staging-apis-01:10602
+      MsTeams__ApiKey: ${STAGING_UNITYHUBIO_MSTEAMS_APIKEY}
+      MsTeams__GrpcUrl: http://staging-apis-01:10902
+      Notification__ApiKey: ${STAGING_UNITYHUBIO_NOTIFICATION_APIKEY}
+      Notification__GrpcUrl: http://staging-apis-01:10402
+      Organization__ApiKey: ${STAGING_UNITYHUBIO_ORGANIZATION_APIKEY}
+      Organization__GrpcUrl: http://staging-apis-01:10202
+      Payment__ApiKey: ${STAGING_UNITYHUBIO_PAYMENT_APIKEY}
+      Payment__GrpcUrl: http://staging-apis-01:10102
+      Slack__ApiKey: ${STAGING_UNITYHUBIO_SLACK_APIKEY}
+      Slack__GrpcUrl: http://staging-apis-01:10702
+      Team__ApiKey: ${STAGING_UNITYHUBIO_TEAM_APIKEY}
+      Team__GrpcUrl: http://staging-apis-01:10502
+      Stripe__PublishableKey: ${STAGING_UNITYHUBIO_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${STAGING_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Slack__AppId: A05H0126U7Q
+      Slack__ClientId: "118234978193.5578036232262"
+      Slack__ClientSecret: ${STAGING_UNITYHUBIO_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${STAGING_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__RedirectUrl: https://slackapistaging.unityhub.io/slack/api/v1/callback
+      Slack__SuccessInstallUrl: https://staging.unityhub.io/slack-success-install
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
+    networks:
+      unityhubio_network:
+        aliases:
+          - staging-processors-01.localhost
+
+  staging-apis-01:
+    image: ghcr.io/unityhubio/allapis:latest
+    restart: unless-stopped
+    depends_on:
+      staging-infra-provision:
+        condition: service_completed_successfully
+    ports:
+      - 9000:9000
+      - 10000:10700
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Application__Environment: staging
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp
+      Application__IdentityProviders__Cognito__Audiences: 7369u947e21plbor9hc4n1r15n,b7lr0dm0454j4df2g6u6l2al
+      Application__IdentityProviders__Google__ApplicationId: 661765198440-lgar8febodjaudbn3ij5tgngqiv0qioi.apps.googleusercontent.com
+      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
+      Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
+      Application__WebAppBaseDomain: https://app.staging.unityhub.io
+      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
+      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__IncomingTopicPrefix: staging
+      Kafka__OutgoingTopicPrefix: staging
+      Subgraphs__Billing__Url: http://localhost:10800/billing/api/v1/graphql
+      Subgraphs__Booking__Url: http://localhost:10300/booking/api/v1/graphql
+      Subgraphs__Customer__Url: http://localhost:10000/customer/api/v1/graphql
+      Subgraphs__Location__Url: http://localhost:10600/location/api/v1/graphql
+      Subgraphs__MsTeams__Url: http://localhost:10900/msteams/api/v1/graphql
+      Subgraphs__Notification__Url: http://localhost:10400/notification/api/v1/graphql
+      Subgraphs__Organization__Url: http://localhost:10200/organization/api/v1/graphql
+      Subgraphs__Payment__Url: http://localhost:10100/payment/api/v1/graphql
+      Subgraphs__Slack__Url: http://localhost:10700/slack/api/v1/graphql
+      Subgraphs__Team__Url: http://localhost:10500/team/api/v1/graphql
+      Billing__ApiKey: ${STAGING_UNITYHUBIO_BILLING_APIKEY}
+      Booking__ApiKey: ${STAGING_UNITYHUBIO_BOOKING_APIKEY}
+      Customer__ApiKey: ${STAGING_UNITYHUBIO_CUSTOMER_APIKEY}
+      Location__ApiKey: ${STAGING_UNITYHUBIO_LOCATION_APIKEY}
+      MsTeams__ApiKey: ${STAGING_UNITYHUBIO_MSTEAMS_APIKEY}
+      Notification__ApiKey: ${STAGING_UNITYHUBIO_NOTIFICATION_APIKEY}
+      Organization__ApiKey: ${STAGING_UNITYHUBIO_ORGANIZATION_APIKEY}
+      Payment__ApiKey: ${STAGING_UNITYHUBIO_PAYMENT_APIKEY}
+      Slack__ApiKey: ${STAGING_UNITYHUBIO_SLACK_APIKEY}
+      Team__ApiKey: ${STAGING_UNITYHUBIO_TEAM_APIKEY}
+      Stripe__PublishableKey: ${STAGING_UNITYHUBIO_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${STAGING_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Slack__AppId: A05H0126U7Q
+      Slack__ClientId: "118234978193.5578036232262"
+      Slack__ClientSecret: ${STAGING_UNITYHUBIO_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${STAGING_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__RedirectUrl: https://slackapistaging.unityhub.io/slack/api/v1/callback
+      Slack__SuccessInstallUrl: https://staging.unityhub.io/slack-success-install
+    networks:
+      unityhubio_network:
+        aliases:
+          - staging-apis-01.localhost
+
+  prod-infra-provision:
+    image: ghcr.io/unityhubio/allinfra:latest
+    restart: on-failure
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
+      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Application__Environment: prod
+      Kafka__IncomingTopicPrefix: prod
+      Kafka__OutgoingTopicPrefix: prod
+    depends_on:
+      - zookeeper
+      - kafka
+      - schema-registry
+      - postgres
+    networks:
+      - unityhubio_network
+
+  prod-processors-01:
+    image: ghcr.io/unityhubio/allprocessors:latest
+    restart: unless-stopped
+    depends_on:
+      prod-infra-provision:
+        condition: service_completed_successfully
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Application__Environment: prod
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF
+      Application__IdentityProviders__Cognito__Audiences: 275ohbeul0cra95kbmpqr6d4o,5kiq7l4sclaloiqgnelj7mcd5g
+      Application__IdentityProviders__Google__ApplicationId: 874220940328-a7o1801134uepnlijk69sue6fs1nl8gr.apps.googleusercontent.com
+      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
+      Application__PublicWebSiteBaseDomain: https://unityhub.io
+      Application__WebAppBaseDomain: https://app.unityhub.io
+      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
+      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__IncomingTopicPrefix: prod
+      Kafka__OutgoingTopicPrefix: prod
+      Billing__ApiKey: ${PRODUCTION_UNITYHUBIO_BILLING_APIKEY}
+      Billing__GrpcUrl: http://prod-apis-01:10802
+      Booking__ApiKey: ${PRODUCTION_UNITYHUBIO_BOOKING_APIKEY}
+      Booking__GrpcUrl: http://prod-apis-01:10302
+      Customer__ApiKey: ${PRODUCTION_UNITYHUBIO_CUSTOMER_APIKEY}
+      Customer__GrpcUrl: http://prod-apis-01:10002
+      Location__ApiKey: ${PRODUCTION_UNITYHUBIO_LOCATION_APIKEY}
+      Location__GrpcUrl: http://prod-apis-01:10602
+      MsTeams__ApiKey: ${PRODUCTION_UNITYHUBIO_MSTEAMS_APIKEY}
+      MsTeams__GrpcUrl: http://prod-apis-01:10902
+      Notification__ApiKey: ${PRODUCTION_UNITYHUBIO_NOTIFICATION_APIKEY}
+      Notification__GrpcUrl: http://prod-apis-01:10402
+      Organization__ApiKey: ${PRODUCTION_UNITYHUBIO_ORGANIZATION_APIKEY}
+      Organization__GrpcUrl: http://prod-apis-01:10202
+      Payment__ApiKey: ${PRODUCTION_UNITYHUBIO_PAYMENT_APIKEY}
+      Payment__GrpcUrl: http://prod-apis-01:10102
+      Slack__ApiKey: ${PRODUCTION_UNITYHUBIO_SLACK_APIKEY}
+      Slack__GrpcUrl: http://prod-apis-01:10702
+      Team__ApiKey: ${PRODUCTION_UNITYHUBIO_TEAM_APIKEY}
+      Team__GrpcUrl: http://prod-apis-01:10502
+      Stripe__PublishableKey: ${PRODUCTION_UNITYHUBIO_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${PRODUCTION_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Slack__AppId: A05H015F9QE
+      Slack__ClientId: "118234978193.5578039519830"
+      Slack__ClientSecret: ${PRODUCTION_UNITYHUBIO_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${PRODUCTION_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__RedirectUrl: https://slackapi.unityhub.io/slack/api/v1/callback
+      Slack__SuccessInstallUrl: https://unityhub.io/slack-success-install
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
+    networks:
+      unityhubio_network:
+        aliases:
+          - prod-processors-01.localhost
+
+  prod-apis-01:
+    image: ghcr.io/unityhubio/allapis:latest
+    restart: unless-stopped
+    depends_on:
+      prod-infra-provision:
+        condition: service_completed_successfully
+    ports:
+      - 9001:9000
+      - 10001:10700
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Application__Environment: prod
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF
+      Application__IdentityProviders__Cognito__Audiences: 275ohbeul0cra95kbmpqr6d4o,5kiq7l4sclaloiqgnelj7mcd5g
+      Application__IdentityProviders__Google__ApplicationId: 874220940328-a7o1801134uepnlijk69sue6fs1nl8gr.apps.googleusercontent.com
+      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
+      Application__PublicWebSiteBaseDomain: https://unityhub.io
+      Application__WebAppBaseDomain: https://app.unityhub.io
+      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
+      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__IncomingTopicPrefix: prod
+      Kafka__OutgoingTopicPrefix: prod
+      Subgraphs__Billing__Url: http://localhost:10800/billing/api/v1/graphql
+      Subgraphs__Booking__Url: http://localhost:10300/booking/api/v1/graphql
+      Subgraphs__Customer__Url: http://localhost:10000/customer/api/v1/graphql
+      Subgraphs__Location__Url: http://localhost:10600/location/api/v1/graphql
+      Subgraphs__MsTeams__Url: http://localhost:10900/msteams/api/v1/graphql
+      Subgraphs__Notification__Url: http://localhost:10400/notification/api/v1/graphql
+      Subgraphs__Organization__Url: http://localhost:10200/organization/api/v1/graphql
+      Subgraphs__Payment__Url: http://localhost:10100/payment/api/v1/graphql
+      Subgraphs__Slack__Url: http://localhost:10700/slack/api/v1/graphql
+      Subgraphs__Team__Url: http://localhost:10500/team/api/v1/graphql
+      Billing__ApiKey: ${PRODUCTION_UNITYHUBIO_BILLING_APIKEY}
+      Booking__ApiKey: ${PRODUCTION_UNITYHUBIO_BOOKING_APIKEY}
+      Customer__ApiKey: ${PRODUCTION_UNITYHUBIO_CUSTOMER_APIKEY}
+      Location__ApiKey: ${PRODUCTION_UNITYHUBIO_LOCATION_APIKEY}
+      MsTeams__ApiKey: ${PRODUCTION_UNITYHUBIO_MSTEAMS_APIKEY}
+      Notification__ApiKey: ${PRODUCTION_UNITYHUBIO_NOTIFICATION_APIKEY}
+      Organization__ApiKey: ${PRODUCTION_UNITYHUBIO_ORGANIZATION_APIKEY}
+      Payment__ApiKey: ${PRODUCTION_UNITYHUBIO_PAYMENT_APIKEY}
+      Slack__ApiKey: ${PRODUCTION_UNITYHUBIO_SLACK_APIKEY}
+      Team__ApiKey: ${PRODUCTION_UNITYHUBIO_TEAM_APIKEY}
+      Stripe__PublishableKey: ${PRODUCTION_UNITYHUBIO_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${PRODUCTION_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Slack__AppId: A05H015F9QE
+      Slack__ClientId: "118234978193.5578039519830"
+      Slack__ClientSecret: ${PRODUCTION_UNITYHUBIO_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${PRODUCTION_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__RedirectUrl: https://slackapi.unityhub.io/slack/api/v1/callback
+      Slack__SuccessInstallUrl: https://unityhub.io/slack-success-install
+    networks:
+      unityhubio_network:
+        aliases:
+          - prod-apis-01.localhost

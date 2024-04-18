@@ -1,0 +1,11 @@
+﻿namespace Enterprise.Shared.Telemetry.Configurations;
+
+public class OpenTelemetrySettings
+{
+    public bool ConsoleEnabled { get; set; }
+    public bool ZipkinEnabled { get; set; }
+    public string ZipkinEndpoint { get; set; } = string.Empty;
+    public bool OtlpEnabled { get; set; }
+    public string OtlpEndpoint { get; set; } = string.Empty;
+    public bool MetricsIngestEnabled { get; set; }
+}

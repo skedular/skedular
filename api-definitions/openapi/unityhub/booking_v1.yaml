@@ -1,0 +1,63 @@
+openapi: 3.1.0
+info:
+  title: Booking API v1
+  description: "Booking REST API"
+  version: 1.0.0
+
+paths:
+  /booking/api/v1/{bookingId}/republish:
+    put:
+      tags:
+        - booking
+      summary: republish booking
+      operationId: republish
+      parameters:
+        - in: path
+          name: bookingId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of booking republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /booking/api/v1/republishAll:
+    put:
+      tags:
+        - booking
+      summary: republish all bookings
+      operationId: republishAll
+      responses:
+        "200":
+          description: the status of republishing all bookings
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message

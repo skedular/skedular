@@ -1,0 +1,22 @@
+using System.Reflection;
+using Api.Shared.Services.Grpc.UnityHub.Payment.V1;
+using Grpc.Core;
+using Version = Api.Shared.Services.Grpc.UnityHub.Payment.V1.Version;
+
+namespace Payment.Api.Grpc;
+
+public class PaymentGrpcService : PaymentService.PaymentServiceBase
+{
+    public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
+    {
+        var assembly = Assembly.GetEntryAssembly();
+        ArgumentNullException.ThrowIfNull(assembly);
+        var version = assembly.GetName().Version;
+        ArgumentNullException.ThrowIfNull(version);
+
+        return Task.FromResult(new Version
+        {
+            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
+        });
+    }
+}

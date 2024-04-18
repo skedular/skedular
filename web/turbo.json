@@ -1,0 +1,107 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "NEXTAUTH_SECRET",
+    "NEXTAUTH_URL",
+    "COGNITO_DOMAIN",
+    "COGNITO_CLIENT_ID",
+    "COGNITO_CLIENT_SECRET",
+    "COGNITO_ISSUER",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "GATEWAY_ENDPOINT",
+    "CUSTOMER_ENDPOINT",
+    "ORGANIZATION_ENDPOINT",
+    "BOOKING_ENDPOINT",
+    "NOTIFICATION_ENDPOINT",
+    "TEAM_ENDPOINT",
+    "LOCATION_ENDPOINT",
+    "SLACK_ENDPOINT",
+    "PAYMENT_ENDPOINT",
+    "BILLING_ENDPOINT",
+    "MSTEAMS_ENDPOINT"
+  ],
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
+    },
+    "start": {
+      "dependsOn": ["^start"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "format": {
+      "dependsOn": ["^format"]
+    },
+    "relay": {
+      "dependsOn": ["^relay"]
+    },
+    "publicwebsite#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
+    },
+    "publicwebsite#start": {
+      "dependsOn": ["^start"]
+    },
+    "publicwebsite#lint": {
+      "dependsOn": ["^lint"]
+    },
+    "publicwebsite#lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "publicwebsite#format": {
+      "dependsOn": ["^format"]
+    },
+    "webapp#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
+    },
+    "webapp#start": {
+      "dependsOn": ["^start"]
+    },
+    "webapp#lint": {
+      "dependsOn": ["^lint"]
+    },
+    "webapp#lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "webapp#format": {
+      "dependsOn": ["^format"]
+    },
+    "webapp#relay": {
+      "dependsOn": ["^relay"]
+    },
+    "msteams#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
+    },
+    "msteams#start": {
+      "dependsOn": ["^start"]
+    },
+    "msteams#lint": {
+      "dependsOn": ["^lint"]
+    },
+    "msteams#lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "msteams#format": {
+      "dependsOn": ["^format"]
+    },
+    "msteams#relay": {
+      "dependsOn": ["^relay"]
+    }
+  },
+  "remoteCache": {
+    "signature": true
+  }
+}

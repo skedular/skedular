@@ -1,0 +1,110 @@
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Enterprise.Shared;
+using Enterprise.Shared.Database;
+using Enterprise.Shared.Grpc;
+using Enterprise.Shared.Random;
+using Slack.Api.Mappers;
+using Slack.Shared.Publishers;
+using Slack.Shared.Repositories;
+using SlackNet.WebApi;
+using Admin_AddInput = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Admin_AddInput;
+using Location = Slack.Shared.Database.Entities.Location;
+using LocationConfiguration = Slack.Shared.Configurations.LocationConfiguration;
+using Organization = Slack.Shared.Database.Entities.Organization;
+using OrganizationConfiguration = Slack.Shared.Configurations.OrganizationConfiguration;
+
+namespace Slack.Api.Services;
+
+public interface IWorkspaceOnboardingService
+{
+    public Task OnboardAsync(OauthV2AccessResponse oauthV2AccessResponse, CancellationToken cancellationToken);
+}
+
+public class WorkspaceOnboardingService(
+    OrganizationConfiguration organizationConfiguration,
+    LocationConfiguration locationConfiguration,
+    IDbTransactionBuilder transactionBuilder,
+    IRepositoryFactory repositoryFactory,
+    IRandomHelper randomHelper,
+    IMapper mapper,
+    ISlackInternalOutboxPublisher slackInternalOutboxPublisher,
+    global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService.OrganizationServiceClient
+        organizationServiceClient,
+    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService.LocationServiceClient locationServiceClient)
+    : IWorkspaceOnboardingService
+{
+    public async Task OnboardAsync(OauthV2AccessResponse oauthV2AccessResponse, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(oauthV2AccessResponse.Team);
+
+        await using var transaction =
+            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
+                cancellationToken);
+
+        var organization =
+            await repositoryFactory.OrganizationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
+
+        var workspace = repositoryFactory.WorkspaceRepository.Add(mapper.MapTo(oauthV2AccessResponse, organization));
+
+        await Task.WhenAll([
+            CreateOrganizationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken),
+            CreateLocationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken)
+        ]);
+
+        await slackInternalOutboxPublisher.PublishRefreshWorkspaceMembersAsync(
+            [workspace.Id],
+            repositoryFactory.WorkspaceRepository.UnitOfWork,
+            cancellationToken);
+        await slackInternalOutboxPublisher.PublishRefreshWorkspaceChannelsAsync(
+            [workspace.Id],
+            repositoryFactory.WorkspaceRepository.UnitOfWork,
+            cancellationToken);
+        await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+    }
+
+    private async Task<Organization> CreateOrganizationAsync(
+        string? name,
+        Organization organization,
+        CancellationToken cancellationToken)
+    {
+        var activeTermsOfUse = await organizationServiceClient.GetActiveOrganizationTermsOfUseAsync(
+            new GetActiveOrganizationTermsOfUseInput(),
+            organizationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+
+        await organizationServiceClient.Admin_AddAsync(
+            new Admin_AddInput
+            {
+                Id = organization.Id,
+                Name = name.ToSafeString(),
+                AgreedToTermsOfUse = true,
+                TermsOfUseId = activeTermsOfUse.Id
+            },
+            organizationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+
+        return organization;
+    }
+
+    private async Task<Location> CreateLocationAsync(
+        string? name,
+        Organization organization,
+        CancellationToken cancellationToken)
+    {
+        var location =
+            await repositoryFactory.LocationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
+
+        await locationServiceClient.Admin_AddAsync(
+            new global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Admin_AddInput
+            {
+                Id = location.Id, Name = $"{name.ToSafeString()} Office", OrganizationId = organization.Id
+            },
+            locationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+
+        return location;
+    }
+}

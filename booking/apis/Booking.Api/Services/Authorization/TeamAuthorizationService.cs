@@ -1,0 +1,129 @@
+using Api.Shared.Models;
+using Booking.Shared.Models;
+using Booking.Shared.Repositories;
+using Enterprise.Shared.Exceptions;
+using Customer = Booking.Shared.Models.Customer;
+using Team = Booking.Shared.Database.Entities.Team;
+
+namespace Booking.Api.Services.Authorization;
+
+public interface ITeamAuthorizationService
+{
+    bool CanViewBookings(Team team, Customer customer);
+    bool CanAddBooking(Team team, Customer customer);
+    bool CanUpdateBooking(Team team, Customer customer);
+    bool CanDeleteBooking(Team team, Customer customer);
+    bool CanAddBookingOnBehalf(Team team, Customer customer);
+    bool CanUpdateBookingOnBehalf(Team team, Customer customer);
+    bool CanDeleteBookingOnBehalf(Team team, Customer customer);
+    Task<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken);
+}
+
+public class TeamAuthorizationService(
+    IOrganizationAuthorizationService organizationAuthorizationService,
+    ICustomerService customerService,
+    IRepositoryFactory repositoryFactory)
+    : ITeamAuthorizationService
+{
+    public bool CanViewBookings(Team team, Customer customer)
+    {
+        if (team.Organization is null)
+        {
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
+                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+        }
+
+        return organizationAuthorizationService.CanViewBookings(team.Organization, customer);
+    }
+
+    public bool CanAddBooking(Team team, Customer customer)
+    {
+        if (team.Organization is null)
+        {
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
+                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+        }
+
+        return organizationAuthorizationService.CanAddBooking(team.Organization, customer);
+    }
+
+    public bool CanUpdateBooking(Team team, Customer customer)
+    {
+        if (team.Organization is null)
+        {
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
+                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+        }
+
+        return organizationAuthorizationService.CanUpdateBooking(team.Organization, customer);
+    }
+
+    public bool CanDeleteBooking(Team team, Customer customer)
+    {
+        if (team.Organization is null)
+        {
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
+                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+        }
+
+        return organizationAuthorizationService.CanDeleteBooking(team.Organization, customer);
+    }
+
+    public bool CanAddBookingOnBehalf(Team team, Customer customer)
+    {
+        if (team.Organization is null)
+        {
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
+                TeamMembershipType.Owner or TeamMembershipType.Administrator;
+        }
+
+        return organizationAuthorizationService.CanAddBookingOnBehalf(team.Organization, customer);
+    }
+
+    public bool CanUpdateBookingOnBehalf(Team team, Customer customer)
+    {
+        if (team.Organization is null)
+        {
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
+                TeamMembershipType.Owner or TeamMembershipType.Administrator;
+        }
+
+        return organizationAuthorizationService.CanUpdateBookingOnBehalf(team.Organization, customer);
+    }
+
+    public bool CanDeleteBookingOnBehalf(Team team, Customer customer)
+    {
+        if (team.Organization is null)
+        {
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
+                TeamMembershipType.Owner or TeamMembershipType.Administrator;
+        }
+
+        return organizationAuthorizationService.CanDeleteBookingOnBehalf(team.Organization, customer);
+    }
+
+    public async Task<TeamPermissions> GetPermissionsAsync(
+        string teamId,
+        CancellationToken cancellationToken)
+    {
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(
+            teamId,
+            cancellationToken);
+        if (team is null)
+        {
+            throw new OrganizationNotFound();
+        }
+
+        return new TeamPermissions
+        {
+            CanViewBookings = CanViewBookings(team, customer),
+            CanAddBooking = CanAddBooking(team, customer),
+            CanUpdateBooking = CanUpdateBooking(team, customer),
+            CanDeleteBooking = CanDeleteBooking(team, customer),
+            CanAddBookingOnBehalf = CanAddBookingOnBehalf(team, customer),
+            CanUpdateBookingOnBehalf = CanUpdateBookingOnBehalf(team, customer),
+            CanDeleteBookingOnBehalf = CanDeleteBookingOnBehalf(team, customer)
+        };
+    }
+}

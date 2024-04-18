@@ -1,0 +1,5 @@
+{{greetings}},
+
+{{customerName}} has invited you to join team {{teamName}}.
+
+{{teamLink}}

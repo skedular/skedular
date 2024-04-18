@@ -1,0 +1,157 @@
+name: "Build, Test and Push image"
+description: "Build, Test and Push image"
+
+inputs:
+  dockerFilePath:
+    description: "Dockerfile path"
+    required: true
+  dockerBuildContextPath:
+    description: "docker build context"
+    required: true
+  dockerRegistry:
+    description: "docker registry"
+    required: true
+  dockerRegistryUsername:
+    description: "docker registry username"
+    required: true
+  dockerRegistryPassword:
+    description: "registry password"
+    required: true
+  dockerNamespace:
+    description: "docker namespace"
+    required: true
+  dockerRepository:
+    description: "docker repository name"
+    required: true
+  uploadFinalArtifact:
+    description: "indicates whether the artifact directory from final image should be attached to the build"
+    required: false
+    default: "false"
+  pushDockerImage:
+    description: "indicates whether the final docker image needs to be pushed"
+    required: false
+    default: "false"
+  scanForSecurityVulnerabilities:
+    description: "indicates whether the final artifact needs to scanned for known security vulnerabilities"
+    required: false
+    default: "true"
+  runIntegrationTests:
+    description: "indicates whether should run integration tests"
+    required: false
+    default: "false"
+  integrationTestsRunScript:
+    description: "the path to integration tests running script"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set required environment variable
+      shell: bash
+      run: |
+        echo "unittest_container_tag=$(uuidgen)" >> $GITHUB_ENV
+        echo "unittest_extract_container_name=$(uuidgen)" >> $GITHUB_ENV
+        if [ -z "${{ inputs.dockerRegistry }}" ]
+        then
+          echo "image_name=${{ inputs.dockerNamespace }}/${{ inputs.dockerRepository }}" >> $GITHUB_ENV
+        else
+          echo "image_name=${{ inputs.dockerRegistry }}/${{ inputs.dockerNamespace }}/${{ inputs.dockerRepository }}" >> $GITHUB_ENV
+        fi
+
+    - name: Docker metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ${{ env.image_name }}
+        tags: |
+          type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+          type=ref,event=branch
+          type=ref,event=pr
+          type=ref,event=tag
+          type=match,pattern=v(.*)
+          type=semver,pattern={{raw}}
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=sha,format=long
+
+    - name: Build and run Unit Tests
+      shell: bash
+      run: |
+        docker build \
+           --pull \
+           --target test \
+          --tag ${{ env.unittest_container_tag }} \
+          --file ${{ inputs.dockerFilePath }} \
+          ${{ inputs.dockerBuildContextPath }}
+
+    - name: Run interation tests
+      if: ${{ inputs.runIntegrationTests == 'true' }}
+      shell: bash
+      run: |
+        ${{ inputs.integrationTestsRunScript }}
+
+    - name: Extract coverage output
+      if: ${{ github.ref == 'refs/heads/main' }}
+      shell: bash
+      run: |
+        mkdir -p ./coverage/reports
+        docker create --name ${{ env.unittest_extract_container_name }} ${{ env.unittest_container_tag }}
+        docker cp ${{ env.unittest_extract_container_name }}:/coverage/reports/. "./coverage/reports/"
+
+    - name: Build final image
+      shell: bash
+      run: |
+        docker build \
+          --pull \
+          --target final \
+          --tag ${{ env.image_name }}:${{ github.sha }} \
+          --file ${{ inputs.dockerFilePath }} \
+          ${{ inputs.dockerBuildContextPath }}
+
+    - name: Run Trivy vulnerability scanner
+      if: ${{ inputs.scanForSecurityVulnerabilities == 'true' }}
+      uses: aquasecurity/trivy-action@0.23.0
+      with:
+        image-ref: ${{ env.image_name }}:${{ github.sha }}
+        format: "table"
+        exit-code: "1"
+        ignore-unfixed: true
+        vuln-type: "os,library"
+        severity: "CRITICAL"
+        timeout: "10m0s"
+
+    - name: Extract build artifact from the final image
+      if: ${{ inputs.uploadFinalArtifact == 'true' }}
+      shell: bash
+      run: |
+        mkdir -p ./artifact
+        final_extract_container_name=$(uuidgen)
+        docker create --name $final_extract_container_name ${{ env.image_name }}:${{ github.sha }}
+        docker cp $final_extract_container_name:/unityhub/. "./artifact/"
+
+    - name: Uploading final build output
+      if: ${{ false }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: final-artifact
+        path: ./artifact/
+
+    - name: Login to Docker Registry
+      if: ${{ github.ref == 'refs/heads/main' && inputs.pushDockerImage == 'true' }}
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ inputs.dockerRegistry }}
+        username: ${{ inputs.dockerRegistryUsername }}
+        password: ${{ inputs.dockerRegistryPassword }}
+
+    - name: Push docker image
+      if: ${{ github.ref == 'refs/heads/main' && inputs.pushDockerImage == 'true' }}
+      uses: docker/build-push-action@v6
+      with:
+        file: ${{ inputs.dockerFilePath }}
+        context: ${{ inputs.dockerBuildContextPath }}
+        push: true
+        target: final
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}

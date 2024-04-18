@@ -1,0 +1,47 @@
+syntax = "proto3";
+package slack;
+
+option csharp_namespace = "Api.Shared.Services.Grpc.UnityHub.Slack.V1";
+
+service SlackService {
+    rpc GetVersion (VersionInput) returns (Version);
+    rpc Admin_AddWorkspace (Admin_AddWorkspaceInput) returns (Workspace);
+}
+
+message VersionInput {
+}
+
+message Version {
+    int32 major = 1;
+    int32 minor = 2;
+    int32 build = 3;
+    int32 revision = 4;
+}
+
+message Admin_AddWorkspaceInput {
+    string id = 1;
+    string name = 2;
+    string botUserId = 3;
+    string botUserScope = 4;
+    string botUserAccessToken = 5;
+    string botRefreshToken = 6;
+    string authedUserId = 7;
+    string authedUserScope = 8;
+    string authedUserAccessToken = 9;
+    string authedRefreshToken = 10;
+    string organizationId = 11;
+}
+
+message Workspace {
+    string id = 1;
+    string name = 2;
+    string botUserId = 3;
+    string botUserScope = 4;
+    string botUserAccessToken = 5;
+    string botRefreshToken = 6;
+    string authedUserId = 7;
+    string authedUserScope = 8;
+    string authedUserAccessToken = 9;
+    string authedRefreshToken = 10;
+    string organizationId = 11;
+}

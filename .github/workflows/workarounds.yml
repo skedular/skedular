@@ -1,0 +1,128 @@
+name: "workarounds"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "v*"
+    paths:
+      - ".github/actions/**"
+      - ".github/workflows/lint.yml"
+      - ".github/workflows/workarounds.yml"
+      - "shared/**"
+      - "all-in-one/**"
+      - "billing/**"
+      - "booking/**"
+      - "customer/**"
+      - "gateway/**"
+      - "location/**"
+      - "msteams/**"
+      - "notification/**"
+      - "organization/**"
+      - "payment/**"
+      - "slack/**"
+      - "team/**"
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - ".github/actions/**"
+      - ".github/workflows/lint.yml"
+      - ".github/workflows/workarounds.yml"
+      - "shared/**"
+      - "all-in-one/**"
+      - "billing/**"
+      - "booking/**"
+      - "customer/**"
+      - "gateway/**"
+      - "location/**"
+      - "msteams/**"
+      - "notification/**"
+      - "organization/**"
+      - "payment/**"
+      - "slack/**"
+      - "team/**"
+
+jobs:
+  build-all-infra:
+    name: "Build all-infra"
+    runs-on: self-hosted
+    if: github.event.pull_request.draft == false
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+
+    steps:
+      - name: Checkout code with full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build, Test and Push Image
+        uses: "./.github/actions/build-test-push"
+        with:
+          dockerFilePath: ./all-in-one/AllInfra/Dockerfile
+          dockerBuildContextPath: .
+          dockerRegistry: ghcr.io
+          dockerRegistryUsername: ${{ github.actor }}
+          dockerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          dockerNamespace: unityhubio
+          dockerRepository: allinfra
+          pushDockerImage: true
+
+  build-all-processors:
+    name: "Build all-processors"
+    runs-on: self-hosted
+    if: github.event.pull_request.draft == false
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+
+    steps:
+      - name: Checkout code with full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build, Test and Push Image
+        uses: "./.github/actions/build-test-push"
+        with:
+          dockerFilePath: ./all-in-one/AllProcessors/Dockerfile
+          dockerBuildContextPath: .
+          dockerRegistry: ghcr.io
+          dockerRegistryUsername: ${{ github.actor }}
+          dockerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          dockerNamespace: unityhubio
+          dockerRepository: allprocessors
+          pushDockerImage: true
+
+  build-all-apis:
+    name: "Build all-apis"
+    runs-on: self-hosted
+    if: github.event.pull_request.draft == false
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+
+    steps:
+      - name: Checkout code with full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build, Test and Push Image
+        uses: "./.github/actions/build-test-push"
+        with:
+          dockerFilePath: ./all-in-one/AllApis/Dockerfile
+          dockerBuildContextPath: .
+          dockerRegistry: ghcr.io
+          dockerRegistryUsername: ${{ github.actor }}
+          dockerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          dockerNamespace: unityhubio
+          dockerRepository: allapis
+          pushDockerImage: true

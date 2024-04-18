@@ -1,0 +1,8 @@
+syntax = "proto3";
+package customer;
+
+option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.Customer.V1.Key";
+
+message Key {
+  string customerId = 1;
+}

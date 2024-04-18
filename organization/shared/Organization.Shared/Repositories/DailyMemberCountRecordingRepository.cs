@@ -1,0 +1,21 @@
+using Enterprise.Shared.Database;
+using Organization.Shared.Database;
+using Organization.Shared.Database.Entities;
+
+namespace Organization.Shared.Repositories;
+
+public interface IDailyMemberCountRecordingRepository : IRepository<DailyMemberCountRecording>
+{
+    DailyMemberCountRecording Add(DailyMemberCountRecording dailyMemberCountRecording);
+}
+
+public class DailyMemberCountRecordingRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
+    : RepositoryBase<OrganizationDbContext, DailyMemberCountRecording>(dbContext), IDailyMemberCountRecordingRepository
+{
+    public DailyMemberCountRecording Add(DailyMemberCountRecording dailyMemberCountRecording)
+    {
+        var now = timeProvider.GetUtcNow();
+        dailyMemberCountRecording.CreatedAt = now;
+        return DbContext.DailyMemberCountRecording.Add(dailyMemberCountRecording).Entity;
+    }
+}

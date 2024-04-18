@@ -1,0 +1,58 @@
+openapi: 3.1.0
+info:
+  title: Payment API v1
+  description: "Payment REST API"
+  version: 1.0.0
+
+paths:
+  /payment/api/v1/organization/add-payment-method:
+    get:
+      tags:
+        - payment-method
+        - payment
+        - organization
+      summary: add organization payment method
+      operationId: addOrganizationPaymentMethod
+      parameters:
+        - name: setup_intent
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: setup_intent_client_secret
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: redirect_status
+          in: query
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: the readiness status
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message

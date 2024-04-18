@@ -1,0 +1,8 @@
+syntax = "proto3";
+package payment;
+
+option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.Payment.V1.Key";
+
+message Key {
+  string organizationId = 1;
+}

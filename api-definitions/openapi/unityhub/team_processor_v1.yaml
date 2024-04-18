@@ -1,0 +1,60 @@
+openapi: 3.1.0
+info:
+  title: Team Processor v1
+  description: "Team Processor"
+  version: 1.0.0
+
+paths:
+  /team-processor/api/v1/liveness:
+    get:
+      tags:
+        - team
+        - processor
+      summary: return the health status
+      operationId: liveness
+
+      responses:
+        "200":
+          description: the health status
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /team-processor/api/v1/readiness:
+    get:
+      tags:
+        - team
+        - processor
+      summary: return the readiness status
+      operationId: readiness
+
+      responses:
+        "200":
+          description: the readiness status
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message

@@ -1,0 +1,243 @@
+syntax = "proto3";
+package customer;
+
+option csharp_namespace = "Api.Shared.Services.Grpc.UnityHub.Customer.V1";
+
+service CustomerService {
+    rpc Admin_Get (Admin_GetInput) returns (Customer);
+    rpc Admin_Add (Admin_AddInput) returns (Customer);
+    rpc Admin_AddIdentity (Admin_AddIdentityInput) returns (Customer);
+    rpc Admin_AnyCustomerExistByVerifiableToken (Admin_AnyCustomerExistByVerifiableTokenInput) returns (AnyCustomerExistByVerifiableTokenResponse);
+    rpc Admin_AnyCustomerExistByEmail (Admin_AnyCustomerExistByEmailInput) returns (AnyCustomerExistByEmailResponse);
+    rpc Admin_SetDefaultOrganization (Admin_SetDefaultOrganizationInput) returns (Customer);
+    rpc Admin_AddDefaultLocation (Admin_AddDefaultLocationInput) returns (Customer);
+    rpc Admin_AddDefaultTeam (Admin_AddDefaultTeamInput) returns (Customer);
+
+    rpc GetVersion (VersionInput) returns (Version);
+    rpc Get (GetInput) returns (Customer);
+    rpc DismissDefaultLocationOnboardingSetup (DismissDefaultLocationOnboardingSetupInput) returns (Customer);
+    rpc DismissSetupPreferredZones (DismissSetupPreferredZonesInput) returns (Customer);
+    rpc DismissSetupPreferredDesks (DismissSetupPreferredDesksInput) returns (Customer);
+    rpc SubmitFeedback (SubmitFeedbackInput) returns (Feedback);
+    rpc SetDefaultOrganization (SetDefaultOrganizationInput) returns (Customer);
+    rpc AddDefaultLocation (AddDefaultLocationInput) returns (Customer);
+    rpc AddDefaultTeam (AddDefaultTeamInput) returns (Customer);
+    rpc ClearDefaultOrganization (ClearDefaultOrganizationInput) returns (Customer);
+    rpc RemoveDefaultLocation (RemoveDefaultLocationInput) returns (Customer);
+    rpc RemoveDefaultTeam (RemoveDefaultTeamInput) returns (Customer);
+    rpc AddPreferredLocationTag (AddPreferredLocationTagInput) returns (Customer);
+    rpc RemovePreferredLocationTag (RemovePreferredLocationTagInput) returns (Customer);
+    rpc AddPreferredDesk (AddPreferredDeskInput) returns (Customer);
+    rpc RemovePreferredDesk (RemovePreferredDeskInput) returns (Customer);
+}
+
+message VersionInput {
+}
+
+message Version {
+    int32 major = 1;
+    int32 minor = 2;
+    int32 build = 3;
+    int32 revision = 4;
+}
+
+message Admin_GetInput {
+    string customerId = 1;
+}
+
+message GetInput {
+}
+
+message Admin_AnyCustomerExistByVerifiableTokenInput {
+    string verifiableToken = 1;
+}
+
+message AnyCustomerExistByVerifiableTokenResponse {
+    bool exist = 1;
+    Customer customer = 2;
+}
+
+message Admin_AnyCustomerExistByEmailInput {
+    string email = 1;
+}
+
+message AnyCustomerExistByEmailResponse {
+    bool exist = 1;
+    Customer customer = 2;
+}
+
+message Admin_AddInput {
+    string id = 1;
+    repeated Identity identities = 2;
+    string designation = 3;
+    string title = 4;
+    string name = 5;
+    string givenName = 6;
+    string middleName = 7;
+    string familyName = 8;
+    string photoUrl = 9;
+    string photoUrl24 = 10;
+    string photoUrl32 = 11;
+    string photoUrl48 = 12;
+    string photoUrl72 = 13;
+    string photoUrl192 = 14;
+    string photoUrl512 = 15;
+    string timezone = 16;
+    string locale = 17;
+    bool isOrganizationOnboardingDone = 18;
+    bool isLocationOnboardingDone = 19;
+    bool isDefaultOrganizationOnboardingDone = 20;
+    bool isDefaultLocationOnboardingDone = 21;
+    bool isPreferredZoneOnboardingDone = 22;
+    bool isPreferredDeskOnboardingDone = 23;
+    Organization defaultOrganization = 24;
+    repeated Location defaultLocations = 25;
+    repeated LocationTag preferredLocationTags = 26;
+    repeated Desk preferredDesks = 27;
+    repeated Team defaultTeams = 28;
+}
+
+message Customer {
+    string id = 1;
+    repeated Identity identities = 2;
+    string designation = 3;
+    string title = 4;
+    string name = 5;
+    string givenName = 6;
+    string middleName = 7;
+    string familyName = 8;
+    string photoUrl = 9;
+    string photoUrl24 = 10;
+    string photoUrl32 = 11;
+    string photoUrl48 = 12;
+    string photoUrl72 = 13;
+    string photoUrl192 = 14;
+    string photoUrl512 = 15;
+    string timezone = 16;
+    string locale = 17;
+    bool isOrganizationOnboardingDone = 18;
+    bool isLocationOnboardingDone = 19;
+    bool isDefaultOrganizationOnboardingDone = 20;
+    bool isDefaultLocationOnboardingDone = 21;
+    bool isPreferredZoneOnboardingDone = 22;
+    bool isPreferredDeskOnboardingDone = 23;
+    Organization defaultOrganization = 24;
+    repeated Location defaultLocations = 25;
+    repeated LocationTag preferredLocationTags = 26;
+    repeated Desk preferredDesks = 27;
+    repeated Team defaultTeams = 28;
+}
+
+message Identity {
+    string id = 1;
+    string email = 2;
+    bool emailVerified = 3;
+}
+
+message Organization {
+    string id = 1;
+    string name = 2;
+}
+
+message Location {
+    string id = 1;
+    string name = 2;
+    Organization organization = 3;
+}
+
+message LocationTag {
+    string id = 1;
+    string name = 2;
+    Location location = 3;
+}
+
+message Desk {
+    string id = 1;
+    string name = 2;
+    Location location = 3;
+}
+
+message Team {
+    string id = 1;
+    string name = 2;
+    Organization organization = 3;
+}
+
+message Admin_AddIdentityInput {
+    string customerId = 1;
+    string id = 2;
+    string email = 3;
+    bool emailVerified = 4;
+}
+
+message Admin_SetDefaultOrganizationInput {
+    string customerId = 1;
+    string organizationId = 2;
+}
+
+message Admin_AddDefaultLocationInput {
+    string customerId = 1;
+    string locationId = 2;
+}
+
+message Admin_AddDefaultTeamInput {
+    string customerId = 1;
+    string teamId = 2;
+}
+
+message DismissDefaultLocationOnboardingSetupInput {
+}
+
+message DismissSetupPreferredZonesInput {
+}
+
+message DismissSetupPreferredDesksInput {
+}
+
+message SubmitFeedbackInput {
+    string id = 1;
+    string feedback = 2;
+}
+
+message Feedback {
+    string id = 1;
+}
+
+message SetDefaultOrganizationInput {
+    string organizationId = 1;
+}
+
+message AddDefaultLocationInput {
+    string locationId = 1;
+}
+
+message AddDefaultTeamInput {
+    string teamId = 1;
+}
+
+message ClearDefaultOrganizationInput {
+}
+
+message RemoveDefaultLocationInput {
+    string locationId = 1;
+}
+
+message RemoveDefaultTeamInput {
+    string teamId = 1;
+}
+
+message AddPreferredLocationTagInput {
+    string locationTagId = 1;
+}
+
+message RemovePreferredLocationTagInput {
+    string locationTagId = 1;
+}
+
+message AddPreferredDeskInput {
+    string deskId = 1;
+}
+
+message RemovePreferredDeskInput {
+    string deskId = 1;
+}

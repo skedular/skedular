@@ -1,0 +1,12 @@
+﻿using Api.Shared.Services.Offering;
+
+namespace Booking.Shared.Models;
+
+public class Offering
+{
+    public string Id { get; set; } = string.Empty;
+    public OfferingCode Code { get; set; }
+    public DateTimeOffset Start { get; set; }
+    public DateTimeOffset End { get; set; }
+    public string[] ActiveCustomerIds { get; set; } = [];
+}

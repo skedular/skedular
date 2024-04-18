@@ -1,0 +1,64 @@
+openapi: 3.1.0
+info:
+  title: Team API v1
+  description: "Team REST API"
+  version: 1.0.0
+
+paths:
+  /team/api/v1/{teamId}/republish:
+    put:
+      tags:
+        - team
+      summary: republish team
+      operationId: republish
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of team republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /team/api/v1/republish-all:
+    put:
+      tags:
+        - team
+      summary: republish all teams
+      operationId: republishAll
+
+      responses:
+        "200":
+          description: the status of team republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message

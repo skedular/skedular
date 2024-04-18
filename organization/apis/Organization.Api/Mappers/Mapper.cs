@@ -1,0 +1,744 @@
+using Api.Shared.Models;
+using Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Api.Shared.Services.Offering;
+using Enterprise.Shared;
+using Enterprise.Shared.Models;
+using Google.Protobuf.WellKnownTypes;
+using AddOrganizationInput = Api.Shared.Services.GraphQL.UnityHub.V1.Organization.AddOrganizationInput;
+using Booking = Organization.Shared.Models.Booking;
+using Customer = Organization.Shared.Models.Customer;
+using DailyMemberCountRecording = Organization.Shared.Models.DailyMemberCountRecording;
+using Identity = Organization.Shared.Models.Identity;
+using IndustryMainCategory = Organization.Shared.Models.IndustryMainCategory;
+using IndustrySubCategory = Organization.Shared.Models.IndustrySubCategory;
+using JoinInvitation = Organization.Shared.Models.JoinInvitation;
+using Location = Organization.Shared.Models.Location;
+using Offering = Api.Shared.Services.Offering.Offering;
+using OrganizationDailyBookingsTotal = Organization.Shared.Models.OrganizationDailyBookingsTotal;
+using OrganizationMember = Organization.Shared.Models.OrganizationMember;
+using OrganizationMemberAttendancePercentage = Organization.Shared.Models.OrganizationMemberAttendancePercentage;
+using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
+using Team = Organization.Shared.Models.Team;
+using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
+using OrganizationEdge = Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationEdge;
+
+namespace Organization.Api.Mappers;
+
+public interface IMapper
+{
+    Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src);
+    OrganizationMember MapTo(Shared.Database.Entities.OrganizationMember src, Shared.Models.Organization organization);
+    JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
+
+    Shared.Database.Entities.Organization MapTo(
+        Shared.Models.Organization src,
+        TermsOfUse termsOfUse,
+        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories);
+
+    Shared.Database.Entities.Organization MergeTo(Shared.Models.Organization src,
+        Shared.Database.Entities.Organization dest);
+
+    IEnumerable<OrganizationMember> MapTo(
+        IEnumerable<Shared.Database.Entities.OrganizationMember> src, Shared.Models.Organization organization);
+
+    Shared.Models.TermsOfUse? MapTo(TermsOfUse? src);
+    Customer? MapTo(Shared.Database.Entities.Customer? src);
+    IEnumerable<IndustryMainCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustryMainCategory> src);
+
+    OrganizationTermsOfUse? MapTo(Shared.Models.TermsOfUse? src);
+    IEnumerable<OrganizationIndustryMainCategoryReferenceDetails> MapTo(IEnumerable<IndustryMainCategory> src);
+    IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src);
+    OrganizationDetails? MapTo(Shared.Models.Organization? src);
+    OrganizationMemberDetails MapTo(OrganizationMember src);
+
+    OrganizationAnalytics MapTo(
+        IEnumerable<OrganizationMemberAttendancePercentage> organizationMemberAttendancePercentages,
+        IEnumerable<OrganizationDailyBookingsTotal> organizationDailyBookingsTotals);
+
+    Shared.Models.Organization MapTo(AddOrganizationInput src);
+    Shared.Models.Organization MapTo(UpdateOrganizationInput src);
+
+    global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.TermsOfUse
+        MapToGrpcResponse(Shared.Models.TermsOfUse src);
+
+    Shared.Models.Organization MapTo(Admin_AddInput src);
+
+    global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization MapToGrpcResponse(
+        Shared.Models.Organization src);
+
+    Shared.Database.Entities.OrganizationMember MapToEntity(
+        OrganizationMember src,
+        Shared.Database.Entities.Organization organization,
+        Shared.Database.Entities.Customer customer);
+
+    Shared.Database.Entities.OrganizationMember MergeToEntity(
+        OrganizationMember src,
+        Shared.Database.Entities.OrganizationMember dest,
+        Shared.Database.Entities.Organization organization,
+        Shared.Database.Entities.Customer customer);
+
+    ICollection<OrganizationMember> MapTo(Admin_UpdateMembersInput src);
+    OrganizationMember MapTo(Admin_AddMemberInput src);
+    Member MapToGrpcResponse(OrganizationMember src);
+    OrganizationEdge MapTo(Edge<Shared.Models.Organization> src);
+
+    IEnumerable<Edge<OrganizationMember>> MapTo(
+        IEnumerable<Edge<Shared.Database.Entities.OrganizationMember>> src,
+        Shared.Models.Organization organization);
+
+    OrganizationMemberEdge MapTo(Edge<OrganizationMember> src);
+    MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src);
+}
+
+public class Mapper : IMapper
+{
+    public Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src)
+    {
+        var organization = new Shared.Models.Organization
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            About = src.About,
+            Website = src.Website,
+            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
+            LogoUrl = src.LogoUrl,
+            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
+            PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
+            DailyMemberCountLastRecordedAt = src.DailyMemberCountLastRecordedAt,
+            TermsOfUse = MapTo(src.TermsOfUse),
+            IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList()
+        };
+
+        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
+        organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
+        organization.Bookings = MapTo(src.Bookings, organization).ToList();
+        organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
+        organization.Locations = MapTo(src.Locations, organization).ToList();
+        organization.Teams = MapTo(src.Teams, organization).ToList();
+        organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
+
+        return organization;
+    }
+
+    public OrganizationMember
+        MapTo(Shared.Database.Entities.OrganizationMember src, Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            MembershipType = src.MembershipType,
+            Customer = MapTo(src.Customer)!,
+            Organization = organization
+        };
+
+    public JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Email = src.Email,
+            Status = src.Status,
+            MembershipType = src.MembershipType,
+            Organization = MapTo(src.Organization),
+            CreatedBy = MapTo(src.CreatedBy)!,
+            Invitee = MapTo(src.Invitee)
+        };
+
+    public Shared.Database.Entities.Organization MapTo(
+        Shared.Models.Organization src,
+        TermsOfUse termsOfUse,
+        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            About = src.About,
+            Website = src.Website,
+            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
+            LogoUrl = src.LogoUrl,
+            TermsOfUse = termsOfUse,
+            IndustrySubCategories = industrySubCategories,
+            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod
+        };
+
+    public Shared.Database.Entities.Organization MergeTo(
+        Shared.Models.Organization src,
+        Shared.Database.Entities.Organization dest)
+    {
+        dest.Id = src.Id;
+        dest.Name = src.Name;
+        dest.About = src.About;
+        dest.Website = src.Website;
+        dest.AgreedToTermsOfUse = src.AgreedToTermsOfUse;
+        dest.LogoUrl = src.LogoUrl;
+        return dest;
+    }
+
+    public IEnumerable<OrganizationMember> MapTo(IEnumerable<Shared.Database.Entities.OrganizationMember> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
+        src is null
+            ? null
+            : new Customer
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name,
+                GivenName = src.GivenName,
+                MiddleName = src.MiddleName,
+                FamilyName = src.FamilyName,
+                PhotoUrl = src.PhotoUrl,
+                PhotoUrl24 = src.PhotoUrl24,
+                PhotoUrl32 = src.PhotoUrl32,
+                PhotoUrl48 = src.PhotoUrl48,
+                PhotoUrl72 = src.PhotoUrl72,
+                PhotoUrl192 = src.PhotoUrl192,
+                PhotoUrl512 = src.PhotoUrl512,
+                Identities = MapTo(src.Identities).ToList()
+            };
+
+    public Shared.Models.TermsOfUse? MapTo(TermsOfUse? src) =>
+        src is null
+            ? null
+            : new Shared.Models.TermsOfUse
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                Active = src.Active,
+                Terms = src.Terms
+            };
+
+    public IEnumerable<IndustryMainCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustryMainCategory> src) =>
+        src.Select(MapTo);
+
+    public OrganizationTermsOfUse? MapTo(Shared.Models.TermsOfUse? src) =>
+        src is null ? null : new OrganizationTermsOfUse { Id = src.Id, Terms = src.Terms };
+
+    public IEnumerable<OrganizationIndustryMainCategoryReferenceDetails> MapTo(IEnumerable<IndustryMainCategory> src) =>
+        src.Select(MapTo);
+
+    public IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src) => src.Select(MapTo)!;
+
+    public OrganizationDetails? MapTo(Shared.Models.Organization? src)
+    {
+        if (src is null)
+        {
+            return null;
+        }
+
+        var organizationOffering = src.OrganizationOfferings.FirstOrDefault();
+        var availableOfferings = organizationOffering is null || organizationOffering.Code == OfferingCode.EarlyBirdV1
+            ? []
+            : Offerings.AllOfferings
+                .Where(item => item != organizationOffering.Code)
+                .Select(item =>
+                {
+                    var offering = item.GetOffering();
+                    return new OrganizationAvailableOfferingDetails
+                    {
+                        Code = item.ToOfferingCode(),
+                        Name = offering.Name,
+                        UnitPrice = offering.UnitPrice,
+                        FeatureSet = MapTo(offering).ToArray()
+                    };
+                }).ToArray();
+
+        return new OrganizationDetails
+        {
+            Id = src.Id,
+            Name = src.Name,
+            About = src.About,
+            Website = src.Website,
+            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
+            LogoUrl = src.LogoUrl,
+            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
+            TermsOfUse = MapTo(src.TermsOfUse),
+            IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)).ToArray(),
+            AvailableOfferings = availableOfferings,
+            Offering = MapTo(organizationOffering),
+            CanModify = src.CanModify,
+            CanDelete = src.CanDelete,
+            CanInvitePeople = src.CanInvitePeople,
+            CanViewAnalytics = src.CanViewAnalytics,
+            HasLocation = src.HasLocation,
+            HasTeam = src.HasTeam,
+            HasFutureBooking = src.HasFutureBooking
+        };
+    }
+
+    public OrganizationMemberDetails MapTo(OrganizationMember src) =>
+        new()
+        {
+            Id = src.Id,
+            MembershipType = src.MembershipType switch
+            {
+                OrganizationMembershipType.Owner => OrganizationMemberMembershipType.OWNER,
+                OrganizationMembershipType.Administrator => OrganizationMemberMembershipType.ADMINISTRATOR,
+                OrganizationMembershipType.Member => OrganizationMemberMembershipType.MEMBER,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Customer = MapTo(src.Customer)
+        };
+
+    public OrganizationAnalytics MapTo(
+        IEnumerable<OrganizationMemberAttendancePercentage> organizationMemberAttendancePercentages,
+        IEnumerable<OrganizationDailyBookingsTotal> organizationDailyBookingsTotals) =>
+        new()
+        {
+            MemberAttendancePercentage = organizationMemberAttendancePercentages.Select(item =>
+                    new global::Api.Shared.Services.GraphQL.UnityHub.V1.Organization.
+                        OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = item.Percentage })
+                .ToArray(),
+            DailyBookingsTotals = organizationDailyBookingsTotals.Select(item =>
+                    new global::Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationDailyBookingsTotal
+                    {
+                        Date = item.Date, Total = item.Total
+                    })
+                .ToArray()
+        };
+
+    public Shared.Models.Organization MapTo(AddOrganizationInput src) =>
+        new()
+        {
+            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Name = src.Name,
+            About = src.About,
+            Website = src.Website,
+            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
+            IndustrySubCategories =
+                src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
+            TermsOfUse = new Shared.Models.TermsOfUse { Id = src.TermsOfUseId }
+        };
+
+    public Shared.Models.Organization MapTo(UpdateOrganizationInput src) =>
+        new()
+        {
+            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Name = src.Name,
+            About = src.About,
+            Website = src.Website,
+            IndustrySubCategories =
+                src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
+        };
+
+    public global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.TermsOfUse
+        MapToGrpcResponse(Shared.Models.TermsOfUse src) => new() { Id = src.Id, Terms = src.Terms };
+
+    public Shared.Models.Organization MapTo(
+        Admin_AddInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            About = src.About,
+            Website = src.Website,
+            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
+            TermsOfUse =
+                string.IsNullOrWhiteSpace(src.TermsOfUseId)
+                    ? null
+                    : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
+            LogoUrl = src.LogoUrl,
+            IndustrySubCategories =
+                src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
+        };
+
+    public global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization MapToGrpcResponse(
+        Shared.Models.Organization src)
+    {
+        var organizationOffering = src.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue)
+            .OrderByDescending(item => item.End).First();
+        var organization = new global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            About = src.About.ToSafeString(),
+            Website = src.Website.ToSafeString(),
+            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
+            LogoUrl = src.LogoUrl.ToSafeString(),
+            Offering = new global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Offering
+            {
+                Id = organizationOffering.Id,
+                OrganizationId = src.Id,
+                Code = organizationOffering.Code.ToOfferingCode(),
+                Start = organizationOffering.Start.ToTimestamp(),
+                End = organizationOffering.End.ToTimestamp(),
+                AutoRenew = organizationOffering.AutoRenew,
+                UnitPrice = organizationOffering.UnitPrice
+            },
+            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
+            HasFutureBooking = src.HasFutureBooking
+        };
+
+        organization.Offering.ActiveCustomerIds.AddRange(
+            organizationOffering.OrganizationOfferingActiveMembers.Select(item => item.OrganizationMember.Customer.Id));
+
+        organization.IndustrySubCategories.AddRange(src.IndustrySubCategories.Select(item =>
+            new global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.IndustrySubCategory
+            {
+                Id = item.Id, Name = item.Name, MainCategoryName = item.IndustryMainCategory.Name
+            }));
+
+        organization.Members.AddRange(MapToGrpcResponse(src.OrganizationMembers));
+
+        return organization;
+    }
+
+    public Shared.Database.Entities.OrganizationMember MapToEntity(
+        OrganizationMember src,
+        Shared.Database.Entities.Organization organization,
+        Shared.Database.Entities.Customer customer) =>
+        MergeToEntity(src, new Shared.Database.Entities.OrganizationMember(), organization, customer);
+
+    public Shared.Database.Entities.OrganizationMember MergeToEntity(
+        OrganizationMember src,
+        Shared.Database.Entities.OrganizationMember dest,
+        Shared.Database.Entities.Organization organization,
+        Shared.Database.Entities.Customer customer)
+    {
+        dest.Id = src.Id;
+        dest.MembershipType = src.MembershipType;
+        dest.Organization = organization;
+        dest.Customer = customer;
+        return dest;
+    }
+
+    public ICollection<OrganizationMember> MapTo(Admin_UpdateMembersInput src) =>
+        src.Members.Select(item => MapTo(item, new Shared.Models.Organization { Id = src.Id })).ToList();
+
+    public OrganizationMember MapTo(Admin_AddMemberInput src) =>
+        MapTo(src.Member, new Shared.Models.Organization { Id = src.Id });
+
+    public Member MapToGrpcResponse(OrganizationMember src) =>
+        new()
+        {
+            Id = src.Id,
+            MembershipType = src.MembershipType switch
+            {
+                OrganizationMembershipType.Owner => MembershipType.Owner,
+                OrganizationMembershipType.Administrator => MembershipType.Administrator,
+                OrganizationMembershipType.Member => MembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Customer = MapToGrpcResponse(src.Customer)
+        };
+
+    public OrganizationEdge MapTo(Edge<Shared.Models.Organization> src) =>
+        new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
+
+    public IEnumerable<Edge<OrganizationMember>> MapTo(
+        IEnumerable<Edge<Shared.Database.Entities.OrganizationMember>> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    public OrganizationMemberEdge MapTo(Edge<OrganizationMember> src) =>
+        new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+
+    public MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src) =>
+        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+
+    private IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
+
+    private static global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer MapToGrpcResponse(
+        Customer src)
+    {
+        var customer = new global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            GivenName = src.GivenName.ToSafeString(),
+            MiddleName = src.MiddleName.ToSafeString(),
+            FamilyName = src.FamilyName.ToSafeString(),
+            PhotoUrl = src.PhotoUrl.ToSafeString(),
+            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
+            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
+            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
+            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
+            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
+            PhotoUrl512 = src.PhotoUrl512.ToSafeString()
+        };
+
+        customer.Identities.AddRange(MapToGrpcResponse(src.Identities));
+
+        return customer;
+    }
+
+    private static IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Identity> MapToGrpcResponse(
+        IEnumerable<Identity> src) =>
+        src.Select(MapToGrpcResponse);
+
+    private static global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Identity MapToGrpcResponse(
+        Identity src) =>
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
+
+    private static OrganizationMember MapTo(Member src, Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            MembershipType = src.MembershipType switch
+            {
+                MembershipType.Owner => OrganizationMembershipType.Owner,
+                MembershipType.Administrator => OrganizationMembershipType.Administrator,
+                MembershipType.Member => OrganizationMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Customer = new Customer { Id = src.Customer.Id },
+            Organization = organization
+        };
+
+    private static OrganizationCustomerDetails MapTo(Customer src) =>
+        new()
+        {
+            UniqueId = src.Id,
+            Name = src.Name,
+            GivenName = src.GivenName,
+            MiddleName = src.MiddleName,
+            FamilyName = src.FamilyName,
+            PhotoUrl = src.PhotoUrl,
+            PhotoUrl24 = src.PhotoUrl24,
+            PhotoUrl32 = src.PhotoUrl32,
+            PhotoUrl48 = src.PhotoUrl48,
+            PhotoUrl72 = src.PhotoUrl72,
+            PhotoUrl192 = src.PhotoUrl192,
+            PhotoUrl512 = src.PhotoUrl512
+        };
+
+    private static OrganizationOfferingDetails MapTo(OrganizationOffering? src)
+    {
+        if (src is null)
+        {
+            return new OrganizationOfferingDetails();
+        }
+
+        var offering = src.Code.GetOffering();
+        return new OrganizationOfferingDetails
+        {
+            Id = src.Id,
+            Code = src.Code.ToOfferingCode(),
+            Name = offering.Name,
+            Start = src.Start,
+            End = src.End,
+            UnitPrice = src.UnitPrice,
+            FeatureSet = MapTo(offering).ToArray()
+        };
+    }
+
+    private static IEnumerable<OrganizationFeatureSetDetails> MapTo(Offering offering) =>
+        offering.FeatureSets.Select(MapTo);
+
+    private static OrganizationFeatureSetDetails MapTo(FeatureSetCode item)
+    {
+        var featureSet = Features.FeatureSet[item];
+        return new OrganizationFeatureSetDetails { Name = featureSet.Name, Description = featureSet.Description };
+    }
+
+    private static OrganizationIndustryMainCategoryReferenceDetails MapTo(IndustryMainCategory src)
+    {
+        var organizationIndustryMainCategoryReferenceDetails =
+            new OrganizationIndustryMainCategoryReferenceDetails { Id = src.Id, Name = src.Name };
+
+        organizationIndustryMainCategoryReferenceDetails.SubCategories = MapTo(src.IndustrySubCategories,
+            organizationIndustryMainCategoryReferenceDetails).ToArray();
+
+        return organizationIndustryMainCategoryReferenceDetails;
+    }
+
+    private static IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> MapTo(
+        IEnumerable<IndustrySubCategory> src,
+        OrganizationIndustryMainCategoryReferenceDetails? organizationIndustryMainCategoryReferenceDetails) =>
+        src.Select(item => MapTo(item, organizationIndustryMainCategoryReferenceDetails));
+
+    private static OrganizationIndustrySubCategoryReferenceDetails MapTo(IndustrySubCategory src,
+        OrganizationIndustryMainCategoryReferenceDetails? organizationIndustryMainCategoryReferenceDetails) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            MainCategoryName = organizationIndustryMainCategoryReferenceDetails is null
+                ? src.IndustryMainCategory.Name
+                : organizationIndustryMainCategoryReferenceDetails.Name
+        };
+
+    private IndustrySubCategory? MapTo(Shared.Database.Entities.IndustrySubCategory? src,
+        IndustryMainCategory? industryMainCategory)
+    {
+        if (src is null)
+        {
+            return null;
+        }
+
+        var industrySubCategory = new IndustrySubCategory
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            IndustryMainCategory = industryMainCategory ?? MapTo(src.IndustryMainCategory)
+        };
+
+        return industrySubCategory;
+    }
+
+    private IEnumerable<IndustrySubCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustrySubCategory> src,
+        IndustryMainCategory? industryMainCategory) =>
+        src.Select(item => MapTo(item, industryMainCategory))!;
+
+    private IndustryMainCategory MapTo(Shared.Database.Entities.IndustryMainCategory src)
+    {
+        var industryMainCategory = new IndustryMainCategory
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name
+        };
+
+        industryMainCategory.IndustrySubCategories = MapTo(src.IndustrySubCategories, industryMainCategory).ToList();
+
+        return industryMainCategory;
+    }
+
+    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) =>
+        src.Select(MapTo);
+
+    private static Identity MapTo(Shared.Database.Entities.Identity src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            EventRaisedAt = src.EventRaisedAt,
+            Email = src.Email,
+            EmailVerified = src.EmailVerified
+        };
+
+    private static IEnumerable<OrganizationOffering> MapTo(
+        IEnumerable<Shared.Database.Entities.OrganizationOffering> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static OrganizationOffering MapTo(Shared.Database.Entities.OrganizationOffering src,
+        Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Code = src.Code,
+            Start = src.Start,
+            End = src.End,
+            AutoRenew = src.AutoRenew,
+            UnitPrice = src.UnitPrice,
+            Organization = organization
+        };
+
+    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static Booking MapTo(Shared.Database.Entities.Booking src,
+        Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            EventRaisedAt = src.EventRaisedAt,
+            From = src.From,
+            To = src.To,
+            Organization = organization
+        };
+
+    private static IEnumerable<DailyMemberCountRecording> MapTo(
+        IEnumerable<Shared.Database.Entities.DailyMemberCountRecording> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static DailyMemberCountRecording MapTo(
+        Shared.Database.Entities.DailyMemberCountRecording src,
+        Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Organization = organization,
+            Date = src.Date,
+            Count = src.Count
+        };
+
+    private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static Location MapTo(Shared.Database.Entities.Location src,
+        Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            EventRaisedAt = src.EventRaisedAt,
+            Organization = organization
+        };
+
+    private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static Team MapTo(Shared.Database.Entities.Team src, Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            EventRaisedAt = src.EventRaisedAt,
+            Organization = organization
+        };
+
+    private IEnumerable<JoinInvitation> MapTo(
+        IEnumerable<Shared.Database.Entities.JoinInvitation> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private JoinInvitation MapTo(
+        Shared.Database.Entities.JoinInvitation src,
+        Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Email = src.Email,
+            Status = src.Status,
+            Organization = organization,
+            CreatedBy = MapTo(src.CreatedBy)!,
+            Invitee = MapTo(src.Invitee)
+        };
+
+    private Edge<OrganizationMember> MapTo(Edge<Shared.Database.Entities.OrganizationMember> src,
+        Shared.Models.Organization organization) =>
+        new(src.Cursor, MapTo(src.Node, organization));
+}

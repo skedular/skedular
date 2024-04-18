@@ -1,0 +1,125 @@
+networks:
+  unityhub_network:
+
+volumes:
+  unityhub_postgres_data:
+  unityhub_postgresold_data:
+  unityhub_zookeeper_data:
+  unityhub_zookeeper_log:
+  unityhub_kafka_data:
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    command: postgres -c 'max_connections=10000'
+    restart: unless-stopped
+    volumes:
+      - unityhub_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "8b974997c3c54b10a556f089377505d7"
+      POSTGRES_PASSWORD: "123456"
+    ports:
+      - "5432:5432"
+    profiles:
+      - core
+      - all
+      - gateway
+    networks:
+      unityhub_network:
+        aliases:
+          - postgres.localhost
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    restart: unless-stopped
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - unityhub_zookeeper_data:/var/lib/zookeeper/data
+      - unityhub_zookeeper_log:/var/lib/zookeeper/log
+    profiles:
+      - core
+      - all
+    networks:
+      - unityhub_network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    ports:
+      - "19092:19092"
+    volumes:
+      - unityhub_kafka_data:/var/lib/kafka/data
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_LISTENERS: "LISTENER_DOCKER_INTERNAL://kafka:9092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-kafka.localhost}:19092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "LISTENER_DOCKER_INTERNAL"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_LOG4J_ROOT_LOGLEVEL: "WARN"
+      KAFKA_TOOLS_LOG4J_LOGLEVEL: "ERROR"
+      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: "http://schema-registry.localhost:9100"
+    profiles:
+      - core
+      - all
+    networks:
+      unityhub_network:
+        aliases:
+          - kafka.localhost
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    restart: unless-stopped
+    depends_on:
+      - kafka
+    ports:
+      - "9100:9100"
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka.localhost:19092"
+      SCHEMA_REGISTRY_HOST_NAME: "schema-registry"
+      SCHEMA_REGISTRY_LISTENERS: "http://schema-registry:9100"
+    profiles:
+      - core
+      - all
+    networks:
+      unityhub_network:
+        aliases:
+          - schema-registry.localhost
+
+  kowl:
+    image: docker.redpanda.com/redpandadata/console:latest
+    restart: unless-stopped
+    depends_on:
+      - schema-registry
+      - kafka
+    environment:
+      KAFKA_BROKERS: "kafka.localhost:19092"
+      KAFKA_SCHEMAREGISTRY_URLS: http://schema-registry.localhost:9100
+      KAFKA_SCHEMAREGISTRY_ENABLED: "TRUE"
+    ports:
+      - 8888:8080
+    profiles:
+      - core
+      - all
+    networks:
+      - unityhub_network
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    profiles:
+      - core
+      - all
+    restart: unless-stopped
+    ports:
+      - 9411:9411
+    networks:
+      unityhub_network:
+        aliases:
+          - zipkin.localhost

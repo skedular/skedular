@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>12</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.10.48">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\gateway\apis\Gateway\Gateway.csproj"/>
+        <ProjectReference Include="..\..\billing\apis\Billing.Api\Billing.Api.csproj"/>
+        <ProjectReference Include="..\..\booking\apis\Booking.Api\Booking.Api.csproj"/>
+        <ProjectReference Include="..\..\customer\apis\Customer.Api\Customer.Api.csproj"/>
+        <ProjectReference Include="..\..\location\apis\Location.Api\Location.Api.csproj"/>
+        <ProjectReference Include="..\..\msteams\apis\MsTeams.Api\MsTeams.Api.csproj"/>
+        <ProjectReference Include="..\..\notification\apis\Notification.Api\Notification.Api.csproj"/>
+        <ProjectReference Include="..\..\organization\apis\Organization.Api\Organization.Api.csproj"/>
+        <ProjectReference Include="..\..\payment\apis\Payment.Api\Payment.Api.csproj"/>
+        <ProjectReference Include="..\..\slack\apis\Slack.Api\Slack.Api.csproj"/>
+        <ProjectReference Include="..\..\team\apis\Team.Api\Team.Api.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>

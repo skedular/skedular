@@ -1,0 +1,176 @@
+﻿using Api.Shared.Clients.Events.UnityHub.Location.V1.Key;
+using Api.Shared.Clients.Events.UnityHub.Location.V1.Value;
+using Confluent.Kafka;
+using Enterprise.Shared.Kafka.Consume;
+using Notification.Shared.Repositories;
+using Event = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event;
+using IMapper = Notification.Processors.Mappers.IMapper;
+using Location = Notification.Shared.Database.Entities.Location;
+using Type = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Type;
+
+namespace Notification.Processors.Subscribers;
+
+public class LocationSubscriber(
+    ILogger<LocationSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
+{
+    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    {
+        switch (@event.Metadata.Type)
+        {
+            case Type.LocationUpserted:
+                {
+                    var location = mapper.MapTo(@event);
+                    var existingLocation =
+                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
+                    if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
+                    {
+                        logger.LogInformation(
+                            "Ignoring Location event. Event timestamp is older that what is already processed.");
+
+                        return;
+                    }
+
+                    await HandleLocationUpsertedEventAsync(location, existingLocation, cancellationToken);
+                }
+                break;
+
+            case Type.LocationDeleted:
+                {
+                    var location = mapper.MapTo(@event);
+                    var existingLocation =
+                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
+                    if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
+                    {
+                        logger.LogInformation(
+                            "Ignoring Location event. Event timestamp is older that what is already processed.");
+
+                        return;
+                    }
+
+                    if (existingLocation is null)
+                    {
+                        return;
+                    }
+
+                    await HandleLocationDeletedEventAsync(existingLocation, cancellationToken);
+                }
+                break;
+
+            case Type.NotificationUpserted:
+                {
+                    if (@event.Data.NotificationAfterState.NotificationType !=
+                        NotificationType.InvitationToJoinLocation)
+                    {
+                        return;
+                    }
+
+                    var notification = mapper.MapToNotification(@event);
+                    var existingNotification =
+                        await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
+                            notification.SourceId,
+                            cancellationToken);
+                    if (existingNotification is not null &&
+                        existingNotification.EventRaisedAt > notification.EventRaisedAt)
+                    {
+                        logger.LogInformation(
+                            "Ignoring Notification event. Event timestamp is older that what is already processed.");
+
+                        return;
+                    }
+
+                    await HandleNotificationUpsertedEventAsync(notification, existingNotification, cancellationToken);
+                }
+                break;
+
+            case Type.NotificationDeleted:
+                {
+                    if (@event.Data.NotificationAfterState.NotificationType !=
+                        NotificationType.InvitationToJoinLocation)
+                    {
+                        return;
+                    }
+
+                    var notification = mapper.MapToNotification(@event);
+                    var existingNotification =
+                        await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
+                            notification.SourceId,
+                            cancellationToken);
+                    if (existingNotification is not null &&
+                        existingNotification.EventRaisedAt > notification.EventRaisedAt)
+                    {
+                        logger.LogInformation(
+                            "Ignoring Notification event. Event timestamp is older that what is already processed.");
+
+                        return;
+                    }
+
+                    if (existingNotification is null)
+                    {
+                        return;
+                    }
+
+                    await HandleNotificationDeletedEventAsync(existingNotification, cancellationToken);
+                }
+                break;
+
+            default:
+                return;
+        }
+    }
+
+    private async Task HandleLocationUpsertedEventAsync(
+        Shared.Models.Location location,
+        Location? existingLocation,
+        CancellationToken cancellationToken)
+    {
+        _ = existingLocation is null
+            ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location))
+            : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation));
+
+        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task HandleLocationDeletedEventAsync(Location existingLocation, CancellationToken cancellationToken)
+    {
+        _ = repositoryFactory.LocationRepository.Remove(existingLocation);
+        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task HandleNotificationUpsertedEventAsync(
+        Shared.Models.Notification notification,
+        Shared.Database.Entities.Notification? existingNotification,
+        CancellationToken cancellationToken)
+    {
+        var invitedBy = string.IsNullOrWhiteSpace(notification.InvitedBy?.Id)
+            ? null
+            : await repositoryFactory.CustomerRepository.UpsertNakedAsync(notification.InvitedBy.Id, cancellationToken);
+
+        var invitee = string.IsNullOrWhiteSpace(notification.Invitee?.Id)
+            ? null
+            : await repositoryFactory.CustomerRepository.UpsertNakedAsync(notification.Invitee.Id, cancellationToken);
+
+        var location = string.IsNullOrWhiteSpace(notification.Location?.Id)
+            ? null
+            : await repositoryFactory.LocationRepository.UpsertNakedAsync(notification.Location.Id, cancellationToken);
+
+        _ = existingNotification is null
+            ? repositoryFactory.NotificationRepository.Add(
+                mapper.MapToEntity(notification, invitedBy, invitee, null, location, null))
+            : repositoryFactory.NotificationRepository.Update(
+                mapper.MergeToEntity(notification, existingNotification, invitedBy, invitee, null, location, null));
+
+        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.NotificationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task HandleNotificationDeletedEventAsync(Shared.Database.Entities.Notification existingNotification,
+        CancellationToken cancellationToken)
+    {
+        _ = repositoryFactory.NotificationRepository.Remove(existingNotification);
+        await repositoryFactory.NotificationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+}

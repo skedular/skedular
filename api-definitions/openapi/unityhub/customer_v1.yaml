@@ -1,0 +1,64 @@
+openapi: 3.1.0
+info:
+  title: Customer API v1
+  description: "Customer REST API"
+  version: 1.0.0
+
+paths:
+  /customer/api/v1/{customerId}/republish:
+    put:
+      tags:
+        - customer
+      summary: republish customer
+      operationId: republish
+      parameters:
+        - in: path
+          name: customerId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: the status of customer event republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /customer/api/v1/republish-all:
+    put:
+      tags:
+        - customer
+      summary: republish all customers
+      operationId: republishAll
+
+      responses:
+        "200":
+          description: the status of customer republishing
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message

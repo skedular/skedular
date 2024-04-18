@@ -1,0 +1,21 @@
+schema {
+    query: Query
+}
+
+type Version {
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
+}
+
+type Query {
+    slackVersion: Version!
+    slackCustomerRecordSynced: Boolean!
+}
+
+enum SlackDeskBookingDetailBookingStatus {
+    AWAIT_ACCEPTANCE
+    ACCEPTED
+    DECLINED
+}

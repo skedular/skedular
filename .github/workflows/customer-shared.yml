@@ -1,0 +1,122 @@
+name: "customer-shared"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "v*"
+    paths:
+      - ".github/actions/**"
+      - ".github/workflows/lint.yml"
+      - ".github/workflows/customer-shared.yml"
+      - "shared/**"
+      - "customer/shared/**"
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - ".github/actions/**"
+      - ".github/workflows/lint.yml"
+      - ".github/workflows/customer-shared.yml"
+      - "shared/**"
+      - "customer/shared/**"
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: self-hosted
+    if: github.event.pull_request.draft == false
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+
+    steps:
+      - name: Checkout code with full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure AWS credentials - staging
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.STAGING_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Lint, Validate and Plan - staging
+        uses: "./.github/actions/lint-validate-infrastructure"
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          workingDirectory: ./customer/shared/infrastructure/workspaces/staging
+          componentName: "customer-shared"
+          environment: staging
+
+      - name: Configure AWS credentials - production
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.PRODUCTION_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Lint, Validate and Plan - production
+        uses: "./.github/actions/lint-validate-infrastructure"
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          workingDirectory: ./customer/shared/infrastructure/workspaces/production
+          componentName: "customer-shared"
+          environment: production
+
+  staging:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    name: "Deploy to staging"
+    runs-on: self-hosted
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+    environment: staging
+    needs:
+      - build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.STAGING_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Deploy Infrastructure
+        uses: "./.github/actions/deploy-infrastructure"
+        with:
+          workingDirectory: ./customer/shared/infrastructure/workspaces/staging
+
+  production:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    name: "Deploy to production"
+    runs-on: self-hosted
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    permissions: write-all
+    environment: production
+    needs:
+      - staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.PRODUCTION_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Deploy Infrastructure
+        uses: "./.github/actions/deploy-infrastructure"
+        with:
+          workingDirectory: ./customer/shared/infrastructure/workspaces/production

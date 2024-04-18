@@ -1,0 +1,53 @@
+using Booking.Shared.Database;
+using Booking.Shared.Database.Entities;
+using Enterprise.Shared;
+using Enterprise.Shared.Database;
+using Microsoft.EntityFrameworkCore;
+
+namespace Booking.Shared.Repositories;
+
+public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
+{
+    Task<ICollection<OrganizationMember>> GetByCustomerIdAsync(
+        string customerId,
+        CancellationToken cancellationToken);
+
+    OrganizationMember Add(OrganizationMember organizationMember);
+    OrganizationMember Update(OrganizationMember organizationMember);
+    void RemoveRange(ICollection<OrganizationMember> organizationMembers);
+}
+
+public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvider timeProvider)
+    : RepositoryBase<BookingDbContext, OrganizationMember>(dbContext), IOrganizationMemberRepository
+{
+    public async Task<ICollection<OrganizationMember>> GetByCustomerIdAsync(
+        string customerId,
+        CancellationToken cancellationToken) =>
+        await DbContext.OrganizationMember
+            .Where(query => !query.DeletedAt.HasValue &&
+                            query.Customer.Id == customerId &&
+                            !query.Organization.DeletedAt.HasValue)
+            .Include(query => query.Organization)
+            .ToListAsync(cancellationToken);
+
+    public OrganizationMember Add(OrganizationMember organizationMember)
+    {
+        var now = timeProvider.GetUtcNow();
+        organizationMember.CreatedAt = now;
+        return DbContext.OrganizationMember.Add(organizationMember).Entity;
+    }
+
+    public void RemoveRange(ICollection<OrganizationMember> organizationMembers)
+    {
+        var now = timeProvider.GetUtcNow();
+        organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
+        DbContext.OrganizationMember.RemoveRange(organizationMembers);
+    }
+
+    public OrganizationMember Update(OrganizationMember organizationMember)
+    {
+        var now = timeProvider.GetUtcNow();
+        organizationMember.ModifiedAt = now;
+        return DbContext.OrganizationMember.Update(organizationMember).Entity;
+    }
+}

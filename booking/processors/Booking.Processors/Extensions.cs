@@ -1,0 +1,9 @@
+using Booking.Processors.Mappers;
+
+namespace Booking.Processors;
+
+public static class Extensions
+{
+    public static IServiceCollection AddMappers(this IServiceCollection services) =>
+        services.AddSingleton<IMapper, Mapper>();
+}

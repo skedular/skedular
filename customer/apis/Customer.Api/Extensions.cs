@@ -1,0 +1,28 @@
+using Customer.Api.Mappers;
+using Customer.Api.Services;
+using Customer.Api.Services.Authorization;
+
+namespace Customer.Api;
+
+public static class Extensions
+{
+    public static IServiceCollection AddMappers(this IServiceCollection services) =>
+        services.AddSingleton<IMapper, Mapper>();
+
+    public static IServiceCollection AddServices(this IServiceCollection services) =>
+        services
+            .AddScoped<ICustomerHelperService, CustomerHelperService>()
+            .AddScoped<ICustomerService, CustomerService>()
+            .AddScoped<ICustomerSettingsService, CustomerSettingsService>()
+            .AddScoped<ICustomerOrganizationSettingsService, CustomerOrganizationSettingsService>()
+            .AddScoped<ICustomerLocationSettingsService, CustomerLocationSettingsService>()
+            .AddScoped<ICustomerTeamSettingsService, CustomerTeamSettingsService>()
+            .AddScoped<ICustomerLocationTagSettingsService, CustomerLocationTagSettingsService>()
+            .AddScoped<ICustomerDeskSettingsService, CustomerDeskSettingsService>()
+            .AddScoped<ICustomerFeedbackService, CustomerFeedbackService>()
+            .AddScoped<ICustomerDetailsService, CustomerDetailsService>()
+            .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
+            .AddScoped<ILocationAuthorizationService, LocationAuthorizationService>()
+            .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
+            .AddScoped<IWorkaroundService, WorkaroundService>();
+}

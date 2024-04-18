@@ -1,0 +1,15 @@
+schema {
+    query: Query
+}
+
+type Version {
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
+}
+
+type Query {
+    msteamsVersion: Version!
+    msteamsCustomerRecordSynced: Boolean!
+}

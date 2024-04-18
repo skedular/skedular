@@ -1,0 +1,54 @@
+using Enterprise.Shared.Pagination;
+
+namespace Booking.Shared.Models;
+
+// ReSharper disable InconsistentNaming
+public class BookingSearchCriteria(
+    DateTimeOffset? fromGT,
+    DateTimeOffset? fromGTE,
+    DateTimeOffset? fromLT,
+    DateTimeOffset? fromLTE,
+    DateTimeOffset? toGT,
+    DateTimeOffset? toGTE,
+    DateTimeOffset? toLT,
+    DateTimeOffset? toLTE,
+    string? notesContains,
+    string? nameContains,
+    bool? includeMineOnly,
+    ICollection<string> organizationIds,
+    ICollection<string> locationIds,
+    ICollection<string> teamIds)
+{
+    public DateTimeOffset? FromGT { get; } = fromGT;
+    public DateTimeOffset? FromGTE { get; } = fromGTE;
+    public DateTimeOffset? FromLT { get; } = fromLT;
+    public DateTimeOffset? FromLTE { get; } = fromLTE;
+    public DateTimeOffset? ToGT { get; } = toGT;
+    public DateTimeOffset? ToGTE { get; } = toGTE;
+    public DateTimeOffset? ToLT { get; } = toLT;
+    public DateTimeOffset? ToLTE { get; } = toLTE;
+    public string? NotesContains { get; } = notesContains;
+    public string? NameContains { get; } = nameContains;
+    public bool? IncludeMineOnly { get; } = includeMineOnly;
+    public string? CustomerId { get; set; }
+    public ICollection<string> OrganizationIds { get; set; } = organizationIds;
+    public ICollection<string> LocationIds { get; set; } = locationIds;
+    public ICollection<string> TeamIds { get; set; } = teamIds;
+}
+// ReSharper restore InconsistentNaming
+
+public record BookingOrder(OrderDirection Direction, BookingOrderField Field);
+
+public enum BookingOrderField
+{
+    From,
+    To,
+    Notes,
+    Name,
+    GivenName,
+    MiddleName,
+    FamilyName,
+    OrganizationName,
+    LocationName,
+    TeamName
+}

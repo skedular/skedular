@@ -1,0 +1,50 @@
+networks:
+  unityhubio_publicwebsite_network:
+
+volumes:
+  staging_publicwebsite:
+  prod_publicwebsite:
+  db:
+
+services:
+  mariadb:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${UNITYHUBIO_MARIADB_PASSWORD}
+    ports:
+      - 3306:3306
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - unityhubio_publicwebsite_network
+
+  staging_publicwebsite_wordpress:
+    image: wordpress:6
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: ${UNITYHUBIO_MARIADB_PASSWORD}
+      WORDPRESS_DB_NAME: staging_publicwebsite
+    volumes:
+      - staging_publicwebsite:/var/www/html
+    networks:
+      - unityhubio_publicwebsite_network
+
+  prod_publicwebsite_wordpress:
+    image: wordpress:6
+    restart: unless-stopped
+    ports:
+      - 8081:80
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: ${UNITYHUBIO_MARIADB_PASSWORD}
+      WORDPRESS_DB_NAME: prod_publicwebsite
+    volumes:
+      - prod_publicwebsite:/var/www/html
+    networks:
+      - unityhubio_publicwebsite_network

@@ -1,0 +1,30 @@
+name: "Deploy Infrastructure"
+description: "Deploy Infrastructure"
+
+inputs:
+  workingDirectory:
+    description: "Working Directory"
+    required: true
+  domainctlDockerFile:
+    description: "the path to the domainctl dockerfile"
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      shell: bash
+      id: init
+      working-directory: ${{ inputs.workingDirectory }}
+      run: |
+        terraform init
+
+    - name: Terraform Apply
+      shell: bash
+      working-directory: ${{ inputs.workingDirectory }}
+      run: |
+        TF_VAR_random_seed=$(uuidgen) terraform apply -auto-approve -input=false

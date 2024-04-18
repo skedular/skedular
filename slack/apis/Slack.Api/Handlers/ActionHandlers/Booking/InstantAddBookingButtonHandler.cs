@@ -1,0 +1,173 @@
+using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
+using Enterprise.Shared;
+using Enterprise.Shared.Exceptions;
+using Enterprise.Shared.Grpc;
+using Enterprise.Shared.Random;
+using Google.Protobuf.WellKnownTypes;
+using Slack.Api.Components;
+using Slack.Api.Mappers;
+using Slack.Api.Pages;
+using Slack.Api.Services;
+using Slack.Shared;
+using Slack.Shared.Configurations;
+using Slack.Shared.Constants;
+using Slack.Shared.Context;
+using Slack.Shared.Repositories;
+using SlackNet.Blocks;
+using SlackNet.Interaction;
+using SlackNet.WebApi;
+using BookingService = Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingService;
+
+namespace Slack.Api.Handlers.ActionHandlers.Booking;
+
+public class InstantAddBookingButtonHandler(
+    BookingConfiguration bookingConfiguration,
+    BookingService.BookingServiceClient bookingServiceClient,
+    IRepositoryFactory repositoryFactory,
+    IWorkspaceMemberService workspaceMemberService,
+    IBookingComponents bookingComponents,
+    IRandomHelper randomHelper,
+    IMapper mapper,
+    IPageNavigator pageNavigator) : IBlockActionHandler<ButtonAction>
+{
+    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        var cancellationToken = CancellationToken.None;
+
+        var workspaceEntity =
+            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        if (workspaceEntity is null)
+        {
+            throw new SlackWorkspaceNotFound();
+        }
+
+        var (workspaceMemberEntity, customerId) =
+            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+                workspaceEntity,
+                request.User.Id,
+                cancellationToken);
+
+        var workspace = mapper.MapTo(workspaceEntity);
+        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+        var context = InstantAddBookingContext.Deserialize(action.Value);
+
+        if (context.InitiationSource != InitiationSource.App)
+        {
+            if (string.IsNullOrEmpty(context.CustomerId))
+            {
+                context.CustomerId = customerId;
+            }
+
+            var getPaginatedBookingsInput = new GetPaginatedBookingsInput
+            {
+                After = string.Empty,
+                First = 1,
+                Before = string.Empty,
+                Last = -1,
+                Where = new BookingWhereInput
+                {
+                    FromGTE = context.From.ToTimestamp(),
+                    FromLTE = context.To.ToTimestamp(),
+                    IncludeMineOnly = true
+                }
+            };
+            getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
+            if (!string.IsNullOrWhiteSpace(context.LocationId))
+            {
+                getPaginatedBookingsInput.Where.LocationIds.Add(context.LocationId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(context.TeamId))
+            {
+                getPaginatedBookingsInput.Where.TeamIds.Add(context.TeamId);
+            }
+
+            getPaginatedBookingsInput.OrderBy.AddRange([
+                new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
+            ]);
+            var bookingConnection = await bookingServiceClient.GetPaginatedBookingsAsync(
+                getPaginatedBookingsInput,
+                bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+                cancellationToken: cancellationToken);
+
+            var slackApiClient = workspace.GetApiClient();
+            if (bookingConnection.TotalCount == 0)
+            {
+                var addInput = new AddInput
+                {
+                    Id = randomHelper.Generate(),
+                    From = context.From.ToTimestamp(),
+                    To = context.To.ToTimestamp(),
+                    CustomerId = customerId,
+                    OrganizationId = workspace.Organization.Id,
+                    LocationId = context.LocationId.ToSafeString(),
+                    TeamId = context.TeamId.ToSafeString()
+                };
+
+                var booking = mapper.MapTo(await bookingServiceClient.AddAsync(
+                    addInput,
+                    bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+                    cancellationToken: cancellationToken));
+                var blocks = new List<Block>
+                {
+                    new SectionBlock { Text = "Your booking on is now confirmed.".ToMarkdown() }
+                };
+                var bookingCardBlocks = bookingComponents.GetBookingCard(
+                    workspace,
+                    booking,
+                    Array.Empty<Shared.Models.Booking>(),
+                    booking.Customer,
+                    false,
+                    false,
+                    false,
+                    context.PageContext);
+                blocks.AddRange(bookingCardBlocks);
+                var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
+                await slackApiClient.Chat.PostEphemeral(workspaceMember.Id, message, cancellationToken);
+            }
+            else
+            {
+                var blocks = new List<Block> { new SectionBlock { Text = "Found a matching booking".ToMarkdown() } };
+                var booking = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).First();
+                var bookingCardBlocks = bookingComponents.GetBookingCard(
+                    workspace,
+                    booking,
+                    Array.Empty<Shared.Models.Booking>(),
+                    booking.Customer,
+                    false,
+                    false,
+                    false,
+                    context.PageContext);
+                blocks.AddRange(bookingCardBlocks);
+
+                var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
+                await slackApiClient.Chat.PostEphemeral(workspaceMember.Id, message, cancellationToken);
+            }
+        }
+        else
+        {
+            var addInput = new AddInput
+            {
+                Id = randomHelper.Generate(),
+                From = context.From.ToTimestamp(),
+                To = context.To.ToTimestamp(),
+                CustomerId = customerId,
+                OrganizationId = workspace.Organization.Id,
+                LocationId = context.LocationId.ToSafeString(),
+                TeamId = context.TeamId.ToSafeString()
+            };
+
+            await bookingServiceClient.AddAsync(
+                addInput,
+                bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+                cancellationToken: cancellationToken);
+
+            await pageNavigator.BackAsync(
+                workspace,
+                workspaceMember,
+                new CommonPageContext(context.PageContext),
+                request.View.Hash,
+                cancellationToken);
+        }
+    }
+}

@@ -1,0 +1,50 @@
+name: "Build and Test"
+description: "Build and Test"
+
+inputs:
+  dockerFilePath:
+    description: "Dockerfile path"
+    required: true
+  dockerBuildContextPath:
+    description: "docker build context"
+    required: true
+  runIntegrationTests:
+    description: "indicates whether should run integration tests"
+    required: false
+    default: "false"
+  integrationTestsRunScript:
+    description: "the path to integration tests running script"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set required environment variable
+      shell: bash
+      run: |
+        echo "unittest_container_tag=$(uuidgen)" >> $GITHUB_ENV
+        echo "unittest_extract_container_name=$(uuidgen)" >> $GITHUB_ENV
+
+    - name: Build and run Unit Tests
+      shell: bash
+      run: |
+        docker build \
+           --pull \
+           --target test \
+          --tag ${{ env.unittest_container_tag }} \
+          --file ${{ inputs.dockerFilePath }} \
+          ${{ inputs.dockerBuildContextPath }}
+
+    - name: Run interation tests
+      if: ${{ inputs.runIntegrationTests == 'true' }}
+      shell: bash
+      run: |
+        ${{ inputs.integrationTestsRunScript }}
+
+    - name: Extract coverage output
+      if: ${{ github.ref == 'refs/heads/main' }}
+      shell: bash
+      run: |
+        mkdir -p ./coverage/reports
+        docker create --name ${{ env.unittest_extract_container_name }} ${{ env.unittest_container_tag }}
+        docker cp ${{ env.unittest_extract_container_name }}:/coverage/reports/. "./coverage/reports/"

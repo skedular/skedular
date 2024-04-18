@@ -1,0 +1,45 @@
+syntax = "proto3";
+package notification;
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.Notification.V1.Value";
+
+enum Type {
+  NotificationUpserted = 0;
+}
+
+message Event {
+  Metadata metadata = 1;
+  Data data = 2;
+}
+
+message Metadata {
+  string id = 1;
+  string domainSource = 2;
+  string appSource = 3;
+  Type type = 4;
+  google.protobuf.Timestamp time = 5;
+  string correlationId = 6;
+}
+
+message Data { Notification afterState = 1; }
+
+enum NotificationType { Email = 0; }
+
+message Notification {
+  string id = 1;
+  google.protobuf.Timestamp deletedAt = 2;
+  NotificationType notificationType = 3;
+  EmailDetails email = 4;
+}
+
+message EmailDetails {
+  string id = 1;
+  string templateId = 2;
+  string templateData = 3;
+  string sender = 4;
+  repeated string toAddresses = 5;
+  repeated string ccAddresses = 6;
+  repeated string bccAddresses = 7;
+}

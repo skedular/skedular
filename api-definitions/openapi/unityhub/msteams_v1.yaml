@@ -1,0 +1,90 @@
+openapi: 3.1.0
+info:
+  title: MSTeams API v1
+  description: "MSTeams REST API"
+  version: 1.0.0
+
+paths:
+  /msteams/api/v1/bot-message:
+    post:
+      tags:
+        - msteams
+        - messaging
+      summary: process bot messages sent by Azure Bot system
+      operationId: processBotMessage
+
+      responses:
+        "200":
+          description: the message processing result
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /msteams/api/v1/generate-temporary-authorization-code:
+    post:
+      tags:
+        - msteams
+        - teant
+        - generate a temporary authorization code
+      summary: generate a temporary authorization code
+      operationId: generateTemporaryAuthorizationCode
+
+      responses:
+        "302":
+          description: redirect status response code
+
+  /msteams/api/v1/onboard-tenant:
+    get:
+      tags:
+        - msteams
+        - onboard a tenant
+      summary: OnBoard a tenant
+      operationId: onBoardTenant
+      parameters:
+        - in: query
+          name: tenant
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: admin_consent
+          schema:
+            type: boolean
+          required: true
+        - in: query
+          name: state
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: error
+          schema:
+            type: string
+        - in: query
+          name: error_description
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: on boarding response
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message

@@ -1,0 +1,748 @@
+using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Enterprise.Shared;
+using Enterprise.Shared.Database;
+using Enterprise.Shared.Exceptions;
+using Enterprise.Shared.Grpc;
+using Microsoft.EntityFrameworkCore;
+using Slack.Api.Components;
+using Slack.Api.Mappers;
+using Slack.Api.Services;
+using Slack.Shared;
+using Slack.Shared.Configurations;
+using Slack.Shared.Constants;
+using Slack.Shared.Context;
+using Slack.Shared.Repositories;
+using SlackNet;
+using SlackNet.AspNetCore;
+using SlackNet.Blocks;
+using SlackNet.Interaction;
+using Icons = Slack.Shared.Constants.Icons;
+using Option = SlackNet.Blocks.Option;
+using Button = SlackNet.Blocks.Button;
+using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService;
+using GetInput = Api.Shared.Services.Grpc.UnityHub.Location.V1.GetInput;
+using Location = Slack.Shared.Database.Entities.Location;
+using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using Workspace = Slack.Shared.Models.Workspace;
+using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
+
+namespace Slack.Api.Pages;
+
+public interface ILocationsPage
+{
+    Task RenderWithContextAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CommonPageContext commonPageContext,
+        string? hash,
+        CancellationToken cancellationToken);
+}
+
+public class LocationsPage(
+    LocationConfiguration locationConfiguration,
+    CustomerConfiguration customerConfiguration,
+    IRepositoryFactory repositoryFactory,
+    IWorkspaceMemberService workspaceMemberService,
+    ICommonComponents commonComponents,
+    CustomerService.CustomerServiceClient customerServiceClient,
+    LocationService.LocationServiceClient locationServiceClient,
+    IBookingsPage bookingsPage,
+    IZonesPage zonesPage,
+    IDesksPage desksPage,
+    ILocationComponents locationComponents,
+    ILocationService locationService,
+    IBookingService bookingService,
+    IDesksPageContextService desksPageContextService,
+    IMapper mapper,
+    IBookingsPageContextService bookingsPageContextService) : IBlockActionHandler<StaticSelectAction>,
+    IBlockActionHandler<ButtonAction>, ILocationsPage
+{
+    private const int LocationsPageSize = 5;
+    private const string LocationsCallback = "Locations";
+    private const string FirstPageLocations = "Locations_FirstPageLocations";
+    private const string PreviousPageLocations = "Locations_PreviousPageLocations";
+    private const string NextPageLocations = "Locations_NextPageLocations";
+    private const string LastPageLocations = "Locations_LastPageLocations";
+
+    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        var cancellationToken = CancellationToken.None;
+
+        var workspaceEntity =
+            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        if (workspaceEntity is null)
+        {
+            throw new SlackWorkspaceNotFound();
+        }
+
+        var (workspaceMemberEntity, _) =
+            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+                workspaceEntity,
+                request.User.Id,
+                cancellationToken);
+
+        var workspace = mapper.MapTo(workspaceEntity);
+        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+
+        switch (action.ActionId)
+        {
+            case FirstPageLocations:
+                await RenderFirstPageAsync(
+                    workspace,
+                    workspaceMember,
+                    CommonPageContext.Deserialize(action.Value),
+                    request.View.Hash,
+                    cancellationToken);
+                break;
+
+            case PreviousPageLocations:
+                await RenderPreviousPageAsync(
+                    workspace,
+                    workspaceMember,
+                    CommonPageContext.Deserialize(action.Value),
+                    request.View.Hash,
+                    cancellationToken);
+                break;
+
+            case NextPageLocations:
+                await RenderNextPageAsync(
+                    workspace,
+                    workspaceMember,
+                    CommonPageContext.Deserialize(action.Value),
+                    request.View.Hash,
+                    cancellationToken);
+                break;
+
+            case LastPageLocations:
+                await RenderLastPageAsync(
+                    workspace,
+                    workspaceMember,
+                    CommonPageContext.Deserialize(action.Value),
+                    request.View.Hash,
+                    cancellationToken);
+                break;
+
+            case LocationActionTypes.SetAsDefaultLocation:
+                await SetAsDefaultLocationAsync(
+                    workspace,
+                    workspaceMember,
+                    SetAsDefaultLocationContext.Deserialize(action.Value),
+                    request.View.Hash,
+                    cancellationToken);
+                break;
+
+            case LocationActionTypes.ClearDefaultLocation:
+                await ClearDefaultLocationAsync(
+                    workspace,
+                    workspaceMember,
+                    ClearDefaultLocationContext.Deserialize(action.Value),
+                    request.View.Hash,
+                    cancellationToken);
+                break;
+        }
+    }
+
+    public async Task Handle(StaticSelectAction action, BlockActionRequest request)
+    {
+        var cancellationToken = CancellationToken.None;
+
+        var workspaceEntity =
+            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        if (workspaceEntity is null)
+        {
+            throw new SlackWorkspaceNotFound();
+        }
+
+        var (workspaceMemberEntity, _) =
+            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+                workspaceEntity,
+                request.User.Id,
+                cancellationToken);
+
+        var workspace = mapper.MapTo(workspaceEntity);
+        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+
+        if (action.SelectedOption.Value.StartsWith(BookingActionTypes.Bookings))
+        {
+            var locationId = action.SelectedOption.Value[BookingActionTypes.Bookings.Length..];
+            var bookingPermissions =
+                await bookingService.GetLocationPermissionsAsync(locationId, workspaceMember, cancellationToken);
+            if (!bookingPermissions.CanViewBookings)
+            {
+                throw new Unauthorized();
+            }
+
+            var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
+            context.PageContext.BookingsPage = bookingsPageContextService.GetDefaultBookingsPageContext();
+            context.PageContext.BookingsPage.LocationIds = [locationId];
+            context.PageContext.PushCurrentPageToVisitedPages();
+
+            await bookingsPage.RenderWithContextAsync(
+                workspace,
+                workspaceMember,
+                new CommonPageContext(context.PageContext),
+                request.View.Hash,
+                cancellationToken);
+        }
+        else if (action.SelectedOption.Value.StartsWith(LocationActionTypes.EditLocation))
+        {
+            var locationId = action.SelectedOption.Value[LocationActionTypes.EditLocation.Length..];
+            var permissions = await locationService.GetPermissionsAsync(locationId, workspaceMember, cancellationToken);
+            if (!permissions.CanModify)
+            {
+                throw new Unauthorized();
+            }
+
+            var context = EditLocationContext.Deserialize(request.View.PrivateMetadata);
+            context.PageContext.PushCurrentPageToVisitedPages();
+            context.LocationId = locationId;
+
+            await OpenEditLocationDialogAsync(
+                workspace,
+                workspaceMember,
+                request.TriggerId,
+                context,
+                cancellationToken);
+        }
+        else if (action.SelectedOption.Value.StartsWith(LocationActionTypes.RemoveLocation))
+        {
+            var locationId = action.SelectedOption.Value[LocationActionTypes.RemoveLocation.Length..];
+            var permissions = await locationService.GetPermissionsAsync(locationId, workspaceMember, cancellationToken);
+            if (!permissions.CanDelete)
+            {
+                throw new Unauthorized();
+            }
+
+            var context = RemoveLocationContext.Deserialize(request.View.PrivateMetadata);
+            context.PageContext.PushCurrentPageToVisitedPages();
+            context.LocationId = locationId;
+
+            await OpenRemoveLocationDialogAsync(
+                workspace,
+                workspaceMember,
+                request.TriggerId,
+                context,
+                cancellationToken);
+        }
+        else if (action.SelectedOption.Value.StartsWith(ZoneActionTypes.Zones))
+        {
+            var locationId = action.SelectedOption.Value[ZoneActionTypes.Zones.Length..];
+            var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
+            context.PageContext.ZonesPage = new Shared.Context.ZonesPage(new PaginationContext(), locationId);
+            context.PageContext.PushCurrentPageToVisitedPages();
+
+            await zonesPage.RenderWithContextAsync(
+                workspace,
+                workspaceMember,
+                new CommonPageContext(context.PageContext),
+                request.View.Hash,
+                cancellationToken);
+        }
+        else if (action.SelectedOption.Value.StartsWith(DeskActionTypes.Desks))
+        {
+            var locationId = action.SelectedOption.Value[DeskActionTypes.Desks.Length..];
+            var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
+            context.PageContext.DesksPage = desksPageContextService.GetDefaultDesksPageContext(locationId);
+            context.PageContext.PushCurrentPageToVisitedPages();
+
+            await desksPage.RenderWithContextAsync(
+                workspace,
+                workspaceMember,
+                new CommonPageContext(context.PageContext),
+                request.View.Hash,
+                cancellationToken);
+        }
+    }
+
+    public async Task RenderWithContextAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CommonPageContext commonPageContext,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.LocationsPage);
+        if (commonPageContext.PageContext.LocationsPage.LocationsPagination.IsEmpty())
+        {
+            await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
+        }
+        else
+        {
+            await RenderInternalAsync(
+                workspace,
+                workspaceMember,
+                commonPageContext.PageContext.LocationsPage.LocationsPagination.CurrentAfter,
+                commonPageContext.PageContext.LocationsPage.LocationsPagination.CurrentFirst,
+                commonPageContext.PageContext.LocationsPage.LocationsPagination.CurrentBefore,
+                commonPageContext.PageContext.LocationsPage.LocationsPagination.CurrentLast,
+                commonPageContext,
+                hash,
+                cancellationToken);
+        }
+    }
+
+    private async Task RenderFirstPageAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CommonPageContext commonPageContext,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.LocationsPage);
+        await RenderInternalAsync(
+            workspace,
+            workspaceMember,
+            null,
+            LocationsPageSize,
+            null,
+            null,
+            commonPageContext,
+            hash,
+            cancellationToken);
+    }
+
+    private async Task RenderPreviousPageAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CommonPageContext commonPageContext,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.LocationsPage);
+        await RenderInternalAsync(
+            workspace,
+            workspaceMember,
+            null,
+            null,
+            commonPageContext.PageContext.LocationsPage.LocationsPagination.Before,
+            LocationsPageSize,
+            commonPageContext,
+            hash,
+            cancellationToken);
+    }
+
+    private async Task RenderNextPageAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CommonPageContext commonPageContext,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.LocationsPage);
+        await RenderInternalAsync(
+            workspace,
+            workspaceMember,
+            commonPageContext.PageContext.LocationsPage.LocationsPagination.After,
+            LocationsPageSize,
+            null,
+            null,
+            commonPageContext,
+            hash,
+            cancellationToken);
+    }
+
+    private async Task RenderLastPageAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CommonPageContext commonPageContext,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.LocationsPage);
+        await RenderInternalAsync(
+            workspace,
+            workspaceMember,
+            null,
+            null,
+            null,
+            LocationsPageSize,
+            commonPageContext,
+            hash,
+            cancellationToken);
+    }
+
+    private async Task RenderInternalAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        CommonPageContext commonPageContext,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.LocationsPage);
+
+        commonPageContext.PageContext.CurrentPageType = PageType.Locations;
+
+        var locationConnection = await GetPaginatedLocationsAsync(
+            workspace,
+            workspaceMember,
+            after,
+            first,
+            before,
+            last,
+            commonPageContext,
+            cancellationToken);
+        var locations = locationConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
+        var locationIds = locations.Select(item => item.Id).ToList();
+        var locationsWithChannel = await repositoryFactory.LocationRepository
+            .Query(new Specification<Location>
+                {
+                    Criteria = query => !query.DeletedAt.HasValue && locationIds.Contains(query.Id)
+                }
+                .AddInclude(query => query.DailyUpdateChannel))
+            .ToListAsync(cancellationToken);
+        locations = locations.Select(item =>
+        {
+            var matchedLocation =
+                locationsWithChannel.FirstOrDefault(replicatedLocation => replicatedLocation.Id == item.Id);
+            if (matchedLocation is not null)
+            {
+                item.DailyUpdateChannel = mapper.MapTo(matchedLocation.DailyUpdateChannel);
+            }
+
+            return item;
+        }).ToList();
+
+        var asyncBlocks = await Task.WhenAll([
+            GetToolbarAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
+            locationComponents.GetLocationCardsAsync(
+                workspaceMember,
+                locations,
+                commonPageContext.PageContext,
+                cancellationToken)
+        ]);
+
+        ICollection<Block>[] blocks =
+        [
+            GetTitle(),
+            asyncBlocks[0],
+            GetLocationsSearchCriteriaAndPaginationBlocks(locationConnection, commonPageContext.PageContext),
+            asyncBlocks[1]
+        ];
+
+        var slackApiClient = workspace.GetApiClient();
+        await slackApiClient.Views.Publish(
+            workspaceMember.Id,
+            new HomeViewDefinition
+            {
+                CallbackId = LocationsCallback,
+                Blocks = blocks
+                    .SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()]))
+                    .SkipLast(1)
+                    .ToList(),
+                PrivateMetadata = commonPageContext.Serialize()
+            },
+            hash);
+    }
+
+    public static void RegisterHandlers(AspNetSlackServiceConfiguration options) =>
+        options
+            .RegisterBlockActionHandler<StaticSelectAction, LocationsPage>(LocationActionTypes.ActionsMenu)
+            .RegisterBlockActionHandler<ButtonAction, LocationsPage>(FirstPageLocations)
+            .RegisterBlockActionHandler<ButtonAction, LocationsPage>(LastPageLocations)
+            .RegisterBlockActionHandler<ButtonAction, LocationsPage>(NextPageLocations)
+            .RegisterBlockActionHandler<ButtonAction, LocationsPage>(PreviousPageLocations)
+            .RegisterBlockActionHandler<ButtonAction, LocationsPage>(LocationActionTypes.SetAsDefaultLocation)
+            .RegisterBlockActionHandler<ButtonAction, LocationsPage>(LocationActionTypes.ClearDefaultLocation);
+
+    private static ICollection<Block> GetTitle() =>
+    [
+        new SectionBlock { Text = "*Locations*".ToMarkdown() }
+    ];
+
+    private async Task<ICollection<Block>> GetToolbarAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        PageContext pageContext,
+        CancellationToken cancellationToken)
+    {
+        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
+        var addLocationButton =
+            await locationComponents.GetAddLocationButtonAsync(workspace, workspaceMember, pageContext,
+                cancellationToken);
+        var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
+
+        return
+        [
+            new ActionsBlock
+            {
+                Elements = new List<IActionElement>()
+                    .Concat(homeAndBackButtons)
+                    .Concat(addLocationButton)
+                    .Concat(feedbackButton)
+                    .ToList()
+            }
+        ];
+    }
+
+    private async Task<LocationConnection> GetPaginatedLocationsAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        CommonPageContext commonPageContext,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.LocationsPage);
+        var getPaginatedLocationsInput = new GetPaginatedLocationsInput
+        {
+            After = after.ToSafeString(),
+            First = first.ToNullInt(),
+            Before = before.ToSafeString(),
+            Last = last.ToNullInt(),
+            Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
+        };
+
+        getPaginatedLocationsInput.OrderBy.AddRange([
+            new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
+        ]);
+
+        return await locationServiceClient.GetPaginatedLocationsAsync(
+            getPaginatedLocationsInput,
+            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+            cancellationToken: cancellationToken);
+    }
+
+    private static List<Block> GetLocationsSearchCriteriaAndPaginationBlocks(
+        LocationConnection locationConnection,
+        PageContext pageContext)
+    {
+        if (locationConnection.Edges.Count == 0)
+        {
+            return [new SectionBlock { Text = "No location found".ToMarkdown() }];
+        }
+
+        var totalLocationsCount =
+            new SectionBlock { Text = $"Total locations: {locationConnection.TotalCount}".ToMarkdown() };
+        if (locationConnection.TotalCount <= LocationsPageSize)
+        {
+            return [totalLocationsCount];
+        }
+
+        pageContext = pageContext.Clone();
+        ArgumentNullException.ThrowIfNull(pageContext.LocationsPage);
+
+        var paginationButtons = new List<IActionElement>();
+        if (locationConnection.PageInfo.HasPreviousPage)
+        {
+            pageContext.LocationsPage.LocationsPagination.First = LocationsPageSize;
+            pageContext.LocationsPage.LocationsPagination.After = null;
+            pageContext.LocationsPage.LocationsPagination.Before = null;
+            pageContext.LocationsPage.LocationsPagination.Last = null;
+
+            paginationButtons.Add(new Button
+            {
+                ActionId = FirstPageLocations,
+                Text = Icons.FirstPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
+            });
+
+            pageContext.LocationsPage.LocationsPagination.First = null;
+            pageContext.LocationsPage.LocationsPagination.After = null;
+            pageContext.LocationsPage.LocationsPagination.Before = locationConnection.PageInfo.StartCursor;
+            pageContext.LocationsPage.LocationsPagination.Last = LocationsPageSize;
+
+            paginationButtons.Add(new Button
+            {
+                ActionId = PreviousPageLocations,
+                Text = Icons.PreviousPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
+            });
+        }
+
+        if (locationConnection.PageInfo.HasNextPage)
+        {
+            pageContext.LocationsPage.LocationsPagination.First = LocationsPageSize;
+            pageContext.LocationsPage.LocationsPagination.After = locationConnection.PageInfo.EndCursor;
+            pageContext.LocationsPage.LocationsPagination.Before = null;
+            pageContext.LocationsPage.LocationsPagination.Last = null;
+
+            paginationButtons.Add(new Button
+            {
+                ActionId = NextPageLocations,
+                Text = Icons.NextPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
+            });
+
+            pageContext.LocationsPage.LocationsPagination.First = null;
+            pageContext.LocationsPage.LocationsPagination.After = null;
+            pageContext.LocationsPage.LocationsPagination.Before = null;
+            pageContext.LocationsPage.LocationsPagination.Last = LocationsPageSize;
+
+            paginationButtons.Add(new Button
+            {
+                ActionId = LastPageLocations,
+                Text = Icons.LastPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize()
+            });
+        }
+
+        var paginationActionBlock = new ActionsBlock { Elements = paginationButtons };
+
+        return [totalLocationsCount, paginationActionBlock];
+    }
+
+    private async Task OpenEditLocationDialogAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        string triggerId,
+        EditLocationContext context,
+        CancellationToken cancellationToken)
+    {
+        var location = await locationServiceClient.GetAsync(
+            new GetInput { Id = context.LocationId },
+            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+            cancellationToken: cancellationToken);
+
+        var name = new InputBlock
+        {
+            BlockId = LocationActionTypes.Name,
+            Label = "Name".ToPlainText(),
+            Element = new PlainTextInput
+            {
+                ActionId = LocationActionTypes.Name, InitialValue = location.Name.ToSafeString()
+            },
+            Optional = false
+        };
+
+        var about = new InputBlock
+        {
+            BlockId = LocationActionTypes.About,
+            Label = "About".ToPlainText(),
+            Element = new PlainTextInput
+            {
+                ActionId = LocationActionTypes.About,
+                InitialValue = location.About.ToSafeString(),
+                Multiline = true
+            },
+            Optional = true
+        };
+
+        var timezone = new InputBlock
+        {
+            BlockId = OptionLoaderKeys.TimezoneKey,
+            Label = "Timezone".ToPlainText(),
+            Element = new ExternalSelectMenu
+            {
+                ActionId = OptionLoaderKeys.TimezoneKey,
+                InitialOption =
+                    string.IsNullOrWhiteSpace(location.Timezone)
+                        ? null
+                        : new Option { Text = location.Timezone.ToOptionText(), Value = location.Timezone },
+                MinQueryLength = 3
+            },
+            Optional = false
+        };
+
+        var locationEntity = await repositoryFactory.LocationRepository
+            .Query(new Specification<Location> { Criteria = query => query.Id == location.Id }
+                .AddInclude(query => query.DailyUpdateChannel))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        var updateChannel = new InputBlock
+        {
+            BlockId = LocationActionTypes.SlackUpdateChannel,
+            Label = "Slack update channel".ToPlainText(),
+            Element = new ChannelSelectMenu
+            {
+                ActionId = LocationActionTypes.SlackUpdateChannel,
+                InitialChannel = locationEntity?.DailyUpdateChannel?.Id
+            },
+            Optional = true
+        };
+
+        var slackApiClient = workspace.GetApiClient();
+        await slackApiClient.Views.Open(
+            triggerId,
+            new ModalViewDefinition
+            {
+                CallbackId = LocationCallbackTypes.EditLocation,
+                Title = "Edit Location",
+                Close = "Cancel",
+                Submit = "Save",
+                Blocks =
+                [
+                    name, about, timezone, updateChannel
+                ],
+                PrivateMetadata = context.Serialize()
+            });
+    }
+
+    private async Task OpenRemoveLocationDialogAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        string triggerId,
+        RemoveLocationContext context,
+        CancellationToken cancellationToken)
+    {
+        var location = await locationServiceClient.GetAsync(
+            new GetInput { Id = context.LocationId },
+            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+            cancellationToken: cancellationToken);
+
+        var confirmationMessage = new SectionBlock
+        {
+            Text = $"Are you sure you want to remove this location {location.Name.ToSafeString()}?"
+        };
+
+        var slackApiClient = workspace.GetApiClient();
+        await slackApiClient.Views.Open(
+            triggerId,
+            new ModalViewDefinition
+            {
+                CallbackId = LocationCallbackTypes.RemoveLocation,
+                Title = "Remove Location",
+                Close = "No",
+                Submit = "Yes",
+                Blocks =
+                    [confirmationMessage],
+                PrivateMetadata = context.Serialize()
+            });
+    }
+
+    private async Task SetAsDefaultLocationAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        SetAsDefaultLocationContext context,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        await customerServiceClient.AddDefaultLocationAsync(
+            new AddDefaultLocationInput { LocationId = context.LocationId },
+            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+            cancellationToken: cancellationToken);
+
+        await RenderWithContextAsync(
+            workspace,
+            workspaceMember,
+            new CommonPageContext(context.PageContext),
+            hash,
+            cancellationToken);
+    }
+
+    private async Task ClearDefaultLocationAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        ClearDefaultLocationContext context,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        await customerServiceClient.RemoveDefaultLocationAsync(
+            new RemoveDefaultLocationInput { LocationId = context.LocationId },
+            customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+            cancellationToken: cancellationToken);
+
+        await RenderWithContextAsync(
+            workspace,
+            workspaceMember,
+            new CommonPageContext(context.PageContext),
+            hash,
+            cancellationToken);
+    }
+}

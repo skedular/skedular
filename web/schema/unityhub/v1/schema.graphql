@@ -1,0 +1,1273 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+type Query {
+  billingVersion: Version!
+  billingCustomerRecordSynced: Boolean!
+  organizationCurrentOfferingCharges(organizationId: String!): [OrganizationCurrentOfferingChargesDetails!]!
+  organizationBillingInfo(organizationId: String!): OrganizationBillingInfo
+  bookingVersion: Version!
+  bookingCustomerRecordSynced: Boolean!
+  booking(id: String!): BookingDetails
+  bookings(after: String, first: Int, before: String, last: Int, where: BookingWhereInputV2!, orderBy: [BookingOrderInput!]): BookingConnection!
+  allBookings(where: BookingWhereInputV2!): [BookingDetails!]!
+  availableLocationDesks(locationId: String!, date: DateTime!, deskIdsToInclude: [String!]!): [BookingDeskDetails!]!
+  organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions!
+  locationBookingPermissions(locationId: String!): LocationBookingPermissions!
+  teamBookingPermissions(teamId: String!): TeamBookingPermissions!
+  customerVersion: Version!
+  me: CustomerDetails
+  customersByDefaultLocation(after: String, first: Int, before: String, last: Int, where: CustomerWhereInputV2!, orderBy: [CustomerOrderInput!]): CustomerConnection!
+  locationVersion: Version!
+  locationCustomerRecordSynced: Boolean!
+  locationMemberMembershipTypes: [LocationMemberMembershipType!]!
+  location(id: String!): LocationDetails
+  locations(after: String, first: Int, before: String, last: Int, where: LocationWhereInputV2!, orderBy: [LocationOrderInput!]): LocationConnection!
+  myLocations(organizationId: String): [LocationDetails!]!
+  paginatedLocationMembers(after: String, first: Int, before: String, last: Int, where: LocationMemberWhereInputV2!, orderBy: [LocationMemberOrderInput!]): LocationMemberConnection!
+  paginatedLocationTags(after: String, first: Int, before: String, last: Int, where: LocationTagWhereInputV2!, orderBy: [LocationTagOrderInput!]): LocationTagConnection!
+  paginatedLocationDesks(after: String, first: Int, before: String, last: Int, where: DeskWhereInputV2!, orderBy: [DeskOrderInput!]): DeskConnection!
+  locationAnalytics(locationId: String!, from: DateTime!, until: DateTime!): LocationAnalytics!
+  msteamsVersion: Version!
+  msteamsCustomerRecordSynced: Boolean!
+  notificationVersion: Version!
+  notificationCustomerRecordSynced: Boolean!
+  myNotifications(after: String, first: Int, before: String, last: Int, orderBy: [NotificationOrderInput!]): NotificationConnection!
+  organizationVersion: Version!
+  organizationCustomerRecordSynced: Boolean!
+  activeOrganizationTermsOfUse: OrganizationTermsOfUse!
+  organizationMemberMembershipTypes: [OrganizationMemberMembershipType!]!
+  organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]!
+  organization(id: String!): OrganizationDetails
+  organizations(after: String, first: Int, before: String, last: Int, where: OrganizationWhereInputV2!, orderBy: [OrganizationOrderInput!]): OrganizationConnection!
+  myOrganizations: [OrganizationDetails!]!
+  paginatedOrganizationMembers(after: String, first: Int, before: String, last: Int, where: OrganizationMemberWhereInputV2!, orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection!
+  organizationAnalytics(organizationId: String!, from: DateTime!, until: DateTime!): OrganizationAnalytics!
+  paymentVersion: Version!
+  paymentCustomerRecordSynced: Boolean!
+  organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!]!
+  slackVersion: Version!
+  slackCustomerRecordSynced: Boolean!
+  teamVersion: Version!
+  teamCustomerRecordSynced: Boolean!
+  teamMemberMembershipTypes: [TeamMemberMembershipType!]!
+  team(id: String!): TeamDetails
+  teams(after: String, first: Int, before: String, last: Int, where: TeamWhereInputV2!, orderBy: [TeamOrderInput!]): TeamConnection!
+  myTeams(organizationId: String): [TeamDetails!]!
+  paginatedTeamMembers(after: String, first: Int, before: String, last: Int, where: TeamMemberWhereInputV2!, orderBy: [TeamMemberOrderInput!]): TeamMemberConnection!
+}
+type Mutation {
+  setOrganizationBillingInfo(input: SetOrganizationBillingInfoInput!): OrganizationBillingInfoPayload
+  addBooking(input: AddBookingInput!): BookingPayload
+  updateBooking(input: UpdateBookingInput!): BookingPayload
+  deleteBooking(input: DeleteBookingInput!): BookingPayload
+  completeOrganizationOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload
+  completeLocationOnboarding(input: CompleteLocationOnboardingInput!): CustomerPayload
+  completeDefaultOrganizationOnboarding(input: CompleteDefaultOrganizationOnboardingInput!): CustomerPayload
+  completeDefaultLocationOnboarding(input: CompleteDefaultLocationOnboardingInput!): CustomerPayload
+  completePreferredZoneOnboarding(input: CompletePreferredZoneOnboardingInput!): CustomerPayload
+  completePreferredDeskOnboarding(input: CompletePreferredDeskOnboardingInput!): CustomerPayload
+  addCustomerDefaultLocation(input: AddCustomerDefaultLocationInput!): CustomerPayload
+  removeCustomerDefaultLocation(input: RemoveCustomerDefaultLocationInput!): CustomerPayload
+  addCustomerDefaultTeam(input: AddCustomerDefaultTeamInput!): CustomerPayload
+  removeCustomerDefaultTeam(input: RemoveCustomerDefaultTeamInput!): CustomerPayload
+  setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload
+  clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload
+  addCustomerDefaultLocationTag(input: AddCustomerDefaultLocationTagInput!): CustomerPayload
+  removeCustomerDefaultLocationTag(input: RemoveCustomerDefaultLocationTagInput!): CustomerPayload
+  addCustomerDefaultDesk(input: AddCustomerDefaultDeskInput!): CustomerPayload
+  removeCustomerDefaultDesk(input: RemoveCustomerDefaultDeskInput!): CustomerPayload
+  submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload
+  updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload
+  addLocation(input: AddLocationInput!): LocationPayload
+  updateLocation(input: UpdateLocationInput!): LocationPayload
+  deleteLocation(input: DeleteLocationInput!): LocationPayload
+  addDesk(input: AddDeskInput!): DeskPayload
+  bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload
+  updateDesk(input: UpdateDeskInput!): DeskPayload
+  deleteDesk(input: DeleteDeskInput!): DeskPayload
+  addLocationTag(input: AddLocationTagInput!): LocationTagPayload
+  updateLocationTag(input: UpdateLocationTagInput!): LocationTagPayload
+  deleteLocationTag(input: DeleteLocationTagInput!): LocationTagPayload
+  changeLocationMemberOwnershipType(input: ChangeLocationMemberOwnershipTypeInput!): LocationMemberDetailsPayload
+  inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload
+  acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload
+  rejectInvitationToJoinLocation(input: RejectInvitationToJoinLocationInput!): RejectInvitationToJoinLocationPayload
+  cancelInvitationToJoinLocation(input: CancelInvitationToJoinLocationInput!): CancelInvitationToJoinLocationPayload
+  addOrganization(input: AddOrganizationInput!): OrganizationPayload
+  updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload
+  deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload
+  updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload
+  cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload
+  changeOrganizationMemberOwnershipType(input: ChangeOrganizationMemberOwnershipTypeInput!): OrganizationMemberDetailsPayload
+  inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InviteCustomersToJoinOrganizationPayload
+  acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): AcceptInvitationToJoinOrganizationPayload
+  rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): RejectInvitationToJoinOrganizationPayload
+  cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): CancelInvitationToJoinOrganizationPayload
+  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse
+  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodResponse
+  addTeam(input: AddTeamInput!): TeamPayload
+  updateTeam(input: UpdateTeamInput!): TeamPayload
+  deleteTeam(input: DeleteTeamInput!): TeamPayload
+  changeTeamMemberOwnershipType(input: ChangeTeamMemberOwnershipTypeInput!): TeamMemberDetailsPayload
+  inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload
+  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload
+  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): RejectInvitationToJoinTeamPayload
+  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): CancelInvitationToJoinTeamPayload
+}
+type OrganizationBillingInfo {
+  organizationId: ID!
+  email: String
+  addressLine1: String
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String
+  country: String
+}
+type OrganizationBillingInfoPayload {
+  clientMutationId: String
+  organizationBillingInfo: OrganizationBillingInfo!
+}
+type OrganizationCurrentOfferingChargesDetails {
+  offeringName: String!
+  start: DateTime!
+  end: DateTime!
+  totalNumberOfActiveCustomers: Int!
+  unitPrice: Int!
+  totalCost: Int!
+}
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+type BookingConnection {
+  pageInfo: PageInfo!
+  edges: [BookingEdge!]!
+  totalCount: Int
+}
+type BookingCustomerDetails {
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+}
+type BookingDeskDetails {
+  uniqueId: ID!
+  name: String!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+  locationTags: [BookingLocationTagDetails!]!
+}
+type BookingDetails implements Node {
+  id: ID!
+  from: DateTime!
+  to: DateTime!
+  notes: String
+  customer: BookingCustomerDetails!
+  organization: BookingOrganizationDetails
+  location: BookingLocationDetails
+  desks: [BookingDeskDetails!]!
+  team: BookingTeamDetails
+}
+type BookingEdge {
+  node: BookingDetails!
+  cursor: String!
+}
+type BookingLocationDetails {
+  uniqueId: ID!
+  name: String!
+}
+type BookingLocationTagDetails {
+  uniqueId: ID!
+  name: String!
+  tagType: String
+}
+type BookingOrganizationDetails {
+  uniqueId: ID!
+  name: String!
+}
+type BookingPayload {
+  clientMutationId: String
+  booking: BookingDetails!
+}
+type BookingTeamDetails {
+  uniqueId: ID!
+  name: String!
+}
+type LocationBookingPermissions {
+  canAddBooking: Boolean!
+  canUpdateBooking: Boolean!
+  canDeleteBooking: Boolean!
+  canAddBookingOnBehalf: Boolean!
+  canUpdateBookingOnBehalf: Boolean!
+  canDeleteBookingOnBehalf: Boolean!
+}
+type OrganizationBookingPermissions {
+  canAddBooking: Boolean!
+  canUpdateBooking: Boolean!
+  canDeleteBooking: Boolean!
+  canAddBookingOnBehalf: Boolean!
+  canUpdateBookingOnBehalf: Boolean!
+  canDeleteBookingOnBehalf: Boolean!
+}
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+type TeamBookingPermissions {
+  canAddBooking: Boolean!
+  canUpdateBooking: Boolean!
+  canDeleteBooking: Boolean!
+  canAddBookingOnBehalf: Boolean!
+  canUpdateBookingOnBehalf: Boolean!
+  canDeleteBookingOnBehalf: Boolean!
+}
+type CustomerConnection {
+  pageInfo: PageInfo!
+  edges: [CustomerEdge!]!
+  totalCount: Int
+}
+type CustomerDeskDetails {
+  uniqueId: ID!
+  name: String
+}
+type CustomerDetails implements Node {
+  id: ID!
+  createdAt: DateTime!
+  email: CustomerEmail
+  designation: String
+  title: String
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+  timezone: String
+  locale: String
+  isOrganizationOnboardingDone: Boolean!
+  isLocationOnboardingDone: Boolean!
+  isDefaultOrganizationOnboardingDone: Boolean!
+  isDefaultLocationOnboardingDone: Boolean!
+  isPreferredZoneOnboardingDone: Boolean!
+  isPreferredDeskOnboardingDone: Boolean!
+  defaultLocations: [CustomerLocationDetails!]!
+  defaultTeams: [CustomerTeamDetails!]!
+  defaultOrganization: CustomerOrganizationDetails
+  preferredZones: [CustomerLocationTagDetails!]!
+  preferredDesks: [CustomerDeskDetails!]!
+}
+type CustomerEdge {
+  node: CustomerDetails!
+  cursor: String!
+}
+type CustomerEmail implements Node {
+  id: ID!
+  email: String!
+  verified: Boolean!
+}
+type CustomerLocationDetails {
+  uniqueId: ID!
+  name: String
+  organization: CustomerOrganizationDetails
+}
+type CustomerLocationTagDetails {
+  uniqueId: ID!
+  name: String
+}
+type CustomerOrganizationDetails {
+  uniqueId: ID!
+  name: String
+  logoUrl: String
+}
+type CustomerPayload {
+  clientMutationId: String
+  customer: CustomerDetails!
+}
+type CustomerTeamDetails {
+  uniqueId: ID!
+  name: String
+  organization: CustomerOrganizationDetails
+}
+type SubmitCustomerFeedbackPayload {
+  clientMutationId: String
+  id: ID!
+}
+type AcceptInvitationToJoinLocationPayload {
+  clientMutationId: String
+}
+type BulkDeskPayload {
+  clientMutationId: String
+  desks: [DeskDetails!]!
+}
+type CancelInvitationToJoinLocationPayload {
+  clientMutationId: String
+}
+type DeskConnection {
+  pageInfo: PageInfo!
+  edges: [DeskEdge!]!
+  totalCount: Int
+}
+type DeskDetails implements Node {
+  id: ID!
+  name: String!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+  locationTags: [LocationTagDetails!]!
+}
+type DeskEdge {
+  node: DeskDetails!
+  cursor: String!
+}
+type DeskPayload {
+  clientMutationId: String
+  desk: DeskDetails!
+}
+type InviteCustomersToJoinLocationPayload {
+  clientMutationId: String
+}
+type LocationAnalytics {
+  desksOccupancyPercentage: [LocationDesksOccupancyPercentage!]!
+  dailyBookingsTotals: [LocationDailyBookingsTotal!]!
+}
+type LocationConnection {
+  pageInfo: PageInfo!
+  edges: [LocationEdge!]!
+  totalCount: Int
+}
+type LocationCustomerDetails {
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+}
+type LocationDailyBookingsTotal {
+  date: DateTime!
+  total: Int!
+}
+type LocationDesksOccupancyPercentage {
+  date: DateTime!
+  percentage: Float!
+}
+type LocationDetails implements Node {
+  id: ID!
+  name: String!
+  about: String
+  organization: LocationOrganizationDetails
+  timezone: String
+  deskCapacity: Int!
+  hasFutureBooking: Boolean!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  canViewAnalytics: Boolean!
+}
+type LocationEdge {
+  node: LocationDetails!
+  cursor: String!
+}
+type LocationMemberConnection {
+  pageInfo: PageInfo!
+  edges: [LocationMemberEdge!]!
+  totalCount: Int
+}
+type LocationMemberDetails implements Node {
+  id: ID!
+  membershipType: LocationMemberMembershipType
+  customer: LocationCustomerDetails!
+}
+type LocationMemberDetailsPayload {
+  clientMutationId: String
+  member: LocationMemberDetails
+}
+type LocationMemberEdge {
+  node: LocationMemberDetails!
+  cursor: String!
+}
+type LocationOrganizationDetails {
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
+}
+type LocationPayload {
+  clientMutationId: String
+  location: LocationDetails!
+}
+type LocationTagConnection {
+  pageInfo: PageInfo!
+  edges: [LocationTagEdge!]!
+  totalCount: Int
+}
+type LocationTagDetails implements Node {
+  id: ID!
+  name: String!
+  description: String
+  tagType: String!
+}
+type LocationTagEdge {
+  node: LocationTagDetails!
+  cursor: String!
+}
+type LocationTagPayload {
+  clientMutationId: String
+  locationTag: LocationTagDetails!
+}
+type RejectInvitationToJoinLocationPayload {
+  clientMutationId: String
+}
+type Notification implements Node {
+  id: ID!
+  sourceId: ID!
+  eventRaisedAt: DateTime!
+  notificationType: NotificationNotificationType!
+  invitedBy: NotificationCustomerDetails
+  invitee: NotificationCustomerDetails
+  organization: NotificationOrganizationDetails
+  location: NotificationLocationDetails
+  team: NotificationTeamDetails
+}
+type NotificationConnection {
+  pageInfo: PageInfo!
+  edges: [NotificationEdge!]!
+  totalCount: Int
+}
+type NotificationCustomerDetails {
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+  emails: [String!]!
+}
+type NotificationEdge {
+  node: Notification!
+  cursor: String!
+}
+type NotificationLocationDetails {
+  uniqueId: ID!
+  name: String!
+}
+type NotificationOrganizationDetails {
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
+}
+type NotificationTeamDetails {
+  uniqueId: ID!
+  name: String!
+}
+type AcceptInvitationToJoinOrganizationPayload {
+  clientMutationId: String
+}
+type CancelInvitationToJoinOrganizationPayload {
+  clientMutationId: String
+}
+type CancelOrganizationOfferingPayload {
+  clientMutationId: String
+}
+type InviteCustomersToJoinOrganizationPayload {
+  clientMutationId: String
+}
+type OrganizationAnalytics {
+  memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
+  dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
+}
+type OrganizationAvailableOfferingDetails {
+  code: String!
+  name: String!
+  unitPrice: Int!
+  featureSet: [OrganizationFeatureSetDetails!]!
+}
+type OrganizationConnection {
+  pageInfo: PageInfo!
+  edges: [OrganizationEdge!]!
+  totalCount: Int
+}
+type OrganizationCustomerDetails {
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+}
+type OrganizationDailyBookingsTotal {
+  date: DateTime!
+  total: Int!
+}
+type OrganizationDetails implements Node {
+  id: ID!
+  name: String!
+  about: String
+  website: String
+  logoUrl: String
+  agreedToTermsOfUse: Boolean!
+  termsOfUse: OrganizationTermsOfUse
+  industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  availableOfferings: [OrganizationAvailableOfferingDetails!]!
+  offering: OrganizationOfferingDetails!
+  hasAttachedPaymentMethod: Boolean!
+  hasFutureBooking: Boolean!
+  hasLocation: Boolean!
+  hasTeam: Boolean!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  canAddBookingOnBehalf: Boolean!
+  canUpdateBookingOnBehalf: Boolean!
+  canDeleteBookingOnBehalf: Boolean!
+  canViewAnalytics: Boolean!
+}
+type OrganizationEdge {
+  node: OrganizationDetails!
+  cursor: String!
+}
+type OrganizationFeatureSetDetails {
+  name: String!
+  description: String!
+}
+type OrganizationIndustryMainCategoryReferenceDetails implements Node {
+  id: ID!
+  name: String!
+  subCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+}
+type OrganizationIndustrySubCategoryReferenceDetails implements Node {
+  id: ID!
+  name: String!
+  mainCategoryName: String!
+}
+type OrganizationMemberAttendancePercentage {
+  date: DateTime!
+  percentage: Float!
+}
+type OrganizationMemberConnection {
+  pageInfo: PageInfo!
+  edges: [OrganizationMemberEdge!]!
+  totalCount: Int
+}
+type OrganizationMemberDetails implements Node {
+  id: ID!
+  membershipType: OrganizationMemberMembershipType
+  customer: OrganizationCustomerDetails!
+}
+type OrganizationMemberDetailsPayload {
+  clientMutationId: String
+  member: OrganizationMemberDetails
+}
+type OrganizationMemberEdge {
+  node: OrganizationMemberDetails!
+  cursor: String!
+}
+type OrganizationOfferingDetails implements Node {
+  id: ID!
+  code: String!
+  name: String!
+  start: DateTime!
+  end: DateTime!
+  unitPrice: Int!
+  featureSet: [OrganizationFeatureSetDetails!]!
+}
+type OrganizationPayload {
+  clientMutationId: String
+  organization: OrganizationDetails!
+}
+type OrganizationTermsOfUse implements Node {
+  id: ID!
+  terms: String!
+}
+type RejectInvitationToJoinOrganizationPayload {
+  clientMutationId: String
+}
+type UpdateOrganizationOfferingPayload {
+  clientMutationId: String
+}
+type AddOrganizationPaymentMethodIntentResponse {
+  clientMutationId: String
+  publishedKeys: String!
+  clientSecret: String!
+}
+type OrganizationPaymentMethod implements Node {
+  id: ID!
+  cardBrand: String
+  cardCountry: String
+  cardDescription: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardFingerprint: String
+  cardFunding: String
+  cardIssuer: String
+  cardLastFourDigit: String
+}
+type RemoveOrganizationPaymentMethodResponse {
+  clientMutationId: String
+}
+type AcceptInvitationToJoinTeamPayload {
+  clientMutationId: String
+}
+type CancelInvitationToJoinTeamPayload {
+  clientMutationId: String
+}
+type InviteCustomersToJoinTeamPayload {
+  clientMutationId: String
+}
+type RejectInvitationToJoinTeamPayload {
+  clientMutationId: String
+}
+type TeamConnection {
+  pageInfo: PageInfo!
+  edges: [TeamEdge!]!
+  totalCount: Int
+}
+type TeamCustomerDetails {
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+}
+type TeamDetails implements Node {
+  id: ID!
+  name: String!
+  about: String
+  members: [TeamMemberDetails!]!
+  organization: TeamOrganizationDetails
+  timezone: String
+  hasFutureBooking: Boolean!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+}
+type TeamEdge {
+  node: TeamDetails!
+  cursor: String!
+}
+type TeamMemberConnection {
+  pageInfo: PageInfo!
+  edges: [TeamMemberEdge!]!
+  totalCount: Int
+}
+type TeamMemberDetails implements Node {
+  id: ID!
+  membershipType: TeamMemberMembershipType
+  customer: TeamCustomerDetails
+  organizationMember: TeamOrganizationMemberDetails
+}
+type TeamMemberDetailsPayload {
+  clientMutationId: String
+  member: TeamMemberDetails
+}
+type TeamMemberEdge {
+  node: TeamMemberDetails!
+  cursor: String!
+}
+type TeamOrganizationDetails {
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
+}
+type TeamOrganizationMemberDetails {
+  uniqueId: ID!
+  customer: TeamCustomerDetails!
+}
+type TeamPayload {
+  clientMutationId: String
+  team: TeamDetails!
+}
+interface Node {
+  id: ID!
+}
+enum BookingDeskBookingDetailBookingStatus {
+  AWAIT_ACCEPTANCE
+  ACCEPTED
+  DECLINED
+}
+enum BookingOrderField {
+  from
+  to
+  notes
+  name
+  givenName
+  middleName
+  familyName
+  organizationName
+  locationName
+  teamName
+}
+enum OrderDirection {
+  Ascending
+  Descending
+}
+enum CustomerOrderField {
+  designation
+  title
+  name
+  givenName
+  middleName
+  familyName
+  timezone
+  locale
+}
+enum DeskBookingDetailBookingStatus {
+  AWAIT_ACCEPTANCE
+  ACCEPTED
+  DECLINED
+}
+enum DeskOrderField {
+  name
+}
+enum LocationJoinInvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+enum LocationMemberMembershipType {
+  OWNER
+  ADMINISTRATOR
+  MEMBER
+}
+enum LocationMemberOrderField {
+  membershipType
+  name
+  givenName
+  middleName
+  familyName
+}
+enum LocationOrderField {
+  name
+}
+enum LocationTagOrderField {
+  name
+  description
+  tagType
+}
+enum NotificationNotificationType {
+  INVITATION_TO_JOIN_ORGANIZATION
+  INVITATION_TO_JOIN_LOCATION
+  INVITATION_TO_JOIN_TEAM
+}
+enum NotificationOrderField {
+  eventRaisedAt
+  notificationType
+}
+enum OrganizationJoinInvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+enum OrganizationMemberMembershipType {
+  OWNER
+  ADMINISTRATOR
+  MEMBER
+}
+enum OrganizationMemberOrderField {
+  membershipType
+  name
+  givenName
+  middleName
+  familyName
+}
+enum OrganizationOrderField {
+  name
+}
+enum PaymentOrganizationStripePaymentMethodStatus {
+  PENDING
+  CANCELLED
+  CONFIRMED
+}
+enum SlackDeskBookingDetailBookingStatus {
+  AWAIT_ACCEPTANCE
+  ACCEPTED
+  DECLINED
+}
+enum TeamJoinInvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+enum TeamMemberMembershipType {
+  OWNER
+  ADMINISTRATOR
+  MEMBER
+}
+enum TeamMemberOrderField {
+  membershipType
+  name
+  givenName
+  middleName
+  familyName
+}
+enum TeamOrderField {
+  name
+  about
+  website
+}
+input SetOrganizationBillingInfoInput {
+  clientMutationId: String
+  organizationId: String!
+  email: String
+  addressLine1: String
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String
+  country: String
+}
+input AddBookingInput {
+  clientMutationId: String
+  id: String
+  customerId: String!
+  from: DateTime!
+  to: DateTime!
+  notes: String
+  organizationId: String
+  locationId: String
+  deskIds: [String!]!
+  teamId: String
+}
+input BookingOrderInput {
+  direction: OrderDirection!
+  field: BookingOrderField
+}
+input BookingWhereInputV2 {
+  fromGT: DateTime
+  fromGTE: DateTime
+  fromLT: DateTime
+  fromLTE: DateTime
+  toGT: DateTime
+  toGTE: DateTime
+  toLT: DateTime
+  toLTE: DateTime
+  notesContains: String
+  nameContains: String
+  organizationIds: [String!]
+  locationIds: [String!]
+  teamIds: [String!]
+  includeMineOnly: Boolean
+}
+input DeleteBookingInput {
+  clientMutationId: String
+  id: String!
+}
+input UpdateBookingInput {
+  clientMutationId: String
+  id: String!
+  customerId: String!
+  from: DateTime!
+  to: DateTime!
+  notes: String
+  organizationId: String
+  locationId: String
+  deskIds: [String!]!
+  teamId: String
+}
+input AddCustomerDefaultDeskInput {
+  clientMutationId: String
+  deskId: String!
+}
+input AddCustomerDefaultLocationInput {
+  clientMutationId: String
+  locationId: String!
+}
+input AddCustomerDefaultLocationTagInput {
+  clientMutationId: String
+  locationTagId: String!
+}
+input AddCustomerDefaultTeamInput {
+  clientMutationId: String
+  teamId: String!
+}
+input ClearCustomerDefaultOrganizationInput {
+  clientMutationId: String
+}
+input CompleteDefaultLocationOnboardingInput {
+  clientMutationId: String
+}
+input CompleteDefaultOrganizationOnboardingInput {
+  clientMutationId: String
+}
+input CompleteLocationOnboardingInput {
+  clientMutationId: String
+}
+input CompleteOrganizationOnboardingInput {
+  clientMutationId: String
+}
+input CompletePreferredDeskOnboardingInput {
+  clientMutationId: String
+}
+input CompletePreferredZoneOnboardingInput {
+  clientMutationId: String
+}
+input CustomerOrderInput {
+  direction: OrderDirection!
+  field: CustomerOrderField
+}
+input CustomerWhereInputV2 {
+  locationId: String!
+  nameContains: String
+}
+input RemoveCustomerDefaultDeskInput {
+  clientMutationId: String
+  deskId: String!
+}
+input RemoveCustomerDefaultLocationInput {
+  clientMutationId: String
+  locationId: String!
+}
+input RemoveCustomerDefaultLocationTagInput {
+  clientMutationId: String
+  locationTagId: String!
+}
+input RemoveCustomerDefaultTeamInput {
+  clientMutationId: String
+  teamId: String!
+}
+input SetCustomerDefaultOrganizationInput {
+  clientMutationId: String
+  organizationId: String!
+}
+input SubmitCustomerFeedbackInput {
+  clientMutationId: String
+  id: String!
+  feedbackContent: String!
+}
+input UpdateMyCustomerDetailsInput {
+  clientMutationId: String
+  timezone: String
+  designation: String
+  title: String
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+}
+input AcceptInvitationToJoinLocationInput {
+  clientMutationId: String
+  id: String!
+}
+input AddDeskInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  locationId: String!
+  locationTagIds: [String!]!
+}
+input AddLocationInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  organizationId: String
+  timezone: String
+}
+input AddLocationTagInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  tagType: String!
+  locationId: String!
+}
+input BulkAddDeskInput {
+  clientMutationId: String
+  id: String
+  namePrefix: String
+  locationId: String!
+  count: Int!
+  locationTagIds: [String!]!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+}
+input CancelInvitationToJoinLocationInput {
+  clientMutationId: String
+  id: String!
+}
+input ChangeLocationMemberOwnershipTypeInput {
+  clientMutationId: String
+  id: String!
+  membershipType: LocationMemberMembershipType!
+}
+input DeleteDeskInput {
+  clientMutationId: String
+  id: String!
+}
+input DeleteLocationInput {
+  clientMutationId: String
+  id: String!
+}
+input DeleteLocationTagInput {
+  clientMutationId: String
+  id: String!
+}
+input DeskOrderInput {
+  direction: OrderDirection!
+  field: DeskOrderField
+}
+input DeskWhereInputV2 {
+  locationId: String!
+  nameContains: String
+}
+input InviteCustomersToJoinLocationInput {
+  clientMutationId: String
+  locationId: String!
+  emails: [String!]!
+}
+input LocationMemberOrderInput {
+  direction: OrderDirection!
+  field: LocationMemberOrderField
+}
+input LocationMemberWhereInputV2 {
+  locationId: String!
+  nameContains: String
+}
+input LocationOrderInput {
+  direction: OrderDirection!
+  field: LocationOrderField
+}
+input LocationTagOrderInput {
+  direction: OrderDirection!
+  field: LocationTagOrderField
+}
+input LocationTagWhereInputV2 {
+  locationId: String!
+  tagType: String
+  nameContains: String
+}
+input LocationWhereInputV2 {
+  organizationId: String
+  nameContains: String
+}
+input RejectInvitationToJoinLocationInput {
+  clientMutationId: String
+  id: String!
+}
+input UpdateDeskInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+  locationTagIds: [String!]!
+}
+input UpdateLocationInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  organizationId: String
+  timezone: String
+}
+input UpdateLocationTagInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+  tagType: String!
+}
+input NotificationOrderInput {
+  direction: OrderDirection!
+  field: NotificationOrderField
+}
+input AcceptInvitationToJoinOrganizationInput {
+  clientMutationId: String
+  id: String!
+}
+input AddOrganizationInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  website: String
+  agreedToTermsOfUse: Boolean!
+  termsOfUseId: String!
+  industrySubCategoryIds: [String!]!
+}
+input CancelInvitationToJoinOrganizationInput {
+  clientMutationId: String
+  id: String!
+}
+input CancelOrganizationOfferingInput {
+  clientMutationId: String
+  id: String!
+}
+input ChangeOrganizationMemberOwnershipTypeInput {
+  clientMutationId: String
+  id: String!
+  membershipType: OrganizationMemberMembershipType!
+}
+input DeleteOrganizationInput {
+  clientMutationId: String
+  id: String!
+}
+input InviteCustomersToJoinOrganizationInput {
+  clientMutationId: String
+  organizationId: String!
+  emails: [String!]!
+}
+input OrganizationMemberOrderInput {
+  direction: OrderDirection!
+  field: OrganizationMemberOrderField
+}
+input OrganizationMemberWhereInputV2 {
+  organizationId: String!
+  nameContains: String
+}
+input OrganizationOrderInput {
+  direction: OrderDirection!
+  field: OrganizationOrderField
+}
+input OrganizationWhereInputV2 {
+  nameContains: String
+}
+input RejectInvitationToJoinOrganizationInput {
+  clientMutationId: String
+  id: String!
+}
+input UpdateOrganizationInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  website: String
+  industrySubCategoryIds: [String!]!
+}
+input UpdateOrganizationOfferingInput {
+  clientMutationId: String
+  id: String!
+  offeringCode: String!
+}
+input AddOrganizationPaymentMethodIntentInput {
+  clientMutationId: String
+  organizationId: String!
+}
+input RemoveOrganizationPaymentMethodInput {
+  clientMutationId: String
+  id: String!
+}
+input AcceptInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+input AddTeamInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  customerIds: [String!]!
+  organizationId: String
+  timezone: String
+  organizationMemberIds: [String!]!
+}
+input CancelInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+input ChangeTeamMemberOwnershipTypeInput {
+  clientMutationId: String
+  id: String!
+  membershipType: TeamMemberMembershipType!
+}
+input DeleteTeamInput {
+  clientMutationId: String
+  id: String!
+}
+input InviteCustomersToJoinTeamInput {
+  clientMutationId: String
+  teamId: String!
+  emails: [String!]!
+}
+input RejectInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+input TeamMemberOrderInput {
+  direction: OrderDirection!
+  field: TeamMemberOrderField
+}
+input TeamMemberWhereInputV2 {
+  teamId: String!
+  nameContains: String
+}
+input TeamOrderInput {
+  direction: OrderDirection!
+  field: TeamOrderField
+}
+input TeamWhereInputV2 {
+  organizationId: String
+  nameContains: String
+}
+input UpdateTeamInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  customerIds: [String!]!
+  organizationId: String
+  timezone: String
+  organizationMemberIds: [String!]!
+}
+"Delegates a resolver to a remote schema."
+directive @delegate(
+    "The path to the field on the remote schema."
+    path: String,
+    "The name of the schema to which this field shall be delegated to."
+    schema: String!
+  ) on FIELD_DEFINITION
+"Annotates the original name of a type."
+directive @source(
+    "The original name of the annotated type."
+    name: String!,
+    "The name of the schema to which this type belongs to."
+    schema: String!
+  ) on OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INTERFACE | UNION | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
+

@@ -1,0 +1,35 @@
+using Organization.Api.Mappers;
+using Organization.Shared.Publishers;
+using Organization.Shared.Repositories;
+
+namespace Organization.Api.Services;
+
+public interface IWorkaroundService
+{
+    Task RepublishOrganizationAsync(string organizationId, CancellationToken cancellationToken);
+    Task RepublishAllOrganizationsAsync(CancellationToken cancellationToken);
+}
+
+public class WorkaroundService(
+    IRepositoryFactory repositoryFactory,
+    IMapper mapper,
+    IOrganizationPublisher organizationPublisher) : IWorkaroundService
+{
+    public async Task RepublishOrganizationAsync(string organizationId, CancellationToken cancellationToken)
+    {
+        var organization =
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        if (organization is null)
+        {
+            return;
+        }
+
+        await organizationPublisher.PublishOrganizationAsync([mapper.MapTo(organization)!], cancellationToken);
+    }
+
+    public async Task RepublishAllOrganizationsAsync(CancellationToken cancellationToken)
+    {
+        var organizations = await repositoryFactory.OrganizationRepository.GetAllAsync(cancellationToken);
+        await organizationPublisher.PublishOrganizationAsync(organizations.Select(mapper.MapTo), cancellationToken);
+    }
+}

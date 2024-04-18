@@ -1,0 +1,71 @@
+using Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Key;
+using Billing.Processors.Mappers;
+using Billing.Shared.Database.Entities;
+using Billing.Shared.Publishers;
+using Billing.Shared.Repositories;
+using Confluent.Kafka;
+using Enterprise.Shared.Database;
+using Enterprise.Shared.Kafka.Consume;
+using Microsoft.EntityFrameworkCore;
+using Event = Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Value.Type;
+
+namespace Billing.Processors.Subscribers;
+
+public class BillingInternalSubscriber(
+    IDbTransactionBuilder transactionBuilder,
+    IRepositoryFactory repositoryFactory,
+    TimeProvider timeProvider,
+    IMapper mapper,
+    IBillingOutboxPublisher billingOutboxPublisher)
+    : IEventSubscriber<Key, Event>
+{
+    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    {
+        switch (@event.Metadata.Type)
+        {
+            case Type.GenerateOrganizationOfferingInvoice:
+                await HandleGenerateOrganizationOfferingInvoiceEventAsync(@event.OrganizationOfferingId,
+                    cancellationToken);
+                break;
+
+            default:
+                return;
+        }
+    }
+
+    private async Task HandleGenerateOrganizationOfferingInvoiceEventAsync(
+        string organizationOfferingId,
+        CancellationToken cancellationToken)
+    {
+        var now = timeProvider.GetUtcNow();
+        var organizationOffering = await repositoryFactory.OrganizationOfferingRepository
+            .Query(new Specification<OrganizationOffering>
+                {
+                    Criteria = query =>
+                        query.Id == organizationOfferingId && query.End <= now && !query.InvoiceDate.HasValue
+                }
+                .AddInclude(query => query.Organization))
+            .FirstOrDefaultAsync(cancellationToken);
+        if (organizationOffering is null)
+        {
+            return;
+        }
+
+        organizationOffering.TotalCost =
+            organizationOffering.TotalNumberOfActiveCustomers * organizationOffering.UnitPrice;
+        organizationOffering.InvoiceDate = now;
+
+        await using var transaction =
+            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
+                cancellationToken);
+
+        repositoryFactory.OrganizationOfferingRepository.Update(organizationOffering);
+        await billingOutboxPublisher.PublishBillingOrganizationsOfferingsAsync(
+            [mapper.MapTo(organizationOffering)],
+            repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
+            cancellationToken);
+        await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+    }
+}
