@@ -24,7 +24,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <html lang="en">
-      <title>unityhub</title>
+      <title>UnityHub</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="description" content="Always know who will be in the office" />
       <link rel="icon" href="/favicon.ico" />
