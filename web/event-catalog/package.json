@@ -1,0 +1,19 @@
+{
+  "name": "unityhub-event-catalog",
+  "version": "0.1.0",
+  "description": "UnityHub Event Catalog",
+  "private": true,
+  "scripts": {
+    "dev": "PORT=15003 eventcatalog dev",
+    "build": "eventcatalog build",
+    "start": "eventcatalog start",
+    "preview": "eventcatalog preview"
+  },
+  "dependencies": {
+    "@eventcatalog/core": "^2.0.12"
+  },
+  "devDependencies": {
+    "@parcel/watcher": "^2.4.1",
+    "concurrently": "^8.2.2"
+  }
+}
