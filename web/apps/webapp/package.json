@@ -1,7 +1,7 @@
 {
   "name": "webapp",
   "version": "0.1.0",
-  "description": "unityhub Web App",
+  "description": "UnityHub Web App",
   "private": true,
   "scripts": {
     "dev": "PORT=15000 next dev",

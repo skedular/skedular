@@ -1,7 +1,7 @@
 {
   "name": "msteams",
   "version": "0.1.0",
-  "description": "unityhub MsTeams Web App",
+  "description": "UnityHub MsTeams Web App",
   "private": true,
   "scripts": {
     "dev": "PORT=15002 next dev",
