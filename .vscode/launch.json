@@ -17,16 +17,34 @@
       "envFile": "${workspaceFolder}/.env"
     },
     {
-      "name": "MsTeams - All in one",
-      "type": "coreclr",
+      "name": "Next.js: debug server-side",
+      "type": "node-terminal",
       "request": "launch",
-      "preLaunchTask": "build-msteams",
-      "program": "${workspaceFolder}/msteams/MsTeamsAllInOne/bin/Debug/net8.0/MsTeamsAllInOne.dll",
-      "cwd": "${workspaceFolder}/msteams/MsTeamsAllInOne/bin/Debug/net8.0",
-      "args": [],
-      "console": "integratedTerminal",
-      "stopAtEntry": false,
+      "command": "pnpm dev",
+      "cwd": "${workspaceFolder}/web",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Next.js: debug client-side",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:15002",
+      "cwd": "${workspaceFolder}/web",
+      "env": {
+        "NEXTAUTH_SECRET": "XXXX"
+      }
+    },
+    {
+      "name": "Next.js: debug full stack",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev",
+      "serverReadyAction": {
+        "pattern": "started server on .+, url: (https?://.+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome"
+      },
+      "cwd": "${workspaceFolder}/web"
     }
   ]
 }

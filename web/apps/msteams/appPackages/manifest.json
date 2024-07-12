@@ -1,0 +1,43 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.16",
+  "version": "1.0.0",
+  "id": "2d02f9d4-7ad1-48d7-9a65-368287dcda70",
+  "packageName": "com.microsoft.teams.extension",
+  "developer": {
+    "name": "UnityHub Ltd",
+    "websiteUrl": "https://mmsteams.unityhub.io",
+    "privacyUrl": "https://unityhub.io/privacy-policy",
+    "termsOfUseUrl": "https://unityhub.io/terms-of-service"
+  },
+  "icons": {
+    "color": "logo.png",
+    "outline": "logo.png"
+  },
+  "name": {
+    "short": "UnityHub-development",
+    "full": "UnityHub"
+  },
+  "description": {
+    "short": "UnityHub",
+    "full": "UnityHub"
+  },
+  "accentColor": "#FFFFFF",
+  "bots": [],
+  "composeExtensions": [],
+  "staticTabs": [
+    {
+      "entityId": "index",
+      "name": "UnityHub Home",
+      "contentUrl": "https://mmsteams.unityhub.io",
+      "websiteUrl": "https://mmsteams.unityhub.io",
+      "scopes": ["personal"]
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": ["mmsteams.unityhub.io"],
+  "webApplicationInfo": {
+    "id": "5f2f2649-cd92-4492-ab03-7ba650c48149",
+    "resource": "api://5f2f2649-cd92-4492-ab03-7ba650c48149"
+  }
+}
