@@ -26,11 +26,10 @@ data "aws_ssm_parameter" "nextauthsecret" {
 
 resource "vercel_project" "default" {
   name             = module.common.project_name
-  framework        = "nextjs"
   team_id          = local.team_id
   build_command    = "npx pnpm msteams#build"
   install_command  = "npx pnpm install --recursive --frozen-lockfile"
-  output_directory = "./apps/msteams/.next"
+  output_directory = "./apps/msteams/build"
   vercel_authentication = {
     deployment_type = "standard_protection"
   }
