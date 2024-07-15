@@ -29,7 +29,7 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
+      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
     },
     "start": {
       "dependsOn": ["^start"]
@@ -48,7 +48,7 @@
     },
     "publicwebsite#build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
+      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
     },
     "publicwebsite#start": {
       "dependsOn": ["^start"]
@@ -64,7 +64,7 @@
     },
     "webapp#build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
+      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
     },
     "webapp#start": {
       "dependsOn": ["^start"]
@@ -83,7 +83,7 @@
     },
     "msteams#build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
+      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
     },
     "msteams#start": {
       "dependsOn": ["^start"]
@@ -98,6 +98,25 @@
       "dependsOn": ["^format"]
     },
     "msteams#relay": {
+      "dependsOn": ["^relay"]
+    },
+    "msteams2#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
+    },
+    "msteams2#start": {
+      "dependsOn": ["^start"]
+    },
+    "msteams2#lint": {
+      "dependsOn": ["^lint"]
+    },
+    "msteams2#lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "msteams2#format": {
+      "dependsOn": ["^format"]
+    },
+    "msteams2#relay": {
       "dependsOn": ["^relay"]
     }
   },
