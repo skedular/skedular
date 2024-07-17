@@ -37,7 +37,7 @@
   "permissions": ["identity", "messageTeamMembers"],
   "validDomains": ["mmsteams.unityhub.io"],
   "webApplicationInfo": {
-    "id": "5f2f2649-cd92-4492-ab03-7ba650c48149",
-    "resource": "api://5f2f2649-cd92-4492-ab03-7ba650c48149"
+    "id": "efc93781-7ccf-4799-bdd5-c2473e86034a",
+    "resource": "api://mmsteams.unityhub.io/efc93781-7ccf-4799-bdd5-c2473e86034a"
   }
 }

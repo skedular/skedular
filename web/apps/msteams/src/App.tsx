@@ -28,9 +28,32 @@ const App = () => {
 
       await app.initialize();
       app.notifySuccess();
+
+      if (!teamsUserCredential) {
+        return;
+      }
+
+      let consentNeeded = false;
+
+      try {
+        let x = process.env.REACT_APP_BASE_URL;
+        let y = process.env.REACT_APP_APPLICATION_REGISTRATION_ID;
+      
+        console.log(x)
+        console.log(y)
+      
+        await teamsUserCredential!.getToken(['User.Read', 'User.ReadBasic.All']);
+      } catch (error) {
+        consentNeeded = true;
+        try {
+          await teamsUserCredential!.login(['User.Read', 'User.ReadBasic.All']);
+        } catch (error1) {
+          console.log(error1)
+        }
+      }
     };
     appInitialize();
-  }, [loading]);
+  }, [loading, teamsUserCredential]);
 
   return (
     <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
