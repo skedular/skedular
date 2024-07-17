@@ -7,9 +7,8 @@ public static class Extensions
 {
     public static IServiceCollection AddMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();
-    
+
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
             .AddSingleton<IEmailService, EmailService>();
-
 }

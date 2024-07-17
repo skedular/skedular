@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Events.UnityHub.Team.V1.Key;
 using Api.Shared.Clients.Events.UnityHub.Team.V1.Value;
-using Api.Shared.Clients.OpenApi.UnityHub.Notification.V1;
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;

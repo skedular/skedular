@@ -10,19 +10,19 @@
     <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="8.0.1"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1"/>
-        <PackageReference Include="Confluent.Kafka" Version="2.4.0"/>
-        <PackageReference Include="Confluent.SchemaRegistry" Version="2.4.0"/>
-        <PackageReference Include="CountryData" Version="6.2.0"/>
+        <PackageReference Include="Confluent.Kafka" Version="2.5.0"/>
+        <PackageReference Include="Confluent.SchemaRegistry" Version="2.5.0"/>
+        <PackageReference Include="CountryData" Version="6.4.0"/>
         <PackageReference Include="EmailValidation" Version="1.2.0"/>
         <PackageReference Include="Flurl.Http" Version="4.0.2"/>
         <PackageReference Include="Google.Apis.Auth" Version="1.68.0"/>
         <PackageReference Include="IdGen" Version="3.0.7"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.6"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.6"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.6"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.7"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.6"/>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.7"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="2.20.0"/>
         <PackageReference Include="Nanoid" Version="3.1.0"/>
         <PackageReference Include="NSwag.AspNetCore" Version="14.0.8"/>
@@ -35,17 +35,17 @@
         <PackageReference Include="Grpc.Net.Client" Version="2.63.0"/>
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="HotChocolate" Version="13.9.6"/>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.6"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="13.9.6"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.9.6"/>
-        <PackageReference Include="HotChocolate.Diagnostics" Version="13.9.6"/>
+        <PackageReference Include="HotChocolate" Version="13.9.7"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.7"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="13.9.7"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.9.7"/>
+        <PackageReference Include="HotChocolate.Diagnostics" Version="13.9.7"/>
 
         <PackageReference Include="OpenTelemetry.Api" Version="1.9.0"/>
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.9.0"/>
@@ -57,10 +57,10 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.0.0-rc9.14"/>
 
-        <PackageReference Include="Quartz" Version="3.10.0"/>
-        <PackageReference Include="Quartz.AspNetCore" Version="3.10.0"/>
-        <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.10.0"/>
-        <PackageReference Include="Quartz.Extensions.Hosting" Version="3.10.0"/>
+        <PackageReference Include="Quartz" Version="3.11.0"/>
+        <PackageReference Include="Quartz.AspNetCore" Version="3.11.0"/>
+        <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.11.0"/>
+        <PackageReference Include="Quartz.Extensions.Hosting" Version="3.11.0"/>
         <PackageReference Include="Quartz.OpenTelemetry.Instrumentation" Version="3.10.0"/>
         <PackageReference Include="Quartz.Serialization.Json" Version="3.10.0"/>
 
