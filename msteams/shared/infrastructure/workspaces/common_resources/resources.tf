@@ -52,16 +52,14 @@ resource "azuread_application" "msteams" {
 
   single_page_application {
     redirect_uris = [
-      "http://localhost:15002/api/auth/callback/msteams",
-      "https://${module.shared_common.msteams_webapp_domain_name}/api/auth/callback/msteams",
-      "https://mmsteams.unityhub.io/api/auth/callback/msteams"
+      "https://${module.shared_common.msteams_webapp_domain_name}/api/auth/callback/msteams"
     ]
   }
 }
 
 resource "azuread_application_identifier_uri" "msteams_identifier_uris" {
   application_id = azuread_application.msteams.id
-  identifier_uri = "api://${azuread_application.msteams.client_id}"
+  identifier_uri = "api://${module.shared_common.msteams_webapp_domain_name}/${azuread_application.msteams.client_id}"
 
   depends_on = [azuread_application.msteams]
 }
