@@ -33,6 +33,13 @@ resource "azuread_application" "msteams_morteza" {
     }
   }
 
+  web {
+    redirect_uris = [
+      "http://localhost:15002/auth-end.html",
+      "https://mmsteams.unityhub.io/auth-end.html"
+    ]
+  }
+
   single_page_application {
     redirect_uris = [
       "https://mmsteams.unityhub.io/api/auth/callback/msteams"

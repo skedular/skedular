@@ -50,6 +50,12 @@ resource "azuread_application" "msteams" {
     }
   }
 
+  web {
+    redirect_uris = [
+      "https://${module.shared_common.msteams_webapp_domain_name}/auth-end.html"
+    ]
+  }
+
   single_page_application {
     redirect_uris = [
       "https://${module.shared_common.msteams_webapp_domain_name}/api/auth/callback/msteams"
