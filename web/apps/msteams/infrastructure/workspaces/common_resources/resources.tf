@@ -16,12 +16,18 @@ module "shared_common" {
   environment = var.environment
 }
 
+module "msteams_common" {
+  source = "../../../../../../msteams/shared/infrastructure/workspaces/common"
+
+  environment = var.environment
+}
+
 data "cloudflare_zone" "default" {
   name = module.shared_common.cloudflare_domain_name
 }
 
-data "aws_ssm_parameter" "nextauthsecret" {
-  name = module.web_common.parameter_store_name_nextauth_session
+data "aws_ssm_parameter" "parameter_store_name_azure_msteams_application_id" {
+  name = module.msteams_common.parameter_store_name_azure_msteams_application_id
 }
 
 resource "vercel_project" "default" {
@@ -36,28 +42,13 @@ resource "vercel_project" "default" {
 
   environment = [
     {
-      key    = "NEXTAUTH_SECRET"
-      value  = data.aws_ssm_parameter.nextauthsecret.value
-      target = ["development", "preview", "production"]
-    },
-    {
-      key    = "NEXTAUTH_URL"
+      key    = "REACT_APP_BASE_URL"
       value  = "https://${module.shared_common.msteams_webapp_domain_name}"
       target = ["development", "preview", "production"]
     },
     {
-      key    = "NEXT_PUBLIC_SITE_URL"
-      value  = "https://${module.shared_common.msteams_webapp_domain_name}"
-      target = ["development", "preview", "production"]
-    },
-    {
-      key    = "NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID"
-      value  = var.google_analytics_measurement_id
-      target = ["development", "preview", "production"]
-    },
-    {
-      key    = "NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID"
-      value  = var.google_tag_manager_container_id
+      key    = "REACT_APP_APPLICATION_REGISTRATION_ID"
+      value  = data.aws_ssm_parameter.parameter_store_name_azure_msteams_application_id.value
       target = ["development", "preview", "production"]
     },
     {

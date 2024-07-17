@@ -11,9 +11,11 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/webapp-msteams.yml"
+      - "web/pnpm-lock.yaml"
       - "web/apps/msteams/**"
-      - "web/infrastructure/workspaces/common/**"
-      - "shared/infrastructure/workspaces/common/**"
+      - "web/infrastructure/**"
+      - "shared/infrastructure/**"
+      - "msteams/shared/infrastructure/**"
   pull_request:
     branches:
       - "main"
@@ -21,9 +23,11 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/webapp-msteams.yml"
+      - "web/pnpm-lock.yaml"
       - "web/apps/msteams/**"
-      - "web/infrastructure/workspaces/common/**"
-      - "shared/infrastructure/workspaces/common/**"
+      - "web/infrastructure/**"
+      - "shared/infrastructure/**"
+      - "msteams/shared/infrastructure/**"
 
 jobs:
   build:

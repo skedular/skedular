@@ -16,11 +16,11 @@ on:
       - "shared/**"
       - "notification/shared/**"
       - "notification/processors/**"
-      - "customer/shared/infrastructure/workspaces/common/**"
-      - "organization/shared/infrastructure/workspaces/common/**"
-      - "location/shared/infrastructure/workspaces/common/**"
-      - "team/shared/infrastructure/workspaces/common/**"
-      - "slack/shared/infrastructure/workspaces/common/**"
+      - "customer/shared/infrastructure/**"
+      - "organization/shared/infrastructure/**"
+      - "location/shared/infrastructure/**"
+      - "team/shared/infrastructure/**"
+      - "slack/shared/infrastructure/**"
   pull_request:
     branches:
       - "main"
@@ -33,11 +33,11 @@ on:
       - "shared/**"
       - "notification/shared/**"
       - "notification/processors/**"
-      - "customer/shared/infrastructure/workspaces/common/**"
-      - "organization/shared/infrastructure/workspaces/common/**"
-      - "location/shared/infrastructure/workspaces/common/**"
-      - "team/shared/infrastructure/workspaces/common/**"
-      - "slack/shared/infrastructure/workspaces/common/**"
+      - "customer/shared/infrastructure/**"
+      - "organization/shared/infrastructure/**"
+      - "location/shared/infrastructure/**"
+      - "team/shared/infrastructure/**"
+      - "slack/shared/infrastructure/**"
 
 jobs:
   build:

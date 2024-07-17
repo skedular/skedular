@@ -11,7 +11,7 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/web-shared.yml"
-      - "shared/infrastructure/workspaces/common/**"
+      - "shared/infrastructure/**"
       - "web/infrastructure/**"
   pull_request:
     branches:
@@ -20,7 +20,7 @@ on:
       - ".github/actions/**"
       - ".github/workflows/lint.yml"
       - ".github/workflows/web-shared.yml"
-      - "shared/infrastructure/workspaces/common/**"
+      - "shared/infrastructure/**"
       - "web/infrastructure/**"
 
 jobs:
