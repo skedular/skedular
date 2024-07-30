@@ -33,8 +33,8 @@ data "aws_ssm_parameter" "parameter_store_name_azure_msteams_application_id" {
 resource "vercel_project" "default" {
   name             = module.common.project_name
   team_id          = local.team_id
-  build_command    = "npx pnpm msteams#build"
-  install_command  = "npx pnpm install --recursive --frozen-lockfile"
+  build_command    = "pnpm msteams#build"
+  install_command  = "pnpm install --recursive --frozen-lockfile"
   output_directory = "./apps/msteams/build"
   vercel_authentication = {
     deployment_type = "standard_protection"

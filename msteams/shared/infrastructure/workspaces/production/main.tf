@@ -10,6 +10,7 @@ module "common_resources" {
   providers = {
     aws     = aws
     azuread = azuread
+    random  = random
   }
 
   environment = local.environment

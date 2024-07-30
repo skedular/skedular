@@ -5,7 +5,7 @@
   "engines": {
     "node": "^20"
   },
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "pnpm@9.6.0",
   "workspace": [
     "apps/*",
     "packages/*"
@@ -37,12 +37,12 @@
     "msteams#relay": "turbo run msteams#relay"
   },
   "devDependencies": {
-    "@types/relay-runtime": "^17.0.1",
-    "eslint": "9.7.0",
-    "eslint-plugin-turbo": "^2.0.7",
+    "@types/relay-runtime": "^17.0.3",
+    "eslint": "9.8.0",
+    "eslint-plugin-turbo": "^2.0.10",
     "global": "^4.4.0",
     "next": "14.2.5",
-    "pnpm": "^9.5.0",
-    "turbo": "^2.0.7"
+    "pnpm": "^9.6.0",
+    "turbo": "^2.0.10"
   }
 }

@@ -64,8 +64,8 @@ resource "vercel_project" "default" {
   name             = module.common.project_name
   framework        = "nextjs"
   team_id          = local.team_id
-  build_command    = "npx pnpm webapp#build"
-  install_command  = "npx pnpm install --recursive --frozen-lockfile"
+  build_command    = "pnpm webapp#build"
+  install_command  = "pnpm install --recursive --frozen-lockfile"
   output_directory = "./apps/webapp/.next"
   vercel_authentication = {
     deployment_type = "standard_protection"

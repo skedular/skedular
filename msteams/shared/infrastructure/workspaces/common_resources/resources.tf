@@ -39,14 +39,15 @@ resource "azuread_application" "msteams" {
   required_resource_access {
     resource_app_id = data.azuread_application_published_app_ids.well_known.result["MicrosoftGraph"]
 
-    resource_access {
-      id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.Read"]
-      type = "Scope"
-    }
+    # resource_access {
+    #   id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.Read"]
+    #   type = "Role"
+    # }
 
     resource_access {
-      id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.ReadBasic.All"]
-      type = "Scope"
+      # data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.ReadBasic.All"]
+      id   = "97235f07-e226-4f63-ace3-39588e11d3a1"
+      type = "Role"
     }
   }
 
@@ -66,37 +67,28 @@ resource "azuread_application" "msteams" {
 resource "azuread_application_identifier_uri" "msteams_identifier_uris" {
   application_id = azuread_application.msteams.id
   identifier_uri = "api://${module.shared_common.msteams_webapp_domain_name}/${azuread_application.msteams.client_id}"
-
-  depends_on = [azuread_application.msteams]
 }
 
-locals {
-  access_as_user_id = uuid()
-}
+resource "random_uuid" "access_as_user_id" {}
 
 resource "azuread_application_permission_scope" "access_as_user" {
   application_id             = azuread_application.msteams.id
-  scope_id                   = local.access_as_user_id
+  scope_id                   = random_uuid.access_as_user_id.result
   admin_consent_display_name = "Teams can access app's web APIs"
   admin_consent_description  = "Allows Teams to call the app's web APIs as the current user."
   type                       = "User"
   user_consent_display_name  = "Teams can access app's web APIs and make requests on your behalf"
   user_consent_description   = "Enable Teams to call this app's web APIs with the same rights that you have"
   value                      = "access_as_user"
-
-  depends_on = [azuread_application_identifier_uri.msteams_identifier_uris]
 }
-
 
 resource "azuread_application_pre_authorized" "team_desktop_mobile_client" {
   application_id       = azuread_application.msteams.id
   authorized_client_id = "1fec8e78-bce4-4aaf-ab1b-5451cc387264"
 
   permission_ids = [
-    local.access_as_user_id,
+    azuread_application_permission_scope.access_as_user.scope_id,
   ]
-
-  depends_on = [azuread_application_permission_scope.access_as_user]
 }
 
 resource "azuread_application_pre_authorized" "team_web_client" {
@@ -104,10 +96,8 @@ resource "azuread_application_pre_authorized" "team_web_client" {
   authorized_client_id = "5e3ce6c0-2b1f-4285-8d4b-75ee78787346"
 
   permission_ids = [
-    local.access_as_user_id,
+    azuread_application_permission_scope.access_as_user.scope_id,
   ]
-
-  depends_on = [azuread_application_permission_scope.access_as_user]
 }
 
 resource "azuread_application_pre_authorized" "outlook_desktop_client" {
@@ -115,10 +105,8 @@ resource "azuread_application_pre_authorized" "outlook_desktop_client" {
   authorized_client_id = "d3590ed6-52b3-4102-aeff-aad2292ab01c"
 
   permission_ids = [
-    local.access_as_user_id,
+    azuread_application_permission_scope.access_as_user.scope_id,
   ]
-
-  depends_on = [azuread_application_permission_scope.access_as_user]
 }
 
 resource "azuread_application_pre_authorized" "outlook_web_client_1" {
@@ -126,10 +114,8 @@ resource "azuread_application_pre_authorized" "outlook_web_client_1" {
   authorized_client_id = "00000002-0000-0ff1-ce00-000000000000"
 
   permission_ids = [
-    local.access_as_user_id,
+    azuread_application_permission_scope.access_as_user.scope_id,
   ]
-
-  depends_on = [azuread_application_permission_scope.access_as_user]
 }
 
 resource "azuread_application_pre_authorized" "outlook_web_client_2" {
@@ -137,10 +123,8 @@ resource "azuread_application_pre_authorized" "outlook_web_client_2" {
   authorized_client_id = "bc59ab01-8403-45c6-8796-ac3ef710b3e3"
 
   permission_ids = [
-    local.access_as_user_id,
+    azuread_application_permission_scope.access_as_user.scope_id,
   ]
-
-  depends_on = [azuread_application_permission_scope.access_as_user]
 }
 
 resource "azuread_application_pre_authorized" "ms365_app_desktop_client" {
@@ -148,10 +132,8 @@ resource "azuread_application_pre_authorized" "ms365_app_desktop_client" {
   authorized_client_id = "0ec893e0-5785-4de6-99da-4ed124e5296c"
 
   permission_ids = [
-    local.access_as_user_id,
+    azuread_application_permission_scope.access_as_user.scope_id,
   ]
-
-  depends_on = [azuread_application_permission_scope.access_as_user]
 }
 
 resource "azuread_application_pre_authorized" "ms365_app_client_1" {
@@ -159,10 +141,8 @@ resource "azuread_application_pre_authorized" "ms365_app_client_1" {
   authorized_client_id = "4345a7b9-9a63-4910-a426-35363201d503"
 
   permission_ids = [
-    local.access_as_user_id,
+    azuread_application_permission_scope.access_as_user.scope_id,
   ]
-
-  depends_on = [azuread_application_permission_scope.access_as_user]
 }
 
 resource "azuread_application_pre_authorized" "ms365_app_client_2" {
@@ -170,10 +150,8 @@ resource "azuread_application_pre_authorized" "ms365_app_client_2" {
   authorized_client_id = "4765445b-32c6-49b0-83e6-1d93765276ca"
 
   permission_ids = [
-    local.access_as_user_id,
+    azuread_application_permission_scope.access_as_user.scope_id,
   ]
-
-  depends_on = [azuread_application_permission_scope.access_as_user]
 }
 
 resource "aws_ssm_parameter" "msteams" {

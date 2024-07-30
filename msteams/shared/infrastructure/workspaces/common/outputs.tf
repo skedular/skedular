@@ -16,3 +16,15 @@ output "parameter_store_name_azure_msteams_secret_id" {
 output "parameter_store_name_azure_msteams_secret_value" {
   value = "azure_msteams_secret_value"
 }
+
+output "parameter_store_name_azure_msteams_dev_application_id" {
+  value = "azure_msteams_dev_application_id"
+}
+
+output "parameter_store_name_azure_msteams_dev_secret_id" {
+  value = "azure_msteams_dev_secret_id"
+}
+
+output "parameter_store_name_azure_msteams_dev_secret_value" {
+  value = "azure_msteams_dev_secret_value"
+}

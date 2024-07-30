@@ -24,7 +24,7 @@ ENV PAYMENT_ENDPOINT="/temp"
 ENV SLACK_ENDPOINT="/temp"
 ENV TEAM_ENDPOINT="/temp"
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --recursive --frozen-lockfile
 RUN pnpm webapp#lint
 RUN pnpm webapp#build
 

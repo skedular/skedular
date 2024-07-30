@@ -6,7 +6,7 @@
   "packageName": "com.microsoft.teams.extension",
   "developer": {
     "name": "UnityHub Ltd",
-    "websiteUrl": "https://mmsteams.unityhub.io",
+    "websiteUrl": "https://localhost:15002",
     "privacyUrl": "https://unityhub.io/privacy-policy",
     "termsOfUseUrl": "https://unityhub.io/terms-of-service"
   },
@@ -29,15 +29,15 @@
     {
       "entityId": "index",
       "name": "UnityHub Home",
-      "contentUrl": "https://mmsteams.unityhub.io",
-      "websiteUrl": "https://mmsteams.unityhub.io",
+      "contentUrl": "https://localhost:15002",
+      "websiteUrl": "https://localhost:15002",
       "scopes": ["personal"]
     }
   ],
   "permissions": ["identity", "messageTeamMembers"],
-  "validDomains": ["mmsteams.unityhub.io"],
+  "validDomains": ["localhost:15002"],
   "webApplicationInfo": {
-    "id": "efc93781-7ccf-4799-bdd5-c2473e86034a",
-    "resource": "api://mmsteams.unityhub.io/efc93781-7ccf-4799-bdd5-c2473e86034a"
+    "id": "092ba383-624e-4a05-9524-7aac72509745",
+    "resource": "api://localhost:15002/092ba383-624e-4a05-9524-7aac72509745"
   }
 }
