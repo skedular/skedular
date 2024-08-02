@@ -11,5 +11,4 @@ public class AzureAdConfiguration
     public string? ClientSecret { get; set; }
     public string? CallbackPath { get; set; }
     public string? SignedOutCallbackPath { get; set; }
-    public List<string>? ClientCapabilities { get; set; }
 }
