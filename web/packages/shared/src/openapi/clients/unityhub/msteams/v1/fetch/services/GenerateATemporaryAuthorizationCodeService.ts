@@ -13,7 +13,7 @@ export class GenerateATemporaryAuthorizationCodeService {
      */
     public generateTemporaryAuthorizationCode(): CancelablePromise<void> {
         return this.httpRequest.request({
-            method: 'POST',
+            method: 'GET',
             url: '/msteams/api/v1/generate-temporary-authorization-code',
             errors: {
                 302: `redirect status response code`,
