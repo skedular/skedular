@@ -9,7 +9,6 @@ paths:
     post:
       tags:
         - msteams
-        - messaging
       summary: process bot messages sent by Azure Bot system
       operationId: processBotMessage
 
@@ -24,14 +23,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /msteams/api/v1/generate-temporary-authorization-code:
+  /msteams/api/v1/adminconsent/{tenantId}:
     get:
       tags:
         - msteams
-        - teant
-        - generate a temporary authorization code
-      summary: generate a temporary authorization code
-      operationId: generateTemporaryAuthorizationCode
+      summary: generate an admin consent Url for the given tenant
+      operationId: adminConsent
+      parameters:
+        - in: query
+          name: tenantId
+          schema:
+            type: string
+          required: true
 
       responses:
         "302":
@@ -41,7 +44,6 @@ paths:
     get:
       tags:
         - msteams
-        - onboard a tenant
       summary: OnBoard a tenant
       operationId: onBoardTenant
       parameters:

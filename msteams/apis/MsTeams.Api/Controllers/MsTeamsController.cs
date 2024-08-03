@@ -11,15 +11,15 @@ public class MsTeamsController(IMsTeamsService msTeamsService) : MsTeamsControll
     public override Task<IActionResult> ProcessBotMessage(CancellationToken cancellationToken = default) =>
         throw new NotImplementedException();
 
-    public override async Task<IActionResult> GenerateTemporaryAuthorizationCode(
+    public override async Task<IActionResult> AdminConsent(
+        string tenantId,
         CancellationToken cancellationToken = default)
     {
         var currentUri = UriHelper.BuildAbsolute(Request.Scheme, Request.Host, Request.PathBase);
         var authorizationRequest =
-            await msTeamsService.GenerateTemporaryAuthorizationCode(currentUri, cancellationToken);
+            await msTeamsService.GenerateAdminConsentUrl(tenantId, currentUri, cancellationToken);
 
-        //return Redirect(authorizationRequest);
-        return Ok(new { redirectUrl = authorizationRequest });
+        return Redirect(authorizationRequest);
     }
 
     public override async Task<IActionResult> OnBoardTenant(

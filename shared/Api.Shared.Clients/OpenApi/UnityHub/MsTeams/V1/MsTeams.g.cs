@@ -38,10 +38,10 @@ namespace Api.Shared.Clients.OpenApi.UnityHub.MsTeams.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// generate a temporary authorization code
+        /// generate an admin consent Url for the given tenant
         /// </summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task GenerateTemporaryAuthorizationCodeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task AdminConsentAsync(string tenantId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -160,11 +160,14 @@ namespace Api.Shared.Clients.OpenApi.UnityHub.MsTeams.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// generate a temporary authorization code
+        /// generate an admin consent Url for the given tenant
         /// </summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task GenerateTemporaryAuthorizationCodeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task AdminConsentAsync(string tenantId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
+            if (tenantId == null)
+                throw new System.ArgumentNullException("tenantId");
+
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
@@ -175,8 +178,11 @@ namespace Api.Shared.Clients.OpenApi.UnityHub.MsTeams.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "msteams/api/v1/generate-temporary-authorization-code"
-                    urlBuilder_.Append("msteams/api/v1/generate-temporary-authorization-code");
+                    // Operation Path: "msteams/api/v1/adminconsent/{tenantId}"
+                    urlBuilder_.Append("msteams/api/v1/adminconsent/");
+                    urlBuilder_.Append('?');
+                    urlBuilder_.Append(System.Uri.EscapeDataString("tenantId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(tenantId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

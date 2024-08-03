@@ -20,14 +20,20 @@ export class MsteamsService {
         });
     }
     /**
-     * generate a temporary authorization code
+     * generate an admin consent Url for the given tenant
+     * @param tenantId
      * @returns void
      * @throws ApiError
      */
-    public generateTemporaryAuthorizationCode(): CancelablePromise<void> {
+    public adminConsent(
+        tenantId: string,
+    ): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/msteams/api/v1/generate-temporary-authorization-code',
+            url: '/msteams/api/v1/adminconsent/{tenantId}',
+            query: {
+                'tenantId': tenantId,
+            },
             errors: {
                 302: `redirect status response code`,
             },

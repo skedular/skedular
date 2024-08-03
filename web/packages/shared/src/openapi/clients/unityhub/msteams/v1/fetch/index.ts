@@ -14,8 +14,4 @@ export type { Error } from './models/Error';
 
 export { $Error } from './schemas/$Error';
 
-export { GenerateATemporaryAuthorizationCodeService } from './services/GenerateATemporaryAuthorizationCodeService';
-export { MessagingService } from './services/MessagingService';
 export { MsteamsService } from './services/MsteamsService';
-export { OnboardATenantService } from './services/OnboardATenantService';
-export { TeantService } from './services/TeantService';

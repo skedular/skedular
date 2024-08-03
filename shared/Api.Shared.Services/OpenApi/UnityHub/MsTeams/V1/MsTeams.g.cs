@@ -38,10 +38,10 @@ namespace Api.Shared.Services.OpenApi.UnityHub.MsTeams.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessBotMessage(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// generate a temporary authorization code
+        /// generate an admin consent Url for the given tenant
         /// </summary>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("msteams/api/v1/generate-temporary-authorization-code")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GenerateTemporaryAuthorizationCode(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("msteams/api/v1/adminconsent/{tenantId}")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AdminConsent([Microsoft.AspNetCore.Mvc.FromQuery] string tenantId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// OnBoard a tenant

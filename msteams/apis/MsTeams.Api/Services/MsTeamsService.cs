@@ -10,10 +10,18 @@ namespace MsTeams.Api.Services;
 
 public interface IMsTeamsService
 {
-    Task<string> GenerateTemporaryAuthorizationCode(string currentUri, CancellationToken cancellationToken);
+    Task<string> GenerateAdminConsentUrl(
+        string tenantId,
+        string currentUri,
+        CancellationToken cancellationToken);
 
-    Task OnBoardTenant(string tenantId, string? error, string? errorMessage, bool adminConsent,
-        string temporaryAuthorizationCode, CancellationToken cancellationToken);
+    Task OnBoardTenant(
+        string tenantId,
+        string? error,
+        string? errorMessage,
+        bool adminConsent,
+        string state, 
+        CancellationToken cancellationToken);
 }
 
 public class MsTeamsService(
@@ -23,20 +31,22 @@ public class MsTeamsService(
     AzureAdConfiguration azureAdConfiguration,
     GraphApiConfiguration graphApiConfiguration) : IMsTeamsService
 {
-    public async Task<string> GenerateTemporaryAuthorizationCode(string currentUri, CancellationToken cancellationToken)
+    public async Task<string> GenerateAdminConsentUrl(
+        string tenantId,
+        string currentUri,
+        CancellationToken cancellationToken)
     {
         var authorizedTenant = new TemporaryAuthorizationCode
         {
             Id = randomHelper.Generate(), CreatedAt = timeProvider.GetUtcNow()
         };
 
-        var authorizationRequest = string.Format(
-            "{0}organizations/v2.0/adminconsent?client_id={1}&redirect_uri={2}&state={3}&scope={4}",
-            azureAdConfiguration.Instance,
-            Uri.EscapeDataString(azureAdConfiguration.ClientId),
-            Uri.EscapeDataString(currentUri + "msteams/api/v1/onboard-tenant"),
-            Uri.EscapeDataString(authorizedTenant.Id),
-            Uri.EscapeDataString(graphApiConfiguration.Scopes));
+        var clientId = Uri.EscapeDataString(azureAdConfiguration.ClientId);
+        var redirectUri = Uri.EscapeDataString(currentUri + "msteams/api/v1/onboard-tenant");
+        var state = authorizedTenant.Id;
+        var scope = Uri.EscapeDataString(graphApiConfiguration.Scopes);
+        var authorizationRequest =
+            $"{azureAdConfiguration.Instance}{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&state={state}&scope={scope}";
 
         repositoryFactory.TemporaryAuthorizationCodeRepository.Add(authorizedTenant);
         await repositoryFactory.TemporaryAuthorizationCodeRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -44,8 +54,13 @@ public class MsTeamsService(
         return authorizationRequest;
     }
 
-    public async Task OnBoardTenant(string tenantId, string? error, string? errorMessage, bool adminConsent,
-        string temporaryAuthorizationCode, CancellationToken cancellationToken)
+    public async Task OnBoardTenant(
+        string tenantId, 
+        string? error, 
+        string? errorMessage, 
+        bool adminConsent,
+        string state, 
+        CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(error))
         {
@@ -63,9 +78,9 @@ public class MsTeamsService(
             throw new ArgumentException("no tenant Id provided.", nameof(tenantId));
         }
 
-        if (string.IsNullOrWhiteSpace(temporaryAuthorizationCode))
+        if (string.IsNullOrWhiteSpace(state))
         {
-            throw new ArgumentException("temporary authorization code is empty.", nameof(temporaryAuthorizationCode));
+            throw new ArgumentException("temporary authorization code is empty.", nameof(state));
         }
 
         var existingTenantQuery = await repositoryFactory.TenantRepository
@@ -81,7 +96,7 @@ public class MsTeamsService(
         var existingAuthorizationCodeQuery = await repositoryFactory.TemporaryAuthorizationCodeRepository
             .Query(new Specification<TemporaryAuthorizationCode>
             {
-                Criteria = query => query.Id == temporaryAuthorizationCode
+                Criteria = query => query.Id == state
             }.ApplyOrderBy(query => query.Id))
             .FirstOrDefaultAsync(cancellationToken);
 
