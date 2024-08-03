@@ -59,7 +59,8 @@ resource "azuread_application" "msteams" {
 
   single_page_application {
     redirect_uris = [
-      "https://${module.shared_common.msteams_webapp_domain_name}/api/auth/callback/msteams"
+      "https://${module.shared_common.msteams_webapp_domain_name}/api/auth/callback/msteams",
+      "https://${module.shared_common.msteams_webapp_domain_name}/msteams/api/v1/onboard-tenant"
     ]
   }
 }
