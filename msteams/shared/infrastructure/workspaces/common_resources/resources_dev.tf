@@ -43,7 +43,7 @@ resource "azuread_application" "msteams_dev" {
   single_page_application {
     redirect_uris = [
       "https://localhost:15002/api/auth/callback/msteams",
-      "https://localhost:15002/msteams/api/v1/onboard-tenant"
+      "http://localhost:10900/msteams/api/v1/onboard-tenant"
     ]
   }
 }
