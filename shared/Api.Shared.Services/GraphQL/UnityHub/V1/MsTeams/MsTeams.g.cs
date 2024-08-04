@@ -19,11 +19,19 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams;
         public abstract class Query
         {
             
-            public abstract Task<Version> MsteamsVersionAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+            public abstract Task<Version> MsTeamsVersionAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<bool> MsteamsCustomerRecordSyncedAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<bool> MsTeamsCustomerRecordSyncedAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+            
+
+                
+                public abstract Task<bool> TenantInstalledAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+            
+
+                
+                public abstract Task<string> AdminConsentUrlAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
         }
         
 

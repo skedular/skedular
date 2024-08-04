@@ -1,15 +1,17 @@
 schema {
-    query: Query
+  query: Query
 }
 
 type Version {
-    major: Int!
-    minor: Int!
-    build: Int!
-    revision: Int!
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
 }
 
 type Query {
-    msteamsVersion: Version!
-    msteamsCustomerRecordSynced: Boolean!
+  msTeamsVersion: Version!
+  msTeamsCustomerRecordSynced: Boolean!
+  tenantInstalled: Boolean!
+  adminConsentUrl: String!
 }

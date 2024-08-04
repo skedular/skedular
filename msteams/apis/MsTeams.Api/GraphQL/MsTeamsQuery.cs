@@ -6,7 +6,7 @@ namespace MsTeams.Api.GraphQL;
 
 public class MsTeamsQuery : Query
 {
-    public override Task<Version> MsteamsVersionAsync(IServiceProvider serviceProvider,
+    public override Task<Version> MsTeamsVersionAsync(IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -20,6 +20,12 @@ public class MsTeamsQuery : Query
         });
     }
 
-    public override Task<bool> MsteamsCustomerRecordSyncedAsync(IServiceProvider serviceProvider,
+    public override Task<bool> MsTeamsCustomerRecordSyncedAsync(IServiceProvider serviceProvider,
         CancellationToken cancellationToken) => throw new NotImplementedException();
+
+    public override Task<bool> TenantInstalledAsync(IServiceProvider serviceProvider,
+        CancellationToken cancellationToken) => Task.FromResult(false);
+
+    public override Task<string> AdminConsentUrlAsync(IServiceProvider serviceProvider,
+        CancellationToken cancellationToken) => Task.FromResult(string.Empty);
 }
