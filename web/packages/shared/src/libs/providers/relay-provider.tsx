@@ -28,7 +28,7 @@ const RelayProvider = ({ children }: Props) => {
       signIn();
     }
 
-    return getEnvironment();
+    return getEnvironment(null);
   }, [session]);
 
   if (environment === null) {

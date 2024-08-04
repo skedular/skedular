@@ -1,7 +1,9 @@
 import { FluentProvider, teamsDarkTheme, teamsHighContrastTheme, teamsLightTheme, tokens } from '@fluentui/react-components';
+import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
 import Home from 'app';
-import { TeamsFxContext } from 'libs/providers';
+import { RelayProvider, TeamsFxContext } from 'libs/providers';
+import { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './App.css';
 
@@ -13,45 +15,49 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+  const [token, setToken] = useState<string | null>(null);
   const { loading, theme, themeString, teamsUserCredential } = useTeamsUserCredential({
     initiateLoginEndpoint: new URL('auth-start.html', process.env.REACT_APP_BASE_URL).href,
     clientId: process.env.REACT_APP_APPLICATION_REGISTRATION_ID!,
   });
 
-  // useEffect(() => {
-  //   const appInitialize = async () => {
-  //     if (!loading) {
-  //       return;
-  //     }
+  useEffect(() => {
+    const appInitialize = async () => {
+      if (!loading) {
+        return;
+      }
 
-  //     await app.initialize();
-  //     app.notifySuccess();
+      await app.initialize();
+      app.notifySuccess();
 
-  //     if (!teamsUserCredential) {
-  //       return;
-  //     }
+      if (!teamsUserCredential) {
+        return;
+      }
 
-  //     let consentNeeded = false;
+      try {
+        const accessToken = await teamsUserCredential!.getToken([]);
+        if (!accessToken) {
+          throw new Error('Access token is null');
+        }
 
-  //     try {
-  //       let x = process.env.REACT_APP_BASE_URL;
-  //       let y = process.env.REACT_APP_APPLICATION_REGISTRATION_ID;
+        setToken(accessToken.token);
+      } catch {
+        try {
+          await teamsUserCredential!.login([]);
+          const accessToken = await teamsUserCredential!.getToken([]);
+          if (!accessToken) {
+            throw new Error('Access token is null');
+          }
 
-  //       console.log(x);
-  //       console.log(y);
+          setToken(accessToken.token);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
 
-  //       await teamsUserCredential!.getToken(['User.Read', 'User.ReadBasic.All']);
-  //     } catch (error) {
-  //       consentNeeded = true;
-  //       try {
-  //         await teamsUserCredential!.login(['User.Read', 'User.ReadBasic.All']);
-  //       } catch (error1) {
-  //         console.log(error1);
-  //       }
-  //     }
-  //   };
-  //   appInitialize();
-  // }, [loading, teamsUserCredential]);
+    appInitialize();
+  }, [loading, teamsUserCredential]);
 
   return (
     <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
@@ -68,7 +74,9 @@ const App = () => {
         }
         style={{ background: tokens.colorNeutralBackground3 }}
       >
-        <RouterProvider router={router} />
+        <RelayProvider token={token}>
+          <RouterProvider router={router} />
+        </RelayProvider>
       </FluentProvider>
     </TeamsFxContext.Provider>
   );

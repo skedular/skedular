@@ -11,7 +11,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint",
     "lint-fix": "eslint --fix",
-    "format": "prettier --write --single-quote true --trailing-comma all --print-width 150 ./src && pnpm lint-fix"
+    "format": "prettier --write --single-quote true --trailing-comma all --print-width 150 ./src && pnpm lint-fix",
+    "relay": "relay-compiler $@"
   },
   "dependencies": {
     "@fluentui/react-components": "^9.54.7",
@@ -25,8 +26,11 @@
     "babel-plugin-relay": "^17.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-relay": "^17.0.0",
     "react-router-dom": "^6.26.0",
     "react-scripts": "5.0.1",
+    "relay-runtime": "^17.0.0",
+    "uuid": "^10.0.0",
     "web-vitals": "^4.2.2"
   },
   "devDependencies": {
@@ -39,8 +43,15 @@
     "@types/node": "^22.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/react-relay": "^16.0.6",
+    "@types/relay-runtime": "^17.0.3",
+    "@types/uuid": "^10.0.0",
     "eslint": "8.57.0",
+    "graphql": "^16.9.0",
     "prettier": "^3.3.3",
+    "relay-compiler": "^17.0.0",
+    "relay-compiler-language-typescript": "^15.0.1",
+    "relay-config": "^12.0.1",
     "typescript": "^5.5.4"
   },
   "browserslist": {
