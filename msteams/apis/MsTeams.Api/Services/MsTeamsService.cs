@@ -28,8 +28,7 @@ public class MsTeamsService(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
-    AzureAdConfiguration azureAdConfiguration,
-    GraphApiConfiguration graphApiConfiguration) : IMsTeamsService
+    AzureEntraConfiguration azureEntraConfiguration) : IMsTeamsService
 {
     public async Task<string> GenerateAdminConsentUrl(
         string tenantId,
@@ -41,12 +40,12 @@ public class MsTeamsService(
             Id = randomHelper.Generate(), CreatedAt = timeProvider.GetUtcNow()
         };
 
-        var clientId = Uri.EscapeDataString(azureAdConfiguration.ClientId);
+        var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(currentUri + "msteams/api/v1/onboard-tenant");
         var state = authorizedTenant.Id;
-        var scope = Uri.EscapeDataString(graphApiConfiguration.Scopes);
+        var scope = Uri.EscapeDataString("User.ReadBasic.All");
         var authorizationRequest =
-            $"{azureAdConfiguration.Instance}{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&state={state}&scope={scope}";
+            $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&state={state}&scope={scope}";
 
         repositoryFactory.TemporaryAuthorizationCodeRepository.Add(authorizedTenant);
         await repositoryFactory.TemporaryAuthorizationCodeRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

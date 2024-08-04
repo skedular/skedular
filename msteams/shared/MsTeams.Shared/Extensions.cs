@@ -40,13 +40,10 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var azureAdConfiguration = configuration.GetSection(AzureAdConfiguration.Key).Get<AzureAdConfiguration>();
-        ArgumentNullException.ThrowIfNull(azureAdConfiguration);
-        services.AddSingleton(azureAdConfiguration);
-
-        var graphApiConfiguration = configuration.GetSection(GraphApiConfiguration.Key).Get<GraphApiConfiguration>();
-        ArgumentNullException.ThrowIfNull(graphApiConfiguration);
-        services.AddSingleton(graphApiConfiguration);
+        var azureEntraConfiguration = configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
+        ArgumentNullException.ThrowIfNull(azureEntraConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientId);
+        services.AddSingleton(azureEntraConfiguration);
 
         return services;
     }
