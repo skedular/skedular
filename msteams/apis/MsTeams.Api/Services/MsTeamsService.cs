@@ -20,7 +20,7 @@ public interface IMsTeamsService
         string? error,
         string? errorMessage,
         bool adminConsent,
-        string state, 
+        string state,
         CancellationToken cancellationToken);
 }
 
@@ -54,11 +54,11 @@ public class MsTeamsService(
     }
 
     public async Task OnBoardTenant(
-        string tenantId, 
-        string? error, 
-        string? errorMessage, 
+        string tenantId,
+        string? error,
+        string? errorMessage,
         bool adminConsent,
-        string state, 
+        string state,
         CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(error))
@@ -93,10 +93,8 @@ public class MsTeamsService(
         }
 
         var existingAuthorizationCodeQuery = await repositoryFactory.TemporaryAuthorizationCodeRepository
-            .Query(new Specification<TemporaryAuthorizationCode>
-            {
-                Criteria = query => query.Id == state
-            }.ApplyOrderBy(query => query.Id))
+            .Query(new Specification<TemporaryAuthorizationCode> { Criteria = query => query.Id == state }.ApplyOrderBy(
+                query => query.Id))
             .FirstOrDefaultAsync(cancellationToken);
 
         if (existingAuthorizationCodeQuery is null)

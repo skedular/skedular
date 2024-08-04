@@ -40,7 +40,8 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var azureEntraConfiguration = configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
+        var azureEntraConfiguration =
+            configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
         ArgumentNullException.ThrowIfNull(azureEntraConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientId);
         services.AddSingleton(azureEntraConfiguration);

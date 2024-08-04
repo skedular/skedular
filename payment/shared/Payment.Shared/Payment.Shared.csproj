@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Stripe.net" Version="45.3.0"/>
+        <PackageReference Include="Stripe.net" Version="45.6.0"/>
 
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
             <PrivateAssets>all</PrivateAssets>

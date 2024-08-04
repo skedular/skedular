@@ -19,7 +19,7 @@ public class MsGraphService(IGraphServiceClientFactory graphServiceClientFactory
         "mail",
         "userPrincipalName"
     ];
-    
+
     public async Task<List<User>> GetUsersAsync(string tenantId, CancellationToken cancellationToken)
     {
         var users = new List<User>();
