@@ -1,4 +1,4 @@
-import { getEnvironment } from 'clients/graphql/unityhub';
+import { getEnvironment } from '@repo/shared/clients/graphql/unityhub';
 import { useMemo } from 'react';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 
@@ -13,7 +13,7 @@ const RelayProvider = ({ children, token }: Props) => {
       return null;
     }
 
-    return getEnvironment(token);
+    return getEnvironment(process.env.REACT_APP_GRAPHQL_ENDPOINT!, `Bearer ${token}`);
   }, [token]);
 
   if (environment === null) {

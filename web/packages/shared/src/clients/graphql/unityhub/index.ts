@@ -1,18 +1,18 @@
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import { v4 as uuidv4 } from 'uuid';
 
-export function createNetwork(authorization: string | null) {
+export function createNetwork(endpoint: string, token: string | null) {
   return Network.create(async (params, variables) => {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
       'X-Correlation-Id': uuidv4(),
     };
 
-    if (authorization) {
-      headers['Authorization'] = authorization;
+    if (token) {
+      headers['Authorization'] = token;
     }
 
-    const response = await fetch('/api/graphql', {
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers,
       body: JSON.stringify({
@@ -27,17 +27,17 @@ export function createNetwork(authorization: string | null) {
 
 let clientEnvironment: Environment | undefined;
 
-export function getEnvironment(authorization: string | null): Environment {
+export function getEnvironment(endpoint: string, token: string | null): Environment {
   if (typeof window === 'undefined') {
     return new Environment({
-      network: createNetwork(authorization),
+      network: createNetwork(endpoint, token),
       store: new Store(new RecordSource()),
       isServer: true,
     });
   } else {
     if (clientEnvironment == null) {
       clientEnvironment = new Environment({
-        network: createNetwork(authorization),
+        network: createNetwork(endpoint, token),
         store: new Store(new RecordSource()),
         isServer: false,
       });

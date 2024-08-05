@@ -28,7 +28,7 @@ const RelayProvider = ({ children }: Props) => {
       signIn();
     }
 
-    return getEnvironment(null);
+    return getEnvironment('/api/graphql', null);
   }, [session]);
 
   if (environment === null) {
