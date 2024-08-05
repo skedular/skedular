@@ -1,6 +1,6 @@
+using Enterprise.Shared.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MsTeams.Shared.Configurations;
 using MsTeams.Shared.Factories;
 using MsTeams.Shared.Mappers;
 using MsTeams.Shared.Publishers;
@@ -35,17 +35,4 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services;
-
-    public static IServiceCollection AddAzure(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        var azureEntraConfiguration =
-            configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
-        ArgumentNullException.ThrowIfNull(azureEntraConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientId);
-        services.AddSingleton(azureEntraConfiguration);
-
-        return services;
-    }
 }

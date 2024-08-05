@@ -46,8 +46,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddPublishers()
             .AddOutboxPublishers()
             .AddMappers()
-            .AddServices()
-            .AddAzure(Configuration);
+            .AddServices();
     }
 
     public override void Configure(IApplicationBuilder app)

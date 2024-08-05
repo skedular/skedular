@@ -147,8 +147,8 @@ services:
       Slack__SigningSecret: ${STAGING_UNITYHUBIO_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapistaging.unityhub.io/slack/api/v1/callback
       Slack__SuccessInstallUrl: https://staging.unityhub.io/slack-success-install
-      AzureEntra__ClientId: ${STAGING_UNITYHUBIO_MSTEAMS_CLIENT_ID}
-      AzureEntra__ClientSecret: ${STAGING_UNITYHUBIO_MSTEAMS_CLIENT_SECRET}
+      MsTeamsAzureEntra__ClientId: ${STAGING_UNITYHUBIO_MSTEAMS_CLIENT_ID}
+      MsTeamsAzureEntra__ClientSecret: ${STAGING_UNITYHUBIO_MSTEAMS_CLIENT_SECRET}
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
@@ -208,8 +208,8 @@ services:
       Slack__SigningSecret: ${STAGING_UNITYHUBIO_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapistaging.unityhub.io/slack/api/v1/callback
       Slack__SuccessInstallUrl: https://staging.unityhub.io/slack-success-install
-      AzureEntra__ClientId: ${STAGING_UNITYHUBIO_MSTEAMS_CLIENT_ID}
-      AzureEntra__ClientSecret: ${STAGING_UNITYHUBIO_MSTEAMS_CLIENT_SECRET}
+      MsTeamsAzureEntra__ClientId: ${STAGING_UNITYHUBIO_MSTEAMS_CLIENT_ID}
+      MsTeamsAzureEntra__ClientSecret: ${STAGING_UNITYHUBIO_MSTEAMS_CLIENT_SECRET}
     networks:
       unityhubio_network:
         aliases:
@@ -281,8 +281,8 @@ services:
       Slack__SigningSecret: ${PRODUCTION_UNITYHUBIO_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapi.unityhub.io/slack/api/v1/callback
       Slack__SuccessInstallUrl: https://unityhub.io/slack-success-install
-      AzureEntra__ClientId: ${PRODUCTION_UNITYHUBIO_MSTEAMS_CLIENT_ID}
-      AzureEntra__ClientSecret: ${PRODUCTION_UNITYHUBIO_MSTEAMS_CLIENT_SECRET}
+      MsTeamsAzureEntra__ClientId: ${PRODUCTION_UNITYHUBIO_MSTEAMS_CLIENT_ID}
+      MsTeamsAzureEntra__ClientSecret: ${PRODUCTION_UNITYHUBIO_MSTEAMS_CLIENT_SECRET}
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
@@ -342,8 +342,8 @@ services:
       Slack__SigningSecret: ${PRODUCTION_UNITYHUBIO_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapi.unityhub.io/slack/api/v1/callback
       Slack__SuccessInstallUrl: https://unityhub.io/slack-success-install
-      AzureEntra__ClientId: ${PRODUCTION_UNITYHUBIO_MSTEAMS_CLIENT_ID}
-      AzureEntra__ClientSecret: ${PRODUCTION_UNITYHUBIO_MSTEAMS_CLIENT_SECRET}
+      MsTeamsAzureEntra__ClientId: ${PRODUCTION_UNITYHUBIO_MSTEAMS_CLIENT_ID}
+      MsTeamsAzureEntra__ClientSecret: ${PRODUCTION_UNITYHUBIO_MSTEAMS_CLIENT_SECRET}
     networks:
       unityhubio_network:
         aliases:

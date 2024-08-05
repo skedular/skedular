@@ -38,8 +38,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddRepositoryFactory()
             .AddPublishers()
             .AddMappers()
-            .AddJobs()
-            .AddAzure(Configuration);
+            .AddJobs();
     }
 
     public override void Configure(IApplicationBuilder app) =>

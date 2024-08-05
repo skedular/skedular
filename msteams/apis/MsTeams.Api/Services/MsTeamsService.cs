@@ -1,7 +1,7 @@
-﻿using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
-using MsTeams.Shared.Configurations;
 using MsTeams.Shared.Database.Entities;
 using MsTeams.Shared.Repositories;
 using Tenant = MsTeams.Shared.Database.Entities.Tenant;
@@ -28,7 +28,7 @@ public class MsTeamsService(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
-    AzureEntraConfiguration azureEntraConfiguration) : IMsTeamsService
+    MsTeamsAzureEntraConfiguration msTeamsAzureEntraConfiguration) : IMsTeamsService
 {
     public async Task<string> GenerateAdminConsentUrl(
         string tenantId,
@@ -40,7 +40,7 @@ public class MsTeamsService(
             Id = randomHelper.Generate(), CreatedAt = timeProvider.GetUtcNow()
         };
 
-        var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
+        var clientId = Uri.EscapeDataString(msTeamsAzureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(currentUri + "msteams/api/v1/onboard-tenant");
         var state = authorizedTenant.Id;
         var scope = Uri.EscapeDataString("User.ReadBasic.All");

@@ -45,6 +45,15 @@ public abstract class StartupCustom(
             }
         }
 
+        var msTeamsAzureEntraConfiguration =
+            configuration.GetSection(MsTeamsAzureEntraConfiguration.Key).Get<MsTeamsAzureEntraConfiguration>();
+        if (msTeamsAzureEntraConfiguration is not null)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(msTeamsAzureEntraConfiguration.ClientId);
+            ArgumentException.ThrowIfNullOrWhiteSpace(msTeamsAzureEntraConfiguration.ClientSecret);
+            services.AddSingleton(msTeamsAzureEntraConfiguration);
+        }
+
         if (Environment.IsDevelopment())
         {
             services.AddSwaggerDocument();
