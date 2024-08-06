@@ -28,7 +28,12 @@ resource "azuread_application" "msteams_dev" {
     # }
 
     resource_access {
-      # data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.ReadBasic.All"]
+      id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.ReadBasic.All"]
+      type = "Scope"
+    }
+
+    resource_access {
+      # User.ReadBasic.All
       id   = "97235f07-e226-4f63-ace3-39588e11d3a1"
       type = "Role"
     }
