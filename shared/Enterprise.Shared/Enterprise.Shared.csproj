@@ -10,8 +10,8 @@
     <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="8.0.1"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1"/>
-        <PackageReference Include="Confluent.Kafka" Version="2.5.1"/>
-        <PackageReference Include="Confluent.SchemaRegistry" Version="2.5.1"/>
+        <PackageReference Include="Confluent.Kafka" Version="2.5.2"/>
+        <PackageReference Include="Confluent.SchemaRegistry" Version="2.5.2"/>
         <PackageReference Include="CountryData" Version="6.4.0"/>
         <PackageReference Include="EmailValidation" Version="1.2.0"/>
         <PackageReference Include="Flurl.Http" Version="4.0.2"/>
