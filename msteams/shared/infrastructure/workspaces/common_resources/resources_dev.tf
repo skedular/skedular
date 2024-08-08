@@ -39,19 +39,31 @@ resource "azuread_application" "msteams_dev" {
     }
   }
 
-  web {
-    redirect_uris = [
-      "https://localhost:15002/auth-end.html"
-    ]
-  }
-
   single_page_application {
     redirect_uris = [
-      "https://localhost:15002/api/auth/callback/msteams",
-      "https://localhost:15002/auth-end.html",
-      "http://localhost:10900/msteams/api/v1/onboard-tenant"
     ]
   }
+}
+
+resource "azuread_application_redirect_uris" "msteams_web_redirect_uris_dev" {
+  count          = var.environment == "staging" ? 1 : 0
+  application_id = azuread_application.msteams_dev[count.index].id
+  type           = "Web"
+
+  redirect_uris = [
+    "https://${module.shared_common.msteams_webapp_domain_name}/auth-end.html?clientId=${azuread_application.msteams_dev[count.index].client_id}",
+  ]
+}
+
+resource "azuread_application_redirect_uris" "msteams_spa_redirect_uris_dev" {
+  count          = var.environment == "staging" ? 1 : 0
+  application_id = azuread_application.msteams_dev[count.index].id
+  type           = "SPA"
+
+  redirect_uris = [
+    "https://localhost:15002/api/auth/callback/msteams",
+    "http://localhost:10900/msteams/api/v1/onboard-tenant"
+  ]
 }
 
 resource "azuread_application_identifier_uri" "msteams_identifier_uris_dev" {

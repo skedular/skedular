@@ -55,20 +55,25 @@ resource "azuread_application" "msteams" {
       type = "Role"
     }
   }
+}
 
-  web {
-    redirect_uris = [
-      "https://${module.shared_common.msteams_webapp_domain_name}/auth-end.html"
-    ]
-  }
+resource "azuread_application_redirect_uris" "msteams_web_redirect_uris" {
+  application_id = azuread_application.msteams.id
+  type           = "Web"
 
-  single_page_application {
-    redirect_uris = [
-      "https://${module.shared_common.msteams_webapp_domain_name}/api/auth/callback/msteams",
-      "https://${module.shared_common.msteams_webapp_domain_name}/auth-end.html",
-      "https://${module.shared_common.msteams_webapp_domain_name}/msteams/api/v1/onboard-tenant"
-    ]
-  }
+  redirect_uris = [
+    "https://${module.shared_common.msteams_webapp_domain_name}/auth-end.html?clientId=${azuread_application.msteams.client_id}",
+  ]
+}
+
+resource "azuread_application_redirect_uris" "msteams_spa_redirect_uris" {
+  application_id = azuread_application.msteams.id
+  type           = "SPA"
+
+  redirect_uris = [
+    "https://${module.shared_common.msteams_webapp_domain_name}/api/auth/callback/msteams",
+    "https://${module.shared_common.msteams_webapp_domain_name}/msteams/api/v1/onboard-tenant"
+  ]
 }
 
 resource "azuread_application_identifier_uri" "msteams_identifier_uris" {
