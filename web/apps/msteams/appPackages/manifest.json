@@ -37,7 +37,7 @@
   "permissions": ["identity", "messageTeamMembers"],
   "validDomains": ["localhost:15002"],
   "webApplicationInfo": {
-    "id": "092ba383-624e-4a05-9524-7aac72509745",
-    "resource": "api://localhost:15002/092ba383-624e-4a05-9524-7aac72509745"
+    "id": "3903ae5d-b0bc-4258-9435-c29c84cebf76",
+    "resource": "api://localhost:15002/3903ae5d-b0bc-4258-9435-c29c84cebf76"
   }
 }

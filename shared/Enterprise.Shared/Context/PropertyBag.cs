@@ -32,6 +32,9 @@ public class PropertyBag
 
     public string? Locale => _properties.TryGetValue(Type.Locale, out var property) ? property.StrVal : null;
 
+    public Guid AzureTenantId =>
+        _properties.TryGetValue(Type.AzureTenantId, out var property) ? property.GuidVal : Guid.Empty;
+
     public PropertyBag AddVerifiableToken(string value)
     {
         _properties[Type.VerifiableToken] = new Property { StrVal = value };
@@ -165,6 +168,13 @@ public class PropertyBag
         return this;
     }
 
+    public PropertyBag AddAzureTenantId(Guid value)
+    {
+        _properties[Type.AzureTenantId] = new Property { GuidVal = value };
+
+        return this;
+    }
+
     private enum Type
     {
         VerifiableToken,
@@ -185,12 +195,14 @@ public class PropertyBag
         EmailVerified,
         Timezone,
         Locale,
-        CorrelationId
+        CorrelationId,
+        AzureTenantId
     }
 
     private class Property
     {
         public string StrVal { get; set; } = string.Empty;
         public bool BoolVal { get; set; }
+        public Guid GuidVal { get; set; }
     }
 }

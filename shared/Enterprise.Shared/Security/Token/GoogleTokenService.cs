@@ -22,8 +22,8 @@ public class GoogleTokenService : IGoogleTokenService
         try
         {
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
-            if (value is not null && _googleConfiguration.Issuer != value)
+            var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
+            if (issuer is not null && _googleConfiguration.Issuer != issuer)
             {
                 return null;
             }

@@ -1,5 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Text.Json.Serialization;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Flurl.Http;
@@ -44,13 +43,14 @@ public class CognitoTokenService : ICognitoTokenService
             ArgumentNullException.ThrowIfNull(jws);
 
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
-            if (value is not null && _cognitoConfiguration.Issuer != value)
+            var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
+            if (issuer is not null && _cognitoConfiguration.Issuer != issuer)
             {
                 return null;
             }
 
-            await new JsonWebTokenHandler().ValidateTokenAsync(jwtToken,
+            await new JsonWebTokenHandler().ValidateTokenAsync(
+                jwtToken,
                 new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -63,7 +63,7 @@ public class CognitoTokenService : ICognitoTokenService
                 });
 
             var propertyBag = new PropertyBag();
-            value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
+            var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
             if (value is not null)
             {
                 propertyBag.AddVerifiableToken(value);
@@ -118,10 +118,5 @@ public class CognitoTokenService : ICognitoTokenService
         {
             return null;
         }
-    }
-
-    private class Jws
-    {
-        [JsonPropertyName("keys")] public JsonWebKey[] Keys { get; } = [];
     }
 }

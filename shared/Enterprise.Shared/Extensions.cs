@@ -13,11 +13,12 @@ public static class Extensions
     public static IServiceCollection AddSecurity(this IServiceCollection services) =>
         services
             .AddScoped<IGrpcAuthenticator, GrpcAuthenticator>()
-            .AddSingleton<IGoogleTokenService, GoogleTokenService>()
             .AddSingleton<ICognitoTokenService, CognitoTokenService>()
+            .AddSingleton<IGoogleTokenService, GoogleTokenService>()
+            .AddSingleton<IMsTeamsTokenServiceTokenService, MsTeamsTokenServiceTokenService>()
             .AddSingleton<IEnumerable<ITokenService>>(sp =>
             {
-                var applicationConfiguration = sp.GetService<ApplicationConfiguration>();
+                var applicationConfiguration = sp.GetRequiredService<ApplicationConfiguration>();
                 ArgumentNullException.ThrowIfNull(applicationConfiguration);
 
                 var tokenServices = new List<ITokenService>();
@@ -27,13 +28,19 @@ public static class Extensions
                     !string.IsNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Cognito.Issuer) &&
                     !string.IsNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Cognito.Audiences))
                 {
-                    tokenServices.Add(sp.GetService<ICognitoTokenService>() ?? throw new InvalidOperationException());
+                    tokenServices.Add(sp.GetRequiredService<ICognitoTokenService>());
                 }
 
                 if (applicationConfiguration.IdentityProviders.Google is not null &&
                     !string.IsNullOrWhiteSpace(applicationConfiguration.IdentityProviders.Google.Issuer))
                 {
-                    tokenServices.Add(sp.GetService<IGoogleTokenService>() ?? throw new InvalidOperationException());
+                    tokenServices.Add(sp.GetRequiredService<IGoogleTokenService>());
+                }
+
+                var msTeamsAzureEntraConfiguration = sp.GetService<MsTeamsAzureEntraConfiguration>();
+                if (msTeamsAzureEntraConfiguration is not null)
+                {
+                    tokenServices.Add(sp.GetRequiredService<IMsTeamsTokenServiceTokenService>());
                 }
 
                 return tokenServices;
