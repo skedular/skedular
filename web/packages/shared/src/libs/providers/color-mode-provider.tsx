@@ -1,15 +1,15 @@
 'use client';
 
 import { useMediaQuery } from '@mui/material';
-import type { ColorMode } from '../theme';
 import { createContext, useEffect, useMemo } from 'react';
+import type { ColorMode } from '../theme';
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 type Props = {
   children?: React.ReactNode;
   loadDefaultSystemMode: boolean;
-  setMode: React.Dispatch<React.SetStateAction<ColorMode>>;
+  setMode?: React.Dispatch<React.SetStateAction<ColorMode>>;
 };
 
 const ColorModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props) => {
@@ -17,7 +17,9 @@ const ColorModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props) 
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+        if (setMode) {
+          setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+        }
       },
     }),
     [setMode],
@@ -28,7 +30,9 @@ const ColorModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props) 
       return;
     }
 
-    setMode(prefersDarkMode ? 'dark' : 'light');
+    if (setMode) {
+      setMode(prefersDarkMode ? 'dark' : 'light');
+    }
   }, [prefersDarkMode, loadDefaultSystemMode, setMode]);
 
   return <ColorModeContext.Provider value={colorMode}>{children}</ColorModeContext.Provider>;
