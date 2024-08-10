@@ -12,7 +12,6 @@ public class Team : EntityBaseWithDeleted
     public string Name { get; set; } = string.Empty;
     public string? About { get; set; }
     public string? Timezone { get; set; }
-    public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
 
     public virtual Organization? Organization { get; set; }
     public virtual ICollection<Booking> Bookings { get; set; } = [];

@@ -7,7 +7,6 @@ public class Team : ModelBaseWithDeleted
     public string Name { get; set; } = string.Empty;
     public string? About { get; set; }
     public string? Timezone { get; set; }
-    public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
 
     public Organization? Organization { get; set; }
     public ICollection<Booking> Bookings { get; set; } = [];
