@@ -1,6 +1,11 @@
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
-import { TeamsFxContext } from 'libs/providers';
-import { memo, useContext, useEffect } from 'react';
+import { memo, useEffect } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { appHome_rootQuery } from './__generated__/appHome_rootQuery.graphql';
 
@@ -18,13 +23,12 @@ type Props = {
 
 const Home = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<appHome_rootQuery>(RootQuery, queryReference);
-  const { themeString } = useContext(TeamsFxContext);
-
+  
   return (
-    <div className={themeString === 'default' ? 'light' : themeString === 'dark' ? 'dark' : 'contrast'}>
-      <h1>Testing home page</h1>
+    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
+      <Typography variant="h4">Testing home page</Typography>
       {rootData.msTeamsVersion.major}
-    </div>
+      </Box>
   );
 };
 
@@ -43,10 +47,14 @@ const HomeWithRelay = () => {
   }, [loadQuery]);
 
   if (queryReference == null) {
-    return <></>;
+    return <Loading />;
   }
 
-  return <MemoHome queryReference={queryReference} />;
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoHome queryReference={queryReference}  />
+    </ErrorBoundary>
+  );
 };
 
 export default memo(HomeWithRelay);

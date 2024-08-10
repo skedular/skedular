@@ -1,12 +1,18 @@
-import { FluentProvider, teamsDarkTheme, teamsHighContrastTheme, teamsLightTheme, tokens } from '@fluentui/react-components';
 import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
 import Home from 'app';
-import { RelayProvider, TeamsFxContext } from 'libs/providers';
+import {
+  ColorModeProvider,
+  DatePickerLocalizationProvider,
+  LogRocketProvider,
+  RelayProvider,
+  SnackbarProvider,
+  TeamsFxContext,
+  ThemeProvider,
+} from 'libs/providers';
 import { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './App.css';
-
 const router = createBrowserRouter([
   {
     path: '/',
@@ -61,23 +67,19 @@ const App = () => {
 
   return (
     <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
-      <FluentProvider
-        theme={
-          themeString === 'dark'
-            ? teamsDarkTheme
-            : themeString === 'contrast'
-              ? teamsHighContrastTheme
-              : {
-                  ...teamsLightTheme,
-                  colorNeutralBackground3: '#eeeeee',
-                }
-        }
-        style={{ background: tokens.colorNeutralBackground3 }}
-      >
-        <RelayProvider token={token}>
-          <RouterProvider router={router} />
-        </RelayProvider>
-      </FluentProvider>
+      <ColorModeProvider loadDefaultSystemMode={false}>
+        <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
+          <SnackbarProvider>
+            <DatePickerLocalizationProvider>
+              <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>
+                <RelayProvider token={token}>
+                  <RouterProvider router={router} />
+                </RelayProvider>
+              </LogRocketProvider>
+            </DatePickerLocalizationProvider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </ColorModeProvider>
     </TeamsFxContext.Provider>
   );
 };

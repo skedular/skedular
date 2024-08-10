@@ -10,7 +10,7 @@ type Props = {
   children?: React.ReactNode;
   ignoreOptOutCookie: boolean;
   forceOverride: boolean;
-  logRocketAppId: string;
+  logRocketAppId: string | undefined;
 };
 
 const LogRocketProvider = ({ children, ignoreOptOutCookie, forceOverride, logRocketAppId }: Props) => {
@@ -42,7 +42,7 @@ const LogRocketProvider = ({ children, ignoreOptOutCookie, forceOverride, logRoc
       LogRocket.init(logRocketAppId);
       setupLogRocketReact(LogRocket);
     }
-  }, [shouldUseAnalytics]);
+  }, [shouldUseAnalytics, logRocketAppId]);
 
   return <>{children}</>;
 };
