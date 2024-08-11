@@ -1,7 +1,5 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
 import MenuIcon from '@mui/icons-material/Menu';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -21,12 +19,11 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { FeedbackIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { Logo } from '@repo/shared/components/logo';
-import { ColorModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { CustomerAvatar } from 'components/customer';
 import { NewFeedbackDialog } from 'components/feedback';
-import { memo, useContext, useState } from 'react';
+import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
 import { useNavigate } from 'react-router-dom';
 import type { mainRootLayout_query$key } from './__generated__/mainRootLayout_query.graphql';
@@ -109,10 +106,9 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
     rootDataRelay,
   );
 
-  const theme = useTheme();
-  const colorMode = useContext(ColorModeContext);
-  const matchMobileView = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
+  const theme = useTheme();
+  const matchMobileView = useMediaQuery(theme.breakpoints.down('md'));
   const [leftDraweropen, setLeftDrawerOpen] = useState(!matchMobileView);
   const [rightDraweropen, setRightDrawerOpen] = useState(false);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -206,9 +202,6 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
                   <FeedbackIcon />
                 </IconButton>
               </Tooltip>
-              <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode}>
-                {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
-              </IconButton>
               <IconButton onClick={handleProfileMenuOpenClick} sx={{ p: 0 }}>
                 <CustomerAvatar
                   name={{
