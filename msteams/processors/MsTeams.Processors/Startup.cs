@@ -38,7 +38,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
-            .AddRepositories()
             .AddRepositoryFactory()
             .AddPublishers()
             .AddMappers()

@@ -2,6 +2,7 @@
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Random;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using MsTeams.Shared.Repositories;
@@ -25,6 +26,7 @@ public class MsTeamsService(
     IHttpContextAccessor httpContextAccessor,
     IRepositoryFactory repositoryFactory,
     TimeProvider timeProvider,
+    IRandomHelper randomHelper,
     IContext context) : IMsTeamsService
 {
     public string GenerateAdminConsentUrl()
@@ -41,7 +43,7 @@ public class MsTeamsService(
         var redirectUri = Uri.EscapeDataString(currentUri + "msteams/api/v1/onboard-tenant");
         var scope = Uri.EscapeDataString("User.ReadBasic.All");
         var authorizationRequest =
-            $"https://login.microsoftonline.com/{context.PropertyBag.AzureTenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}";
+            $"https://login.microsoftonline.com/{context.PropertyBag.AzureTenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={randomHelper.Generate()}";
 
         return authorizationRequest;
     }

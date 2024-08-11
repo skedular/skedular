@@ -26,7 +26,6 @@ public static class Extensions
 
     public static IServiceCollection AddRepositories(this IServiceCollection services) =>
         services
-            .AddScoped<ITemporaryAuthorizationCodeRepository, TemporaryAuthorizationCodeRepository>()
             .AddScoped<ITenantRepository, TenantRepository>()
             .AddScoped<ITenantMemberRepository, TenantMemberRepository>();
 

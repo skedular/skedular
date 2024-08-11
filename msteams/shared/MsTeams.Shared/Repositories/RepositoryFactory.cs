@@ -7,7 +7,6 @@ public interface IRepositoryFactory
 {
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
-    ITemporaryAuthorizationCodeRepository TemporaryAuthorizationCodeRepository { get; }
     ITenantRepository TenantRepository { get; }
     ITenantMemberRepository TenantMemberRepository { get; }
 }
@@ -22,7 +21,6 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
 
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
-        TemporaryAuthorizationCodeRepository = new TemporaryAuthorizationCodeRepository(_dbContext, timeProvider);
         TenantRepository = new TenantRepository(_dbContext, timeProvider);
         TenantMemberRepository = new TenantMemberRepository(_dbContext, timeProvider);
     }
@@ -35,7 +33,6 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
 
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
-    public ITemporaryAuthorizationCodeRepository TemporaryAuthorizationCodeRepository { get; }
     public ITenantRepository TenantRepository { get; }
     public ITenantMemberRepository TenantMemberRepository { get; }
 
