@@ -1,6 +1,10 @@
+using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
+using Api.Shared.Models;
 using MsTeams.Shared.Database.Entities;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Customer = MsTeams.Shared.Models.Customer;
+using Organization = MsTeams.Shared.Models.Organization;
+using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
 
 namespace MsTeams.Processors.Mappers;
 
@@ -27,6 +31,21 @@ public interface IMapper
         Shared.Models.Identity src,
         Identity dest,
         Shared.Database.Entities.Customer? customer);
+
+    Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
+    Shared.Database.Entities.Organization MapToEntity(Organization src);
+    Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
+
+    OrganizationMember MapToEntity(
+        Shared.Models.OrganizationMember src,
+        Shared.Database.Entities.Organization organization,
+        Shared.Database.Entities.Customer customer);
+
+    OrganizationMember MergeToEntity(
+        Shared.Models.OrganizationMember src,
+        OrganizationMember dest,
+        Shared.Database.Entities.Organization organization,
+        Shared.Database.Entities.Customer customer);
 }
 
 public class Mapper : IMapper
@@ -83,6 +102,68 @@ public class Mapper : IMapper
             dest.Customer = customer;
         }
 
+        return dest;
+    }
+
+    public Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src)
+    {
+        var organizationAfterState = src.Data.OrganizationAfterState;
+        var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        var organization = new Organization
+        {
+            Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt
+        };
+
+        organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
+        {
+            return new Shared.Models.OrganizationMember
+            {
+                Id = item.Id,
+                MembershipType = item.MembershipType switch
+                {
+                    MembershipType.Owner => OrganizationMembershipType.Owner,
+                    MembershipType.Administrator => OrganizationMembershipType.Administrator,
+                    MembershipType.Member => OrganizationMembershipType.Member,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
+                Customer = new Customer { Id = item.CustomerId },
+                Organization = organization
+            };
+        }).ToList();
+
+        return organization;
+    }
+
+    public Shared.Database.Entities.Organization MapToEntity(Organization src) =>
+        MergeToEntity(src, new Shared.Database.Entities.Organization());
+
+    public Shared.Database.Entities.Organization MergeToEntity(Organization src,
+        Shared.Database.Entities.Organization dest)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        return dest;
+    }
+
+    public OrganizationMember MapToEntity(
+        Shared.Models.OrganizationMember src,
+        Shared.Database.Entities.Organization organization,
+        Shared.Database.Entities.Customer customer) =>
+        MergeToEntity(src, new OrganizationMember(), organization, customer);
+
+    public OrganizationMember MergeToEntity(
+        Shared.Models.OrganizationMember src,
+        OrganizationMember dest,
+        Shared.Database.Entities.Organization organization,
+        Shared.Database.Entities.Customer customer)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.MembershipType = src.MembershipType;
+        dest.Organization = organization;
+        dest.Customer = customer;
         return dest;
     }
 }

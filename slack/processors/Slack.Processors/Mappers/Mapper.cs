@@ -250,14 +250,12 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer)
     {
-        {
-            dest.Id = src.Id;
-            dest.EventRaisedAt = src.EventRaisedAt;
-            dest.MembershipType = src.MembershipType;
-            dest.Organization = organization;
-            dest.Customer = customer;
-            return dest;
-        }
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.MembershipType = src.MembershipType;
+        dest.Organization = organization;
+        dest.Customer = customer;
+        return dest;
     }
 
     public WorkspaceChannel MapToEntity(Conversation src, Workspace workspace) =>
