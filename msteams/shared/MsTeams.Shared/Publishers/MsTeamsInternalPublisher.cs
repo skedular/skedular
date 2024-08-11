@@ -9,7 +9,7 @@ namespace MsTeams.Shared.Publishers;
 
 public interface IMsTeamsInternalPublisher
 {
-    Task PublishTenantMembersAsync(IEnumerable<string> tenantIds, CancellationToken cancellationToken);
+    Task PublishRefreshTenantMembersAsync(IEnumerable<string> tenantIds, CancellationToken cancellationToken);
 }
 
 public class MsTeamsInternalPublisher(
@@ -18,7 +18,7 @@ public class MsTeamsInternalPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : IMsTeamsInternalPublisher
 {
-    public async Task PublishTenantMembersAsync(
+    public async Task PublishRefreshTenantMembersAsync(
         IEnumerable<string> tenantIds,
         CancellationToken cancellationToken) =>
         await Task.WhenAll(tenantIds.Select(async tenantId =>

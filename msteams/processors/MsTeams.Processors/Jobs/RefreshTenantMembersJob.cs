@@ -38,14 +38,13 @@ public class RefreshTenantMembersJob(
                 var tenantIds = await repositoryFactory.TenantRepository.Query(
                     new Specification<Tenant>
                     {
-                        //TODO : move to config
                         Criteria = query =>
                             !query.EntitiesLastRefreshedAt.HasValue ||
                             (now - query.EntitiesLastRefreshedAt.Value).TotalHours >= 24
                     }).Select(item => item.Id).ToListAsync(cancellationToken);
                 if (tenantIds.Count != 0)
                 {
-                    await msTeamsInternalPublisher.PublishTenantMembersAsync(tenantIds, cancellationToken);
+                    await msTeamsInternalPublisher.PublishRefreshTenantMembersAsync(tenantIds, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken);

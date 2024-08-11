@@ -12,8 +12,6 @@ public interface IGraphServiceClientFactory
 public class CreateGraphServiceClientFactory(MsTeamsAzureEntraConfiguration msTeamsAzureEntraOptions)
     : IGraphServiceClientFactory
 {
-    private static readonly string[] s_scopes = ["https://graph.microsoft.com/.default"];
-
     public GraphServiceClient CreateGraphServiceClient(string tenantId)
     {
         var clientSecretCredential = new ClientSecretCredential(
@@ -21,6 +19,6 @@ public class CreateGraphServiceClientFactory(MsTeamsAzureEntraConfiguration msTe
             msTeamsAzureEntraOptions.ClientId,
             msTeamsAzureEntraOptions.ClientSecret,
             new ClientSecretCredentialOptions { AuthorityHost = AzureAuthorityHosts.AzurePublicCloud });
-        return new GraphServiceClient(clientSecretCredential, s_scopes);
+        return new GraphServiceClient(clientSecretCredential, ["https://graph.microsoft.com/.default"]);
     }
 }
