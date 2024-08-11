@@ -1,12 +1,9 @@
 ﻿using Ardalis.GuardClauses;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.EntityFrameworkCore;
 using MsTeams.Shared.Repositories;
-using Tenant = MsTeams.Shared.Database.Entities.Tenant;
 
 namespace MsTeams.Api.Services;
 
@@ -25,7 +22,6 @@ public class MsTeamsService(
     MsTeamsAzureEntraConfiguration msTeamsAzureEntraConfiguration,
     IHttpContextAccessor httpContextAccessor,
     IRepositoryFactory repositoryFactory,
-    TimeProvider timeProvider,
     IRandomHelper randomHelper,
     IContext context) : IMsTeamsService
 {
@@ -39,11 +35,13 @@ public class MsTeamsService(
             httpContextAccessor.HttpContext.Request.Host,
             httpContextAccessor.HttpContext.Request.PathBase);
 
+        var tenantId = context.PropertyBag.AzureTenantId;
         var clientId = Uri.EscapeDataString(msTeamsAzureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(currentUri + "msteams/api/v1/onboard-tenant");
         var scope = Uri.EscapeDataString("User.ReadBasic.All");
+        var state = randomHelper.Generate();
         var authorizationRequest =
-            $"https://login.microsoftonline.com/{context.PropertyBag.AzureTenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={randomHelper.Generate()}";
+            $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={state}";
 
         return authorizationRequest;
     }
@@ -65,19 +63,7 @@ public class MsTeamsService(
             throw new ArgumentException("no tenant Id provided.", nameof(tenantId));
         }
 
-        var existingTenantQuery = await repositoryFactory.TenantRepository
-            .Query(new Specification<Tenant> { Criteria = query => query.Id == tenantId }
-                .ApplyOrderBy(query => query.Id))
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (existingTenantQuery is not null)
-        {
-            return;
-        }
-
-        var newTenant = new Tenant { Id = tenantId, CreatedAt = timeProvider.GetUtcNow() };
-
-        repositoryFactory.TenantRepository.Add(newTenant);
+        await repositoryFactory.TenantRepository.UpsertNakedAsync(tenantId, cancellationToken);
         await repositoryFactory.TenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

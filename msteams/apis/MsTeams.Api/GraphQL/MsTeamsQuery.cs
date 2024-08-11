@@ -1,7 +1,6 @@
 using System.Reflection;
 using Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams;
 using Enterprise.Shared.Context;
-using Microsoft.AspNetCore.Http.Extensions;
 using MsTeams.Api.Services;
 using Version = Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams.Version;
 
@@ -32,9 +31,14 @@ public class MsTeamsQuery : Query
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override Task<bool> TenantInstalledAsync(
+    public override async Task<bool> TenantInstalledAsync(
         IServiceProvider serviceProvider,
-        CancellationToken cancellationToken) => Task.FromResult(false);
+        CancellationToken cancellationToken)
+    {
+        await using var scope = serviceProvider.CreateScopeAndSetContent();
+        var service = scope.ServiceProvider.GetRequiredService<ITenantService>();
+        return await service.DoesTenantExistAsync(cancellationToken);
+    }
 
     public override async Task<string> AdminConsentUrlAsync(
         IServiceProvider serviceProvider,

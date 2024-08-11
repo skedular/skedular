@@ -2,7 +2,6 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using MsTeams.Api.Mappers;
 using MsTeams.Shared.Database.Entities;
 using MsTeams.Shared.Repositories;
 
@@ -15,7 +14,6 @@ public interface ICustomerService
 
 public class CustomerService(
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
     IContext context,
     IMemoryCache memoryCache) : ICustomerService, IDisposable
 {
