@@ -1,5 +1,4 @@
 using Microsoft.Graph.Models;
-using MsTeams.Shared.Factories;
 
 namespace MsTeams.Shared.Services;
 
@@ -8,24 +7,13 @@ public interface IMsGraphService
     Task<List<User>> GetUsersAsync(string tenantId, CancellationToken cancellationToken);
 }
 
-public class MsGraphService(IGraphServiceClientFactory graphServiceClientFactory) : IMsGraphService
+public class MsGraphService(IMsGraphServiceClientService msGraphServiceClientService) : IMsGraphService
 {
-    private static readonly string[] s_userProperties =
-    [
-        "id",
-        "givenName",
-        "surname",
-        "jobTitle",
-        "mail",
-        "userPrincipalName"
-    ];
-
     public async Task<List<User>> GetUsersAsync(string tenantId, CancellationToken cancellationToken)
     {
+        var graphServiceClient = msGraphServiceClientService.CreateGraphServiceClient(tenantId);
         var users = new List<User>();
         var skipCount = 0;
-
-        var graphServiceClient = graphServiceClientFactory.CreateGraphServiceClient(tenantId);
 
         do
         {
@@ -33,7 +21,15 @@ public class MsGraphService(IGraphServiceClientFactory graphServiceClientFactory
                 .GetAsync(requestConfiguration =>
                     {
                         requestConfiguration.QueryParameters.Count = true;
-                        requestConfiguration.QueryParameters.Select = s_userProperties;
+                        requestConfiguration.QueryParameters.Select =
+                        [
+                            "id",
+                            "givenName",
+                            "surname",
+                            "jobTitle",
+                            "mail",
+                            "userPrincipalName"
+                        ];
                         _ = requestConfiguration.QueryParameters.Select.Skip(skipCount);
                     },
                     cancellationToken);

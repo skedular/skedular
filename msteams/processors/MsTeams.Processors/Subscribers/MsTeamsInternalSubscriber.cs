@@ -65,6 +65,7 @@ public class MsTeamsInternalSubscriber(
         existingTenant.EntitiesLastRefreshedAt = timeProvider.GetUtcNow();
         repositoryFactory.TenantMemberRepository.RemoveRange(itemsToRemove);
         existingTenant.TenantMembers = addedItems.Concat(updatedItems).ToList();
+
         await repositoryFactory.TenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

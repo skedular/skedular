@@ -2,15 +2,15 @@ using Azure.Identity;
 using Enterprise.Shared.Configurations;
 using Microsoft.Graph;
 
-namespace MsTeams.Shared.Factories;
+namespace MsTeams.Shared.Services;
 
-public interface IGraphServiceClientFactory
+public interface IMsGraphServiceClientService
 {
     GraphServiceClient CreateGraphServiceClient(string tenantId);
 }
 
-public class CreateGraphServiceClientFactory(MsTeamsAzureEntraConfiguration msTeamsAzureEntraOptions)
-    : IGraphServiceClientFactory
+public class MsGraphServiceClientService(MsTeamsAzureEntraConfiguration msTeamsAzureEntraOptions)
+    : IMsGraphServiceClientService
 {
     public GraphServiceClient CreateGraphServiceClient(string tenantId)
     {

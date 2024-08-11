@@ -2,7 +2,6 @@ using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MsTeams.Shared.Configurations;
-using MsTeams.Shared.Factories;
 using MsTeams.Shared.Mappers;
 using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
@@ -18,7 +17,7 @@ public static class Extensions
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
             .AddScoped<IMsGraphService, MsGraphService>()
-            .AddSingleton<IGraphServiceClientFactory, CreateGraphServiceClientFactory>();
+            .AddSingleton<IMsGraphServiceClientService, MsGraphServiceClientService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services
