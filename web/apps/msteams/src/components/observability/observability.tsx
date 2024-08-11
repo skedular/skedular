@@ -1,5 +1,6 @@
+import graphql from 'babel-plugin-relay/macro';
 import { memo } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { useFragment } from 'react-relay';
 import type { observability_query$key } from './__generated__/observability_query.graphql';
 import LogRocket from './logrocket';
 
@@ -17,7 +18,7 @@ const Observability = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
-  return <>{process.env.NEXT_PUBLIC_LOGROCKET_APP_ID && <LogRocket rootDataRelay={rootData} />}</>;
+  return <>{process.env.REACT_APP_LOGROCKET_APP_ID && <LogRocket rootDataRelay={rootData} />}</>;
 };
 
 export default memo(Observability);

@@ -33,6 +33,8 @@
     "@mui/x-data-grid": "^7.12.0",
     "@mui/x-date-pickers": "^7.12.0",
     "@mui/x-date-pickers-pro": "^7.12.0",
+    "@mui/x-license": "^7.12.0",
+    "@mui/x-license-pro": "^6.10.2",
     "@mui/x-tree-view": "^7.12.0",
     "babel-plugin-relay": "^17.0.0",
     "cookies-next": "^4.2.1",

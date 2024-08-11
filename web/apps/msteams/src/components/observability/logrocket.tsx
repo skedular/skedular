@@ -1,6 +1,7 @@
+import graphql from 'babel-plugin-relay/macro';
 import LogRocket from 'logrocket';
 import { memo, useEffect } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { useFragment } from 'react-relay';
 import type { logrocket_query$key } from './__generated__/logrocket_query.graphql';
 
 type Props = {
