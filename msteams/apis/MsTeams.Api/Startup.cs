@@ -46,11 +46,12 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddPublishers()
             .AddOutboxPublishers()
             .AddMappers()
-            .AddServices();
+            .AddServices()
+            .AddJobs()
+            .AddUnityHubGrpcServices(Configuration);
     }
 
-    public override void Configure(IApplicationBuilder app)
-    {
+    public override void Configure(IApplicationBuilder app) =>
         app.UseApplicationBuilderDefaults(
             Environment,
             Configuration,
@@ -59,7 +60,4 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                 endpointRouteBuilder.MapGrpcService<MsTeamsGrpcService>();
             }
         );
-
-        app.UseCors("CorsPolicy");
-    }
 }

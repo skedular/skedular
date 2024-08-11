@@ -1,5 +1,7 @@
 using System.Reflection;
 using Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams;
+using Enterprise.Shared.Context;
+using MsTeams.Api.Services;
 using Version = Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams.Version;
 
 namespace MsTeams.Api.GraphQL;
@@ -20,8 +22,14 @@ public class MsTeamsQuery : Query
         });
     }
 
-    public override Task<bool> MsTeamsCustomerRecordSyncedAsync(IServiceProvider serviceProvider,
-        CancellationToken cancellationToken) => throw new NotImplementedException();
+    public override async Task<bool> MsTeamsCustomerRecordSyncedAsync(
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
+    {
+        await using var scope = serviceProvider.CreateScopeAndSetContent();
+        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        return await service.DoesCustomerExistAsync(cancellationToken);
+    }
 
     public override Task<bool> TenantInstalledAsync(IServiceProvider serviceProvider,
         CancellationToken cancellationToken) => Task.FromResult(false);

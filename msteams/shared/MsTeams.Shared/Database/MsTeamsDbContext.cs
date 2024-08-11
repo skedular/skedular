@@ -11,6 +11,8 @@ public class MsTeamsDbContext(
     DbContextOptions<MsTeamsDbContext> options,
     CustomDbContextOptions customDbContextOptions) : DbContextBase<MsTeamsDbContext>(options, customDbContextOptions)
 {
+    public DbSet<Customer> Customer { get; set; }
+    public DbSet<Identity> Identity { get; set; }
     public DbSet<TemporaryAuthorizationCode> TemporaryAuthorizationCode { get; set; }
     public DbSet<Tenant> Tenant { get; set; }
     public DbSet<TenantMember> TenantMember { get; set; }

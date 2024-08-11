@@ -1,6 +1,7 @@
-using Enterprise.Shared.Configurations;
+using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MsTeams.Shared.Configurations;
 using MsTeams.Shared.Factories;
 using MsTeams.Shared.Mappers;
 using MsTeams.Shared.Publishers;
@@ -35,4 +36,20 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services;
+
+    public static IServiceCollection AddUnityHubGrpcServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var customerConfiguration =
+            configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
+        ArgumentNullException.ThrowIfNull(customerConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
+        ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
+
+        services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
+
+        return services
+            .AddSingleton(customerConfiguration);
+    }
 }

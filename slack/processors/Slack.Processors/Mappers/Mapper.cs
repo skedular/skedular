@@ -116,6 +116,7 @@ public class Mapper : IMapper
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Timezone = src.Timezone;
         dest.Identities = identities;
+
         return dest;
     }
 

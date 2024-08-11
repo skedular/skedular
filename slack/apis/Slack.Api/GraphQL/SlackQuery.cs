@@ -1,5 +1,7 @@
 using System.Reflection;
 using Api.Shared.Services.GraphQL.UnityHub.V1.Slack;
+using Enterprise.Shared.Context;
+using Slack.Api.Services;
 using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Slack.Version;
 
 namespace Slack.Api.GraphQL;
@@ -21,6 +23,12 @@ public class SlackQuery : Query
         });
     }
 
-    public override Task<bool> SlackCustomerRecordSyncedAsync(IServiceProvider serviceProvider,
-        CancellationToken cancellationToken) => throw new NotImplementedException();
+    public override async Task<bool> SlackCustomerRecordSyncedAsync(
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
+    {
+        await using var scope = serviceProvider.CreateScopeAndSetContent();
+        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        return await service.DoesCustomerExistAsync(cancellationToken);
+    }
 }

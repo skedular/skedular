@@ -26,6 +26,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddKafka()
             .AddKafkaReliableEventConsumers<
+                CustomerSubscriber,
+                Api.Shared.Clients.Events.UnityHub.Customer.V1.Key.Key,
+                Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
                 MsTeamsInternalSubscriber,
                 Key,
                 Event>(kafkaConfiguration);
@@ -38,7 +42,8 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddRepositoryFactory()
             .AddPublishers()
             .AddMappers()
-            .AddJobs();
+            .AddJobs()
+            .AddUnityHubGrpcServices(Configuration);
     }
 
     public override void Configure(IApplicationBuilder app) =>

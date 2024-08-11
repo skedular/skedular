@@ -7,8 +7,6 @@ public static class CustomerExtensions
     public static TimeZoneInfo GetTimezone(this Database.Entities.Customer customer) =>
         customer.Timezone.ToTimezoneInfo();
 
-    public static TimeZoneInfo GetTimezone(this Customer customer) => customer.Timezone.ToTimezoneInfo();
-
     public static string GetCustomerName(this Customer customer)
     {
         if (!string.IsNullOrWhiteSpace(customer.Name))

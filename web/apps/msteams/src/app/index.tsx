@@ -11,6 +11,7 @@ import type { appHome_rootQuery } from './__generated__/appHome_rootQuery.graphq
 
 const RootQuery = graphql`
   query appHome_rootQuery {
+    msTeamsCustomerRecordSynced
     msTeamsVersion {
       major
     }
@@ -19,16 +20,17 @@ const RootQuery = graphql`
 
 type Props = {
   queryReference: PreloadedQuery<appHome_rootQuery, Record<string, unknown>>;
+  onReloadRequire: () => void;
 };
 
-const Home = ({ queryReference }: Props) => {
+const Home = ({ queryReference, onReloadRequire }: Props) => {
   const rootData = usePreloadedQuery<appHome_rootQuery>(RootQuery, queryReference);
-  
+
   return (
     <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
       <Typography variant="h4">Testing home page</Typography>
       {rootData.msTeamsVersion.major}
-      </Box>
+    </Box>
   );
 };
 
@@ -46,13 +48,16 @@ const HomeWithRelay = () => {
     );
   }, [loadQuery]);
 
+  const handleReloadRequire = () => {
+  };
+
   if (queryReference == null) {
     return <Loading />;
   }
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoHome queryReference={queryReference}  />
+      <MemoHome queryReference={queryReference} onReloadRequire={handleReloadRequire}/>
     </ErrorBoundary>
   );
 };
