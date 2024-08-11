@@ -23,19 +23,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /msteams/api/v1/adminconsent/{tenantId}:
+  /msteams/api/v1/adminconsent:
     get:
       tags:
         - msteams
       summary: generate an admin consent Url for the given tenant
       operationId: adminConsent
-      parameters:
-        - in: query
-          name: tenantId
-          schema:
-            type: string
-          required: true
-
       responses:
         "302":
           description: redirect status response code

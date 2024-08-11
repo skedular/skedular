@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b6afb5cd56ddfbdee88a4b13fea9596>>
+ * @generated SignedSource<<294d8c27d558f3017cd667df4ef84043>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,9 +11,11 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type rootShell_query$data = {
+  readonly adminConsentUrl: string;
   readonly me: {
     readonly id: string;
   } | null | undefined;
+  readonly tenantInstalled: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"mainRootLayout_query" | "observability_query">;
   readonly " $fragmentType": "rootShell_query";
 };
@@ -47,6 +49,20 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "tenantInstalled",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "adminConsentUrl",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "observability_query"
@@ -61,6 +77,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "7709a9d4696523b42de4c356602ce4cb";
+(node as any).hash = "a677733fc4c62455bc1aefc5faf251a3";
 
 export default node;

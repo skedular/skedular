@@ -56,10 +56,9 @@ public partial class OpenTelemetryInstrumentation : IOpenTelemetryInstrumentatio
     private static void CheckIsInstrumentNameValid(string instrumentName)
     {
         var regex = InstrumentNameValidationRegex();
-
         if (!regex.IsMatch(instrumentName))
         {
-            throw new ConfigurationErrorsException();
+            throw new ArgumentException(nameof(instrumentName));
         }
     }
 

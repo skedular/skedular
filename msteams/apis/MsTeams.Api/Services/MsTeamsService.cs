@@ -1,8 +1,9 @@
-﻿using Enterprise.Shared.Configurations;
+﻿using Ardalis.GuardClauses;
+using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Random;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
-using MsTeams.Shared.Database.Entities;
 using MsTeams.Shared.Repositories;
 using Tenant = MsTeams.Shared.Database.Entities.Tenant;
 
@@ -10,45 +11,37 @@ namespace MsTeams.Api.Services;
 
 public interface IMsTeamsService
 {
-    Task<string> GenerateAdminConsentUrl(
-        string tenantId,
-        string currentUri,
-        CancellationToken cancellationToken);
+    string GenerateAdminConsentUrl();
 
     Task OnBoardTenant(
         string tenantId,
         string? error,
         string? errorMessage,
-        bool adminConsent,
-        string state,
         CancellationToken cancellationToken);
 }
 
 public class MsTeamsService(
+    MsTeamsAzureEntraConfiguration msTeamsAzureEntraConfiguration,
+    IHttpContextAccessor httpContextAccessor,
     IRepositoryFactory repositoryFactory,
-    IRandomHelper randomHelper,
     TimeProvider timeProvider,
-    MsTeamsAzureEntraConfiguration msTeamsAzureEntraConfiguration) : IMsTeamsService
+    IContext context) : IMsTeamsService
 {
-    public async Task<string> GenerateAdminConsentUrl(
-        string tenantId,
-        string currentUri,
-        CancellationToken cancellationToken)
+    public string GenerateAdminConsentUrl()
     {
-        var authorizedTenant = new TemporaryAuthorizationCode
-        {
-            Id = randomHelper.Generate(), CreatedAt = timeProvider.GetUtcNow()
-        };
+        Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
+        ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
+
+        var currentUri = UriHelper.BuildAbsolute(
+            httpContextAccessor.HttpContext.Request.Scheme,
+            httpContextAccessor.HttpContext.Request.Host,
+            httpContextAccessor.HttpContext.Request.PathBase);
 
         var clientId = Uri.EscapeDataString(msTeamsAzureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(currentUri + "msteams/api/v1/onboard-tenant");
-        var state = authorizedTenant.Id;
         var scope = Uri.EscapeDataString("User.ReadBasic.All");
         var authorizationRequest =
-            $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&state={state}&scope={scope}";
-
-        repositoryFactory.TemporaryAuthorizationCodeRepository.Add(authorizedTenant);
-        await repositoryFactory.TemporaryAuthorizationCodeRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            $"https://login.microsoftonline.com/{context.PropertyBag.AzureTenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}";
 
         return authorizationRequest;
     }
@@ -57,8 +50,6 @@ public class MsTeamsService(
         string tenantId,
         string? error,
         string? errorMessage,
-        bool adminConsent,
-        string state,
         CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(error))
@@ -67,19 +58,9 @@ public class MsTeamsService(
                 $"onboarding went wrong with error {error} and message {errorMessage}.");
         }
 
-        if (!adminConsent)
-        {
-            throw new InvalidOperationException("Admin consent is required for the onboarding process.");
-        }
-
         if (string.IsNullOrWhiteSpace(tenantId))
         {
             throw new ArgumentException("no tenant Id provided.", nameof(tenantId));
-        }
-
-        if (string.IsNullOrWhiteSpace(state))
-        {
-            throw new ArgumentException("temporary authorization code is empty.", nameof(state));
         }
 
         var existingTenantQuery = await repositoryFactory.TenantRepository
@@ -90,16 +71,6 @@ public class MsTeamsService(
         if (existingTenantQuery is not null)
         {
             return;
-        }
-
-        var existingAuthorizationCodeQuery = await repositoryFactory.TemporaryAuthorizationCodeRepository
-            .Query(new Specification<TemporaryAuthorizationCode> { Criteria = query => query.Id == state }.ApplyOrderBy(
-                query => query.Id))
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (existingAuthorizationCodeQuery is null)
-        {
-            throw new ArgumentException("The authorization code provided is not valid.");
         }
 
         var newTenant = new Tenant { Id = tenantId, CreatedAt = timeProvider.GetUtcNow() };

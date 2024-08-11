@@ -58,7 +58,14 @@ const HomeWithRelay = () => {
     );
   }, [loadQuery]);
 
-  const handleReloadRequire = () => {};
+  const handleReloadRequire = useCallback(() => {
+    loadQuery(
+      {},
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery]);
 
   if (queryReference == null) {
     return <Loading />;

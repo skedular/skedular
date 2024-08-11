@@ -21,19 +21,13 @@ export class MsteamsService {
     }
     /**
      * generate an admin consent Url for the given tenant
-     * @param tenantId
      * @returns void
      * @throws ApiError
      */
-    public adminConsent(
-        tenantId: string,
-    ): CancelablePromise<void> {
+    public adminConsent(): CancelablePromise<void> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/msteams/api/v1/adminconsent/{tenantId}',
-            query: {
-                'tenantId': tenantId,
-            },
+            url: '/msteams/api/v1/adminconsent',
             errors: {
                 302: `redirect status response code`,
             },

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c6c728511c43743940165cc155b27f1d>>
+ * @generated SignedSource<<ef1a2db5b3fe1e7ffadb830b568a2365>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -148,16 +148,30 @@ return {
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "tenantInstalled",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "adminConsentUrl",
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "9c3e70063a65ce61271d0e9e9a4369bb",
+    "cacheID": "e1780ad938f9f1d84ebbc1008953a0f7",
     "id": null,
     "metadata": {},
     "name": "appHome_rootQuery",
     "operationKind": "query",
-    "text": "query appHome_rootQuery {\n  msTeamsCustomerRecordSynced\n  bookingCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query appHome_rootQuery {\n  msTeamsCustomerRecordSynced\n  bookingCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  tenantInstalled\n  adminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
   }
 };
 })();

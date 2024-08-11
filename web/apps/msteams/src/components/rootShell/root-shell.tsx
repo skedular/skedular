@@ -36,6 +36,8 @@ const RootShell = ({
         me {
           id
         }
+        tenantInstalled
+        adminConsentUrl
         ...observability_query
         ...mainRootLayout_query
       }
