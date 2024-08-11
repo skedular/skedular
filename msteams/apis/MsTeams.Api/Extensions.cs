@@ -9,7 +9,7 @@ public static class Extensions
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
             .AddScoped<ICustomerService, CustomerService>()
-            .AddScoped<IMsTeamsService, MsTeamsService>()
+            .AddScoped<ITenantOnboardingService, TenantOnboardingService>()
             .AddScoped<ITenantService, TenantService>();
 
     public static IServiceCollection AddMappers(this IServiceCollection services) =>

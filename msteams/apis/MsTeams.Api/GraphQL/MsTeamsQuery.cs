@@ -45,7 +45,7 @@ public class MsTeamsQuery : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IMsTeamsService>();
+        var service = scope.ServiceProvider.GetRequiredService<ITenantService>();
         return service.GenerateAdminConsentUrl();
     }
 }

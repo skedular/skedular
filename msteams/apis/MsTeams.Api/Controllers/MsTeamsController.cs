@@ -5,14 +5,16 @@ using MsTeams.Api.Services;
 namespace MsTeams.Api.Controllers;
 
 [ApiController]
-public class MsTeamsController(IMsTeamsService msTeamsService) : MsTeamsControllerBase
+public class MsTeamsController(
+    ITenantService tenantService,
+    ITenantOnboardingService tenantOnboardingService) : MsTeamsControllerBase
 {
     public override Task<IActionResult> ProcessBotMessage(CancellationToken cancellationToken = default) =>
         throw new NotImplementedException();
 
     public override Task<IActionResult> AdminConsent(CancellationToken cancellationToken = default)
     {
-        var authorizationRequest = msTeamsService.GenerateAdminConsentUrl();
+        var authorizationRequest = tenantService.GenerateAdminConsentUrl();
 
         return Task.FromResult((IActionResult)Redirect(authorizationRequest));
     }
@@ -27,7 +29,7 @@ public class MsTeamsController(IMsTeamsService msTeamsService) : MsTeamsControll
         // ReSharper restore InconsistentNaming
         CancellationToken cancellationToken = default)
     {
-        await msTeamsService.OnBoardTenant(tenant, error, error_description, cancellationToken);
+        await tenantOnboardingService.OnBoardTenantAsync(tenant, error, error_description, cancellationToken);
 
         return Redirect("https://teams.microsoft.com/v2/");
     }
