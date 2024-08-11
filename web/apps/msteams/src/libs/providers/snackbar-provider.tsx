@@ -1,5 +1,3 @@
-'use client';
-
 import { useMediaQuery } from '@mui/material';
 import { SnackbarProvider as Provider } from 'notistack';
 

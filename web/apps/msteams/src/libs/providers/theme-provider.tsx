@@ -1,5 +1,3 @@
-'use client';
-
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import type { ColorMode } from '@repo/shared/libs/theme';
 import createTheme from '@repo/shared/libs/theme';

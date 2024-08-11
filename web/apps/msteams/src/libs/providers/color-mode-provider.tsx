@@ -1,5 +1,3 @@
-'use client';
-
 import { useMediaQuery } from '@mui/material';
 import type { ColorMode } from '@repo/shared/libs/theme';
 import { createContext, useEffect, useMemo } from 'react';

@@ -1,5 +1,3 @@
-'use client';
-
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import { useEffect } from 'react';
