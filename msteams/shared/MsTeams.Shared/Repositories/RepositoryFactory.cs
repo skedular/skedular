@@ -7,6 +7,8 @@ public interface IRepositoryFactory
 {
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
+    IOrganizationRepository OrganizationRepository { get; }
+    IOrganizationMemberRepository OrganizationMemberRepository { get; }
     ITenantRepository TenantRepository { get; }
     ITenantMemberRepository TenantMemberRepository { get; }
 }
@@ -21,6 +23,8 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
 
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
+        OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
+        OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         TenantRepository = new TenantRepository(_dbContext, timeProvider);
         TenantMemberRepository = new TenantMemberRepository(_dbContext, timeProvider);
     }
@@ -33,6 +37,8 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
 
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
+    public IOrganizationRepository OrganizationRepository { get; }
+    public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public ITenantRepository TenantRepository { get; }
     public ITenantMemberRepository TenantMemberRepository { get; }
 

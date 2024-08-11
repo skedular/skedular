@@ -13,7 +13,7 @@ public class Mapper : IMapper
     public TenantMember MapToEntity(User src) =>
         new()
         {
-            Id = src.Id,
+            Id = src.Id!,
             GivenName = src.GivenName,
             Surname = src.Surname,
             JobTitle = src.JobTitle,

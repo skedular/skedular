@@ -1,4 +1,4 @@
-using Api.Shared;
+using Api.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -7,27 +7,29 @@ namespace MsTeams.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class Tenant : EntityBaseWithDeleted
+public class OrganizationMember : ReplicatedEntityBaseWithDeleted
 {
-    public string? Name { get; set; }
-    public DateTimeOffset? EntitiesLastRefreshedAt { get; set; }
+    public OrganizationMembershipType? MembershipType { get; set; }
 
-    public virtual ICollection<TenantMember> TenantMembers { get; set; } = [];
     public virtual Organization Organization { get; set; }
+    public virtual Customer Customer { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
+public class OrganizationMemberConfiguration : IEntityTypeConfiguration<OrganizationMember>
 {
-    public void Configure(EntityTypeBuilder<Tenant> builder)
+    public void Configure(EntityTypeBuilder<OrganizationMember> builder)
     {
-        builder.ConfigureEntityBaseWithDeleted();
+        builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Name).HasMaxLength(Constants.MaxTenantNameLength);
-        
         builder
             .HasOne(item => item.Organization)
-            .WithMany(item => item.Tenants);
+            .WithMany(item => item.OrganizationMembers);
 
+        builder
+            .HasOne(item => item.Customer)
+            .WithMany(item => item.OrganizationMembers);
+
+        builder.HasIndex(item => item.MembershipType);
     }
 }

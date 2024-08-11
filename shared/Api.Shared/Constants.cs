@@ -54,7 +54,7 @@ public static class Constants
     public const int StripeCustomerIdLength = 200;
 
     public const int MaxTeamNameLength = 200;
-    public const int MaxTenantLength = 200;
+    public const int MaxTenantNameLength = 200;
 
     public const int MaxBookingNotesLength = 1000;
 

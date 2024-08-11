@@ -1,4 +1,5 @@
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MsTeams.Shared.Configurations;
@@ -25,6 +26,10 @@ public static class Extensions
 
     public static IServiceCollection AddRepositories(this IServiceCollection services) =>
         services
+            .AddScoped<ICustomerRepository, CustomerRepository>()
+            .AddScoped<IIdentityRepository, IdentityRepository>()
+            .AddScoped<IOrganizationRepository, OrganizationRepository>()
+            .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
             .AddScoped<ITenantRepository, TenantRepository>()
             .AddScoped<ITenantMemberRepository, TenantMemberRepository>();
 
@@ -45,7 +50,14 @@ public static class Extensions
         ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
 
+        var organizationConfiguration =
+            configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
+        ArgumentNullException.ThrowIfNull(organizationConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
+        ArgumentNullException.ThrowIfNull(organizationConfiguration.GrpcUrl);
+
         services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
+        services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
 
         return services
             .AddSingleton(customerConfiguration);

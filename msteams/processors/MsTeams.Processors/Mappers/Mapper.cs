@@ -57,6 +57,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Timezone = src.Timezone;
         dest.Identities = identities;
 
         return dest;

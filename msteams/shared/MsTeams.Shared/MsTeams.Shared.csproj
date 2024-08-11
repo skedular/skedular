@@ -14,6 +14,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <Protobuf Include="../../../api-definitions/grpc/unityhub/customer_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/unityhub/organization_v1.proto" GrpcServices="Client"/>
     </ItemGroup>
 
     <ItemGroup>
