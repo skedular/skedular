@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Loading } from '@repo/shared/components/loading';
 import { MuiXLicense } from '@repo/shared/libs/mui';
@@ -48,6 +49,10 @@ const RootShell = ({
   const [reloadCount, setReloadCount] = useState(0);
 
   useEffect(() => {
+    if (!rootData.tenantInstalled) {
+      return;
+    }
+
     if (reloadCount === maxRetryAttemptsToReload || (rootData.me && areAdditionalCustomerRecordsSync())) {
       return;
     }
@@ -64,6 +69,23 @@ const RootShell = ({
 
   if (!rootDataRelay) {
     return null;
+  }
+
+  const handleInstallClicked = () => {
+    window.open(rootData.adminConsentUrl);
+  };
+
+  if (!rootData.tenantInstalled) {
+    return (
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
+        <Typography variant="h2">
+          Your administrator needs to install UnityHub for you. This is a one-time setup. Please click the button below to start the installation.
+        </Typography>
+        <Button variant="contained" onClick={handleInstallClicked}>
+          Install
+        </Button>
+      </Box>
+    );
   }
 
   if (reloadCount === maxRetryAttemptsToReload) {
