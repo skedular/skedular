@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MsTeams.Shared.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MsTeams.Shared.Database.Migrations
 {
     [DbContext(typeof(MsTeamsDbContext))]
-    partial class MsTeamsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240812061713_AddMembersLastRefreshedAtToTenantModel")]
+    partial class AddMembersLastRefreshedAtToTenantModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -310,11 +313,6 @@ namespace MsTeams.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("InstalledByUserId")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTimeOffset?>("MembersLastRefreshedAt")
                         .HasColumnType("timestamp with time zone");

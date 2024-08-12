@@ -180,7 +180,8 @@ public class SlackInternalSubscriber(
         await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task SyncCustomersAndOrganizationMembersAsync(Workspace workspace,
+    private async Task SyncCustomersAndOrganizationMembersAsync(
+        Workspace workspace,
         CancellationToken cancellationToken)
     {
         var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput

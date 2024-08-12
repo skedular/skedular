@@ -1,15 +1,22 @@
 using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
 using Api.Shared.Models;
+using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Enterprise.Shared;
+using Microsoft.Graph.Models;
 using MsTeams.Shared.Database.Entities;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Customer = MsTeams.Shared.Models.Customer;
+using Identity = MsTeams.Shared.Database.Entities.Identity;
+using Location = MsTeams.Shared.Models.Location;
 using Organization = MsTeams.Shared.Models.Organization;
 using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
+using Team = MsTeams.Shared.Models.Team;
 
 namespace MsTeams.Processors.Mappers;
 
 public interface IMapper
 {
+    TenantMember MapToEntity(User src);
     Customer MapTo(Event src);
 
     Shared.Database.Entities.Customer MapToEntity(
@@ -46,10 +53,36 @@ public interface IMapper
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
+
+    Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
+    Shared.Database.Entities.Location MapToEntity(Location src);
+    Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest);
+    Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
+    Shared.Database.Entities.Team MapToEntity(Team src);
+    Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest);
+    Admin_AddIdentityInput MapTo(TenantMember src, string customerId);
+
+    Admin_AddInput MapTo(
+        TenantMember src,
+        string customerId,
+        Shared.Database.Entities.Organization defaultOrganization,
+        ICollection<Shared.Database.Entities.Location> defaultLocations);
 }
 
 public class Mapper : IMapper
 {
+    public TenantMember MapToEntity(User src) =>
+        new()
+        {
+            Id = src.Id!,
+            GivenName = src.GivenName,
+            Surname = src.Surname,
+            JobTitle = src.JobTitle,
+            Email = src.Mail,
+            PrincipalName = src.UserPrincipalName,
+            PreferredLanguage = src.PreferredLanguage
+        };
+
     public Customer MapTo(Event src)
     {
         var customer = src.Data.AfterState;
@@ -165,5 +198,99 @@ public class Mapper : IMapper
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;
+    }
+
+    public Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
+    {
+        var locationAfterState = src.Data.LocationAfterState;
+        var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        return new Location
+        {
+            Id = locationAfterState.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Timezone = locationAfterState.Timezone.ToSafeString()
+        };
+    }
+
+    public Shared.Database.Entities.Location MapToEntity(Location src) =>
+        MergeToEntity(src, new Shared.Database.Entities.Location());
+
+    public Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Timezone = src.Timezone;
+        return dest;
+    }
+
+    public Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src)
+    {
+        var teamAfterState = src.Data.TeamAfterState;
+        var deletedAt = teamAfterState.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        return new Team
+        {
+            Id = teamAfterState.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Timezone = teamAfterState.Timezone.ToSafeString()
+        };
+    }
+
+    public Shared.Database.Entities.Team MapToEntity(Team src) =>
+        MergeToEntity(src, new Shared.Database.Entities.Team());
+
+    public Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Timezone = src.Timezone;
+        return dest;
+    }
+
+    public Admin_AddIdentityInput MapTo(TenantMember src, string customerId) =>
+        new() { Id = src.Id, Email = src.Email, EmailVerified = true, CustomerId = customerId };
+
+    public Admin_AddInput MapTo(
+        TenantMember src,
+        string customerId,
+        Shared.Database.Entities.Organization defaultOrganization,
+        ICollection<Shared.Database.Entities.Location> defaultLocations)
+    {
+        var input = new Admin_AddInput
+        {
+            Id = customerId,
+            Designation = src.JobTitle.ToSafeString(),
+            GivenName = src.GivenName.ToSafeString(),
+            FamilyName = src.Surname.ToSafeString(),
+            IsOrganizationOnboardingDone = true,
+            IsLocationOnboardingDone = true,
+            IsDefaultOrganizationOnboardingDone = true,
+            IsDefaultLocationOnboardingDone = true,
+            IsPreferredZoneOnboardingDone = false,
+            IsPreferredDeskOnboardingDone = false,
+            DefaultOrganization =
+                new Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization { Id = defaultOrganization.Id }
+        };
+
+        input.Identities.Add(
+            new Api.Shared.Services.Grpc.UnityHub.Customer.V1.Identity
+            {
+                Id = src.Id, Email = src.Email, EmailVerified = true
+            });
+
+        input.DefaultLocations.AddRange(defaultLocations.Select(item =>
+            new Api.Shared.Services.Grpc.UnityHub.Customer.V1.Location
+            {
+                Id = item.Id,
+                Organization =
+                    new Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization { Id = defaultOrganization.Id }
+            }));
+
+        return input;
     }
 }

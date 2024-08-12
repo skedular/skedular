@@ -39,8 +39,8 @@ public class RefreshTenantMembersJob(
                     new Specification<Tenant>
                     {
                         Criteria = query =>
-                            !query.EntitiesLastRefreshedAt.HasValue ||
-                            (now - query.EntitiesLastRefreshedAt.Value).TotalHours >= 24
+                            !query.MembersLastRefreshedAt.HasValue ||
+                            (now - query.MembersLastRefreshedAt.Value).TotalHours >= 24
                     }).Select(item => item.Id).ToListAsync(cancellationToken);
                 if (tenantIds.Count != 0)
                 {

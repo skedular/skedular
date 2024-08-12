@@ -30,9 +30,17 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                 Api.Shared.Clients.Events.UnityHub.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
+                LocationSubscriber,
+                Api.Shared.Clients.Events.UnityHub.Location.V1.Key.Key,
+                Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
                 MsTeamsInternalSubscriber,
                 Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
+                TeamSubscriber,
+                Api.Shared.Clients.Events.UnityHub.Team.V1.Key.Key,
+                Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 OrganizationSubscriber,
                 Key,

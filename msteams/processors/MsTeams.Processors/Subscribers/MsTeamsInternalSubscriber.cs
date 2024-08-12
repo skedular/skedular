@@ -1,22 +1,42 @@
+using Customer = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer;
 using Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Key;
+using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Confluent.Kafka;
-using Enterprise.Shared.Database;
+using Enterprise.Shared;
+using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Kafka.Consume;
-using Microsoft.EntityFrameworkCore;
+using Enterprise.Shared.Random;
+using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Database.Entities;
-using MsTeams.Shared.Mappers;
 using MsTeams.Shared.Repositories;
 using MsTeams.Shared.Services;
 using Event = Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type;
+using CustomerConfiguration = MsTeams.Shared.Configurations.CustomerConfiguration;
+using Location = MsTeams.Shared.Database.Entities.Location;
+using OrganizationConfiguration = MsTeams.Shared.Configurations.OrganizationConfiguration;
+using LocationConfiguration = MsTeams.Shared.Configurations.LocationConfiguration;
+using Member = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Member;
+using MembershipType = Api.Shared.Services.Grpc.UnityHub.Organization.V1.MembershipType;
+using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirection;
+using Organization = MsTeams.Shared.Database.Entities.Organization;
 
 namespace MsTeams.Processors.Subscribers;
 
 public class MsTeamsInternalSubscriber(
+    CustomerConfiguration customerConfiguration,
+    LocationConfiguration locationConfiguration,
+    OrganizationConfiguration organizationConfiguration,
     TimeProvider timeProvider,
     IMsGraphService msGraphService,
-    IMapper sharedMapper,
-    IRepositoryFactory repositoryFactory)
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    CustomerService.CustomerServiceClient customerServiceClient,
+    LocationService.LocationServiceClient locationServiceClient,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
+    IRandomHelper randomHelper)
     : IEventSubscriber<Key, Event>
 {
     public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
@@ -36,36 +56,165 @@ public class MsTeamsInternalSubscriber(
         string tenantId,
         CancellationToken cancellationToken)
     {
-        var existingTenant = await repositoryFactory.TenantRepository
-            .Query(
-                new Specification<Tenant> { Criteria = query => query.Id == tenantId }
-                    .AddInclude(query => query.TenantMembers)
-                    .ApplyOrderBy(query => query.Id))
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (existingTenant is null)
+        var tenant = await repositoryFactory.TenantRepository.GetByIdAsync(tenantId, cancellationToken);
+        if (tenant is null)
         {
             return;
         }
 
         var users = await msGraphService.GetUsersAsync(tenantId, cancellationToken);
-
-        var itemsToRemove = existingTenant.TenantMembers
+        var itemsToRemove = tenant.TenantMembers
             .Where(tenantMember => users.All(item => item.Id != tenantMember.Id))
             .ToList();
-
-        var updatedItems = existingTenant.TenantMembers
+        var updatedItems = tenant.TenantMembers
             .Where(tenantMember => users.Any(item => item.Id == tenantMember.Id))
             .ToList();
-
         var addedItems = users
-            .Where(tenantMember => existingTenant.TenantMembers.All(item => item.Id != tenantMember.Id))
-            .Select(user => repositoryFactory.TenantMemberRepository.Add(sharedMapper.MapToEntity(user))).ToList();
+            .Where(tenantMember => tenant.TenantMembers.All(item => item.Id != tenantMember.Id))
+            .Select(user => repositoryFactory.TenantMemberRepository.Add(mapper.MapToEntity(user))).ToList();
 
-        existingTenant.EntitiesLastRefreshedAt = timeProvider.GetUtcNow();
         repositoryFactory.TenantMemberRepository.RemoveRange(itemsToRemove);
-        existingTenant.TenantMembers = addedItems.Concat(updatedItems).ToList();
+        tenant.TenantMembers = addedItems.Concat(updatedItems).ToList();
 
+        await SyncCustomersAndOrganizationMembersAsync(tenant, cancellationToken);
+
+        tenant.MembersLastRefreshedAt = timeProvider.GetUtcNow();
+        repositoryFactory.TenantRepository.Update(tenant);
+
+        await repositoryFactory.TenantMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.TenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task SyncCustomersAndOrganizationMembersAsync(
+        Tenant tenant,
+        CancellationToken cancellationToken)
+    {
+        var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
+        {
+            First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = tenant.Organization.Id }
+        };
+        getPaginatedLocationsInput.OrderBy.AddRange([
+            new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
+        ]);
+        var getLocationsResponse = await locationServiceClient.Admin_GetPaginatedLocationsAsync(
+            getPaginatedLocationsInput,
+            locationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+
+        var customerIdsTenantMembersPair = new List<(string, TenantMember)>();
+
+        foreach (var tenantMember in tenant.TenantMembers)
+        {
+            var anyCustomerExistByVerifiableTokenResponse =
+                await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
+                    new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = tenantMember.Id },
+                    customerConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: cancellationToken);
+            if (anyCustomerExistByVerifiableTokenResponse.Exist)
+            {
+                customerIdsTenantMembersPair.Add(
+                    (anyCustomerExistByVerifiableTokenResponse.Customer.Id, tenantMember));
+
+                if (string.IsNullOrWhiteSpace(
+                        anyCustomerExistByVerifiableTokenResponse.Customer.DefaultOrganization?.Id))
+                {
+                    await customerServiceClient.Admin_SetDefaultOrganizationAsync(
+                        new Admin_SetDefaultOrganizationInput
+                        {
+                            OrganizationId = tenant.Organization.Id,
+                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
+                        },
+                        customerConfiguration.ApiKey.CreateMetadata(),
+                        cancellationToken: cancellationToken);
+                }
+
+                continue;
+            }
+
+            var anyCustomerExistByEmailTokenResponse =
+                await customerServiceClient.Admin_AnyCustomerExistByEmailAsync(
+                    new Admin_AnyCustomerExistByEmailInput { Email = tenantMember.Email },
+                    customerConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: cancellationToken);
+            if (anyCustomerExistByEmailTokenResponse.Exist)
+            {
+                customerIdsTenantMembersPair.Add(
+                    (anyCustomerExistByEmailTokenResponse.Customer.Id, tenantMember));
+                await customerServiceClient.Admin_AddIdentityAsync(
+                    mapper.MapTo(tenantMember, anyCustomerExistByEmailTokenResponse.Customer.Id),
+                    customerConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: cancellationToken);
+
+                if (string.IsNullOrWhiteSpace(
+                        anyCustomerExistByEmailTokenResponse.Customer.DefaultOrganization?.Id))
+                {
+                    await customerServiceClient.Admin_SetDefaultOrganizationAsync(
+                        new Admin_SetDefaultOrganizationInput
+                        {
+                            OrganizationId = tenant.Organization.Id,
+                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                        },
+                        customerConfiguration.ApiKey.CreateMetadata(),
+                        cancellationToken: cancellationToken);
+                }
+
+                if (getLocationsResponse.TotalCount == 1)
+                {
+                    await customerServiceClient.Admin_AddDefaultLocationAsync(
+                        new Admin_AddDefaultLocationInput
+                        {
+                            LocationId = getLocationsResponse.Edges.First().Node.Id,
+                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                        },
+                        customerConfiguration.ApiKey.CreateMetadata(),
+                        cancellationToken: cancellationToken);
+                }
+
+                continue;
+            }
+
+            var customerId = randomHelper.Generate();
+            customerIdsTenantMembersPair.Add((customerId, tenantMember));
+            await customerServiceClient.Admin_AddAsync(
+                mapper.MapTo(
+                    tenantMember,
+                    customerId,
+                    new Organization { Id = tenant.Organization.Id },
+                    getLocationsResponse.TotalCount == 1
+                        ? [new Location { Id = getLocationsResponse.Edges.First().Node.Id }]
+                        : []),
+                customerConfiguration.ApiKey.CreateMetadata(),
+                cancellationToken: cancellationToken);
+        }
+        
+        await customerIdsTenantMembersPair.Select(customerIdsTenantMemberPair =>
+        {
+            var customerId = customerIdsTenantMemberPair.Item1;
+            var organizationMember =
+                tenant.Organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customerId);
+
+            if (organizationMember is null)
+            {
+                return new Member
+                {
+                    Id = randomHelper.Generate(),
+                    Customer = new Customer { Id = customerId },
+                    MembershipType = MembershipType.Member
+                };
+            }
+
+            return new Member
+            {
+                Id = organizationMember.Id,
+                Customer = new Customer { Id = customerId },
+                MembershipType = MembershipType.Member
+            };
+        }).ForEachAsync(async (member, ct) =>
+        {
+            await organizationServiceClient.Admin_AddMemberAsync(
+                new Admin_AddMemberInput { Id = tenant.Organization.Id, Member = member },
+                organizationConfiguration.ApiKey.CreateMetadata(),
+                cancellationToken: ct);
+        }, cancellationToken);
     }
 }

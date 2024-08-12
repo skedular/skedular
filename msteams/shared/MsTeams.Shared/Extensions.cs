@@ -1,4 +1,5 @@
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Api.Shared.Services.Grpc.UnityHub.Location.V1;
 using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,8 +29,10 @@ public static class Extensions
         services
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
+            .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
+            .AddScoped<ITeamRepository, TeamRepository>()
             .AddScoped<ITenantRepository, TenantRepository>()
             .AddScoped<ITenantMemberRepository, TenantMemberRepository>();
 
@@ -38,7 +41,8 @@ public static class Extensions
             .AddScoped<IMsTeamsInternalPublisher, MsTeamsInternalPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
-        services;
+        services
+            .AddScoped<IMsTeamsInternalOutboxPublisher, MsTeamsInternalOutboxPublisher>();
 
     public static IServiceCollection AddUnityHubGrpcServices(
         this IServiceCollection services,
@@ -50,6 +54,12 @@ public static class Extensions
         ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
 
+        var locationConfiguration =
+            configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
+        ArgumentNullException.ThrowIfNull(locationConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
+        ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
+
         var organizationConfiguration =
             configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
         ArgumentNullException.ThrowIfNull(organizationConfiguration);
@@ -57,6 +67,7 @@ public static class Extensions
         ArgumentNullException.ThrowIfNull(organizationConfiguration.GrpcUrl);
 
         services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
+        services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
         services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
 
         return services

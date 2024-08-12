@@ -10,7 +10,8 @@ namespace MsTeams.Shared.Database.Entities;
 public class Tenant : EntityBaseWithDeleted
 {
     public string? Name { get; set; }
-    public DateTimeOffset? EntitiesLastRefreshedAt { get; set; }
+    public DateTimeOffset? MembersLastRefreshedAt { get; set; }
+    public string InstalledByUserId { get; set; } = string.Empty;
 
     public virtual ICollection<TenantMember> TenantMembers { get; set; } = [];
     public virtual Organization Organization { get; set; }
@@ -24,6 +25,7 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxTenantNameLength);
+        builder.Property(item => item.InstalledByUserId).HasMaxLength(Constants.MaxVerifiableTokenLength);
         
         builder
             .HasOne(item => item.Organization)

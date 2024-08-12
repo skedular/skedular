@@ -5,9 +5,7 @@ using MsTeams.Api.Services;
 namespace MsTeams.Api.Controllers;
 
 [ApiController]
-public class MsTeamsController(
-    ITenantService tenantService,
-    ITenantOnboardingService tenantOnboardingService) : MsTeamsControllerBase
+public class MsTeamsController(ITenantService tenantService) : MsTeamsControllerBase
 {
     public override Task<IActionResult> ProcessBotMessage(CancellationToken cancellationToken = default) =>
         throw new NotImplementedException();
@@ -29,8 +27,14 @@ public class MsTeamsController(
         // ReSharper restore InconsistentNaming
         CancellationToken cancellationToken = default)
     {
-        await tenantOnboardingService.OnBoardTenantAsync(tenant, error, error_description, cancellationToken);
+        if (!string.IsNullOrWhiteSpace(error))
+        {
+            throw new InvalidOperationException(
+                $"onboarding went wrong with error {error} and message {error_description}.");
+        }
 
-        return Redirect("https://teams.microsoft.com/v2/");
+        var redirectUri = await tenantService.InstallAsync(tenant, state, cancellationToken);
+
+        return Redirect(redirectUri.AbsoluteUri);
     }
 }

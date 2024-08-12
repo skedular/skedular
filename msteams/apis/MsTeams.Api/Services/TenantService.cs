@@ -2,11 +2,11 @@
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Random;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using MsTeams.Shared.Database.Entities;
+using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
 
 namespace MsTeams.Api.Services;
@@ -15,15 +15,18 @@ public interface ITenantService
 {
     Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken);
     string GenerateAdminConsentUrl();
+    Task<Uri> InstallAsync(string tenantId, string state, CancellationToken cancellationToken);
 }
 
 public class TenantService(
+    IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IContext context,
     IMemoryCache memoryCache,
     MsTeamsAzureEntraConfiguration msTeamsAzureEntraConfiguration,
     IHttpContextAccessor httpContextAccessor,
-    IRandomHelper randomHelper) : ITenantService
+    ITenantOnboardingService tenantOnboardingService,
+    IMsTeamsInternalOutboxPublisher msTeamsInternalOutboxPublisher) : ITenantService
 {
     public async Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken)
     {
@@ -53,6 +56,7 @@ public class TenantService(
 
     public string GenerateAdminConsentUrl()
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
         Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
         ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
 
@@ -65,10 +69,42 @@ public class TenantService(
         var clientId = Uri.EscapeDataString(msTeamsAzureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(currentUri + "msteams/api/v1/onboard-tenant");
         var scope = Uri.EscapeDataString("User.ReadBasic.All");
-        var state = randomHelper.Generate();
+        var state = context.PropertyBag.VerifiableToken;
         var authorizationRequest =
             $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={state}";
 
         return authorizationRequest;
+    }
+
+    public async Task<Uri> InstallAsync(string tenantId, string state, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
+
+        var organization =
+            await repositoryFactory.OrganizationRepository.GetByTenantIdAsync(tenantId, cancellationToken);
+
+        if (organization is null)
+        {
+            await tenantOnboardingService.OnboardAsync(tenantId, state, cancellationToken);
+        }
+        else
+        {
+            await using var transaction =
+                await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
+                    cancellationToken);
+
+            var tenant =
+                await repositoryFactory.TenantRepository.GetByIdAsync(tenantId, cancellationToken);
+            ArgumentNullException.ThrowIfNull(tenant);
+            tenant = repositoryFactory.TenantRepository.Update(tenant);
+            await msTeamsInternalOutboxPublisher.PublishRefreshTenantMembersAsync(
+                [tenant.Id],
+                repositoryFactory.TenantRepository.UnitOfWork,
+                cancellationToken);
+            await repositoryFactory.TenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+        }
+
+        return new Uri("https://teams.microsoft.com/v2/");
     }
 }
