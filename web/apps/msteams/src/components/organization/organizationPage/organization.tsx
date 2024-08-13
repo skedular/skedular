@@ -6,10 +6,10 @@ import Typography from '@mui/material/Typography';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo, useEffect, useState } from 'react';
 import { useRefetchableFragment } from 'react-relay';
+import { useNavigate, useSearchParams } from "react-router-dom";
 import OrganizationAvatar from '../organization-avatar';
 import type { organizationPageQuery } from './__generated__/organizationPageQuery.graphql';
 import type { organizationPage_query$key } from './__generated__/organizationPage_query.graphql';
@@ -52,9 +52,9 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
     rootDataRelay,
   );
 
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
   const tab = searchParams.get('tab');
-  const router = useRouter();
+  const navigate = useNavigate();
   const addPaymentMethodStatus = searchParams.get('add-payment-method-status');
   const { enqueueSnackbar } = useSnackbar();
 
@@ -114,7 +114,7 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
     }
 
     if (tab) {
-      router.push(`${getCurrentCompleteUrl()}?tab=${tab}`);
+      navigate(`${getCurrentCompleteUrl()}?tab=${tab}`);
     }
   };
 

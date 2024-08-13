@@ -8,11 +8,11 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMemberSelector } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 import type { addTeam_addTeamMutation } from './__generated__/addTeam_addTeamMutation.graphql';
@@ -64,12 +64,12 @@ const AddTeam = ({ rootDataRelay, organizationId }: Props) => {
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const router = useRouter();
+  const navigate = useNavigate();
   const validate = makeValidate(teamSchema);
   const requiredFields = makeRequired(teamSchema);
 
   const handleCancelClick = () => {
-    router.back();
+    navigate(-1);
   };
 
   const handleTeamCreateClick = ({ name, about, timezone, organizationMemberIds }: TeamDetails) => {
@@ -100,7 +100,7 @@ const AddTeam = ({ rootDataRelay, organizationId }: Props) => {
             anchorOrigin,
           });
         } else {
-          router.back();
+          navigate(-1);
         }
       },
       onError: (error) => {

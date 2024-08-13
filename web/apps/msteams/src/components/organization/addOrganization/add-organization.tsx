@@ -7,11 +7,11 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from 'components/organization';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
-import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { array, boolean, object, string } from 'yup';
 import type { addOrganization_addOrganizationMutation } from './__generated__/addOrganization_addOrganizationMutation.graphql';
@@ -65,12 +65,12 @@ const AddOrganization = ({ rootDataRelay }: Props) => {
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const router = useRouter();
+  const navigate = useNavigate();
   const validate = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
   const handleCancelClick = () => {
-    router.back();
+    navigate(-1);
   };
 
   const handleOrganizationCreateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
@@ -96,7 +96,7 @@ const AddOrganization = ({ rootDataRelay }: Props) => {
             anchorOrigin,
           });
         } else {
-          router.back();
+          navigate(-1);
         }
       },
       onError: (error) => {

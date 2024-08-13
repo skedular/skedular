@@ -7,11 +7,11 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo } from 'react';
 import { Form } from 'react-final-form';
 import { useMutation } from 'react-relay';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { object, string } from 'yup';
 import type { addLocation_addLocationMutation } from './__generated__/addLocation_addLocationMutation.graphql';
@@ -47,12 +47,12 @@ const AddLocation = ({ organizationId }: Props) => {
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const router = useRouter();
+  const navigate = useNavigate();
   const validate = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
 
   const handleCancelClick = () => {
-    router.back();
+    navigate(-1);
   };
 
   const handleLocationCreateClick = ({ name, about, timezone }: LocationDetails) => {
@@ -76,7 +76,7 @@ const AddLocation = ({ organizationId }: Props) => {
             anchorOrigin,
           });
         } else {
-          router.back();
+          navigate(-1);
         }
       },
       onError: (error) => {
