@@ -7,7 +7,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { CustomerAvatar } from 'components/customer';
 import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { customerSettingsPage_query$key } from './__generated__/customerSettingsPage_query.graphql';
 import CustomerSettingsPersonalTab from './customer-settings-personal-tab';
 

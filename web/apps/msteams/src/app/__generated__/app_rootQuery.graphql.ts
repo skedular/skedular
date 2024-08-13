@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<83e6d27e5da3b4be52e92a7b4bc0462e>>
+ * @generated SignedSource<<6420285aa9417fa706171c32fca53735>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type BookingOrderInput = {
   direction: OrderDirection;
   field?: BookingOrderField | null | undefined;
 };
-export type appHome_rootQuery$variables = {
+export type app_rootQuery$variables = {
   bookingDetailsSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   bookingPeopleNameSearchText: string;
   dateToGetAvailableDesks: any;
@@ -32,15 +32,15 @@ export type appHome_rootQuery$variables = {
   organizationId: string;
   smallMonthlyViewCalendarBookingsSortingValues?: ReadonlyArray<BookingOrderInput> | null | undefined;
 };
-export type appHome_rootQuery$data = {
+export type app_rootQuery$data = {
   readonly bookingCustomerRecordSynced: boolean;
   readonly msTeamsCustomerRecordSynced: boolean;
   readonly organizationCustomerRecordSynced: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"organizationOnboarding_query" | "rootShell_query" | "smallMonthlyViewCalendar_query">;
 };
-export type appHome_rootQuery = {
-  response: appHome_rootQuery$data;
-  variables: appHome_rootQuery$variables;
+export type app_rootQuery = {
+  response: app_rootQuery$data;
+  variables: app_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -326,7 +326,7 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "appHome_rootQuery",
+    "name": "app_rootQuery",
     "selections": [
       (v9/*: any*/),
       (v10/*: any*/),
@@ -364,7 +364,7 @@ return {
       (v8/*: any*/)
     ],
     "kind": "Operation",
-    "name": "appHome_rootQuery",
+    "name": "app_rootQuery",
     "selections": [
       (v9/*: any*/),
       (v10/*: any*/),
@@ -788,16 +788,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "19f4da9e58ef91c926fee881d685dfac",
+    "cacheID": "7b113c7c516b5774472548e603d5d533",
     "id": null,
     "metadata": {},
-    "name": "appHome_rootQuery",
+    "name": "app_rootQuery",
     "operationKind": "query",
-    "text": "query appHome_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $monthlyCalendarDateFrom: DateTime!\n  $monthlyCalendarDateTo: DateTime!\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $bookingPeopleNameSearchText: String!\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  msTeamsCustomerRecordSynced\n  bookingCustomerRecordSynced\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...organizationOnboarding_query\n  ...smallMonthlyViewCalendar_query\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    preferredDesks {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  organization(id: $organizationId) {\n    canUpdateBookingOnBehalf\n    canDeleteBookingOnBehalf\n    id\n  }\n  ...bookingDetailsSelector_query\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n  bookingDetailsSelectorQueryPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationOnboarding_query on Query {\n  me {\n    id\n    isOrganizationOnboardingDone\n    isLocationOnboardingDone\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  tenantInstalled\n  adminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n\nfragment smallMonthlyViewCalendar_query on Query {\n  monthlyBookings: bookings(first: 1000, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          photoUrl\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  ...bookingCard_query\n}\n"
+    "text": "query app_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $monthlyCalendarDateFrom: DateTime!\n  $monthlyCalendarDateTo: DateTime!\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $bookingPeopleNameSearchText: String!\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  msTeamsCustomerRecordSynced\n  bookingCustomerRecordSynced\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...organizationOnboarding_query\n  ...smallMonthlyViewCalendar_query\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    preferredDesks {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  organization(id: $organizationId) {\n    canUpdateBookingOnBehalf\n    canDeleteBookingOnBehalf\n    id\n  }\n  ...bookingDetailsSelector_query\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n  bookingDetailsSelectorQueryPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationOnboarding_query on Query {\n  me {\n    id\n    isOrganizationOnboardingDone\n    isLocationOnboardingDone\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  tenantInstalled\n  adminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n\nfragment smallMonthlyViewCalendar_query on Query {\n  monthlyBookings: bookings(first: 1000, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          photoUrl\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  ...bookingCard_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9ce71d0c7885acff778b0a8225c4eeba";
+(node as any).hash = "aeb3e910e488198852ea0a29c114ed31";
 
 export default node;

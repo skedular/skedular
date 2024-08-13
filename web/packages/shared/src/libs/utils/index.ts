@@ -174,13 +174,14 @@ export {
   getCustomerAvatarLetters,
   getCustomerFullName,
   getCustomerShortName,
-  getPublicSiteUrl, joinErrors, now,
+  getPublicSiteUrl,
+  joinErrors,
+  now,
   startOfDay,
   startOfMonth,
   toDayAndMonthDate,
   toFixed,
   toShortDate,
   toShortDateTime,
-  toShortDateTimeInUtc
+  toShortDateTimeInUtc,
 };
-

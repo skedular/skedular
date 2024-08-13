@@ -9,7 +9,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { useSnackbar } from 'notistack';
 import { memo, useEffect, useState } from 'react';
 import { useRefetchableFragment } from 'react-relay';
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import OrganizationAvatar from '../organization-avatar';
 import type { organizationPageQuery } from './__generated__/organizationPageQuery.graphql';
 import type { organizationPage_query$key } from './__generated__/organizationPage_query.graphql';

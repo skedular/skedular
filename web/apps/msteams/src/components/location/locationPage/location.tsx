@@ -7,7 +7,7 @@ import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import LocationAvatar from '../location-avatar';
 import type { locationPage_query$key } from './__generated__/locationPage_query.graphql';
 import LocationAboutTab from './location-about-tab';

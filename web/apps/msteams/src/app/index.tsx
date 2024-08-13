@@ -9,10 +9,10 @@ import { SmallMonthlyViewCalendar } from 'components/smallMonthlyViewCalendar';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { appHome_rootQuery } from './__generated__/appHome_rootQuery.graphql';
+import type { app_rootQuery } from './__generated__/app_rootQuery.graphql';
 
 const RootQuery = graphql`
-  query appHome_rootQuery(
+  query app_rootQuery(
     $organizationId: String!
     $locationId: String!
     $monthlyCalendarDateFrom: DateTime!
@@ -34,12 +34,12 @@ const RootQuery = graphql`
 `;
 
 type Props = {
-  queryReference: PreloadedQuery<appHome_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<app_rootQuery, Record<string, unknown>>;
   onReloadRequire: () => void;
 };
 
 const Home = ({ queryReference, onReloadRequire }: Props) => {
-  const rootData = usePreloadedQuery<appHome_rootQuery>(RootQuery, queryReference);
+  const rootData = usePreloadedQuery<app_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(
     () => rootData?.msTeamsCustomerRecordSynced && rootData?.bookingCustomerRecordSynced && rootData?.organizationCustomerRecordSynced,
     [rootData?.msTeamsCustomerRecordSynced, rootData?.bookingCustomerRecordSynced, rootData?.organizationCustomerRecordSynced],
@@ -61,8 +61,8 @@ const Home = ({ queryReference, onReloadRequire }: Props) => {
 const MemoHome = memo(Home);
 
 const HomeWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<appHome_rootQuery>(RootQuery);
-  const [date, setDate] = useState(startOfMonth(null));
+  const [queryReference, loadQuery] = useQueryLoader<app_rootQuery>(RootQuery);
+  const [date] = useState(startOfMonth(null));
 
   useEffect(() => {
     loadQuery(

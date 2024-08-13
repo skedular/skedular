@@ -7,7 +7,7 @@ import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import TeamAvatar from '../team-avatar';
 import type { teamPage_query$key } from './__generated__/teamPage_query.graphql';
 import TeamAboutTab from './team-about-tab';
