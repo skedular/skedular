@@ -8,12 +8,13 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from 'components/organization';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, useFragment, useMutation } from 'react-relay';
+import { useFragment, useMutation } from 'react-relay';
 import { v4 as uuidv4 } from 'uuid';
 import { array, boolean, object, string } from 'yup';
 import type { organizationOnboarding_addOrganizationMutation } from './__generated__/organizationOnboarding_addOrganizationMutation.graphql';
@@ -95,7 +96,7 @@ const OrganizationOnboarding = ({ rootDataRelay }: Props) => {
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep] = useState(0);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(!rootData.me?.isOrganizationOnboardingDone);
   const validate = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);

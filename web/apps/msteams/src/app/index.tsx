@@ -1,20 +1,35 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { endOfMonth, startOfDay, startOfMonth } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { OrganizationOnboarding } from 'components/organization/organizationOnboarding';
 import { RootShell } from 'components/rootShell';
-import { memo, useCallback, useEffect } from 'react';
+import { SmallMonthlyViewCalendar } from 'components/smallMonthlyViewCalendar';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { appHome_rootQuery } from './__generated__/appHome_rootQuery.graphql';
 
 const RootQuery = graphql`
-  query appHome_rootQuery {
+  query appHome_rootQuery(
+    $organizationId: String!
+    $locationId: String!
+    $monthlyCalendarDateFrom: DateTime!
+    $monthlyCalendarDateTo: DateTime!
+    $dateToGetAvailableDesks: DateTime!
+    $deskIdsToIncludeToGetAvailableDesks: [String!]!
+    $bookingPeopleNameSearchText: String!
+    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]
+  ) {
     msTeamsCustomerRecordSynced
     bookingCustomerRecordSynced
+    organizationCustomerRecordSynced
     ...rootShell_query
+    ...rootShell_query
+    ...organizationOnboarding_query
+    ...smallMonthlyViewCalendar_query
   }
 `;
 
@@ -26,8 +41,8 @@ type Props = {
 const Home = ({ queryReference, onReloadRequire }: Props) => {
   const rootData = usePreloadedQuery<appHome_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(
-    () => rootData?.msTeamsCustomerRecordSynced && rootData?.bookingCustomerRecordSynced,
-    [rootData?.msTeamsCustomerRecordSynced, rootData?.bookingCustomerRecordSynced],
+    () => rootData?.msTeamsCustomerRecordSynced && rootData?.bookingCustomerRecordSynced && rootData?.organizationCustomerRecordSynced,
+    [rootData?.msTeamsCustomerRecordSynced, rootData?.bookingCustomerRecordSynced, rootData?.organizationCustomerRecordSynced],
   );
 
   return (
@@ -37,9 +52,8 @@ const Home = ({ queryReference, onReloadRequire }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.msTeamsCustomerRecordSynced, rootData?.bookingCustomerRecordSynced]}
     >
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
-        <Typography variant="h4">Testing home page</Typography>
-      </Box>
+      <OrganizationOnboarding rootDataRelay={rootData} />
+      <SmallMonthlyViewCalendar rootDataRelay={rootData} />
     </RootShell>
   );
 };
@@ -48,24 +62,65 @@ const MemoHome = memo(Home);
 
 const HomeWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<appHome_rootQuery>(RootQuery);
+  const [date, setDate] = useState(startOfMonth(null));
 
   useEffect(() => {
     loadQuery(
-      {},
+      {
+        monthlyCalendarDateFrom: startOfMonth(date).toISOString(),
+        monthlyCalendarDateTo: endOfMonth(date).toISOString(),
+        deskIdsToIncludeToGetAvailableDesks: [],
+        organizationId: '',
+        locationId: '',
+        bookingPeopleNameSearchText: '',
+        bookingDetailsSelectorOrganizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        smallMonthlyViewCalendarBookingsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'from',
+          },
+        ],
+        dateToGetAvailableDesks: startOfDay(null).toISOString(),
+      },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery]);
+  }, [loadQuery, date]);
 
   const handleReloadRequire = useCallback(() => {
     loadQuery(
-      {},
+      {
+        monthlyCalendarDateFrom: startOfMonth(date).toISOString(),
+        monthlyCalendarDateTo: endOfMonth(date).toISOString(),
+        deskIdsToIncludeToGetAvailableDesks: [],
+        organizationId: '',
+        locationId: '',
+        bookingPeopleNameSearchText: '',
+        bookingDetailsSelectorOrganizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        smallMonthlyViewCalendarBookingsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'from',
+          },
+        ],
+        dateToGetAvailableDesks: startOfDay(null).toISOString(),
+      },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery]);
+  }, [loadQuery, date]);
 
   if (queryReference == null) {
     return <Loading />;

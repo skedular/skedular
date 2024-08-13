@@ -1,5 +1,6 @@
+import graphql from 'babel-plugin-relay/macro';
 import { memo, useMemo } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { useFragment } from 'react-relay';
 import type { notificationCard_NotificationDetails$key } from './__generated__/notificationCard_NotificationDetails.graphql';
 import InvitationToJoinLocationNotificationCard from './invitation-to-join-location-notification-card';
 import InvitationToJoinOrganizationNotificationCard from './invitation-to-join-organization-notification-card';

@@ -2,9 +2,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { convertStringToLowercaseExceptFirstLetter } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { useFragment } from 'react-relay';
 import type { locationSingleChoiceMembershipType_query$key } from './__generated__/locationSingleChoiceMembershipType_query.graphql';
 
 type Props = {

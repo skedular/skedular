@@ -12,11 +12,12 @@ import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '@repo/shared/comp
 import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { endOfDay, keyboardDebounceTimeout, startOfDay, toShortDate } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { BulkNewDeskDialog, DeskCard, NewDeskDialog } from 'components/desk';
 import { Dayjs } from 'dayjs';
 import debounce from 'lodash.debounce';
 import { memo, useCallback, useMemo, useState } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { usePaginationFragment } from 'react-relay';
 import type { DeskOrderField, DeskOrderInput, desksPaginationQuery } from './__generated__/desksPaginationQuery.graphql';
 import type { locationDesksTab_query$key } from './__generated__/locationDesksTab_query.graphql';
 

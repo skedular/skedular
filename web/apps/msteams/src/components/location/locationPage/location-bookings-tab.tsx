@@ -10,11 +10,12 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { startOfDay, toShortDate } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { BookingCard } from 'components/booking';
 import { NewBookingDialog } from 'components/booking/addBooking';
 import dayjs, { Dayjs } from 'dayjs';
 import { memo, useCallback, useMemo, useState } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { usePaginationFragment } from 'react-relay';
 import type { BookingOrderField, BookingOrderInput, locationBookingsPaginationQuery } from './__generated__/locationBookingsPaginationQuery.graphql';
 import type { locationBookingsTab_query$key } from './__generated__/locationBookingsTab_query.graphql';
 

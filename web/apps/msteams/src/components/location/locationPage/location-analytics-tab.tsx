@@ -3,9 +3,10 @@ import { axisClasses } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
 import { toDayAndMonthDate, toFixed } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { Dayjs } from 'dayjs';
 import { memo, useCallback } from 'react';
-import { graphql, useRefetchableFragment } from 'react-relay';
+import { useRefetchableFragment } from 'react-relay';
 import type { locationAnalyticsPaginationQuery } from './__generated__/locationAnalyticsPaginationQuery.graphql';
 import type { locationAnalyticsTab_query$key } from './__generated__/locationAnalyticsTab_query.graphql';
 

@@ -1,9 +1,10 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { useFragment } from 'react-relay';
 import type { bookingSingleChoiceOrganization_query$key } from './__generated__/bookingSingleChoiceOrganization_query.graphql';
 
 type Props = {

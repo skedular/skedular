@@ -1,7 +1,8 @@
 import Grid from '@mui/material/Grid';
+import graphql from 'babel-plugin-relay/macro';
 import { BookingCard } from 'components/booking';
 import { memo, useCallback, useMemo } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { usePaginationFragment } from 'react-relay';
 import type { bookingFeedsPaginationQuery } from './__generated__/bookingFeedsPaginationQuery.graphql';
 import type { bookingFeeds_query$key } from './__generated__/bookingFeeds_query.graphql';
 

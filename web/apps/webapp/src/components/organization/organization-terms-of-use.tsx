@@ -10,12 +10,6 @@ type Props = {
   required?: boolean;
 };
 
-interface SubCategoryDetails {
-  mainCategoryName: string;
-  id: string;
-  name: string;
-}
-
 const OrganizationTermsOfUse = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment(
     graphql`

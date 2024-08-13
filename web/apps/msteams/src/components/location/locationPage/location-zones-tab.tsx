@@ -9,10 +9,11 @@ import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { NewZoneDialog, ZoneCard } from 'components/zone';
 import debounce from 'lodash.debounce';
 import { memo, useCallback, useMemo, useState } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { usePaginationFragment } from 'react-relay';
 import type { locationZonesTab_query$key } from './__generated__/locationZonesTab_query.graphql';
 import type { LocationTagOrderField, LocationTagOrderInput, zonesPaginationQuery } from './__generated__/zonesPaginationQuery.graphql';
 

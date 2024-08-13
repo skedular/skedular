@@ -16,13 +16,14 @@ import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMemberCard } from 'components/organization';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, useMutation, usePaginationFragment } from 'react-relay';
+import { useMutation, usePaginationFragment } from 'react-relay';
 import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 import type {

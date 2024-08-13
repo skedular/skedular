@@ -1,7 +1,8 @@
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { useFragment } from 'react-relay';
 import type { organizationMultipleChoicesIndustries_query$key } from './__generated__/organizationMultipleChoicesIndustries_query.graphql';
 
 type Props = {

@@ -1,11 +1,12 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { CustomerAvatar } from 'components/customer';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useMemo, useState } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { usePaginationFragment } from 'react-relay';
 import type { organizationMemberSelector_organizationMembersPaginationQuery } from './__generated__/organizationMemberSelector_organizationMembersPaginationQuery.graphql';
 import type { organizationMemberSelector_query$key } from './__generated__/organizationMemberSelector_query.graphql';
 
@@ -33,12 +34,10 @@ interface OrganizationMemberDetails {
 }
 
 const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, multiple, useMemberId }: Props) => {
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<organizationMemberSelector_organizationMembersPaginationQuery, organizationMemberSelector_query$key>(
+  const { data: rootData, refetch } = usePaginationFragment<
+    organizationMemberSelector_organizationMembersPaginationQuery,
+    organizationMemberSelector_query$key
+  >(
     graphql`
       fragment organizationMemberSelector_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
@@ -71,7 +70,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
   );
 
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize] = useState(20);
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');
 
   const customers = useMemo<OrganizationMemberDetails[]>(() => {

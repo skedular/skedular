@@ -1,7 +1,8 @@
 import Link from '@mui/material/Link';
+import graphql from 'babel-plugin-relay/macro';
 import { Checkboxes } from 'mui-rff';
 import { memo } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { useFragment } from 'react-relay';
 import type { organizationTermsOfUse_query$key } from './__generated__/organizationTermsOfUse_query.graphql';
 
 type Props = {
@@ -9,12 +10,6 @@ type Props = {
   name: string;
   required?: boolean;
 };
-
-interface SubCategoryDetails {
-  mainCategoryName: string;
-  id: string;
-  name: string;
-}
 
 const OrganizationTermsOfUse = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment(

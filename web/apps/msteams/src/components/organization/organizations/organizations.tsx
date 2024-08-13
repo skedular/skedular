@@ -4,16 +4,17 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { OrganizationCard } from 'components/organization';
 import debounce from 'lodash.debounce';
-import Link from 'next/link';
 import { memo, useCallback, useMemo, useState } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { usePaginationFragment } from 'react-relay';
 import type {
   OrganizationOrderField,
   OrganizationOrderInput,

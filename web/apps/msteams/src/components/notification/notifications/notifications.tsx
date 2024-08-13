@@ -1,9 +1,10 @@
 import Grid from '@mui/material/Grid';
 import TablePagination from '@mui/material/TablePagination';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
+import graphql from 'babel-plugin-relay/macro';
 import { NotificationCard } from 'components/notification';
 import { memo, useCallback, useMemo, useState } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { usePaginationFragment } from 'react-relay';
 import type {
   NotificationOrderField,
   NotificationOrderInput,

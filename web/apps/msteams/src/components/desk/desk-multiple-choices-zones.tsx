@@ -1,9 +1,10 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useEffect, useMemo } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { usePaginationFragment } from 'react-relay';
 import type { deskMultipleChoicesZonesPaginationQuery } from './__generated__/deskMultipleChoicesZonesPaginationQuery.graphql';
 import type { deskMultipleChoicesZones_query$key } from './__generated__/deskMultipleChoicesZones_query.graphql';
 

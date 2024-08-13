@@ -3,12 +3,13 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { CustomerAvatar } from 'components/customer';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from 'components/zone';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { usePaginationFragment } from 'react-relay';
 import type { bookingDetailsSelectorQuery } from './__generated__/bookingDetailsSelectorQuery.graphql';
 import type { bookingDetailsSelector_query$key } from './__generated__/bookingDetailsSelector_query.graphql';
 
@@ -98,12 +99,7 @@ const BookingDetailsSelector = ({
   bookingFrom,
   bookingTo,
 }: Props) => {
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<bookingDetailsSelectorQuery, bookingDetailsSelector_query$key>(
+  const { data: rootData, refetch } = usePaginationFragment<bookingDetailsSelectorQuery, bookingDetailsSelector_query$key>(
     graphql`
       fragment bookingDetailsSelector_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
@@ -157,7 +153,7 @@ const BookingDetailsSelector = ({
 
   const theme = useTheme();
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize] = useState(20);
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');
   const [organizationId, setOrganizationId] = useState(defaultOrganizationId);
   const [locationId, setLocationId] = useState(defaultLocationId);

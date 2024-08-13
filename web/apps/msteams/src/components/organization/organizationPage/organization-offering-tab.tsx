@@ -1,8 +1,9 @@
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
+import graphql from 'babel-plugin-relay/macro';
 import { memo } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { useFragment } from 'react-relay';
 import type { organizationOfferingTab_query$key } from './__generated__/organizationOfferingTab_query.graphql';
 import OrganizationAvailableOfferings from './organization-available-offerings';
 import OrganizationOffering from './organization-offering';

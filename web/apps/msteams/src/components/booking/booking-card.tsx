@@ -20,6 +20,7 @@ import {
 } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, getCustomerFullName, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { CustomerAvatar } from 'components/customer';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from 'components/zone';
 import dayjs, { Dayjs } from 'dayjs';
@@ -27,7 +28,7 @@ import { makeRequired, makeValidate } from 'mui-rff';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, useFragment, useMutation } from 'react-relay';
+import { useFragment, useMutation } from 'react-relay';
 import { v4 as uuidv4 } from 'uuid';
 import { array, date, object, string } from 'yup';
 import type { bookingCard_BookingDetails$key } from './__generated__/bookingCard_BookingDetails.graphql';
