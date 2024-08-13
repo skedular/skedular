@@ -13,6 +13,7 @@ on:
       - ".github/workflows/webapp.yml"
       - "web/pnpm-lock.yaml"
       - "web/apps/webapp/**"
+      - "web/packages/**"
       - "web/infrastructure/**"
       - "shared/infrastructure/**"
   pull_request:
@@ -24,6 +25,7 @@ on:
       - ".github/workflows/webapp.yml"
       - "web/pnpm-lock.yaml"
       - "web/apps/webapp/**"
+      - "web/packages/**"
       - "web/infrastructure/**"
       - "shared/infrastructure/**"
 
