@@ -68,7 +68,7 @@ const getPublicSiteUrl = () => {
 };
 
 const getCurrentCompleteUrl = () => {
-  return new URL(window.location.pathname, getPublicSiteUrl()).href;
+  return new URL(window.location.pathname, window.location.origin).href;
 };
 
 const encodeBase64 = (value: string) => {
@@ -174,14 +174,13 @@ export {
   getCustomerAvatarLetters,
   getCustomerFullName,
   getCustomerShortName,
-  getPublicSiteUrl,
-  now,
+  getPublicSiteUrl, joinErrors, now,
   startOfDay,
   startOfMonth,
   toDayAndMonthDate,
   toFixed,
   toShortDate,
   toShortDateTime,
-  toShortDateTimeInUtc,
-  joinErrors,
+  toShortDateTimeInUtc
 };
+
