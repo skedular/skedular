@@ -78,7 +78,8 @@ public class OrganizationBillingService(
         }
 
         await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationRepository.UnitOfWork,
                 cancellationToken);
 
         existingOrganization.BillingContactEmail = email;

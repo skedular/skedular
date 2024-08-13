@@ -99,14 +99,17 @@ public class TenantService(
         {
             await tenantOnboardingService.OnboardAsync(
                 tenantId,
-                installStateUserIdLookup.InstalledByUserId,
+                installStateUserIdLookup,
                 cancellationToken);
         }
         else
         {
             await using var transaction =
-                await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
+                await transactionBuilder.BeginTransactionAsync(
+                    repositoryFactory.TenantRepository.UnitOfWork,
                     cancellationToken);
+            
+            repositoryFactory.InstallStateUserIdLookupRepository.Remove(installStateUserIdLookup);
 
             var tenant =
                 await repositoryFactory.TenantRepository.GetByIdAsync(tenantId, cancellationToken);

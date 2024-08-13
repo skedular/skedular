@@ -43,7 +43,8 @@ public class WorkspaceService(
         else
         {
             await using var transaction =
-                await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
+                await transactionBuilder.BeginTransactionAsync(
+                    repositoryFactory.OrganizationRepository.UnitOfWork,
                     cancellationToken);
 
             var workspace =

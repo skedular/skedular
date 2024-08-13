@@ -17,7 +17,10 @@ namespace MsTeams.Api.Services;
 
 public interface ITenantOnboardingService
 {
-    Task OnboardAsync(string tenantId, string installedByUserId, CancellationToken cancellationToken);
+    Task OnboardAsync(
+        string tenantId,
+        InstallStateUserIdLookup installStateUserIdLookup,
+        CancellationToken cancellationToken);
 }
 
 public class TenantOnboardingService(
@@ -30,12 +33,16 @@ public class TenantOnboardingService(
     OrganizationService.OrganizationServiceClient organizationServiceClient,
     LocationService.LocationServiceClient locationServiceClient) : ITenantOnboardingService
 {
-    public async Task OnboardAsync(string tenantId, string installedByUserId, CancellationToken cancellationToken)
+    public async Task OnboardAsync(
+        string tenantId,
+        InstallStateUserIdLookup installStateUserIdLookup,
+        CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
 
         await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationRepository.UnitOfWork,
                 cancellationToken);
 
         var organization =
@@ -43,8 +50,12 @@ public class TenantOnboardingService(
 
         var tenant = repositoryFactory.TenantRepository.Add(new Tenant
         {
-            Id = tenantId, InstalledByUserId = installedByUserId, Organization = organization
+            Id = tenantId,
+            InstalledByUserId = installStateUserIdLookup.InstalledByUserId,
+            Organization = organization
         });
+
+        repositoryFactory.InstallStateUserIdLookupRepository.Remove(installStateUserIdLookup);
 
         await Task.WhenAll([
             CreateOrganizationAsync("No name set!!!", organization, cancellationToken),

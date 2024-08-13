@@ -38,7 +38,8 @@ public class WorkspaceOnboardingService(
         ArgumentNullException.ThrowIfNull(oauthV2AccessResponse.Team);
 
         await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationRepository.UnitOfWork,
                 cancellationToken);
 
         var organization =

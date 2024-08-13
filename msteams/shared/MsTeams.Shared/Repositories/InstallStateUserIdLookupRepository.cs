@@ -9,6 +9,7 @@ public interface IInstallStateUserIdLookupRepository : IRepository<InstallStateU
 {
     Task<InstallStateUserIdLookup?> GetByIdAsync(string id, CancellationToken cancellationToken);
     InstallStateUserIdLookup Add(InstallStateUserIdLookup installStateUserIdLookup);
+    void Remove(InstallStateUserIdLookup installStateUserIdLookup);
 }
 
 public class InstallStateUserIdLookupRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)
@@ -26,4 +27,7 @@ public class InstallStateUserIdLookupRepository(MsTeamsDbContext dbContext, Time
         installStateUserIdLookup.CreatedAt = now;
         return DbContext.InstallStateUserIdLookup.Add(installStateUserIdLookup).Entity;
     }
+
+    public void Remove(InstallStateUserIdLookup installStateUserIdLookup) =>
+        DbContext.InstallStateUserIdLookup.Remove(installStateUserIdLookup);
 }

@@ -113,7 +113,8 @@ public class OrganizationService(
             .ToListAsync(cancellationToken);
 
         await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationRepository.UnitOfWork,
                 cancellationToken);
 
         var organizationEntity = mapper.MapTo(organization, termsOfUse, industrySubCategories);
@@ -202,7 +203,8 @@ public class OrganizationService(
         }
 
         await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationRepository.UnitOfWork,
                 cancellationToken);
 
         var deletedOrganization = mapper.MapTo(repositoryFactory.OrganizationRepository.Remove(organization));
@@ -287,7 +289,8 @@ public class OrganizationService(
         }
 
         await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationRepository.UnitOfWork,
                 cancellationToken);
 
         organization =
