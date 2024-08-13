@@ -9,12 +9,22 @@ namespace MsTeams.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class TenantMember : EntityBaseWithDeleted
 {
-    public string? GivenName { get; set; }
-    public string? Surname { get; set; }
     public string? Email { get; set; }
-    public string? JobTitle { get; set; }
+    public string? Designation { get; set; }
+    public string? Name { get; set; }
+    public string? GivenName { get; set; }
+    public string? FamilyName { get; set; }
     public string? PreferredLanguage { get; set; }
-    public string? PrincipalName { get; set; }
+    public string? PhotoUrl { get; set; }
+    public string? PhotoUrl48 { get; set; }
+    public string? PhotoUrl64 { get; set; }
+    public string? PhotoUrl96 { get; set; }
+    public string? PhotoUrl120 { get; set; }
+    public string? PhotoUrl240 { get; set; }
+    public string? PhotoUrl360 { get; set; }
+    public string? PhotoUrl432 { get; set; }
+    public string? PhotoUrl504 { get; set; }
+    public string? PhotoUrl648 { get; set; }
 
     public virtual Tenant Tenant { get; set; }
 }
@@ -26,12 +36,22 @@ public class TenantMemberConfiguration : IEntityTypeConfiguration<TenantMember>
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder.Property(item => item.GivenName).HasMaxLength(Constants.MaxGivenNameLength);
-        builder.Property(item => item.Surname).HasMaxLength(Constants.MaxFamilyNameLength);
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
-        builder.Property(item => item.JobTitle).HasMaxLength(Constants.MaxDesignationLength);
+        builder.Property(item => item.Designation).HasMaxLength(Constants.MaxDesignationLength);
+        builder.Property(item => item.Name).HasMaxLength(Constants.MaxPersonNameLength);
+        builder.Property(item => item.GivenName).HasMaxLength(Constants.MaxGivenNameLength);
+        builder.Property(item => item.FamilyName).HasMaxLength(Constants.MaxFamilyNameLength);
         builder.Property(item => item.PreferredLanguage).HasMaxLength(Constants.MaxLocaleLength);
-        builder.Property(item => item.PrincipalName).HasMaxLength(Constants.MaxTenantPrincipalLength);
+        builder.Property(item => item.PhotoUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl48).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl64).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl96).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl120).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl240).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl360).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl432).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl504).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.PhotoUrl648).HasMaxLength(Constants.MaxUrlLength);
 
         builder
             .HasOne(item => item.Tenant)

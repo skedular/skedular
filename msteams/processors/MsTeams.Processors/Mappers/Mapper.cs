@@ -75,11 +75,11 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id!,
-            GivenName = src.GivenName,
-            Surname = src.Surname,
-            JobTitle = src.JobTitle,
             Email = src.Mail,
-            PrincipalName = src.UserPrincipalName,
+            Designation = src.JobTitle,
+            Name = src.DisplayName,
+            GivenName = src.GivenName,
+            FamilyName = src.Surname,
             PreferredLanguage = src.PreferredLanguage
         };
 
@@ -264,9 +264,9 @@ public class Mapper : IMapper
         var input = new Admin_AddInput
         {
             Id = customerId,
-            Designation = src.JobTitle.ToSafeString(),
+            Designation = src.Designation.ToSafeString(),
             GivenName = src.GivenName.ToSafeString(),
-            FamilyName = src.Surname.ToSafeString(),
+            FamilyName = src.FamilyName.ToSafeString(),
             IsOrganizationOnboardingDone = true,
             IsLocationOnboardingDone = true,
             IsDefaultOrganizationOnboardingDone = true,

@@ -24,11 +24,13 @@ public class MsGraphService(IMsGraphServiceClientService msGraphServiceClientSer
                         requestConfiguration.QueryParameters.Select =
                         [
                             "id",
+                            "mail",
+                            "jobTitle",
+                            "displayName",
                             "givenName",
                             "surname",
-                            "jobTitle",
-                            "mail",
-                            "userPrincipalName"
+                            "photo",
+                            "photos"
                         ];
                         _ = requestConfiguration.QueryParameters.Select.Skip(skipCount);
                     },
