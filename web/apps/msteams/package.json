@@ -37,6 +37,8 @@
     "@mui/x-license-pro": "^6.10.2",
     "@mui/x-tree-view": "^7.12.1",
     "babel-plugin-relay": "^17.0.0",
+    "@stripe/react-stripe-js": "^2.7.3",
+    "@stripe/stripe-js": "^4.2.0",
     "cookies-next": "^4.2.1",
     "countries-list": "^3.1.1",
     "date-fns": "^3.6.0",
