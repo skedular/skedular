@@ -7,15 +7,8 @@ namespace MsTeams.Api.Controllers;
 [ApiController]
 public class MsTeamsController(ITenantService tenantService) : MsTeamsControllerBase
 {
-    public override Task<IActionResult> ProcessBotMessage(CancellationToken cancellationToken = default) =>
-        throw new NotImplementedException();
-
-    public override Task<IActionResult> AdminConsent(CancellationToken cancellationToken = default)
-    {
-        var authorizationRequest = tenantService.GenerateAdminConsentUrl();
-
-        return Task.FromResult((IActionResult)Redirect(authorizationRequest));
-    }
+    public override async Task<IActionResult> AdminConsentUrl(CancellationToken cancellationToken = default) =>
+        Redirect(await tenantService.GenerateAdminConsentUrlAsync(cancellationToken));
 
     public override async Task<IActionResult> OnBoardTenant(
         // ReSharper disable InconsistentNaming

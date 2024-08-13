@@ -7,6 +7,7 @@ public interface IRepositoryFactory
 {
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
+    IInstallStateUserIdLookupRepository InstallStateUserIdLookupRepository { get; }
     ILocationRepository LocationRepository { get; }
     IOrganizationRepository OrganizationRepository { get; }
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
@@ -25,6 +26,7 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
 
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
+        InstallStateUserIdLookupRepository = new InstallStateUserIdLookupRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
@@ -41,6 +43,7 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
 
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
+    public IInstallStateUserIdLookupRepository InstallStateUserIdLookupRepository { get; }
     public ILocationRepository LocationRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }

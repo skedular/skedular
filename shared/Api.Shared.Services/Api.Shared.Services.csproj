@@ -18,4 +18,8 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="OpenApi\UnityHub\MsTeams\V1\" />
+    </ItemGroup>
+
 </Project>

@@ -5,30 +5,12 @@ info:
   version: 1.0.0
 
 paths:
-  /msteams/api/v1/bot-message:
-    post:
-      tags:
-        - msteams
-      summary: process bot messages sent by Azure Bot system
-      operationId: processBotMessage
-
-      responses:
-        "200":
-          description: the message processing result
-
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /msteams/api/v1/adminconsent:
+  /msteams/api/v1/adminconsenturl:
     get:
       tags:
         - msteams
       summary: generate an admin consent Url for the given tenant
-      operationId: adminConsent
+      operationId: adminConsentUrl
       responses:
         "302":
           description: redirect status response code

@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@types/relay-runtime": "^17.0.4",
-    "eslint": "9.8.0",
+    "eslint": "9.9.0",
     "eslint-plugin-turbo": "^2.0.12",
     "global": "^4.4.0",
     "next": "14.2.5",

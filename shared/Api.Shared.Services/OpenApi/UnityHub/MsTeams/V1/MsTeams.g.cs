@@ -31,17 +31,10 @@ namespace Api.Shared.Services.OpenApi.UnityHub.MsTeams.V1
     public abstract class MsTeamsControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>
-        /// process bot messages sent by Azure Bot system
-        /// </summary>
-        /// <returns>the message processing result</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("msteams/api/v1/bot-message")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessBotMessage(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
         /// generate an admin consent Url for the given tenant
         /// </summary>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("msteams/api/v1/adminconsent")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AdminConsent(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("msteams/api/v1/adminconsenturl")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AdminConsentUrl(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// OnBoard a tenant

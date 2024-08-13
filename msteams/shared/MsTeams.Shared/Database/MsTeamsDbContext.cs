@@ -13,6 +13,7 @@ public class MsTeamsDbContext(
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
+    public DbSet<InstallStateUserIdLookup> InstallStateUserIdLookup { get; set; }
     public DbSet<Location> Location { get; set; }
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }

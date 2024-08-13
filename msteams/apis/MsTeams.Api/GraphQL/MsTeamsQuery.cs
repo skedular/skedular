@@ -46,6 +46,6 @@ public class MsTeamsQuery : Query
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ITenantService>();
-        return service.GenerateAdminConsentUrl();
+        return await service.GenerateAdminConsentUrlAsync(cancellationToken);
     }
 }

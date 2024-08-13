@@ -2,6 +2,7 @@
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Random;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -14,7 +15,7 @@ namespace MsTeams.Api.Services;
 public interface ITenantService
 {
     Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken);
-    string GenerateAdminConsentUrl();
+    Task<string> GenerateAdminConsentUrlAsync(CancellationToken cancellationToken);
     Task<Uri> InstallAsync(string tenantId, string state, CancellationToken cancellationToken);
 }
 
@@ -23,6 +24,7 @@ public class TenantService(
     IRepositoryFactory repositoryFactory,
     IContext context,
     IMemoryCache memoryCache,
+    IRandomHelper randomHelper,
     MsTeamsAzureEntraConfiguration msTeamsAzureEntraConfiguration,
     IHttpContextAccessor httpContextAccessor,
     ITenantOnboardingService tenantOnboardingService,
@@ -54,7 +56,7 @@ public class TenantService(
             });
     }
 
-    public string GenerateAdminConsentUrl()
+    public async Task<string> GenerateAdminConsentUrlAsync(CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
         Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
@@ -65,27 +67,40 @@ public class TenantService(
             httpContextAccessor.HttpContext.Request.Host,
             httpContextAccessor.HttpContext.Request.PathBase);
 
+        var installStateUserIdLookup = repositoryFactory.InstallStateUserIdLookupRepository.Add(
+            new InstallStateUserIdLookup
+            {
+                Id = randomHelper.Generate(), InstalledByUserId = context.PropertyBag.VerifiableToken
+            });
+
         var tenantId = context.PropertyBag.AzureTenantId;
         var clientId = Uri.EscapeDataString(msTeamsAzureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(currentUri + "msteams/api/v1/onboard-tenant");
         var scope = Uri.EscapeDataString("User.ReadBasic.All");
-        var state = context.PropertyBag.VerifiableToken;
         var authorizationRequest =
-            $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={state}";
+            $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={installStateUserIdLookup.Id}";
+
+        await repositoryFactory.InstallStateUserIdLookupRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return authorizationRequest;
     }
 
     public async Task<Uri> InstallAsync(string tenantId, string state, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
+        var installStateUserIdLookup =
+            await repositoryFactory.InstallStateUserIdLookupRepository.GetByIdAsync(state, cancellationToken);
+        ArgumentNullException.ThrowIfNull(installStateUserIdLookup);
 
+        ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByTenantIdAsync(tenantId, cancellationToken);
 
         if (organization is null)
         {
-            await tenantOnboardingService.OnboardAsync(tenantId, state, cancellationToken);
+            await tenantOnboardingService.OnboardAsync(
+                tenantId,
+                installStateUserIdLookup.InstalledByUserId,
+                cancellationToken);
         }
         else
         {

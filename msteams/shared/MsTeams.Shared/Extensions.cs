@@ -29,6 +29,7 @@ public static class Extensions
         services
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
+            .AddScoped<IInstallStateUserIdLookupRepository, InstallStateUserIdLookupRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
