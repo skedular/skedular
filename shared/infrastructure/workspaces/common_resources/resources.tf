@@ -135,13 +135,3 @@ resource "cloudflare_record" "mapp" {
   proxied = false
   ttl     = 600
 }
-
-resource "cloudflare_record" "mmsteams" {
-  count   = var.environment == "staging" ? 1 : 0
-  zone_id = data.cloudflare_zone.default.id
-  name    = "mmsteams"
-  value   = "31.220.100.177"
-  type    = "A"
-  proxied = false
-  ttl     = 600
-}
