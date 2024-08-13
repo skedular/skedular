@@ -2,6 +2,7 @@ using Customer.Api.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
+using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
@@ -43,6 +44,7 @@ public interface ICustomerService
 }
 
 public class CustomerService(
+    MsTeamsAzureEntraConfiguration msTeamsAzureEntraConfiguration,
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICustomerOutboxPublisher customerOutboxPublisher,
@@ -66,7 +68,8 @@ public class CustomerService(
         return mapper.MapTo(customer);
     }
 
-    public async Task<Shared.Models.Customer> GetMeAsync(bool addCustomerIfNotExist,
+    public async Task<Shared.Models.Customer> GetMeAsync(
+        bool addCustomerIfNotExist,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
@@ -81,6 +84,14 @@ public class CustomerService(
         }
 
         if (!addCustomerIfNotExist)
+        {
+            throw new CustomerNotFound();
+        }
+
+        // TODO: 20240813 - Morteza: Trying to avoid MsTeams web to create customer, we might want in future to only
+        // allow web app to create customer if not exists
+        if (context.PropertyBag.AzureTenantId != Guid.Empty &&
+            context.PropertyBag.AzureTenantAudience == msTeamsAzureEntraConfiguration.ClientId)
         {
             throw new CustomerNotFound();
         }

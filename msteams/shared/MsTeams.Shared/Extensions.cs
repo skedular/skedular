@@ -71,6 +71,8 @@ public static class Extensions
         services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
 
         return services
-            .AddSingleton(customerConfiguration);
+            .AddSingleton(customerConfiguration)
+            .AddSingleton(locationConfiguration)
+            .AddSingleton(organizationConfiguration);
     }
 }
