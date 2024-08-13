@@ -1,6 +1,7 @@
 import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
 import Home from 'app';
+import Organizations from 'app/organizations';
 import Settings from 'app/settings';
 import {
   ColorModeProvider,
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Home />,
+  },
+  {
+    path: '/organization',
+    element: <Organizations />,
   },
   {
     path: '/settings',

@@ -52,14 +52,7 @@ const SettingsWithRelay = () => {
     );
   }, [loadQuery]);
 
-  const handleReloadRequire = useCallback(() => {
-    loadQuery(
-      {},
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery]);
+  const handleReloadRequire = () => {};
 
   if (queryReference == null) {
     return <Loading />;

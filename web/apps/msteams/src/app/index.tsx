@@ -62,7 +62,7 @@ const MemoHome = memo(Home);
 
 const HomeWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<app_rootQuery>(RootQuery);
-  const [date] = useState(startOfMonth(null));
+  const [date, setDate] = useState(startOfMonth(null));
 
   useEffect(() => {
     loadQuery(
@@ -93,34 +93,9 @@ const HomeWithRelay = () => {
     );
   }, [loadQuery, date]);
 
-  const handleReloadRequire = useCallback(() => {
-    loadQuery(
-      {
-        monthlyCalendarDateFrom: startOfMonth(date).toISOString(),
-        monthlyCalendarDateTo: endOfMonth(date).toISOString(),
-        deskIdsToIncludeToGetAvailableDesks: [],
-        organizationId: '',
-        locationId: '',
-        bookingPeopleNameSearchText: '',
-        bookingDetailsSelectorOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        smallMonthlyViewCalendarBookingsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'from',
-          },
-        ],
-        dateToGetAvailableDesks: startOfDay(null).toISOString(),
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, date]);
+  const handleReloadRequire = () => {
+    setDate(startOfMonth(null));
+  };
 
   if (queryReference == null) {
     return <Loading />;
