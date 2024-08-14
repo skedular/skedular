@@ -8,8 +8,10 @@ import Notifications from 'app/notifications';
 import Organizations from 'app/organizations';
 import AddOrganization from 'app/organizations/add';
 import Organization from 'app/organizations/organization';
-import AddOrganizationLocation from 'app/organizations/organization/location/add';
-import AddOrganizationTeam from 'app/organizations/organization/team/add';
+import AddOrganizationLocation from 'app/organizations/organization/locations/add';
+import OrganizationLocation from 'app/organizations/organization/locations/location';
+import AddOrganizationTeam from 'app/organizations/organization/teams/add';
+import OrganizationTeam from 'app/organizations/organization/teams/team';
 import Settings from 'app/settings';
 import Teams from 'app/teams';
 import AddTeam from 'app/teams/add';
@@ -49,8 +51,16 @@ const router = createBrowserRouter([
     element: <AddOrganizationLocation />,
   },
   {
+    path: 'organization/:organizationId/location/:locationId',
+    element: <OrganizationLocation />,
+  },
+  {
     path: 'organization/:organizationId/team/add',
     element: <AddOrganizationTeam />,
+  },
+  {
+    path: 'organization/:organizationId/team/:teamId',
+    element: <OrganizationTeam />,
   },
   {
     path: 'location',
