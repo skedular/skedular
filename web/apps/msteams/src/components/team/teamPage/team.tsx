@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import graphql from 'babel-plugin-relay/macro';
 import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import TeamAvatar from '../team-avatar';
 import type { teamPage_query$key } from './__generated__/teamPage_query.graphql';
 import TeamAboutTab from './team-about-tab';
@@ -34,10 +34,8 @@ const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
     rootDataRelay,
   );
 
-  const [searchParams] = useSearchParams();
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get('tab');
-  const navigate = useNavigate();
 
   let initialTabIndex = 0;
 
@@ -65,7 +63,7 @@ const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
     }
 
     if (tab) {
-      navigate(`${location.pathname}?tab=${tab}`);
+      setSearchParams({ tab });
     }
   };
 

@@ -8,7 +8,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { useSnackbar } from 'notistack';
 import { memo, useEffect, useState } from 'react';
 import { useRefetchableFragment } from 'react-relay';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import OrganizationAvatar from '../organization-avatar';
 import type { organizationPageQuery } from './__generated__/organizationPageQuery.graphql';
 import type { organizationPage_query$key } from './__generated__/organizationPage_query.graphql';
@@ -51,10 +51,8 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
     rootDataRelay,
   );
 
-  const [searchParams] = useSearchParams();
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get('tab');
-  const navigate = useNavigate();
   const addPaymentMethodStatus = searchParams.get('add-payment-method-status');
   const { enqueueSnackbar } = useSnackbar();
 
@@ -114,7 +112,7 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
     }
 
     if (tab) {
-      navigate(`${location.pathname}?tab=${tab}`);
+      setSearchParams({ tab });
     }
   };
 

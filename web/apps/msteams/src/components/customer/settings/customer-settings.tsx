@@ -6,7 +6,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { CustomerAvatar } from 'components/customer';
 import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import type { customerSettingsPage_query$key } from './__generated__/customerSettingsPage_query.graphql';
 import CustomerSettingsPersonalTab from './customer-settings-personal-tab';
 
@@ -33,10 +33,8 @@ const CustomerSettings = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
-  const [searchParams] = useSearchParams();
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get('tab');
-  const navigate = useNavigate();
 
   let initialTabIndex = 0;
 
@@ -56,7 +54,7 @@ const CustomerSettings = ({ rootDataRelay }: Props) => {
     }
 
     if (tab) {
-      navigate(`${location.pathname}?tab=${tab}`);
+      setSearchParams({ tab });
     }
   };
 

@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import graphql from 'babel-plugin-relay/macro';
 import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import LocationAvatar from '../location-avatar';
 import type { locationPage_query$key } from './__generated__/locationPage_query.graphql';
 import LocationAboutTab from './location-about-tab';
@@ -42,10 +42,8 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
     rootDataRelay,
   );
 
-  const [searchParams] = useSearchParams();
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get('tab');
-  const navigate = useNavigate();
 
   let initialTabIndex = 0;
 
@@ -85,7 +83,7 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
     }
 
     if (tab) {
-      navigate(`${location.pathname}?tab=${tab}`);
+      setSearchParams({ tab });
     }
   };
 
