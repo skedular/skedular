@@ -2,6 +2,7 @@ import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
 import Home from 'app';
 import Locations from 'app/locations';
+import Location from 'app/locations/location';
 import Organizations from 'app/organizations';
 import Organization from 'app/organizations/organization';
 import Settings from 'app/settings';
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: 'location',
     element: <Locations />,
+  },
+  {
+    path: 'location/:locationId',
+    element: <Location />,
   },
   {
     path: 'settings',

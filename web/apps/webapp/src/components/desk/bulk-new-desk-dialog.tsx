@@ -6,14 +6,14 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
-import { joinErrors } from '@repo/shared/libs/utils';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { v4 as uuidv4 } from 'uuid';
 import { array, number, object, string } from 'yup';
 import DeskMultipleChoicesZones from './desk-multiple-choices-zones';
 
@@ -87,7 +87,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to add desk '${name}'. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to add desks. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -100,7 +100,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
         }
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to add desk '${name}'. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to add desks. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });

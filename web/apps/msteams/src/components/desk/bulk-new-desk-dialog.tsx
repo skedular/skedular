@@ -88,7 +88,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to add desk '${name}'. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to add desks. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -101,7 +101,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
         }
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to add desk '${name}'. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to add desk. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
