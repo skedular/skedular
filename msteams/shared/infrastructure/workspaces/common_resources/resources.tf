@@ -17,7 +17,7 @@ data "azuread_service_principal" "msgraph" {
 }
 
 resource "azuread_application" "msteams" {
-  display_name     = "msteams-${var.environment}"
+  display_name     = var.environment == "production" ? "UnityHub" : "UnityHub-${var.environment}"
   sign_in_audience = "AzureADMultipleOrgs"
 
   api {

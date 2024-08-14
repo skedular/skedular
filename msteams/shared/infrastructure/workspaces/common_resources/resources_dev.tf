@@ -1,6 +1,6 @@
 resource "azuread_application" "msteams_dev" {
   count            = var.environment == "staging" ? 1 : 0
-  display_name     = "msteams-dev"
+  display_name     = "UnityHub-dev"
   sign_in_audience = "AzureADMultipleOrgs"
 
   api {
