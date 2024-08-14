@@ -4,12 +4,11 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { useSnackbar } from 'notistack';
 import { memo, useEffect, useState } from 'react';
 import { useRefetchableFragment } from 'react-relay';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import OrganizationAvatar from '../organization-avatar';
 import type { organizationPageQuery } from './__generated__/organizationPageQuery.graphql';
 import type { organizationPage_query$key } from './__generated__/organizationPage_query.graphql';
@@ -53,6 +52,7 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
   );
 
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const tab = searchParams.get('tab');
   const navigate = useNavigate();
   const addPaymentMethodStatus = searchParams.get('add-payment-method-status');
@@ -114,7 +114,7 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
     }
 
     if (tab) {
-      navigate(`${getCurrentCompleteUrl()}?tab=${tab}`);
+      navigate(`${location.pathname}?tab=${tab}`);
     }
   };
 

@@ -2,12 +2,11 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { CustomerAvatar } from 'components/customer';
 import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import type { customerSettingsPage_query$key } from './__generated__/customerSettingsPage_query.graphql';
 import CustomerSettingsPersonalTab from './customer-settings-personal-tab';
 
@@ -35,6 +34,7 @@ const CustomerSettings = ({ rootDataRelay }: Props) => {
   );
 
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const tab = searchParams.get('tab');
   const navigate = useNavigate();
 
@@ -56,7 +56,7 @@ const CustomerSettings = ({ rootDataRelay }: Props) => {
     }
 
     if (tab) {
-      navigate(`${getCurrentCompleteUrl()}?tab=${tab}`);
+      navigate(`${location.pathname}?tab=${tab}`);
     }
   };
 

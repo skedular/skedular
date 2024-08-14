@@ -3,11 +3,10 @@ import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
-import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import LocationAvatar from '../location-avatar';
 import type { locationPage_query$key } from './__generated__/locationPage_query.graphql';
 import LocationAboutTab from './location-about-tab';
@@ -44,6 +43,7 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
   );
 
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const tab = searchParams.get('tab');
   const navigate = useNavigate();
 
@@ -85,7 +85,7 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
     }
 
     if (tab) {
-      navigate(`${getCurrentCompleteUrl()}?tab=${tab}`);
+      navigate(`${location.pathname}?tab=${tab}`);
     }
   };
 

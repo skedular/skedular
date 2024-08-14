@@ -68,7 +68,7 @@ const getPublicSiteUrl = () => {
 };
 
 const getCurrentCompleteUrl = () => {
-  return new URL(window.location.pathname, window.location.origin).href;
+  return new URL(window.location.pathname, getPublicSiteUrl()).href;
 };
 
 const encodeBase64 = (value: string) => {
