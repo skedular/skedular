@@ -8,6 +8,9 @@ import Organizations from 'app/organizations';
 import AddOrganization from 'app/organizations/add';
 import Organization from 'app/organizations/organization';
 import Settings from 'app/settings';
+import Teams from 'app/teams';
+import AddTeam from 'app/teams/add';
+import Team from 'app/teams/team';
 import {
   ColorModeProvider,
   DatePickerLocalizationProvider,
@@ -49,6 +52,18 @@ const router = createBrowserRouter([
   {
     path: 'location/:locationId',
     element: <Location />,
+  },
+  {
+    path: 'team',
+    element: <Teams />,
+  },
+  {
+    path: 'team/add',
+    element: <AddTeam />,
+  },
+  {
+    path: 'team/:teamId',
+    element: <Team />,
   },
   {
     path: 'settings',
