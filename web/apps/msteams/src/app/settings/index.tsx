@@ -8,6 +8,7 @@ import { memo, useCallback, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { settings_rootQuery } from './__generated__/settings_rootQuery.graphql';
+
 type Props = {
   queryReference: PreloadedQuery<settings_rootQuery, Record<string, unknown>>;
   onReloadRequire: () => void;

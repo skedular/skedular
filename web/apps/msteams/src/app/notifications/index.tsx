@@ -2,31 +2,31 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
-import { AddOrganization } from 'components/organization/addOrganization';
+import { Notifications } from 'components/notification/notifications';
 import { RootShell } from 'components/rootShell';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { addOrganization_rootQuery } from './__generated__/addOrganization_rootQuery.graphql';
+import type { notifications_rootQuery } from './__generated__/notifications_rootQuery.graphql';
 
 type Props = {
-  queryReference: PreloadedQuery<addOrganization_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<notifications_rootQuery, Record<string, unknown>>;
   onReloadRequire: () => void;
 };
 
 const RootQuery = graphql`
-  query addOrganization_rootQuery {
-    organizationCustomerRecordSynced
+  query notifications_rootQuery($myNotificationsSortingValues: [NotificationOrderInput!]!) {
+    notificationCustomerRecordSynced
     ...rootShell_query
-    ...addOrganization_query
+    ...notifications_query
   }
 `;
 
-const AddOrganizationPage = ({ queryReference, onReloadRequire }: Props) => {
-  const rootData = usePreloadedQuery<addOrganization_rootQuery>(RootQuery, queryReference);
+const NotificationsPage = ({ queryReference, onReloadRequire }: Props) => {
+  const rootData = usePreloadedQuery<notifications_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(
-    () => rootData?.organizationCustomerRecordSynced,
-    [rootData?.organizationCustomerRecordSynced],
+    () => rootData?.notificationCustomerRecordSynced,
+    [rootData?.notificationCustomerRecordSynced],
   );
 
   return (
@@ -34,22 +34,29 @@ const AddOrganizationPage = ({ queryReference, onReloadRequire }: Props) => {
       rootDataRelay={rootData}
       onReloadRequire={onReloadRequire}
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
-      additionalCustomerRecords={[rootData?.organizationCustomerRecordSynced]}
+      additionalCustomerRecords={[rootData?.notificationCustomerRecordSynced]}
     >
-      <AddOrganization rootDataRelay={rootData} />
+      <Notifications rootDataRelay={rootData} />
     </RootShell>
   );
 };
 
-const MemoAddOrganizationPage = memo(AddOrganizationPage);
+const MemoNotificationsPage = memo(NotificationsPage);
 
-const AddOrganizationPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<addOrganization_rootQuery>(RootQuery);
+const NotificationsPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<notifications_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
     loadQuery(
-      {},
+      {
+        myNotificationsSortingValues: [
+          {
+            direction: 'Descending',
+            field: 'eventRaisedAt',
+          },
+        ],
+      },
       {
         fetchPolicy: 'store-and-network',
       },
@@ -66,9 +73,9 @@ const AddOrganizationPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAddOrganizationPage queryReference={queryReference} onReloadRequire={handleReloadRequire} />
+      <MemoNotificationsPage queryReference={queryReference} onReloadRequire={handleReloadRequire} />
     </ErrorBoundary>
   );
 };
 
-export default memo(AddOrganizationPageWithRelay);
+export default memo(NotificationsPageWithRelay);

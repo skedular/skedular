@@ -4,6 +4,7 @@ import Home from 'app';
 import Locations from 'app/locations';
 import AddLocation from 'app/locations/add';
 import Location from 'app/locations/location';
+import Notifications from 'app/notifications';
 import Organizations from 'app/organizations';
 import AddOrganization from 'app/organizations/add';
 import Organization from 'app/organizations/organization';
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
   {
     path: 'team/:teamId',
     element: <Team />,
+  },
+  {
+    path: 'notification',
+    element: <Notifications />,
   },
   {
     path: 'settings',
