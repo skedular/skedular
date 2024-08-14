@@ -159,7 +159,7 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
           maxWidth: 350,
         }}
       >
-        {cardState == CardState.Pending && (
+        {cardState === CardState.Pending && (
           <CardContent>
             <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
               <CustomerAvatar
@@ -194,7 +194,7 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
           </CardContent>
         )}
 
-        {cardState == CardState.Rejecting && (
+        {cardState === CardState.Rejecting && (
           <CardContent>
             <Typography gutterBottom variant="body1">
               {`Rejecting invitation to join ${location?.name}`}
@@ -202,7 +202,7 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
           </CardContent>
         )}
 
-        {cardState == CardState.Rejected && (
+        {cardState === CardState.Rejected && (
           <CardContent>
             <Typography gutterBottom variant="body1">
               {`Rejected invitation to join ${location?.name}`}
@@ -210,7 +210,7 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
           </CardContent>
         )}
 
-        {cardState == CardState.Accepting && (
+        {cardState === CardState.Accepting && (
           <CardContent>
             <Typography gutterBottom variant="body1">
               {`Accepting invitation to join ${location?.name}`}
@@ -218,7 +218,7 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
           </CardContent>
         )}
 
-        {cardState == CardState.Accepted && (
+        {cardState === CardState.Accepted && (
           <CardContent>
             <Typography gutterBottom variant="body1">
               {`Accepted invitation to join ${location?.name}`}

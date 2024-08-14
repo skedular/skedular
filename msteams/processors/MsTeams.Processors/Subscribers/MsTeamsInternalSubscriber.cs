@@ -1,4 +1,3 @@
-using Customer = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer;
 using Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Key;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Api.Shared.Services.Grpc.UnityHub.Location.V1;
@@ -12,6 +11,7 @@ using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Database.Entities;
 using MsTeams.Shared.Repositories;
 using MsTeams.Shared.Services;
+using Customer = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer;
 using Event = Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type;
 using CustomerConfiguration = MsTeams.Shared.Configurations.CustomerConfiguration;
@@ -186,7 +186,7 @@ public class MsTeamsInternalSubscriber(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
         }
-        
+
         await customerIdsTenantMembersPair.Select(customerIdsTenantMemberPair =>
         {
             var customerId = customerIdsTenantMemberPair.Item1;
@@ -199,7 +199,9 @@ public class MsTeamsInternalSubscriber(
                 {
                     Id = randomHelper.Generate(),
                     Customer = new Customer { Id = customerId },
-                    MembershipType = MembershipType.Member
+                    MembershipType = customerIdsTenantMemberPair.Item2.Id == tenant.InstalledByUserId
+                        ? MembershipType.Owner
+                        : MembershipType.Member
                 };
             }
 
@@ -207,7 +209,9 @@ public class MsTeamsInternalSubscriber(
             {
                 Id = organizationMember.Id,
                 Customer = new Customer { Id = customerId },
-                MembershipType = MembershipType.Member
+                MembershipType = customerIdsTenantMemberPair.Item2.Id == tenant.InstalledByUserId
+                    ? MembershipType.Owner
+                    : MembershipType.Member
             };
         }).ForEachAsync(async (member, ct) =>
         {

@@ -1,5 +1,4 @@
 import { CustomerAvatar } from '@/components/customer';
-import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
 import type { invitationToJoinTeamNotificationCard_NotificationDetails$key } from '@/queries/__generated__/invitationToJoinTeamNotificationCard_NotificationDetails.graphql';
 import type { invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation } from '@/queries/__generated__/invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation.graphql';
 import type { invitationToJoinTeamNotificationCard_rejectInvitationToJoinTeamMutation } from '@/queries/__generated__/invitationToJoinTeamNotificationCard_rejectInvitationToJoinTeamMutation.graphql';
@@ -10,12 +9,13 @@ import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
-import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { v4 as uuidv4 } from 'uuid';
 
 type Props = {
   notificationDetailsRelay: invitationToJoinTeamNotificationCard_NotificationDetails$key;
@@ -158,7 +158,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
           maxWidth: 350,
         }}
       >
-        {cardState == CardState.Pending && (
+        {cardState === CardState.Pending && (
           <CardContent>
             <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
               <CustomerAvatar
@@ -193,7 +193,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
           </CardContent>
         )}
 
-        {cardState == CardState.Rejecting && (
+        {cardState === CardState.Rejecting && (
           <CardContent>
             <Typography gutterBottom variant="body1">
               {`Rejecting invitation to join ${team?.name}`}
@@ -201,7 +201,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
           </CardContent>
         )}
 
-        {cardState == CardState.Rejected && (
+        {cardState === CardState.Rejected && (
           <CardContent>
             <Typography gutterBottom variant="body1">
               {`Rejected invitation to join ${team?.name}`}
@@ -209,7 +209,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
           </CardContent>
         )}
 
-        {cardState == CardState.Accepting && (
+        {cardState === CardState.Accepting && (
           <CardContent>
             <Typography gutterBottom variant="body1">
               {`Accepting invitation to join ${team?.name}`}
@@ -217,7 +217,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
           </CardContent>
         )}
 
-        {cardState == CardState.Accepted && (
+        {cardState === CardState.Accepted && (
           <CardContent>
             <Typography gutterBottom variant="body1">
               {`Accepted invitation to join ${team?.name}`}
