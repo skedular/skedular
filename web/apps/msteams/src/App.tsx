@@ -4,6 +4,7 @@ import Home from 'app';
 import Locations from 'app/locations';
 import Location from 'app/locations/location';
 import Organizations from 'app/organizations';
+import AddOrganization from 'app/organizations/add';
 import Organization from 'app/organizations/organization';
 import Settings from 'app/settings';
 import {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: 'organization',
     element: <Organizations />,
+  },
+  {
+    path: 'organization/add',
+    element: <AddOrganization />,
   },
   {
     path: 'organization/:organizationId',
