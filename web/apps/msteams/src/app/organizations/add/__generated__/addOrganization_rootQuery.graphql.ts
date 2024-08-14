@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d16c88f1acfe8e2f4ed287082569edb0>>
+ * @generated SignedSource<<b5f9c34318ff478dd9f9bbe7017c97bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,14 +10,14 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type add_rootQuery$variables = Record<PropertyKey, never>;
-export type add_rootQuery$data = {
+export type addOrganization_rootQuery$variables = Record<PropertyKey, never>;
+export type addOrganization_rootQuery$data = {
   readonly organizationCustomerRecordSynced: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"addOrganization_query" | "rootShell_query">;
 };
-export type add_rootQuery = {
-  response: add_rootQuery$data;
-  variables: add_rootQuery$variables;
+export type addOrganization_rootQuery = {
+  response: addOrganization_rootQuery$data;
+  variables: addOrganization_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -47,7 +47,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "add_rootQuery",
+    "name": "addOrganization_rootQuery",
     "selections": [
       (v0/*: any*/),
       {
@@ -68,7 +68,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "add_rootQuery",
+    "name": "addOrganization_rootQuery",
     "selections": [
       (v0/*: any*/),
       {
@@ -207,16 +207,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0964ff6d6e319e8741d7339b035dc1bf",
+    "cacheID": "f60ff764c71f885a258be17a8f777a1a",
     "id": null,
     "metadata": {},
-    "name": "add_rootQuery",
+    "name": "addOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query add_rootQuery {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...addOrganization_query\n}\n\nfragment addOrganization_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  tenantInstalled\n  adminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query addOrganization_rootQuery {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...addOrganization_query\n}\n\nfragment addOrganization_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  tenantInstalled\n  adminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b7ac7e6cb170b4c307704a933da1d629";
+(node as any).hash = "446c3a987db17b5d59d98cbdd9c28108";
 
 export default node;
