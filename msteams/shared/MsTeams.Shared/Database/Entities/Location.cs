@@ -1,3 +1,4 @@
+using Api.Shared;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -18,6 +19,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Timezone).HasMaxLength(Api.Shared.Constants.MaxTimezoneLength);
+        builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
     }
 }

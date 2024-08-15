@@ -14,7 +14,7 @@
         <PackageReference Include="GraphQL" Version="7.8.0"/>
         <PackageReference Include="GraphQL-Parser" Version="9.3.1"/>
 
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.10.48">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.11.20">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

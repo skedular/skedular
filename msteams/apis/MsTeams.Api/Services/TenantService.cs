@@ -108,7 +108,7 @@ public class TenantService(
                 await transactionBuilder.BeginTransactionAsync(
                     repositoryFactory.TenantRepository.UnitOfWork,
                     cancellationToken);
-            
+
             repositoryFactory.InstallStateUserIdLookupRepository.Remove(installStateUserIdLookup);
 
             var tenant =
