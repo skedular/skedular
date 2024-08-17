@@ -390,8 +390,8 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
         
 
         
-        [HotChocolate.GraphQLName("CustomerWhereInputV2")]
-        public class CustomerWhereInputV2
+        [HotChocolate.GraphQLName("CustomerWhereInput")]
+        public class CustomerWhereInput
         {
             [HotChocolate.GraphQLName("locationId")]
             public string LocationId { get; set; }
@@ -705,7 +705,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
             
 
                 
-                public abstract Task<CustomerConnection> CustomersByDefaultLocationAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] CustomerWhereInputV2 where, [HotChocolate.GraphQLName("orderBy")] CustomerOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<CustomerConnection> CustomersByDefaultLocationAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] CustomerWhereInput where, [HotChocolate.GraphQLName("orderBy")] CustomerOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
         }
         
 
@@ -726,7 +726,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
             public int? Last { get; set; }
 
             [HotChocolate.GraphQLName("where")]
-            public CustomerWhereInputV2 Where { get; set; }
+            public CustomerWhereInput Where { get; set; }
 
             [HotChocolate.GraphQLName("orderBy")]
             public CustomerOrderInput[]? OrderBy { get; set; }

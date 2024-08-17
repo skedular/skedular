@@ -66,7 +66,7 @@ public class LocationQuery(IMapper mapper) : Query
         int? first,
         string? before,
         int? last,
-        LocationWhereInputV2 where,
+        LocationWhereInput where,
         LocationOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -138,7 +138,7 @@ public class LocationQuery(IMapper mapper) : Query
         int? first,
         string? before,
         int? last,
-        LocationMemberWhereInputV2 where,
+        LocationMemberWhereInput where,
         LocationMemberOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -201,7 +201,7 @@ public class LocationQuery(IMapper mapper) : Query
         int? first,
         string? before,
         int? last,
-        LocationTagWhereInputV2 where,
+        LocationTagWhereInput where,
         LocationTagOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -254,7 +254,7 @@ public class LocationQuery(IMapper mapper) : Query
         int? first,
         string? before,
         int? last,
-        DeskWhereInputV2 where,
+        DeskWhereInput where,
         DeskOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)

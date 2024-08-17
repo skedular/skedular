@@ -285,8 +285,8 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Booking;
         
 
         
-        [HotChocolate.GraphQLName("BookingWhereInputV2")]
-        public class BookingWhereInputV2
+        [HotChocolate.GraphQLName("BookingWhereInput")]
+        public class BookingWhereInput
         {
             [HotChocolate.GraphQLName("fromGT")]
             public DateTimeOffset? FromGT { get; set; }
@@ -493,11 +493,11 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Booking;
             
 
                 
-                public abstract Task<BookingConnection> BookingsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] BookingWhereInputV2 where, [HotChocolate.GraphQLName("orderBy")] BookingOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<BookingConnection> BookingsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] BookingWhereInput where, [HotChocolate.GraphQLName("orderBy")] BookingOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<BookingDetails[]> AllBookingsAsync([HotChocolate.GraphQLName("where")] BookingWhereInputV2 where, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<BookingDetails[]> AllBookingsAsync([HotChocolate.GraphQLName("where")] BookingWhereInput where, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
@@ -522,7 +522,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Booking;
         public class Query_AllBookings_Arguments
         {
             [HotChocolate.GraphQLName("where")]
-            public BookingWhereInputV2 Where { get; set; }
+            public BookingWhereInput Where { get; set; }
 
         }
         
@@ -570,7 +570,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Booking;
             public int? Last { get; set; }
 
             [HotChocolate.GraphQLName("where")]
-            public BookingWhereInputV2 Where { get; set; }
+            public BookingWhereInput Where { get; set; }
 
             [HotChocolate.GraphQLName("orderBy")]
             public BookingOrderInput[]? OrderBy { get; set; }

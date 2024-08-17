@@ -44,7 +44,7 @@ public class CustomerQuery(IMapper mapper) : Query
         int? first,
         string? before,
         int? last,
-        CustomerWhereInputV2 where,
+        CustomerWhereInput where,
         CustomerOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)

@@ -318,7 +318,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Team;
             
 
                 
-                public abstract Task<TeamConnection> TeamsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] TeamWhereInputV2 where, [HotChocolate.GraphQLName("orderBy")] TeamOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<TeamConnection> TeamsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] TeamWhereInput where, [HotChocolate.GraphQLName("orderBy")] TeamOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
@@ -326,7 +326,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Team;
             
 
                 
-                public abstract Task<TeamMemberConnection> PaginatedTeamMembersAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] TeamMemberWhereInputV2 where, [HotChocolate.GraphQLName("orderBy")] TeamMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<TeamMemberConnection> PaginatedTeamMembersAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] TeamMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] TeamMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
         }
         
 
@@ -357,7 +357,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Team;
             public int? Last { get; set; }
 
             [HotChocolate.GraphQLName("where")]
-            public TeamMemberWhereInputV2 Where { get; set; }
+            public TeamMemberWhereInput Where { get; set; }
 
             [HotChocolate.GraphQLName("orderBy")]
             public TeamMemberOrderInput[]? OrderBy { get; set; }
@@ -392,7 +392,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Team;
             public int? Last { get; set; }
 
             [HotChocolate.GraphQLName("where")]
-            public TeamWhereInputV2 Where { get; set; }
+            public TeamWhereInput Where { get; set; }
 
             [HotChocolate.GraphQLName("orderBy")]
             public TeamOrderInput[]? OrderBy { get; set; }
@@ -633,8 +633,8 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Team;
         
 
         
-        [HotChocolate.GraphQLName("TeamMemberWhereInputV2")]
-        public class TeamMemberWhereInputV2
+        [HotChocolate.GraphQLName("TeamMemberWhereInput")]
+        public class TeamMemberWhereInput
         {
             [HotChocolate.GraphQLName("teamId")]
             public string TeamId { get; set; }
@@ -709,8 +709,8 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Team;
         
 
         
-        [HotChocolate.GraphQLName("TeamWhereInputV2")]
-        public class TeamWhereInputV2
+        [HotChocolate.GraphQLName("TeamWhereInput")]
+        public class TeamWhereInput
         {
             [HotChocolate.GraphQLName("organizationId")]
             public string? OrganizationId { get; set; }

@@ -1,273 +1,273 @@
 scalar DateTime
 
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 interface Node {
-    id: ID!
+  id: ID!
 }
 
 type Version {
-    major: Int!
-    minor: Int!
-    build: Int!
-    revision: Int!
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
 }
 
 type Query {
-    teamVersion: Version!
-    teamCustomerRecordSynced: Boolean!
-    teamMemberMembershipTypes: [TeamMemberMembershipType!]!
-    team(id: String!): TeamDetails
-    teams(
-        after: String
-        first: Int
-        before: String
-        last: Int
-        where: TeamWhereInputV2!
-        orderBy: [TeamOrderInput!]
-    ): TeamConnection!
-    myTeams(organizationId: String): [TeamDetails!]!
-    paginatedTeamMembers(
-        after: String
-        first: Int
-        before: String
-        last: Int
-        where: TeamMemberWhereInputV2!
-        orderBy: [TeamMemberOrderInput!]
-    ): TeamMemberConnection!
+  teamVersion: Version!
+  teamCustomerRecordSynced: Boolean!
+  teamMemberMembershipTypes: [TeamMemberMembershipType!]!
+  team(id: String!): TeamDetails
+  teams(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: TeamWhereInput!
+    orderBy: [TeamOrderInput!]
+  ): TeamConnection!
+  myTeams(organizationId: String): [TeamDetails!]!
+  paginatedTeamMembers(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: TeamMemberWhereInput!
+    orderBy: [TeamMemberOrderInput!]
+  ): TeamMemberConnection!
 }
 
-input TeamWhereInputV2 {
-    organizationId: String
-    nameContains: String
+input TeamWhereInput {
+  organizationId: String
+  nameContains: String
 }
 
-input TeamMemberWhereInputV2 {
-    teamId: String!
-    nameContains: String
+input TeamMemberWhereInput {
+  teamId: String!
+  nameContains: String
 }
 
 type Mutation {
-    addTeam(input: AddTeamInput!): TeamPayload
-    updateTeam(input: UpdateTeamInput!): TeamPayload
-    deleteTeam(input: DeleteTeamInput!): TeamPayload
+  addTeam(input: AddTeamInput!): TeamPayload
+  updateTeam(input: UpdateTeamInput!): TeamPayload
+  deleteTeam(input: DeleteTeamInput!): TeamPayload
 
-    changeTeamMemberOwnershipType(
-        input: ChangeTeamMemberOwnershipTypeInput!
-    ): TeamMemberDetailsPayload
+  changeTeamMemberOwnershipType(
+    input: ChangeTeamMemberOwnershipTypeInput!
+  ): TeamMemberDetailsPayload
 
-    inviteCustomersToJoinTeam(
-        input: InviteCustomersToJoinTeamInput!
-    ): InviteCustomersToJoinTeamPayload
+  inviteCustomersToJoinTeam(
+    input: InviteCustomersToJoinTeamInput!
+  ): InviteCustomersToJoinTeamPayload
 
-    acceptInvitationToJoinTeam(
-        input: AcceptInvitationToJoinTeamInput!
-    ): AcceptInvitationToJoinTeamPayload
+  acceptInvitationToJoinTeam(
+    input: AcceptInvitationToJoinTeamInput!
+  ): AcceptInvitationToJoinTeamPayload
 
-    rejectInvitationToJoinTeam(
-        input: RejectInvitationToJoinTeamInput!
-    ): RejectInvitationToJoinTeamPayload
+  rejectInvitationToJoinTeam(
+    input: RejectInvitationToJoinTeamInput!
+  ): RejectInvitationToJoinTeamPayload
 
-    cancelInvitationToJoinTeam(
-        input: CancelInvitationToJoinTeamInput!
-    ): CancelInvitationToJoinTeamPayload
+  cancelInvitationToJoinTeam(
+    input: CancelInvitationToJoinTeamInput!
+  ): CancelInvitationToJoinTeamPayload
 }
 
 type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
 }
 
 type TeamDetails implements Node {
-    id: ID!
-    name: String!
-    about: String
-    members: [TeamMemberDetails!]!
-    organization: TeamOrganizationDetails
-    timezone: String
-    hasFutureBooking: Boolean!
-    canModify: Boolean!
-    canDelete: Boolean!
-    canInvitePeople: Boolean!
+  id: ID!
+  name: String!
+  about: String
+  members: [TeamMemberDetails!]!
+  organization: TeamOrganizationDetails
+  timezone: String
+  hasFutureBooking: Boolean!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
 }
 
 type TeamMemberDetails implements Node {
-    id: ID!
-    membershipType: TeamMemberMembershipType
-    customer: TeamCustomerDetails
-    organizationMember: TeamOrganizationMemberDetails
+  id: ID!
+  membershipType: TeamMemberMembershipType
+  customer: TeamCustomerDetails
+  organizationMember: TeamOrganizationMemberDetails
 }
 
 type TeamCustomerDetails {
-    uniqueId: ID!
-    name: String
-    givenName: String
-    middleName: String
-    familyName: String
-    photoUrl: String
-    photoUrl24: String
-    photoUrl32: String
-    photoUrl48: String
-    photoUrl72: String
-    photoUrl192: String
-    photoUrl512: String
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
 }
 
 type TeamOrganizationMemberDetails {
-    uniqueId: ID!
-    customer: TeamCustomerDetails!
+  uniqueId: ID!
+  customer: TeamCustomerDetails!
 }
 
 type TeamOrganizationDetails {
-    uniqueId: ID!
-    name: String!
-    logoUrl: String
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
 }
 
 enum OrderDirection {
-    Ascending
-    Descending
+  Ascending
+  Descending
 }
 
 enum TeamOrderField {
-    name
-    about
-    website
+  name
+  about
+  website
 }
 
 input TeamOrderInput {
-    direction: OrderDirection!
-    field: TeamOrderField
+  direction: OrderDirection!
+  field: TeamOrderField
 }
 
 enum TeamMemberOrderField {
-    membershipType
-    name
-    givenName
-    middleName
-    familyName
+  membershipType
+  name
+  givenName
+  middleName
+  familyName
 }
 
 input TeamMemberOrderInput {
-    direction: OrderDirection!
-    field: TeamMemberOrderField
+  direction: OrderDirection!
+  field: TeamMemberOrderField
 }
 
 type TeamConnection {
-    pageInfo: PageInfo!
-    edges: [TeamEdge!]!
-    totalCount: Int
+  pageInfo: PageInfo!
+  edges: [TeamEdge!]!
+  totalCount: Int
 }
 
 type TeamMemberConnection {
-    pageInfo: PageInfo!
-    edges: [TeamMemberEdge!]!
-    totalCount: Int
+  pageInfo: PageInfo!
+  edges: [TeamMemberEdge!]!
+  totalCount: Int
 }
 
 type TeamEdge {
-    node: TeamDetails!
-    cursor: String!
+  node: TeamDetails!
+  cursor: String!
 }
 
 type TeamMemberEdge {
-    node: TeamMemberDetails!
-    cursor: String!
+  node: TeamMemberDetails!
+  cursor: String!
 }
 
 enum TeamMemberMembershipType {
-    OWNER
-    ADMINISTRATOR
-    MEMBER
+  OWNER
+  ADMINISTRATOR
+  MEMBER
 }
 
 input AddTeamInput {
-    clientMutationId: String
-    id: String
-    name: String!
-    about: String
-    customerIds: [String!]!
-    organizationId: String
-    timezone: String
-    organizationMemberIds: [String!]!
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  customerIds: [String!]!
+  organizationId: String
+  timezone: String
+  organizationMemberIds: [String!]!
 }
 
 input UpdateTeamInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    about: String
-    customerIds: [String!]!
-    organizationId: String
-    timezone: String
-    organizationMemberIds: [String!]!
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  customerIds: [String!]!
+  organizationId: String
+  timezone: String
+  organizationMemberIds: [String!]!
 }
 
 input DeleteTeamInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type TeamPayload {
-    clientMutationId: String
-    team: TeamDetails!
+  clientMutationId: String
+  team: TeamDetails!
 }
 
 input ChangeTeamMemberOwnershipTypeInput {
-    clientMutationId: String
-    id: String!
-    membershipType: TeamMemberMembershipType!
+  clientMutationId: String
+  id: String!
+  membershipType: TeamMemberMembershipType!
 }
 
 type TeamMemberDetailsPayload {
-    clientMutationId: String
-    member: TeamMemberDetails
+  clientMutationId: String
+  member: TeamMemberDetails
 }
 
 enum TeamJoinInvitationStatus {
-    PENDING
-    ACCEPTED
-    REJECTED
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 input InviteCustomersToJoinTeamInput {
-    clientMutationId: String
-    teamId: String!
-    emails: [String!]!
+  clientMutationId: String
+  teamId: String!
+  emails: [String!]!
 }
 
 type InviteCustomersToJoinTeamPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 input AcceptInvitationToJoinTeamInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type AcceptInvitationToJoinTeamPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 input RejectInvitationToJoinTeamInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type RejectInvitationToJoinTeamPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 input CancelInvitationToJoinTeamInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type CancelInvitationToJoinTeamPayload {
-    clientMutationId: String
+  clientMutationId: String
 }

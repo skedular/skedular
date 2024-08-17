@@ -11,452 +11,452 @@ public static class Metadata
 public readonly static string Schema = @"scalar DateTime
 
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 interface Node {
-    id: ID!
+  id: ID!
 }
 
 type Version {
-    major: Int!
-    minor: Int!
-    build: Int!
-    revision: Int!
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
 }
 
 type Query {
-    locationVersion: Version!
-    locationCustomerRecordSynced: Boolean!
-    locationMemberMembershipTypes: [LocationMemberMembershipType!]!
-    location(id: String!): LocationDetails
-    locations(
-        after: String
-        first: Int
-        before: String
-        last: Int
-        where: LocationWhereInputV2!
-        orderBy: [LocationOrderInput!]
-    ): LocationConnection!
-    myLocations(organizationId: String): [LocationDetails!]!
-    paginatedLocationMembers(
-        after: String
-        first: Int
-        before: String
-        last: Int
-        where: LocationMemberWhereInputV2!
-        orderBy: [LocationMemberOrderInput!]
-    ): LocationMemberConnection!
-    paginatedLocationTags(
-        after: String
-        first: Int
-        before: String
-        last: Int
-        where: LocationTagWhereInputV2!
-        orderBy: [LocationTagOrderInput!]
-    ): LocationTagConnection!
-    paginatedLocationDesks(
-        after: String
-        first: Int
-        before: String
-        last: Int
-        where: DeskWhereInputV2!
-        orderBy: [DeskOrderInput!]
-    ): DeskConnection!
-    locationAnalytics(
-        locationId: String!
-        from: DateTime!
-        until: DateTime!
-    ): LocationAnalytics!
-}
-
-input LocationWhereInputV2 {
-    organizationId: String
-    nameContains: String
-}
-
-input LocationMemberWhereInputV2 {
+  locationVersion: Version!
+  locationCustomerRecordSynced: Boolean!
+  locationMemberMembershipTypes: [LocationMemberMembershipType!]!
+  location(id: String!): LocationDetails
+  locations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: LocationWhereInput!
+    orderBy: [LocationOrderInput!]
+  ): LocationConnection!
+  myLocations(organizationId: String): [LocationDetails!]!
+  paginatedLocationMembers(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: LocationMemberWhereInput!
+    orderBy: [LocationMemberOrderInput!]
+  ): LocationMemberConnection!
+  paginatedLocationTags(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: LocationTagWhereInput!
+    orderBy: [LocationTagOrderInput!]
+  ): LocationTagConnection!
+  paginatedLocationDesks(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: DeskWhereInput!
+    orderBy: [DeskOrderInput!]
+  ): DeskConnection!
+  locationAnalytics(
     locationId: String!
-    nameContains: String
+    from: DateTime!
+    until: DateTime!
+  ): LocationAnalytics!
 }
 
-input LocationTagWhereInputV2 {
-    locationId: String!
-    tagType: String
-    nameContains: String
+input LocationWhereInput {
+  organizationId: String
+  nameContains: String
 }
 
-input DeskWhereInputV2 {
-    locationId: String!
-    nameContains: String
+input LocationMemberWhereInput {
+  locationId: String!
+  nameContains: String
+}
+
+input LocationTagWhereInput {
+  locationId: String!
+  tagType: String
+  nameContains: String
+}
+
+input DeskWhereInput {
+  locationId: String!
+  nameContains: String
 }
 
 type Mutation {
-    addLocation(input: AddLocationInput!): LocationPayload
-    updateLocation(input: UpdateLocationInput!): LocationPayload
-    deleteLocation(input: DeleteLocationInput!): LocationPayload
+  addLocation(input: AddLocationInput!): LocationPayload
+  updateLocation(input: UpdateLocationInput!): LocationPayload
+  deleteLocation(input: DeleteLocationInput!): LocationPayload
 
-    addDesk(input: AddDeskInput!): DeskPayload
-    bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload
-    updateDesk(input: UpdateDeskInput!): DeskPayload
-    deleteDesk(input: DeleteDeskInput!): DeskPayload
+  addDesk(input: AddDeskInput!): DeskPayload
+  bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload
+  updateDesk(input: UpdateDeskInput!): DeskPayload
+  deleteDesk(input: DeleteDeskInput!): DeskPayload
 
-    addLocationTag(input: AddLocationTagInput!): LocationTagPayload
-    updateLocationTag(input: UpdateLocationTagInput!): LocationTagPayload
-    deleteLocationTag(input: DeleteLocationTagInput!): LocationTagPayload
+  addLocationTag(input: AddLocationTagInput!): LocationTagPayload
+  updateLocationTag(input: UpdateLocationTagInput!): LocationTagPayload
+  deleteLocationTag(input: DeleteLocationTagInput!): LocationTagPayload
 
-    changeLocationMemberOwnershipType(
-        input: ChangeLocationMemberOwnershipTypeInput!
-    ): LocationMemberDetailsPayload
+  changeLocationMemberOwnershipType(
+    input: ChangeLocationMemberOwnershipTypeInput!
+  ): LocationMemberDetailsPayload
 
-    inviteCustomersToJoinLocation(
-        input: InviteCustomersToJoinLocationInput!
-    ): InviteCustomersToJoinLocationPayload
+  inviteCustomersToJoinLocation(
+    input: InviteCustomersToJoinLocationInput!
+  ): InviteCustomersToJoinLocationPayload
 
-    acceptInvitationToJoinLocation(
-        input: AcceptInvitationToJoinLocationInput!
-    ): AcceptInvitationToJoinLocationPayload
+  acceptInvitationToJoinLocation(
+    input: AcceptInvitationToJoinLocationInput!
+  ): AcceptInvitationToJoinLocationPayload
 
-    rejectInvitationToJoinLocation(
-        input: RejectInvitationToJoinLocationInput!
-    ): RejectInvitationToJoinLocationPayload
+  rejectInvitationToJoinLocation(
+    input: RejectInvitationToJoinLocationInput!
+  ): RejectInvitationToJoinLocationPayload
 
-    cancelInvitationToJoinLocation(
-        input: CancelInvitationToJoinLocationInput!
-    ): CancelInvitationToJoinLocationPayload
+  cancelInvitationToJoinLocation(
+    input: CancelInvitationToJoinLocationInput!
+  ): CancelInvitationToJoinLocationPayload
 }
 
 type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
 }
 
 type LocationDetails implements Node {
-    id: ID!
-    name: String!
-    about: String
-    organization: LocationOrganizationDetails
-    timezone: String
-    deskCapacity: Int!
-    hasFutureBooking: Boolean!
-    canModify: Boolean!
-    canDelete: Boolean!
-    canInvitePeople: Boolean!
-    canViewAnalytics: Boolean!
+  id: ID!
+  name: String!
+  about: String
+  organization: LocationOrganizationDetails
+  timezone: String
+  deskCapacity: Int!
+  hasFutureBooking: Boolean!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  canViewAnalytics: Boolean!
 }
 
 type LocationMemberDetails implements Node {
-    id: ID!
-    membershipType: LocationMemberMembershipType
-    customer: LocationCustomerDetails!
+  id: ID!
+  membershipType: LocationMemberMembershipType
+  customer: LocationCustomerDetails!
 }
 
 type DeskDetails implements Node {
-    id: ID!
-    name: String!
-    deactivated: Boolean!
-    requireBookingApproval: Boolean!
-    locationTags: [LocationTagDetails!]!
+  id: ID!
+  name: String!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+  locationTags: [LocationTagDetails!]!
 }
 
 type LocationCustomerDetails {
-    uniqueId: ID!
-    name: String
-    givenName: String
-    middleName: String
-    familyName: String
-    photoUrl: String
-    photoUrl24: String
-    photoUrl32: String
-    photoUrl48: String
-    photoUrl72: String
-    photoUrl192: String
-    photoUrl512: String
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
 }
 
 type LocationOrganizationDetails {
-    uniqueId: ID!
-    name: String!
-    logoUrl: String
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
 }
 
 enum OrderDirection {
-    Ascending
-    Descending
+  Ascending
+  Descending
 }
 
 enum LocationOrderField {
-    name
+  name
 }
 
 input LocationOrderInput {
-    direction: OrderDirection!
-    field: LocationOrderField
+  direction: OrderDirection!
+  field: LocationOrderField
 }
 
 enum LocationMemberOrderField {
-    membershipType
-    name
-    givenName
-    middleName
-    familyName
+  membershipType
+  name
+  givenName
+  middleName
+  familyName
 }
 
 input LocationMemberOrderInput {
-    direction: OrderDirection!
-    field: LocationMemberOrderField
+  direction: OrderDirection!
+  field: LocationMemberOrderField
 }
 
 enum DeskOrderField {
-    name
+  name
 }
 
 input DeskOrderInput {
-    direction: OrderDirection!
-    field: DeskOrderField
+  direction: OrderDirection!
+  field: DeskOrderField
 }
 
 type LocationConnection {
-    pageInfo: PageInfo!
-    edges: [LocationEdge!]!
-    totalCount: Int
+  pageInfo: PageInfo!
+  edges: [LocationEdge!]!
+  totalCount: Int
 }
 
 type LocationMemberConnection {
-    pageInfo: PageInfo!
-    edges: [LocationMemberEdge!]!
-    totalCount: Int
+  pageInfo: PageInfo!
+  edges: [LocationMemberEdge!]!
+  totalCount: Int
 }
 
 type LocationEdge {
-    node: LocationDetails!
-    cursor: String!
+  node: LocationDetails!
+  cursor: String!
 }
 
 type LocationMemberEdge {
-    node: LocationMemberDetails!
-    cursor: String!
+  node: LocationMemberDetails!
+  cursor: String!
 }
 
 enum LocationMemberMembershipType {
-    OWNER
-    ADMINISTRATOR
-    MEMBER
+  OWNER
+  ADMINISTRATOR
+  MEMBER
 }
 
 input AddLocationInput {
-    clientMutationId: String
-    id: String
-    name: String!
-    about: String
-    organizationId: String
-    timezone: String
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  organizationId: String
+  timezone: String
 }
 
 input UpdateLocationInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    about: String
-    organizationId: String
-    timezone: String
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  organizationId: String
+  timezone: String
 }
 
 input DeleteLocationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type LocationPayload {
-    clientMutationId: String
-    location: LocationDetails!
+  clientMutationId: String
+  location: LocationDetails!
 }
 
 input AddDeskInput {
-    clientMutationId: String
-    id: String
-    name: String!
-    locationId: String!
-    locationTagIds: [String!]!
+  clientMutationId: String
+  id: String
+  name: String!
+  locationId: String!
+  locationTagIds: [String!]!
 }
 
 input BulkAddDeskInput {
-    clientMutationId: String
-    id: String
-    namePrefix: String
-    locationId: String!
-    count: Int!
-    locationTagIds: [String!]!
-    deactivated: Boolean!
-    requireBookingApproval: Boolean!
+  clientMutationId: String
+  id: String
+  namePrefix: String
+  locationId: String!
+  count: Int!
+  locationTagIds: [String!]!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
 }
 
 input UpdateDeskInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    deactivated: Boolean!
-    requireBookingApproval: Boolean!
-    locationTagIds: [String!]!
+  clientMutationId: String
+  id: String!
+  name: String!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+  locationTagIds: [String!]!
 }
 
 input DeleteDeskInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type DeskPayload {
-    clientMutationId: String
-    desk: DeskDetails!
+  clientMutationId: String
+  desk: DeskDetails!
 }
 
 type BulkDeskPayload {
-    clientMutationId: String
-    desks: [DeskDetails!]!
+  clientMutationId: String
+  desks: [DeskDetails!]!
 }
 
 type DeskConnection {
-    pageInfo: PageInfo!
-    edges: [DeskEdge!]!
-    totalCount: Int
+  pageInfo: PageInfo!
+  edges: [DeskEdge!]!
+  totalCount: Int
 }
 
 type DeskEdge {
-    node: DeskDetails!
-    cursor: String!
+  node: DeskDetails!
+  cursor: String!
 }
 
 input AddLocationTagInput {
-    clientMutationId: String
-    id: String
-    name: String!
-    description: String
-    tagType: String!
-    locationId: String!
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  tagType: String!
+  locationId: String!
 }
 
 input UpdateLocationTagInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    description: String
-    tagType: String!
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+  tagType: String!
 }
 
 input DeleteLocationTagInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type LocationTagPayload {
-    clientMutationId: String
-    locationTag: LocationTagDetails!
+  clientMutationId: String
+  locationTag: LocationTagDetails!
 }
 
 type LocationTagConnection {
-    pageInfo: PageInfo!
-    edges: [LocationTagEdge!]!
-    totalCount: Int
+  pageInfo: PageInfo!
+  edges: [LocationTagEdge!]!
+  totalCount: Int
 }
 
 type LocationTagEdge {
-    node: LocationTagDetails!
-    cursor: String!
+  node: LocationTagDetails!
+  cursor: String!
 }
 
 type LocationTagDetails implements Node {
-    id: ID!
-    name: String!
-    description: String
-    tagType: String!
+  id: ID!
+  name: String!
+  description: String
+  tagType: String!
 }
 
 enum LocationTagOrderField {
-    name
-    description
-    tagType
+  name
+  description
+  tagType
 }
 
 input LocationTagOrderInput {
-    direction: OrderDirection!
-    field: LocationTagOrderField
+  direction: OrderDirection!
+  field: LocationTagOrderField
 }
 
 input ChangeLocationMemberOwnershipTypeInput {
-    clientMutationId: String
-    id: String!
-    membershipType: LocationMemberMembershipType!
+  clientMutationId: String
+  id: String!
+  membershipType: LocationMemberMembershipType!
 }
 
 type LocationMemberDetailsPayload {
-    clientMutationId: String
-    member: LocationMemberDetails
+  clientMutationId: String
+  member: LocationMemberDetails
 }
 
 type LocationAnalytics {
-    desksOccupancyPercentage: [LocationDesksOccupancyPercentage!]!
-    dailyBookingsTotals: [LocationDailyBookingsTotal!]!
+  desksOccupancyPercentage: [LocationDesksOccupancyPercentage!]!
+  dailyBookingsTotals: [LocationDailyBookingsTotal!]!
 }
 
 type LocationDesksOccupancyPercentage {
-    date: DateTime!
-    percentage: Float!
+  date: DateTime!
+  percentage: Float!
 }
 
 type LocationDailyBookingsTotal {
-    date: DateTime!
-    total: Int!
+  date: DateTime!
+  total: Int!
 }
 
 enum LocationJoinInvitationStatus {
-    PENDING
-    ACCEPTED
-    REJECTED
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 input InviteCustomersToJoinLocationInput {
-    clientMutationId: String
-    locationId: String!
-    emails: [String!]!
+  clientMutationId: String
+  locationId: String!
+  emails: [String!]!
 }
 
 type InviteCustomersToJoinLocationPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 input AcceptInvitationToJoinLocationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type AcceptInvitationToJoinLocationPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 input RejectInvitationToJoinLocationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type RejectInvitationToJoinLocationPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 input CancelInvitationToJoinLocationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type CancelInvitationToJoinLocationPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 enum DeskBookingDetailBookingStatus {
-    AWAIT_ACCEPTANCE
-    ACCEPTED
-    DECLINED
+  AWAIT_ACCEPTANCE
+  ACCEPTED
+  DECLINED
 }";
 }

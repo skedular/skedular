@@ -65,7 +65,7 @@ public class TeamQuery(IMapper mapper) : Query
         int? first,
         string? before,
         int? last,
-        TeamWhereInputV2 where,
+        TeamWhereInput where,
         TeamOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -136,7 +136,7 @@ public class TeamQuery(IMapper mapper) : Query
         int? first,
         string? before,
         int? last,
-        TeamMemberWhereInputV2 where,
+        TeamMemberWhereInput where,
         TeamMemberOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)

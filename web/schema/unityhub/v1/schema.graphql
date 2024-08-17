@@ -12,24 +12,24 @@ type Query {
   bookingVersion: Version!
   bookingCustomerRecordSynced: Boolean!
   booking(id: String!): BookingDetails
-  bookings(after: String, first: Int, before: String, last: Int, where: BookingWhereInputV2!, orderBy: [BookingOrderInput!]): BookingConnection!
-  allBookings(where: BookingWhereInputV2!): [BookingDetails!]!
+  bookings(after: String, first: Int, before: String, last: Int, where: BookingWhereInput!, orderBy: [BookingOrderInput!]): BookingConnection!
+  allBookings(where: BookingWhereInput!): [BookingDetails!]!
   availableLocationDesks(locationId: String!, date: DateTime!, deskIdsToInclude: [String!]!): [BookingDeskDetails!]!
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions!
   locationBookingPermissions(locationId: String!): LocationBookingPermissions!
   teamBookingPermissions(teamId: String!): TeamBookingPermissions!
   customerVersion: Version!
   me: CustomerDetails
-  customersByDefaultLocation(after: String, first: Int, before: String, last: Int, where: CustomerWhereInputV2!, orderBy: [CustomerOrderInput!]): CustomerConnection!
+  customersByDefaultLocation(after: String, first: Int, before: String, last: Int, where: CustomerWhereInput!, orderBy: [CustomerOrderInput!]): CustomerConnection!
   locationVersion: Version!
   locationCustomerRecordSynced: Boolean!
   locationMemberMembershipTypes: [LocationMemberMembershipType!]!
   location(id: String!): LocationDetails
-  locations(after: String, first: Int, before: String, last: Int, where: LocationWhereInputV2!, orderBy: [LocationOrderInput!]): LocationConnection!
+  locations(after: String, first: Int, before: String, last: Int, where: LocationWhereInput!, orderBy: [LocationOrderInput!]): LocationConnection!
   myLocations(organizationId: String): [LocationDetails!]!
-  paginatedLocationMembers(after: String, first: Int, before: String, last: Int, where: LocationMemberWhereInputV2!, orderBy: [LocationMemberOrderInput!]): LocationMemberConnection!
-  paginatedLocationTags(after: String, first: Int, before: String, last: Int, where: LocationTagWhereInputV2!, orderBy: [LocationTagOrderInput!]): LocationTagConnection!
-  paginatedLocationDesks(after: String, first: Int, before: String, last: Int, where: DeskWhereInputV2!, orderBy: [DeskOrderInput!]): DeskConnection!
+  paginatedLocationMembers(after: String, first: Int, before: String, last: Int, where: LocationMemberWhereInput!, orderBy: [LocationMemberOrderInput!]): LocationMemberConnection!
+  paginatedLocationTags(after: String, first: Int, before: String, last: Int, where: LocationTagWhereInput!, orderBy: [LocationTagOrderInput!]): LocationTagConnection!
+  paginatedLocationDesks(after: String, first: Int, before: String, last: Int, where: DeskWhereInput!, orderBy: [DeskOrderInput!]): DeskConnection!
   locationAnalytics(locationId: String!, from: DateTime!, until: DateTime!): LocationAnalytics!
   msTeamsVersion: Version!
   msTeamsCustomerRecordSynced: Boolean!
@@ -44,9 +44,9 @@ type Query {
   organizationMemberMembershipTypes: [OrganizationMemberMembershipType!]!
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]!
   organization(id: String!): OrganizationDetails
-  organizations(after: String, first: Int, before: String, last: Int, where: OrganizationWhereInputV2!, orderBy: [OrganizationOrderInput!]): OrganizationConnection!
+  organizations(after: String, first: Int, before: String, last: Int, where: OrganizationWhereInput!, orderBy: [OrganizationOrderInput!]): OrganizationConnection!
   myOrganizations: [OrganizationDetails!]!
-  paginatedOrganizationMembers(after: String, first: Int, before: String, last: Int, where: OrganizationMemberWhereInputV2!, orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection!
+  paginatedOrganizationMembers(after: String, first: Int, before: String, last: Int, where: OrganizationMemberWhereInput!, orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection!
   organizationAnalytics(organizationId: String!, from: DateTime!, until: DateTime!): OrganizationAnalytics!
   paymentVersion: Version!
   paymentCustomerRecordSynced: Boolean!
@@ -57,9 +57,9 @@ type Query {
   teamCustomerRecordSynced: Boolean!
   teamMemberMembershipTypes: [TeamMemberMembershipType!]!
   team(id: String!): TeamDetails
-  teams(after: String, first: Int, before: String, last: Int, where: TeamWhereInputV2!, orderBy: [TeamOrderInput!]): TeamConnection!
+  teams(after: String, first: Int, before: String, last: Int, where: TeamWhereInput!, orderBy: [TeamOrderInput!]): TeamConnection!
   myTeams(organizationId: String): [TeamDetails!]!
-  paginatedTeamMembers(after: String, first: Int, before: String, last: Int, where: TeamMemberWhereInputV2!, orderBy: [TeamMemberOrderInput!]): TeamMemberConnection!
+  paginatedTeamMembers(after: String, first: Int, before: String, last: Int, where: TeamMemberWhereInput!, orderBy: [TeamMemberOrderInput!]): TeamMemberConnection!
 }
 type Mutation {
   setOrganizationBillingInfo(input: SetOrganizationBillingInfoInput!): OrganizationBillingInfoPayload
@@ -881,7 +881,7 @@ input BookingOrderInput {
   direction: OrderDirection!
   field: BookingOrderField
 }
-input BookingWhereInputV2 {
+input BookingWhereInput {
   fromGT: DateTime
   fromGTE: DateTime
   fromLT: DateTime
@@ -954,7 +954,7 @@ input CustomerOrderInput {
   direction: OrderDirection!
   field: CustomerOrderField
 }
-input CustomerWhereInputV2 {
+input CustomerWhereInput {
   locationId: String!
   nameContains: String
 }
@@ -1055,7 +1055,7 @@ input DeskOrderInput {
   direction: OrderDirection!
   field: DeskOrderField
 }
-input DeskWhereInputV2 {
+input DeskWhereInput {
   locationId: String!
   nameContains: String
 }
@@ -1068,7 +1068,7 @@ input LocationMemberOrderInput {
   direction: OrderDirection!
   field: LocationMemberOrderField
 }
-input LocationMemberWhereInputV2 {
+input LocationMemberWhereInput {
   locationId: String!
   nameContains: String
 }
@@ -1080,12 +1080,12 @@ input LocationTagOrderInput {
   direction: OrderDirection!
   field: LocationTagOrderField
 }
-input LocationTagWhereInputV2 {
+input LocationTagWhereInput {
   locationId: String!
   tagType: String
   nameContains: String
 }
-input LocationWhereInputV2 {
+input LocationWhereInput {
   organizationId: String
   nameContains: String
 }
@@ -1160,7 +1160,7 @@ input OrganizationMemberOrderInput {
   direction: OrderDirection!
   field: OrganizationMemberOrderField
 }
-input OrganizationMemberWhereInputV2 {
+input OrganizationMemberWhereInput {
   organizationId: String!
   nameContains: String
 }
@@ -1168,7 +1168,7 @@ input OrganizationOrderInput {
   direction: OrderDirection!
   field: OrganizationOrderField
 }
-input OrganizationWhereInputV2 {
+input OrganizationWhereInput {
   nameContains: String
 }
 input RejectInvitationToJoinOrganizationInput {
@@ -1236,7 +1236,7 @@ input TeamMemberOrderInput {
   direction: OrderDirection!
   field: TeamMemberOrderField
 }
-input TeamMemberWhereInputV2 {
+input TeamMemberWhereInput {
   teamId: String!
   nameContains: String
 }
@@ -1244,7 +1244,7 @@ input TeamOrderInput {
   direction: OrderDirection!
   field: TeamOrderField
 }
-input TeamWhereInputV2 {
+input TeamWhereInput {
   organizationId: String
   nameContains: String
 }

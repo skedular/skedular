@@ -673,8 +673,8 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
         
 
         
-        [HotChocolate.GraphQLName("OrganizationMemberWhereInputV2")]
-        public class OrganizationMemberWhereInputV2
+        [HotChocolate.GraphQLName("OrganizationMemberWhereInput")]
+        public class OrganizationMemberWhereInput
         {
             [HotChocolate.GraphQLName("organizationId")]
             public string OrganizationId { get; set; }
@@ -759,8 +759,8 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
         
 
         
-        [HotChocolate.GraphQLName("OrganizationWhereInputV2")]
-        public class OrganizationWhereInputV2
+        [HotChocolate.GraphQLName("OrganizationWhereInput")]
+        public class OrganizationWhereInput
         {
             [HotChocolate.GraphQLName("nameContains")]
             public string? NameContains { get; set; }
@@ -815,7 +815,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
             
 
                 
-                public abstract Task<OrganizationConnection> OrganizationsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] OrganizationWhereInputV2 where, [HotChocolate.GraphQLName("orderBy")] OrganizationOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<OrganizationConnection> OrganizationsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] OrganizationWhereInput where, [HotChocolate.GraphQLName("orderBy")] OrganizationOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
@@ -823,7 +823,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
             
 
                 
-                public abstract Task<OrganizationMemberConnection> PaginatedOrganizationMembersAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] OrganizationMemberWhereInputV2 where, [HotChocolate.GraphQLName("orderBy")] OrganizationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<OrganizationMemberConnection> PaginatedOrganizationMembersAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] OrganizationMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] OrganizationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
@@ -874,7 +874,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
             public int? Last { get; set; }
 
             [HotChocolate.GraphQLName("where")]
-            public OrganizationWhereInputV2 Where { get; set; }
+            public OrganizationWhereInput Where { get; set; }
 
             [HotChocolate.GraphQLName("orderBy")]
             public OrganizationOrderInput[]? OrderBy { get; set; }
@@ -899,7 +899,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
             public int? Last { get; set; }
 
             [HotChocolate.GraphQLName("where")]
-            public OrganizationMemberWhereInputV2 Where { get; set; }
+            public OrganizationMemberWhereInput Where { get; set; }
 
             [HotChocolate.GraphQLName("orderBy")]
             public OrganizationMemberOrderInput[]? OrderBy { get; set; }

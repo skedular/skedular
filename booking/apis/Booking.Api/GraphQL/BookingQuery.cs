@@ -55,7 +55,7 @@ public class BookingQuery(IMapper mapper) : Query
         int? first,
         string? before,
         int? last,
-        BookingWhereInputV2 where,
+        BookingWhereInput where,
         BookingOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -128,7 +128,7 @@ public class BookingQuery(IMapper mapper) : Query
     }
 
     public override async Task<BookingDetails[]> AllBookingsAsync(
-        BookingWhereInputV2 where,
+        BookingWhereInput where,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {

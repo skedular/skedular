@@ -83,7 +83,7 @@ public class OrganizationQuery(IMapper mapper) : Query
         int? first,
         string? before,
         int? last,
-        OrganizationWhereInputV2 where,
+        OrganizationWhereInput where,
         OrganizationOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -153,7 +153,7 @@ public class OrganizationQuery(IMapper mapper) : Query
         string? after,
         int? first,
         string? before, int? last,
-        OrganizationMemberWhereInputV2 where,
+        OrganizationMemberWhereInput where,
         OrganizationMemberOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
