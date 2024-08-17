@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5b563c0843bd7e25541537b9444c9b61>>
+ * @generated SignedSource<<1223d5393973aa2b6a19befce4f19410>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -143,7 +143,7 @@ return {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "tenantInstalled",
+        "name": "isMsTeamsTenantInstalled",
         "storageKey": null
       },
       {
@@ -156,12 +156,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ab9b859d52f4b81ea1283a9cc3f317ae",
+    "cacheID": "25f90f7a3c61f68c42de965750618aa3",
     "id": null,
     "metadata": {},
     "name": "addOrganizationLocation_rootQuery",
     "operationKind": "query",
-    "text": "query addOrganizationLocation_rootQuery {\n  locationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  tenantInstalled\n  adminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query addOrganizationLocation_rootQuery {\n  locationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isMsTeamsTenantInstalled\n  adminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
   }
 };
 })();

@@ -6,9 +6,11 @@ using Enterprise.Shared.Random;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using MsTeams.Api.Mappers;
 using MsTeams.Shared.Database.Entities;
 using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
+using Organization = MsTeams.Shared.Models.Organization;
 
 namespace MsTeams.Api.Services;
 
@@ -17,6 +19,7 @@ public interface ITenantService
     Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken);
     Task<string> GenerateAdminConsentUrlAsync(CancellationToken cancellationToken);
     Task<Uri> InstallAsync(string tenantId, string state, CancellationToken cancellationToken);
+    Task<Organization?> GetAttachedOrganizationAsync(CancellationToken cancellationToken);
 }
 
 public class TenantService(
@@ -28,7 +31,8 @@ public class TenantService(
     MsTeamsAzureEntraConfiguration msTeamsAzureEntraConfiguration,
     IHttpContextAccessor httpContextAccessor,
     ITenantOnboardingService tenantOnboardingService,
-    IMsTeamsInternalOutboxPublisher msTeamsInternalOutboxPublisher) : ITenantService
+    IMsTeamsInternalOutboxPublisher msTeamsInternalOutboxPublisher,
+    IMapper mapper) : ITenantService
 {
     public async Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken)
     {
@@ -124,5 +128,18 @@ public class TenantService(
         }
 
         return new Uri("https://teams.microsoft.com/v2/");
+    }
+
+    public async Task<Organization?> GetAttachedOrganizationAsync(CancellationToken cancellationToken)
+    {
+        Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
+
+        var tenantId = context.PropertyBag.AzureTenantId;
+        var tenant = await repositoryFactory.TenantRepository.Query(
+            new Specification<Tenant>
+            {
+                Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString()
+            }).AsNoTracking().FirstOrDefaultAsync(cancellationToken);
+        return tenant is null ? null : mapper.MapTo(tenant.Organization);
     }
 }

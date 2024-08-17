@@ -31,13 +31,23 @@ public class MsTeamsQuery : Query
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override async Task<bool> TenantInstalledAsync(
+    public override async Task<bool> IsMsTeamsTenantInstalledAsync(
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ITenantService>();
         return await service.DoesTenantExistAsync(cancellationToken);
+    }
+
+    public override async Task<string?> MsTeamsOrganizationIdAsync(
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
+    {
+        await using var scope = serviceProvider.CreateScopeAndSetContent();
+        var service = scope.ServiceProvider.GetRequiredService<ITenantService>();
+        var organization = await service.GetAttachedOrganizationAsync(cancellationToken);
+        return organization?.Id;
     }
 
     public override async Task<string> AdminConsentUrlAsync(

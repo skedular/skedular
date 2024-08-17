@@ -27,7 +27,11 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams;
             
 
                 
-                public abstract Task<bool> TenantInstalledAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<bool> IsMsTeamsTenantInstalledAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+            
+
+                
+                public abstract Task<string?> MsTeamsOrganizationIdAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 

@@ -37,7 +37,7 @@ const RootShell = ({
         me {
           id
         }
-        tenantInstalled
+        isMsTeamsTenantInstalled
         adminConsentUrl
         ...observability_query
         ...mainRootLayout_query
@@ -49,7 +49,7 @@ const RootShell = ({
   const [reloadCount, setReloadCount] = useState(0);
 
   useEffect(() => {
-    if (!rootData.tenantInstalled) {
+    if (!rootData.isMsTeamsTenantInstalled) {
       return;
     }
 
@@ -75,7 +75,7 @@ const RootShell = ({
     window.open(rootData.adminConsentUrl);
   };
 
-  if (!rootData.tenantInstalled) {
+  if (!rootData.isMsTeamsTenantInstalled) {
     return (
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
         <Typography variant="h2">

@@ -33,7 +33,8 @@ type Query {
   locationAnalytics(locationId: String!, from: DateTime!, until: DateTime!): LocationAnalytics!
   msTeamsVersion: Version!
   msTeamsCustomerRecordSynced: Boolean!
-  tenantInstalled: Boolean!
+  isMsTeamsTenantInstalled: Boolean!
+  msTeamsOrganizationId: ID
   adminConsentUrl: String!
   notificationVersion: Version!
   notificationCustomerRecordSynced: Boolean!

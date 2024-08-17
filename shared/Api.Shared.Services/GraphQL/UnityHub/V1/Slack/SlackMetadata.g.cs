@@ -9,24 +9,24 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Slack;
 public static class Metadata
 {
 public readonly static string Schema = @"schema {
-  query: Query
+    query: Query
 }
 
 type Version {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
 }
 
 type Query {
-  slackVersion: Version!
-  slackCustomerRecordSynced: Boolean!
+    slackVersion: Version!
+    slackCustomerRecordSynced: Boolean!
 }
 
 enum SlackDeskBookingDetailBookingStatus {
-  AWAIT_ACCEPTANCE
-  ACCEPTED
-  DECLINED
+    AWAIT_ACCEPTANCE
+    ACCEPTED
+    DECLINED
 }";
 }

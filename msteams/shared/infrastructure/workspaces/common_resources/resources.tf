@@ -64,7 +64,8 @@ resource "azuread_application_redirect_uris" "msteams_spa_redirect_uris" {
   redirect_uris = [
     "https://${module.shared_common.msteams_webapp_domain_name}/auth-end.html?clientId=${azuread_application.msteams.client_id}",
     "https://${module.shared_common.msteams_webapp_domain_name}/api/auth/callback/msteams",
-    "https://${module.shared_common.msteams_webapp_domain_name}/msteams/api/v1/onboard-tenant"
+    "https://${module.shared_common.msteams_webapp_domain_name}/msteams/api/v1/onboard-tenant",
+    "https://${module.shared_common.webapp_domain_name}/api/auth/callback/azure-ad"
   ]
 }
 

@@ -53,7 +53,9 @@ resource "azuread_application_redirect_uris" "msteams_spa_redirect_uris_dev" {
   redirect_uris = [
     "https://localhost:15002/auth-end.html?clientId=${azuread_application.msteams_dev[count.index].client_id}",
     "https://localhost:15002/api/auth/callback/msteams",
-    "http://localhost:10900/msteams/api/v1/onboard-tenant"
+    "http://localhost:10900/msteams/api/v1/onboard-tenant",
+    "http://localhost:15000/api/auth/callback/azure-ad",
+    "https://mapp.unityhub.io/api/auth/callback/azure-ad"
   ]
 }
 

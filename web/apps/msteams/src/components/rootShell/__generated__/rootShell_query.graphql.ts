@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<294d8c27d558f3017cd667df4ef84043>>
+ * @generated SignedSource<<ff74cd02c3dfae61a776def9c3426996>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,10 +12,10 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type rootShell_query$data = {
   readonly adminConsentUrl: string;
+  readonly isMsTeamsTenantInstalled: boolean;
   readonly me: {
     readonly id: string;
   } | null | undefined;
-  readonly tenantInstalled: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"mainRootLayout_query" | "observability_query">;
   readonly " $fragmentType": "rootShell_query";
 };
@@ -52,7 +52,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "tenantInstalled",
+      "name": "isMsTeamsTenantInstalled",
       "storageKey": null
     },
     {
@@ -77,6 +77,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a677733fc4c62455bc1aefc5faf251a3";
+(node as any).hash = "77498d225074ff864bcd2ba36782bd52";
 
 export default node;

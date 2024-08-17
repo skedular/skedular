@@ -1,111 +1,111 @@
 scalar DateTime
 
 schema {
-  query: Query
+    query: Query
 }
 
 interface Node {
-  id: ID!
+    id: ID!
 }
 
 type Version {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
 }
 
 type Query {
-  notificationVersion: Version!
-  notificationCustomerRecordSynced: Boolean!
-  myNotifications(
-    after: String
-    first: Int
-    before: String
-    last: Int
-    orderBy: [NotificationOrderInput!]
-  ): NotificationConnection!
+    notificationVersion: Version!
+    notificationCustomerRecordSynced: Boolean!
+    myNotifications(
+        after: String
+        first: Int
+        before: String
+        last: Int
+        orderBy: [NotificationOrderInput!]
+    ): NotificationConnection!
 }
 
 type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
 }
 
 type Notification implements Node {
-  id: ID!
-  sourceId: ID!
-  eventRaisedAt: DateTime!
-  notificationType: NotificationNotificationType!
-  invitedBy: NotificationCustomerDetails
-  invitee: NotificationCustomerDetails
-  organization: NotificationOrganizationDetails
-  location: NotificationLocationDetails
-  team: NotificationTeamDetails
+    id: ID!
+    sourceId: ID!
+    eventRaisedAt: DateTime!
+    notificationType: NotificationNotificationType!
+    invitedBy: NotificationCustomerDetails
+    invitee: NotificationCustomerDetails
+    organization: NotificationOrganizationDetails
+    location: NotificationLocationDetails
+    team: NotificationTeamDetails
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+    Ascending
+    Descending
 }
 
 enum NotificationOrderField {
-  eventRaisedAt
-  notificationType
+    eventRaisedAt
+    notificationType
 }
 
 input NotificationOrderInput {
-  direction: OrderDirection!
-  field: NotificationOrderField
+    direction: OrderDirection!
+    field: NotificationOrderField
 }
 
 type NotificationConnection {
-  pageInfo: PageInfo!
-  edges: [NotificationEdge!]!
-  totalCount: Int
+    pageInfo: PageInfo!
+    edges: [NotificationEdge!]!
+    totalCount: Int
 }
 
 type NotificationEdge {
-  node: Notification!
-  cursor: String!
+    node: Notification!
+    cursor: String!
 }
 
 enum NotificationNotificationType {
-  INVITATION_TO_JOIN_ORGANIZATION
-  INVITATION_TO_JOIN_LOCATION
-  INVITATION_TO_JOIN_TEAM
+    INVITATION_TO_JOIN_ORGANIZATION
+    INVITATION_TO_JOIN_LOCATION
+    INVITATION_TO_JOIN_TEAM
 }
 
 type NotificationCustomerDetails {
-  uniqueId: ID!
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  emails: [String!]!
+    uniqueId: ID!
+    name: String
+    givenName: String
+    middleName: String
+    familyName: String
+    photoUrl: String
+    photoUrl24: String
+    photoUrl32: String
+    photoUrl48: String
+    photoUrl72: String
+    photoUrl192: String
+    photoUrl512: String
+    emails: [String!]!
 }
 
 type NotificationOrganizationDetails {
-  uniqueId: ID!
-  name: String!
-  logoUrl: String
+    uniqueId: ID!
+    name: String!
+    logoUrl: String
 }
 
 type NotificationLocationDetails {
-  uniqueId: ID!
-  name: String!
+    uniqueId: ID!
+    name: String!
 }
 
 type NotificationTeamDetails {
-  uniqueId: ID!
-  name: String!
+    uniqueId: ID!
+    name: String!
 }
