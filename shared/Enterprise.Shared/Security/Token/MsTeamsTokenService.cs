@@ -79,6 +79,13 @@ public class MsTeamsTokenServiceTokenService(
                 propertyBag.AddName(value);
             }
 
+            value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
+            if (value is not null)
+            {
+                propertyBag.AddEmail(value);
+                propertyBag.AddEmailVerified(true);
+            }
+
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "aud")?.Value;
             if (value is not null)
             {
