@@ -1,8 +1,9 @@
-import logger from '../logger';
-import { v4 as uuidv4 } from 'uuid';
 import type { AuthOptions } from 'next-auth';
+import AzureADProvider from 'next-auth/providers/azure-ad';
 import CognitoProvider from 'next-auth/providers/cognito';
 import GoogleProvider from 'next-auth/providers/google';
+import { v4 as uuidv4 } from 'uuid';
+import logger from '../logger';
 
 export interface TokenExtended {
   accessToken: string;
@@ -125,6 +126,10 @@ const authOptions: AuthOptions = {
       clientSecret: process.env.COGNITO_CLIENT_SECRET,
       issuer: process.env.COGNITO_ISSUER,
       checks: ['nonce'],
+    }),
+    AzureADProvider({
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
     }),
   ],
   callbacks: {

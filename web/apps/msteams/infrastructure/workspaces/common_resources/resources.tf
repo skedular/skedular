@@ -16,18 +16,12 @@ module "shared_common" {
   environment = var.environment
 }
 
-module "msteams_common" {
-  source = "../../../../../../msteams/shared/infrastructure/workspaces/common"
-
-  environment = var.environment
-}
-
 data "cloudflare_zone" "default" {
   name = module.shared_common.cloudflare_domain_name
 }
 
-data "aws_ssm_parameter" "parameter_store_name_azure_msteams_application_id" {
-  name = module.msteams_common.parameter_store_name_azure_msteams_application_id
+data "aws_ssm_parameter" "parameter_store_name_azure_application_id" {
+  name = module.shared_common.parameter_store_name_azure_application_id
 }
 
 resource "vercel_project" "default" {
@@ -48,7 +42,7 @@ resource "vercel_project" "default" {
     },
     {
       key    = "REACT_APP_APPLICATION_REGISTRATION_ID"
-      value  = data.aws_ssm_parameter.parameter_store_name_azure_msteams_application_id.value
+      value  = data.aws_ssm_parameter.parameter_store_name_azure_application_id.value
       target = ["development", "preview", "production"]
     },
     {

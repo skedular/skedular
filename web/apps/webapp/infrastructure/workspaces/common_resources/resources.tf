@@ -60,6 +60,14 @@ data "aws_ssm_parameter" "nextauthsecret" {
   name = module.web_common.parameter_store_name_nextauth_session
 }
 
+data "aws_ssm_parameter" "parameter_store_name_azure_application_id" {
+  name = module.shared_common.parameter_store_name_azure_application_id
+}
+
+data "aws_ssm_parameter" "parameter_store_name_azure_application_secret_value" {
+  name = module.shared_common.parameter_store_name_azure_application_secret_value
+}
+
 resource "vercel_project" "default" {
   name             = module.common.project_name
   framework        = "nextjs"
@@ -140,6 +148,16 @@ resource "vercel_project" "default" {
     {
       key    = "GOOGLE_CLIENT_SECRET"
       value  = var.gcp_unityhub_web_credentials_client_secret
+      target = ["development", "preview", "production"]
+    },
+    {
+      key    = "AZURE_AD_CLIENT_ID"
+      value  = data.aws_ssm_parameter.parameter_store_name_azure_application_id.value
+      target = ["development", "preview", "production"]
+    },
+    {
+      key    = "AZURE_AD_CLIENT_SECRET"
+      value  = data.aws_ssm_parameter.parameter_store_name_azure_application_secret_value.value
       target = ["development", "preview", "production"]
     },
     {

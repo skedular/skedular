@@ -16,7 +16,6 @@ on:
       - "web/packages/**"
       - "web/infrastructure/**"
       - "shared/infrastructure/**"
-      - "msteams/shared/infrastructure/**"
   pull_request:
     branches:
       - "main"
@@ -29,7 +28,6 @@ on:
       - "web/packages/**"
       - "web/infrastructure/**"
       - "shared/infrastructure/**"
-      - "msteams/shared/infrastructure/**"
 
 jobs:
   build:

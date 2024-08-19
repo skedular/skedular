@@ -121,3 +121,27 @@ output "api_gateway_name" {
 output "parameter_store_name_azure_github_actions_oidc_application_id" {
   value = "azure_github_actions_oidc_application_id"
 }
+
+output "parameter_store_name_azure_application_id" {
+  value = "azure_application_id"
+}
+
+output "parameter_store_name_azure_application_secret_id" {
+  value = "azure_application_secret_id"
+}
+
+output "parameter_store_name_azure_application_secret_value" {
+  value = "azure_application_secret_value"
+}
+
+output "parameter_store_name_azure_application_id_dev" {
+  value = "azure_application_id_dev"
+}
+
+output "parameter_store_name_azure_application_secret_id_dev" {
+  value = "azure_application_secret_id_dev"
+}
+
+output "parameter_store_name_azure_application_secret_value_dev" {
+  value = "azure_application_secret_value_dev"
+}

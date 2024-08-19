@@ -49,7 +49,6 @@ jobs:
           service_account: ${{ vars.STAGING_GCP_GITHUB_ACTIONS_SERVICE_ACCOUNT }}
 
       - name: Configure Azure credentials - staging
-        if: ${{ false }}
         uses: azure/login@v2
         with:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
@@ -83,11 +82,10 @@ jobs:
           service_account: ${{ vars.PRODUCTION_GCP_GITHUB_ACTIONS_SERVICE_ACCOUNT }}
 
       - name: Configure Azure credentials - production
-        if: ${{ false }}
         uses: azure/login@v2
         with:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
+          client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
           allow-no-subscriptions: true
 
       - name: Lint, Validate and Plan - production
@@ -133,7 +131,6 @@ jobs:
           service_account: ${{ vars.STAGING_GCP_GITHUB_ACTIONS_SERVICE_ACCOUNT }}
 
       - name: Configure Azure credentials
-        if: ${{ false }}
         uses: azure/login@v2
         with:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
@@ -180,7 +177,6 @@ jobs:
           service_account: ${{ vars.PRODUCTION_GCP_GITHUB_ACTIONS_SERVICE_ACCOUNT }}
 
       - name: Configure Azure credentials
-        if: ${{ false }}
         uses: azure/login@v2
         with:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}

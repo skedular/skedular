@@ -45,13 +45,6 @@ jobs:
           role-to-assume: ${{ vars.STAGING_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Configure Azure credentials - staging
-        uses: azure/login@v2
-        with:
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
-          allow-no-subscriptions: true
-
       - name: Lint, Validate and Plan - staging
         uses: "./.github/actions/lint-validate-infrastructure"
         with:
@@ -65,13 +58,6 @@ jobs:
         with:
           role-to-assume: ${{ vars.PRODUCTION_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
-
-      - name: Configure Azure credentials - production
-        uses: azure/login@v2
-        with:
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
-          allow-no-subscriptions: true
 
       - name: Lint, Validate and Plan - production
         uses: "./.github/actions/lint-validate-infrastructure"
@@ -103,13 +89,6 @@ jobs:
           role-to-assume: ${{ vars.STAGING_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Configure Azure credentials
-        uses: azure/login@v2
-        with:
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
-          allow-no-subscriptions: true
-
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
         with:
@@ -136,13 +115,6 @@ jobs:
         with:
           role-to-assume: ${{ vars.PRODUCTION_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
-
-      - name: Configure Azure credentials
-        uses: azure/login@v2
-        with:
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
-          allow-no-subscriptions: true
 
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
