@@ -37,8 +37,8 @@ public static class Extensions
                     tokenServices.Add(sp.GetRequiredService<IGoogleTokenService>());
                 }
 
-                var msTeamsAzureEntraConfiguration = sp.GetService<MsTeamsAzureEntraConfiguration>();
-                if (msTeamsAzureEntraConfiguration is not null)
+                var azureEntraConfiguration = sp.GetService<AzureEntraConfiguration>();
+                if (azureEntraConfiguration is not null)
                 {
                     tokenServices.Add(sp.GetRequiredService<IMsTeamsTokenServiceTokenService>());
                 }

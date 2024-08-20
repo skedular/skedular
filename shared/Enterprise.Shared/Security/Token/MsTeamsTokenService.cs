@@ -12,7 +12,7 @@ namespace Enterprise.Shared.Security.Token;
 public interface IMsTeamsTokenServiceTokenService : ITokenService;
 
 public class MsTeamsTokenServiceTokenService(
-    MsTeamsAzureEntraConfiguration msTeamsAzureEntraConfiguration,
+    AzureEntraConfiguration azureEntraConfiguration,
     IMemoryCache memoryCache)
     : IMsTeamsTokenServiceTokenService
 {
@@ -53,7 +53,7 @@ public class MsTeamsTokenServiceTokenService(
                     ValidateIssuer = true,
                     ValidIssuer = authority,
                     ValidateAudience = true,
-                    ValidAudience = msTeamsAzureEntraConfiguration.ClientId,
+                    ValidAudience = azureEntraConfiguration.ClientId,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKeys = openIdConnectConfiguration.SigningKeys,
                     ValidateLifetime = true

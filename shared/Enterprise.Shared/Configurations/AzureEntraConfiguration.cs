@@ -1,8 +1,8 @@
 namespace Enterprise.Shared.Configurations;
 
-public class MsTeamsAzureEntraConfiguration
+public class AzureEntraConfiguration
 {
-    public const string Key = "MsTeamsAzureEntra";
+    public const string Key = "AzureEntra";
 
     public string ClientId { get; set; } = string.Empty;
     public string ClientSecret { get; set; } = string.Empty;

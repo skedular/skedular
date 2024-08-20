@@ -28,7 +28,7 @@ public class TenantService(
     IContext context,
     IMemoryCache memoryCache,
     IRandomHelper randomHelper,
-    MsTeamsAzureEntraConfiguration msTeamsAzureEntraConfiguration,
+    AzureEntraConfiguration azureEntraConfiguration,
     IHttpContextAccessor httpContextAccessor,
     ITenantOnboardingService tenantOnboardingService,
     IMsTeamsInternalOutboxPublisher msTeamsInternalOutboxPublisher,
@@ -78,7 +78,7 @@ public class TenantService(
             });
 
         var tenantId = context.PropertyBag.AzureTenantId;
-        var clientId = Uri.EscapeDataString(msTeamsAzureEntraConfiguration.ClientId);
+        var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(currentUri + "msteams/api/v1/onboard-tenant");
         var scope = Uri.EscapeDataString("User.ReadBasic.All");
         var authorizationRequest =

@@ -45,13 +45,13 @@ public abstract class StartupCustom(
             }
         }
 
-        var msTeamsAzureEntraConfiguration =
-            configuration.GetSection(MsTeamsAzureEntraConfiguration.Key).Get<MsTeamsAzureEntraConfiguration>();
-        if (msTeamsAzureEntraConfiguration is not null)
+        var azureEntraConfiguration =
+            configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
+        if (azureEntraConfiguration is not null)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(msTeamsAzureEntraConfiguration.ClientId);
-            ArgumentException.ThrowIfNullOrWhiteSpace(msTeamsAzureEntraConfiguration.ClientSecret);
-            services.AddSingleton(msTeamsAzureEntraConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientId);
+            ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientSecret);
+            services.AddSingleton(azureEntraConfiguration);
         }
 
         if (Environment.IsDevelopment())
