@@ -14,4 +14,6 @@ export type { Error } from './models/Error';
 
 export { $Error } from './schemas/$Error';
 
+export { AzureService } from './services/AzureService';
 export { OrganizationService } from './services/OrganizationService';
+export { TenantService } from './services/TenantService';

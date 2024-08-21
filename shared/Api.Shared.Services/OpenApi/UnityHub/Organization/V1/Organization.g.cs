@@ -44,6 +44,19 @@ namespace Api.Shared.Services.OpenApi.UnityHub.Organization.V1
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("organization/api/v1/republish-all")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAll(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
+        /// <summary>
+        /// generate an admin consent Url for the given tenant
+        /// </summary>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("organization/api/v1/azure-tenant-admin-consent-url")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AzureTenantAdminConsentUrl(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// OnBoard a tenant
+        /// </summary>
+        /// <returns>onboarding response</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("organization/api/v1/onboard-azure-tenant")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> OnboardAzureTenant([Microsoft.AspNetCore.Mvc.FromQuery] string tenant, [Microsoft.AspNetCore.Mvc.FromQuery] bool admin_consent, [Microsoft.AspNetCore.Mvc.FromQuery] string state, [Microsoft.AspNetCore.Mvc.FromQuery] string? error, [Microsoft.AspNetCore.Mvc.FromQuery] string? error_description, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]

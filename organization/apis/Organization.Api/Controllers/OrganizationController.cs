@@ -21,4 +21,18 @@ public class OrganizationController(IWorkaroundService workaroundService) : Orga
 
         return Ok();
     }
+
+    public override Task<IActionResult> AzureTenantAdminConsentUrl(CancellationToken cancellationToken = default) =>
+        throw new NotImplementedException();
+
+    public override Task<IActionResult> OnboardAzureTenant(
+        string tenant,
+        // ReSharper disable once InconsistentNaming
+        bool admin_consent,
+        string state,
+        string? error,
+        // ReSharper disable once InconsistentNaming
+        string? error_description,
+        CancellationToken cancellationToken = default) =>
+        throw new NotImplementedException();
 }
