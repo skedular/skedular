@@ -27,15 +27,15 @@ public static class Extensions
 
     public static IServiceCollection AddRepositories(this IServiceCollection services) =>
         services
+            .AddScoped<IAzureInstallStateUserIdLookupRepository, AzureInstallStateUserIdLookupRepository>()
+            .AddScoped<IAzureTenantRepository, AzureTenantRepository>()
+            .AddScoped<IAzureTenantMemberRepository, AzureTenantMemberRepository>()
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
-            .AddScoped<IAzureInstallStateUserIdLookupRepository, AzureInstallStateUserIdLookupRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
-            .AddScoped<ITeamRepository, TeamRepository>()
-            .AddScoped<IAzureTenantRepository, AzureTenantRepository>()
-            .AddScoped<IAzureTenantMemberRepository, AzureTenantMemberRepository>();
+            .AddScoped<ITeamRepository, TeamRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

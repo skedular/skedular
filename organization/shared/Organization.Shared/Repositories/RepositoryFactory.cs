@@ -6,6 +6,9 @@ namespace Organization.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
+    IAzureTenantRepository AzureTenantRepository { get; }
+    IAzureTenantMemberRepository AzureTenantMemberRepository { get; }
     IBookingRepository BookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IDailyMemberCountRecordingRepository DailyMemberCountRecordingRepository { get; }
@@ -30,6 +33,9 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
+        AzureInstallStateUserIdLookupRepository = new AzureInstallStateUserIdLookupRepository(_dbContext, timeProvider);
+        AzureTenantRepository = new AzureTenantRepository(_dbContext, timeProvider);
+        AzureTenantMemberRepository = new AzureTenantMemberRepository(_dbContext, timeProvider);
         BookingRepository = new BookingRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         DailyMemberCountRecordingRepository = new DailyMemberCountRecordingRepository(_dbContext, timeProvider);
@@ -53,6 +59,9 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
         GC.SuppressFinalize(this);
     }
 
+    public IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
+    public IAzureTenantRepository AzureTenantRepository { get; }
+    public IAzureTenantMemberRepository AzureTenantMemberRepository { get; }
     public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IDailyMemberCountRecordingRepository DailyMemberCountRecordingRepository { get; }
