@@ -29,13 +29,13 @@ public static class Extensions
         services
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
-            .AddScoped<IInstallStateUserIdLookupRepository, InstallStateUserIdLookupRepository>()
+            .AddScoped<IAzureInstallStateUserIdLookupRepository, AzureInstallStateUserIdLookupRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
             .AddScoped<ITeamRepository, TeamRepository>()
-            .AddScoped<ITenantRepository, TenantRepository>()
-            .AddScoped<ITenantMemberRepository, TenantMemberRepository>();
+            .AddScoped<IAzureTenantRepository, AzureTenantRepository>()
+            .AddScoped<IAzureTenantMemberRepository, AzureTenantMemberRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

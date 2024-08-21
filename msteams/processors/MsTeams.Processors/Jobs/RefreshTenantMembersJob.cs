@@ -35,8 +35,8 @@ public class RefreshTenantMembersJob(
                     scope.ServiceProvider.GetRequiredService<IMsTeamsInternalPublisher>();
 
                 var now = timeProvider.GetUtcNow();
-                var tenantIds = await repositoryFactory.TenantRepository.Query(
-                    new Specification<Tenant>
+                var tenantIds = await repositoryFactory.AzureTenantRepository.Query(
+                    new Specification<AzureTenant>
                     {
                         Criteria = query =>
                             !query.MembersLastRefreshedAt.HasValue ||

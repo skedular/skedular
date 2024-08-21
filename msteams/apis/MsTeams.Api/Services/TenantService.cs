@@ -52,8 +52,8 @@ public class TenantService(
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
 
-                return await repositoryFactory.TenantRepository.Query(
-                    new Specification<Tenant>
+                return await repositoryFactory.AzureTenantRepository.Query(
+                    new Specification<AzureTenant>
                     {
                         Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString()
                     }).AsNoTracking().AnyAsync(cancellationToken);
@@ -71,8 +71,8 @@ public class TenantService(
             httpContextAccessor.HttpContext.Request.Host,
             httpContextAccessor.HttpContext.Request.PathBase);
 
-        var installStateUserIdLookup = repositoryFactory.InstallStateUserIdLookupRepository.Add(
-            new InstallStateUserIdLookup
+        var installStateUserIdLookup = repositoryFactory.AzureInstallStateUserIdLookupRepository.Add(
+            new AzureInstallStateUserIdLookup
             {
                 Id = randomHelper.Generate(), InstalledByUserId = context.PropertyBag.VerifiableToken
             });
@@ -84,7 +84,7 @@ public class TenantService(
         var authorizationRequest =
             $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={installStateUserIdLookup.Id}";
 
-        await repositoryFactory.InstallStateUserIdLookupRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.AzureInstallStateUserIdLookupRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return authorizationRequest;
     }
@@ -92,7 +92,7 @@ public class TenantService(
     public async Task<Uri> InstallAsync(string tenantId, string state, CancellationToken cancellationToken)
     {
         var installStateUserIdLookup =
-            await repositoryFactory.InstallStateUserIdLookupRepository.GetByIdAsync(state, cancellationToken);
+            await repositoryFactory.AzureInstallStateUserIdLookupRepository.GetByIdAsync(state, cancellationToken);
         ArgumentNullException.ThrowIfNull(installStateUserIdLookup);
 
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
@@ -110,20 +110,20 @@ public class TenantService(
         {
             await using var transaction =
                 await transactionBuilder.BeginTransactionAsync(
-                    repositoryFactory.TenantRepository.UnitOfWork,
+                    repositoryFactory.AzureTenantRepository.UnitOfWork,
                     cancellationToken);
 
-            repositoryFactory.InstallStateUserIdLookupRepository.Remove(installStateUserIdLookup);
+            repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(installStateUserIdLookup);
 
             var tenant =
-                await repositoryFactory.TenantRepository.GetByIdAsync(tenantId, cancellationToken);
+                await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
             ArgumentNullException.ThrowIfNull(tenant);
-            tenant = repositoryFactory.TenantRepository.Update(tenant);
+            tenant = repositoryFactory.AzureTenantRepository.Update(tenant);
             await msTeamsInternalOutboxPublisher.PublishRefreshTenantMembersAsync(
                 [tenant.Id],
-                repositoryFactory.TenantRepository.UnitOfWork,
+                repositoryFactory.AzureTenantRepository.UnitOfWork,
                 cancellationToken);
-            await repositoryFactory.TenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }
 
@@ -135,8 +135,8 @@ public class TenantService(
         Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
 
         var tenantId = context.PropertyBag.AzureTenantId;
-        var tenant = await repositoryFactory.TenantRepository.Query(
-            new Specification<Tenant>
+        var tenant = await repositoryFactory.AzureTenantRepository.Query(
+            new Specification<AzureTenant>
             {
                 Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString()
             }).AsNoTracking().FirstOrDefaultAsync(cancellationToken);

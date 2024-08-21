@@ -26,20 +26,21 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
           string.Concat(
             "CiRvcmdhbml6YXRpb25faW50ZXJuYWxfdjFfdmFsdWUucHJvdG8SFG9yZ2Fu",
             "aXphdGlvbmludGVybmFsGh9nb29nbGUvcHJvdG9idWYvdGltZXN0YW1wLnBy",
-            "b3RvIl4KBUV2ZW50EjAKCG1ldGFkYXRhGAEgASgLMh4ub3JnYW5pemF0aW9u",
-            "aW50ZXJuYWwuTWV0YWRhdGESGAoOb3JnYW5pemF0aW9uSWQYAiABKAlIAEIJ",
-            "CgdwYXlsb2FkIqoBCghNZXRhZGF0YRIKCgJpZBgBIAEoCRIUCgxkb21haW5T",
-            "b3VyY2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEigKBHR5cGUYBCABKA4y",
-            "Gi5vcmdhbml6YXRpb25pbnRlcm5hbC5UeXBlEigKBHRpbWUYBSABKAsyGi5n",
-            "b29nbGUucHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0aW9uSWQYBiAB",
-            "KAkqQQoEVHlwZRIdChlSZW5ld09yZ2FuaXphdGlvbk9mZmVyaW5nEAASGgoW",
-            "UmVjb3JkRGFpbHlNZW1iZXJDb3VudBABQkOqAkBBcGkuU2hhcmVkLkNsaWVu",
-            "dHMuRXZlbnRzLlVuaXR5SHViLk9yZ2FuaXphdGlvbkludGVybmFsLlYxLlZh",
-            "bHVlYgZwcm90bzM="));
+            "b3RvIncKBUV2ZW50EjAKCG1ldGFkYXRhGAEgASgLMh4ub3JnYW5pemF0aW9u",
+            "aW50ZXJuYWwuTWV0YWRhdGESGAoOb3JnYW5pemF0aW9uSWQYAiABKAlIABIX",
+            "Cg1BenVyZVRlbmFudElkGAMgASgJSABCCQoHcGF5bG9hZCKqAQoITWV0YWRh",
+            "dGESCgoCaWQYASABKAkSFAoMZG9tYWluU291cmNlGAIgASgJEhEKCWFwcFNv",
+            "dXJjZRgDIAEoCRIoCgR0eXBlGAQgASgOMhoub3JnYW5pemF0aW9uaW50ZXJu",
+            "YWwuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz",
+            "dGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJKlsKBFR5cGUSHQoZUmVuZXdP",
+            "cmdhbml6YXRpb25PZmZlcmluZxAAEhoKFlJlY29yZERhaWx5TWVtYmVyQ291",
+            "bnQQARIYChRSZWZyZXNoVGVuYW50TWVtYmVycxACQkOqAkBBcGkuU2hhcmVk",
+            "LkNsaWVudHMuRXZlbnRzLlVuaXR5SHViLk9yZ2FuaXphdGlvbkludGVybmFs",
+            "LlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Event), global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Event.Parser, new[]{ "Metadata", "OrganizationId" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Event), global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Event.Parser, new[]{ "Metadata", "OrganizationId", "AzureTenantId" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Metadata), global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null)
           }));
     }
@@ -50,6 +51,7 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
   public enum Type {
     [pbr::OriginalName("RenewOrganizationOffering")] RenewOrganizationOffering = 0,
     [pbr::OriginalName("RecordDailyMemberCount")] RecordDailyMemberCount = 1,
+    [pbr::OriginalName("RefreshTenantMembers")] RefreshTenantMembers = 2,
   }
 
   #endregion
@@ -94,6 +96,9 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
       switch (other.PayloadCase) {
         case PayloadOneofCase.OrganizationId:
           OrganizationId = other.OrganizationId;
+          break;
+        case PayloadOneofCase.AzureTenantId:
+          AzureTenantId = other.AzureTenantId;
           break;
       }
 
@@ -144,11 +149,38 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "AzureTenantId" field.</summary>
+    public const int AzureTenantIdFieldNumber = 3;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AzureTenantId {
+      get { return HasAzureTenantId ? (string) payload_ : ""; }
+      set {
+        payload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        payloadCase_ = PayloadOneofCase.AzureTenantId;
+      }
+    }
+    /// <summary>Gets whether the "AzureTenantId" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasAzureTenantId {
+      get { return payloadCase_ == PayloadOneofCase.AzureTenantId; }
+    }
+    /// <summary> Clears the value of the oneof if it's currently set to "AzureTenantId" </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearAzureTenantId() {
+      if (HasAzureTenantId) {
+        ClearPayload();
+      }
+    }
+
     private object payload_;
     /// <summary>Enum of possible cases for the "payload" oneof.</summary>
     public enum PayloadOneofCase {
       None = 0,
       OrganizationId = 2,
+      AzureTenantId = 3,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -181,6 +213,7 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
       }
       if (!object.Equals(Metadata, other.Metadata)) return false;
       if (OrganizationId != other.OrganizationId) return false;
+      if (AzureTenantId != other.AzureTenantId) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -191,6 +224,7 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
       int hash = 1;
       if (metadata_ != null) hash ^= Metadata.GetHashCode();
       if (HasOrganizationId) hash ^= OrganizationId.GetHashCode();
+      if (HasAzureTenantId) hash ^= AzureTenantId.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -218,6 +252,10 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(OrganizationId);
       }
+      if (HasAzureTenantId) {
+        output.WriteRawTag(26);
+        output.WriteString(AzureTenantId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -236,6 +274,10 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(OrganizationId);
       }
+      if (HasAzureTenantId) {
+        output.WriteRawTag(26);
+        output.WriteString(AzureTenantId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -251,6 +293,9 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
       }
       if (HasOrganizationId) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
+      }
+      if (HasAzureTenantId) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AzureTenantId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -273,6 +318,9 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
       switch (other.PayloadCase) {
         case PayloadOneofCase.OrganizationId:
           OrganizationId = other.OrganizationId;
+          break;
+        case PayloadOneofCase.AzureTenantId:
+          AzureTenantId = other.AzureTenantId;
           break;
       }
 
@@ -306,6 +354,10 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
             OrganizationId = input.ReadString();
             break;
           }
+          case 26: {
+            AzureTenantId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -334,6 +386,10 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
           }
           case 18: {
             OrganizationId = input.ReadString();
+            break;
+          }
+          case 26: {
+            AzureTenantId = input.ReadString();
             break;
           }
         }

@@ -25,13 +25,14 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CiJvcmdhbml6YXRpb25faW50ZXJuYWxfdjFfa2V5LnByb3RvEhRvcmdhbml6",
-            "YXRpb25pbnRlcm5hbCIdCgNLZXkSFgoOb3JnYW5pemF0aW9uSWQYASABKAlC",
-            "QaoCPkFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuVW5pdHlIdWIuT3JnYW5p",
-            "emF0aW9uSW50ZXJuYWwuVjEuS2V5YgZwcm90bzM="));
+            "YXRpb25pbnRlcm5hbCI0CgNLZXkSFgoOb3JnYW5pemF0aW9uSWQYASABKAkS",
+            "FQoNQXp1cmVUZW5hbnRJZBgCIAEoCUJBqgI+QXBpLlNoYXJlZC5DbGllbnRz",
+            "LkV2ZW50cy5Vbml0eUh1Yi5Pcmdhbml6YXRpb25JbnRlcm5hbC5WMS5LZXli",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key.Key), global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key.Key.Parser, new[]{ "OrganizationId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key.Key), global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key.Key.Parser, new[]{ "OrganizationId", "AzureTenantId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -74,6 +75,7 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Key(Key other) : this() {
       organizationId_ = other.organizationId_;
+      azureTenantId_ = other.azureTenantId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -95,6 +97,18 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
       }
     }
 
+    /// <summary>Field number for the "AzureTenantId" field.</summary>
+    public const int AzureTenantIdFieldNumber = 2;
+    private string azureTenantId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AzureTenantId {
+      get { return azureTenantId_; }
+      set {
+        azureTenantId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -111,6 +125,7 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
         return true;
       }
       if (OrganizationId != other.OrganizationId) return false;
+      if (AzureTenantId != other.AzureTenantId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -119,6 +134,7 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
     public override int GetHashCode() {
       int hash = 1;
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
+      if (AzureTenantId.Length != 0) hash ^= AzureTenantId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -141,6 +157,10 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
         output.WriteRawTag(10);
         output.WriteString(OrganizationId);
       }
+      if (AzureTenantId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(AzureTenantId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -155,6 +175,10 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
         output.WriteRawTag(10);
         output.WriteString(OrganizationId);
       }
+      if (AzureTenantId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(AzureTenantId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -167,6 +191,9 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
       int size = 0;
       if (OrganizationId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
+      }
+      if (AzureTenantId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AzureTenantId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -182,6 +209,9 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
       }
       if (other.OrganizationId.Length != 0) {
         OrganizationId = other.OrganizationId;
+      }
+      if (other.AzureTenantId.Length != 0) {
+        AzureTenantId = other.AzureTenantId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -206,6 +236,10 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
             OrganizationId = input.ReadString();
             break;
           }
+          case 18: {
+            AzureTenantId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -227,6 +261,10 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key {
             break;
           case 10: {
             OrganizationId = input.ReadString();
+            break;
+          }
+          case 18: {
+            AzureTenantId = input.ReadString();
             break;
           }
         }

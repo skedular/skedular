@@ -16,7 +16,7 @@ namespace MsTeams.Processors.Mappers;
 
 public interface IMapper
 {
-    TenantMember MapToEntity(User src);
+    AzureTenantMember MapToEntity(User src);
     Customer MapTo(Event src);
 
     Shared.Database.Entities.Customer MapToEntity(
@@ -60,10 +60,10 @@ public interface IMapper
     Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
     Shared.Database.Entities.Team MapToEntity(Team src);
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest);
-    Admin_AddIdentityInput MapTo(TenantMember src, string customerId);
+    Admin_AddIdentityInput MapTo(AzureTenantMember src, string customerId);
 
     Admin_AddInput MapTo(
-        TenantMember src,
+        AzureTenantMember src,
         string customerId,
         Shared.Database.Entities.Organization defaultOrganization,
         ICollection<Shared.Database.Entities.Location> defaultLocations);
@@ -71,7 +71,7 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public TenantMember MapToEntity(User src) =>
+    public AzureTenantMember MapToEntity(User src) =>
         new()
         {
             Id = src.Id!,
@@ -252,11 +252,11 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Admin_AddIdentityInput MapTo(TenantMember src, string customerId) =>
+    public Admin_AddIdentityInput MapTo(AzureTenantMember src, string customerId) =>
         new() { Id = src.Id, Email = src.Email, EmailVerified = true, CustomerId = customerId };
 
     public Admin_AddInput MapTo(
-        TenantMember src,
+        AzureTenantMember src,
         string customerId,
         Shared.Database.Entities.Organization defaultOrganization,
         ICollection<Shared.Database.Entities.Location> defaultLocations)

@@ -2,7 +2,7 @@ using Enterprise.Shared.Models;
 
 namespace MsTeams.Shared.Models;
 
-public class TenantMember : ModelBaseWithDeleted
+public class AzureTenantMember : ModelBaseWithDeleted
 {
     public string? Email { get; set; }
     public string? Designation { get; set; }

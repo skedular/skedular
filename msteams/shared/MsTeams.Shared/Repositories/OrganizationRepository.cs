@@ -21,7 +21,7 @@ internal static class OrganizationExtensions
     internal static IIncludableQueryable<Organization, Customer?> AddDependentObjects(
         this IQueryable<Organization> originalQuery) =>
         originalQuery
-            .Include(query => query.Tenants)
+            .Include(query => query.AzureTenants)
             .Include(query => query.OrganizationMembers)
             .ThenInclude(query => query.Customer);
 }
@@ -50,7 +50,7 @@ public class OrganizationRepository(MsTeamsDbContext dbContext, TimeProvider tim
 
     public async Task<Organization?> GetByTenantIdAsync(string tenantId, CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => !query.DeletedAt.HasValue && query.Tenants.Any(tenant => tenant.Id == tenantId))
+            .Where(query => !query.DeletedAt.HasValue && query.AzureTenants.Any(tenant => tenant.Id == tenantId))
             .AddDependentObjects()
             .OrderBy(query => query.Id)
             .FirstOrDefaultAsync(cancellationToken);

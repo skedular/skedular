@@ -5,4 +5,5 @@ option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.OrganizationIntern
 
 message Key {
   string organizationId = 1;
+  string AzureTenantId = 2;
 }

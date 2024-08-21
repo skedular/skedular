@@ -26,7 +26,7 @@ public partial class Metadata : IMetadata { }
     retryTopicPartitionCount: 5,
     deadLetterTopicName: "organization.v1.internal.deadletter",
     deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package organizationinternal;option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key\";message Key {  string organizationId = 1;}")]
+    protobufSchema: "syntax = \"proto3\";package organizationinternal;option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key\";message Key {  string organizationId = 1;  string AzureTenantId = 2;}")]
 public partial class Key : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =

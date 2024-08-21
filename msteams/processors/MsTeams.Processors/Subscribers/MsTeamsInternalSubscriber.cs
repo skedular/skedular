@@ -56,42 +56,42 @@ public class MsTeamsInternalSubscriber(
         string tenantId,
         CancellationToken cancellationToken)
     {
-        var tenant = await repositoryFactory.TenantRepository.GetByIdAsync(tenantId, cancellationToken);
+        var tenant = await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
         if (tenant is null)
         {
             return;
         }
 
         var users = await msGraphService.GetUsersAsync(tenantId, cancellationToken);
-        var itemsToRemove = tenant.TenantMembers
+        var itemsToRemove = tenant.AzureTenantMembers
             .Where(tenantMember => users.All(item => item.Id != tenantMember.Id))
             .ToList();
-        var updatedItems = tenant.TenantMembers
+        var updatedItems = tenant.AzureTenantMembers
             .Where(tenantMember => users.Any(item => item.Id == tenantMember.Id))
             .ToList();
         var addedItems = users
-            .Where(tenantMember => tenant.TenantMembers.All(item => item.Id != tenantMember.Id))
-            .Select(user => repositoryFactory.TenantMemberRepository.Add(mapper.MapToEntity(user))).ToList();
+            .Where(tenantMember => tenant.AzureTenantMembers.All(item => item.Id != tenantMember.Id))
+            .Select(user => repositoryFactory.AzureTenantMemberRepository.Add(mapper.MapToEntity(user))).ToList();
 
-        repositoryFactory.TenantMemberRepository.RemoveRange(itemsToRemove);
-        tenant.TenantMembers = addedItems.Concat(updatedItems).ToList();
+        repositoryFactory.AzureTenantMemberRepository.RemoveRange(itemsToRemove);
+        tenant.AzureTenantMembers = addedItems.Concat(updatedItems).ToList();
 
         await SyncCustomersAndOrganizationMembersAsync(tenant, cancellationToken);
 
         tenant.MembersLastRefreshedAt = timeProvider.GetUtcNow();
-        repositoryFactory.TenantRepository.Update(tenant);
+        repositoryFactory.AzureTenantRepository.Update(tenant);
 
-        await repositoryFactory.TenantMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.TenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.AzureTenantMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task SyncCustomersAndOrganizationMembersAsync(
-        Tenant tenant,
+        AzureTenant azureTenant,
         CancellationToken cancellationToken)
     {
         var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
         {
-            First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = tenant.Organization.Id }
+            First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
         };
         getPaginatedLocationsInput.OrderBy.AddRange([
             new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
@@ -101,9 +101,9 @@ public class MsTeamsInternalSubscriber(
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
-        var customerIdsTenantMembersPair = new List<(string, TenantMember)>();
+        var customerIdsTenantMembersPair = new List<(string, AzureTenantMember)>();
 
-        foreach (var tenantMember in tenant.TenantMembers)
+        foreach (var tenantMember in azureTenant.AzureTenantMembers)
         {
             var anyCustomerExistByVerifiableTokenResponse =
                 await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
@@ -121,7 +121,7 @@ public class MsTeamsInternalSubscriber(
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = tenant.Organization.Id,
+                            OrganizationId = azureTenant.Organization.Id,
                             CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
@@ -151,7 +151,7 @@ public class MsTeamsInternalSubscriber(
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = tenant.Organization.Id,
+                            OrganizationId = azureTenant.Organization.Id,
                             CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
@@ -179,7 +179,7 @@ public class MsTeamsInternalSubscriber(
                 mapper.MapTo(
                     tenantMember,
                     customerId,
-                    new Organization { Id = tenant.Organization.Id },
+                    new Organization { Id = azureTenant.Organization.Id },
                     getLocationsResponse.TotalCount == 1
                         ? [new Location { Id = getLocationsResponse.Edges.First().Node.Id }]
                         : []),
@@ -191,7 +191,7 @@ public class MsTeamsInternalSubscriber(
         {
             var customerId = customerIdsTenantMemberPair.Item1;
             var organizationMember =
-                tenant.Organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customerId);
+                azureTenant.Organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customerId);
 
             if (organizationMember is null)
             {
@@ -199,7 +199,7 @@ public class MsTeamsInternalSubscriber(
                 {
                     Id = randomHelper.Generate(),
                     Customer = new Customer { Id = customerId },
-                    MembershipType = customerIdsTenantMemberPair.Item2.Id == tenant.InstalledByUserId
+                    MembershipType = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
                         ? MembershipType.Owner
                         : MembershipType.Member
                 };
@@ -209,14 +209,14 @@ public class MsTeamsInternalSubscriber(
             {
                 Id = organizationMember.Id,
                 Customer = new Customer { Id = customerId },
-                MembershipType = customerIdsTenantMemberPair.Item2.Id == tenant.InstalledByUserId
+                MembershipType = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
                     ? MembershipType.Owner
                     : MembershipType.Member
             };
         }).ForEachAsync(async (member, ct) =>
         {
             await organizationServiceClient.Admin_AddMemberAsync(
-                new Admin_AddMemberInput { Id = tenant.Organization.Id, Member = member },
+                new Admin_AddMemberInput { Id = azureTenant.Organization.Id, Member = member },
                 organizationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: ct);
         }, cancellationToken);

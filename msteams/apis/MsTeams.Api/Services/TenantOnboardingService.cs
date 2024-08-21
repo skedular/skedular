@@ -19,7 +19,7 @@ public interface ITenantOnboardingService
 {
     Task OnboardAsync(
         string tenantId,
-        InstallStateUserIdLookup installStateUserIdLookup,
+        AzureInstallStateUserIdLookup azureInstallStateUserIdLookup,
         CancellationToken cancellationToken);
 }
 
@@ -35,7 +35,7 @@ public class TenantOnboardingService(
 {
     public async Task OnboardAsync(
         string tenantId,
-        InstallStateUserIdLookup installStateUserIdLookup,
+        AzureInstallStateUserIdLookup azureInstallStateUserIdLookup,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
@@ -48,14 +48,14 @@ public class TenantOnboardingService(
         var organization =
             await repositoryFactory.OrganizationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
 
-        var tenant = repositoryFactory.TenantRepository.Add(new Tenant
+        var tenant = repositoryFactory.AzureTenantRepository.Add(new AzureTenant
         {
             Id = tenantId,
-            InstalledByUserId = installStateUserIdLookup.InstalledByUserId,
+            InstalledByUserId = azureInstallStateUserIdLookup.InstalledByUserId,
             Organization = organization
         });
 
-        repositoryFactory.InstallStateUserIdLookupRepository.Remove(installStateUserIdLookup);
+        repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(azureInstallStateUserIdLookup);
 
         await Task.WhenAll([
             CreateOrganizationAsync("No name set!!!", organization, cancellationToken),
@@ -64,10 +64,10 @@ public class TenantOnboardingService(
 
         await msTeamsInternalOutboxPublisher.PublishRefreshTenantMembersAsync(
             [tenant.Id],
-            repositoryFactory.TenantRepository.UnitOfWork,
+            repositoryFactory.AzureTenantRepository.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.TenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 

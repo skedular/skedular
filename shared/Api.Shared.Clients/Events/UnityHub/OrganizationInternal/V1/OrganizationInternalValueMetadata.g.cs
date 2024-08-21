@@ -26,7 +26,7 @@ public partial class Metadata : IMetadata { }
     retryTopicPartitionCount: 5,
     deadLetterTopicName: "organization.v1.internal.deadletter",
     deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package organizationinternal;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value\";enum Type {   RenewOrganizationOffering = 0;  RecordDailyMemberCount = 1; }message Event {  Metadata metadata = 1;  oneof payload {    string organizationId = 2;  }}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}")]
+    protobufSchema: "syntax = \"proto3\";package organizationinternal;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value\";enum Type {   RenewOrganizationOffering = 0;  RecordDailyMemberCount = 1;  RefreshTenantMembers = 2; }message Event {  Metadata metadata = 1;  oneof payload {    string organizationId = 2;    string AzureTenantId = 3;  }}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}")]
 public partial class Event : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =

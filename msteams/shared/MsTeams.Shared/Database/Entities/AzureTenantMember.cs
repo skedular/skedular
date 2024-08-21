@@ -7,7 +7,7 @@ namespace MsTeams.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class TenantMember : EntityBaseWithDeleted
+public class AzureTenantMember : EntityBaseWithDeleted
 {
     public string? Email { get; set; }
     public string? Designation { get; set; }
@@ -26,13 +26,13 @@ public class TenantMember : EntityBaseWithDeleted
     public string? PhotoUrl504 { get; set; }
     public string? PhotoUrl648 { get; set; }
 
-    public virtual Tenant Tenant { get; set; }
+    public virtual AzureTenant AzureTenant { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class TenantMemberConfiguration : IEntityTypeConfiguration<TenantMember>
+public class TenantMemberConfiguration : IEntityTypeConfiguration<AzureTenantMember>
 {
-    public void Configure(EntityTypeBuilder<TenantMember> builder)
+    public void Configure(EntityTypeBuilder<AzureTenantMember> builder)
     {
         builder.ConfigureEntityBaseWithDeleted();
 
@@ -54,7 +54,7 @@ public class TenantMemberConfiguration : IEntityTypeConfiguration<TenantMember>
         builder.Property(item => item.PhotoUrl648).HasMaxLength(Constants.MaxUrlLength);
 
         builder
-            .HasOne(item => item.Tenant)
-            .WithMany(item => item.TenantMembers);
+            .HasOne(item => item.AzureTenant)
+            .WithMany(item => item.AzureTenantMembers);
     }
 }
