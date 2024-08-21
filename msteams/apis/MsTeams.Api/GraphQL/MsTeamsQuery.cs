@@ -31,7 +31,7 @@ public class MsTeamsQuery : Query
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override async Task<bool> IsMsTeamsTenantInstalledAsync(
+    public override async Task<bool> IsAzureTenantInstalledAsync(
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {

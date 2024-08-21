@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<400ddda6a74876d2f8be9bf9ba4c396b>>
+ * @generated SignedSource<<2c1ab1ec433ea50c8999d26fdfaab1df>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -215,7 +215,7 @@ return {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "isMsTeamsTenantInstalled",
+        "name": "isAzureTenantInstalled",
         "storageKey": null
       },
       {
@@ -382,12 +382,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c4262987a1a84c0c8409bcd9a298d7f5",
+    "cacheID": "30fff9d0627290983ef4572ab72b6b26",
     "id": null,
     "metadata": {},
     "name": "organizations_rootQuery",
     "operationKind": "query",
-    "text": "query organizations_rootQuery(\n  $organizationsSortingValues: [OrganizationOrderInput!]!\n  $organizationNameSearchText: String!\n) {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...organizations_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationCard_OrganizationDetails on OrganizationDetails {\n  id\n  name\n  about\n  website\n  logoUrl\n  hasFutureBooking\n  hasLocation\n  canModify\n  canDelete\n}\n\nfragment organizationCard_Query on Query {\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n}\n\nfragment organizations_query on Query {\n  organizations(first: 50, where: {nameContains: $organizationNameSearchText}, orderBy: $organizationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationCard_OrganizationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...organizationCard_Query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isMsTeamsTenantInstalled\n  adminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query organizations_rootQuery(\n  $organizationsSortingValues: [OrganizationOrderInput!]!\n  $organizationNameSearchText: String!\n) {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...organizations_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationCard_OrganizationDetails on OrganizationDetails {\n  id\n  name\n  about\n  website\n  logoUrl\n  hasFutureBooking\n  hasLocation\n  canModify\n  canDelete\n}\n\nfragment organizationCard_Query on Query {\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n}\n\nfragment organizations_query on Query {\n  organizations(first: 50, where: {nameContains: $organizationNameSearchText}, orderBy: $organizationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationCard_OrganizationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...organizationCard_Query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  adminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
   }
 };
 })();

@@ -27,7 +27,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams;
             
 
                 
-                public abstract Task<bool> IsMsTeamsTenantInstalledAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<bool> IsAzureTenantInstalledAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 

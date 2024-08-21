@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.400.7"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.400.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,13 +22,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
-        <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj"/>
+        <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj" />
+        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj" />
+        <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="appsettings.json"/>
+        <EmbeddedResource Include="appsettings.json" />
     </ItemGroup>
 
 </Project>

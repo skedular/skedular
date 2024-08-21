@@ -22,7 +22,7 @@ type Version {
 type Query {
     msTeamsVersion: Version!
     msTeamsCustomerRecordSynced: Boolean!
-    isMsTeamsTenantInstalled: Boolean!
+    isAzureTenantInstalled: Boolean!
     msTeamsOrganizationId: ID
     adminConsentUrl: String!
 }";
