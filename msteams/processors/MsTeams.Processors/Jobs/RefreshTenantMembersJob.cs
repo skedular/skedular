@@ -44,7 +44,7 @@ public class RefreshTenantMembersJob(
                     }).Select(item => item.Id).ToListAsync(cancellationToken);
                 if (tenantIds.Count != 0)
                 {
-                    await msTeamsInternalPublisher.PublishRefreshTenantMembersAsync(tenantIds, cancellationToken);
+                    await msTeamsInternalPublisher.PublishRefreshAzureTenantMembersAsync(tenantIds, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken);

@@ -24,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="Events\UnityHub\Organization\" />
         <Folder Include="OpenApi\"/>
     </ItemGroup>
 

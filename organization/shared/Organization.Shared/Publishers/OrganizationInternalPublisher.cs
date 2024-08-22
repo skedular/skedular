@@ -16,6 +16,8 @@ public interface IOrganizationInternalPublisher
     Task PublishRecordOrganizationDailyMemberCountAsync(
         IEnumerable<string> organizationIds,
         CancellationToken cancellationToken);
+    
+    Task PublishRefreshAzureTenantMembersAsync(IEnumerable<string> azureTenantIds, CancellationToken cancellationToken);
 }
 
 public class OrganizationInternalPublisher(
@@ -59,6 +61,24 @@ public class OrganizationInternalPublisher(
                 OrganizationId = organizationId
             };
 
+            await publisher.PublishAsync(key, @event, cancellationToken);
+        }));
+
+    public async Task PublishRefreshAzureTenantMembersAsync(
+        IEnumerable<string> azureTenantIds,
+        CancellationToken cancellationToken) =>
+        await Task.WhenAll(azureTenantIds.Select(async azureTenantId =>
+        {
+            var key = new Key { AzureTenantId = azureTenantId };
+            var @event = new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    Type.RefreshAzureTenantMembers,
+                    context.PropertyBag.CorrelationId),
+                AzureTenantId = azureTenantId
+            };
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
 }

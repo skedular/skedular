@@ -8,7 +8,7 @@ option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.OrganizationIntern
 enum Type { 
   RenewOrganizationOffering = 0;
   RecordDailyMemberCount = 1;
-  RefreshTenantMembers = 2;
+  RefreshAzureTenantMembers = 2;
  }
 
 message Event {

@@ -1,4 +1,4 @@
-namespace Slack.Shared.Configurations;
+namespace Organization.Shared.Configurations;
 
 public class CustomerConfiguration
 {

@@ -1,14 +1,14 @@
-using Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Key;
+using Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
-using Event = Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Type;
 
-namespace MsTeams.Shared.Publishers;
+namespace Organization.Shared.Publishers;
 
-public interface IMsTeamsInternalOutboxPublisher
+public interface IOrganizationInternalOutboxPublisher
 {
     Task PublishRefreshAzureTenantMembersAsync(
         IEnumerable<string> azureTenantIds,
@@ -16,11 +16,11 @@ public interface IMsTeamsInternalOutboxPublisher
         CancellationToken cancellationToken);
 }
 
-public class MsTeamsInternalOutboxPublisher(
+public class OrganizationInternalOutboxPublisher(
     ApplicationConfiguration applicationConfiguration,
     IContext context,
     IOutboxEventPublisher<Key, Event> publisher)
-    : IMsTeamsInternalOutboxPublisher
+    : IOrganizationInternalOutboxPublisher
 {
     public async Task PublishRefreshAzureTenantMembersAsync(
         IEnumerable<string> azureTenantIds,
@@ -28,15 +28,15 @@ public class MsTeamsInternalOutboxPublisher(
         CancellationToken cancellationToken) =>
         await Task.WhenAll(azureTenantIds.Select(async azureTenantId =>
         {
-            var key = new Key { TenantId = azureTenantId };
+            var key = new Key { AzureTenantId = azureTenantId };
             var @event = new Event
             {
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    Type.RefreshTenantMembers,
+                    Type.RefreshAzureTenantMembers,
                     context.PropertyBag.CorrelationId),
-                TenantId = azureTenantId
+                AzureTenantId = azureTenantId
             };
 
             await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);

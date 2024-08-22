@@ -62,7 +62,7 @@ public class TenantOnboardingService(
             CreateLocationAsync(organization, cancellationToken)
         ]);
 
-        await msTeamsInternalOutboxPublisher.PublishRefreshTenantMembersAsync(
+        await msTeamsInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync(
             [tenant.Id],
             repositoryFactory.AzureTenantRepository.UnitOfWork,
             cancellationToken);

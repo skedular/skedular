@@ -32,11 +32,11 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
             "dGESCgoCaWQYASABKAkSFAoMZG9tYWluU291cmNlGAIgASgJEhEKCWFwcFNv",
             "dXJjZRgDIAEoCRIoCgR0eXBlGAQgASgOMhoub3JnYW5pemF0aW9uaW50ZXJu",
             "YWwuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz",
-            "dGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJKlsKBFR5cGUSHQoZUmVuZXdP",
+            "dGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJKmAKBFR5cGUSHQoZUmVuZXdP",
             "cmdhbml6YXRpb25PZmZlcmluZxAAEhoKFlJlY29yZERhaWx5TWVtYmVyQ291",
-            "bnQQARIYChRSZWZyZXNoVGVuYW50TWVtYmVycxACQkOqAkBBcGkuU2hhcmVk",
-            "LkNsaWVudHMuRXZlbnRzLlVuaXR5SHViLk9yZ2FuaXphdGlvbkludGVybmFs",
-            "LlYxLlZhbHVlYgZwcm90bzM="));
+            "bnQQARIdChlSZWZyZXNoQXp1cmVUZW5hbnRNZW1iZXJzEAJCQ6oCQEFwaS5T",
+            "aGFyZWQuQ2xpZW50cy5FdmVudHMuVW5pdHlIdWIuT3JnYW5pemF0aW9uSW50",
+            "ZXJuYWwuVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -51,7 +51,7 @@ namespace Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value {
   public enum Type {
     [pbr::OriginalName("RenewOrganizationOffering")] RenewOrganizationOffering = 0,
     [pbr::OriginalName("RecordDailyMemberCount")] RecordDailyMemberCount = 1,
-    [pbr::OriginalName("RefreshTenantMembers")] RefreshTenantMembers = 2,
+    [pbr::OriginalName("RefreshAzureTenantMembers")] RefreshAzureTenantMembers = 2,
   }
 
   #endregion

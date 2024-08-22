@@ -119,7 +119,7 @@ public class TenantService(
                 await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
             ArgumentNullException.ThrowIfNull(tenant);
             tenant = repositoryFactory.AzureTenantRepository.Update(tenant);
-            await msTeamsInternalOutboxPublisher.PublishRefreshTenantMembersAsync(
+            await msTeamsInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync(
                 [tenant.Id],
                 repositoryFactory.AzureTenantRepository.UnitOfWork,
                 cancellationToken);

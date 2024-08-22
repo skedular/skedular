@@ -4,6 +4,7 @@ using Organization.Shared.Configurations;
 using Organization.Shared.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services;
 
 namespace Organization.Shared;
 
@@ -13,7 +14,9 @@ public static class Extensions
         services.AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services;
+        services
+            .AddScoped<IMsGraphService, MsGraphService>()
+            .AddSingleton<IMsGraphServiceClientService, MsGraphServiceClientService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services
@@ -46,6 +49,7 @@ public static class Extensions
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
             .AddScoped<IOrganizationOutboxPublisher, OrganizationOutboxPublisher>()
+            .AddScoped<IOrganizationInternalOutboxPublisher, OrganizationInternalOutboxPublisher>()
             .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
     public static IServiceCollection AddUnityHubGrpcServices(
@@ -57,7 +61,21 @@ public static class Extensions
         ArgumentNullException.ThrowIfNull(organizationConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
 
+        var customerConfiguration =
+            configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
+        ArgumentNullException.ThrowIfNull(customerConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
+        ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
+
+        var locationConfiguration =
+            configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
+        ArgumentNullException.ThrowIfNull(locationConfiguration);
+        ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
+        ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
+
         return services
-            .AddSingleton(organizationConfiguration);
+            .AddSingleton(organizationConfiguration)
+            .AddSingleton(customerConfiguration)
+            .AddSingleton(locationConfiguration);
     }
 }
