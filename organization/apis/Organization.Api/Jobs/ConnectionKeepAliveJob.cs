@@ -2,10 +2,10 @@ using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Api.Shared.Services.Grpc.UnityHub.Location.V1;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Time;
-using MsTeams.Shared.Configurations;
+using Organization.Shared.Configurations;
 using VersionInput = Api.Shared.Services.Grpc.UnityHub.Customer.V1.VersionInput;
 
-namespace MsTeams.Api.Jobs;
+namespace Organization.Api.Jobs;
 
 public class ConnectionKeepAliveJob(
     IServiceProvider serviceProvider,
