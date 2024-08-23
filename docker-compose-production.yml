@@ -127,8 +127,6 @@ services:
       Customer__GrpcUrl: http://staging-apis-01:10002
       Location__ApiKey: ${STAGING_UNITYHUBIO_LOCATION_APIKEY}
       Location__GrpcUrl: http://staging-apis-01:10602
-      MsTeams__ApiKey: ${STAGING_UNITYHUBIO_MSTEAMS_APIKEY}
-      MsTeams__GrpcUrl: http://staging-apis-01:10902
       Notification__ApiKey: ${STAGING_UNITYHUBIO_NOTIFICATION_APIKEY}
       Notification__GrpcUrl: http://staging-apis-01:10402
       Organization__ApiKey: ${STAGING_UNITYHUBIO_ORGANIZATION_APIKEY}
@@ -184,7 +182,6 @@ services:
       Subgraphs__Booking__Url: http://localhost:10300/booking/api/v1/graphql
       Subgraphs__Customer__Url: http://localhost:10000/customer/api/v1/graphql
       Subgraphs__Location__Url: http://localhost:10600/location/api/v1/graphql
-      Subgraphs__MsTeams__Url: http://localhost:10900/msteams/api/v1/graphql
       Subgraphs__Notification__Url: http://localhost:10400/notification/api/v1/graphql
       Subgraphs__Organization__Url: http://localhost:10200/organization/api/v1/graphql
       Subgraphs__Payment__Url: http://localhost:10100/payment/api/v1/graphql
@@ -194,7 +191,6 @@ services:
       Booking__ApiKey: ${STAGING_UNITYHUBIO_BOOKING_APIKEY}
       Customer__ApiKey: ${STAGING_UNITYHUBIO_CUSTOMER_APIKEY}
       Location__ApiKey: ${STAGING_UNITYHUBIO_LOCATION_APIKEY}
-      MsTeams__ApiKey: ${STAGING_UNITYHUBIO_MSTEAMS_APIKEY}
       Notification__ApiKey: ${STAGING_UNITYHUBIO_NOTIFICATION_APIKEY}
       Organization__ApiKey: ${STAGING_UNITYHUBIO_ORGANIZATION_APIKEY}
       Payment__ApiKey: ${STAGING_UNITYHUBIO_PAYMENT_APIKEY}
@@ -261,8 +257,6 @@ services:
       Customer__GrpcUrl: http://prod-apis-01:10002
       Location__ApiKey: ${PRODUCTION_UNITYHUBIO_LOCATION_APIKEY}
       Location__GrpcUrl: http://prod-apis-01:10602
-      MsTeams__ApiKey: ${PRODUCTION_UNITYHUBIO_MSTEAMS_APIKEY}
-      MsTeams__GrpcUrl: http://prod-apis-01:10902
       Notification__ApiKey: ${PRODUCTION_UNITYHUBIO_NOTIFICATION_APIKEY}
       Notification__GrpcUrl: http://prod-apis-01:10402
       Organization__ApiKey: ${PRODUCTION_UNITYHUBIO_ORGANIZATION_APIKEY}
@@ -318,7 +312,6 @@ services:
       Subgraphs__Booking__Url: http://localhost:10300/booking/api/v1/graphql
       Subgraphs__Customer__Url: http://localhost:10000/customer/api/v1/graphql
       Subgraphs__Location__Url: http://localhost:10600/location/api/v1/graphql
-      Subgraphs__MsTeams__Url: http://localhost:10900/msteams/api/v1/graphql
       Subgraphs__Notification__Url: http://localhost:10400/notification/api/v1/graphql
       Subgraphs__Organization__Url: http://localhost:10200/organization/api/v1/graphql
       Subgraphs__Payment__Url: http://localhost:10100/payment/api/v1/graphql
@@ -328,7 +321,6 @@ services:
       Booking__ApiKey: ${PRODUCTION_UNITYHUBIO_BOOKING_APIKEY}
       Customer__ApiKey: ${PRODUCTION_UNITYHUBIO_CUSTOMER_APIKEY}
       Location__ApiKey: ${PRODUCTION_UNITYHUBIO_LOCATION_APIKEY}
-      MsTeams__ApiKey: ${PRODUCTION_UNITYHUBIO_MSTEAMS_APIKEY}
       Notification__ApiKey: ${PRODUCTION_UNITYHUBIO_NOTIFICATION_APIKEY}
       Organization__ApiKey: ${PRODUCTION_UNITYHUBIO_ORGANIZATION_APIKEY}
       Payment__ApiKey: ${PRODUCTION_UNITYHUBIO_PAYMENT_APIKEY}

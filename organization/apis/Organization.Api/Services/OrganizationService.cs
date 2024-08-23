@@ -1,5 +1,7 @@
 using Api.Shared.Models;
 using Api.Shared.Services.Offering;
+using Ardalis.GuardClauses;
+using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -34,6 +36,7 @@ public interface IOrganizationService
 
     Task<Shared.Models.Organization> DeleteAsync(string organizationId, CancellationToken cancellationToken);
     Task<Shared.Models.Organization?> GetByIdAsync(string organizationId, CancellationToken cancellationToken);
+    Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken);
     Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int )> GetPaginatedOrganizationsAsync(
@@ -51,7 +54,8 @@ public class OrganizationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IMapper mapper,
-    TimeProvider timeProvider) : IOrganizationService
+    TimeProvider timeProvider,
+    IContext context) : IOrganizationService
 {
     public async Task<Shared.Models.Organization> AddAsync(
         Shared.Models.Organization organization,
@@ -226,7 +230,6 @@ public class OrganizationService(
             return null;
         }
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)
@@ -234,6 +237,23 @@ public class OrganizationService(
             return null;
         }
 
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        return await EnrichOrganizationAsync(customer, organization, cancellationToken);
+    }
+
+    public async Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken)
+    {
+        Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
+        var azureTenantId = context.PropertyBag.AzureTenantId.ToString();
+
+        var organization =
+            await repositoryFactory.OrganizationRepository.GetByAzureTenantIdAsync(azureTenantId, cancellationToken);
+        if (organization is null)
+        {
+            return null;
+        }
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         return await EnrichOrganizationAsync(customer, organization, cancellationToken);
     }
 

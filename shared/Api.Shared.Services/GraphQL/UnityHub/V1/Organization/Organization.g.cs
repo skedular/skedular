@@ -828,6 +828,18 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
 
                 
                 public abstract Task<OrganizationAnalytics> OrganizationAnalyticsAsync([HotChocolate.GraphQLName("organizationId")] string organizationId, [HotChocolate.GraphQLName("from")] DateTimeOffset from, [HotChocolate.GraphQLName("until")] DateTimeOffset until, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+            
+
+                
+                public abstract Task<bool> IsAzureTenantInstalledAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+            
+
+                
+                public abstract Task<string> AzureTenantAdminConsentUrlAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+            
+
+                
+                public abstract Task<OrganizationDetails?> AzureTenantOrganizationAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
         }
         
 

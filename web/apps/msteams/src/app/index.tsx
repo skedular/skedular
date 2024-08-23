@@ -23,7 +23,6 @@ const RootQuery = graphql`
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]
   ) {
-    msTeamsCustomerRecordSynced
     bookingCustomerRecordSynced
     organizationCustomerRecordSynced
     ...rootShell_query
@@ -41,8 +40,8 @@ type Props = {
 const Home = ({ queryReference, onReloadRequire }: Props) => {
   const rootData = usePreloadedQuery<app_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(
-    () => rootData?.msTeamsCustomerRecordSynced && rootData?.bookingCustomerRecordSynced && rootData?.organizationCustomerRecordSynced,
-    [rootData?.msTeamsCustomerRecordSynced, rootData?.bookingCustomerRecordSynced, rootData?.organizationCustomerRecordSynced],
+    () => rootData?.bookingCustomerRecordSynced && rootData?.organizationCustomerRecordSynced,
+    [rootData?.bookingCustomerRecordSynced, rootData?.organizationCustomerRecordSynced],
   );
 
   return (
@@ -50,7 +49,7 @@ const Home = ({ queryReference, onReloadRequire }: Props) => {
       rootDataRelay={rootData}
       onReloadRequire={onReloadRequire}
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
-      additionalCustomerRecords={[rootData?.msTeamsCustomerRecordSynced, rootData?.bookingCustomerRecordSynced]}
+      additionalCustomerRecords={[rootData?.bookingCustomerRecordSynced]}
     >
       <OrganizationOnboarding rootDataRelay={rootData} />
       <SmallMonthlyViewCalendar rootDataRelay={rootData} />

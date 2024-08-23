@@ -38,7 +38,7 @@ const RootShell = ({
           id
         }
         isAzureTenantInstalled
-        adminConsentUrl
+        azureTenantAdminConsentUrl
         ...observability_query
         ...mainRootLayout_query
       }
@@ -72,7 +72,7 @@ const RootShell = ({
   }
 
   const handleInstallClicked = () => {
-    window.open(rootData.adminConsentUrl);
+    window.open(rootData.azureTenantAdminConsentUrl);
   };
 
   if (!rootData.isAzureTenantInstalled) {

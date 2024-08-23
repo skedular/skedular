@@ -2,7 +2,6 @@ using Api.Shared.Services.Grpc.UnityHub.Billing.V1;
 using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Api.Shared.Services.Grpc.UnityHub.Location.V1;
-using Api.Shared.Services.Grpc.UnityHub.MsTeams.V1;
 using Api.Shared.Services.Grpc.UnityHub.Notification.V1;
 using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Api.Shared.Services.Grpc.UnityHub.Payment.V1;
@@ -108,12 +107,6 @@ public static class Extensions
         ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
 
-        var msTeamsConfiguration =
-            configuration.GetSection(MsTeamsConfiguration.Key).Get<MsTeamsConfiguration>();
-        ArgumentNullException.ThrowIfNull(msTeamsConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(msTeamsConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(msTeamsConfiguration.GrpcUrl);
-
         var notificationConfiguration =
             configuration.GetSection(NotificationConfiguration.Key).Get<NotificationConfiguration>();
         ArgumentNullException.ThrowIfNull(notificationConfiguration);
@@ -143,7 +136,6 @@ public static class Extensions
         services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
         services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
         services.AddGrpcClient<NotificationService.NotificationServiceClient>(GrpcClients.ConfigureNotification);
-        services.AddGrpcClient<MsTeamsService.MsTeamsServiceClient>(GrpcClients.ConfigureMsTeams);
         services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
         services.AddGrpcClient<PaymentService.PaymentServiceClient>(GrpcClients.ConfigurePayment);
         services.AddGrpcClient<TeamService.TeamServiceClient>(GrpcClients.ConfigureTeam);
@@ -154,7 +146,6 @@ public static class Extensions
             .AddSingleton(bookingConfiguration)
             .AddSingleton(customerConfiguration)
             .AddSingleton(locationConfiguration)
-            .AddSingleton(msTeamsConfiguration)
             .AddSingleton(notificationConfiguration)
             .AddSingleton(organizationConfiguration)
             .AddSingleton(paymentConfiguration)

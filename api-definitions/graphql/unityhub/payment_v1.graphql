@@ -1,72 +1,72 @@
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 interface Node {
-    id: ID!
+  id: ID!
 }
 
 type Version {
-    major: Int!
-    minor: Int!
-    build: Int!
-    revision: Int!
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
 }
 
 type Query {
-    paymentVersion: Version!
-    paymentCustomerRecordSynced: Boolean!
-    organizationPaymentMethodsDetails(
-        organizationId: String!
-    ): [OrganizationPaymentMethod!]!
+  paymentVersion: Version!
+  paymentCustomerRecordSynced: Boolean!
+  organizationPaymentMethodsDetails(
+    organizationId: String!
+  ): [OrganizationPaymentMethod!]!
 }
 
 type Mutation {
-    addOrganizationPaymentMethodIntent(
-        input: AddOrganizationPaymentMethodIntentInput!
-    ): AddOrganizationPaymentMethodIntentResponse
+  addOrganizationPaymentMethodIntent(
+    input: AddOrganizationPaymentMethodIntentInput!
+  ): AddOrganizationPaymentMethodIntentResponse
 
-    removeOrganizationPaymentMethod(
-        input: RemoveOrganizationPaymentMethodInput!
-    ): RemoveOrganizationPaymentMethodResponse
+  removeOrganizationPaymentMethod(
+    input: RemoveOrganizationPaymentMethodInput!
+  ): RemoveOrganizationPaymentMethodResponse
 }
 
 input AddOrganizationPaymentMethodIntentInput {
-    clientMutationId: String
-    organizationId: String!
+  clientMutationId: String
+  organizationId: String!
 }
 
 type AddOrganizationPaymentMethodIntentResponse {
-    clientMutationId: String
-    publishedKeys: String!
-    clientSecret: String!
+  clientMutationId: String
+  publishedKeys: String!
+  clientSecret: String!
 }
 
 input RemoveOrganizationPaymentMethodInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type RemoveOrganizationPaymentMethodResponse {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 type OrganizationPaymentMethod implements Node {
-    id: ID!
-    cardBrand: String
-    cardCountry: String
-    cardDescription: String
-    cardExpiryMonth: Int
-    cardExpiryYear: Int
-    cardFingerprint: String
-    cardFunding: String
-    cardIssuer: String
-    cardLastFourDigit: String
+  id: ID!
+  cardBrand: String
+  cardCountry: String
+  cardDescription: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardFingerprint: String
+  cardFunding: String
+  cardIssuer: String
+  cardLastFourDigit: String
 }
 
 enum PaymentOrganizationStripePaymentMethodStatus {
-    PENDING
-    CANCELLED
-    CONFIRMED
+  PENDING
+  CANCELLED
+  CONFIRMED
 }

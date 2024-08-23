@@ -209,11 +209,6 @@ resource "vercel_project" "default" {
       key    = "BILLING_ENDPOINT"
       value  = "https://${module.shared_common.api_domain_name}"
       target = ["development", "preview", "production"]
-    },
-    {
-      key    = "MSTEAMS_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}"
-      target = ["development", "preview", "production"]
     }
   ]
 }

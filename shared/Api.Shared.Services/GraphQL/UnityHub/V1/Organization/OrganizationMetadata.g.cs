@@ -11,356 +11,359 @@ public static class Metadata
 public readonly static string Schema = @"scalar DateTime
 
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 interface Node {
-    id: ID!
+  id: ID!
 }
 
 type Version {
-    major: Int!
-    minor: Int!
-    build: Int!
-    revision: Int!
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
 }
 
 type Query {
-    organizationVersion: Version!
-    organizationCustomerRecordSynced: Boolean!
-    activeOrganizationTermsOfUse: OrganizationTermsOfUse!
-    organizationMemberMembershipTypes: [OrganizationMemberMembershipType!]!
-    organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]!
-    organization(id: String!): OrganizationDetails
-    organizations(
-        after: String
-        first: Int
-        before: String
-        last: Int
-        where: OrganizationWhereInput!
-        orderBy: [OrganizationOrderInput!]
-    ): OrganizationConnection!
-    myOrganizations: [OrganizationDetails!]!
-    paginatedOrganizationMembers(
-        after: String
-        first: Int
-        before: String
-        last: Int
-        where: OrganizationMemberWhereInput!
-        orderBy: [OrganizationMemberOrderInput!]
-    ): OrganizationMemberConnection!
-    organizationAnalytics(
-        organizationId: String!
-        from: DateTime!
-        until: DateTime!
-    ): OrganizationAnalytics!
+  organizationVersion: Version!
+  organizationCustomerRecordSynced: Boolean!
+  activeOrganizationTermsOfUse: OrganizationTermsOfUse!
+  organizationMemberMembershipTypes: [OrganizationMemberMembershipType!]!
+  organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]!
+  organization(id: String!): OrganizationDetails
+  organizations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: OrganizationWhereInput!
+    orderBy: [OrganizationOrderInput!]
+  ): OrganizationConnection!
+  myOrganizations: [OrganizationDetails!]!
+  paginatedOrganizationMembers(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: OrganizationMemberWhereInput!
+    orderBy: [OrganizationMemberOrderInput!]
+  ): OrganizationMemberConnection!
+  organizationAnalytics(
+    organizationId: String!
+    from: DateTime!
+    until: DateTime!
+  ): OrganizationAnalytics!
+  isAzureTenantInstalled: Boolean!
+  azureTenantAdminConsentUrl: String!
+  azureTenantOrganization: OrganizationDetails
 }
 
 input OrganizationWhereInput {
-    nameContains: String
+  nameContains: String
 }
 
 input OrganizationMemberWhereInput {
-    organizationId: String!
-    nameContains: String
+  organizationId: String!
+  nameContains: String
 }
 
 type Mutation {
-    addOrganization(input: AddOrganizationInput!): OrganizationPayload
-    updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload
-    deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload
+  addOrganization(input: AddOrganizationInput!): OrganizationPayload
+  updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload
+  deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload
 
-    updateOrganizationOffering(
-        input: UpdateOrganizationOfferingInput!
-    ): UpdateOrganizationOfferingPayload
+  updateOrganizationOffering(
+    input: UpdateOrganizationOfferingInput!
+  ): UpdateOrganizationOfferingPayload
 
-    cancelOrganizationOffering(
-        input: CancelOrganizationOfferingInput!
-    ): CancelOrganizationOfferingPayload
+  cancelOrganizationOffering(
+    input: CancelOrganizationOfferingInput!
+  ): CancelOrganizationOfferingPayload
 
-    changeOrganizationMemberOwnershipType(
-        input: ChangeOrganizationMemberOwnershipTypeInput!
-    ): OrganizationMemberDetailsPayload
+  changeOrganizationMemberOwnershipType(
+    input: ChangeOrganizationMemberOwnershipTypeInput!
+  ): OrganizationMemberDetailsPayload
 
-    inviteCustomersToJoinOrganization(
-        input: InviteCustomersToJoinOrganizationInput!
-    ): InviteCustomersToJoinOrganizationPayload
+  inviteCustomersToJoinOrganization(
+    input: InviteCustomersToJoinOrganizationInput!
+  ): InviteCustomersToJoinOrganizationPayload
 
-    acceptInvitationToJoinOrganization(
-        input: AcceptInvitationToJoinOrganizationInput!
-    ): AcceptInvitationToJoinOrganizationPayload
+  acceptInvitationToJoinOrganization(
+    input: AcceptInvitationToJoinOrganizationInput!
+  ): AcceptInvitationToJoinOrganizationPayload
 
-    rejectInvitationToJoinOrganization(
-        input: RejectInvitationToJoinOrganizationInput!
-    ): RejectInvitationToJoinOrganizationPayload
+  rejectInvitationToJoinOrganization(
+    input: RejectInvitationToJoinOrganizationInput!
+  ): RejectInvitationToJoinOrganizationPayload
 
-    cancelInvitationToJoinOrganization(
-        input: CancelInvitationToJoinOrganizationInput!
-    ): CancelInvitationToJoinOrganizationPayload
+  cancelInvitationToJoinOrganization(
+    input: CancelInvitationToJoinOrganizationInput!
+  ): CancelInvitationToJoinOrganizationPayload
 }
 
 type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
 }
 
 type OrganizationTermsOfUse implements Node {
-    id: ID!
-    terms: String!
+  id: ID!
+  terms: String!
 }
 
 type OrganizationDetails implements Node {
-    id: ID!
-    name: String!
-    about: String
-    website: String
-    logoUrl: String
-    agreedToTermsOfUse: Boolean!
-    termsOfUse: OrganizationTermsOfUse
-    industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
-    availableOfferings: [OrganizationAvailableOfferingDetails!]!
-    offering: OrganizationOfferingDetails!
-    hasAttachedPaymentMethod: Boolean!
-    hasFutureBooking: Boolean!
-    hasLocation: Boolean!
-    hasTeam: Boolean!
-    canModify: Boolean!
-    canDelete: Boolean!
-    canInvitePeople: Boolean!
-    canAddBookingOnBehalf: Boolean!
-    canUpdateBookingOnBehalf: Boolean!
-    canDeleteBookingOnBehalf: Boolean!
-    canViewAnalytics: Boolean!
+  id: ID!
+  name: String!
+  about: String
+  website: String
+  logoUrl: String
+  agreedToTermsOfUse: Boolean!
+  termsOfUse: OrganizationTermsOfUse
+  industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  availableOfferings: [OrganizationAvailableOfferingDetails!]!
+  offering: OrganizationOfferingDetails!
+  hasAttachedPaymentMethod: Boolean!
+  hasFutureBooking: Boolean!
+  hasLocation: Boolean!
+  hasTeam: Boolean!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  canAddBookingOnBehalf: Boolean!
+  canUpdateBookingOnBehalf: Boolean!
+  canDeleteBookingOnBehalf: Boolean!
+  canViewAnalytics: Boolean!
 }
 
 type OrganizationMemberDetails implements Node {
-    id: ID!
-    membershipType: OrganizationMemberMembershipType
-    customer: OrganizationCustomerDetails!
+  id: ID!
+  membershipType: OrganizationMemberMembershipType
+  customer: OrganizationCustomerDetails!
 }
 
 type OrganizationCustomerDetails {
-    uniqueId: ID!
-    name: String
-    givenName: String
-    middleName: String
-    familyName: String
-    photoUrl: String
-    photoUrl24: String
-    photoUrl32: String
-    photoUrl48: String
-    photoUrl72: String
-    photoUrl192: String
-    photoUrl512: String
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
 }
 
 enum OrderDirection {
-    Ascending
-    Descending
+  Ascending
+  Descending
 }
 
 enum OrganizationOrderField {
-    name
+  name
 }
 
 enum OrganizationMemberOrderField {
-    membershipType
-    name
-    givenName
-    middleName
-    familyName
+  membershipType
+  name
+  givenName
+  middleName
+  familyName
 }
 
 input OrganizationOrderInput {
-    direction: OrderDirection!
-    field: OrganizationOrderField
+  direction: OrderDirection!
+  field: OrganizationOrderField
 }
 
 input OrganizationMemberOrderInput {
-    direction: OrderDirection!
-    field: OrganizationMemberOrderField
+  direction: OrderDirection!
+  field: OrganizationMemberOrderField
 }
 
 type OrganizationConnection {
-    pageInfo: PageInfo!
-    edges: [OrganizationEdge!]!
-    totalCount: Int
+  pageInfo: PageInfo!
+  edges: [OrganizationEdge!]!
+  totalCount: Int
 }
 
 type OrganizationMemberConnection {
-    pageInfo: PageInfo!
-    edges: [OrganizationMemberEdge!]!
-    totalCount: Int
+  pageInfo: PageInfo!
+  edges: [OrganizationMemberEdge!]!
+  totalCount: Int
 }
 
 type OrganizationEdge {
-    node: OrganizationDetails!
-    cursor: String!
+  node: OrganizationDetails!
+  cursor: String!
 }
 
 type OrganizationMemberEdge {
-    node: OrganizationMemberDetails!
-    cursor: String!
+  node: OrganizationMemberDetails!
+  cursor: String!
 }
 
 enum OrganizationMemberMembershipType {
-    OWNER
-    ADMINISTRATOR
-    MEMBER
+  OWNER
+  ADMINISTRATOR
+  MEMBER
 }
 
 input AddOrganizationInput {
-    clientMutationId: String
-    id: String
-    name: String!
-    about: String
-    website: String
-    agreedToTermsOfUse: Boolean!
-    termsOfUseId: String!
-    industrySubCategoryIds: [String!]!
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  website: String
+  agreedToTermsOfUse: Boolean!
+  termsOfUseId: String!
+  industrySubCategoryIds: [String!]!
 }
 
 input UpdateOrganizationInput {
-    clientMutationId: String
-    id: String!
-    name: String!
-    about: String
-    website: String
-    industrySubCategoryIds: [String!]!
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  website: String
+  industrySubCategoryIds: [String!]!
 }
 
 input DeleteOrganizationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type OrganizationPayload {
-    clientMutationId: String
-    organization: OrganizationDetails!
+  clientMutationId: String
+  organization: OrganizationDetails!
 }
 
 type OrganizationIndustryMainCategoryReferenceDetails implements Node {
-    id: ID!
-    name: String!
-    subCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  id: ID!
+  name: String!
+  subCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
 }
 
 type OrganizationIndustrySubCategoryReferenceDetails implements Node {
-    id: ID!
-    name: String!
-    mainCategoryName: String!
+  id: ID!
+  name: String!
+  mainCategoryName: String!
 }
 
 enum OrganizationJoinInvitationStatus {
-    PENDING
-    ACCEPTED
-    REJECTED
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 input UpdateOrganizationOfferingInput {
-    clientMutationId: String
-    id: String!
-    offeringCode: String!
+  clientMutationId: String
+  id: String!
+  offeringCode: String!
 }
 
 type UpdateOrganizationOfferingPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 input CancelOrganizationOfferingInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type CancelOrganizationOfferingPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 type OrganizationAvailableOfferingDetails {
-    code: String!
-    name: String!
-    unitPrice: Int!
-    featureSet: [OrganizationFeatureSetDetails!]!
+  code: String!
+  name: String!
+  unitPrice: Int!
+  featureSet: [OrganizationFeatureSetDetails!]!
 }
 
 type OrganizationOfferingDetails implements Node {
-    id: ID!
-    code: String!
-    name: String!
-    start: DateTime!
-    end: DateTime!
-    unitPrice: Int!
-    featureSet: [OrganizationFeatureSetDetails!]!
+  id: ID!
+  code: String!
+  name: String!
+  start: DateTime!
+  end: DateTime!
+  unitPrice: Int!
+  featureSet: [OrganizationFeatureSetDetails!]!
 }
 
 type OrganizationFeatureSetDetails {
-    name: String!
-    description: String!
+  name: String!
+  description: String!
 }
 
 input ChangeOrganizationMemberOwnershipTypeInput {
-    clientMutationId: String
-    id: String!
-    membershipType: OrganizationMemberMembershipType!
+  clientMutationId: String
+  id: String!
+  membershipType: OrganizationMemberMembershipType!
 }
 
 type OrganizationMemberDetailsPayload {
-    clientMutationId: String
-    member: OrganizationMemberDetails
+  clientMutationId: String
+  member: OrganizationMemberDetails
 }
 
 type OrganizationAnalytics {
-    memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
-    dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
+  memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
+  dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
 }
 
 type OrganizationMemberAttendancePercentage {
-    date: DateTime!
-    percentage: Float!
+  date: DateTime!
+  percentage: Float!
 }
 
 type OrganizationDailyBookingsTotal {
-    date: DateTime!
-    total: Int!
+  date: DateTime!
+  total: Int!
 }
 
 input InviteCustomersToJoinOrganizationInput {
-    clientMutationId: String
-    organizationId: String!
-    emails: [String!]!
+  clientMutationId: String
+  organizationId: String!
+  emails: [String!]!
 }
 
 type InviteCustomersToJoinOrganizationPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 input AcceptInvitationToJoinOrganizationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type AcceptInvitationToJoinOrganizationPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 input RejectInvitationToJoinOrganizationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type RejectInvitationToJoinOrganizationPayload {
-    clientMutationId: String
+  clientMutationId: String
 }
 
 input CancelInvitationToJoinOrganizationInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type CancelInvitationToJoinOrganizationPayload {
-    clientMutationId: String
+  clientMutationId: String
 }";
 }

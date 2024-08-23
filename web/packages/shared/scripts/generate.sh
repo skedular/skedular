@@ -14,4 +14,3 @@ npx openapi-typescript-codegen --input ../../../api-definitions/openapi/unityhub
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/unityhub/slack_v1.yaml --output ./src/clients/openapi/unityhub/slack/v1/fetch --name UnityHubSlackClient --client fetch --exportSchemas true
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/unityhub/payment_v1.yaml --output ./src/clients/openapi/unityhub/payment/v1/fetch --name UnityHubBillingClient --client fetch --exportSchemas true
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/unityhub/billing_v1.yaml --output ./src/clients/openapi/unityhub/billing/v1/fetch --name UnityHubPaymentClient --client fetch --exportSchemas true
-npx openapi-typescript-codegen --input ../../../api-definitions/openapi/unityhub/msteams_v1.yaml --output ./src/clients/openapi/unityhub/msteams/v1/fetch --name UnityHubMSTeamsClient --client fetch --exportSchemas true

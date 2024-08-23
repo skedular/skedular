@@ -18,9 +18,6 @@ public static class GrpcClients
     public static void ConfigureLocation(IServiceProvider provider, GrpcClientFactoryOptions client) =>
         client.Address = provider.GetRequiredService<LocationConfiguration>().GrpcUrl;
 
-    public static void ConfigureMsTeams(IServiceProvider provider, GrpcClientFactoryOptions client) =>
-        client.Address = provider.GetRequiredService<MsTeamsConfiguration>().GrpcUrl;
-
     public static void ConfigureNotification(IServiceProvider provider, GrpcClientFactoryOptions client) =>
         client.Address = provider.GetRequiredService<NotificationConfiguration>().GrpcUrl;
 

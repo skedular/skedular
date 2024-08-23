@@ -19,8 +19,7 @@
     "LOCATION_ENDPOINT",
     "SLACK_ENDPOINT",
     "PAYMENT_ENDPOINT",
-    "BILLING_ENDPOINT",
-    "MSTEAMS_ENDPOINT"
+    "BILLING_ENDPOINT"
   ],
   "tasks": {
     "dev": {

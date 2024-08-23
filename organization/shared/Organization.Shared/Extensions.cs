@@ -1,3 +1,5 @@
+using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Api.Shared.Services.Grpc.UnityHub.Location.V1;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Organization.Shared.Configurations;
@@ -72,6 +74,9 @@ public static class Extensions
         ArgumentNullException.ThrowIfNull(locationConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
+
+        services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
+        services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
 
         return services
             .AddSingleton(organizationConfiguration)

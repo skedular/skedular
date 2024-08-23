@@ -1,231 +1,231 @@
 scalar DateTime
 
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 interface Node {
-    id: ID!
+  id: ID!
 }
 
 type Version {
-    major: Int!
-    minor: Int!
-    build: Int!
-    revision: Int!
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
 }
 
 type Query {
-    bookingVersion: Version!
-    bookingCustomerRecordSynced: Boolean!
-    booking(id: String!): BookingDetails
-    bookings(
-        after: String
-        first: Int
-        before: String
-        last: Int
-        where: BookingWhereInput!
-        orderBy: [BookingOrderInput!]
-    ): BookingConnection!
-    allBookings(where: BookingWhereInput!): [BookingDetails!]!
-    availableLocationDesks(
-        locationId: String!
-        date: DateTime!
-        deskIdsToInclude: [String!]!
-    ): [BookingDeskDetails!]!
-    organizationBookingPermissions(
-        organizationId: String!
-    ): OrganizationBookingPermissions!
-    locationBookingPermissions(locationId: String!): LocationBookingPermissions!
-    teamBookingPermissions(teamId: String!): TeamBookingPermissions!
+  bookingVersion: Version!
+  bookingCustomerRecordSynced: Boolean!
+  booking(id: String!): BookingDetails
+  bookings(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: BookingWhereInput!
+    orderBy: [BookingOrderInput!]
+  ): BookingConnection!
+  allBookings(where: BookingWhereInput!): [BookingDetails!]!
+  availableLocationDesks(
+    locationId: String!
+    date: DateTime!
+    deskIdsToInclude: [String!]!
+  ): [BookingDeskDetails!]!
+  organizationBookingPermissions(
+    organizationId: String!
+  ): OrganizationBookingPermissions!
+  locationBookingPermissions(locationId: String!): LocationBookingPermissions!
+  teamBookingPermissions(teamId: String!): TeamBookingPermissions!
 }
 
 type OrganizationBookingPermissions {
-    canAddBooking: Boolean!
-    canUpdateBooking: Boolean!
-    canDeleteBooking: Boolean!
-    canAddBookingOnBehalf: Boolean!
-    canUpdateBookingOnBehalf: Boolean!
-    canDeleteBookingOnBehalf: Boolean!
+  canAddBooking: Boolean!
+  canUpdateBooking: Boolean!
+  canDeleteBooking: Boolean!
+  canAddBookingOnBehalf: Boolean!
+  canUpdateBookingOnBehalf: Boolean!
+  canDeleteBookingOnBehalf: Boolean!
 }
 
 type LocationBookingPermissions {
-    canAddBooking: Boolean!
-    canUpdateBooking: Boolean!
-    canDeleteBooking: Boolean!
-    canAddBookingOnBehalf: Boolean!
-    canUpdateBookingOnBehalf: Boolean!
-    canDeleteBookingOnBehalf: Boolean!
+  canAddBooking: Boolean!
+  canUpdateBooking: Boolean!
+  canDeleteBooking: Boolean!
+  canAddBookingOnBehalf: Boolean!
+  canUpdateBookingOnBehalf: Boolean!
+  canDeleteBookingOnBehalf: Boolean!
 }
 
 type TeamBookingPermissions {
-    canAddBooking: Boolean!
-    canUpdateBooking: Boolean!
-    canDeleteBooking: Boolean!
-    canAddBookingOnBehalf: Boolean!
-    canUpdateBookingOnBehalf: Boolean!
-    canDeleteBookingOnBehalf: Boolean!
+  canAddBooking: Boolean!
+  canUpdateBooking: Boolean!
+  canDeleteBooking: Boolean!
+  canAddBookingOnBehalf: Boolean!
+  canUpdateBookingOnBehalf: Boolean!
+  canDeleteBookingOnBehalf: Boolean!
 }
 
 input BookingWhereInput {
-    fromGT: DateTime
-    fromGTE: DateTime
-    fromLT: DateTime
-    fromLTE: DateTime
-    toGT: DateTime
-    toGTE: DateTime
-    toLT: DateTime
-    toLTE: DateTime
-    notesContains: String
-    nameContains: String
-    organizationIds: [String!]
-    locationIds: [String!]
-    teamIds: [String!]
-    includeMineOnly: Boolean
+  fromGT: DateTime
+  fromGTE: DateTime
+  fromLT: DateTime
+  fromLTE: DateTime
+  toGT: DateTime
+  toGTE: DateTime
+  toLT: DateTime
+  toLTE: DateTime
+  notesContains: String
+  nameContains: String
+  organizationIds: [String!]
+  locationIds: [String!]
+  teamIds: [String!]
+  includeMineOnly: Boolean
 }
 
 type Mutation {
-    addBooking(input: AddBookingInput!): BookingPayload
-    updateBooking(input: UpdateBookingInput!): BookingPayload
-    deleteBooking(input: DeleteBookingInput!): BookingPayload
+  addBooking(input: AddBookingInput!): BookingPayload
+  updateBooking(input: UpdateBookingInput!): BookingPayload
+  deleteBooking(input: DeleteBookingInput!): BookingPayload
 }
 
 type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
 }
 
 type BookingDetails implements Node {
-    id: ID!
-    from: DateTime!
-    to: DateTime!
-    notes: String
-    customer: BookingCustomerDetails!
-    organization: BookingOrganizationDetails
-    location: BookingLocationDetails
-    desks: [BookingDeskDetails!]!
-    team: BookingTeamDetails
+  id: ID!
+  from: DateTime!
+  to: DateTime!
+  notes: String
+  customer: BookingCustomerDetails!
+  organization: BookingOrganizationDetails
+  location: BookingLocationDetails
+  desks: [BookingDeskDetails!]!
+  team: BookingTeamDetails
 }
 
 type BookingCustomerDetails {
-    uniqueId: ID!
-    name: String
-    givenName: String
-    middleName: String
-    familyName: String
-    photoUrl: String
-    photoUrl24: String
-    photoUrl32: String
-    photoUrl48: String
-    photoUrl72: String
-    photoUrl192: String
-    photoUrl512: String
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
 }
 
 type BookingOrganizationDetails {
-    uniqueId: ID!
-    name: String!
+  uniqueId: ID!
+  name: String!
 }
 
 type BookingLocationDetails {
-    uniqueId: ID!
-    name: String!
+  uniqueId: ID!
+  name: String!
 }
 
 type BookingDeskDetails {
-    uniqueId: ID!
-    name: String!
-    deactivated: Boolean!
-    requireBookingApproval: Boolean!
-    locationTags: [BookingLocationTagDetails!]!
+  uniqueId: ID!
+  name: String!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+  locationTags: [BookingLocationTagDetails!]!
 }
 
 type BookingLocationTagDetails {
-    uniqueId: ID!
-    name: String!
-    tagType: String
+  uniqueId: ID!
+  name: String!
+  tagType: String
 }
 
 type BookingTeamDetails {
-    uniqueId: ID!
-    name: String!
+  uniqueId: ID!
+  name: String!
 }
 
 enum OrderDirection {
-    Ascending
-    Descending
+  Ascending
+  Descending
 }
 
 enum BookingOrderField {
-    from
-    to
-    notes
-    name
-    givenName
-    middleName
-    familyName
-    organizationName
-    locationName
-    teamName
+  from
+  to
+  notes
+  name
+  givenName
+  middleName
+  familyName
+  organizationName
+  locationName
+  teamName
 }
 
 input BookingOrderInput {
-    direction: OrderDirection!
-    field: BookingOrderField
+  direction: OrderDirection!
+  field: BookingOrderField
 }
 
 type BookingConnection {
-    pageInfo: PageInfo!
-    edges: [BookingEdge!]!
-    totalCount: Int
+  pageInfo: PageInfo!
+  edges: [BookingEdge!]!
+  totalCount: Int
 }
 
 type BookingEdge {
-    node: BookingDetails!
-    cursor: String!
+  node: BookingDetails!
+  cursor: String!
 }
 
 input AddBookingInput {
-    clientMutationId: String
-    id: String
-    customerId: String!
-    from: DateTime!
-    to: DateTime!
-    notes: String
-    organizationId: String
-    locationId: String
-    deskIds: [String!]!
-    teamId: String
+  clientMutationId: String
+  id: String
+  customerId: String!
+  from: DateTime!
+  to: DateTime!
+  notes: String
+  organizationId: String
+  locationId: String
+  deskIds: [String!]!
+  teamId: String
 }
 
 input UpdateBookingInput {
-    clientMutationId: String
-    id: String!
-    customerId: String!
-    from: DateTime!
-    to: DateTime!
-    notes: String
-    organizationId: String
-    locationId: String
-    deskIds: [String!]!
-    teamId: String
+  clientMutationId: String
+  id: String!
+  customerId: String!
+  from: DateTime!
+  to: DateTime!
+  notes: String
+  organizationId: String
+  locationId: String
+  deskIds: [String!]!
+  teamId: String
 }
 
 input DeleteBookingInput {
-    clientMutationId: String
-    id: String!
+  clientMutationId: String
+  id: String!
 }
 
 type BookingPayload {
-    clientMutationId: String
-    booking: BookingDetails!
+  clientMutationId: String
+  booking: BookingDetails!
 }
 
 enum BookingDeskBookingDetailBookingStatus {
-    AWAIT_ACCEPTANCE
-    ACCEPTED
-    DECLINED
+  AWAIT_ACCEPTANCE
+  ACCEPTED
+  DECLINED
 }

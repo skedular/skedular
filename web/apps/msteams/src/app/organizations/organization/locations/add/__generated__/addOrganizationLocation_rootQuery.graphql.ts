@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a462e449afe65a98c23824a334a0ccae>>
+ * @generated SignedSource<<01b06155964f00bc3b6fefb9e56f9092>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -150,18 +150,18 @@ return {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "adminConsentUrl",
+        "name": "azureTenantAdminConsentUrl",
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "8a488705abba49f661d187513c1decbf",
+    "cacheID": "0c52ad462917b96b5b9d20929582c40d",
     "id": null,
     "metadata": {},
     "name": "addOrganizationLocation_rootQuery",
     "operationKind": "query",
-    "text": "query addOrganizationLocation_rootQuery {\n  locationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  adminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query addOrganizationLocation_rootQuery {\n  locationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
   }
 };
 })();

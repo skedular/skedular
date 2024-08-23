@@ -86,8 +86,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unityhub", "unityhub", "{D3
 		api-definitions\events\unityhub\slack_internal_v1_key.proto = api-definitions\events\unityhub\slack_internal_v1_key.proto
 		api-definitions\events\unityhub\team_v1_value.proto = api-definitions\events\unityhub\team_v1_value.proto
 		api-definitions\events\unityhub\team_v1_key.proto = api-definitions\events\unityhub\team_v1_key.proto
-		api-definitions\events\unityhub\msteams_internal_v1_key.proto = api-definitions\events\unityhub\msteams_internal_v1_key.proto
-		api-definitions\events\unityhub\msteams_internal_v1_value.proto = api-definitions\events\unityhub\msteams_internal_v1_value.proto
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unityhubctl", "shared\Unityhubctl\Unityhubctl.csproj", "{276BBB2F-4DC5-4C3C-BA07-A8C3EBF64C51}"
@@ -99,7 +97,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unityhub", "unityhub", "{1A
 		api-definitions\openapi\unityhub\customer_v1.yaml = api-definitions\openapi\unityhub\customer_v1.yaml
 		api-definitions\openapi\unityhub\gateway_v1.yaml = api-definitions\openapi\unityhub\gateway_v1.yaml
 		api-definitions\openapi\unityhub\location_v1.yaml = api-definitions\openapi\unityhub\location_v1.yaml
-		api-definitions\openapi\unityhub\msteams_v1.yaml = api-definitions\openapi\unityhub\msteams_v1.yaml
 		api-definitions\openapi\unityhub\notification_v1.yaml = api-definitions\openapi\unityhub\notification_v1.yaml
 		api-definitions\openapi\unityhub\organization_v1.yaml = api-definitions\openapi\unityhub\organization_v1.yaml
 		api-definitions\openapi\unityhub\payment_v1.yaml = api-definitions\openapi\unityhub\payment_v1.yaml
@@ -139,7 +136,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unityhub", "unityhub", "{04
 		api-definitions\graphql\unityhub\booking_v1.graphql = api-definitions\graphql\unityhub\booking_v1.graphql
 		api-definitions\graphql\unityhub\customer_v1.graphql = api-definitions\graphql\unityhub\customer_v1.graphql
 		api-definitions\graphql\unityhub\location_v1.graphql = api-definitions\graphql\unityhub\location_v1.graphql
-		api-definitions\graphql\unityhub\msteams_v1.graphql = api-definitions\graphql\unityhub\msteams_v1.graphql
 		api-definitions\graphql\unityhub\notification_v1.graphql = api-definitions\graphql\unityhub\notification_v1.graphql
 		api-definitions\graphql\unityhub\organization_v1.graphql = api-definitions\graphql\unityhub\organization_v1.graphql
 		api-definitions\graphql\unityhub\payment_v1.graphql = api-definitions\graphql\unityhub\payment_v1.graphql
@@ -152,14 +148,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllInOne", "all-in-one\AllInOne\AllInOne.csproj", "{D24E0B14-3C5E-4F29-9025-D6E155C1BA86}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.Processors", "customer\processors\Customer.Processors\Customer.Processors.csproj", "{46629528-FA0F-46ED-B5AC-4C9803B3C8DF}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "msteams", "msteams", "{879BE31C-FF36-4B2D-9A11-B515E3D6C099}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apis", "apis", "{FBA5AB71-1A67-4696-9169-0793284E3109}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "processors", "processors", "{9CC486DA-FF25-4064-9CDE-A7D90843C665}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{83C73A46-D837-4106-B9D4-A8E41560F83E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.Processors.UnitTests", "customer\processors\Customer.Processors.UnitTests\Customer.Processors.UnitTests.csproj", "{BA210388-D7E8-46AF-BB84-DD8E6A0C7F19}"
 EndProject
@@ -262,18 +250,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slack.Api.UnitTests", "slack\apis\Slack.Api.UnitTests\Slack.Api.UnitTests.csproj", "{1A93C218-4DF4-4BC1-B632-8FA7E568F6B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slack.Api.IntegrationTests", "slack\apis\Slack.Api.IntegrationTests\Slack.Api.IntegrationTests.csproj", "{C2C2005E-4110-4F99-AB09-861B580DB354}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsTeams.Shared", "msteams\shared\MsTeams.Shared\MsTeams.Shared.csproj", "{099E8BCF-90E5-4E7B-A963-91DB0B8C1F2C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsTeams.Shared.UnitTests", "msteams\shared\MsTeams.Shared.UnitTests\MsTeams.Shared.UnitTests.csproj", "{1DA7E8F5-0F6A-4F91-A182-4E174E7351E7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsTeams.Processors", "msteams\processors\MsTeams.Processors\MsTeams.Processors.csproj", "{7260284F-53C3-44E9-B942-05C5D40896D7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsTeams.Api", "msteams\apis\MsTeams.Api\MsTeams.Api.csproj", "{FF680005-E488-4351-843A-91E48A19F06E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsTeams.Api.IntegrationTests", "msteams\apis\MsTeams.Api.IntegrationTests\MsTeams.Api.IntegrationTests.csproj", "{199C83B5-EBB9-4092-97DC-8EE2BE8B1BF7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsTeams.Api.UnitTests", "msteams\apis\MsTeams.Api.UnitTests\MsTeams.Api.UnitTests.csproj", "{B213A635-A468-40C9-9D71-B7EEB2ABC3FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payment.Shared", "payment\shared\Payment.Shared\Payment.Shared.csproj", "{8ECA0850-A004-4FEE-8FA1-5E6E621DB607}"
 EndProject
@@ -390,7 +366,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unityhub", "unityhub", "{20
 		api-definitions\grpc\unityhub\billing_v1.proto = api-definitions\grpc\unityhub\billing_v1.proto
 		api-definitions\grpc\unityhub\booking_v1.proto = api-definitions\grpc\unityhub\booking_v1.proto
 		api-definitions\grpc\unityhub\customer_v1.proto = api-definitions\grpc\unityhub\customer_v1.proto
-		api-definitions\grpc\unityhub\msteams_v1.proto = api-definitions\grpc\unityhub\msteams_v1.proto
 		api-definitions\grpc\unityhub\notification_v1.proto = api-definitions\grpc\unityhub\notification_v1.proto
 		api-definitions\grpc\unityhub\payment_v1.proto = api-definitions\grpc\unityhub\payment_v1.proto
 		api-definitions\grpc\unityhub\slack_v1.proto = api-definitions\grpc\unityhub\slack_v1.proto
@@ -547,30 +522,6 @@ Global
 		{C2C2005E-4110-4F99-AB09-861B580DB354}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2C2005E-4110-4F99-AB09-861B580DB354}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2C2005E-4110-4F99-AB09-861B580DB354}.Release|Any CPU.Build.0 = Release|Any CPU
-		{099E8BCF-90E5-4E7B-A963-91DB0B8C1F2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{099E8BCF-90E5-4E7B-A963-91DB0B8C1F2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{099E8BCF-90E5-4E7B-A963-91DB0B8C1F2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{099E8BCF-90E5-4E7B-A963-91DB0B8C1F2C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1DA7E8F5-0F6A-4F91-A182-4E174E7351E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1DA7E8F5-0F6A-4F91-A182-4E174E7351E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1DA7E8F5-0F6A-4F91-A182-4E174E7351E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1DA7E8F5-0F6A-4F91-A182-4E174E7351E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7260284F-53C3-44E9-B942-05C5D40896D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7260284F-53C3-44E9-B942-05C5D40896D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7260284F-53C3-44E9-B942-05C5D40896D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7260284F-53C3-44E9-B942-05C5D40896D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF680005-E488-4351-843A-91E48A19F06E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF680005-E488-4351-843A-91E48A19F06E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF680005-E488-4351-843A-91E48A19F06E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF680005-E488-4351-843A-91E48A19F06E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{199C83B5-EBB9-4092-97DC-8EE2BE8B1BF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{199C83B5-EBB9-4092-97DC-8EE2BE8B1BF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{199C83B5-EBB9-4092-97DC-8EE2BE8B1BF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{199C83B5-EBB9-4092-97DC-8EE2BE8B1BF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B213A635-A468-40C9-9D71-B7EEB2ABC3FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B213A635-A468-40C9-9D71-B7EEB2ABC3FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B213A635-A468-40C9-9D71-B7EEB2ABC3FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B213A635-A468-40C9-9D71-B7EEB2ABC3FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8ECA0850-A004-4FEE-8FA1-5E6E621DB607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8ECA0850-A004-4FEE-8FA1-5E6E621DB607}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8ECA0850-A004-4FEE-8FA1-5E6E621DB607}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -811,9 +762,6 @@ Global
 		{04ADFDF8-E8F4-4E50-851F-2BAB9D97E28A} = {6C2C2117-E685-4BD8-85F8-485B0821306C}
 		{D24E0B14-3C5E-4F29-9025-D6E155C1BA86} = {3C37F231-E3BF-4C6C-90ED-6EDA6C0CAF64}
 		{46629528-FA0F-46ED-B5AC-4C9803B3C8DF} = {AC1BBA2E-A1F7-41BF-828E-175BED47719B}
-		{FBA5AB71-1A67-4696-9169-0793284E3109} = {879BE31C-FF36-4B2D-9A11-B515E3D6C099}
-		{9CC486DA-FF25-4064-9CDE-A7D90843C665} = {879BE31C-FF36-4B2D-9A11-B515E3D6C099}
-		{83C73A46-D837-4106-B9D4-A8E41560F83E} = {879BE31C-FF36-4B2D-9A11-B515E3D6C099}
 		{BA210388-D7E8-46AF-BB84-DD8E6A0C7F19} = {AC1BBA2E-A1F7-41BF-828E-175BED47719B}
 		{3EE35958-93B3-46A0-A530-18B5CF55FF16} = {AC1BBA2E-A1F7-41BF-828E-175BED47719B}
 		{9A4F650D-1380-465D-8291-E7F6C07EFE1D} = {274BD17E-0623-4332-8D29-61506E18417C}
@@ -856,12 +804,6 @@ Global
 		{D73C262E-C468-4DC3-9256-F37F3D4B99CA} = {9A4F650D-1380-465D-8291-E7F6C07EFE1D}
 		{1A93C218-4DF4-4BC1-B632-8FA7E568F6B0} = {9A4F650D-1380-465D-8291-E7F6C07EFE1D}
 		{C2C2005E-4110-4F99-AB09-861B580DB354} = {9A4F650D-1380-465D-8291-E7F6C07EFE1D}
-		{099E8BCF-90E5-4E7B-A963-91DB0B8C1F2C} = {83C73A46-D837-4106-B9D4-A8E41560F83E}
-		{1DA7E8F5-0F6A-4F91-A182-4E174E7351E7} = {83C73A46-D837-4106-B9D4-A8E41560F83E}
-		{7260284F-53C3-44E9-B942-05C5D40896D7} = {9CC486DA-FF25-4064-9CDE-A7D90843C665}
-		{FF680005-E488-4351-843A-91E48A19F06E} = {FBA5AB71-1A67-4696-9169-0793284E3109}
-		{199C83B5-EBB9-4092-97DC-8EE2BE8B1BF7} = {FBA5AB71-1A67-4696-9169-0793284E3109}
-		{B213A635-A468-40C9-9D71-B7EEB2ABC3FE} = {FBA5AB71-1A67-4696-9169-0793284E3109}
 		{8ECA0850-A004-4FEE-8FA1-5E6E621DB607} = {23877264-6FFC-40CC-890B-A73736B118B9}
 		{6FC99702-EF0A-4F6A-8C21-693254A7E2B0} = {23877264-6FFC-40CC-890B-A73736B118B9}
 		{05A38015-E1F6-4FB4-A5DA-9A610A8E6F0B} = {32877B96-808B-47A9-B90F-A32E61F03F8D}

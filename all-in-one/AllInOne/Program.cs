@@ -44,7 +44,6 @@ public class Program : WebHostServiceBase<Program>
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Value.Event>(),
-            kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Notification.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event>(),
             kafkaHelper
@@ -118,7 +117,6 @@ public class Program : WebHostServiceBase<Program>
             Booking.Shared.Program.Main(args),
             Customer.Shared.Program.Main(args),
             Location.Shared.Program.Main(args),
-            MsTeams.Shared.Program.Main(args),
             Notification.Shared.Program.Main(args),
             Organization.Shared.Program.Main(args),
             Payment.Shared.Program.Main(args),
@@ -140,9 +138,6 @@ public class Program : WebHostServiceBase<Program>
 
             Location.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Location.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-
-            MsTeams.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            MsTeams.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
 
             Organization.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Organization.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),

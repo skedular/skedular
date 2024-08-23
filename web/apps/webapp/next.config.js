@@ -48,10 +48,6 @@ const nextConfig = {
         source: "/api/billing/:path*",
         destination: `${process.env.BILLING_ENDPOINT}/billing/api/:path*`,
       },
-      {
-        source: "/api/msteams/:path*",
-        destination: `${process.env.MSTEAMS_ENDPOINT}/msteams/api/:path*`,
-      },
     ];
   },
 };

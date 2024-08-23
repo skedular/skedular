@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<731eb9e8e2eef4ce7dc946961527ede1>>
+ * @generated SignedSource<<a9ddc841562ceee62b2938c77bb9c6fc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type rootShell_query$data = {
-  readonly adminConsentUrl: string;
+  readonly azureTenantAdminConsentUrl: string;
   readonly isAzureTenantInstalled: boolean;
   readonly me: {
     readonly id: string;
@@ -59,7 +59,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "adminConsentUrl",
+      "name": "azureTenantAdminConsentUrl",
       "storageKey": null
     },
     {
@@ -77,6 +77,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "0e30b85c5a114eda5187ff03419efe8a";
+(node as any).hash = "f47c9f6cded11baf3162ab3aba3a2426";
 
 export default node;

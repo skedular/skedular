@@ -31,9 +31,6 @@
         <ProjectReference Include="..\..\location\apis\Location.Api\Location.Api.csproj"/>
         <ProjectReference Include="..\..\location\processors\Location.Processors\Location.Processors.csproj"/>
 
-        <ProjectReference Include="..\..\msteams\apis\MsTeams.Api\MsTeams.Api.csproj"/>
-        <ProjectReference Include="..\..\msteams\processors\MsTeams.Processors\MsTeams.Processors.csproj"/>
-
         <ProjectReference Include="..\..\notification\apis\Notification.Api\Notification.Api.csproj"/>
         <ProjectReference Include="..\..\notification\processors\Notification.Processors\Notification.Processors.csproj"/>
 

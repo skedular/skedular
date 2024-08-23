@@ -2,7 +2,6 @@ using Api.Shared.Services.Grpc.UnityHub.Billing.V1;
 using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Api.Shared.Services.Grpc.UnityHub.Location.V1;
-using Api.Shared.Services.Grpc.UnityHub.MsTeams.V1;
 using Api.Shared.Services.Grpc.UnityHub.Notification.V1;
 using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Api.Shared.Services.Grpc.UnityHub.Payment.V1;
@@ -51,10 +50,6 @@ public class ConnectionKeepAliveJob(
                 var locationServiceClient =
                     scope.ServiceProvider.GetRequiredService<LocationService.LocationServiceClient>();
 
-                var msTeamsConfiguration = scope.ServiceProvider.GetRequiredService<MsTeamsConfiguration>();
-                var msTeamsServiceClient =
-                    scope.ServiceProvider.GetRequiredService<MsTeamsService.MsTeamsServiceClient>();
-
                 var notificationConfiguration = scope.ServiceProvider.GetRequiredService<NotificationConfiguration>();
                 var notificationServiceClient =
                     scope.ServiceProvider.GetRequiredService<NotificationService.NotificationServiceClient>();
@@ -88,11 +83,6 @@ public class ConnectionKeepAliveJob(
                 await locationServiceClient.GetVersionAsync(
                     new global::Api.Shared.Services.Grpc.UnityHub.Location.V1.VersionInput(),
                     locationConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: cancellationToken);
-
-                await msTeamsServiceClient.GetVersionAsync(
-                    new global::Api.Shared.Services.Grpc.UnityHub.MsTeams.V1.VersionInput(),
-                    msTeamsConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
 
                 await notificationServiceClient.GetVersionAsync(

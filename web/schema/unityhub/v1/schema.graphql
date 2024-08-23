@@ -31,11 +31,6 @@ type Query {
   paginatedLocationTags(after: String, first: Int, before: String, last: Int, where: LocationTagWhereInput!, orderBy: [LocationTagOrderInput!]): LocationTagConnection!
   paginatedLocationDesks(after: String, first: Int, before: String, last: Int, where: DeskWhereInput!, orderBy: [DeskOrderInput!]): DeskConnection!
   locationAnalytics(locationId: String!, from: DateTime!, until: DateTime!): LocationAnalytics!
-  msTeamsVersion: Version!
-  msTeamsCustomerRecordSynced: Boolean!
-  isAzureTenantInstalled: Boolean!
-  msTeamsOrganizationId: ID
-  adminConsentUrl: String!
   notificationVersion: Version!
   notificationCustomerRecordSynced: Boolean!
   myNotifications(after: String, first: Int, before: String, last: Int, orderBy: [NotificationOrderInput!]): NotificationConnection!
@@ -49,6 +44,9 @@ type Query {
   myOrganizations: [OrganizationDetails!]!
   paginatedOrganizationMembers(after: String, first: Int, before: String, last: Int, where: OrganizationMemberWhereInput!, orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection!
   organizationAnalytics(organizationId: String!, from: DateTime!, until: DateTime!): OrganizationAnalytics!
+  isAzureTenantInstalled: Boolean!
+  azureTenantAdminConsentUrl: String!
+  azureTenantOrganization: OrganizationDetails
   paymentVersion: Version!
   paymentCustomerRecordSynced: Boolean!
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!]!

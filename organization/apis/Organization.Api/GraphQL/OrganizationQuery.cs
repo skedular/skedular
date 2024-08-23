@@ -232,4 +232,32 @@ public class OrganizationQuery(IMapper mapper) : Query
             await service.GetAnalyticsAsync(organizationId, from, until, cancellationToken);
         return mapper.MapTo(organizationMemberAttendancePercentages, organizationDailyBookingsTotals);
     }
+
+    public override async Task<bool> IsAzureTenantInstalledAsync(
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
+    {
+        await using var scope = serviceProvider.CreateScopeAndSetContent();
+        var service = scope.ServiceProvider.GetRequiredService<IAzureTenantService>();
+        return await service.DoesTenantExistAsync(cancellationToken);
+    }
+
+    public override async Task<string> AzureTenantAdminConsentUrlAsync(
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
+    {
+        await using var scope = serviceProvider.CreateScopeAndSetContent();
+        var service = scope.ServiceProvider.GetRequiredService<IAzureTenantService>();
+        return await service.GenerateAdminConsentUrlAsync(cancellationToken);
+    }
+
+    public override async Task<OrganizationDetails?> AzureTenantOrganizationAsync(
+        IServiceProvider serviceProvider, 
+        CancellationToken cancellationToken)
+    {
+        await using var scope = serviceProvider.CreateScopeAndSetContent();
+        var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
+        var organization = await service.GetByAzureTenantAsync(cancellationToken);
+        return mapper.MapTo(organization);
+    }
 }
