@@ -91,8 +91,7 @@ resource "azuread_application_redirect_uris" "azure_application_spa_redirect_uri
   type           = "SPA"
 
   redirect_uris = [
-    "https://localhost:15002/auth-end.html?clientId=${azuread_application.azure_application_dev[count.index].client_id}",
-    "https://localhost:15002/api/auth/callback/msteams",
+    # "https://localhost:15002/auth-end.html?clientId=${azuread_application.azure_application_dev[count.index].client_id}",
     "http://localhost:10200/organization/api/v1/onboard-azure-tenant"
   ]
 }
