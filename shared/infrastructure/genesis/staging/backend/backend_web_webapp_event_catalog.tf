@@ -3,10 +3,11 @@ terraform {
 
   backend "s3" {
     region         = "us-east-1"
-    bucket         = "unityhub-staging-msteams-shared-terraform-state"
+    bucket         = "unityhub-staging-web-webapp-event-catalog-terraform-state"
     key            = "terraform.tfstate"
-    dynamodb_table = "unityhub-staging-msteams-shared-terraform-state-lock"
+    dynamodb_table = "unityhub-staging-web-webapp-event-catalog-terraform-state-lock"
     profile        = ""
+    role_arn       = ""
     encrypt        = "true"
   }
 }

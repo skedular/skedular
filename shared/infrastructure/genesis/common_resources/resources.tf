@@ -133,14 +133,3 @@ module "slack" {
   organization_name = module.common.organization_name
   environment       = var.environment
 }
-
-module "msteams" {
-  source = "../modules/msteams"
-
-  providers = {
-    aws = aws
-  }
-
-  organization_name = module.common.organization_name
-  environment       = var.environment
-}
