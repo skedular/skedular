@@ -15,7 +15,7 @@ using Organization = MsTeams.Shared.Database.Entities.Organization;
 
 namespace MsTeams.Api.Services;
 
-public interface ITenantOnboardingService
+public interface IAzureTenantOnboardingService
 {
     Task OnboardAsync(
         string tenantId,
@@ -23,7 +23,7 @@ public interface ITenantOnboardingService
         CancellationToken cancellationToken);
 }
 
-public class TenantOnboardingService(
+public class AzureTenantOnboardingService(
     OrganizationConfiguration organizationConfiguration,
     LocationConfiguration locationConfiguration,
     IDbTransactionBuilder transactionBuilder,
@@ -31,7 +31,7 @@ public class TenantOnboardingService(
     IRandomHelper randomHelper,
     IMsTeamsInternalOutboxPublisher msTeamsInternalOutboxPublisher,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
-    LocationService.LocationServiceClient locationServiceClient) : ITenantOnboardingService
+    LocationService.LocationServiceClient locationServiceClient) : IAzureTenantOnboardingService
 {
     public async Task OnboardAsync(
         string tenantId,

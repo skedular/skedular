@@ -14,8 +14,11 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
     Task<Database.Entities.Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Database.Entities.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId,
+    Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(
+        string customerId,
         CancellationToken cancellationToken);
+
+    Task<Database.Entities.Organization?> GetByAzureTenantIdAsync(string tenantId, CancellationToken cancellationToken);
 
     Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken);
     Database.Entities.Organization Add(Database.Entities.Organization organization);
@@ -200,6 +203,15 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
                             query.OrganizationMembers.Select(item => item.Customer.Id).Contains(customerId))
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+
+    public async Task<Database.Entities.Organization?> GetByAzureTenantIdAsync(
+        string tenantId,
+        CancellationToken cancellationToken) =>
+        await DbContext.Organization
+            .Where(query => !query.DeletedAt.HasValue && query.AzureTenants.Any(tenant => tenant.Id == tenantId))
+            .AddDependentObjects()
+            .OrderBy(query => query.Id)
+            .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Organization

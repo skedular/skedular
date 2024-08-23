@@ -5,7 +5,9 @@ using Organization.Api.Services;
 namespace Organization.Api.Controllers;
 
 [ApiController]
-public class OrganizationController(IWorkaroundService workaroundService) : OrganizationControllerBase
+public class OrganizationController(
+    IWorkaroundService workaroundService,
+    IAzureTenantService azureTenantService) : OrganizationControllerBase
 {
     public override async Task<IActionResult>
         Republish(string organizationId, CancellationToken cancellationToken = default)
@@ -22,10 +24,11 @@ public class OrganizationController(IWorkaroundService workaroundService) : Orga
         return Ok();
     }
 
-    public override Task<IActionResult> AzureTenantAdminConsentUrl(CancellationToken cancellationToken = default) =>
-        throw new NotImplementedException();
+    public override async Task<IActionResult>
+        AzureTenantAdminConsentUrl(CancellationToken cancellationToken = default) =>
+        Redirect(await azureTenantService.GenerateAdminConsentUrlAsync(cancellationToken));
 
-    public override Task<IActionResult> OnboardAzureTenant(
+    public override async Task<IActionResult> OnboardAzureTenant(
         string tenant,
         // ReSharper disable once InconsistentNaming
         bool admin_consent,
@@ -33,6 +36,16 @@ public class OrganizationController(IWorkaroundService workaroundService) : Orga
         string? error,
         // ReSharper disable once InconsistentNaming
         string? error_description,
-        CancellationToken cancellationToken = default) =>
-        throw new NotImplementedException();
+        CancellationToken cancellationToken = default)
+    {
+        if (!string.IsNullOrWhiteSpace(error))
+        {
+            throw new InvalidOperationException(
+                $"Azure tenant onboarding went wrong with error {error} and message {error_description}.");
+        }
+
+        var redirectUri = await azureTenantService.InstallAsync(tenant, state, cancellationToken);
+
+        return Redirect(redirectUri.AbsoluteUri);
+    }
 }

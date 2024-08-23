@@ -14,7 +14,7 @@ using Organization = MsTeams.Shared.Models.Organization;
 
 namespace MsTeams.Api.Services;
 
-public interface ITenantService
+public interface IAzureTenantService
 {
     Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken);
     Task<string> GenerateAdminConsentUrlAsync(CancellationToken cancellationToken);
@@ -22,7 +22,7 @@ public interface ITenantService
     Task<Organization?> GetAttachedOrganizationAsync(CancellationToken cancellationToken);
 }
 
-public class TenantService(
+public class AzureTenantService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IContext context,
@@ -30,9 +30,9 @@ public class TenantService(
     IRandomHelper randomHelper,
     AzureEntraConfiguration azureEntraConfiguration,
     IHttpContextAccessor httpContextAccessor,
-    ITenantOnboardingService tenantOnboardingService,
+    IAzureTenantOnboardingService azureTenantOnboardingService,
     IMsTeamsInternalOutboxPublisher msTeamsInternalOutboxPublisher,
-    IMapper mapper) : ITenantService
+    IMapper mapper) : IAzureTenantService
 {
     public async Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken)
     {
@@ -97,11 +97,11 @@ public class TenantService(
 
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByTenantIdAsync(tenantId, cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByAzureTenantIdAsync(tenantId, cancellationToken);
 
         if (organization is null)
         {
-            await tenantOnboardingService.OnboardAsync(
+            await azureTenantOnboardingService.OnboardAsync(
                 tenantId,
                 installStateUserIdLookup,
                 cancellationToken);

@@ -12,6 +12,8 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
+            .AddScoped<IAzureTenantOnboardingService, AzureTenantOnboardingService>()
+            .AddScoped<IAzureTenantService, AzureTenantService>()
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<IOrganizationTermsOfUseService, OrganizationTermsOfUseService>()
             .AddScoped<IIndustryMainCategoryService, IndustryMainCategoryService>()

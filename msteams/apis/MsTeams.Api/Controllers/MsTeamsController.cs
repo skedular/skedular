@@ -5,10 +5,10 @@ using MsTeams.Api.Services;
 namespace MsTeams.Api.Controllers;
 
 [ApiController]
-public class MsTeamsController(ITenantService tenantService) : MsTeamsControllerBase
+public class MsTeamsController(IAzureTenantService azureTenantService) : MsTeamsControllerBase
 {
     public override async Task<IActionResult> AdminConsentUrl(CancellationToken cancellationToken = default) =>
-        Redirect(await tenantService.GenerateAdminConsentUrlAsync(cancellationToken));
+        Redirect(await azureTenantService.GenerateAdminConsentUrlAsync(cancellationToken));
 
     public override async Task<IActionResult> OnBoardTenant(
         // ReSharper disable InconsistentNaming
@@ -23,10 +23,10 @@ public class MsTeamsController(ITenantService tenantService) : MsTeamsController
         if (!string.IsNullOrWhiteSpace(error))
         {
             throw new InvalidOperationException(
-                $"onboarding went wrong with error {error} and message {error_description}.");
+                $"Azure tenant onboarding went wrong with error {error} and message {error_description}.");
         }
 
-        var redirectUri = await tenantService.InstallAsync(tenant, state, cancellationToken);
+        var redirectUri = await azureTenantService.InstallAsync(tenant, state, cancellationToken);
 
         return Redirect(redirectUri.AbsoluteUri);
     }

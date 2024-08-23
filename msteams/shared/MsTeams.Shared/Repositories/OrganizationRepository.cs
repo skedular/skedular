@@ -10,7 +10,7 @@ public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<Organization?> GetByTenantIdAsync(string tenantId, CancellationToken cancellationToken);
+    Task<Organization?> GetByAzureTenantIdAsync(string tenantId, CancellationToken cancellationToken);
     Organization Add(Organization organization);
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
@@ -48,7 +48,7 @@ public class OrganizationRepository(MsTeamsDbContext dbContext, TimeProvider tim
             .OrderBy(query => query.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
-    public async Task<Organization?> GetByTenantIdAsync(string tenantId, CancellationToken cancellationToken) =>
+    public async Task<Organization?> GetByAzureTenantIdAsync(string tenantId, CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue && query.AzureTenants.Any(tenant => tenant.Id == tenantId))
             .AddDependentObjects()

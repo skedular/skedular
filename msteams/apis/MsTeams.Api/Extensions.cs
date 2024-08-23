@@ -9,8 +9,8 @@ public static class Extensions
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
             .AddScoped<ICustomerService, CustomerService>()
-            .AddScoped<ITenantOnboardingService, TenantOnboardingService>()
-            .AddScoped<ITenantService, TenantService>();
+            .AddScoped<IAzureTenantOnboardingService, AzureTenantOnboardingService>()
+            .AddScoped<IAzureTenantService, AzureTenantService>();
 
     public static IServiceCollection AddMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();

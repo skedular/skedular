@@ -36,7 +36,7 @@ public class MsTeamsQuery : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITenantService>();
+        var service = scope.ServiceProvider.GetRequiredService<IAzureTenantService>();
         return await service.DoesTenantExistAsync(cancellationToken);
     }
 
@@ -45,7 +45,7 @@ public class MsTeamsQuery : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITenantService>();
+        var service = scope.ServiceProvider.GetRequiredService<IAzureTenantService>();
         var organization = await service.GetAttachedOrganizationAsync(cancellationToken);
         return organization?.Id;
     }
@@ -55,7 +55,7 @@ public class MsTeamsQuery : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITenantService>();
+        var service = scope.ServiceProvider.GetRequiredService<IAzureTenantService>();
         return await service.GenerateAdminConsentUrlAsync(cancellationToken);
     }
 }
