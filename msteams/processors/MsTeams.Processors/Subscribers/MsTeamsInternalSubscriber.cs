@@ -44,7 +44,7 @@ public class MsTeamsInternalSubscriber(
         switch (@event.Metadata.Type)
         {
             case Type.RefreshTenantMembers:
-                await HandleRefreshTenantMembersAsync(@event.TenantId, cancellationToken);
+                await HandleRefreshAzureTenantMembersAsync(@event.TenantId, cancellationToken);
                 break;
 
             default:
@@ -52,7 +52,7 @@ public class MsTeamsInternalSubscriber(
         }
     }
 
-    private async Task HandleRefreshTenantMembersAsync(
+    private async Task HandleRefreshAzureTenantMembersAsync(
         string tenantId,
         CancellationToken cancellationToken)
     {

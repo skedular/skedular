@@ -195,7 +195,9 @@ public class OrganizationMemberService(
         return mapper.MapTo(organization);
     }
 
-    public async Task<Shared.Models.Organization> AddMemberAsync(string organizationId, OrganizationMember member,
+    public async Task<Shared.Models.Organization> AddMemberAsync(
+        string organizationId,
+        OrganizationMember member,
         CancellationToken cancellationToken)
     {
         var organization =

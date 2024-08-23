@@ -1,5 +1,6 @@
 using Organization.Processors.Jobs;
 using Organization.Processors.Mappers;
+using Organization.Processors.Services;
 
 namespace Organization.Processors;
 
@@ -12,4 +13,8 @@ public static class Extensions
         services
             .AddHostedService<OrganizationDailyMemberCountRecorderJob>()
             .AddHostedService<OrganizationOfferingRenewalJob>();
+
+    public static IServiceCollection AddServices(this IServiceCollection services) =>
+        services
+            .AddScoped<IOrganizationMemberService, OrganizationMemberService>();
 }

@@ -1,12 +1,17 @@
 using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
 using Api.Shared.Models;
+using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Api.Shared.Services.Offering;
+using Enterprise.Shared;
+using Microsoft.Graph.Models;
 using Organization.Shared.Models;
+using AzureTenantMember = Organization.Shared.Database.Entities.AzureTenantMember;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Identity = Organization.Shared.Models.Identity;
 using Location = Organization.Shared.Models.Location;
 using Team = Organization.Shared.Models.Team;
 using Booking = Organization.Shared.Models.Booking;
+using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
 
@@ -88,6 +93,15 @@ public interface IMapper
 
     Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src);
     IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src);
+    Admin_AddIdentityInput MapTo(AzureTenantMember src, string customerId);
+
+    Admin_AddInput MapTo(
+        AzureTenantMember src,
+        string customerId,
+        Shared.Database.Entities.Organization defaultOrganization,
+        ICollection<Shared.Database.Entities.Location> defaultLocations);
+
+    AzureTenantMember MapToEntity(User src);
 }
 
 public class Mapper : IMapper
@@ -393,6 +407,60 @@ public class Mapper : IMapper
 
     public IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src) =>
         src.Select(MapTo);
+
+    public Admin_AddIdentityInput MapTo(AzureTenantMember src, string customerId) =>
+        new() { Id = src.Id, Email = src.Email, EmailVerified = true, CustomerId = customerId };
+
+    public Admin_AddInput MapTo(
+        AzureTenantMember src,
+        string customerId,
+        Shared.Database.Entities.Organization defaultOrganization,
+        ICollection<Shared.Database.Entities.Location> defaultLocations)
+    {
+        var input = new Admin_AddInput
+        {
+            Id = customerId,
+            Designation = src.Designation.ToSafeString(),
+            GivenName = src.GivenName.ToSafeString(),
+            FamilyName = src.FamilyName.ToSafeString(),
+            IsOrganizationOnboardingDone = true,
+            IsLocationOnboardingDone = true,
+            IsDefaultOrganizationOnboardingDone = true,
+            IsDefaultLocationOnboardingDone = true,
+            IsPreferredZoneOnboardingDone = false,
+            IsPreferredDeskOnboardingDone = false,
+            DefaultOrganization =
+                new Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization { Id = defaultOrganization.Id }
+        };
+
+        input.Identities.Add(
+            new Api.Shared.Services.Grpc.UnityHub.Customer.V1.Identity
+            {
+                Id = src.Id, Email = src.Email, EmailVerified = true
+            });
+
+        input.DefaultLocations.AddRange(defaultLocations.Select(item =>
+            new Api.Shared.Services.Grpc.UnityHub.Customer.V1.Location
+            {
+                Id = item.Id,
+                Organization =
+                    new Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization { Id = defaultOrganization.Id }
+            }));
+
+        return input;
+    }
+
+    public AzureTenantMember MapToEntity(User src) =>
+        new()
+        {
+            Id = src.Id!,
+            Email = src.Mail,
+            Designation = src.JobTitle,
+            Name = src.DisplayName,
+            GivenName = src.GivenName,
+            FamilyName = src.Surname,
+            PreferredLanguage = src.PreferredLanguage
+        };
 
     private JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
         new()
