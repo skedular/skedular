@@ -9,5 +9,5 @@ public static class Extensions
         services.AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services.AddHostedService<RefreshTenantMembersJob>();
+        services.AddHostedService<RefreshAzureTenantMembersJob>();
 }

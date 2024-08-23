@@ -1,16 +1,16 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore;
-using MsTeams.Shared.Database.Entities;
-using MsTeams.Shared.Publishers;
-using MsTeams.Shared.Repositories;
+using Organization.Shared.Database.Entities;
+using Organization.Shared.Publishers;
+using Organization.Shared.Repositories;
 
-namespace MsTeams.Processors.Jobs;
+namespace Organization.Processors.Jobs;
 
-public class RefreshTenantMembersJob(
+public class RefreshAzureTenantMembersJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<RefreshTenantMembersJob> logger,
+    ILogger<RefreshAzureTenantMembersJob> logger,
     ITimeHelper timeHelper) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ public class RefreshTenantMembersJob(
                 var repositoryFactory =
                     scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
                 var msTeamsInternalPublisher =
-                    scope.ServiceProvider.GetRequiredService<IMsTeamsInternalPublisher>();
+                    scope.ServiceProvider.GetRequiredService<IOrganizationInternalPublisher>();
 
                 var now = timeProvider.GetUtcNow();
                 var tenantIds = await repositoryFactory.AzureTenantRepository.Query(
@@ -55,7 +55,7 @@ public class RefreshTenantMembersJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshTenantMembersJob));
+                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshAzureTenantMembersJob));
             }
         } while (true);
     }

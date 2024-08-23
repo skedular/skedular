@@ -12,7 +12,8 @@ public static class Extensions
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services
             .AddHostedService<OrganizationDailyMemberCountRecorderJob>()
-            .AddHostedService<OrganizationOfferingRenewalJob>();
+            .AddHostedService<OrganizationOfferingRenewalJob>()
+            .AddHostedService<RefreshAzureTenantMembersJob>();
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
