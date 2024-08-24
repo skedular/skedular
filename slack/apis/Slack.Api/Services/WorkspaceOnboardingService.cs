@@ -8,7 +8,6 @@ using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using SlackNet.WebApi;
 using Admin_AddInput = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Admin_AddInput;
-using Location = Slack.Shared.Database.Entities.Location;
 using LocationConfiguration = Slack.Shared.Configurations.LocationConfiguration;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationConfiguration = Slack.Shared.Configurations.OrganizationConfiguration;
@@ -47,10 +46,8 @@ public class WorkspaceOnboardingService(
 
         var workspace = repositoryFactory.WorkspaceRepository.Add(mapper.MapTo(oauthV2AccessResponse, organization));
 
-        await Task.WhenAll([
-            CreateOrganizationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken),
-            CreateLocationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken)
-        ]);
+        await CreateOrganizationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
+        await CreateLocationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
 
         await slackInternalOutboxPublisher.PublishRefreshWorkspaceMembersAsync(
             [workspace.Id],
@@ -66,7 +63,7 @@ public class WorkspaceOnboardingService(
         await transaction.CommitAsync(cancellationToken);
     }
 
-    private async Task<Organization> CreateOrganizationAsync(
+    private async Task CreateOrganizationAsync(
         string? name,
         Organization organization,
         CancellationToken cancellationToken)
@@ -86,11 +83,9 @@ public class WorkspaceOnboardingService(
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
-
-        return organization;
     }
 
-    private async Task<Location> CreateLocationAsync(
+    private async Task CreateLocationAsync(
         string? name,
         Organization organization,
         CancellationToken cancellationToken)
@@ -105,7 +100,5 @@ public class WorkspaceOnboardingService(
             },
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
-
-        return location;
     }
 }
