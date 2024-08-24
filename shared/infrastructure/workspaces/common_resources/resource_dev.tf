@@ -46,26 +46,27 @@ resource "azuread_application" "azure_application_dev" {
   required_resource_access {
     resource_app_id = data.azuread_application_published_app_ids.well_known.result["MicrosoftGraph"]
 
-    # resource_access {
-    #   id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.Read"]
-    #   type = "Role"
-    # }
+    resource_access {
+      id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.ReadBasic.All"]
+      type = "Scope"
+    }
 
-    # resource_access {
-    #   id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.ReadBasic.All"]
-    #   type = "Scope"
-    # }
+    resource_access {
+      id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["ProfilePhoto.Read.All"]
+      type = "Scope"
+    }
 
     resource_access {
       # User.ReadBasic.All
       id   = "97235f07-e226-4f63-ace3-39588e11d3a1"
       type = "Role"
     }
-  }
 
-  single_page_application {
-    redirect_uris = [
-    ]
+    resource_access {
+      # ProfilePhoto.Read.All
+      id   = "e24d31aa-e1ab-4c80-85fe-23018690335d"
+      type = "Role"
+    }
   }
 }
 
@@ -85,7 +86,7 @@ resource "azuread_application_redirect_uris" "azure_application_spa_redirect_uri
   type           = "SPA"
 
   redirect_uris = [
-    # "https://localhost:15002/auth-end.html?clientId=${azuread_application.azure_application_dev[count.index].client_id}",
+    "https://localhost:15002/auth-end.html?clientId=${azuread_application.azure_application_dev[count.index].client_id}",
     "http://localhost:10200/organization/api/v1/onboard-azure-tenant"
   ]
 }
