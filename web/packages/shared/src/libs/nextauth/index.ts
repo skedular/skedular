@@ -165,7 +165,7 @@ const authOptions: AuthOptions = {
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: 'email offline_access openid profile',
+          scope: 'ProfilePhoto.Read.All Contacts.Read email offline_access openid profile',
         },
       },
     }),
