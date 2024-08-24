@@ -29,9 +29,13 @@ resource "cloudflare_record" "mapp" {
 }
 
 resource "azuread_application" "azure_application_dev" {
-  count            = var.environment == "staging" ? 1 : 0
-  display_name     = "UnityHub-dev"
-  sign_in_audience = "AzureADMultipleOrgs"
+  count                 = var.environment == "staging" ? 1 : 0
+  display_name          = "UnityHub-dev"
+  description           = "UnityHub-dev"
+  sign_in_audience      = "AzureADMultipleOrgs"
+  privacy_statement_url = "https://unityhub.io/privacy-policy"
+  terms_of_service_url  = "https://unityhub.io/terms-of-service"
+
 
   api {
     mapped_claims_enabled          = true

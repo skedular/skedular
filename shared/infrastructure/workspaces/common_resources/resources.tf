@@ -113,8 +113,11 @@ data "azuread_service_principal" "msgraph" {
 }
 
 resource "azuread_application" "azure_application" {
-  display_name     = var.environment == "production" ? "UnityHub" : "UnityHub-${var.environment}"
-  sign_in_audience = "AzureADMultipleOrgs"
+  display_name          = var.environment == "production" ? "UnityHub" : "UnityHub-${var.environment}"
+  description           = var.environment == "production" ? "UnityHub" : "UnityHub-${var.environment}"
+  sign_in_audience      = "AzureADMultipleOrgs"
+  privacy_statement_url = "https://unityhub.io/privacy-policy"
+  terms_of_service_url  = "https://unityhub.io/terms-of-service"
 
   api {
     mapped_claims_enabled          = true
