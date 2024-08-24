@@ -15,7 +15,7 @@ public static class Extensions
             .AddScoped<IGrpcAuthenticator, GrpcAuthenticator>()
             .AddSingleton<ICognitoTokenService, CognitoTokenService>()
             .AddSingleton<IGoogleTokenService, GoogleTokenService>()
-            .AddSingleton<IMsTeamsTokenServiceTokenService, MsTeamsTokenServiceTokenService>()
+            .AddSingleton<IAzureEntraTokenService, AzureEntraTokenService>()
             .AddSingleton<IEnumerable<ITokenService>>(sp =>
             {
                 var applicationConfiguration = sp.GetRequiredService<ApplicationConfiguration>();
@@ -40,7 +40,7 @@ public static class Extensions
                 var azureEntraConfiguration = sp.GetService<AzureEntraConfiguration>();
                 if (azureEntraConfiguration is not null)
                 {
-                    tokenServices.Add(sp.GetRequiredService<IMsTeamsTokenServiceTokenService>());
+                    tokenServices.Add(sp.GetRequiredService<IAzureEntraTokenService>());
                 }
 
                 return tokenServices;

@@ -9,12 +9,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Enterprise.Shared.Security.Token;
 
-public interface IMsTeamsTokenServiceTokenService : ITokenService;
+public interface IAzureEntraTokenService : ITokenService;
 
-public class MsTeamsTokenServiceTokenService(
+public class AzureEntraTokenService(
     AzureEntraConfiguration azureEntraConfiguration,
     IMemoryCache memoryCache)
-    : IMsTeamsTokenServiceTokenService
+    : IAzureEntraTokenService
 {
     public async Task<PropertyBag?> VerifyTokenAsync(string token, CancellationToken cancellationToken)
     {
