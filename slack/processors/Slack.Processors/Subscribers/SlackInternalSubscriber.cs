@@ -373,7 +373,9 @@ public class SlackInternalSubscriber(
         }
 
         var workspace = mapper.MapTo(workspaceEntity);
-        var from = now.StartOfDay();
+        var convertedNow = TimeZoneInfo.ConvertTime(now, locationEntity.Timezone.ToTimezoneInfo());
+        var from = new DateTimeOffset(convertedNow.Year, convertedNow.Month, convertedNow.Day, 0, 0, 0, TimeSpan.Zero)
+            .StartOfDay();
         var until = from.EndOfDay();
         var getPaginatedBookingsInput = new Admin_GetPaginatedBookingsInput
         {
@@ -508,7 +510,9 @@ public class SlackInternalSubscriber(
         }
 
         var workspace = mapper.MapTo(workspaceEntity);
-        var from = now.StartOfDay();
+        var convertedNow = TimeZoneInfo.ConvertTime(now, teamEntity.Timezone.ToTimezoneInfo());
+        var from = new DateTimeOffset(convertedNow.Year, convertedNow.Month, convertedNow.Day, 0, 0, 0, TimeSpan.Zero)
+            .StartOfDay();
         var until = from.EndOfDay();
         var getPaginatedBookingsInput = new Admin_GetPaginatedBookingsInput
         {
