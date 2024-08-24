@@ -210,6 +210,11 @@ public class SlackInternalSubscriber(
                 customerIdsWorkspaceMembersPair.Add(
                     (anyCustomerExistByVerifiableTokenResponse.Customer.Id, workspaceMember));
 
+                await customerServiceClient.Admin_UpdateIdentityAsync(
+                    mapper.MapToUpdateIdentityInput(workspaceMember, anyCustomerExistByVerifiableTokenResponse.Customer.Id),
+                    customerConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: cancellationToken);
+
                 if (string.IsNullOrWhiteSpace(
                         anyCustomerExistByVerifiableTokenResponse.Customer.DefaultOrganization?.Id))
                 {

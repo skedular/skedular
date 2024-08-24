@@ -38,7 +38,9 @@ public interface IMapper
     Shared.Models.Customer MapTo(Admin_AddInput src);
     global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer MapToGrpcResponse(Shared.Models.Customer src);
     Identity MapTo(Shared.Models.Identity src, Shared.Database.Entities.Customer customer);
+    Identity MergeTo(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer customer);
     Shared.Models.Identity MapTo(Admin_AddIdentityInput src);
+    Shared.Models.Identity MapTo(Admin_UpdateIdentityInput src);
     Edge<Shared.Models.Customer> MapTo(Edge<Shared.Database.Entities.Customer> src);
     CustomerEdge MapTo(Edge<Shared.Models.Customer> src);
 }
@@ -424,13 +426,31 @@ public class Mapper : IMapper
     }
 
     public Identity MapTo(Shared.Models.Identity src, Shared.Database.Entities.Customer customer) =>
-        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified, Customer = customer };
+        MergeTo(src, new Identity(), customer);
+
+    public Identity MergeTo(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer customer)
+    {
+        dest.Id = src.Id;
+        dest.Email = src.Email;
+        dest.EmailVerified = src.EmailVerified;
+        dest.Customer = customer;
+        return dest;
+    }
 
     public Shared.Models.Identity MapTo(Admin_AddIdentityInput src) =>
         new()
         {
             Id = src.Id,
-            Email = src.Email,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = src.EmailVerified,
+            Customer = new Shared.Models.Customer { Id = src.CustomerId }
+        };
+
+    public Shared.Models.Identity MapTo(Admin_UpdateIdentityInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
             EmailVerified = src.EmailVerified,
             Customer = new Shared.Models.Customer { Id = src.CustomerId }
         };

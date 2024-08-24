@@ -95,6 +95,15 @@ public class CustomerGrpcService(
         return mapper.MapToGrpcResponse(
             await customerService.AddIdentityAsync(mapper.MapTo(request), context.CancellationToken));
     }
+    
+    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> Admin_UpdateIdentity(
+        Admin_UpdateIdentityInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(
+            await customerService.UpdateIdentityAsync(mapper.MapTo(request), context.CancellationToken));
+    }
 
     public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
         Admin_SetDefaultOrganization(

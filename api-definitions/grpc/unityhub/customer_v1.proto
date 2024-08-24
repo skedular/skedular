@@ -7,6 +7,7 @@ service CustomerService {
     rpc Admin_Get (Admin_GetInput) returns (Customer);
     rpc Admin_Add (Admin_AddInput) returns (Customer);
     rpc Admin_AddIdentity (Admin_AddIdentityInput) returns (Customer);
+    rpc Admin_UpdateIdentity (Admin_UpdateIdentityInput) returns (Customer);
     rpc Admin_AnyCustomerExistByVerifiableToken (Admin_AnyCustomerExistByVerifiableTokenInput) returns (AnyCustomerExistByVerifiableTokenResponse);
     rpc Admin_AnyCustomerExistByEmail (Admin_AnyCustomerExistByEmailInput) returns (AnyCustomerExistByEmailResponse);
     rpc Admin_SetDefaultOrganization (Admin_SetDefaultOrganizationInput) returns (Customer);
@@ -164,6 +165,13 @@ message Team {
 }
 
 message Admin_AddIdentityInput {
+    string customerId = 1;
+    string id = 2;
+    string email = 3;
+    bool emailVerified = 4;
+}
+
+message Admin_UpdateIdentityInput {
     string customerId = 1;
     string id = 2;
     string email = 3;

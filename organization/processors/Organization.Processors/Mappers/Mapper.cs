@@ -94,6 +94,7 @@ public interface IMapper
     Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src);
     IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src);
     Admin_AddIdentityInput MapTo(AzureTenantMember src, string customerId);
+    Admin_UpdateIdentityInput MapToUpdateIdentityInput(AzureTenantMember src, string customerId);
 
     Admin_AddInput MapTo(
         AzureTenantMember src,
@@ -130,9 +131,9 @@ public class Mapper : IMapper
             PhotoUrl512 = customer.PhotoUrl512,
             Identities = customer.Identities.Select(item =>
                     new Identity
-                        {
-                            Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
-                        })
+                    {
+                        Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
+                    })
                 .ToList()
         };
     }
@@ -413,7 +414,10 @@ public class Mapper : IMapper
         src.Select(MapTo);
 
     public Admin_AddIdentityInput MapTo(AzureTenantMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email, EmailVerified = true, CustomerId = customerId };
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+
+    public Admin_UpdateIdentityInput MapToUpdateIdentityInput(AzureTenantMember src, string customerId) =>
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
 
     public Admin_AddInput MapTo(
         AzureTenantMember src,

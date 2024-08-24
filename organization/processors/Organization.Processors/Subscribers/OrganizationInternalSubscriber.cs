@@ -221,6 +221,11 @@ public class OrganizationInternalSubscriber(
                 customerIdsTenantMembersPair.Add(
                     (anyCustomerExistByVerifiableTokenResponse.Customer.Id, tenantMember));
 
+                await customerServiceClient.Admin_UpdateIdentityAsync(
+                    mapper.MapToUpdateIdentityInput(tenantMember, anyCustomerExistByVerifiableTokenResponse.Customer.Id),
+                    customerConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: cancellationToken);
+
                 if (string.IsNullOrWhiteSpace(
                         anyCustomerExistByVerifiableTokenResponse.Customer.DefaultOrganization?.Id))
                 {
@@ -246,6 +251,7 @@ public class OrganizationInternalSubscriber(
             {
                 customerIdsTenantMembersPair.Add(
                     (anyCustomerExistByEmailTokenResponse.Customer.Id, tenantMember));
+
                 await customerServiceClient.Admin_AddIdentityAsync(
                     mapper.MapTo(tenantMember, anyCustomerExistByEmailTokenResponse.Customer.Id),
                     customerConfiguration.ApiKey.CreateMetadata(),

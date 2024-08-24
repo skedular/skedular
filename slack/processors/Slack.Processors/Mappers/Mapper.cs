@@ -78,6 +78,7 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations);
 
     Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId);
+    Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId);
     Booking MapTo(Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking src);
     Shared.Models.Workspace MapTo(Workspace src);
 }
@@ -355,7 +356,10 @@ public class Mapper : IMapper
     }
 
     public Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email, EmailVerified = true, CustomerId = customerId };
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+
+    public Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId) =>
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
 
     public Booking MapTo(Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking src) =>
         new()
