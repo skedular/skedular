@@ -97,7 +97,10 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             Timezone = customer.Timezone.ToSafeString(),
             Identities = customer.Identities
-                .Select(item => new Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified })
+                .Select(item => new Identity
+                {
+                    Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
+                })
                 .ToList()
         };
     }

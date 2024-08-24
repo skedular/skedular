@@ -297,7 +297,7 @@ public class Mapper : IMapper
                 src.Identities.Select(item =>
                         new Shared.Models.Identity
                         {
-                            Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified
+                            Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
                         })
                     .ToList(),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
@@ -374,7 +374,7 @@ public class Mapper : IMapper
         customer.Identities.AddRange(src.Identities.Select(item =>
             new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Identity
             {
-                Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified ?? false
+                Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
             }));
         customer.DefaultLocations.AddRange(src.DefaultLocations.Select(item =>
             new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Location

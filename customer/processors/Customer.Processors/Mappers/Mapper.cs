@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
 using Api.Shared.Models;
 using Customer.Shared.Database.Entities;
+using Enterprise.Shared;
 using Desk = Customer.Shared.Models.Desk;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Identity = Customer.Shared.Models.Identity;
@@ -153,7 +154,11 @@ public class Mapper : IMapper
             IsPreferredZoneOnboardingDone = customer.Settings.IsPreferredZoneOnboardingDone,
             IsPreferredDeskOnboardingDone = customer.Settings.IsPreferredDeskOnboardingDone,
             Identities = customer.Identities.Select(item =>
-                new Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified }).ToList(),
+                    new Identity
+                        {
+                            Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
+                        })
+                .ToList(),
             DefaultOrganization = string.IsNullOrWhiteSpace(customer.DefaultOrganizationId)
                 ? null
                 : new Organization { Id = customer.DefaultOrganizationId },

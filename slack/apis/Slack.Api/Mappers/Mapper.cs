@@ -209,7 +209,7 @@ public class Mapper : IMapper
 
         customer.Identities = src.Identities.Select(item => new Shared.Models.Identity
         {
-            Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified, Customer = customer
+            Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified, Customer = customer
         }).ToList();
 
         customer.DefaultOrganization = string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id)

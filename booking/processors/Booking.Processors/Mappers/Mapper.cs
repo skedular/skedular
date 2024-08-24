@@ -2,6 +2,7 @@ using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
 using Api.Shared.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
+using Enterprise.Shared;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Desk = Booking.Shared.Database.Entities.Desk;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
@@ -160,7 +161,10 @@ public class Mapper : IMapper
             PhotoUrl192 = customer.PhotoUrl192,
             PhotoUrl512 = customer.PhotoUrl512,
             Identities = customer.Identities.Select(item =>
-                    new Shared.Models.Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified })
+                    new Shared.Models.Identity
+                    {
+                        Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
+                    })
                 .ToList(),
             DefaultOrganization = string.IsNullOrWhiteSpace(customer.DefaultOrganizationId)
                 ? null

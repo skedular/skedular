@@ -129,7 +129,11 @@ public class Mapper : IMapper
             PhotoUrl192 = customer.PhotoUrl192,
             PhotoUrl512 = customer.PhotoUrl512,
             Identities = customer.Identities.Select(item =>
-                new Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified }).ToList()
+                    new Identity
+                        {
+                            Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
+                        })
+                .ToList()
         };
     }
 
