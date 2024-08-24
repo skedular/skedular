@@ -73,8 +73,7 @@ public class AzureTenantService(
         var installStateUserIdLookup = repositoryFactory.AzureInstallStateUserIdLookupRepository.Add(
             new AzureInstallStateUserIdLookup
             {
-                Id = randomHelper.Generate(),
-                InstalledByUserId = context.PropertyBag.VerifiableToken
+                Id = randomHelper.Generate(), InstalledByUserId = context.PropertyBag.VerifiableToken
             });
 
         var tenantId = context.PropertyBag.AzureTenantId;

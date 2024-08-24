@@ -24,7 +24,7 @@ public static class Extensions
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<IOrganizationInvitationService, OrganizationInvitationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
-    
+
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services
             .AddHostedService<ConnectionKeepAliveJob>();

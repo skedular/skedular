@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Services.Grpc.UnityHub.Location.V1;
-using Enterprise.Shared;
+using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
@@ -26,8 +26,8 @@ public class AzureTenantOnboardingService(
     IRandomHelper randomHelper,
     IOrganizationInternalOutboxPublisher organizationInternalOutboxPublisher,
     IOrganizationTermsOfUseService organizationTermsOfUseService,
-    IOrganizationService organizationService,
-    LocationService.LocationServiceClient locationServiceClient) : IAzureTenantOnboardingService
+    LocationService.LocationServiceClient locationServiceClient,
+    TimeProvider timeProvider) : IAzureTenantOnboardingService
 {
     public async Task OnboardAsync(
         string tenantId,
@@ -38,70 +38,55 @@ public class AzureTenantOnboardingService(
 
         await using var transaction =
             await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationRepository.UnitOfWork,
+                repositoryFactory.AzureTenantRepository.UnitOfWork,
                 cancellationToken);
 
-        var organization =
-            await repositoryFactory.OrganizationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
-
-        var tenant = repositoryFactory.AzureTenantRepository.Add(new AzureTenant
+        var location = new Location { Id = randomHelper.Generate() };
+        var now = timeProvider.GetUtcNow();
+        var organization = new Shared.Database.Entities.Organization
         {
-            Id = tenantId,
-            InstalledByUserId = azureInstallStateUserIdLookup.InstalledByUserId,
-            Organization = organization
-        });
-
-        repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(azureInstallStateUserIdLookup);
-
-        await Task.WhenAll(CreateOrganizationAsync("No name set!!!", organization, cancellationToken),
-            CreateLocationAsync(organization, cancellationToken));
-
-        await organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync(
-            [tenant.Id],
-            repositoryFactory.AzureTenantRepository.UnitOfWork,
-            cancellationToken);
-
-        await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-    }
-
-    private async Task<Shared.Database.Entities.Organization> CreateOrganizationAsync(
-        string? name,
-        Shared.Database.Entities.Organization organization,
-        CancellationToken cancellationToken)
-    {
-        var activeTermsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken);
-
-        await organizationService.AddAsync(
-            new Shared.Models.Organization
+            Id = randomHelper.Generate(),
+            Name = "No name set!!!",
+            AgreedToTermsOfUse = true,
+            TermsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseEntityAsync(cancellationToken),
+            HasAttachedPaymentMethod = false,
+            Locations = [location],
+            OrganizationOfferings =
+            [
+                new OrganizationOffering
+                {
+                    Id = randomHelper.Generate(),
+                    CreatedAt = now,
+                    Code = OfferingCode.FreeTierV1,
+                    Start = now,
+                    End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
+                    AutoRenew = true,
+                    UnitPrice = OfferingCode.FreeTierV1.GetOffering().UnitPrice
+                }
+            ]
+        };
+        var tenant = repositoryFactory.AzureTenantRepository.Add(
+            new AzureTenant
             {
-                Id = organization.Id,
-                Name = name.ToSafeString(),
-                AgreedToTermsOfUse = true,
-                TermsOfUse = activeTermsOfUse
-            },
-            null,
-            true,
-            cancellationToken);
-
-        return organization;
-    }
-
-    private async Task<Location> CreateLocationAsync(
-        Shared.Database.Entities.Organization organization,
-        CancellationToken cancellationToken)
-    {
-        var location =
-            await repositoryFactory.LocationRepository.UpsertNakedAsync(
-                randomHelper.Generate(),
-                organization,
-                cancellationToken);
+                Id = tenantId,
+                InstalledByUserId = azureInstallStateUserIdLookup.InstalledByUserId,
+                Organization = organization
+            });
 
         await locationServiceClient.Admin_AddAsync(
             new Admin_AddInput { Id = location.Id, Name = "Office", OrganizationId = organization.Id },
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
-        return location;
+        repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(azureInstallStateUserIdLookup);
+
+        await organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync(
+            [tenant.Id],
+            repositoryFactory.AzureTenantRepository.UnitOfWork,
+            cancellationToken);
+
+        await repositoryFactory.AzureInstallStateUserIdLookupRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
     }
 }

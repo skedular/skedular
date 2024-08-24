@@ -252,7 +252,7 @@ public class OrganizationQuery(IMapper mapper) : Query
     }
 
     public override async Task<OrganizationDetails?> AzureTenantOrganizationAsync(
-        IServiceProvider serviceProvider, 
+        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

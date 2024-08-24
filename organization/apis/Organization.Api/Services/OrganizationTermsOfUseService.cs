@@ -10,6 +10,7 @@ namespace Organization.Api.Services;
 public interface IOrganizationTermsOfUseService
 {
     Task<TermsOfUse> GetActiveTermsOfUseAsync(CancellationToken cancellationToken);
+    Task<Shared.Database.Entities.TermsOfUse> GetActiveTermsOfUseEntityAsync(CancellationToken cancellationToken);
 }
 
 public class OrganizationTermsOfUseService(
@@ -32,4 +33,12 @@ public class OrganizationTermsOfUseService(
 
                 return mapper.MapTo(termsOfUse)!;
             }))!;
+
+    public async Task<Shared.Database.Entities.TermsOfUse> GetActiveTermsOfUseEntityAsync(
+        CancellationToken cancellationToken) =>
+        await repositoryFactory.TermsOfUseRepository
+            .Query(new Specification<Shared.Database.Entities.TermsOfUse>
+            {
+                Criteria = query => !query.DeletedAt.HasValue && query.Active
+            }).FirstAsync(cancellationToken);
 }
