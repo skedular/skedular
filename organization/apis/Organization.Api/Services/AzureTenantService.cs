@@ -80,7 +80,7 @@ public class AzureTenantService(
         var tenantId = context.PropertyBag.AzureTenantId;
         var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(currentUri + "organization/api/v1/onboard-azure-tenant");
-        var scope = Uri.EscapeDataString("User.ReadBasic.All ProfilePhoto.Read.All Contacts.Read email offline_access openid profile");
+        var scope = Uri.EscapeDataString("User.ReadBasic.All ProfilePhoto.Read.All email offline_access openid profile");
         var authorizationRequest =
             $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={installStateUserIdLookup.Id}";
 
