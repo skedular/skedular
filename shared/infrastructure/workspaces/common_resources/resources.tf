@@ -121,12 +121,6 @@ resource "azuread_application" "azure_application" {
     requested_access_token_version = 2
   }
 
-  optional_claims {
-    access_token {
-      name = "idtyp"
-    }
-  }
-
   feature_tags {
     enterprise = true
     gallery    = true
