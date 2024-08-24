@@ -216,7 +216,7 @@ resource "vercel_deployment" "default" {
 resource "cloudflare_record" "default" {
   zone_id = data.cloudflare_zone.default.id
   name    = var.environment == "production" ? "@" : "staging"
-  value   = var.environment == "production" ? "76.76.21.21" : "cname.vercel-dns.com."
+  content = var.environment == "production" ? "76.76.21.21" : "cname.vercel-dns.com."
   type    = var.environment == "production" ? "A" : "CNAME"
   proxied = false
   ttl     = 600

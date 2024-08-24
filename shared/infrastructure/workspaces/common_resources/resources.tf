@@ -73,7 +73,7 @@ data "cloudflare_zone" "default" {
 resource "cloudflare_record" "wordpress_publicwebsite" {
   zone_id = data.cloudflare_zone.default.id
   name    = var.environment == "production" ? "@" : "staging"
-  value   = "31.220.100.177"
+  content = "31.220.100.177"
   type    = "A"
   proxied = false
   ttl     = 600
@@ -82,7 +82,7 @@ resource "cloudflare_record" "wordpress_publicwebsite" {
 resource "cloudflare_record" "wordpress_test" {
   zone_id = data.cloudflare_zone.default.id
   name    = var.environment == "production" ? "public" : "stagingpublic"
-  value   = "31.220.100.177"
+  content = "31.220.100.177"
   type    = "A"
   proxied = false
   ttl     = 600
@@ -91,7 +91,7 @@ resource "cloudflare_record" "wordpress_test" {
 resource "cloudflare_record" "api" {
   zone_id = data.cloudflare_zone.default.id
   name    = var.environment == "production" ? "api" : "apistaging"
-  value   = "31.220.100.177"
+  content = "31.220.100.177"
   type    = "A"
   proxied = false
   ttl     = 600
@@ -100,7 +100,7 @@ resource "cloudflare_record" "api" {
 resource "cloudflare_record" "slack_api" {
   zone_id = data.cloudflare_zone.default.id
   name    = var.environment == "production" ? "slackapi" : "slackapistaging"
-  value   = "31.220.100.177"
+  content = "31.220.100.177"
   type    = "A"
   proxied = false
   ttl     = 600
@@ -118,6 +118,11 @@ resource "azuread_application" "azure_application" {
   sign_in_audience      = "AzureADMultipleOrgs"
   privacy_statement_url = "https://unityhub.io/privacy-policy"
   terms_of_service_url  = "https://unityhub.io/terms-of-service"
+  logo_image            = filebase64("../../../../assets/logos/logo.png")
+
+  web {
+    homepage_url = "https://unityhub.io"
+  }
 
   api {
     mapped_claims_enabled          = true

@@ -2,7 +2,7 @@ resource "cloudflare_record" "contabo" {
   count   = var.environment == "staging" ? 1 : 0
   zone_id = data.cloudflare_zone.default.id
   name    = "contabo"
-  value   = "31.220.100.177"
+  content = "31.220.100.177"
   type    = "A"
   proxied = false
   ttl     = 600
@@ -12,7 +12,7 @@ resource "cloudflare_record" "mweb" {
   count   = var.environment == "staging" ? 1 : 0
   zone_id = data.cloudflare_zone.default.id
   name    = "mweb"
-  value   = "31.220.100.177"
+  content = "31.220.100.177"
   type    = "A"
   proxied = false
   ttl     = 600
@@ -22,7 +22,7 @@ resource "cloudflare_record" "mapp" {
   count   = var.environment == "staging" ? 1 : 0
   zone_id = data.cloudflare_zone.default.id
   name    = "mapp"
-  value   = "31.220.100.177"
+  content = "31.220.100.177"
   type    = "A"
   proxied = false
   ttl     = 600
@@ -35,7 +35,11 @@ resource "azuread_application" "azure_application_dev" {
   sign_in_audience      = "AzureADMultipleOrgs"
   privacy_statement_url = "https://unityhub.io/privacy-policy"
   terms_of_service_url  = "https://unityhub.io/terms-of-service"
+  logo_image            = filebase64("../../../../assets/logos/logo.png")
 
+  web {
+    homepage_url = "https://unityhub.io"
+  }
 
   api {
     mapped_claims_enabled          = true

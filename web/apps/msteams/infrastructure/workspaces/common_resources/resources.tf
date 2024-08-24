@@ -119,7 +119,7 @@ resource "vercel_deployment" "default" {
 resource "cloudflare_record" "default" {
   zone_id = data.cloudflare_zone.default.id
   name    = module.shared_common.msteams_webapp_domain_name
-  value   = "cname.vercel-dns.com."
+  content = "cname.vercel-dns.com."
   type    = "CNAME"
   proxied = false
   ttl     = 600
