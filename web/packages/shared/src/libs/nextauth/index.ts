@@ -1,3 +1,4 @@
+import { jwtDecode } from 'jwt-decode';
 import type { AuthOptions } from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import CognitoProvider from 'next-auth/providers/cognito';
@@ -20,12 +21,16 @@ type AccessToken = {
   error?: string;
 };
 
-const refreshCognitoTokens = async (refreshToken?: string): Promise<AccessToken> => {
+interface AzureEntraDecodedToken {
+  tid: string; // Azure Teanant ID
+}
+
+const refreshCognitoTokens = async (token: TokenExtended): Promise<AccessToken> => {
   try {
     const formData = [
       `${encodeURIComponent('grant_type')}=${encodeURIComponent('refresh_token')}`,
       `${encodeURIComponent('client_id')}=${encodeURIComponent(process.env.COGNITO_CLIENT_ID)}`,
-      `${encodeURIComponent('refresh_token')}=${encodeURIComponent(refreshToken ?? '')}`,
+      `${encodeURIComponent('refresh_token')}=${encodeURIComponent(token.refreshToken)}`,
     ];
 
     const buff = Buffer.from(`${process.env.COGNITO_CLIENT_ID}:${process.env.COGNITO_CLIENT_SECRET}`);
@@ -49,27 +54,21 @@ const refreshCognitoTokens = async (refreshToken?: string): Promise<AccessToken>
       idToken: responseJson.id_token,
       accessToken: responseJson.access_token,
       accessTokenExpires: Date.now() + responseJson.expires_in * 1000,
-      refreshToken: responseJson.refresh_token ?? refreshToken,
+      refreshToken: responseJson.refresh_token,
     };
   } catch (exception) {
     logger.error({ exception }, 'failed to refresh access token');
 
-    return {
-      idToken: '',
-      accessToken: '',
-      accessTokenExpires: 0,
-      refreshToken: '',
-      error: 'RefreshAccessTokenError',
-    };
+    throw exception;
   }
 };
 
-const refreshGoogleTokens = async (refreshToken?: string): Promise<AccessToken> => {
+const refreshGoogleTokens = async (token: TokenExtended): Promise<AccessToken> => {
   try {
     const formData = [
       `${encodeURIComponent('grant_type')}=${encodeURIComponent('refresh_token')}`,
       `${encodeURIComponent('client_id')}=${encodeURIComponent(process.env.GOOGLE_CLIENT_ID)}`,
-      `${encodeURIComponent('refresh_token')}=${encodeURIComponent(refreshToken ?? '')}`,
+      `${encodeURIComponent('refresh_token')}=${encodeURIComponent(token.refreshToken)}`,
     ];
 
     const buff = Buffer.from(`${process.env.GOOGLE_CLIENT_ID}:${process.env.GOOGLE_CLIENT_SECRET}`);
@@ -93,18 +92,52 @@ const refreshGoogleTokens = async (refreshToken?: string): Promise<AccessToken> 
       idToken: responseJson.id_token,
       accessToken: responseJson.access_token,
       accessTokenExpires: Date.now() + responseJson.expires_in * 1000,
-      refreshToken: responseJson.refresh_token ?? refreshToken,
+      refreshToken: responseJson.refresh_token,
     };
   } catch (exception) {
     logger.error({ exception }, 'failed to refresh access token');
 
+    throw exception;
+  }
+};
+
+const refreshAzureEntraTokens = async (token: TokenExtended): Promise<AccessToken> => {
+  try {
+    const decodedAccessToken = jwtDecode<AzureEntraDecodedToken>(token.accessToken);
+    const formData = [
+      `${encodeURIComponent('grant_type')}=${encodeURIComponent('refresh_token')}`,
+      `${encodeURIComponent('client_id')}=${encodeURIComponent(process.env.AZURE_AD_CLIENT_ID)}`,
+      `${encodeURIComponent('client_secret')}=${encodeURIComponent(process.env.AZURE_AD_CLIENT_SECRET)}`,
+      `${encodeURIComponent('refresh_token')}=${encodeURIComponent(token.refreshToken)}`,
+    ];
+
+    const buff = Buffer.from(`${process.env.GOOGLE_CLIENT_ID}:${process.env.GOOGLE_CLIENT_SECRET}`);
+
+    const response = await fetch(`https://login.microsoftonline.com/${decodedAccessToken.tid}/oauth2/v2.0/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        Authorization: `Basic ${buff.toString('base64')}`,
+      },
+      body: formData.join('&'),
+    });
+
+    const responseJson = await response.json();
+
+    if (!response.ok) {
+      throw responseJson;
+    }
+
     return {
-      idToken: '',
-      accessToken: '',
-      accessTokenExpires: 0,
-      refreshToken: '',
-      error: 'RefreshAccessTokenError',
+      idToken: responseJson.id_token,
+      accessToken: responseJson.access_token,
+      accessTokenExpires: Date.now() + responseJson.expires_in * 1000,
+      refreshToken: responseJson.refresh_token,
     };
+  } catch (exception) {
+    logger.error({ exception }, 'failed to refresh access token');
+
+    throw exception;
   }
 };
 
@@ -130,6 +163,11 @@ const authOptions: AuthOptions = {
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID,
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+      authorization: {
+        params: {
+          scope: 'email offline_access openid profile',
+        },
+      },
     }),
   ],
   callbacks: {
@@ -163,8 +201,12 @@ const authOptions: AuthOptions = {
         return token;
       }
 
+      if (!tokenExtended.refreshToken) {
+        throw new TypeError('Missing refresh_token');
+      }
+
       if (token.provider === 'cognito') {
-        const response = await refreshCognitoTokens(tokenExtended.refreshToken);
+        const response = await refreshCognitoTokens(tokenExtended);
 
         token.idToken = response.idToken;
         token.accessToken = response.accessToken;
@@ -172,7 +214,15 @@ const authOptions: AuthOptions = {
         token.refreshToken = response.refreshToken;
         token.error = response.error;
       } else if (token.provider === 'google') {
-        const response = await refreshGoogleTokens(tokenExtended.refreshToken);
+        const response = await refreshGoogleTokens(tokenExtended);
+
+        token.idToken = response.idToken;
+        token.accessToken = response.accessToken;
+        token.accessTokenExpires = response.accessTokenExpires;
+        token.refreshToken = response.refreshToken;
+        token.error = response.error;
+      } else if (token.provider === 'azure-ad') {
+        const response = await refreshAzureEntraTokens(tokenExtended);
 
         token.idToken = response.idToken;
         token.accessToken = response.accessToken;
