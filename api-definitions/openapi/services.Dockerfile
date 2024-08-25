@@ -27,7 +27,7 @@ RUN nswag \
   /UseActionResultType:true \
   /UseCancellationToken:true \
   /GenerateNullableReferenceTypes:true
-    
+
 RUN nswag \
   openapi2cscontroller \
   /Input:/openapi/unityhub/billing_v1.yaml \

@@ -321,3 +321,26 @@ RUN /app/publish/Unityhubctl protobuf-event-metadata-generate \
     --dead-letter-topic-name team.v1.event.deadletter \
     --protobuf-schema-file-path /events/unityhub/team_v1_value.proto \
     --output-file-path /output/UnityHub/Team/V1/TeamValueMetadata.g.cs 
+
+RUN mkdir -p /output/UnityHub/MsTeamsInternal/V1
+RUN protoc -I=/events/unityhub --csharp_out=/output/UnityHub/MsTeamsInternal/V1 --csharp_opt=file_extension=.g.cs msteams_internal_v1_key.proto
+RUN protoc -I=/events/unityhub --csharp_out=/output/UnityHub/MsTeamsInternal/V1 --csharp_opt=file_extension=.g.cs msteams_internal_v1_value.proto
+RUN /app/publish/Unityhubctl protobuf-event-metadata-generate \
+    --namespace Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Key \
+    --event-type Key \
+    --topic-name msteams.v1.internal \
+    --retry-topic-name-prefix msteams \
+    --retry-topic-count 1 \
+    --dead-letter-topic-name msteams \
+    --generate-metadata-function-helper False \
+    --protobuf-schema-file-path /events/unityhub/msteams_internal_v1_key.proto \
+    --output-file-path /output/UnityHub/MsTeamsInternal/V1/MsTeamsInternalKeyMetadata.g.cs
+RUN /app/publish/Unityhubctl protobuf-event-metadata-generate \
+    --namespace Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value \
+    --event-type Event \
+    --topic-name msteams.v1.internal \
+    --retry-topic-name-prefix msteams.v1.internal.retry \
+    --retry-topic-count 1 \
+    --dead-letter-topic-name msteams.v1.internal.deadletter \
+    --protobuf-schema-file-path /events/unityhub/msteams_internal_v1_value.proto \
+    --output-file-path /output/UnityHub/MsTeamsInternal/V1/MsTeamsInternalValueMetadata.g.cs

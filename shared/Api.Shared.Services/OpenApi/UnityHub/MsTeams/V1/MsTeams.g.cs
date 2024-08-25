@@ -26,24 +26,7 @@ namespace Api.Shared.Services.OpenApi.UnityHub.MsTeams.V1
 {
     using System = global::System;
 
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
-
-    public abstract class MsTeamsControllerBase : Microsoft.AspNetCore.Mvc.Controller
-    {
-        /// <summary>
-        /// generate an admin consent Url for the given tenant
-        /// </summary>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("msteams/api/v1/adminconsenturl")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AdminConsentUrl(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
-        /// OnBoard a tenant
-        /// </summary>
-        /// <returns>on boarding response</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("msteams/api/v1/onboard-tenant")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> OnBoardTenant([Microsoft.AspNetCore.Mvc.FromQuery] string tenant, [Microsoft.AspNetCore.Mvc.FromQuery] bool admin_consent, [Microsoft.AspNetCore.Mvc.FromQuery] string state, [Microsoft.AspNetCore.Mvc.FromQuery] string? error, [Microsoft.AspNetCore.Mvc.FromQuery] string? error_description, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-    }
+    
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.1.0.0 (NJsonSchema v11.0.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class Error

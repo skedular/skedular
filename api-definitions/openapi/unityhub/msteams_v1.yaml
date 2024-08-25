@@ -1,0 +1,21 @@
+openapi: 3.1.0
+info:
+  title: MsTeams API v1
+  description: "MsTeams REST API"
+  version: 1.0.0
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message

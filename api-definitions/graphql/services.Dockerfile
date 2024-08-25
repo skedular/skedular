@@ -44,6 +44,14 @@ RUN /app/publish/Unityhubctl graphql-services-generate \
     --output-file-path /output/UnityHub/V1/Location/Location.g.cs \
     --output-metadata-file-path /output/UnityHub/V1/Location/LocationMetadata.g.cs
 
+RUN mkdir -p /output/UnityHub/V1/MsTeams
+RUN /app/publish/Unityhubctl graphql-services-generate \
+    --namespace Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams \
+    --input-schema-files-path /graphql/unityhub/msteams_v1.graphql \
+    --visitors AbstractClass,Argument,Class,Enum,Interface,Union \
+    --output-file-path /output/UnityHub/V1/MsTeams/MsTeams.g.cs \
+    --output-metadata-file-path /output/UnityHub/V1/MsTeams/MsTeamsMetadata.g.cs
+
 RUN mkdir -p /output/UnityHub/V1/Notification
 RUN /app/publish/Unityhubctl graphql-services-generate \
     --namespace Api.Shared.Services.GraphQL.UnityHub.V1.Notification \

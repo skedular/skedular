@@ -6,13 +6,13 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value";
 
 enum Type {
-  RefreshTenantMembers = 0;
+  RefreshAzureTenantMembers = 0;
 }
 
 message Event {
   Metadata metadata = 1;
   oneof payload {
-    string TenantId = 2;
+    string AzureTenantId = 2;
   }
 }
 

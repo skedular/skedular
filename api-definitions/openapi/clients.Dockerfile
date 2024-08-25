@@ -30,7 +30,7 @@ RUN nswag \
   /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
   /GenerateDtoTypes:true \
   /GenerateNullableReferenceTypes:true
-    
+
 RUN nswag \
   openapi2csclient \
   /Input:/openapi/unityhub/billing_v1.yaml \
@@ -94,6 +94,25 @@ RUN nswag \
   /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Location.V1 \
   /Classname:LocationClient \
   /Output:/output/UnityHub/Location/V1/Location.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true
+
+RUN nswag \
+  openapi2csclient \
+  /Input:/openapi/unityhub/msteams_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.MsTeams.V1 \
+  /Classname:MsTeamsClient \
+  /Output:/output/UnityHub/MsTeams/V1/MsTeams.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
