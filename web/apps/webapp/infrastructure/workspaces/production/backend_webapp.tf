@@ -7,6 +7,7 @@ terraform {
     key            = "terraform.tfstate"
     dynamodb_table = "unityhub-production-webapp-terraform-state-lock"
     profile        = ""
+    role_arn       = ""
     encrypt        = "true"
   }
 }
