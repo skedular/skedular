@@ -494,56 +494,47 @@ public class HomePage(
 
         var from = commonPageContext.PageContext.HomePage.SelectedDate.StartOfWeek();
         var until = from.AddDays(6);
-        var response = await Task.WhenAll([
-            GetPaginatedBookingsAsync(
-                workspace,
-                workspaceMember,
-                after,
-                first,
-                before,
-                last,
-                from,
-                until,
-                commonPageContext.PageContext.HomePage.IncludeMyBookingsOnly,
-                cancellationToken),
-            GetMyBookingsAsync(workspace, workspaceMember, from, until, cancellationToken)
-        ]);
+        var response = await Task.WhenAll(GetPaginatedBookingsAsync(
+            workspace,
+            workspaceMember,
+            after,
+            first,
+            before,
+            last,
+            from,
+            until,
+            commonPageContext.PageContext.HomePage.IncludeMyBookingsOnly,
+            cancellationToken), GetMyBookingsAsync(workspace, workspaceMember, from, until, cancellationToken));
         var bookingConnection = response.First();
         var bookings = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var myBookings = response.Last().Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var permissions =
             await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
 
-        var asyncBlocks = await Task.WhenAll([
-            settingsComponents.GetDefaultLocationOnboardingDoneAsync(
-                workspaceMember,
-                commonPageContext.PageContext,
-                cancellationToken),
-            settingsComponents.GetPreferredZoneOnboardingDoneAsync(
-                workspace,
-                workspaceMember,
-                commonPageContext.PageContext,
-                cancellationToken),
-            settingsComponents.GetPreferredDeskOnboardingDoneAsync(
-                workspace,
-                workspaceMember,
-                commonPageContext.PageContext,
-                cancellationToken),
-            GetBookingCalendarSettingBlocksAsync(
-                workspaceMember,
-                myBookings,
-                commonPageContext.PageContext,
-                cancellationToken),
-            bookingComponents.GetBookingCardsAsync(
-                workspace,
-                workspaceMember,
-                bookings,
-                myBookings,
-                permissions.CanUpdateBookingOnBehalf,
-                permissions.CanDeleteBookingOnBehalf,
-                commonPageContext.PageContext,
-                cancellationToken)
-        ]);
+        var asyncBlocks = await Task.WhenAll(settingsComponents.GetDefaultLocationOnboardingDoneAsync(
+            workspaceMember,
+            commonPageContext.PageContext,
+            cancellationToken), settingsComponents.GetPreferredZoneOnboardingDoneAsync(
+            workspace,
+            workspaceMember,
+            commonPageContext.PageContext,
+            cancellationToken), settingsComponents.GetPreferredDeskOnboardingDoneAsync(
+            workspace,
+            workspaceMember,
+            commonPageContext.PageContext,
+            cancellationToken), GetBookingCalendarSettingBlocksAsync(
+            workspaceMember,
+            myBookings,
+            commonPageContext.PageContext,
+            cancellationToken), bookingComponents.GetBookingCardsAsync(
+            workspace,
+            workspaceMember,
+            bookings,
+            myBookings,
+            permissions.CanUpdateBookingOnBehalf,
+            permissions.CanDeleteBookingOnBehalf,
+            commonPageContext.PageContext,
+            cancellationToken));
 
         asyncBlocks =
         [

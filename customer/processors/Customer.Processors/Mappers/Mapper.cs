@@ -155,9 +155,9 @@ public class Mapper : IMapper
             IsPreferredDeskOnboardingDone = customer.Settings.IsPreferredDeskOnboardingDone,
             Identities = customer.Identities.Select(item =>
                     new Identity
-                        {
-                            Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
-                        })
+                    {
+                        Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
+                    })
                 .ToList(),
             DefaultOrganization = string.IsNullOrWhiteSpace(customer.DefaultOrganizationId)
                 ? null

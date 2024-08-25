@@ -36,13 +36,13 @@ public class Program : WebHostServiceBase<Program>
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
         var kafkaHelper = new KafkaHelper(kafkaConfiguration);
-        await Task.WhenAll([
-            kafkaHelper.CreateTopicForEventAsync<Event>(),
+        await Task.WhenAll(kafkaHelper.CreateTopicForEventAsync<Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Value.Event>(),
+            kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Notification.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event>(),
             kafkaHelper
@@ -51,8 +51,7 @@ public class Program : WebHostServiceBase<Program>
                 .CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.OrganizationMember.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Payment.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Value.Event>(),
-            kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event>()
-        ]);
+            kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event>());
 
         // await Task.WhenAll([
         //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Key>(),
@@ -75,6 +74,10 @@ public class Program : WebHostServiceBase<Program>
         //         .RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Key.Key>(),
         //     kafkaHelper
         //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Value.Event>(),
+        //
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Key.Key>(),
+        //     kafkaHelper
+        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event>(),
         //
         //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Notification.V1.Key.Key>(),
         //     kafkaHelper
@@ -107,16 +110,9 @@ public class Program : WebHostServiceBase<Program>
         //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event>()
         // ]);
 
-        await Task.WhenAll([
-            Billing.Shared.Program.Main(args),
-            Booking.Shared.Program.Main(args),
-            Customer.Shared.Program.Main(args),
-            Location.Shared.Program.Main(args),
-            Notification.Shared.Program.Main(args),
-            Organization.Shared.Program.Main(args),
-            Payment.Shared.Program.Main(args),
-            Slack.Shared.Program.Main(args),
-            Team.Shared.Program.Main(args)
-        ]);
+        await Task.WhenAll(Billing.Shared.Program.Main(args), Booking.Shared.Program.Main(args),
+            Customer.Shared.Program.Main(args), Location.Shared.Program.Main(args), MsTeams.Shared.Program.Main(args),
+            Notification.Shared.Program.Main(args), Organization.Shared.Program.Main(args),
+            Payment.Shared.Program.Main(args), Slack.Shared.Program.Main(args), Team.Shared.Program.Main(args));
     }
 }

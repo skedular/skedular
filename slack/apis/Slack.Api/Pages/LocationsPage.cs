@@ -407,14 +407,13 @@ public class LocationsPage(
             return item;
         }).ToList();
 
-        var asyncBlocks = await Task.WhenAll([
+        var asyncBlocks = await Task.WhenAll(
             GetToolbarAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
             locationComponents.GetLocationCardsAsync(
                 workspaceMember,
                 locations,
                 commonPageContext.PageContext,
-                cancellationToken)
-        ]);
+                cancellationToken));
 
         ICollection<Block>[] blocks =
         [

@@ -16,7 +16,7 @@ public interface IOrganizationInternalPublisher
     Task PublishRecordOrganizationDailyMemberCountAsync(
         IEnumerable<string> organizationIds,
         CancellationToken cancellationToken);
-    
+
     Task PublishRefreshAzureTenantMembersAsync(IEnumerable<string> azureTenantIds, CancellationToken cancellationToken);
 }
 

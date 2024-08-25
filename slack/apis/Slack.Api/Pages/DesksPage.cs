@@ -407,20 +407,17 @@ public class DesksPage(
         var bookingConnection =
             await GetBookingsAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken);
         var bookings = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
-        var asyncBlocks = await Task.WhenAll([
-            GetToolbarAsync(
-                commonPageContext.PageContext.DesksPage.LocationId,
-                workspaceMember,
-                commonPageContext.PageContext,
-                cancellationToken),
-            deskComponents.GetDeskCardsAsync(
-                commonPageContext.PageContext.DesksPage.LocationId,
-                workspaceMember,
-                desks,
-                bookings,
-                commonPageContext.PageContext,
-                cancellationToken)
-        ]);
+        var asyncBlocks = await Task.WhenAll(GetToolbarAsync(
+            commonPageContext.PageContext.DesksPage.LocationId,
+            workspaceMember,
+            commonPageContext.PageContext,
+            cancellationToken), deskComponents.GetDeskCardsAsync(
+            commonPageContext.PageContext.DesksPage.LocationId,
+            workspaceMember,
+            desks,
+            bookings,
+            commonPageContext.PageContext,
+            cancellationToken));
 
         ICollection<Block>[] blocks =
         [

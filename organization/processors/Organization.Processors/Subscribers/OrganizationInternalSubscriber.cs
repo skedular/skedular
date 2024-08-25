@@ -197,7 +197,9 @@ public class OrganizationInternalSubscriber(
     {
         var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
         {
-            First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
+            First = -1,
+            Last = -1,
+            Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
         };
         getPaginatedLocationsInput.OrderBy.AddRange([
             new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
@@ -222,7 +224,9 @@ public class OrganizationInternalSubscriber(
                     (anyCustomerExistByVerifiableTokenResponse.Customer.Id, tenantMember));
 
                 await customerServiceClient.Admin_UpdateIdentityAsync(
-                    mapper.MapToUpdateIdentityInput(tenantMember, anyCustomerExistByVerifiableTokenResponse.Customer.Id),
+                    mapper.MapToUpdateIdentityInput(
+                        tenantMember,
+                        anyCustomerExistByVerifiableTokenResponse.Customer.Id),
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
 

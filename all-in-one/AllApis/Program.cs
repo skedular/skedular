@@ -22,17 +22,16 @@ public class Program : WebHostServiceBase<Program>
             Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"),
             cancellationToken);
 
-        await Task.WhenAll([
-            Gateway.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
+        await Task.WhenAll(Gateway.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Billing.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Booking.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Customer.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Location.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
+            MsTeams.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Organization.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Notification.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Payment.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Slack.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Team.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken)
-        ]);
+            Team.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken));
     }
 }

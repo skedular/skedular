@@ -375,14 +375,13 @@ public class TeamsPage(
             return item;
         }).ToList();
 
-        var asyncBlocks = await Task.WhenAll([
+        var asyncBlocks = await Task.WhenAll(
             GetToolbarAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
             teamComponents.GetTeamCardsAsync(
                 workspaceMember,
                 teams,
                 commonPageContext.PageContext,
-                cancellationToken)
-        ]);
+                cancellationToken));
 
         ICollection<Block>[] blocks =
         [

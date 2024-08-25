@@ -75,11 +75,10 @@ public class AddBookingButtonHandler(
             Optional = false
         };
 
-        var asyncBlocks = await Task.WhenAll([
+        var asyncBlocks = await Task.WhenAll(
             GetOrganizationMemberBlockAsync(workspace, workspaceMember, context, customer, cancellationToken),
             GetLocationBlockAsync(workspace, workspaceMember, context, customer, cancellationToken),
-            GetTeamBlockAsync(workspace, workspaceMember, context, customer, cancellationToken)
-        ]);
+            GetTeamBlockAsync(workspace, workspaceMember, context, customer, cancellationToken));
 
         var notes = new InputBlock
         {

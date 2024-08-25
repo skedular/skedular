@@ -46,7 +46,7 @@ public abstract class StartupCustom(
         }
 
         var azureEntraConfiguration =
-            configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
+            Configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
         if (azureEntraConfiguration is not null)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientId);
@@ -77,14 +77,5 @@ public abstract class StartupCustom(
             .AddTimeHelper();
     }
 
-    /// <summary>
-    ///     The host may configure some services before Startup methods are called.
-    /// </summary>
-    /// <remarks>
-    ///     Called by the host before the Configure method to configure the app's services.
-    ///     Where configuration options are set by convention.
-    ///     https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup?view=aspnetcore-5.0#the-configureservices-method
-    /// </remarks>
-    /// <param name="services"></param>
     protected abstract void ConfigureCustomServices(IServiceCollection services);
 }

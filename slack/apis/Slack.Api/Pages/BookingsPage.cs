@@ -329,8 +329,7 @@ public class BookingsPage(
                    timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc);
         var until = bookingsDateRange.To?.EndOfDay() ??
                     from.AddMonths(1).StartOfDay(TimeZoneInfo.Utc);
-        var response = await Task.WhenAll([
-            GetPaginatedBookingsAsync(
+        var response = await Task.WhenAll(GetPaginatedBookingsAsync(
                 workspace,
                 workspaceMember,
                 after,
@@ -341,8 +340,7 @@ public class BookingsPage(
                 until,
                 commonPageContext,
                 cancellationToken),
-            GetMyBookingsAsync(workspace, workspaceMember, from, until, commonPageContext, cancellationToken)
-        ]);
+            GetMyBookingsAsync(workspace, workspaceMember, from, until, commonPageContext, cancellationToken));
         var bookingConnection = response.First();
         var bookings = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var myBookings = response.Last().Edges.Select(item => mapper.MapTo(item.Node)).ToList();

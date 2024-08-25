@@ -363,19 +363,16 @@ public class ZonesPage(
             commonPageContext,
             cancellationToken);
         var zones = zoneConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
-        var asyncBlocks = await Task.WhenAll([
-            GetToolbarAsync(
-                commonPageContext.PageContext.ZonesPage.LocationId,
-                workspaceMember,
-                commonPageContext.PageContext,
-                cancellationToken),
-            zoneComponents.GetZoneCardsAsync(
-                commonPageContext.PageContext.ZonesPage.LocationId,
-                workspaceMember,
-                zones,
-                commonPageContext.PageContext,
-                cancellationToken)
-        ]);
+        var asyncBlocks = await Task.WhenAll(GetToolbarAsync(
+            commonPageContext.PageContext.ZonesPage.LocationId,
+            workspaceMember,
+            commonPageContext.PageContext,
+            cancellationToken), zoneComponents.GetZoneCardsAsync(
+            commonPageContext.PageContext.ZonesPage.LocationId,
+            workspaceMember,
+            zones,
+            commonPageContext.PageContext,
+            cancellationToken));
 
         ICollection<Block>[] blocks =
         [

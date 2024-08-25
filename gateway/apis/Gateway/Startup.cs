@@ -43,6 +43,13 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                 .AddHttpMessageHandler<ApiAuthenticationHttpClientHandler>();
         }
 
+        if (subgraphsConfigurations.MsTeams.Uri is not null)
+        {
+            services.AddHttpClient(nameof(subgraphsConfigurations.MsTeams),
+                    c => c.BaseAddress = subgraphsConfigurations.MsTeams.Uri)
+                .AddHttpMessageHandler<ApiAuthenticationHttpClientHandler>();
+        }
+
         if (subgraphsConfigurations.Notification.Uri is not null)
         {
             services.AddHttpClient(nameof(subgraphsConfigurations.Notification),
@@ -93,6 +100,8 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                 Api.Shared.Services.GraphQL.UnityHub.V1.Customer.Metadata.Schema)
             .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Location),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Location.Metadata.Schema)
+            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.MsTeams),
+                Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams.Metadata.Schema)
             .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Notification),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Notification.Metadata.Schema)
             .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Organization),

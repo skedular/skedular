@@ -31,6 +31,8 @@ type Query {
   paginatedLocationTags(after: String, first: Int, before: String, last: Int, where: LocationTagWhereInput!, orderBy: [LocationTagOrderInput!]): LocationTagConnection!
   paginatedLocationDesks(after: String, first: Int, before: String, last: Int, where: DeskWhereInput!, orderBy: [DeskOrderInput!]): DeskConnection!
   locationAnalytics(locationId: String!, from: DateTime!, until: DateTime!): LocationAnalytics!
+  msTeamsVersion: Version!
+  msTeamsCustomerRecordSynced: Boolean!
   notificationVersion: Version!
   notificationCustomerRecordSynced: Boolean!
   myNotifications(after: String, first: Int, before: String, last: Int, orderBy: [NotificationOrderInput!]): NotificationConnection!

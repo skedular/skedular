@@ -11,310 +11,310 @@ public static class Metadata
 public readonly static string Schema = @"scalar DateTime
 
 schema {
-  query: Query
-  mutation: Mutation
+    query: Query
+    mutation: Mutation
 }
 
 interface Node {
-  id: ID!
+    id: ID!
 }
 
 type Version {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
 }
 
 type Query {
-  customerVersion: Version!
-  me: CustomerDetails
+    customerVersion: Version!
+    me: CustomerDetails
 
-  customersByDefaultLocation(
-    after: String
-    first: Int
-    before: String
-    last: Int
-    where: CustomerWhereInput!
-    orderBy: [CustomerOrderInput!]
-  ): CustomerConnection!
+    customersByDefaultLocation(
+        after: String
+        first: Int
+        before: String
+        last: Int
+        where: CustomerWhereInput!
+        orderBy: [CustomerOrderInput!]
+    ): CustomerConnection!
 }
 
 input CustomerWhereInput {
-  locationId: String!
-  nameContains: String
+    locationId: String!
+    nameContains: String
 }
 
 type Mutation {
-  completeOrganizationOnboarding(
-    input: CompleteOrganizationOnboardingInput!
-  ): CustomerPayload
+    completeOrganizationOnboarding(
+        input: CompleteOrganizationOnboardingInput!
+    ): CustomerPayload
 
-  completeLocationOnboarding(
-    input: CompleteLocationOnboardingInput!
-  ): CustomerPayload
+    completeLocationOnboarding(
+        input: CompleteLocationOnboardingInput!
+    ): CustomerPayload
 
-  completeDefaultOrganizationOnboarding(
-    input: CompleteDefaultOrganizationOnboardingInput!
-  ): CustomerPayload
+    completeDefaultOrganizationOnboarding(
+        input: CompleteDefaultOrganizationOnboardingInput!
+    ): CustomerPayload
 
-  completeDefaultLocationOnboarding(
-    input: CompleteDefaultLocationOnboardingInput!
-  ): CustomerPayload
+    completeDefaultLocationOnboarding(
+        input: CompleteDefaultLocationOnboardingInput!
+    ): CustomerPayload
 
-  completePreferredZoneOnboarding(
-    input: CompletePreferredZoneOnboardingInput!
-  ): CustomerPayload
+    completePreferredZoneOnboarding(
+        input: CompletePreferredZoneOnboardingInput!
+    ): CustomerPayload
 
-  completePreferredDeskOnboarding(
-    input: CompletePreferredDeskOnboardingInput!
-  ): CustomerPayload
+    completePreferredDeskOnboarding(
+        input: CompletePreferredDeskOnboardingInput!
+    ): CustomerPayload
 
-  addCustomerDefaultLocation(
-    input: AddCustomerDefaultLocationInput!
-  ): CustomerPayload
+    addCustomerDefaultLocation(
+        input: AddCustomerDefaultLocationInput!
+    ): CustomerPayload
 
-  removeCustomerDefaultLocation(
-    input: RemoveCustomerDefaultLocationInput!
-  ): CustomerPayload
+    removeCustomerDefaultLocation(
+        input: RemoveCustomerDefaultLocationInput!
+    ): CustomerPayload
 
-  addCustomerDefaultTeam(input: AddCustomerDefaultTeamInput!): CustomerPayload
+    addCustomerDefaultTeam(input: AddCustomerDefaultTeamInput!): CustomerPayload
 
-  removeCustomerDefaultTeam(
-    input: RemoveCustomerDefaultTeamInput!
-  ): CustomerPayload
+    removeCustomerDefaultTeam(
+        input: RemoveCustomerDefaultTeamInput!
+    ): CustomerPayload
 
-  setCustomerDefaultOrganization(
-    input: SetCustomerDefaultOrganizationInput!
-  ): CustomerPayload
+    setCustomerDefaultOrganization(
+        input: SetCustomerDefaultOrganizationInput!
+    ): CustomerPayload
 
-  clearCustomerDefaultOrganization(
-    input: ClearCustomerDefaultOrganizationInput!
-  ): CustomerPayload
+    clearCustomerDefaultOrganization(
+        input: ClearCustomerDefaultOrganizationInput!
+    ): CustomerPayload
 
-  addCustomerDefaultLocationTag(
-    input: AddCustomerDefaultLocationTagInput!
-  ): CustomerPayload
+    addCustomerDefaultLocationTag(
+        input: AddCustomerDefaultLocationTagInput!
+    ): CustomerPayload
 
-  removeCustomerDefaultLocationTag(
-    input: RemoveCustomerDefaultLocationTagInput!
-  ): CustomerPayload
+    removeCustomerDefaultLocationTag(
+        input: RemoveCustomerDefaultLocationTagInput!
+    ): CustomerPayload
 
-  addCustomerDefaultDesk(input: AddCustomerDefaultDeskInput!): CustomerPayload
+    addCustomerDefaultDesk(input: AddCustomerDefaultDeskInput!): CustomerPayload
 
-  removeCustomerDefaultDesk(
-    input: RemoveCustomerDefaultDeskInput!
-  ): CustomerPayload
+    removeCustomerDefaultDesk(
+        input: RemoveCustomerDefaultDeskInput!
+    ): CustomerPayload
 
-  submitCustomerFeedback(
-    input: SubmitCustomerFeedbackInput!
-  ): SubmitCustomerFeedbackPayload
+    submitCustomerFeedback(
+        input: SubmitCustomerFeedbackInput!
+    ): SubmitCustomerFeedbackPayload
 
-  updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload
+    updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload
 }
 
 type CustomerDetails implements Node {
-  id: ID!
-  createdAt: DateTime!
-  email: CustomerEmail
-  designation: String
-  title: String
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  timezone: String
-  locale: String
-  isOrganizationOnboardingDone: Boolean!
-  isLocationOnboardingDone: Boolean!
-  isDefaultOrganizationOnboardingDone: Boolean!
-  isDefaultLocationOnboardingDone: Boolean!
-  isPreferredZoneOnboardingDone: Boolean!
-  isPreferredDeskOnboardingDone: Boolean!
-  defaultLocations: [CustomerLocationDetails!]!
-  defaultTeams: [CustomerTeamDetails!]!
-  defaultOrganization: CustomerOrganizationDetails
-  preferredZones: [CustomerLocationTagDetails!]!
-  preferredDesks: [CustomerDeskDetails!]!
+    id: ID!
+    createdAt: DateTime!
+    email: CustomerEmail
+    designation: String
+    title: String
+    name: String
+    givenName: String
+    middleName: String
+    familyName: String
+    photoUrl: String
+    photoUrl24: String
+    photoUrl32: String
+    photoUrl48: String
+    photoUrl72: String
+    photoUrl192: String
+    photoUrl512: String
+    timezone: String
+    locale: String
+    isOrganizationOnboardingDone: Boolean!
+    isLocationOnboardingDone: Boolean!
+    isDefaultOrganizationOnboardingDone: Boolean!
+    isDefaultLocationOnboardingDone: Boolean!
+    isPreferredZoneOnboardingDone: Boolean!
+    isPreferredDeskOnboardingDone: Boolean!
+    defaultLocations: [CustomerLocationDetails!]!
+    defaultTeams: [CustomerTeamDetails!]!
+    defaultOrganization: CustomerOrganizationDetails
+    preferredZones: [CustomerLocationTagDetails!]!
+    preferredDesks: [CustomerDeskDetails!]!
 }
 
 type CustomerEmail implements Node {
-  id: ID!
-  email: String!
-  verified: Boolean!
+    id: ID!
+    email: String!
+    verified: Boolean!
 }
 
 type CustomerOrganizationDetails {
-  uniqueId: ID!
-  name: String
-  logoUrl: String
+    uniqueId: ID!
+    name: String
+    logoUrl: String
 }
 
 type CustomerLocationDetails {
-  uniqueId: ID!
-  name: String
-  organization: CustomerOrganizationDetails
+    uniqueId: ID!
+    name: String
+    organization: CustomerOrganizationDetails
 }
 
 type CustomerTeamDetails {
-  uniqueId: ID!
-  name: String
-  organization: CustomerOrganizationDetails
+    uniqueId: ID!
+    name: String
+    organization: CustomerOrganizationDetails
 }
 
 input CompleteOrganizationOnboardingInput {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 input CompleteLocationOnboardingInput {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 input CompleteDefaultOrganizationOnboardingInput {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 input CompleteDefaultLocationOnboardingInput {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 input CompletePreferredZoneOnboardingInput {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 input CompletePreferredDeskOnboardingInput {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type CustomerPayload {
-  clientMutationId: String
-  customer: CustomerDetails!
+    clientMutationId: String
+    customer: CustomerDetails!
 }
 
 input AddCustomerDefaultLocationInput {
-  clientMutationId: String
-  locationId: String!
+    clientMutationId: String
+    locationId: String!
 }
 
 input RemoveCustomerDefaultLocationInput {
-  clientMutationId: String
-  locationId: String!
+    clientMutationId: String
+    locationId: String!
 }
 
 input SetCustomerDefaultOrganizationInput {
-  clientMutationId: String
-  organizationId: String!
+    clientMutationId: String
+    organizationId: String!
 }
 
 input ClearCustomerDefaultOrganizationInput {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 input AddCustomerDefaultLocationTagInput {
-  clientMutationId: String
-  locationTagId: String!
+    clientMutationId: String
+    locationTagId: String!
 }
 
 input RemoveCustomerDefaultLocationTagInput {
-  clientMutationId: String
-  locationTagId: String!
+    clientMutationId: String
+    locationTagId: String!
 }
 
 input AddCustomerDefaultDeskInput {
-  clientMutationId: String
-  deskId: String!
+    clientMutationId: String
+    deskId: String!
 }
 
 input RemoveCustomerDefaultDeskInput {
-  clientMutationId: String
-  deskId: String!
+    clientMutationId: String
+    deskId: String!
 }
 
 type CustomerLocationTagDetails {
-  uniqueId: ID!
-  name: String
+    uniqueId: ID!
+    name: String
 }
 
 type CustomerDeskDetails {
-  uniqueId: ID!
-  name: String
+    uniqueId: ID!
+    name: String
 }
 
 input SubmitCustomerFeedbackInput {
-  clientMutationId: String
-  id: String!
-  feedbackContent: String!
+    clientMutationId: String
+    id: String!
+    feedbackContent: String!
 }
 
 type SubmitCustomerFeedbackPayload {
-  clientMutationId: String
-  id: ID!
+    clientMutationId: String
+    id: ID!
 }
 
 input AddCustomerDefaultTeamInput {
-  clientMutationId: String
-  teamId: String!
+    clientMutationId: String
+    teamId: String!
 }
 
 input RemoveCustomerDefaultTeamInput {
-  clientMutationId: String
-  teamId: String!
+    clientMutationId: String
+    teamId: String!
 }
 
 input UpdateMyCustomerDetailsInput {
-  clientMutationId: String
-  timezone: String
-  designation: String
-  title: String
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
+    clientMutationId: String
+    timezone: String
+    designation: String
+    title: String
+    name: String
+    givenName: String
+    middleName: String
+    familyName: String
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+    Ascending
+    Descending
 }
 
 enum CustomerOrderField {
-  designation
-  title
-  name
-  givenName
-  middleName
-  familyName
-  timezone
-  locale
+    designation
+    title
+    name
+    givenName
+    middleName
+    familyName
+    timezone
+    locale
 }
 
 input CustomerOrderInput {
-  direction: OrderDirection!
-  field: CustomerOrderField
+    direction: OrderDirection!
+    field: CustomerOrderField
 }
 
 type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
 }
 
 type CustomerConnection {
-  pageInfo: PageInfo!
-  edges: [CustomerEdge!]!
-  totalCount: Int
+    pageInfo: PageInfo!
+    edges: [CustomerEdge!]!
+    totalCount: Int
 }
 
 type CustomerEdge {
-  node: CustomerDetails!
-  cursor: String!
+    node: CustomerDetails!
+    cursor: String!
 }";
 }
