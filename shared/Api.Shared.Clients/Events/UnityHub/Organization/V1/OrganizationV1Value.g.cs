@@ -35,42 +35,43 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
             "ZRgBIAEoCzIaLm9yZ2FuaXphdGlvbi5Pcmdhbml6YXRpb25IABI8ChZub3Rp",
             "ZmljYXRpb25BZnRlclN0YXRlGAIgASgLMhoub3JnYW5pemF0aW9uLk5vdGlm",
             "aWNhdGlvbkgAEjQKEm9mZmVyaW5nQWZ0ZXJTdGF0ZRgDIAEoCzIWLm9yZ2Fu",
-            "aXphdGlvbi5PZmZlcmluZ0gAQgkKB3BheWxvYWQi2QEKDE9yZ2FuaXphdGlv",
+            "aXphdGlvbi5PZmZlcmluZ0gAQgkKB3BheWxvYWQi8QEKDE9yZ2FuaXphdGlv",
             "bhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJv",
             "dG9idWYuVGltZXN0YW1wEgwKBG5hbWUYAyABKAkSDQoFYWJvdXQYBCABKAkS",
             "DwoHbG9nb1VybBgFIAEoCRIPCgd3ZWJzaXRlGAYgASgJEiUKB21lbWJlcnMY",
             "ByADKAsyFC5vcmdhbml6YXRpb24uTWVtYmVyEigKCE9mZmVyaW5nGAggASgL",
-            "MhYub3JnYW5pemF0aW9uLk9mZmVyaW5nIl4KBk1lbWJlchIKCgJpZBgBIAEo",
-            "CRISCgpjdXN0b21lcklkGAIgASgJEjQKDm1lbWJlcnNoaXBUeXBlGAMgASgO",
-            "Mhwub3JnYW5pemF0aW9uLk1lbWJlcnNoaXBUeXBlItEBCghPZmZlcmluZxIK",
-            "CgJpZBgBIAEoCRIMCgRjb2RlGAIgASgJEikKBXN0YXJ0GAMgASgLMhouZ29v",
-            "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYBCABKAsyGi5nb29nbGUu",
-            "cHJvdG9idWYuVGltZXN0YW1wEhEKCWF1dG9SZW5ldxgFIAEoCBIRCgl1bml0",
-            "UHJpY2UYBiABKAUSGQoRYWN0aXZlQ3VzdG9tZXJJZHMYByADKAkSFgoOb3Jn",
-            "YW5pemF0aW9uSWQYCCABKAkiFgoITG9jYXRpb24SCgoCaWQYASABKAki4wEK",
-            "DE5vdGlmaWNhdGlvbhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsy",
-            "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjgKEG5vdGlmaWNhdGlvblR5",
-            "cGUYAyABKA4yHi5vcmdhbml6YXRpb24uTm90aWZpY2F0aW9uVHlwZRJeCiNp",
-            "bnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGV0YWlscxgEIAEoCzIxLm9y",
-            "Z2FuaXphdGlvbi5JbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGV0YWls",
-            "cyJlCiNJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGV0YWlscxIWCg5v",
-            "cmdhbml6YXRpb25JZBgBIAEoCRITCgtpbnZpdGVkQnlJZBgCIAEoCRIRCglp",
-            "bnZpdGVlSWQYAyABKAkqjQEKBFR5cGUSGAoUT3JnYW5pemF0aW9uVXBzZXJ0",
-            "ZWQQABIXChNPcmdhbml6YXRpb25EZWxldGVkEAESGAoUTm90aWZpY2F0aW9u",
-            "VXBzZXJ0ZWQQAhIXChNOb3RpZmljYXRpb25EZWxldGVkEAMSHwobT3JnYW5p",
-            "emF0aW9uT2ZmZXJpbmdVcGRhdGVkEAQqZAoOTWVtYmVyc2hpcFR5cGUSFwoT",
-            "TWVtYmVyc2hpcFR5cGVPd25lchAAEh8KG01lbWJlcnNoaXBUeXBlQWRtaW5p",
-            "c3RyYXRvchABEhgKFE1lbWJlcnNoaXBUeXBlTWVtYmVyEAIqNAoQTm90aWZp",
-            "Y2F0aW9uVHlwZRIgChxJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uEABC",
-            "O6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuVW5pdHlIdWIuT3JnYW5p",
-            "emF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "MhYub3JnYW5pemF0aW9uLk9mZmVyaW5nEhYKDmF6dXJlVGVuYW50SWRzGAkg",
+            "AygJIl4KBk1lbWJlchIKCgJpZBgBIAEoCRISCgpjdXN0b21lcklkGAIgASgJ",
+            "EjQKDm1lbWJlcnNoaXBUeXBlGAMgASgOMhwub3JnYW5pemF0aW9uLk1lbWJl",
+            "cnNoaXBUeXBlItEBCghPZmZlcmluZxIKCgJpZBgBIAEoCRIMCgRjb2RlGAIg",
+            "ASgJEikKBXN0YXJ0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFt",
+            "cBInCgNlbmQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhEK",
+            "CWF1dG9SZW5ldxgFIAEoCBIRCgl1bml0UHJpY2UYBiABKAUSGQoRYWN0aXZl",
+            "Q3VzdG9tZXJJZHMYByADKAkSFgoOb3JnYW5pemF0aW9uSWQYCCABKAkiFgoI",
+            "TG9jYXRpb24SCgoCaWQYASABKAki4wEKDE5vdGlmaWNhdGlvbhIKCgJpZBgB",
+            "IAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGlt",
+            "ZXN0YW1wEjgKEG5vdGlmaWNhdGlvblR5cGUYAyABKA4yHi5vcmdhbml6YXRp",
+            "b24uTm90aWZpY2F0aW9uVHlwZRJeCiNpbnZpdGF0aW9uVG9Kb2luT3JnYW5p",
+            "emF0aW9uRGV0YWlscxgEIAEoCzIxLm9yZ2FuaXphdGlvbi5JbnZpdGF0aW9u",
+            "VG9Kb2luT3JnYW5pemF0aW9uRGV0YWlscyJlCiNJbnZpdGF0aW9uVG9Kb2lu",
+            "T3JnYW5pemF0aW9uRGV0YWlscxIWCg5vcmdhbml6YXRpb25JZBgBIAEoCRIT",
+            "CgtpbnZpdGVkQnlJZBgCIAEoCRIRCglpbnZpdGVlSWQYAyABKAkqjQEKBFR5",
+            "cGUSGAoUT3JnYW5pemF0aW9uVXBzZXJ0ZWQQABIXChNPcmdhbml6YXRpb25E",
+            "ZWxldGVkEAESGAoUTm90aWZpY2F0aW9uVXBzZXJ0ZWQQAhIXChNOb3RpZmlj",
+            "YXRpb25EZWxldGVkEAMSHwobT3JnYW5pemF0aW9uT2ZmZXJpbmdVcGRhdGVk",
+            "EAQqZAoOTWVtYmVyc2hpcFR5cGUSFwoTTWVtYmVyc2hpcFR5cGVPd25lchAA",
+            "Eh8KG01lbWJlcnNoaXBUeXBlQWRtaW5pc3RyYXRvchABEhgKFE1lbWJlcnNo",
+            "aXBUeXBlTWVtYmVyEAIqNAoQTm90aWZpY2F0aW9uVHlwZRIgChxJbnZpdGF0",
+            "aW9uVG9Kb2luT3JnYW5pemF0aW9uEABCO6oCOEFwaS5TaGFyZWQuQ2xpZW50",
+            "cy5FdmVudHMuVW5pdHlIdWIuT3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.MembershipType), typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.NotificationType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Data.Parser, new[]{ "OrganizationAfterState", "NotificationAfterState", "OfferingAfterState" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Member), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Member.Parser, new[]{ "Id", "CustomerId", "MembershipType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
@@ -1138,6 +1139,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       website_ = other.website_;
       members_ = other.members_.Clone();
       offering_ = other.offering_ != null ? other.offering_.Clone() : null;
+      azureTenantIds_ = other.azureTenantIds_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1242,6 +1244,17 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "azureTenantIds" field.</summary>
+    public const int AzureTenantIdsFieldNumber = 9;
+    private static readonly pb::FieldCodec<string> _repeated_azureTenantIds_codec
+        = pb::FieldCodec.ForString(74);
+    private readonly pbc::RepeatedField<string> azureTenantIds_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<string> AzureTenantIds {
+      get { return azureTenantIds_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1265,6 +1278,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       if (Website != other.Website) return false;
       if(!members_.Equals(other.members_)) return false;
       if (!object.Equals(Offering, other.Offering)) return false;
+      if(!azureTenantIds_.Equals(other.azureTenantIds_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1280,6 +1294,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       if (Website.Length != 0) hash ^= Website.GetHashCode();
       hash ^= members_.GetHashCode();
       if (offering_ != null) hash ^= Offering.GetHashCode();
+      hash ^= azureTenantIds_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1327,6 +1342,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
         output.WriteRawTag(66);
         output.WriteMessage(Offering);
       }
+      azureTenantIds_.WriteTo(output, _repeated_azureTenantIds_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1366,6 +1382,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
         output.WriteRawTag(66);
         output.WriteMessage(Offering);
       }
+      azureTenantIds_.WriteTo(ref output, _repeated_azureTenantIds_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1398,6 +1415,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       if (offering_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Offering);
       }
+      size += azureTenantIds_.CalculateSize(_repeated_azureTenantIds_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1438,6 +1456,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
         }
         Offering.MergeFrom(other.Offering);
       }
+      azureTenantIds_.Add(other.azureTenantIds_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1495,6 +1514,10 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
             input.ReadMessage(Offering);
             break;
           }
+          case 74: {
+            azureTenantIds_.AddEntriesFrom(input, _repeated_azureTenantIds_codec);
+            break;
+          }
         }
       }
     #endif
@@ -1550,6 +1573,10 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
               Offering = new global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Offering();
             }
             input.ReadMessage(Offering);
+            break;
+          }
+          case 74: {
+            azureTenantIds_.AddEntriesFrom(ref input, _repeated_azureTenantIds_codec);
             break;
           }
         }

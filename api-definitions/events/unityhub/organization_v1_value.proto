@@ -44,6 +44,7 @@ message Organization {
   string website = 6;
   repeated Member members = 7;
   Offering Offering = 8;
+  repeated string azureTenantIds = 9;
 }
 
 enum MembershipType {
