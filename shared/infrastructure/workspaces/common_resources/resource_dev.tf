@@ -54,15 +54,15 @@ resource "azuread_application" "azure_application_dev" {
   required_resource_access {
     resource_app_id = data.azuread_application_published_app_ids.well_known.result["MicrosoftGraph"]
 
-    resource_access {
-      id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.ReadBasic.All"]
-      type = "Scope"
-    }
+    # resource_access {
+    #   id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.ReadBasic.All"]
+    #   type = "Scope"
+    # }
 
-    resource_access {
-      id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["ProfilePhoto.Read.All"]
-      type = "Scope"
-    }
+    # resource_access {
+    #   id   = data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["ProfilePhoto.Read.All"]
+    #   type = "Scope"
+    # }
 
     resource_access {
       # User.ReadBasic.All
@@ -73,6 +73,30 @@ resource "azuread_application" "azure_application_dev" {
     resource_access {
       # ProfilePhoto.Read.All
       id   = "e24d31aa-e1ab-4c80-85fe-23018690335d"
+      type = "Role"
+    }
+
+    resource_access {
+      # ChannelSettings.ReadWrite.All
+      id   = "243cded2-bd16-4fd6-a953-ff8177894c3d"
+      type = "Role"
+    }
+
+    resource_access {
+      # Group.ReadWrite.All
+      id   = "62a82d76-70ea-41e2-9197-370581804d09"
+      type = "Role"
+    }
+
+    resource_access {
+      # Team.ReadBasic.All
+      id   = "2280dda6-0bfd-44ee-a2f4-cb867cfc4c1e"
+      type = "Role"
+    }
+
+    resource_access {
+      # Teamwork.Migrate.All
+      id   = "dfb0dd15-61de-45b2-be36-d6a69fba3c79"
       type = "Role"
     }
   }
