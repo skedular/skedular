@@ -6,6 +6,7 @@ using Enterprise.Shared.Random;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.VisualBasic;
 using Organization.Api.Mappers;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
@@ -33,6 +34,24 @@ public class AzureTenantService(
     IOrganizationInternalOutboxPublisher organizationInternalOutboxPublisher,
     IMapper mapper) : IAzureTenantService
 {
+    private static readonly string[] s_userProfilePermissions =
+        ["User.ReadBasic.All", "ProfilePhoto.Read.All", "email", "offline_access", "openid"];
+
+    private static readonly string[] s_teamPermissions =
+    [
+        "Team.ReadBasic.All" // List teams
+    ];
+
+    private static readonly string[] s_channelPermissions =
+    [
+        "Group.ReadWrite.All", // Maintain channel
+        "ChannelSettings.ReadWrite.All", // Archive Channel
+        "Teamwork.Migrate.All" // Send chatMessage in channel
+    ];
+
+    private static readonly string[] s_allPermissions =
+        s_userProfilePermissions.Concat(s_teamPermissions).Concat(s_channelPermissions).ToArray();
+
     public async Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken)
     {
         Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
@@ -79,8 +98,7 @@ public class AzureTenantService(
         var tenantId = context.PropertyBag.AzureTenantId;
         var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(currentUri + "organization/api/v1/onboard-azure-tenant");
-        var scope = Uri.EscapeDataString(
-            "User.ReadBasic.All ProfilePhoto.Read.All email offline_access openid profile");
+        var scope = Uri.EscapeDataString(Strings.Join(s_allPermissions)!);
         var authorizationRequest =
             $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={installStateUserIdLookup.Id}";
 

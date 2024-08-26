@@ -31,7 +31,7 @@
       "name": "UnityHub Home",
       "contentUrl": "https://localhost:15002",
       "websiteUrl": "https://localhost:15002",
-      "scopes": ["personal"]
+      "scopes": ["personal", "team", "groupChat"]
     }
   ],
   "permissions": ["identity", "messageTeamMembers"],
