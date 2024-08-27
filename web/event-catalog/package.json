@@ -7,13 +7,17 @@
     "dev": "PORT=15003 eventcatalog dev",
     "build": "eventcatalog build",
     "start": "eventcatalog start",
-    "preview": "eventcatalog preview"
+    "preview": "eventcatalog preview",
+    "generate": "eventcatalog generate",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@eventcatalog/core": "^2.0.12"
+    "@eventcatalog/core": "latest"
   },
   "devDependencies": {
-    "@parcel/watcher": "^2.4.1",
-    "concurrently": "^8.2.2"
+    "@parcel/watcher": "2.4.1",
+    "@types/lodash.merge": "4.6.9",
+    "concurrently": "8.2.2",
+    "cross-env": "7.0.3"
   }
 }
