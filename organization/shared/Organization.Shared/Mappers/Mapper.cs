@@ -39,6 +39,8 @@ public class Mapper : IMapper
             }
         };
 
+        organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
+
         organization.Offering.ActiveCustomerIds.AddRange(
             organizationOffering.OrganizationOfferingActiveMembers.Select(item => item.OrganizationMember.Customer.Id));
 

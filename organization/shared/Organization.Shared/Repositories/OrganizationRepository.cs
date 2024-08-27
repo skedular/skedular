@@ -39,6 +39,9 @@ internal static class OrganizationExtensions
     internal static IIncludableQueryable<Database.Entities.Organization, ICollection<Team>> AddDependentObjects(
         this IQueryable<Database.Entities.Organization> originalQuery) =>
         originalQuery
+            .Include(query => query.AzureTenants.Where(azureTenant => !azureTenant.DeletedAt.HasValue))
+            .ThenInclude(query =>
+                query.AzureTenantMembers.Where(azureTenantMember => !azureTenantMember.DeletedAt.HasValue))
             .Include(query =>
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
