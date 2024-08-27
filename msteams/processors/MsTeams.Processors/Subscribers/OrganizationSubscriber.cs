@@ -83,7 +83,17 @@ public class OrganizationSubscriber(
             : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization,
                 existingOrganization));
 
+        var azureTenants = new List<AzureTenant>();
+        foreach (var azureTenant in organization.AzureTenants)
+        {
+            azureTenants.Add(
+                await repositoryFactory.AzureTenantRepository.UpsertNakedAsync(azureTenant.Id, cancellationToken));
+        }
+
+        existingOrganization.AzureTenants = azureTenants;
+
         _ = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
+        await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

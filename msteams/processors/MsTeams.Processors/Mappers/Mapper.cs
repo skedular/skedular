@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
 using Api.Shared.Models;
 using Enterprise.Shared;
+using MsTeams.Shared.Models;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Customer = MsTeams.Shared.Models.Customer;
 using Identity = MsTeams.Shared.Database.Entities.Identity;
@@ -125,6 +126,10 @@ public class Mapper : IMapper
         {
             Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt
         };
+
+        organization.AzureTenants = organizationAfterState.AzureTenantIds
+            .Select(item => new AzureTenant { Id = item, Organization = organization, EventRaisedAt = eventRaisedAt })
+            .ToList();
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
         {

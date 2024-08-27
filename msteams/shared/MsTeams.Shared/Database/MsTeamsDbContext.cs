@@ -11,6 +11,7 @@ public class MsTeamsDbContext(
     DbContextOptions<MsTeamsDbContext> options,
     CustomDbContextOptions customDbContextOptions) : DbContextBase<MsTeamsDbContext>(options, customDbContextOptions)
 {
+    public DbSet<AzureTenant> AzureTenant { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Location> Location { get; set; }

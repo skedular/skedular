@@ -1,10 +1,10 @@
 ﻿using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Organization.Shared.Database;
-using Organization.Shared.Database.Entities;
+using MsTeams.Shared.Database;
+using MsTeams.Shared.Database.Entities;
 
-namespace Organization.Shared.Repositories;
+namespace MsTeams.Shared.Repositories;
 
 public interface IAzureTenantRepository : IRepository<AzureTenant>
 {
@@ -16,17 +16,14 @@ public interface IAzureTenantRepository : IRepository<AzureTenant>
 
 internal static class AzureTenantExtensions
 {
-    internal static IIncludableQueryable<AzureTenant, ICollection<AzureTenantMember>> AddDependentObjects(
+    internal static IIncludableQueryable<AzureTenant, Organization> AddDependentObjects(
         this IQueryable<AzureTenant> originalQuery) =>
         originalQuery
-            .Include(query => query.Organization)
-            .ThenInclude(query => query.OrganizationMembers)
-            .ThenInclude(query => query.Customer)
-            .Include(query => query.AzureTenantMembers);
+            .Include(query => query.Organization);
 }
 
-public class AzureTenantRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, AzureTenant>(dbContext), IAzureTenantRepository
+public class AzureTenantRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)
+    : RepositoryBase<MsTeamsDbContext, AzureTenant>(dbContext), IAzureTenantRepository
 {
     public async Task<AzureTenant> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
