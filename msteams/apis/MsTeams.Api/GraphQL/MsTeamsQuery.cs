@@ -8,7 +8,8 @@ namespace MsTeams.Api.GraphQL;
 
 public class MsTeamsQuery : Query
 {
-    public override Task<Version> MsTeamsVersionAsync(IServiceProvider serviceProvider,
+    public override Task<Version> MsTeamsVersionAsync(
+        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
