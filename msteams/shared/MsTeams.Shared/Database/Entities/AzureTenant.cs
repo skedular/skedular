@@ -1,4 +1,3 @@
-using Api.Shared;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -11,6 +10,7 @@ public class AzureTenant : ReplicatedEntityBaseWithDeleted
 {
     public DateTimeOffset? TeamsAndChannelsLastRefreshedAt { get; set; }
     public virtual Organization Organization { get; set; }
+    public virtual ICollection<AzureTenantTeam> AzureTenantTeams { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

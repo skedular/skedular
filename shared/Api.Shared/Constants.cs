@@ -70,4 +70,8 @@ public static class Constants
     public const int MaxSlackScopeLength = 10000;
 
     public const int MaxTokenLength = 10000;
+    
+    public const int MaxAzureTeamNameLength = 1000;
+    public const int MaxAzureTeamChannelNameLength = 1000;
+
 }

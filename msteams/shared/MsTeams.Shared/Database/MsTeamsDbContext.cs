@@ -12,6 +12,8 @@ public class MsTeamsDbContext(
     CustomDbContextOptions customDbContextOptions) : DbContextBase<MsTeamsDbContext>(options, customDbContextOptions)
 {
     public DbSet<AzureTenant> AzureTenant { get; set; }
+    public DbSet<AzureTenantTeam> AzureTenantTeam { get; set; }
+    public DbSet<AzureTenantTeamChannel> AzureTenantTeamChannel { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Location> Location { get; set; }

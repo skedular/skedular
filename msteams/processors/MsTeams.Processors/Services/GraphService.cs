@@ -29,10 +29,7 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory) 
                             "displayName",
                             "description",
                             "photo",
-                            "webUrl",
-                            "allChannels",
-                            "incomingChannels",
-                            "primaryChannel"
+                            "webUrl"
                         ];
                         _ = requestConfiguration.QueryParameters.Select.Skip(skipCount);
                     },
