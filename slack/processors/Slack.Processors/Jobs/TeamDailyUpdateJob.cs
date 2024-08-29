@@ -51,7 +51,7 @@ public class TeamDailyUpdateJob(
                     .ToList();
                 if (teamIds.Count != 0)
                 {
-                    await slackInternalPublisher.PublishWorkspaceTeamDailyUpdateMessageAsync(teamIds,
+                    await slackInternalPublisher.PublishSendWorkspaceTeamDailyUpdateMessageAsync(teamIds,
                         cancellationToken);
                 }
 

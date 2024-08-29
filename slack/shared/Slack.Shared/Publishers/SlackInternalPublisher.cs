@@ -17,11 +17,11 @@ public interface ISlackInternalPublisher
         IEnumerable<string> workspaceIds,
         CancellationToken cancellationToken);
 
-    Task PublishWorkspaceLocationDailyUpdateMessageAsync(
+    Task PublishSendWorkspaceLocationDailyUpdateMessageAsync(
         IEnumerable<string> locationIds,
         CancellationToken cancellationToken);
 
-    Task PublishWorkspaceTeamDailyUpdateMessageAsync(
+    Task PublishSendWorkspaceTeamDailyUpdateMessageAsync(
         IEnumerable<string> teamIds,
         CancellationToken cancellationToken);
 
@@ -74,7 +74,7 @@ public class SlackInternalPublisher(
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
 
-    public async Task PublishWorkspaceLocationDailyUpdateMessageAsync(
+    public async Task PublishSendWorkspaceLocationDailyUpdateMessageAsync(
         IEnumerable<string> locationIds,
         CancellationToken cancellationToken) =>
         await Task.WhenAll(locationIds.Select(async locationId =>
@@ -93,7 +93,7 @@ public class SlackInternalPublisher(
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
 
-    public async Task PublishWorkspaceTeamDailyUpdateMessageAsync(
+    public async Task PublishSendWorkspaceTeamDailyUpdateMessageAsync(
         IEnumerable<string> teamIds,
         CancellationToken cancellationToken) =>
         await Task.WhenAll(teamIds.Select(async teamId =>

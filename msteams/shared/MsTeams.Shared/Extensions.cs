@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MsTeams.Shared.Configurations;
 using MsTeams.Shared.Mappers;
+using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
 
 namespace MsTeams.Shared;
@@ -29,7 +30,8 @@ public static class Extensions
             .AddScoped<ITeamRepository, TeamRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services;
+        services
+            .AddScoped<IMsTeamsInternalPublisher, MsTeamsInternalPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services;

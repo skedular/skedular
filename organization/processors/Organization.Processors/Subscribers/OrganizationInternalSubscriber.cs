@@ -243,6 +243,18 @@ public class OrganizationInternalSubscriber(
                         cancellationToken: cancellationToken);
                 }
 
+                if (getLocationsResponse.TotalCount == 1)
+                {
+                    await customerServiceClient.Admin_AddDefaultLocationAsync(
+                        new Admin_AddDefaultLocationInput
+                        {
+                            LocationId = getLocationsResponse.Edges.First().Node.Id,
+                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
+                        },
+                        customerConfiguration.ApiKey.CreateMetadata(),
+                        cancellationToken: cancellationToken);
+                }
+
                 continue;
             }
 

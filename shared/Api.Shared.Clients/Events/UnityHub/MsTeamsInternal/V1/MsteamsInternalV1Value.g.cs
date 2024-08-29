@@ -24,16 +24,17 @@ namespace Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value {
     static MsteamsInternalV1ValueReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Ch9tc3RlYW1zX2ludGVybmFsX3YxX3ZhbHVlLnByb3RvEg1zbGFja2ludGVy",
-            "bmFsGh9nb29nbGUvcHJvdG9idWYvdGltZXN0YW1wLnByb3RvIlYKBUV2ZW50",
-            "EikKCG1ldGFkYXRhGAEgASgLMhcuc2xhY2tpbnRlcm5hbC5NZXRhZGF0YRIX",
-            "Cg1BenVyZVRlbmFudElkGAIgASgJSABCCQoHcGF5bG9hZCKjAQoITWV0YWRh",
-            "dGESCgoCaWQYASABKAkSFAoMZG9tYWluU291cmNlGAIgASgJEhEKCWFwcFNv",
-            "dXJjZRgDIAEoCRIhCgR0eXBlGAQgASgOMhMuc2xhY2tpbnRlcm5hbC5UeXBl",
-            "EigKBHRpbWUYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhUK",
-            "DWNvcnJlbGF0aW9uSWQYBiABKAkqJQoEVHlwZRIdChlSZWZyZXNoQXp1cmVU",
-            "ZW5hbnRNZW1iZXJzEABCPqoCO0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMu",
-            "VW5pdHlIdWIuTXNUZWFtc0ludGVybmFsLlYxLlZhbHVlYgZwcm90bzM="));
+            "Ch9tc3RlYW1zX2ludGVybmFsX3YxX3ZhbHVlLnByb3RvEg9tc3RlYW1zaW50",
+            "ZXJuYWwaH2dvb2dsZS9wcm90b2J1Zi90aW1lc3RhbXAucHJvdG8iWAoFRXZl",
+            "bnQSKwoIbWV0YWRhdGEYASABKAsyGS5tc3RlYW1zaW50ZXJuYWwuTWV0YWRh",
+            "dGESFwoNQXp1cmVUZW5hbnRJZBgCIAEoCUgAQgkKB3BheWxvYWQipQEKCE1l",
+            "dGFkYXRhEgoKAmlkGAEgASgJEhQKDGRvbWFpblNvdXJjZRgCIAEoCRIRCglh",
+            "cHBTb3VyY2UYAyABKAkSIwoEdHlwZRgEIAEoDjIVLm1zdGVhbXNpbnRlcm5h",
+            "bC5UeXBlEigKBHRpbWUYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
+            "YW1wEhUKDWNvcnJlbGF0aW9uSWQYBiABKAkqLgoEVHlwZRImCiJSZWZyZXNo",
+            "QXp1cmVUZW5hbnRUZWFtc0FuZENoYW5uZWxzEABCPqoCO0FwaS5TaGFyZWQu",
+            "Q2xpZW50cy5FdmVudHMuVW5pdHlIdWIuTXNUZWFtc0ludGVybmFsLlYxLlZh",
+            "bHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -46,7 +47,7 @@ namespace Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("RefreshAzureTenantMembers")] RefreshAzureTenantMembers = 0,
+    [pbr::OriginalName("RefreshAzureTenantTeamsAndChannels")] RefreshAzureTenantTeamsAndChannels = 0,
   }
 
   #endregion
@@ -428,7 +429,7 @@ namespace Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value {
 
     /// <summary>Field number for the "type" field.</summary>
     public const int TypeFieldNumber = 4;
-    private global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type type_ = global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantMembers;
+    private global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type type_ = global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantTeamsAndChannels;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type Type {
@@ -493,7 +494,7 @@ namespace Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (DomainSource.Length != 0) hash ^= DomainSource.GetHashCode();
       if (AppSource.Length != 0) hash ^= AppSource.GetHashCode();
-      if (Type != global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantMembers) hash ^= Type.GetHashCode();
+      if (Type != global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantTeamsAndChannels) hash ^= Type.GetHashCode();
       if (time_ != null) hash ^= Time.GetHashCode();
       if (CorrelationId.Length != 0) hash ^= CorrelationId.GetHashCode();
       if (_unknownFields != null) {
@@ -526,7 +527,7 @@ namespace Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantMembers) {
+      if (Type != global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantTeamsAndChannels) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Type);
       }
@@ -560,7 +561,7 @@ namespace Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantMembers) {
+      if (Type != global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantTeamsAndChannels) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Type);
       }
@@ -591,7 +592,7 @@ namespace Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value {
       if (AppSource.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantMembers) {
+      if (Type != global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantTeamsAndChannels) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
       if (time_ != null) {
@@ -621,7 +622,7 @@ namespace Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value {
       if (other.AppSource.Length != 0) {
         AppSource = other.AppSource;
       }
-      if (other.Type != global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantMembers) {
+      if (other.Type != global::Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Type.RefreshAzureTenantTeamsAndChannels) {
         Type = other.Type;
       }
       if (other.time_ != null) {

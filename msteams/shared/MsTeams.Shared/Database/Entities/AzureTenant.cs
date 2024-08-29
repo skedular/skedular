@@ -9,6 +9,7 @@ namespace MsTeams.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class AzureTenant : ReplicatedEntityBaseWithDeleted
 {
+    public DateTimeOffset? TeamsAndChannelsLastRefreshedAt { get; set; }
     public virtual Organization Organization { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -22,5 +23,7 @@ public class TenantConfiguration : IEntityTypeConfiguration<AzureTenant>
         builder
             .HasOne(item => item.Organization)
             .WithMany(item => item.AzureTenants);
+
+        builder.HasIndex(item => item.TeamsAndChannelsLastRefreshedAt);
     }
 }

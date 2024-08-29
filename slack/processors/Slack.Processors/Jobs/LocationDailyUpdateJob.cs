@@ -51,7 +51,8 @@ public class LocationDailyUpdateJob(
                     .ToList();
                 if (locationIds.Count != 0)
                 {
-                    await slackInternalPublisher.PublishWorkspaceLocationDailyUpdateMessageAsync(locationIds,
+                    await slackInternalPublisher.PublishSendWorkspaceLocationDailyUpdateMessageAsync(
+                        locationIds,
                         cancellationToken);
                 }
 

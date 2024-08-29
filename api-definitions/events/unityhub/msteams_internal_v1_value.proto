@@ -1,12 +1,12 @@
 syntax = "proto3";
-package slackinternal;
+package msteamsinternal;
 
 import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value";
 
 enum Type {
-  RefreshAzureTenantMembers = 0;
+  RefreshAzureTenantTeamsAndChannels = 0;
 }
 
 message Event {
