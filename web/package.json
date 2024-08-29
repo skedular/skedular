@@ -5,7 +5,7 @@
   "engines": {
     "node": "^20"
   },
-  "packageManager": "pnpm@9.8.0",
+  "packageManager": "pnpm@9.9.0",
   "workspace": [
     "apps/*",
     "packages/*"
@@ -38,10 +38,10 @@
   },
   "devDependencies": {
     "@types/relay-runtime": "^17.0.4",
-    "eslint": "9.9.0",
-    "eslint-plugin-turbo": "^2.0.14",
+    "eslint": "9.9.1",
+    "eslint-plugin-turbo": "^2.1.0",
     "global": "^4.4.0",
-    "next": "14.2.6",
-    "turbo": "^2.0.14"
+    "next": "14.2.7",
+    "turbo": "^2.1.0"
   }
 }
