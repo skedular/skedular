@@ -26,6 +26,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddKafka()
             .AddKafkaReliableEventConsumers<
+                MsTeamsInternalSubscriber,
+                Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Key.Key,
+                Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.UnityHub.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>(kafkaConfiguration)
@@ -48,6 +52,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddMappers()
             .AddRepositoryFactory()
             .AddPublishers()
+            .AddServices()
             .AddMappers()
             .AddJobs();
     }

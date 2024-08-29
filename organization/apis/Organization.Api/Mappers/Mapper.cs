@@ -5,6 +5,7 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
+using Organization.Shared.Models;
 using AddOrganizationInput = Api.Shared.Services.GraphQL.UnityHub.V1.Organization.AddOrganizationInput;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
@@ -120,6 +121,7 @@ public class Mapper : IMapper
         organization.Locations = MapTo(src.Locations, organization).ToList();
         organization.Teams = MapTo(src.Teams, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
+        organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
 
         return organization;
     }
@@ -738,7 +740,66 @@ public class Mapper : IMapper
             Invitee = MapTo(src.Invitee)
         };
 
-    private Edge<OrganizationMember> MapTo(Edge<Shared.Database.Entities.OrganizationMember> src,
+    private Edge<OrganizationMember> MapTo(
+        Edge<Shared.Database.Entities.OrganizationMember> src,
         Shared.Models.Organization organization) =>
         new(src.Cursor, MapTo(src.Node, organization));
+
+    private static IEnumerable<AzureTenant> MapTo(
+        IEnumerable<Shared.Database.Entities.AzureTenant> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static AzureTenant MapTo(
+        Shared.Database.Entities.AzureTenant src,
+        Shared.Models.Organization organization)
+    {
+        var azureTenant = new AzureTenant
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+            Name = src.Name,
+            MembersLastRefreshedAt = src.MembersLastRefreshedAt,
+            Organization = organization
+        };
+
+        azureTenant.AzureTenantMembers = MapTo(src.AzureTenantMembers, azureTenant).ToList();
+
+        return azureTenant;
+    }
+
+    private static IEnumerable<AzureTenantMember> MapTo(
+        IEnumerable<Shared.Database.Entities.AzureTenantMember> src,
+        AzureTenant azureTenant) =>
+        src.Select(item => MapTo(item, azureTenant));
+
+    private static AzureTenantMember MapTo(
+        Shared.Database.Entities.AzureTenantMember src,
+        AzureTenant azureTenant) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+            Email = src.Email,
+            Designation = src.Designation,
+            Name = src.Name,
+            GivenName = src.GivenName,
+            FamilyName = src.FamilyName,
+            PreferredLanguage = src.PreferredLanguage,
+            PhotoUrl = src.PhotoUrl,
+            PhotoUrl48 = src.PhotoUrl48,
+            PhotoUrl64 = src.PhotoUrl64,
+            PhotoUrl96 = src.PhotoUrl96,
+            PhotoUrl120 = src.PhotoUrl120,
+            PhotoUrl240 = src.PhotoUrl240,
+            PhotoUrl360 = src.PhotoUrl360,
+            PhotoUrl432 = src.PhotoUrl432,
+            PhotoUrl504 = src.PhotoUrl504,
+            PhotoUrl648 = src.PhotoUrl648,
+            AzureTenant = azureTenant,
+        };
 }

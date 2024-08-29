@@ -20,4 +20,6 @@ public class AzureTenantMember : ModelBaseWithDeleted
     public string? PhotoUrl432 { get; set; }
     public string? PhotoUrl504 { get; set; }
     public string? PhotoUrl648 { get; set; }
+
+    public AzureTenant AzureTenant { get; set; }
 }

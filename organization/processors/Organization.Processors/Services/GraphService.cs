@@ -18,7 +18,7 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory) 
 
         do
         {
-            var userCollectionResponse = await graphServiceClient.Users
+            var response = await graphServiceClient.Users
                 .GetAsync(requestConfiguration =>
                     {
                         requestConfiguration.QueryParameters.Count = true;
@@ -37,14 +37,14 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory) 
                     },
                     cancellationToken);
 
-            if (userCollectionResponse is not null)
+            if (response is not null)
             {
-                ArgumentNullException.ThrowIfNull(userCollectionResponse.Value);
-                skipCount += userCollectionResponse.Value.Count;
-                users.AddRange(userCollectionResponse.Value);
+                ArgumentNullException.ThrowIfNull(response.Value);
+                skipCount += response.Value.Count;
+                users.AddRange(response.Value);
             }
 
-            if (userCollectionResponse is null || string.IsNullOrWhiteSpace(userCollectionResponse.OdataNextLink))
+            if (response is null || string.IsNullOrWhiteSpace(response.OdataNextLink))
             {
                 break;
             }
