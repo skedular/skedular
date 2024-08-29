@@ -1,17 +1,18 @@
+using Enterprise.Shared.Azure.Graph;
 using Microsoft.Graph.Models;
 
-namespace Organization.Shared.Services;
+namespace Organization.Processors.Services;
 
-public interface IMsGraphService
+public interface IGraphService
 {
     Task<List<User>> GetUsersAsync(string tenantId, CancellationToken cancellationToken);
 }
 
-public class MsGraphService(IMsGraphServiceClientService msGraphServiceClientService) : IMsGraphService
+public class GraphService(IGraphServiceClientFactory graphServiceClientFactory) : IGraphService
 {
     public async Task<List<User>> GetUsersAsync(string tenantId, CancellationToken cancellationToken)
     {
-        var graphServiceClient = msGraphServiceClientService.CreateGraphServiceClient(tenantId);
+        var graphServiceClient = graphServiceClientFactory.CreateGraphServiceClient(tenantId);
         var users = new List<User>();
         var skipCount = 0;
 

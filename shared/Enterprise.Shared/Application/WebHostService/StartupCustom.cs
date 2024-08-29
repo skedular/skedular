@@ -1,4 +1,5 @@
 ﻿using Confluent.SchemaRegistry;
+using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Telemetry;
@@ -65,6 +66,8 @@ public abstract class StartupCustom(
         services.AddGrpc();
 
         ConfigureCustomServices(services);
+
+        services.AddSingleton<IGraphServiceClientFactory, GraphServiceClientFactory>();
 
         services.TryAddSingleton(TimeProvider.System);
         services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();

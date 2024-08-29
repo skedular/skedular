@@ -15,7 +15,6 @@ using Organization.Processors.Services;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
-using Organization.Shared.Services;
 using Customer = Organization.Shared.Models.Customer;
 using LocationConfiguration = Organization.Shared.Configurations.LocationConfiguration;
 using CustomerConfiguration = Organization.Shared.Configurations.CustomerConfiguration;
@@ -34,7 +33,7 @@ public class OrganizationInternalSubscriber(
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
     IMapper mapper,
-    IMsGraphService msGraphService,
+    IGraphService graphService,
     CustomerService.CustomerServiceClient customerServiceClient,
     LocationService.LocationServiceClient locationServiceClient,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
@@ -168,7 +167,7 @@ public class OrganizationInternalSubscriber(
             return;
         }
 
-        var users = await msGraphService.GetUsersAsync(tenantId, cancellationToken);
+        var users = await graphService.GetUsersAsync(tenantId, cancellationToken);
         var itemsToRemove = tenant.AzureTenantMembers
             .Where(tenantMember => users.All(item => item.Id != tenantMember.Id))
             .ToList();

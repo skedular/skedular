@@ -17,5 +17,6 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
-            .AddScoped<IOrganizationMemberService, OrganizationMemberService>();
+            .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
+            .AddScoped<IGraphService, GraphService>();
 }

@@ -6,7 +6,6 @@ using Organization.Shared.Configurations;
 using Organization.Shared.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
-using Organization.Shared.Services;
 
 namespace Organization.Shared;
 
@@ -16,9 +15,7 @@ public static class Extensions
         services.AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services
-            .AddScoped<IMsGraphService, MsGraphService>()
-            .AddSingleton<IMsGraphServiceClientService, MsGraphServiceClientService>();
+        services;
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services
