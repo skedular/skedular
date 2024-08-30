@@ -4,6 +4,7 @@ using Confluent.Kafka;
 using Enterprise.Shared.Kafka.Consume;
 using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Database.Entities;
+using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
 using Organization = MsTeams.Shared.Database.Entities.Organization;
 using Type = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Type;
@@ -13,7 +14,8 @@ namespace MsTeams.Processors.Subscribers;
 public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
-    IRepositoryFactory repositoryFactory)
+    IRepositoryFactory repositoryFactory,
+    IMsTeamsInternalPublisher msTeamsInternalPublisher)
     : IEventSubscriber<Key, Event>
 {
     public async Task HandleAsync(
@@ -97,6 +99,10 @@ public class OrganizationSubscriber(
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await msTeamsInternalPublisher.PublishRefreshAzureTenantTeamsAndChannelsAsync(
+            azureTenants.Select(item => item.Id),
+            cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(

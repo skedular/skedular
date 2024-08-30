@@ -3,6 +3,7 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
+using Organization.Api.Mappers;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
@@ -24,6 +25,8 @@ public class AzureTenantOnboardingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
+    IMapper mapper,
+    IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationInternalOutboxPublisher organizationInternalOutboxPublisher,
     IOrganizationTermsOfUseService organizationTermsOfUseService,
     LocationService.LocationServiceClient locationServiceClient,
@@ -65,13 +68,15 @@ public class AzureTenantOnboardingService(
                 }
             ]
         };
-        var tenant = repositoryFactory.AzureTenantRepository.Add(
-            new AzureTenant
-            {
-                Id = tenantId,
-                InstalledByUserId = azureInstallStateUserIdLookup.InstalledByUserId,
-                Organization = organization
-            });
+        var azureTenant = new AzureTenant
+        {
+            Id = tenantId,
+            InstalledByUserId = azureInstallStateUserIdLookup.InstalledByUserId,
+            Organization = organization
+        };
+        organization.AzureTenants = [azureTenant];
+
+        var tenant = repositoryFactory.AzureTenantRepository.Add(azureTenant);
 
         await locationServiceClient.Admin_AddAsync(
             new Admin_AddInput { Id = location.Id, Name = "Office", OrganizationId = organization.Id },
@@ -79,6 +84,11 @@ public class AzureTenantOnboardingService(
             cancellationToken: cancellationToken);
 
         repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(azureInstallStateUserIdLookup);
+
+        await organizationOutboxPublisher.PublishOrganizationAsync(
+            [mapper.MapTo(organization)],
+            repositoryFactory.AzureTenantRepository.UnitOfWork,
+            cancellationToken);
 
         await organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync(
             [tenant.Id],
