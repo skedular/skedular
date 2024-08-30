@@ -1,6 +1,6 @@
 import type { organizationAnalyticsPaginationQuery } from '@/queries/__generated__/organizationAnalyticsPaginationQuery.graphql';
 import type { organizationAnalyticsTab_query$key } from '@/queries/__generated__/organizationAnalyticsTab_query.graphql';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import { axisClasses } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
@@ -110,7 +110,7 @@ const OrganizationAnalyticsTab = ({ rootDataRelay, organizationId }: Props) => {
   return (
     <>
       <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid item>
+        <Grid>
           <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         </Grid>
       </Grid>

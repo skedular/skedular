@@ -9,7 +9,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
 import MUITextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
@@ -356,7 +356,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
     <>
       {!organizationId && (
         <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-          <Grid item>
+          <Grid>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
               Invite People
             </Button>
@@ -364,7 +364,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
         </Grid>
       )}
 
-      <Grid item sx={{ marginTop: 1 }}>
+      <Grid sx={{ marginTop: 1 }}>
         <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} />
           <AccordionDetails>
@@ -378,7 +378,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
       </Grid>
 
       <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid item>
+        <Grid>
           <TablePagination
             count={count}
             page={page}
@@ -387,7 +387,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
             onRowsPerPageChange={handlePageSizeChange}
           />
         </Grid>
-        <Grid item>
+        <Grid>
           <Sorting
             options={[
               { id: 'name', label: 'Name' },
@@ -413,13 +413,13 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
         {organizationId &&
           slicedOrganizationMemberEdges &&
           slicedOrganizationMemberEdges.map((edge) => (
-            <Grid item key={edge.node.id}>
+            <Grid key={edge.node.id}>
               <CustomerCard customerDetailsRelay={edge.node} />
             </Grid>
           ))}
         {!organizationId &&
           slicedLocationMemberEdges.map((edge) => (
-            <Grid item key={edge.node.id}>
+            <Grid key={edge.node.id}>
               <LocationMemberCard data={rootDataLocation} locationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
             </Grid>
           ))}

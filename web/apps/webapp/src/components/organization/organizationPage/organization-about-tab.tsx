@@ -1,24 +1,24 @@
 import { OrganizationMultipleChoicesIndustries } from '@/components/organization';
-import { EditIcon } from '@repo/shared/components/icons';
 import type { organizationAboutTab_query$key } from '@/queries/__generated__/organizationAboutTab_query.graphql';
 import type { organizationAboutTab_updateOrganizationMutation } from '@/queries/__generated__/organizationAboutTab_updateOrganizationMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import MuiLink from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { joinErrors } from '@repo/shared/libs/utils';
+import { EditIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 
 type Props = {
@@ -175,7 +175,7 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
             marginBottom: 1,
           }}
         >
-          <Grid item>
+          <Grid>
             <Stack direction={'row'}>
               <Typography gutterBottom variant="h6">
                 About
@@ -200,7 +200,7 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
               <Typography gutterBottom variant="h6">
                 Industry
               </Typography>
-              <Grid item sx={{ marginLeft: 1 }}>
+              <Grid sx={{ marginLeft: 1 }}>
                 {organization.industrySubCategories.map(({ id, name }) => (
                   <Tooltip key={id} title={name}>
                     <Chip

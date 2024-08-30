@@ -1,7 +1,7 @@
 import { BookingCard } from '@/components/booking';
 import type { bookingFeedsPaginationQuery } from '@/queries/__generated__/bookingFeedsPaginationQuery.graphql';
 import type { bookingFeeds_query$key } from '@/queries/__generated__/bookingFeeds_query.graphql';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import { memo, useCallback, useMemo } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
@@ -50,7 +50,7 @@ const BookingFeeds = ({ rootDataRelay }: Props) => {
   return (
     <Grid container spacing={{ xs: 2, md: 3 }}>
       {bookings.edges.map((edge) => (
-        <Grid item key={edge.node.id}>
+        <Grid key={edge.node.id}>
           <BookingCard
             rootDataRelay={rootData}
             bookingDetailsRelay={edge.node}

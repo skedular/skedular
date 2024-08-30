@@ -1,22 +1,22 @@
-import { SingleChoiceCountry } from '@repo/shared/components/forms';
-import { EditIcon } from '@repo/shared/components/icons';
 import type { organizationBillingInfoQuery } from '@/queries/__generated__/organizationBillingInfoQuery.graphql';
 import type { organizationBillingInfo_query$key } from '@/queries/__generated__/organizationBillingInfo_query.graphql';
 import type { organizationBillingInfo_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationBillingInfo_setOrganizationBillingInfoMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { joinErrors } from '@repo/shared/libs/utils';
+import { SingleChoiceCountry } from '@repo/shared/components/forms';
+import { EditIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
+import { v4 as uuidv4 } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
@@ -185,7 +185,7 @@ const OrganizationBillingInfo = ({ rootDataRelay }: Props) => {
             marginBottom: 1,
           }}
         >
-          <Grid item>
+          <Grid>
             <Stack direction={'row'}>
               <Typography gutterBottom variant="h6">
                 Email

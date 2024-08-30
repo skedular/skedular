@@ -18,22 +18,22 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import MUITextField from '@mui/material/TextField';
 import { AddIcon, EditIcon } from '@repo/shared/components/icons';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { keyboardDebounceTimeout, joinErrors } from '@repo/shared/libs/utils';
+import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, usePaginationFragment } from 'react-relay';
+import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 import TeamMemberCard from './team-member-card';
 
@@ -364,7 +364,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
     <>
       {!organizationId && (
         <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-          <Grid item>
+          <Grid>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
               Invite People
             </Button>
@@ -384,7 +384,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
 
       {!editingOrganizationMembers && (
         <>
-          <Grid item sx={{ marginTop: 1 }}>
+          <Grid sx={{ marginTop: 1 }}>
             <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} />
               <AccordionDetails>
@@ -398,7 +398,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
           </Grid>
 
           <Grid container sx={{ justifyContent: 'flex-end' }}>
-            <Grid item>
+            <Grid>
               <TablePagination
                 count={count}
                 page={page}
@@ -408,7 +408,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
               />
             </Grid>
 
-            <Grid item>
+            <Grid>
               <Sorting
                 options={[
                   { id: 'createdAt', label: 'Join date' },
@@ -427,7 +427,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
 
           <Grid container spacing={{ xs: 2, md: 3 }}>
             {slicedrEdges.map((edge) => (
-              <Grid item key={edge.node.id}>
+              <Grid key={edge.node.id}>
                 <TeamMemberCard
                   teamMemberDetailsRelay={edge.node}
                   rootDataRelay={rootData}

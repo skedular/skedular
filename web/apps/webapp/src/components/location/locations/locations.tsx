@@ -6,7 +6,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
@@ -142,7 +142,7 @@ const Locations = ({ rootDataRelay }: Props) => {
   return (
     <>
       <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-        <Grid item>
+        <Grid>
           <Link href="/location/add">
             <Button variant="contained" startIcon={<AddIcon />}>
               Add Location
@@ -151,7 +151,7 @@ const Locations = ({ rootDataRelay }: Props) => {
         </Grid>
       </Grid>
 
-      <Grid item sx={{ marginTop: 1 }}>
+      <Grid sx={{ marginTop: 1 }}>
         <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} />
           <AccordionDetails>
@@ -165,7 +165,7 @@ const Locations = ({ rootDataRelay }: Props) => {
       </Grid>
 
       <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid item>
+        <Grid>
           <TablePagination
             count={locations?.totalCount ? locations.totalCount : 0}
             page={page}
@@ -174,7 +174,7 @@ const Locations = ({ rootDataRelay }: Props) => {
             onRowsPerPageChange={handlePageSizeChange}
           />
         </Grid>
-        <Grid item>
+        <Grid>
           <Sorting
             options={[{ id: 'name', label: 'Name' }]}
             // @ts-expect-error
@@ -187,7 +187,7 @@ const Locations = ({ rootDataRelay }: Props) => {
 
       <Grid container spacing={{ xs: 2, md: 3 }}>
         {slicedEdges.map((edge) => (
-          <Grid item key={edge.node.id}>
+          <Grid key={edge.node.id}>
             <LocationCard rootDataRelay={rootData} locationDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}

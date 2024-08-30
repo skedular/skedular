@@ -9,7 +9,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
@@ -361,7 +361,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
     <>
       {!organizationId && (
         <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-          <Grid item>
+          <Grid>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
               Invite People
             </Button>
@@ -381,7 +381,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
 
       {!editingOrganizationMembers && (
         <>
-          <Grid item sx={{ marginTop: 1 }}>
+          <Grid sx={{ marginTop: 1 }}>
             <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />} />
               <AccordionDetails>
@@ -395,7 +395,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
           </Grid>
 
           <Grid container sx={{ justifyContent: 'flex-end' }}>
-            <Grid item>
+            <Grid>
               <TablePagination
                 count={count}
                 page={page}
@@ -405,7 +405,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
               />
             </Grid>
 
-            <Grid item>
+            <Grid>
               <Sorting
                 options={[
                   { id: 'createdAt', label: 'Join date' },
@@ -424,7 +424,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
 
           <Grid container spacing={{ xs: 2, md: 3 }}>
             {slicedrEdges.map((edge) => (
-              <Grid item key={edge.node.id}>
+              <Grid key={edge.node.id}>
                 <TeamMemberCard
                   teamMemberDetailsRelay={edge.node}
                   rootDataRelay={rootData}

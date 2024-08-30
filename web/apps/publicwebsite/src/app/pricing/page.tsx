@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { memo } from 'react';
 
@@ -23,7 +23,6 @@ const Pricing = () => {
       >
         <Grid container sx={{ justifyContent: 'center' }}>
           <Grid
-            item
             sx={{
               marginLeft: 2,
               minWidth: 300,
@@ -43,7 +42,6 @@ const Pricing = () => {
           </Grid>
 
           <Grid
-            item
             sx={{
               marginLeft: 2,
               minWidth: 300,
@@ -63,7 +61,6 @@ const Pricing = () => {
           </Grid>
 
           {/* <Grid
-            item
             sx={{
               marginLeft: 2,
               minWidth: 300,

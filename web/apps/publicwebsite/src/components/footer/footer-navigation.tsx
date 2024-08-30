@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import { memo } from 'react';
 import NavigationItem from './footer-navigation-item';
 import FooterSectionTitle from './footer-section-title';
@@ -27,13 +27,13 @@ const companyMenu: Array<Navigation> = [
 const FooterNavigation = () => {
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={4}>
+      <Grid sx={{ sx: 12, md: 4 }}>
         <FooterSectionTitle title="Product" />
         {productMenu.map(({ label, path }, index) => (
           <NavigationItem key={index + path} label={label} path={path} />
         ))}
       </Grid>
-      <Grid item xs={12} md={4}>
+      <Grid sx={{ sx: 12, md: 4 }}>
         <FooterSectionTitle title="Company" />
         {companyMenu.map(({ label, path }, index) => (
           <NavigationItem key={index + path} label={label} path={path} />

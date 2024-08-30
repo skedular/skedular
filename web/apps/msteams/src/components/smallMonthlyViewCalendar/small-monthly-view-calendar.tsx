@@ -3,7 +3,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Autocomplete from '@mui/material/Autocomplete';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
@@ -173,7 +173,7 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
       </Stack>
 
       <Stack direction="column" sx={{ width: '100%' }}>
-        <Grid item sx={{ marginBottom: 1 }}>
+        <Grid sx={{ marginBottom: 1 }}>
           <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               {!pageContextOpen && selectedOrganization && (
@@ -219,7 +219,7 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
 
       <Grid container spacing={{ xs: 2, md: 3 }}>
         {nodes.map((node) => (
-          <Grid item key={node.id}>
+          <Grid key={node.id}>
             <BookingCard
               rootDataRelay={rootData}
               bookingDetailsRelay={node}

@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingCard } from 'components/booking';
 import { memo, useCallback, useMemo } from 'react';
@@ -51,7 +51,7 @@ const BookingFeeds = ({ rootDataRelay }: Props) => {
   return (
     <Grid container spacing={{ xs: 2, md: 3 }}>
       {bookings.edges.map((edge) => (
-        <Grid item key={edge.node.id}>
+        <Grid key={edge.node.id}>
           <BookingCard
             rootDataRelay={rootData}
             bookingDetailsRelay={edge.node}

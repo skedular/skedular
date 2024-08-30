@@ -5,7 +5,7 @@ import type {
   notificationsPaginationQuery,
 } from '@/queries/__generated__/notificationsPaginationQuery.graphql';
 import type { notifications_query$key } from '@/queries/__generated__/notifications_query.graphql';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { memo, useCallback, useMemo, useState } from 'react';
@@ -111,7 +111,7 @@ const Notifications = ({ rootDataRelay }: Props) => {
   return (
     <>
       <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid item>
+        <Grid>
           <TablePagination
             count={myNotifications?.totalCount ? myNotifications.totalCount : 0}
             page={page}
@@ -120,7 +120,7 @@ const Notifications = ({ rootDataRelay }: Props) => {
             onRowsPerPageChange={handlePageSizeChange}
           />
         </Grid>
-        <Grid item>
+        <Grid>
           <Sorting
             options={[{ id: 'eventRaisedAt', label: 'Date' }]}
             // @ts-expect-error
@@ -132,7 +132,7 @@ const Notifications = ({ rootDataRelay }: Props) => {
       </Grid>
       <Grid container spacing={{ xs: 2, md: 3 }}>
         {slicedEdges.map((edge) => (
-          <Grid item key={edge.node.id}>
+          <Grid key={edge.node.id}>
             <NotificationCard notificationDetailsRelay={edge.node} />
           </Grid>
         ))}

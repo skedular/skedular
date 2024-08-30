@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import { axisClasses } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
@@ -111,7 +111,7 @@ const OrganizationAnalyticsTab = ({ rootDataRelay, organizationId }: Props) => {
   return (
     <>
       <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid item>
+        <Grid>
           <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         </Grid>
       </Grid>

@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import MuiLink from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -175,7 +175,7 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
             marginBottom: 1,
           }}
         >
-          <Grid item>
+          <Grid>
             <Stack direction={'row'}>
               <Typography gutterBottom variant="h6">
                 About
@@ -200,7 +200,7 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
               <Typography gutterBottom variant="h6">
                 Industry
               </Typography>
-              <Grid item sx={{ marginLeft: 1 }}>
+              <Grid sx={{ marginLeft: 1 }}>
                 {organization.industrySubCategories.map(({ id, name }) => (
                   <Tooltip key={id} title={name}>
                     <Chip

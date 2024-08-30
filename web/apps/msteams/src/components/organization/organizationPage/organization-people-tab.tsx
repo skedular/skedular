@@ -9,7 +9,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
 import MUITextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
@@ -255,7 +255,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
     <>
       {rootData.organization.canInvitePeople && (
         <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-          <Grid item>
+          <Grid>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
               Invite People
             </Button>
@@ -263,7 +263,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
         </Grid>
       )}
 
-      <Grid item sx={{ marginTop: 1 }}>
+      <Grid sx={{ marginTop: 1 }}>
         <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} />
           <AccordionDetails>
@@ -277,7 +277,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
       </Grid>
 
       <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid item>
+        <Grid>
           <TablePagination
             count={rootData.paginatedOrganizationMembers.totalCount ? rootData.paginatedOrganizationMembers.totalCount : 0}
             page={page}
@@ -286,7 +286,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
             onRowsPerPageChange={handlePageSizeChange}
           />
         </Grid>
-        <Grid item>
+        <Grid>
           <Sorting
             options={[
               { id: 'name', label: 'Name' },
@@ -306,7 +306,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
 
       <Grid container spacing={{ xs: 2, md: 3 }}>
         {slicedEdges.map((edge) => (
-          <Grid item key={edge.node.id}>
+          <Grid key={edge.node.id}>
             <OrganizationMemberCard data={rootData} organizationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}

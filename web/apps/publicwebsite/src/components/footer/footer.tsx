@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { memo } from 'react';
 import FooterNavigation from './footer-navigation';
@@ -18,7 +18,7 @@ const Footer = () => {
     >
       <Container>
         <Grid container spacing={1}>
-          <Grid item xs={12} md={5}>
+          <Grid sx={{ sx: 12, md: 5 }}>
             <Box sx={{ width: { xs: '100%', md: 360 }, mb: { xs: 3, md: 0 } }}>
               <Typography component="h2" variant="h2" sx={{ mb: 2 }}>
                 UnityHub
@@ -29,7 +29,7 @@ const Footer = () => {
               <FooterSocialLinks />
             </Box>
           </Grid>
-          <Grid item xs={12} md={7}>
+          <Grid sx={{ sx: 12, md: 7 }}>
             <FooterNavigation />
           </Grid>
         </Grid>

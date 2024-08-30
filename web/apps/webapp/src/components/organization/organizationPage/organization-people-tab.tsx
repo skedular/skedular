@@ -17,20 +17,20 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
 import MUITextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { keyboardDebounceTimeout, joinErrors } from '@repo/shared/libs/utils';
+import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, usePaginationFragment } from 'react-relay';
+import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 
 type Props = {
@@ -254,7 +254,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
     <>
       {rootData.organization.canInvitePeople && (
         <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-          <Grid item>
+          <Grid>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
               Invite People
             </Button>
@@ -262,7 +262,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
         </Grid>
       )}
 
-      <Grid item sx={{ marginTop: 1 }}>
+      <Grid sx={{ marginTop: 1 }}>
         <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} />
           <AccordionDetails>
@@ -276,7 +276,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
       </Grid>
 
       <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid item>
+        <Grid>
           <TablePagination
             count={rootData.paginatedOrganizationMembers.totalCount ? rootData.paginatedOrganizationMembers.totalCount : 0}
             page={page}
@@ -285,7 +285,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
             onRowsPerPageChange={handlePageSizeChange}
           />
         </Grid>
-        <Grid item>
+        <Grid>
           <Sorting
             options={[
               { id: 'name', label: 'Name' },
@@ -305,7 +305,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
 
       <Grid container spacing={{ xs: 2, md: 3 }}>
         {slicedEdges.map((edge) => (
-          <Grid item key={edge.node.id}>
+          <Grid key={edge.node.id}>
             <OrganizationMemberCard data={rootData} organizationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}

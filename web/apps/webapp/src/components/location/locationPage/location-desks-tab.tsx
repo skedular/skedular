@@ -6,7 +6,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -226,12 +226,12 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
     <>
       {rootData.location.canModify && (
         <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-          <Grid item sx={{ marginRight: 1 }}>
+          <Grid sx={{ marginRight: 1 }}>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddDeskClick}>
               Add Desk
             </Button>
           </Grid>
-          <Grid item sx={{ marginRight: 1 }}>
+          <Grid sx={{ marginRight: 1 }}>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleBulkAddDeskClick}>
               Bulk Add Desk
             </Button>
@@ -239,7 +239,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
         </Grid>
       )}
 
-      <Grid item sx={{ marginTop: 1 }}>
+      <Grid sx={{ marginTop: 1 }}>
         <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             {!pageContextOpen && <Typography>{toShortDate(selectedDate)}</Typography>}
@@ -265,7 +265,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
       </Grid>
 
       <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid item>
+        <Grid>
           <TablePagination
             count={rootData.paginatedLocationDesks.totalCount ? rootData.paginatedLocationDesks.totalCount : 0}
             page={page}
@@ -274,7 +274,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
             onRowsPerPageChange={handlePageSizeChange}
           />
         </Grid>
-        <Grid item>
+        <Grid>
           <Sorting
             options={[{ id: 'name', label: 'Name' }]}
             // @ts-expect-error
@@ -289,7 +289,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
           const foundBooking = rootData.allBookings.find((booking) => booking.desks.find(({ uniqueId }) => uniqueId === edge.node.id));
 
           return (
-            <Grid item key={edge.node.id}>
+            <Grid key={edge.node.id}>
               <DeskCard
                 rootDataRelay={rootData}
                 deskMultipleChoicesZonesData={rootData}

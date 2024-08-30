@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -29,7 +29,7 @@ const CookieConsent = () => {
   const action = (
     <>
       <Container>
-        <Grid item>
+        <Grid>
           <Typography variant="subtitle1">
             This site uses cookies to improve and customise your browsing experience and for analytics and metrics about our visitors. By continuing
             to use this site, you consent to the use of cookies. To find out more, see our
@@ -40,7 +40,7 @@ const CookieConsent = () => {
             your preference not to be tracked.
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Stack direction={'row'}>
             <Button variant="contained" onClick={handleAccept} sx={{ margin: 1 }}>
               OK - continue browsing
