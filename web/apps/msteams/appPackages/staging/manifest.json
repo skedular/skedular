@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
   "manifestVersion": "1.16",
   "version": "1.0.0",
-  "id": "2d02f9d4-7ad1-48d7-9a65-368287dcda70",
+  "id": "9e668292-6724-11ef-921c-5f8c407faabc",
   "packageName": "com.microsoft.teams.extension",
   "developer": {
     "name": "UnityHub Ltd",
-    "websiteUrl": "https://localhost:15002",
+    "websiteUrl": "https://msteams.staging.unityhub.io",
     "privacyUrl": "https://unityhub.io/privacy-policy",
     "termsOfUseUrl": "https://unityhub.io/terms-of-service"
   },
@@ -15,12 +15,12 @@
     "outline": "logo.png"
   },
   "name": {
-    "short": "UnityHub-development",
-    "full": "UnityHub"
+    "short": "UnityHub-staging",
+    "full": "UnityHub-staging"
   },
   "description": {
-    "short": "UnityHub",
-    "full": "UnityHub"
+    "short": "UnityHub-staging",
+    "full": "UnityHub-staging"
   },
   "accentColor": "#FFFFFF",
   "bots": [],
@@ -29,15 +29,15 @@
     {
       "entityId": "index",
       "name": "UnityHub Home",
-      "contentUrl": "https://localhost:15002",
-      "websiteUrl": "https://localhost:15002",
+      "contentUrl": "https://msteams.staging.unityhub.io",
+      "websiteUrl": "https://msteams.staging.unityhub.io",
       "scopes": ["personal", "team", "groupChat"]
     }
   ],
   "permissions": ["identity", "messageTeamMembers"],
-  "validDomains": ["localhost:15002"],
+  "validDomains": ["msteams.staging.unityhub.io"],
   "webApplicationInfo": {
-    "id": "a7437e15-7d9d-4b2a-abab-df490c49f4ec",
-    "resource": "api://localhost:15002/a7437e15-7d9d-4b2a-abab-df490c49f4ec"
+    "id": "e2f3d447-0197-4a61-be7a-546c4b02b4d3",
+    "resource": "api://msteams.staging.unityhub.io/e2f3d447-0197-4a61-be7a-546c4b02b4d3"
   }
 }
