@@ -1,8 +1,8 @@
-import { v4 as uuidv4 } from 'uuid';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
 
-const federatedGraphQLEndpoint = `${process.env.GATEWAY_ENDPOINT}/gateway/api/v1/graphql`;
+const federatedGraphQLEndpoint = new URL('v1/graphql', process.env.GATEWAY_ENDPOINT).href;
 
 const handler = async (request: NextRequest) => {
   const token = await getToken({ req: request });

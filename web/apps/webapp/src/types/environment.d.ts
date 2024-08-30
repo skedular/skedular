@@ -27,6 +27,7 @@ declare global {
       BOOKING_ENDPOINT: string;
       PAYMENT_ENDPOINT: string;
       BILLING_ENDPOINT: string;
+      MSTEAMS_ENDPOINT: string;
     }
   }
 }

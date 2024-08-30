@@ -11,18 +11,6 @@ RUN mkdir -p /src/web
 COPY web /src/web
 WORKDIR /src/web
 
-# This is to only allow build process pass, so we can validate the compilation of the project when PR raised
-ENV BILLING_ENDPOINT="/temp"
-ENV BOOKING_ENDPOINT="/temp"
-ENV CUSTOMER_ENDPOINT="/temp"
-ENV GATEWAY_ENDPOINT="/temp"
-ENV LOCATION_ENDPOINT="/temp"
-ENV NOTIFICATION_ENDPOINT="/temp"
-ENV ORGANIZATION_ENDPOINT="/temp"
-ENV PAYMENT_ENDPOINT="/temp"
-ENV SLACK_ENDPOINT="/temp"
-ENV TEAM_ENDPOINT="/temp"
-
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --recursive --frozen-lockfile
 RUN pnpm msteams#lint
 RUN pnpm msteams#build

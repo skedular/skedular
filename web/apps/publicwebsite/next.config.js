@@ -4,43 +4,43 @@ const nextConfig = {
     return [
       {
         source: "/api/gateway/:path*",
-        destination: `${process.env.GATEWAY_ENDPOINT}/gateway/api/:path*`,
+        destination: new URL(":path*", process.env.GATEWAY_ENDPOINT).href,
       },
       {
         source: "/api/customer/:path*",
-        destination: `${process.env.CUSTOMER_ENDPOINT}/customer/api/:path*`,
+        destination: new URL(":path*", process.env.CUSTOMER_ENDPOINT).href,
       },
       {
         source: "/api/location/:path*",
-        destination: `${process.env.LOCATION_ENDPOINT}/location/api/:path*`,
+        destination: new URL(":path*", process.env.LOCATION_ENDPOINT).href,
       },
       {
         source: "/api/notification/:path*",
-        destination: `${process.env.NOTIFICATION_ENDPOINT}/notification/api/:path*`,
+        destination: new URL(":path*", process.env.NOTIFICATION_ENDPOINT).href,
       },
       {
         source: "/api/organization/:path*",
-        destination: `${process.env.ORGANIZATION_ENDPOINT}/organization/api/:path*`,
+        destination: new URL(":path*", process.env.ORGANIZATION_ENDPOINT).href,
       },
       {
         source: "/api/slack/:path*",
-        destination: `${process.env.SLACK_ENDPOINT}/slack/api/:path*`,
+        destination: new URL(":path*", process.env.SLACK_ENDPOINT).href,
       },
       {
         source: "/api/team/:path*",
-        destination: `${process.env.TEAM_ENDPOINT}/team/api/:path*`,
+        destination: new URL(":path*", process.env.TEAM_ENDPOINT).href,
       },
       {
         source: "/api/booking/:path*",
-        destination: `${process.env.BOOKING_ENDPOINT}/booking/api/:path*`,
+        destination: new URL(":path*", process.env.BOOKING_ENDPOINT).href,
       },
       {
         source: "/api/payment/:path*",
-        destination: `${process.env.PAYMENT_ENDPOINT}/payment/api/:path*`,
+        destination: new URL(":path*", process.env.PAYMENT_ENDPOINT).href,
       },
       {
         source: "/api/billing/:path*",
-        destination: `${process.env.BILLING_ENDPOINT}/billing/api/:path*`,
+        destination: new URL(":path*", process.env.BILLING_ENDPOINT).href,
       },
     ];
   },

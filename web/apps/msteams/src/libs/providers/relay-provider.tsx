@@ -13,7 +13,7 @@ const RelayProvider = ({ children, token }: Props) => {
       return null;
     }
 
-    return getEnvironment(process.env.REACT_APP_GRAPHQL_ENDPOINT!, `Bearer ${token}`);
+    return getEnvironment(new URL('v1/graphql', process.env.REACT_APP_GATEWAY_ENDPOINT!).href, `Bearer ${token}`);
   }, [token]);
 
   if (environment === null) {

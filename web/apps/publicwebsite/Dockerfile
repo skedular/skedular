@@ -12,16 +12,17 @@ COPY web /src/web
 WORKDIR /src/web
 
 # This is to only allow build process pass, so we can validate the compilation of the project when PR raised
-ENV BILLING_ENDPOINT="/temp"
-ENV BOOKING_ENDPOINT="/temp"
-ENV CUSTOMER_ENDPOINT="/temp"
-ENV GATEWAY_ENDPOINT="/temp"
-ENV LOCATION_ENDPOINT="/temp"
-ENV NOTIFICATION_ENDPOINT="/temp"
-ENV ORGANIZATION_ENDPOINT="/temp"
-ENV PAYMENT_ENDPOINT="/temp"
-ENV SLACK_ENDPOINT="/temp"
-ENV TEAM_ENDPOINT="/temp"
+ENV BILLING_ENDPOINT="https://localhost/"
+ENV BOOKING_ENDPOINT="https://localhost/"
+ENV CUSTOMER_ENDPOINT="https://localhost/"
+ENV GATEWAY_ENDPOINT="https://localhost/"
+ENV LOCATION_ENDPOINT="https://localhost/"
+ENV NOTIFICATION_ENDPOINT="https://localhost/"
+ENV ORGANIZATION_ENDPOINT="https://localhost/"
+ENV PAYMENT_ENDPOINT="https://localhost/"
+ENV SLACK_ENDPOINT="https://localhost/"
+ENV TEAM_ENDPOINT="https://localhost/"
+ENV MSTEAMS_ENDPOINT="https://localhost/"
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --recursive --frozen-lockfile
 RUN pnpm publicwebsite#lint
