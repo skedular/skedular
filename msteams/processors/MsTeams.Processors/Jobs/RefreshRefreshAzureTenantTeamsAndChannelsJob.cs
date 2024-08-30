@@ -46,7 +46,8 @@ public class RefreshRefreshAzureTenantTeamsAndChannelsJob(
                     .ToListAsync(cancellationToken);
                 if (azureTenantIds.Count != 0)
                 {
-                    await msTeamsInternalPublisher.PublishRefreshAzureTenantTeamsAndChannelsAsync(azureTenantIds,
+                    await msTeamsInternalPublisher.PublishRefreshAzureTenantTeamsAndChannelsAsync(
+                        azureTenantIds,
                         cancellationToken);
                 }
 

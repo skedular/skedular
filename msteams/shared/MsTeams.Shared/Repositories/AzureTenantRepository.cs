@@ -19,6 +19,8 @@ internal static class AzureTenantExtensions
     internal static IIncludableQueryable<AzureTenant, Organization> AddDependentObjects(
         this IQueryable<AzureTenant> originalQuery) =>
         originalQuery
+            .Include(query => query.AzureTenantTeams)
+            .ThenInclude(query => query.AzureTenantTeamChannels)
             .Include(query => query.Organization);
 }
 

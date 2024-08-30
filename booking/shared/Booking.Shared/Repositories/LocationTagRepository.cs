@@ -42,7 +42,7 @@ public class LocationTagRepository(BookingDbContext dbContext, TimeProvider time
     {
         var now = timeProvider.GetUtcNow();
         locationTags.ForEach(locationTag => locationTag.DeletedAt = now);
-        DbContext.LocationTag.RemoveRange(locationTags);
+        DbContext.LocationTag.UpdateRange(locationTags);
     }
 
     public LocationTag Update(LocationTag locationTag)

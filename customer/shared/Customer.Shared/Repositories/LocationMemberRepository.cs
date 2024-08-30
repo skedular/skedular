@@ -26,7 +26,7 @@ public class LocationMemberRepository(CustomerDbContext dbContext, TimeProvider 
     {
         var now = timeProvider.GetUtcNow();
         locationMembers.ForEach(locationMember => locationMember.DeletedAt = now);
-        DbContext.LocationMember.RemoveRange(locationMembers);
+        DbContext.LocationMember.UpdateRange(locationMembers);
     }
 
     public LocationMember Update(LocationMember locationMember)

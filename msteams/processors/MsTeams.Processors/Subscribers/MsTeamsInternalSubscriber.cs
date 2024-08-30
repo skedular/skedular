@@ -40,10 +40,10 @@ public class MsTeamsInternalSubscriber(
         }
 
         var azureTenantTeams = await graphService.GetAzureTenantTeamsAsync(tenantId, cancellationToken);
-        var itemsToRemove = existingTenant.AzureTenantTeams
+        var teamsToRemove = existingTenant.AzureTenantTeams
             .Where(azureTenantMember => azureTenantTeams.All(item => item.Id != azureTenantMember.Id))
             .ToList();
-        var updatedItems = existingTenant.AzureTenantTeams
+        var updatedTeams = existingTenant.AzureTenantTeams
             .Where(azureTenantTeam => azureTenantTeams.Any(item => item.Id == azureTenantTeam.Id))
             .Select(azureTenantTeam => repositoryFactory.AzureTenantTeamRepository.Update(
                 mapper.MergeToEntity(
@@ -51,15 +51,15 @@ public class MsTeamsInternalSubscriber(
                     azureTenantTeam,
                     existingTenant)))
             .ToList();
-        var addedItems = azureTenantTeams
+        var addedTeams = azureTenantTeams
             .Where(azureTenantTeam => existingTenant.AzureTenantTeams.All(item => item.Id != azureTenantTeam.Id))
             .Select(item => repositoryFactory.AzureTenantTeamRepository.Add(mapper.MapTo(item, existingTenant)))
             .ToList();
 
-        repositoryFactory.AzureTenantTeamRepository.RemoveRange(itemsToRemove);
-        existingTenant.AzureTenantTeams = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        repositoryFactory.AzureTenantTeamRepository.RemoveRange(teamsToRemove);
+        existingTenant.AzureTenantTeams = addedTeams.Concat(updatedTeams).Concat(teamsToRemove).ToList();
 
-        foreach (var existingAzureTenantTeam in addedItems.Concat(updatedItems))
+        foreach (var existingAzureTenantTeam in addedTeams.Concat(updatedTeams))
         {
             var azureTenantTeamChannels =
                 await graphService.GetAzureTenantTeamChannelsAsync(tenantId, existingAzureTenantTeam.Id,

@@ -489,9 +489,6 @@ public class Mapper : IMapper
         AzureTenant azureTenant)
     {
         dest.Id = src.Id;
-        dest.CreatedAt = src.CreatedAt;
-        dest.DeletedAt = src.DeletedAt;
-        dest.ModifiedAt = src.ModifiedAt;
         dest.Email = src.Email;
         dest.Designation = src.Designation;
         dest.Name = src.Name;

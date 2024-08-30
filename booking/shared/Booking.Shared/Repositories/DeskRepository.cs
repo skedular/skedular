@@ -41,7 +41,7 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
     {
         var now = timeProvider.GetUtcNow();
         desks.ForEach(desk => desk.DeletedAt = now);
-        DbContext.Desk.RemoveRange(desks);
+        DbContext.Desk.UpdateRange(desks);
     }
 
     public Desk Update(Desk desk)

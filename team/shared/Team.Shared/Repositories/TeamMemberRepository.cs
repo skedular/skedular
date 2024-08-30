@@ -263,7 +263,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
     {
         var now = timeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.DeletedAt = now);
-        DbContext.TeamMember.RemoveRange(teamMembers);
+        DbContext.TeamMember.UpdateRange(teamMembers);
     }
 
     public TeamMember Update(TeamMember teamMember)

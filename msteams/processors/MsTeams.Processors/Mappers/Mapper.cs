@@ -268,9 +268,6 @@ public class Mapper : IMapper
         AzureTenant azureTenant)
     {
         dest.Id = src.Id;
-        dest.CreatedAt = src.CreatedAt;
-        dest.DeletedAt = src.DeletedAt;
-        dest.ModifiedAt = src.ModifiedAt;
         dest.Name = src.Name;
         dest.Description = src.Description;
         dest.WebUrl = src.WebUrl;
@@ -299,9 +296,6 @@ public class Mapper : IMapper
         Shared.Database.Entities.AzureTenantTeam azureTenantTeam)
     {
         dest.Id = src.Id;
-        dest.CreatedAt = src.CreatedAt;
-        dest.DeletedAt = src.DeletedAt;
-        dest.ModifiedAt = src.ModifiedAt;
         dest.Name = src.Name;
         dest.Description = src.Description;
         dest.WebUrl = src.WebUrl;

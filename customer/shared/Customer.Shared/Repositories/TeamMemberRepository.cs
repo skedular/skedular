@@ -26,7 +26,7 @@ public class TeamMemberRepository(CustomerDbContext dbContext, TimeProvider time
     {
         var now = timeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.DeletedAt = now);
-        DbContext.TeamMember.RemoveRange(teamMembers);
+        DbContext.TeamMember.UpdateRange(teamMembers);
     }
 
     public TeamMember Update(TeamMember teamMember)

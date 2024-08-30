@@ -26,7 +26,7 @@ public class OrganizationMemberRepository(SlackDbContext dbContext, TimeProvider
     {
         var now = timeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
-        DbContext.OrganizationMember.RemoveRange(organizationMembers);
+        DbContext.OrganizationMember.UpdateRange(organizationMembers);
     }
 
     public OrganizationMember Update(OrganizationMember organizationMember)

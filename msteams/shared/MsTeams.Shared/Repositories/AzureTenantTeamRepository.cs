@@ -33,6 +33,6 @@ public class AzureTenantTeamRepository(MsTeamsDbContext dbContext, TimeProvider 
     {
         var now = timeProvider.GetUtcNow();
         tenantMembers.ForEach(teamMember => teamMember.DeletedAt = now);
-        DbContext.AzureTenantTeam.RemoveRange(tenantMembers);
+        DbContext.AzureTenantTeam.UpdateRange(tenantMembers);
     }
 }
