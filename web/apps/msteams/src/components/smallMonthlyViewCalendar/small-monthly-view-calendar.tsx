@@ -146,14 +146,7 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
   };
 
   return (
-    <Grid
-      container
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
+    <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Stack direction="column">
         <Paper elevation={24} sx={{ marginBottom: 1 }}>
           <StaticDatePicker
