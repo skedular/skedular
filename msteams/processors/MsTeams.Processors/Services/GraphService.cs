@@ -1,20 +1,31 @@
 using Enterprise.Shared.Azure.Graph;
-using Microsoft.Graph.Models;
+using MsTeams.Processors.Mappers;
+using MsTeams.Shared.Models;
 
 namespace MsTeams.Processors.Services;
 
 public interface IGraphService
 {
-    Task<List<Team>> GetTeamsAsync(string tenantId, CancellationToken cancellationToken);
-    Task<List<Channel>> GetTeamChannelsAsync(string tenantId, string teamId, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<AzureTenantTeam>> GetAzureTenantTeamsAsync(
+        string tenantId,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyCollection<AzureTenantTeamChannel>> GetAzureTenantTeamChannelsAsync(
+        string tenantId,
+        string teamId,
+        CancellationToken cancellationToken);
 }
 
-public class GraphService(IGraphServiceClientFactory graphServiceClientFactory) : IGraphService
+public class GraphService(
+    IGraphServiceClientFactory graphServiceClientFactory,
+    IMapper mapper) : IGraphService
 {
-    public async Task<List<Team>> GetTeamsAsync(string tenantId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<AzureTenantTeam>> GetAzureTenantTeamsAsync(
+        string tenantId,
+        CancellationToken cancellationToken)
     {
         var graphServiceClient = graphServiceClientFactory.CreateGraphServiceClient(tenantId);
-        var teams = new List<Team>();
+        var teams = new List<AzureTenantTeam>();
         var skipCount = 0;
 
         do
@@ -39,7 +50,7 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory) 
             {
                 ArgumentNullException.ThrowIfNull(response.Value);
                 skipCount += response.Value.Count;
-                teams.AddRange(response.Value);
+                teams.AddRange(response.Value.Select(mapper.MapTo));
             }
 
             if (response is null || string.IsNullOrWhiteSpace(response.OdataNextLink))
@@ -51,13 +62,12 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory) 
         return teams;
     }
 
-    public async Task<List<Channel>> GetTeamChannelsAsync(
+    public async Task<IReadOnlyCollection<AzureTenantTeamChannel>> GetAzureTenantTeamChannelsAsync(
         string tenantId,
         string teamId,
         CancellationToken cancellationToken)
     {
         var graphServiceClient = graphServiceClientFactory.CreateGraphServiceClient(tenantId);
-        var channels = new List<Channel>();
         // TODO: 20240829 - Morteza: Need to figure out how to implement pagination  
         var response = await graphServiceClient.Teams[teamId].AllChannels
             .GetAsync(requestConfiguration =>
@@ -74,12 +84,9 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory) 
                 },
                 cancellationToken);
 
-        if (response is not null)
-        {
-            ArgumentNullException.ThrowIfNull(response.Value);
-            channels.AddRange(response.Value.Where(item => !(bool)item.AdditionalData["isArchived"]));
-        }
+        ArgumentNullException.ThrowIfNull(response);
+        ArgumentNullException.ThrowIfNull(response.Value);
 
-        return channels;
+        return response.Value.Where(item => !(bool)item.AdditionalData["isArchived"]).Select(mapper.MapTo).ToList();
     }
 }

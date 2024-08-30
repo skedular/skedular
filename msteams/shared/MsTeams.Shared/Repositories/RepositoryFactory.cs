@@ -6,6 +6,8 @@ namespace MsTeams.Shared.Repositories;
 public interface IRepositoryFactory
 {
     IAzureTenantRepository AzureTenantRepository { get; }
+    IAzureTenantTeamChannelRepository AzureTenantTeamChannelRepository { get; }
+    IAzureTenantTeamRepository AzureTenantTeamRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
     ILocationRepository LocationRepository { get; }
@@ -23,6 +25,8 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
         _dbContext = dbContextFactory.CreateDbContext();
 
         AzureTenantRepository = new AzureTenantRepository(_dbContext, timeProvider);
+        AzureTenantTeamChannelRepository = new AzureTenantTeamChannelRepository(_dbContext, timeProvider);
+        AzureTenantTeamRepository = new AzureTenantTeamRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
@@ -38,6 +42,8 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
     }
 
     public IAzureTenantRepository AzureTenantRepository { get; }
+    public IAzureTenantTeamChannelRepository AzureTenantTeamChannelRepository { get; }
+    public IAzureTenantTeamRepository AzureTenantTeamRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public ILocationRepository LocationRepository { get; }

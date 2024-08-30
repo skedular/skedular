@@ -5,6 +5,7 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Microsoft.Graph.Models;
 using Organization.Shared.Models;
+using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
 using AzureTenantMember = Organization.Shared.Database.Entities.AzureTenantMember;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Identity = Organization.Shared.Models.Identity;
@@ -103,8 +104,15 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations);
 
     Shared.Models.AzureTenantMember MapTo(User src);
-    AzureTenantMember MapTo(Shared.Models.AzureTenantMember src);
-    AzureTenantMember MergeToEntity(Shared.Models.AzureTenantMember src, AzureTenantMember dest);
+
+    AzureTenantMember MapTo(
+        Shared.Models.AzureTenantMember src,
+        AzureTenant azureTenant);
+
+    AzureTenantMember MergeToEntity(
+        Shared.Models.AzureTenantMember src,
+        AzureTenantMember dest,
+        AzureTenant azureTenant);
 }
 
 public class Mapper : IMapper
@@ -472,9 +480,13 @@ public class Mapper : IMapper
             PreferredLanguage = src.PreferredLanguage
         };
 
-    public AzureTenantMember MapTo(Shared.Models.AzureTenantMember src) => MergeToEntity(src, new AzureTenantMember());
+    public AzureTenantMember MapTo(Shared.Models.AzureTenantMember src, AzureTenant azureTenant) =>
+        MergeToEntity(src, new AzureTenantMember(), azureTenant);
 
-    public AzureTenantMember MergeToEntity(Shared.Models.AzureTenantMember src, AzureTenantMember dest)
+    public AzureTenantMember MergeToEntity(
+        Shared.Models.AzureTenantMember src,
+        AzureTenantMember dest,
+        AzureTenant azureTenant)
     {
         dest.Id = src.Id;
         dest.CreatedAt = src.CreatedAt;
@@ -496,6 +508,7 @@ public class Mapper : IMapper
         dest.PhotoUrl432 = src.PhotoUrl432;
         dest.PhotoUrl504 = src.PhotoUrl504;
         dest.PhotoUrl648 = src.PhotoUrl648;
+        dest.AzureTenant = azureTenant;
         return dest;
     }
 

@@ -22,6 +22,8 @@ public static class Extensions
     public static IServiceCollection AddRepositories(this IServiceCollection services) =>
         services
             .AddScoped<IAzureTenantRepository, AzureTenantRepository>()
+            .AddScoped<IAzureTenantTeamChannelRepository, AzureTenantTeamChannelRepository>()
+            .AddScoped<IAzureTenantTeamRepository, AzureTenantTeamRepository>()
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()

@@ -176,11 +176,12 @@ public class OrganizationInternalSubscriber(
             .Select(azureTenantMember => repositoryFactory.AzureTenantMemberRepository.Update(
                 mapper.MergeToEntity(
                     azureTenantMembers.Single(item => item.Id == azureTenantMember.Id),
-                    azureTenantMember)))
+                    azureTenantMember,
+                    existingTenant)))
             .ToList();
         var addedItems = azureTenantMembers
             .Where(azureTenantMember => existingTenant.AzureTenantMembers.All(item => item.Id != azureTenantMember.Id))
-            .Select(item => repositoryFactory.AzureTenantMemberRepository.Add(mapper.MapTo(item)))
+            .Select(item => repositoryFactory.AzureTenantMemberRepository.Add(mapper.MapTo(item, existingTenant)))
             .ToList();
 
         repositoryFactory.AzureTenantMemberRepository.RemoveRange(itemsToRemove);

@@ -1,7 +1,9 @@
 using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
 using Api.Shared.Models;
 using Enterprise.Shared;
+using Microsoft.Graph.Models;
 using MsTeams.Shared.Models;
+using AzureTenant = MsTeams.Shared.Database.Entities.AzureTenant;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Customer = MsTeams.Shared.Models.Customer;
 using Identity = MsTeams.Shared.Database.Entities.Identity;
@@ -57,6 +59,25 @@ public interface IMapper
     Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
     Shared.Database.Entities.Team MapToEntity(Team src);
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest);
+
+    AzureTenantTeam MapTo(Microsoft.Graph.Models.Team src);
+    Shared.Database.Entities.AzureTenantTeam MapTo(AzureTenantTeam src, AzureTenant azureTenant);
+
+    Shared.Database.Entities.AzureTenantTeam MergeToEntity(
+        AzureTenantTeam src,
+        Shared.Database.Entities.AzureTenantTeam dest,
+        AzureTenant azureTenant);
+
+    AzureTenantTeamChannel MapTo(Channel src);
+
+    Shared.Database.Entities.AzureTenantTeamChannel MapTo(
+        AzureTenantTeamChannel src,
+        Shared.Database.Entities.AzureTenantTeam azureTenantTeam);
+
+    Shared.Database.Entities.AzureTenantTeamChannel MergeToEntity(
+        AzureTenantTeamChannel src,
+        Shared.Database.Entities.AzureTenantTeamChannel dest,
+        Shared.Database.Entities.AzureTenantTeam azureTenantTeam);
 }
 
 public class Mapper : IMapper
@@ -128,7 +149,8 @@ public class Mapper : IMapper
         };
 
         organization.AzureTenants = organizationAfterState.AzureTenantIds
-            .Select(item => new AzureTenant { Id = item, Organization = organization, EventRaisedAt = eventRaisedAt })
+            .Select(item =>
+                new Shared.Models.AzureTenant { Id = item, Organization = organization, EventRaisedAt = eventRaisedAt })
             .ToList();
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
@@ -231,6 +253,60 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Timezone = src.Timezone;
+        return dest;
+    }
+
+    public AzureTenantTeam MapTo(Microsoft.Graph.Models.Team src) =>
+        new() { Id = src.Id!, Name = src.DisplayName!, Description = src.Description!, WebUrl = src.WebUrl! };
+
+    public Shared.Database.Entities.AzureTenantTeam MapTo(AzureTenantTeam src, AzureTenant azureTenant) =>
+        MergeToEntity(src, new Shared.Database.Entities.AzureTenantTeam(), azureTenant);
+
+    public Shared.Database.Entities.AzureTenantTeam MergeToEntity(
+        AzureTenantTeam src,
+        Shared.Database.Entities.AzureTenantTeam dest,
+        AzureTenant azureTenant)
+    {
+        dest.Id = src.Id;
+        dest.CreatedAt = src.CreatedAt;
+        dest.DeletedAt = src.DeletedAt;
+        dest.ModifiedAt = src.ModifiedAt;
+        dest.Name = src.Name;
+        dest.Description = src.Description;
+        dest.WebUrl = src.WebUrl;
+        dest.AzureTenant = azureTenant;
+        return dest;
+    }
+
+    public AzureTenantTeamChannel MapTo(Channel src) =>
+        new()
+        {
+            Id = src.Id!,
+            Name = src.DisplayName!,
+            Description = src.Description!,
+            WebUrl = src.WebUrl!,
+            Email = src.Email!
+        };
+
+    public Shared.Database.Entities.AzureTenantTeamChannel MapTo(
+        AzureTenantTeamChannel src,
+        Shared.Database.Entities.AzureTenantTeam azureTenantTeam) =>
+        MergeToEntity(src, new Shared.Database.Entities.AzureTenantTeamChannel(), azureTenantTeam);
+
+    public Shared.Database.Entities.AzureTenantTeamChannel MergeToEntity(
+        AzureTenantTeamChannel src,
+        Shared.Database.Entities.AzureTenantTeamChannel dest,
+        Shared.Database.Entities.AzureTenantTeam azureTenantTeam)
+    {
+        dest.Id = src.Id;
+        dest.CreatedAt = src.CreatedAt;
+        dest.DeletedAt = src.DeletedAt;
+        dest.ModifiedAt = src.ModifiedAt;
+        dest.Name = src.Name;
+        dest.Description = src.Description;
+        dest.WebUrl = src.WebUrl;
+        dest.Email = src.Email;
+        dest.AzureTenantTeam = azureTenantTeam;
         return dest;
     }
 }
