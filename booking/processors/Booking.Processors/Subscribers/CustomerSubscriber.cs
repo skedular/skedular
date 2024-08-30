@@ -189,10 +189,11 @@ public class CustomerSubscriber(
             .Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
         var updatedItems = existingCustomer.Identities
             .Where(identity => customer.Identities.Any(item => item.Id == identity.Id))
-            .Select(identity => repositoryFactory.IdentityRepository.Update(mapper.MergeToEntity(
-                customer.Identities.Single(item => item.Id == identity.Id),
-                identity,
-                existingCustomer)))
+            .Select(identity => repositoryFactory.IdentityRepository.Update(
+                mapper.MergeToEntity(
+                    customer.Identities.Single(item => item.Id == identity.Id),
+                    identity,
+                    existingCustomer)))
             .ToList();
         var addedItems = customer.Identities
             .Where(identity => existingCustomer.Identities.All(item => item.Id != identity.Id))

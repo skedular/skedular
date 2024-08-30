@@ -1,19 +1,23 @@
 using Enterprise.Shared.Azure.Graph;
-using Microsoft.Graph.Models;
+using Organization.Processors.Mappers;
+using Organization.Shared.Models;
 
 namespace Organization.Processors.Services;
 
 public interface IGraphService
 {
-    Task<List<User>> GetUsersAsync(string tenantId, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(string tenantId, CancellationToken cancellationToken);
 }
 
-public class GraphService(IGraphServiceClientFactory graphServiceClientFactory) : IGraphService
+public class GraphService(
+    IGraphServiceClientFactory graphServiceClientFactory,
+    IMapper mapper) : IGraphService
 {
-    public async Task<List<User>> GetUsersAsync(string tenantId, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(string tenantId,
+        CancellationToken cancellationToken)
     {
         var graphServiceClient = graphServiceClientFactory.CreateGraphServiceClient(tenantId);
-        var users = new List<User>();
+        var users = new List<AzureTenantMember>();
         var skipCount = 0;
 
         do
@@ -41,7 +45,7 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory) 
             {
                 ArgumentNullException.ThrowIfNull(response.Value);
                 skipCount += response.Value.Count;
-                users.AddRange(response.Value);
+                users.AddRange(response.Value.Select(mapper.MapTo));
             }
 
             if (response is null || string.IsNullOrWhiteSpace(response.OdataNextLink))

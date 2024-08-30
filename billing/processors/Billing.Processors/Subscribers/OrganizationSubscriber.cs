@@ -152,11 +152,11 @@ public class OrganizationSubscriber(
                 organization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id)).ToList();
         var updatedItems = existingOrganization.OrganizationOfferings
             .Where(organizationOffering =>
-                organization.OrganizationOfferings.Any(item => item.Id == organizationOffering.Id)).Select(
-                organizationOffering => repositoryFactory.OrganizationOfferingRepository.Update(
-                    mapper.MergeToEntity(
-                        organization.OrganizationOfferings.Single(item => item.Id == organizationOffering.Id),
-                        organizationOffering, existingOrganization))).ToList();
+                organization.OrganizationOfferings.Any(item => item.Id == organizationOffering.Id))
+            .Select(organizationOffering => repositoryFactory.OrganizationOfferingRepository.Update(
+                mapper.MergeToEntity(
+                    organization.OrganizationOfferings.Single(item => item.Id == organizationOffering.Id),
+                    organizationOffering, existingOrganization))).ToList();
         var addedItems = organization.OrganizationOfferings
             .Where(organizationOffering =>
                 existingOrganization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id)).Select(

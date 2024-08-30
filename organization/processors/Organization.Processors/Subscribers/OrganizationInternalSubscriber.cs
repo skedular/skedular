@@ -161,30 +161,35 @@ public class OrganizationInternalSubscriber(
         string tenantId,
         CancellationToken cancellationToken)
     {
-        var tenant = await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
-        if (tenant is null)
+        var existingTenant = await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
+        if (existingTenant is null)
         {
             return;
         }
 
-        var users = await graphService.GetUsersAsync(tenantId, cancellationToken);
-        var itemsToRemove = tenant.AzureTenantMembers
-            .Where(tenantMember => users.All(item => item.Id != tenantMember.Id))
+        var azureTenantMembers = await graphService.GetAzureTenantMembersAsync(tenantId, cancellationToken);
+        var itemsToRemove = existingTenant.AzureTenantMembers
+            .Where(azureTenantMember => azureTenantMembers.All(item => item.Id != azureTenantMember.Id))
             .ToList();
-        var updatedItems = tenant.AzureTenantMembers
-            .Where(tenantMember => users.Any(item => item.Id == tenantMember.Id))
+        var updatedItems = existingTenant.AzureTenantMembers
+            .Where(azureTenantMember => azureTenantMembers.Any(item => item.Id == azureTenantMember.Id))
+            .Select(azureTenantMember => repositoryFactory.AzureTenantMemberRepository.Update(
+                mapper.MergeToEntity(
+                    azureTenantMembers.Single(item => item.Id == azureTenantMember.Id),
+                    azureTenantMember)))
             .ToList();
-        var addedItems = users
-            .Where(tenantMember => tenant.AzureTenantMembers.All(item => item.Id != tenantMember.Id))
-            .Select(user => repositoryFactory.AzureTenantMemberRepository.Add(mapper.MapToEntity(user))).ToList();
+        var addedItems = azureTenantMembers
+            .Where(azureTenantMember => existingTenant.AzureTenantMembers.All(item => item.Id != azureTenantMember.Id))
+            .Select(item => repositoryFactory.AzureTenantMemberRepository.Add(mapper.MapTo(item)))
+            .ToList();
 
         repositoryFactory.AzureTenantMemberRepository.RemoveRange(itemsToRemove);
-        tenant.AzureTenantMembers = addedItems.Concat(updatedItems).ToList();
+        existingTenant.AzureTenantMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
-        await SyncCustomersAndOrganizationMembersAsync(tenant, cancellationToken);
+        await SyncCustomersAndOrganizationMembersAsync(existingTenant, cancellationToken);
 
-        tenant.MembersLastRefreshedAt = timeProvider.GetUtcNow();
-        repositoryFactory.AzureTenantRepository.Update(tenant);
+        existingTenant.MembersLastRefreshedAt = timeProvider.GetUtcNow();
+        repositoryFactory.AzureTenantRepository.Update(existingTenant);
 
         await repositoryFactory.AzureTenantMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -196,9 +201,7 @@ public class OrganizationInternalSubscriber(
     {
         var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
         {
-            First = -1,
-            Last = -1,
-            Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
+            First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
         };
         getPaginatedLocationsInput.OrderBy.AddRange([
             new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }

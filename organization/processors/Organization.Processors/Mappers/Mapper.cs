@@ -102,7 +102,9 @@ public interface IMapper
         Shared.Database.Entities.Organization defaultOrganization,
         ICollection<Shared.Database.Entities.Location> defaultLocations);
 
-    AzureTenantMember MapToEntity(User src);
+    Shared.Models.AzureTenantMember MapTo(User src);
+    AzureTenantMember MapTo(Shared.Models.AzureTenantMember src);
+    AzureTenantMember MergeToEntity(Shared.Models.AzureTenantMember src, AzureTenantMember dest);
 }
 
 public class Mapper : IMapper
@@ -458,7 +460,7 @@ public class Mapper : IMapper
         return input;
     }
 
-    public AzureTenantMember MapToEntity(User src) =>
+    public Shared.Models.AzureTenantMember MapTo(User src) =>
         new()
         {
             Id = src.Id!,
@@ -469,6 +471,33 @@ public class Mapper : IMapper
             FamilyName = src.Surname,
             PreferredLanguage = src.PreferredLanguage
         };
+
+    public AzureTenantMember MapTo(Shared.Models.AzureTenantMember src) => MergeToEntity(src, new AzureTenantMember());
+
+    public AzureTenantMember MergeToEntity(Shared.Models.AzureTenantMember src, AzureTenantMember dest)
+    {
+        dest.Id = src.Id;
+        dest.CreatedAt = src.CreatedAt;
+        dest.DeletedAt = src.DeletedAt;
+        dest.ModifiedAt = src.ModifiedAt;
+        dest.Email = src.Email;
+        dest.Designation = src.Designation;
+        dest.Name = src.Name;
+        dest.GivenName = src.GivenName;
+        dest.FamilyName = src.FamilyName;
+        dest.PreferredLanguage = src.PreferredLanguage;
+        dest.PhotoUrl = src.PhotoUrl;
+        dest.PhotoUrl48 = src.PhotoUrl48;
+        dest.PhotoUrl64 = src.PhotoUrl64;
+        dest.PhotoUrl96 = src.PhotoUrl96;
+        dest.PhotoUrl120 = src.PhotoUrl120;
+        dest.PhotoUrl240 = src.PhotoUrl240;
+        dest.PhotoUrl360 = src.PhotoUrl360;
+        dest.PhotoUrl432 = src.PhotoUrl432;
+        dest.PhotoUrl504 = src.PhotoUrl504;
+        dest.PhotoUrl648 = src.PhotoUrl648;
+        return dest;
+    }
 
     private JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
         new()
