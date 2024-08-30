@@ -40,7 +40,6 @@ const RootShell = ({
         isAzureTenantInstalled
         azureTenantAdminConsentUrl
         ...observability_query
-        ...mainRootLayout_query
       }
     `,
     rootDataRelay,
@@ -103,7 +102,7 @@ const RootShell = ({
   return (
     <>
       <Observability rootDataRelay={rootData} />
-      <MainRootLayout rootDataRelay={rootData} leftSideContent={<LeftSideNavigationMenu />} rightSideContent={rightSideContent}>
+      <MainRootLayout leftSideContent={<LeftSideNavigationMenu />} rightSideContent={rightSideContent}>
         <Box
           sx={{
             display: 'flex',

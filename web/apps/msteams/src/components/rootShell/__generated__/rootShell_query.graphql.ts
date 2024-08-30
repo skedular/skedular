@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a9ddc841562ceee62b2938c77bb9c6fc>>
+ * @generated SignedSource<<173a63d29ff508da7c10b6cdc10a6eb6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type rootShell_query$data = {
   readonly me: {
     readonly id: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"mainRootLayout_query" | "observability_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"observability_query">;
   readonly " $fragmentType": "rootShell_query";
 };
 export type rootShell_query$key = {
@@ -66,17 +66,12 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "observability_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "mainRootLayout_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "f47c9f6cded11baf3162ab3aba3a2426";
+(node as any).hash = "55d7aeae55c9449169036c0fbea878e4";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<17d339a76057c160852724d78400747c>>
+ * @generated SignedSource<<1a812891caaa6029509ccf1a893eedd4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -95,14 +95,7 @@ return {
                 "name": "email",
                 "storageKey": null
               },
-              (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "verified",
-                "storageKey": null
-              }
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
@@ -133,15 +126,7 @@ return {
             "kind": "ScalarField",
             "name": "familyName",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "photoUrl",
-            "storageKey": null
-          },
-          (v2/*: any*/)
+          }
         ],
         "storageKey": null
       },
@@ -207,12 +192,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bc45a40ab2151cd8577d7f36eb5f20a7",
+    "cacheID": "d1b465d389c5051f9cf5c46c81e56484",
     "id": null,
     "metadata": {},
     "name": "addOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query addOrganization_rootQuery {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...addOrganization_query\n}\n\nfragment addOrganization_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query addOrganization_rootQuery {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...addOrganization_query\n}\n\nfragment addOrganization_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();

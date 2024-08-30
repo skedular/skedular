@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<efd6b58fdf580e8de95cd57b5db4774d>>
+ * @generated SignedSource<<75db5277198b98694fc9d50238c0824c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -83,14 +83,7 @@ return {
                 "name": "email",
                 "storageKey": null
               },
-              (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "verified",
-                "storageKey": null
-              }
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
@@ -121,20 +114,6 @@ return {
             "kind": "ScalarField",
             "name": "familyName",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "photoUrl",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -156,12 +135,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2a338438b8c45e636181010f25b18c4e",
+    "cacheID": "2814f986a20beedd159bc6fdd9df657c",
     "id": null,
     "metadata": {},
     "name": "addLoation_rootQuery",
     "operationKind": "query",
-    "text": "query addLoation_rootQuery {\n  locationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query addLoation_rootQuery {\n  locationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();

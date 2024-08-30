@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fe4213c7f96dac356473c2bc553e290d>>
+ * @generated SignedSource<<bb98c95c48b2780bfd89ec77ed584606>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -71,21 +71,7 @@ v5 = {
   "name": "familyName",
   "storageKey": null
 },
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "photoUrl",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v8 = [
+v6 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -97,14 +83,27 @@ v8 = [
     "variableName": "myNotificationsSortingValues"
   }
 ],
-v9 = [
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v8 = [
   (v7/*: any*/),
   (v3/*: any*/),
   (v4/*: any*/),
   (v5/*: any*/),
-  (v6/*: any*/)
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "photoUrl",
+    "storageKey": null
+  }
 ],
-v10 = [
+v9 = [
   (v7/*: any*/)
 ];
 return {
@@ -160,14 +159,7 @@ return {
                 "name": "email",
                 "storageKey": null
               },
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "verified",
-                "storageKey": null
-              }
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -180,9 +172,7 @@ return {
           },
           (v3/*: any*/),
           (v4/*: any*/),
-          (v5/*: any*/),
-          (v6/*: any*/),
-          (v7/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       },
@@ -202,7 +192,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v8/*: any*/),
+        "args": (v6/*: any*/),
         "concreteType": "NotificationConnection",
         "kind": "LinkedField",
         "name": "myNotifications",
@@ -253,7 +243,7 @@ return {
                     "kind": "LinkedField",
                     "name": "invitedBy",
                     "plural": false,
-                    "selections": (v9/*: any*/),
+                    "selections": (v8/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -263,7 +253,7 @@ return {
                     "kind": "LinkedField",
                     "name": "invitee",
                     "plural": false,
-                    "selections": (v9/*: any*/),
+                    "selections": (v8/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -273,7 +263,7 @@ return {
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
-                    "selections": (v10/*: any*/),
+                    "selections": (v9/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -283,7 +273,7 @@ return {
                     "kind": "LinkedField",
                     "name": "location",
                     "plural": false,
-                    "selections": (v10/*: any*/),
+                    "selections": (v9/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -293,7 +283,7 @@ return {
                     "kind": "LinkedField",
                     "name": "team",
                     "plural": false,
-                    "selections": (v10/*: any*/),
+                    "selections": (v9/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -358,7 +348,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v8/*: any*/),
+        "args": (v6/*: any*/),
         "filters": [
           "orderBy"
         ],
@@ -370,12 +360,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8144c7395cef1b5d5a6725de09168ce3",
+    "cacheID": "ea02712281d4224b2eb0613a76e731db",
     "id": null,
     "metadata": {},
     "name": "notifications_rootQuery",
     "operationKind": "query",
-    "text": "query notifications_rootQuery(\n  $myNotificationsSortingValues: [NotificationOrderInput!]!\n) {\n  notificationCustomerRecordSynced\n  ...rootShell_query\n  ...notifications_query\n}\n\nfragment invitationToJoinLocationNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  location {\n    name\n  }\n}\n\nfragment invitationToJoinOrganizationNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    name\n  }\n}\n\nfragment invitationToJoinTeamNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  team {\n    name\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment notificationCard_NotificationDetails on Notification {\n  id\n  notificationType\n  ...invitationToJoinOrganizationNotificationCard_NotificationDetails\n  ...invitationToJoinLocationNotificationCard_NotificationDetails\n  ...invitationToJoinTeamNotificationCard_NotificationDetails\n}\n\nfragment notifications_query on Query {\n  myNotifications(first: 50, orderBy: $myNotificationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...notificationCard_NotificationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query notifications_rootQuery(\n  $myNotificationsSortingValues: [NotificationOrderInput!]!\n) {\n  notificationCustomerRecordSynced\n  ...rootShell_query\n  ...notifications_query\n}\n\nfragment invitationToJoinLocationNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  location {\n    name\n  }\n}\n\nfragment invitationToJoinOrganizationNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    name\n  }\n}\n\nfragment invitationToJoinTeamNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  team {\n    name\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment notificationCard_NotificationDetails on Notification {\n  id\n  notificationType\n  ...invitationToJoinOrganizationNotificationCard_NotificationDetails\n  ...invitationToJoinLocationNotificationCard_NotificationDetails\n  ...invitationToJoinTeamNotificationCard_NotificationDetails\n}\n\nfragment notifications_query on Query {\n  myNotifications(first: 50, orderBy: $myNotificationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...notificationCard_NotificationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();

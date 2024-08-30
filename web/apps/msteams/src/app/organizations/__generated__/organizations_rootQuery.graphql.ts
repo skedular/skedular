@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ca6f14994c09fd08342e5f99085665bb>>
+ * @generated SignedSource<<d47ce6e92d1ed1f138e09241aee46dba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -54,14 +54,7 @@ v3 = {
   "name": "id",
   "storageKey": null
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v5 = [
+v4 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -143,14 +136,7 @@ return {
                 "name": "email",
                 "storageKey": null
               },
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "verified",
-                "storageKey": null
-              }
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -182,14 +168,6 @@ return {
             "name": "familyName",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "photoUrl",
-            "storageKey": null
-          },
-          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -227,7 +205,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "OrganizationConnection",
         "kind": "LinkedField",
         "name": "organizations",
@@ -257,7 +235,13 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v4/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "name",
+                    "storageKey": null
+                  },
                   {
                     "alias": null,
                     "args": null,
@@ -369,7 +353,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v4/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -382,12 +366,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b6d97294dd38a2aa7f03ad8c1257f45b",
+    "cacheID": "2f392defdb41513c0d271520998518c3",
     "id": null,
     "metadata": {},
     "name": "organizations_rootQuery",
     "operationKind": "query",
-    "text": "query organizations_rootQuery(\n  $organizationsSortingValues: [OrganizationOrderInput!]!\n  $organizationNameSearchText: String!\n) {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...organizations_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationCard_OrganizationDetails on OrganizationDetails {\n  id\n  name\n  about\n  website\n  logoUrl\n  hasFutureBooking\n  hasLocation\n  canModify\n  canDelete\n}\n\nfragment organizationCard_Query on Query {\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n}\n\nfragment organizations_query on Query {\n  organizations(first: 50, where: {nameContains: $organizationNameSearchText}, orderBy: $organizationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationCard_OrganizationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...organizationCard_Query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query organizations_rootQuery(\n  $organizationsSortingValues: [OrganizationOrderInput!]!\n  $organizationNameSearchText: String!\n) {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...organizations_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationCard_OrganizationDetails on OrganizationDetails {\n  id\n  name\n  about\n  website\n  logoUrl\n  hasFutureBooking\n  hasLocation\n  canModify\n  canDelete\n}\n\nfragment organizationCard_Query on Query {\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n}\n\nfragment organizations_query on Query {\n  organizations(first: 50, where: {nameContains: $organizationNameSearchText}, orderBy: $organizationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationCard_OrganizationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...organizationCard_Query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();

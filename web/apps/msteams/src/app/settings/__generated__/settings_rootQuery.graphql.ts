@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3ff6da0e6c1acd54b32818ba78182a21>>
+ * @generated SignedSource<<13d90d3cea5b67fd65ab02a23380dfeb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -78,14 +78,7 @@ return {
                 "name": "email",
                 "storageKey": null
               },
-              (v0/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "verified",
-                "storageKey": null
-              }
+              (v0/*: any*/)
             ],
             "storageKey": null
           },
@@ -121,14 +114,14 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "photoUrl",
+            "name": "name",
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "name",
+            "name": "photoUrl",
             "storageKey": null
           },
           {
@@ -165,12 +158,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "98fe710968e97d25b3a5da569cacfa29",
+    "cacheID": "1f6aafb295b473622173b13a25e65e67",
     "id": null,
     "metadata": {},
     "name": "settings_rootQuery",
     "operationKind": "query",
-    "text": "query settings_rootQuery {\n  ...rootShell_query\n  ...customerSettingsPage_query\n}\n\nfragment customerSettingsPage_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  ...customerSettingsPersonalTab_query\n}\n\nfragment customerSettingsPersonalTab_query on Query {\n  me {\n    id\n    timezone\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query settings_rootQuery {\n  ...rootShell_query\n  ...customerSettingsPage_query\n}\n\nfragment customerSettingsPage_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  ...customerSettingsPersonalTab_query\n}\n\nfragment customerSettingsPersonalTab_query on Query {\n  me {\n    id\n    timezone\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();

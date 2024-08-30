@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6a5f7c10b618829168a047417583a8a1>>
+ * @generated SignedSource<<efb2989d73a67a52b4fc842bad85cea0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -81,21 +81,7 @@ v7 = {
   "name": "familyName",
   "storageKey": null
 },
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "photoUrl",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v10 = [
+v8 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -184,14 +170,7 @@ return {
                 "name": "email",
                 "storageKey": null
               },
-              (v4/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "verified",
-                "storageKey": null
-              }
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
@@ -204,9 +183,7 @@ return {
           },
           (v5/*: any*/),
           (v6/*: any*/),
-          (v7/*: any*/),
-          (v8/*: any*/),
-          (v9/*: any*/)
+          (v7/*: any*/)
         ],
         "storageKey": null
       },
@@ -226,7 +203,7 @@ return {
       },
       {
         "alias": "organizationMemberSelectorPaginatedOrganizationMembers",
-        "args": (v10/*: any*/),
+        "args": (v8/*: any*/),
         "concreteType": "OrganizationMemberConnection",
         "kind": "LinkedField",
         "name": "paginatedOrganizationMembers",
@@ -271,11 +248,23 @@ return {
                         "name": "uniqueId",
                         "storageKey": null
                       },
-                      (v9/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "name",
+                        "storageKey": null
+                      },
                       (v5/*: any*/),
                       (v6/*: any*/),
                       (v7/*: any*/),
-                      (v8/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "photoUrl",
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   },
@@ -341,7 +330,7 @@ return {
       },
       {
         "alias": "organizationMemberSelectorPaginatedOrganizationMembers",
-        "args": (v10/*: any*/),
+        "args": (v8/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -354,12 +343,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a6eefebf72880a06c2ea6ab2e7130674",
+    "cacheID": "187b9724c7d912743c921f48d1f1e9a0",
     "id": null,
     "metadata": {},
     "name": "addTeam_rootQuery",
     "operationKind": "query",
-    "text": "query addTeam_rootQuery(\n  $organizationId: String!\n  $bookingPeopleNameSearchText: String!\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  teamCustomerRecordSynced\n  ...rootShell_query\n  ...addTeam_query\n}\n\nfragment addTeam_query on Query {\n  me {\n    id\n  }\n  ...organizationMemberSelector_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query addTeam_rootQuery(\n  $organizationId: String!\n  $bookingPeopleNameSearchText: String!\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  teamCustomerRecordSynced\n  ...rootShell_query\n  ...addTeam_query\n}\n\nfragment addTeam_query on Query {\n  me {\n    id\n  }\n  ...organizationMemberSelector_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();
