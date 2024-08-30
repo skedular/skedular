@@ -1,10 +1,13 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import MenuIcon from '@mui/icons-material/Menu';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { memo, useState } from 'react';
@@ -30,6 +33,27 @@ const Main = styled('div', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }),
 }));
 
+interface AppBarProps extends MuiAppBarProps {
+  open?: boolean;
+}
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})<AppBarProps>(({ theme, open }) => ({
+  transition: theme.transitions.create(['margin', 'width'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: `${drawerWidth}px`,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
+
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -51,6 +75,10 @@ const MainRootLayout = ({ children, leftSideContent, rightSideContent }: Props) 
   const [leftDraweropen, setLeftDrawerOpen] = useState(!matchMobileView);
   const [rightDraweropen, setRightDrawerOpen] = useState(false);
 
+  const handleLeftDrawerOpen = () => {
+    setLeftDrawerOpen(true);
+  };
+
   const handleLeftDrawerClose = () => {
     setLeftDrawerOpen(false);
   };
@@ -62,6 +90,13 @@ const MainRootLayout = ({ children, leftSideContent, rightSideContent }: Props) 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
+      <AppBar position="fixed" open={leftDraweropen} sx={{ background: theme.palette.background.paper }}>
+        <Toolbar>
+          <IconButton aria-label="open drawer" onClick={handleLeftDrawerOpen} edge="start" sx={{ mr: 2, ...(leftDraweropen && { display: 'none' }) }}>
+            <MenuIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
 
       <Drawer
         sx={{
