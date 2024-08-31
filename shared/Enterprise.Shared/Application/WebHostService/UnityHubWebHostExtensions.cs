@@ -30,14 +30,14 @@ public static class UnityHubWebHostExtensions
         Action? middleAction = null,
         Action<IEndpointRouteBuilder>? configureEndpointRouteBuilder = null)
     {
+        app.UseCors(corsPolicyBuilder => corsPolicyBuilder
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowAnyOrigin()
+        );
+
         if (env.IsDevelopment())
         {
-            app.UseCors(a => a
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowAnyOrigin()
-            );
-
             app.UseDeveloperExceptionPage();
 
             app.UseOpenApi();
