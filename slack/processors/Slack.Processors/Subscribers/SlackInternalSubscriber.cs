@@ -186,9 +186,7 @@ public class SlackInternalSubscriber(
     {
         var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
         {
-            First = -1,
-            Last = -1,
-            Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
+            First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
         };
         getPaginatedLocationsInput.OrderBy.AddRange([
             new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
@@ -481,9 +479,7 @@ public class SlackInternalSubscriber(
 
         var message = new Message
         {
-            Channel = locationEntity.DailyUpdateChannel.Id,
-            Blocks = blocks,
-            Text = "Who's in today?"
+            Channel = locationEntity.DailyUpdateChannel.Id, Blocks = blocks, Text = "Who's in today?"
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -620,9 +616,7 @@ public class SlackInternalSubscriber(
 
         var message = new Message
         {
-            Channel = teamEntity.DailyUpdateChannel.Id,
-            Blocks = blocks,
-            Text = "Who's in today?"
+            Channel = teamEntity.DailyUpdateChannel.Id, Blocks = blocks, Text = "Who's in today?"
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -680,9 +674,7 @@ public class SlackInternalSubscriber(
             Last = -1,
             Where = new BookingWhereInput
             {
-                FromGTE = from.ToTimestamp(),
-                FromLTE = until.ToTimestamp(),
-                IncludeMineOnly = true
+                FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = true
             }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);

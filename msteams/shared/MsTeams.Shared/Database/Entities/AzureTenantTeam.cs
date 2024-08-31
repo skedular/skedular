@@ -30,7 +30,7 @@ public class AzureTenantTeamConfiguration : IEntityTypeConfiguration<AzureTenant
         builder
             .HasOne(item => item.AzureTenant)
             .WithMany(item => item.AzureTenantTeams);
-        
+
         builder.HasIndex(item => item.Name);
     }
 }

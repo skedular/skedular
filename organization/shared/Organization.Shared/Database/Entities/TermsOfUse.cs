@@ -20,7 +20,7 @@ public class TermsOfUseConfiguration : IEntityTypeConfiguration<TermsOfUse>
 {
     private static TermsOfUse[] SeedData =>
     [
-        new TermsOfUse
+        new()
         {
             Id = "VHzIH3DC09QJrOrCV-PnU",
             Active = true,

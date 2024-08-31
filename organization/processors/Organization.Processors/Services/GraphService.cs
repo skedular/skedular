@@ -6,14 +6,17 @@ namespace Organization.Processors.Services;
 
 public interface IGraphService
 {
-    Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(string tenantId, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(
+        string tenantId,
+        CancellationToken cancellationToken);
 }
 
 public class GraphService(
     IGraphServiceClientFactory graphServiceClientFactory,
     IMapper mapper) : IGraphService
 {
-    public async Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(string tenantId,
+    public async Task<IReadOnlyCollection<AzureTenantMember>> GetAzureTenantMembersAsync(
+        string tenantId,
         CancellationToken cancellationToken)
     {
         var graphServiceClient = graphServiceClientFactory.CreateGraphServiceClient(tenantId);

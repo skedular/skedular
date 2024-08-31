@@ -26,6 +26,7 @@ data "aws_ssm_parameter" "parameter_store_name_azure_application_id" {
 
 resource "vercel_project" "default" {
   name             = module.common.project_name
+  framework        = "create-react-app"
   team_id          = local.team_id
   build_command    = "pnpm msteams#build"
   install_command  = "pnpm install --recursive --frozen-lockfile"

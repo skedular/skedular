@@ -1,5 +1,7 @@
 import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Home from 'app';
 import Locations from 'app/locations';
 import AddLocation from 'app/locations/add';
@@ -142,21 +144,25 @@ const App = () => {
   }, [loading, teamsUserCredential]);
 
   return (
-    <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
-      <ColorModeProvider loadDefaultSystemMode={false}>
-        <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
-          <SnackbarProvider>
-            <DatePickerLocalizationProvider>
-              <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>
-                <RelayProvider token={token}>
-                  <RouterProvider router={router} />
-                </RelayProvider>
-              </LogRocketProvider>
-            </DatePickerLocalizationProvider>
-          </SnackbarProvider>
-        </ThemeProvider>
-      </ColorModeProvider>
-    </TeamsFxContext.Provider>
+    <>
+      <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
+        <ColorModeProvider loadDefaultSystemMode={false}>
+          <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
+            <SnackbarProvider>
+              <DatePickerLocalizationProvider>
+                <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>
+                  <RelayProvider token={token}>
+                    <RouterProvider router={router} />
+                  </RelayProvider>
+                </LogRocketProvider>
+              </DatePickerLocalizationProvider>
+            </SnackbarProvider>
+          </ThemeProvider>
+        </ColorModeProvider>
+      </TeamsFxContext.Provider>
+      <Analytics />
+      <SpeedInsights />
+    </>
   );
 };
 

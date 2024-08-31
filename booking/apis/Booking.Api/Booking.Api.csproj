@@ -14,7 +14,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/booking_v1.proto" GrpcServices="Server" />
+        <Protobuf Include="../../../api-definitions/grpc/unityhub/booking_v1.proto" GrpcServices="Server"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -24,11 +24,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\shared\Booking.Shared\Booking.Shared.csproj" />
+        <ProjectReference Include="..\..\shared\Booking.Shared\Booking.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="appsettings.json" />
+        <EmbeddedResource Include="appsettings.json"/>
     </ItemGroup>
 
 </Project>

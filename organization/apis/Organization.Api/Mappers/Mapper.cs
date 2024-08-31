@@ -800,6 +800,6 @@ public class Mapper : IMapper
             PhotoUrl432 = src.PhotoUrl432,
             PhotoUrl504 = src.PhotoUrl504,
             PhotoUrl648 = src.PhotoUrl648,
-            AzureTenant = azureTenant,
+            AzureTenant = azureTenant
         };
 }

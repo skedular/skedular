@@ -13,6 +13,7 @@ import {
 } from '@repo/shared/libs/providers';
 import type { ColorMode } from '@repo/shared/libs/theme';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import { useState } from 'react';
@@ -61,6 +62,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           </ThemeProvider>
         </ColorModeProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
       <GoogleAnalytics ignoreOptOutCookie={true} forceOverride={false} />
       <GoogleTagManager ignoreOptOutCookie={true} forceOverride={false} />
