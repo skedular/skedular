@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Loading } from '@repo/shared/components/loading';
-import { MuiXLicense } from '@repo/shared/libs/mui';
 import graphql from 'babel-plugin-relay/macro';
 import { MainRootLayout } from 'components/layouts';
 import { LeftSideNavigationMenu } from 'components/navigationMenu';
@@ -115,7 +114,6 @@ const RootShell = ({
           {children}
         </Box>
       </MainRootLayout>
-      <MuiXLicense />
     </>
   );
 };

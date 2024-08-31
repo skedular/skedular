@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { LogoutIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
-import { MuiXLicense } from '@repo/shared/libs/mui';
 import { signOut } from 'next-auth/react';
 import { memo, useEffect, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -103,7 +102,6 @@ const RootShell = ({
           {children}
         </Box>
       </MainRootLayout>
-      <MuiXLicense />
     </>
   );
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import { GoogleAnalytics, GoogleTagManager } from '@repo/shared/libs/analytics';
+import { MuiXLicense } from '@repo/shared/libs/mui';
 import {
   ColorModeProvider,
   DatePickerLocalizationProvider,
@@ -63,6 +64,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         </ColorModeProvider>
         <Analytics />
         <SpeedInsights />
+        <MuiXLicense />
       </body>
       <GoogleAnalytics ignoreOptOutCookie={true} forceOverride={false} />
       <GoogleTagManager ignoreOptOutCookie={true} forceOverride={false} />

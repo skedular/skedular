@@ -1,5 +1,6 @@
 import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
+import { MuiXLicense } from '@repo/shared/libs/mui';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Root from 'app';
@@ -137,6 +138,7 @@ const App = () => {
       </TeamsFxContext.Provider>
       <Analytics />
       <SpeedInsights />
+      <MuiXLicense />
     </>
   );
 };
