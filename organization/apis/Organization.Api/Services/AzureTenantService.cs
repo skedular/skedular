@@ -23,6 +23,7 @@ public interface IAzureTenantService
 }
 
 public class AzureTenantService(
+    ApplicationConfiguration applicationConfiguration,
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IContext context,
@@ -84,10 +85,12 @@ public class AzureTenantService(
         Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
         ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
 
-        var currentUri = UriHelper.BuildAbsolute(
-            httpContextAccessor.HttpContext.Request.Scheme,
-            httpContextAccessor.HttpContext.Request.Host,
-            httpContextAccessor.HttpContext.Request.PathBase);
+        var currentUri = string.IsNullOrWhiteSpace(applicationConfiguration.ApiBaseDomain)
+            ? UriHelper.BuildAbsolute(
+                httpContextAccessor.HttpContext.Request.Scheme,
+                httpContextAccessor.HttpContext.Request.Host,
+                httpContextAccessor.HttpContext.Request.PathBase)
+            : applicationConfiguration.ApiBaseDomain;
 
         var installStateUserIdLookup = repositoryFactory.AzureInstallStateUserIdLookupRepository.Add(
             new AzureInstallStateUserIdLookup
@@ -97,7 +100,8 @@ public class AzureTenantService(
 
         var tenantId = context.PropertyBag.AzureTenantId;
         var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
-        var redirectUri = Uri.EscapeDataString(currentUri + "organization/api/v1/onboard-azure-tenant");
+        var redirectUri = Uri.EscapeDataString(new Uri(new Uri(currentUri), "organization/api/v1/onboard-azure-tenant")
+            .OriginalString);
         var scope = Uri.EscapeDataString(Strings.Join(s_allPermissions)!);
         var authorizationRequest =
             $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={installStateUserIdLookup.Id}";
