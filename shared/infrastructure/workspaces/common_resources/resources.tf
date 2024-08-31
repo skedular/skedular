@@ -200,7 +200,7 @@ resource "azuread_application_redirect_uris" "azure_application_spa_redirect_uri
 
   redirect_uris = [
     "https://${module.common.msteams_webapp_domain_name}/auth-end.html?clientId=${azuread_application.azure_application.client_id}",
-    "https://${module.common.msteams_webapp_domain_name}/organization/api/v1/onboard-azure-tenant"
+    "https://${module.common.api_domain_name}/organization/api/v1/onboard-azure-tenant"
   ]
 }
 
