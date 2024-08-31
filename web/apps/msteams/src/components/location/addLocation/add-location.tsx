@@ -17,7 +17,7 @@ import { object, string } from 'yup';
 import type { addLocation_addLocationMutation } from './__generated__/addLocation_addLocationMutation.graphql';
 
 type Props = {
-  organizationId: string | null;
+  organizationId: string;
 };
 
 interface LocationDetails {

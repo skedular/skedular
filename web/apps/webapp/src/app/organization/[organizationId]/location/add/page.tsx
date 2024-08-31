@@ -1,11 +1,11 @@
 'use client';
 
-import { Loading } from '@repo/shared/components/loading';
 import { AddLocation } from '@/components/location/addLocation';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import type { pageAddOrganizationLocation_rootQuery } from '@/queries/__generated__/pageAddOrganizationLocation_rootQuery.graphql';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { useParams } from 'next/navigation';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -45,6 +45,8 @@ const MemoAddLocationPage = memo(AddLocationPage);
 type PropsWithRelay = {};
 
 const AddLocationPageWithRelay = ({}: PropsWithRelay) => {
+  const [queryReference, loadQuery] = useQueryLoader<pageAddOrganizationLocation_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
   if (typeof organizationId === 'string') {
@@ -58,9 +60,6 @@ const AddLocationPageWithRelay = ({}: PropsWithRelay) => {
   } else {
     throw new Error('organizationId is required');
   }
-
-  const [queryReference, loadQuery] = useQueryLoader<pageAddOrganizationLocation_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
     loadQuery(

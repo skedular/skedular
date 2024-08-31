@@ -47,6 +47,8 @@ const AddTeamPage = ({ queryReference, onReloadRequire, organizationId }: Props)
 const MemoAddTeamPage = memo(AddTeamPage);
 
 const AddTeamPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<addOrganizationTeam_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
   if (typeof organizationId === 'string') {
@@ -60,9 +62,6 @@ const AddTeamPageWithRelay = () => {
   } else {
     throw new Error('organizationId is required');
   }
-
-  const [queryReference, loadQuery] = useQueryLoader<addOrganizationTeam_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
     loadQuery(

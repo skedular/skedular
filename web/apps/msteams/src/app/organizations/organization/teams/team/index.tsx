@@ -59,6 +59,8 @@ const TeamPage = ({ queryReference, onReloadRequire, teamId, organizationId }: P
 const MemoTeamPage = memo(TeamPage);
 
 const TeamPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<teamOrganization_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId, teamId } = useParams();
   let finalOrganizationId = '';
   if (typeof organizationId === 'string') {
@@ -85,9 +87,6 @@ const TeamPageWithRelay = () => {
   } else {
     throw new Error('teamId is required');
   }
-
-  const [queryReference, loadQuery] = useQueryLoader<teamOrganization_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
     const from = startOfDay(null).toISOString();

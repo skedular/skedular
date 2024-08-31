@@ -69,6 +69,8 @@ const LocationPage = ({ queryReference, onReloadRequire, locationId, organizatio
 const MemoLocationPage = memo(LocationPage);
 
 const LocationPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<locationOrganization_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId, locationId } = useParams();
   let finalOrganizationId = '';
   if (typeof organizationId === 'string') {
@@ -96,9 +98,6 @@ const LocationPageWithRelay = () => {
     throw new Error('locationId is required');
   }
 
-  const [queryReference, loadQuery] = useQueryLoader<locationOrganization_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
-
   useEffect(() => {
     const from = startOfDay(null).toISOString();
     const to = endOfDay(null).toISOString();
@@ -109,12 +108,12 @@ const LocationPageWithRelay = () => {
 
     loadQuery(
       {
+        organizationId: finalOrganizationId,
         locationId: finalLocationId,
         zoneTagType: TAG_TYPE_LOCATION_ZONE,
         deskIdsToIncludeToGetAvailableDesks: [],
         fromToGetBookings: from,
         toToGetBookings: to,
-        organizationId: finalOrganizationId,
         peopleNameSearchText: '',
         zoneNameSearchText: '',
         deskNameSearchText: '',

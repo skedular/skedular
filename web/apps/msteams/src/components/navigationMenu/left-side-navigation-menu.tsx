@@ -5,35 +5,28 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { CalendarIcon, LocationIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
+import { LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { memo } from 'react';
+import { useParams } from 'react-router-dom';
 
 const LeftSideNavigationMenu = () => {
+  const { organizationId } = useParams();
+  let finalOrganizationId = '';
+  if (typeof organizationId === 'string') {
+    finalOrganizationId = organizationId;
+  } else if (Array.isArray(organizationId)) {
+    if (typeof organizationId[0] === 'undefined') {
+      throw new Error('organizationId is required');
+    }
+
+    finalOrganizationId = organizationId[0];
+  } else {
+    throw new Error('organizationId is required');
+  }
+
   return (
     <List>
-      <Link href="/">
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <CalendarIcon />
-            </ListItemIcon>
-            <ListItemText>Calendar</ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </Link>
-
-      <Link href="/organization">
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <OrganizationIcon />
-            </ListItemIcon>
-            <ListItemText>Organizations</ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </Link>
-
-      <Link href="/location">
+      <Link href={`/organization/${finalOrganizationId}/location`}>
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -44,7 +37,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href="/team">
+      <Link href={`/organization/${finalOrganizationId}/team`}>
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -55,7 +48,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href="/notification">
+      <Link href={`/${finalOrganizationId}/notification`}>
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -66,7 +59,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href="/settings">
+      <Link href={`/${finalOrganizationId}/settings`}>
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>

@@ -2,13 +2,10 @@ import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import Home from 'app';
+import Root from 'app';
+import Install from 'app/install';
 import Locations from 'app/locations';
-import AddLocation from 'app/locations/add';
-import Location from 'app/locations/location';
 import Notifications from 'app/notifications';
-import Organizations from 'app/organizations';
-import AddOrganization from 'app/organizations/add';
 import Organization from 'app/organizations/organization';
 import AddOrganizationLocation from 'app/organizations/organization/locations/add';
 import OrganizationLocation from 'app/organizations/organization/locations/location';
@@ -16,8 +13,6 @@ import AddOrganizationTeam from 'app/organizations/organization/teams/add';
 import OrganizationTeam from 'app/organizations/organization/teams/team';
 import Settings from 'app/settings';
 import Teams from 'app/teams';
-import AddTeam from 'app/teams/add';
-import Team from 'app/teams/team';
 import {
   ColorModeProvider,
   DatePickerLocalizationProvider,
@@ -34,66 +29,46 @@ import './App.css';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <Root />,
   },
   {
-    path: 'organization',
-    element: <Organizations />,
+    path: '/install',
+    element: <Install />,
   },
   {
-    path: 'organization/add',
-    element: <AddOrganization />,
-  },
-  {
-    path: 'organization/:organizationId',
+    path: '/organization/:organizationId',
     element: <Organization />,
   },
   {
-    path: 'organization/:organizationId/location/add',
-    element: <AddOrganizationLocation />,
-  },
-  {
-    path: 'organization/:organizationId/location/:locationId',
-    element: <OrganizationLocation />,
-  },
-  {
-    path: 'organization/:organizationId/team/add',
-    element: <AddOrganizationTeam />,
-  },
-  {
-    path: 'organization/:organizationId/team/:teamId',
-    element: <OrganizationTeam />,
-  },
-  {
-    path: 'location',
+    path: '/organization/:organizationId/location',
     element: <Locations />,
   },
   {
-    path: 'location/add',
-    element: <AddLocation />,
+    path: '/organization/:organizationId/location/add',
+    element: <AddOrganizationLocation />,
   },
   {
-    path: 'location/:locationId',
-    element: <Location />,
+    path: '/organization/:organizationId/location/:locationId',
+    element: <OrganizationLocation />,
   },
   {
-    path: 'team',
+    path: '/organization/:organizationId/team',
     element: <Teams />,
   },
   {
-    path: 'team/add',
-    element: <AddTeam />,
+    path: '/organization/:organizationId/team/add',
+    element: <AddOrganizationTeam />,
   },
   {
-    path: 'team/:teamId',
-    element: <Team />,
+    path: '/organization/:organizationId/team/:teamId',
+    element: <OrganizationTeam />,
   },
   {
-    path: 'notification',
+    path: '/:organizationId/notification',
     element: <Notifications />,
   },
   {
-    path: 'settings',
+    path: '/:organizationId/settings',
     element: <Settings />,
   },
 ]);

@@ -42,6 +42,8 @@ const AddLocationPage = ({ queryReference, onReloadRequire, organizationId }: Pr
 const MemoAddLocationPage = memo(AddLocationPage);
 
 const AddLocationPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<addOrganizationLocation_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
   if (typeof organizationId === 'string') {
@@ -55,9 +57,6 @@ const AddLocationPageWithRelay = () => {
   } else {
     throw new Error('organizationId is required');
   }
-
-  const [queryReference, loadQuery] = useQueryLoader<addOrganizationLocation_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
     loadQuery(

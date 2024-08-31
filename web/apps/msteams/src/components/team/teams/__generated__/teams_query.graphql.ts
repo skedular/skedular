@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<15eb1e567afd55cd9f3c624de31931bc>>
+ * @generated SignedSource<<44ecc993f02f8d793489e8f2cbca2caa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,6 +44,10 @@ return {
       "defaultValue": null,
       "kind": "LocalArgument",
       "name": "cursor"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
     },
     {
       "kind": "RootArgument",
@@ -93,6 +97,11 @@ return {
               "kind": "Variable",
               "name": "nameContains",
               "variableName": "teamNameSearchText"
+            },
+            {
+              "kind": "Variable",
+              "name": "organizationId",
+              "variableName": "organizationId"
             }
           ],
           "kind": "ObjectValue",
@@ -210,6 +219,6 @@ return {
 };
 })();
 
-(node as any).hash = "943d56e5a9aff10a5dfe0d3cc86f0983";
+(node as any).hash = "7d57824b3a11e35ee7299b9a7df1c7fa";
 
 export default node;

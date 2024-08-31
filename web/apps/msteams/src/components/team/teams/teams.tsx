@@ -20,9 +20,10 @@ import type { teams_query$key } from './__generated__/teams_query.graphql';
 
 type Props = {
   rootDataRelay: teams_query$key;
+  organizationId: string;
 };
 
-const Teams = ({ rootDataRelay }: Props) => {
+const Teams = ({ rootDataRelay, organizationId }: Props) => {
   const {
     data: rootData,
     loadNext,
@@ -33,8 +34,12 @@ const Teams = ({ rootDataRelay }: Props) => {
       fragment teams_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
       @refetchable(queryName: "teamsPaginationQuery") {
-        teams(first: $count, after: $cursor, where: { nameContains: $teamNameSearchText }, orderBy: $teamsSortingValues)
-          @connection(key: "teams_teams") {
+        teams(
+          first: $count
+          after: $cursor
+          where: { organizationId: $organizationId, nameContains: $teamNameSearchText }
+          orderBy: $teamsSortingValues
+        ) @connection(key: "teams_teams") {
           __id
           totalCount
           edges {
@@ -96,6 +101,7 @@ const Teams = ({ rootDataRelay }: Props) => {
         {
           count: pageSize,
           teamsSortingValues: [order],
+          organizationId: organizationId,
           teamNameSearchText,
         },
         {
@@ -146,7 +152,7 @@ const Teams = ({ rootDataRelay }: Props) => {
     <>
       <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
         <Grid>
-          <Link href="/team/add">
+          <Link href={`/organization/${organizationId}/team/add`}>
             <Button variant="contained" startIcon={<AddIcon />}>
               Add Team
             </Button>

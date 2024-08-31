@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af6b4c88499605dc4f0123484d2b35dd>>
+ * @generated SignedSource<<1d64d3d419085fd3cf36815e9bb07c00>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type TeamOrderInput = {
 export type teamsPaginationQuery$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
+  organizationId?: string | null | undefined;
   teamNameSearchText?: string | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
@@ -41,6 +42,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationId"
   },
   {
     "defaultValue": null,
@@ -75,6 +81,11 @@ v1 = [
         "kind": "Variable",
         "name": "nameContains",
         "variableName": "teamNameSearchText"
+      },
+      {
+        "kind": "Variable",
+        "name": "organizationId",
+        "variableName": "organizationId"
       }
     ],
     "kind": "ObjectValue",
@@ -308,16 +319,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3712c533f100a96bbeb2efd8fd72d677",
+    "cacheID": "c07c93f3859f9aeb35d9cf722ece7a65",
     "id": null,
     "metadata": {},
     "name": "teamsPaginationQuery",
     "operationKind": "query",
-    "text": "query teamsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $teamNameSearchText: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...teams_query_1G22uz\n}\n\nfragment teamCard_Query on Query {\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment teams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...teamCard_Query\n}\n"
+    "text": "query teamsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $organizationId: String\n  $teamNameSearchText: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...teams_query_1G22uz\n}\n\nfragment teamCard_Query on Query {\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment teams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...teamCard_Query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "943d56e5a9aff10a5dfe0d3cc86f0983";
+(node as any).hash = "7d57824b3a11e35ee7299b9a7df1c7fa";
 
 export default node;

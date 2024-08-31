@@ -20,7 +20,7 @@ import type { addTeam_query$key } from './__generated__/addTeam_query.graphql';
 
 type Props = {
   rootDataRelay: addTeam_query$key;
-  organizationId: string | null;
+  organizationId: string;
 };
 
 interface TeamDetails {

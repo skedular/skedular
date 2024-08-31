@@ -7,22 +7,24 @@ import { RootShell } from 'components/rootShell';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useParams } from 'react-router-dom';
 import type { locations_rootQuery } from './__generated__/locations_rootQuery.graphql';
 
 type Props = {
   queryReference: PreloadedQuery<locations_rootQuery, Record<string, unknown>>;
   onReloadRequire: () => void;
+  organizationId: string;
 };
 
 const RootQuery = graphql`
-  query locations_rootQuery($locationsSortingValues: [LocationOrderInput!]!, $locationNameSearchText: String!) {
+  query locations_rootQuery($organizationId: String!, $locationsSortingValues: [LocationOrderInput!]!, $locationNameSearchText: String!) {
     locationCustomerRecordSynced
     ...rootShell_query
     ...locations_query
   }
 `;
 
-const LocationsPage = ({ queryReference, onReloadRequire }: Props) => {
+const LocationsPage = ({ queryReference, onReloadRequire, organizationId }: Props) => {
   const rootData = usePreloadedQuery<locations_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.locationCustomerRecordSynced, [rootData?.locationCustomerRecordSynced]);
 
@@ -33,7 +35,7 @@ const LocationsPage = ({ queryReference, onReloadRequire }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.locationCustomerRecordSynced]}
     >
-      <Locations rootDataRelay={rootData} />
+      <Locations rootDataRelay={rootData} organizationId={organizationId} />
     </RootShell>
   );
 };
@@ -43,10 +45,24 @@ const MemoLocationsPage = memo(LocationsPage);
 const LocationsPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<locations_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
+  const { organizationId } = useParams();
+  let finalOrganizationId = '';
+  if (typeof organizationId === 'string') {
+    finalOrganizationId = organizationId;
+  } else if (Array.isArray(organizationId)) {
+    if (typeof organizationId[0] === 'undefined') {
+      throw new Error('organizationId is required');
+    }
+
+    finalOrganizationId = organizationId[0];
+  } else {
+    throw new Error('organizationId is required');
+  }
 
   useEffect(() => {
     loadQuery(
       {
+        organizationId: finalOrganizationId,
         locationsSortingValues: [
           {
             direction: 'Ascending',
@@ -59,7 +75,7 @@ const LocationsPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload]);
+  }, [loadQuery, triggerReload, finalOrganizationId]);
 
   const handleReloadRequire = () => {
     setTriggerReload(triggerReload + 1);
@@ -71,7 +87,7 @@ const LocationsPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationsPage queryReference={queryReference} onReloadRequire={handleReloadRequire} />
+      <MemoLocationsPage queryReference={queryReference} onReloadRequire={handleReloadRequire} organizationId={finalOrganizationId} />
     </ErrorBoundary>
   );
 };

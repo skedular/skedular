@@ -7,22 +7,24 @@ import { Teams } from 'components/team/teams';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useParams } from 'react-router-dom';
 import type { teams_rootQuery } from './__generated__/teams_rootQuery.graphql';
 
 type Props = {
   queryReference: PreloadedQuery<teams_rootQuery, Record<string, unknown>>;
   onReloadRequire: () => void;
+  organizationId: string;
 };
 
 const RootQuery = graphql`
-  query teams_rootQuery($teamsSortingValues: [TeamOrderInput!]!, $teamNameSearchText: String!) {
+  query teams_rootQuery($organizationId: String!, $teamsSortingValues: [TeamOrderInput!]!, $teamNameSearchText: String!) {
     teamCustomerRecordSynced
     ...rootShell_query
     ...teams_query
   }
 `;
 
-const TeamsPage = ({ queryReference, onReloadRequire }: Props) => {
+const TeamsPage = ({ queryReference, onReloadRequire, organizationId }: Props) => {
   const rootData = usePreloadedQuery<teams_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.teamCustomerRecordSynced, [rootData?.teamCustomerRecordSynced]);
 
@@ -33,7 +35,7 @@ const TeamsPage = ({ queryReference, onReloadRequire }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.teamCustomerRecordSynced]}
     >
-      <Teams rootDataRelay={rootData} />
+      <Teams rootDataRelay={rootData} organizationId={organizationId} />
     </RootShell>
   );
 };
@@ -43,10 +45,24 @@ const MemoTeamsPage = memo(TeamsPage);
 const TeamsPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<teams_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
+  const { organizationId } = useParams();
+  let finalOrganizationId = '';
+  if (typeof organizationId === 'string') {
+    finalOrganizationId = organizationId;
+  } else if (Array.isArray(organizationId)) {
+    if (typeof organizationId[0] === 'undefined') {
+      throw new Error('organizationId is required');
+    }
+
+    finalOrganizationId = organizationId[0];
+  } else {
+    throw new Error('organizationId is required');
+  }
 
   useEffect(() => {
     loadQuery(
       {
+        organizationId: finalOrganizationId,
         teamsSortingValues: [
           {
             direction: 'Ascending',
@@ -59,7 +75,7 @@ const TeamsPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload]);
+  }, [loadQuery, triggerReload, finalOrganizationId]);
 
   const handleReloadRequire = () => {
     setTriggerReload(triggerReload + 1);
@@ -71,7 +87,7 @@ const TeamsPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeamsPage queryReference={queryReference} onReloadRequire={handleReloadRequire} />
+      <MemoTeamsPage queryReference={queryReference} onReloadRequire={handleReloadRequire} organizationId={finalOrganizationId} />
     </ErrorBoundary>
   );
 };

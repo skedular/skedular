@@ -20,9 +20,10 @@ import type { locations_query$key } from './__generated__/locations_query.graphq
 
 type Props = {
   rootDataRelay: locations_query$key;
+  organizationId: string;
 };
 
-const Locations = ({ rootDataRelay }: Props) => {
+const Locations = ({ rootDataRelay, organizationId }: Props) => {
   const {
     data: rootData,
     loadNext,
@@ -33,8 +34,12 @@ const Locations = ({ rootDataRelay }: Props) => {
       fragment locations_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
       @refetchable(queryName: "locationsPaginationQuery") {
-        locations(first: $count, after: $cursor, where: { nameContains: $locationNameSearchText }, orderBy: $locationsSortingValues)
-          @connection(key: "locations_locations") {
+        locations(
+          first: $count
+          after: $cursor
+          where: { organizationId: $organizationId, nameContains: $locationNameSearchText }
+          orderBy: $locationsSortingValues
+        ) @connection(key: "locations_locations") {
           __id
           totalCount
           edges {
@@ -96,6 +101,7 @@ const Locations = ({ rootDataRelay }: Props) => {
         {
           count: pageSize,
           locationsSortingValues: [order],
+          organizationId: organizationId,
           locationNameSearchText,
         },
         {
@@ -144,7 +150,7 @@ const Locations = ({ rootDataRelay }: Props) => {
     <>
       <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
         <Grid>
-          <Link href="/location/add">
+          <Link href={`/organization/${organizationId}/location/add`}>
             <Button variant="contained" startIcon={<AddIcon />}>
               Add Location
             </Button>

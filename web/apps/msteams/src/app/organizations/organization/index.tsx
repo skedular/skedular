@@ -65,6 +65,8 @@ const OrganizationPage = ({ queryReference, onReloadRequire, organizationId }: P
 const MemoOrganizationPage = memo(OrganizationPage);
 
 const OrganizationPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<organization_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
   if (typeof organizationId === 'string') {
@@ -78,9 +80,6 @@ const OrganizationPageWithRelay = () => {
   } else {
     throw new Error('organizationId is required');
   }
-
-  const [queryReference, loadQuery] = useQueryLoader<organization_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
     const from = startOfDay(null).toISOString();

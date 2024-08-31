@@ -1,12 +1,12 @@
 'use client';
 
-import { Loading } from '@repo/shared/components/loading';
 import { Location } from '@/components/location/locationPage';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { TAG_TYPE_LOCATION_ZONE } from '@/components/zone';
 import type { pageLocation_rootQuery } from '@/queries/__generated__/pageLocation_rootQuery.graphql';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { endOfDay, startOfDay } from '@repo/shared/libs/utils';
 import { useParams } from 'next/navigation';
 import { memo, useCallback, useEffect, useState } from 'react';
@@ -71,6 +71,8 @@ const MemoLocationPage = memo(LocationPage);
 type PropsWithRelay = {};
 
 const LocationPageWithRelay = ({}: PropsWithRelay) => {
+  const [queryReference, loadQuery] = useQueryLoader<pageLocation_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
   const { locationId } = useParams();
   let finalLocationId = '';
   if (typeof locationId === 'string') {
@@ -84,9 +86,6 @@ const LocationPageWithRelay = ({}: PropsWithRelay) => {
   } else {
     throw new Error('locationId is required');
   }
-
-  const [queryReference, loadQuery] = useQueryLoader<pageLocation_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
     const from = startOfDay(null).toISOString();

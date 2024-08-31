@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6b66b7e86daeeb3b197028b2b09d5e9b>>
+ * @generated SignedSource<<1a6e43c077ecebe782a202486f643388>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,6 +21,7 @@ export type locationsPaginationQuery$variables = {
   cursor?: string | null | undefined;
   locationNameSearchText?: string | null | undefined;
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
+  organizationId?: string | null | undefined;
 };
 export type locationsPaginationQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"locations_query">;
@@ -51,6 +52,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "locationsSortingValues"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationId"
   }
 ],
 v1 = [
@@ -75,6 +81,11 @@ v1 = [
         "kind": "Variable",
         "name": "nameContains",
         "variableName": "locationNameSearchText"
+      },
+      {
+        "kind": "Variable",
+        "name": "organizationId",
+        "variableName": "organizationId"
       }
     ],
     "kind": "ObjectValue",
@@ -315,16 +326,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "40ba2c50bcf9eb151b5b4ccceb7d552f",
+    "cacheID": "0c1173c398f6d161d697fc2e80523bf5",
     "id": null,
     "metadata": {},
     "name": "locationsPaginationQuery",
     "operationKind": "query",
-    "text": "query locationsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $locationNameSearchText: String\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...locations_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  deskCapacity\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment locationCard_Query on Query {\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n}\n\nfragment locations_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...locationCard_Query\n}\n"
+    "text": "query locationsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $locationNameSearchText: String\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String\n) {\n  ...locations_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  deskCapacity\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment locationCard_Query on Query {\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n}\n\nfragment locations_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...locationCard_Query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fd217ebba59eedf46a040ea58ccac8eb";
+(node as any).hash = "2f456ceb4368de832eeac4a67d5e17d7";
 
 export default node;

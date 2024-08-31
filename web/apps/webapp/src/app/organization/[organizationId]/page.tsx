@@ -1,11 +1,11 @@
 'use client';
 
-import { Loading } from '@repo/shared/components/loading';
 import { Organization } from '@/components/organization/organizationPage';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganization_rootQuery } from '@/queries/__generated__/pageOrganization_rootQuery.graphql';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
 import { useParams } from 'next/navigation';
 import { memo, useCallback, useEffect, useState } from 'react';
@@ -68,6 +68,8 @@ const MemoOrganizationPage = memo(OrganizationPage);
 type PropsWithRelay = {};
 
 const OrganizationPageWithRelay = ({}: PropsWithRelay) => {
+  const [queryReference, loadQuery] = useQueryLoader<pageOrganization_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
   if (typeof organizationId === 'string') {
@@ -81,9 +83,6 @@ const OrganizationPageWithRelay = ({}: PropsWithRelay) => {
   } else {
     throw new Error('organizationId is required');
   }
-
-  const [queryReference, loadQuery] = useQueryLoader<pageOrganization_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
     const from = startOfDay(null).toISOString();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8d815667eec665b6e928073f65c5e880>>
+ * @generated SignedSource<<4e20b7b3489f03700758f2357b3f302a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -52,6 +52,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "locationsSortingValues"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
     }
   ],
   "kind": "Fragment",
@@ -93,6 +97,11 @@ return {
               "kind": "Variable",
               "name": "nameContains",
               "variableName": "locationNameSearchText"
+            },
+            {
+              "kind": "Variable",
+              "name": "organizationId",
+              "variableName": "organizationId"
             }
           ],
           "kind": "ObjectValue",
@@ -210,6 +219,6 @@ return {
 };
 })();
 
-(node as any).hash = "fd217ebba59eedf46a040ea58ccac8eb";
+(node as any).hash = "2f456ceb4368de832eeac4a67d5e17d7";
 
 export default node;

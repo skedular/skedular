@@ -1,11 +1,11 @@
 'use client';
 
-import { Loading } from '@repo/shared/components/loading';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { Team } from '@/components/team/teamPage';
 import type { pageTeam_rootQuery } from '@/queries/__generated__/pageTeam_rootQuery.graphql';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
 import { useParams } from 'next/navigation';
 import { memo, useCallback, useEffect, useState } from 'react';
@@ -61,6 +61,8 @@ const MemoTeamPage = memo(TeamPage);
 type PropsWithRelay = {};
 
 const TeamPageWithRelay = ({}: PropsWithRelay) => {
+  const [queryReference, loadQuery] = useQueryLoader<pageTeam_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
   const { teamId } = useParams();
   let finalTeamId = '';
   if (typeof teamId === 'string') {
@@ -74,9 +76,6 @@ const TeamPageWithRelay = ({}: PropsWithRelay) => {
   } else {
     throw new Error('teamId is required');
   }
-
-  const [queryReference, loadQuery] = useQueryLoader<pageTeam_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
     const from = startOfDay(null).toISOString();

@@ -1,11 +1,11 @@
 'use client';
 
-import { Loading } from '@repo/shared/components/loading';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { AddTeam } from '@/components/team/addTeam';
 import type { pageAddOrganizationTeam_rootQuery } from '@/queries/__generated__/pageAddOrganizationTeam_rootQuery.graphql';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { useParams } from 'next/navigation';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -50,6 +50,8 @@ const MemoAddTeamPage = memo(AddTeamPage);
 type PropsWithRelay = {};
 
 const AddTeamPageWithRelay = ({}: PropsWithRelay) => {
+  const [queryReference, loadQuery] = useQueryLoader<pageAddOrganizationTeam_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
   if (typeof organizationId === 'string') {
@@ -63,9 +65,6 @@ const AddTeamPageWithRelay = ({}: PropsWithRelay) => {
   } else {
     throw new Error('organizationId is required');
   }
-
-  const [queryReference, loadQuery] = useQueryLoader<pageAddOrganizationTeam_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
     loadQuery(
