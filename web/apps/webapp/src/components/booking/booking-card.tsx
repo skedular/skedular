@@ -28,14 +28,14 @@ import {
   TeamIcon,
 } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { endOfDay, getCustomerFullName, startOfDay, toShortDate, joinErrors } from '@repo/shared/libs/utils';
+import { endOfDay, getCustomerFullName, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { v4 as uuidv4 } from 'uuid';
 import { array, date, object, string } from 'yup';
 import BookingDate from './booking-date';
 import BookingDetailsSelector from './booking-details-selector';
@@ -91,7 +91,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           id
           name
         }
-        organization(id: $organizationId) {
+        organizationBookingPermissions(organizationId: $organizationId) {
           canUpdateBookingOnBehalf
           canDeleteBookingOnBehalf
         }
@@ -527,9 +527,11 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
   }
 
   const canUpdateBooking =
-    rootData.me.id === bookingDetails.customer?.uniqueId || (rootData.organization && rootData.organization.canUpdateBookingOnBehalf);
+    rootData.me.id === bookingDetails.customer?.uniqueId ||
+    (rootData.organizationBookingPermissions && rootData.organizationBookingPermissions.canUpdateBookingOnBehalf);
   const canDeleteBooking =
-    rootData.me.id === bookingDetails.customer?.uniqueId || (rootData.organization && rootData.organization.canDeleteBookingOnBehalf);
+    rootData.me.id === bookingDetails.customer?.uniqueId ||
+    (rootData.organizationBookingPermissions && rootData.organizationBookingPermissions.canDeleteBookingOnBehalf);
   const isMyBooking = rootData.me.id === bookingDetails.customer?.uniqueId;
 
   return (

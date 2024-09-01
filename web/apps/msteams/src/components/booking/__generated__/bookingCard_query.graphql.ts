@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<12052d826c538440121d1b0b0a3828bf>>
+ * @generated SignedSource<<5468034dfa8704491e330869fa94de35>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,10 +30,10 @@ export type bookingCard_query$data = {
     readonly id: string;
     readonly name: string;
   }>;
-  readonly organization: {
+  readonly organizationBookingPermissions: {
     readonly canDeleteBookingOnBehalf: boolean;
     readonly canUpdateBookingOnBehalf: boolean;
-  } | null | undefined;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_query">;
   readonly " $fragmentType": "bookingCard_query";
 };
@@ -60,6 +60,13 @@ v1 = {
 v2 = [
   (v0/*: any*/),
   (v1/*: any*/)
+],
+v3 = [
+  {
+    "kind": "Variable",
+    "name": "organizationId",
+    "variableName": "organizationId"
+  }
 ];
 return {
   "argumentDefinitions": [
@@ -143,13 +150,7 @@ return {
     },
     {
       "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "organizationId",
-          "variableName": "organizationId"
-        }
-      ],
+      "args": (v3/*: any*/),
       "concreteType": "LocationDetails",
       "kind": "LinkedField",
       "name": "myLocations",
@@ -159,16 +160,10 @@ return {
     },
     {
       "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "id",
-          "variableName": "organizationId"
-        }
-      ],
-      "concreteType": "OrganizationDetails",
+      "args": (v3/*: any*/),
+      "concreteType": "OrganizationBookingPermissions",
       "kind": "LinkedField",
-      "name": "organization",
+      "name": "organizationBookingPermissions",
       "plural": false,
       "selections": [
         {
@@ -199,6 +194,6 @@ return {
 };
 })();
 
-(node as any).hash = "6542769515d9a607d0498086de36b84b";
+(node as any).hash = "af9b8d5dbccadb1116f6fa6766899ebc";
 
 export default node;

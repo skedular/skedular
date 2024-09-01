@@ -92,7 +92,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           id
           name
         }
-        organization(id: $organizationId) {
+        organizationBookingPermissions(organizationId: $organizationId) {
           canUpdateBookingOnBehalf
           canDeleteBookingOnBehalf
         }
@@ -528,9 +528,11 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
   }
 
   const canUpdateBooking =
-    rootData.me.id === bookingDetails.customer?.uniqueId || (rootData.organization && rootData.organization.canUpdateBookingOnBehalf);
+    rootData.me.id === bookingDetails.customer?.uniqueId ||
+    (rootData.organizationBookingPermissions && rootData.organizationBookingPermissions.canUpdateBookingOnBehalf);
   const canDeleteBooking =
-    rootData.me.id === bookingDetails.customer?.uniqueId || (rootData.organization && rootData.organization.canDeleteBookingOnBehalf);
+    rootData.me.id === bookingDetails.customer?.uniqueId ||
+    (rootData.organizationBookingPermissions && rootData.organizationBookingPermissions.canDeleteBookingOnBehalf);
   const isMyBooking = rootData.me.id === bookingDetails.customer?.uniqueId;
 
   return (

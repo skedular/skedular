@@ -76,8 +76,7 @@ const NewBookingDialog = ({
         me {
           id
         }
-        organization(id: $organizationId) {
-          id
+        organizationBookingPermissions(organizationId: $organizationId) {
           canAddBookingOnBehalf
         }
         ...bookingDetailsSelector_query
@@ -104,7 +103,7 @@ const NewBookingDialog = ({
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const schema = !!rootData.organization?.canAddBookingOnBehalf ? bookingSchema : bookingWithoutMemberSchema;
+  const schema = !!rootData.organizationBookingPermissions?.canAddBookingOnBehalf ? bookingSchema : bookingWithoutMemberSchema;
   const validate = makeValidate(schema);
   const requiredFields = makeRequired(schema);
   const [from, setFrom] = useState<Dayjs | Date>(startOfDay(null));
@@ -218,7 +217,7 @@ const NewBookingDialog = ({
                   hideOrganizationControl={hideOrganizationControl}
                   organizationMemberName="member"
                   organizationMemberRequired={requiredFields.member}
-                  hideOrganizationMemberControl={!!!rootData.organization?.canAddBookingOnBehalf}
+                  hideOrganizationMemberControl={!!!rootData.organizationBookingPermissions?.canAddBookingOnBehalf}
                   defaultLocationId={locationId}
                   locationName="location"
                   locationRequired={requiredFields.location}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f214eaab598329bebc3159dc314c11a4>>
+ * @generated SignedSource<<6cae3147ae2ba871e0978c1e5c9bac8f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,10 +14,9 @@ export type newBookingDialog_query$data = {
   readonly me: {
     readonly id: string;
   } | null | undefined;
-  readonly organization: {
+  readonly organizationBookingPermissions: {
     readonly canAddBookingOnBehalf: boolean;
-    readonly id: string;
-  } | null | undefined;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_query">;
   readonly " $fragmentType": "newBookingDialog_query";
 };
@@ -26,15 +25,7 @@ export type newBookingDialog_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -53,7 +44,13 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v0/*: any*/)
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -62,16 +59,15 @@ return {
       "args": [
         {
           "kind": "Variable",
-          "name": "id",
+          "name": "organizationId",
           "variableName": "organizationId"
         }
       ],
-      "concreteType": "OrganizationDetails",
+      "concreteType": "OrganizationBookingPermissions",
       "kind": "LinkedField",
-      "name": "organization",
+      "name": "organizationBookingPermissions",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -91,8 +87,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "cc71ca3d6c67782044230fecbd567354";
+(node as any).hash = "a75782e50fecb33b803ddb1777425da1";
 
 export default node;

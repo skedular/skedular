@@ -133,9 +133,6 @@ type OrganizationDetails implements Node {
     canModify: Boolean!
     canDelete: Boolean!
     canInvitePeople: Boolean!
-    canAddBookingOnBehalf: Boolean!
-    canUpdateBookingOnBehalf: Boolean!
-    canDeleteBookingOnBehalf: Boolean!
     canViewAnalytics: Boolean!
 }
 

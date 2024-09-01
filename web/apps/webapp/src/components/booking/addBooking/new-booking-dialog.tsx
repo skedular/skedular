@@ -8,14 +8,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { endOfDay, startOfDay, toShortDate, joinErrors } from '@repo/shared/libs/utils';
+import { endOfDay, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { v4 as uuidv4 } from 'uuid';
 import { array, date, object, string } from 'yup';
 
 type Props = {
@@ -75,8 +75,7 @@ const NewBookingDialog = ({
         me {
           id
         }
-        organization(id: $organizationId) {
-          id
+        organizationBookingPermissions(organizationId: $organizationId) {
           canAddBookingOnBehalf
         }
         ...bookingDetailsSelector_query
@@ -103,7 +102,7 @@ const NewBookingDialog = ({
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const schema = !!rootData.organization?.canAddBookingOnBehalf ? bookingSchema : bookingWithoutMemberSchema;
+  const schema = !!rootData.organizationBookingPermissions?.canAddBookingOnBehalf ? bookingSchema : bookingWithoutMemberSchema;
   const validate = makeValidate(schema);
   const requiredFields = makeRequired(schema);
   const [from, setFrom] = useState<Dayjs | Date>(startOfDay(null));
@@ -217,7 +216,7 @@ const NewBookingDialog = ({
                   hideOrganizationControl={hideOrganizationControl}
                   organizationMemberName="member"
                   organizationMemberRequired={requiredFields.member}
-                  hideOrganizationMemberControl={!!!rootData.organization?.canAddBookingOnBehalf}
+                  hideOrganizationMemberControl={!!!rootData.organizationBookingPermissions?.canAddBookingOnBehalf}
                   defaultLocationId={locationId}
                   locationName="location"
                   locationRequired={requiredFields.location}

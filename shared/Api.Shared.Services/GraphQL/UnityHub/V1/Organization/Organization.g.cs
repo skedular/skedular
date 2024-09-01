@@ -489,15 +489,6 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
             [HotChocolate.GraphQLName("canInvitePeople")]
             public bool CanInvitePeople { get; set; }
 
-            [HotChocolate.GraphQLName("canAddBookingOnBehalf")]
-            public bool CanAddBookingOnBehalf { get; set; }
-
-            [HotChocolate.GraphQLName("canUpdateBookingOnBehalf")]
-            public bool CanUpdateBookingOnBehalf { get; set; }
-
-            [HotChocolate.GraphQLName("canDeleteBookingOnBehalf")]
-            public bool CanDeleteBookingOnBehalf { get; set; }
-
             [HotChocolate.GraphQLName("canViewAnalytics")]
             public bool CanViewAnalytics { get; set; }
 
