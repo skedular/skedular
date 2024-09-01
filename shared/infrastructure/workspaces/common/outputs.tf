@@ -90,6 +90,10 @@ output "logrocket_webapp_app_id" {
   value = "unity-hub/unityhub-web-app-${var.environment}"
 }
 
+output "logrocket_msteams_webapp_app_id" {
+  value = "unity-hub/unityhub-msteams-web-app-${var.environment}"
+}
+
 output "microanalytics_publicwebsite_app_id" {
   value = var.environment == "production" ? "ZwSg9rf6GA" : "ZwSg9rf6GA"
 }

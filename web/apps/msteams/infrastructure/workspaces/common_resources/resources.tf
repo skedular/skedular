@@ -47,6 +47,11 @@ resource "vercel_project" "default" {
       target = ["development", "preview", "production"]
     },
     {
+      key    = "REACT_APP_LOGROCKET_APP_ID"
+      value  = module.shared_common.logrocket_msteams_webapp_app_id
+      target = ["development", "preview", "production"]
+    },
+    {
       key    = "REACT_APP_GATEWAY_ENDPOINT"
       value  = "https://${module.shared_common.api_domain_name}/gateway/api/"
       target = ["development", "preview", "production"]
