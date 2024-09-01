@@ -18,8 +18,4 @@ const Loading = ({ message }: Props) => {
   );
 };
 
-Loading.defaultProps = {
-  message: '',
-};
-
 export default memo(Loading);
