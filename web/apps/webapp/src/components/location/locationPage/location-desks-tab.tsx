@@ -77,7 +77,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<DeskOrderInput>({
     direction: 'Ascending',
     field: 'name',

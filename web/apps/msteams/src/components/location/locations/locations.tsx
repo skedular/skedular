@@ -55,7 +55,7 @@ const Locations = ({ rootDataRelay, organizationId }: Props) => {
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<LocationOrderInput>({
     direction: 'Ascending',
     field: 'name',
@@ -103,7 +103,7 @@ const Locations = ({ rootDataRelay, organizationId }: Props) => {
           {
             count: pageSize,
             locationsSortingValues: [order],
-            organizationId: organizationId,
+            organizationId,
             locationNameSearchText,
           },
           {
@@ -115,7 +115,7 @@ const Locations = ({ rootDataRelay, organizationId }: Props) => {
         );
       });
     },
-    [refetch],
+    [refetch, organizationId],
   );
 
   const loadNextPage = useCallback(() => {

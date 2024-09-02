@@ -69,8 +69,8 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
-  const [page, setPage] = useState(0);
+  const [, startTransition] = useTransition();
+  const [, setPage] = useState(0);
   const [pageSize] = useState(20);
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');
 

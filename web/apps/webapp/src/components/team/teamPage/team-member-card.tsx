@@ -1,5 +1,4 @@
 import { CustomerAvatar } from '@/components/customer';
-import { DangerIcon, DeleteIcon } from '@repo/shared/components/icons';
 import type { teamMemberCard_TeamMemberDetails$key } from '@/queries/__generated__/teamMemberCard_TeamMemberDetails.graphql';
 import type { teamMemberCard_query$key } from '@/queries/__generated__/teamMemberCard_query.graphql';
 import type { teamMemberCard_updateTeamMutation } from '@/queries/__generated__/teamMemberCard_updateTeamMutation.graphql';
@@ -16,12 +15,13 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { DangerIcon, DeleteIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
-import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { v4 as uuidv4 } from 'uuid';
 
 type Props = {
   rootDataRelay: teamMemberCard_query$key;
@@ -29,25 +29,6 @@ type Props = {
   organizationId: string | null;
   onRefetchNeeded: () => void;
 };
-
-interface CustomerDetails {
-  uniqueId: string;
-  name: string | null | undefined;
-  givenName: string | null | undefined;
-  middleName: string | null | undefined;
-  familyName: string | null | undefined;
-  photoUrl: string | null | undefined;
-}
-
-interface OrganizationMemberDetails {
-  customer: CustomerDetails;
-}
-
-interface TeamMemberDetails {
-  id: string;
-  member: CustomerDetails | null | undefined;
-  organizationMember: OrganizationMemberDetails | null | undefined;
-}
 
 const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId, onRefetchNeeded }: Props) => {
   const rootData = useFragment<teamMemberCard_query$key>(

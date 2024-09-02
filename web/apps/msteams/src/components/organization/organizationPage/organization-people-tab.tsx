@@ -100,7 +100,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
     }
   `);
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<OrganizationMemberOrderInput>({
     direction: 'Ascending',
     field: 'name',

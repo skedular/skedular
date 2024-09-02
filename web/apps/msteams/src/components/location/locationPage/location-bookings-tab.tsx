@@ -66,7 +66,7 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<BookingOrderInput>({
     direction: 'Ascending',
     field: 'from',

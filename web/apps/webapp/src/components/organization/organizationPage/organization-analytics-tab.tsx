@@ -33,7 +33,7 @@ const OrganizationAnalyticsTab = ({ rootDataRelay, organizationId }: Props) => {
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const handleRefetch = useCallback(
     (organizationAnalyticsFrom: Dayjs, organizationAnalyticsUntil: Dayjs) => {
       startTransition(() => {

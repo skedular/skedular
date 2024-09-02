@@ -145,7 +145,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
     }
   `);
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<TeamMemberOrderInput>({
     direction: 'Ascending',
     field: 'name',
@@ -207,7 +207,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => (rootData.paginatedTeamMembers ? [rootData.paginatedTeamMembers.__id] : []), [rootData.paginatedTeamMembers]);
+  useMemo(() => (rootData.paginatedTeamMembers ? [rootData.paginatedTeamMembers.__id] : []), [rootData.paginatedTeamMembers]);
 
   // Workaround to ensure we have all the zones if new zones added using zone dialog
   useEffect(() => {

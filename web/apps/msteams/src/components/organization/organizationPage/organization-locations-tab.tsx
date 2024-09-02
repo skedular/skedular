@@ -62,7 +62,7 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<LocationOrderInput>({
     direction: 'Ascending',
     field: 'name',

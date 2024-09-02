@@ -87,7 +87,7 @@ const OrganizationBillingInfo = ({ rootDataRelay }: Props) => {
     }
   `);
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const { enqueueSnackbar } = useSnackbar();
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(organizationBillingInfoSchema);

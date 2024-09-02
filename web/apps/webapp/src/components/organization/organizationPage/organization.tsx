@@ -51,7 +51,7 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
   const router = useRouter();

@@ -33,7 +33,7 @@ const LocationAnalyticsTab = ({ rootDataRelay, locationId }: Props) => {
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const handleRefetch = useCallback(
     (locationAnalyticsFrom: Dayjs, locationAnalyticsUntil: Dayjs) => {
       startTransition(() => {

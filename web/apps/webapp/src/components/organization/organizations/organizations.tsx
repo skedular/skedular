@@ -53,7 +53,7 @@ const Organizations = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<OrganizationOrderInput>({
     direction: 'Ascending',
     field: 'name',

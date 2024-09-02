@@ -55,7 +55,7 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<TeamOrderInput>({
     direction: 'Ascending',
     field: 'name',
@@ -103,7 +103,7 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
           {
             count: pageSize,
             teamsSortingValues: [order],
-            organizationId: organizationId,
+            organizationId,
             teamNameSearchText,
           },
           {
@@ -115,7 +115,7 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
         );
       });
     },
-    [refetch],
+    [refetch, organizationId],
   );
 
   const loadNextPage = useCallback(() => {

@@ -152,8 +152,8 @@ const BookingDetailsSelector = ({
   );
 
   const theme = useTheme();
-  const [isPending, startTransition] = useTransition();
-  const [page, setPage] = useState(0);
+  const [, startTransition] = useTransition();
+  const [, setPage] = useState(0);
   const [pageSize] = useState(20);
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');
   const [organizationId, setOrganizationId] = useState(defaultOrganizationId);

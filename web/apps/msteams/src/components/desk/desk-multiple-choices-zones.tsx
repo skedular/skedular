@@ -20,12 +20,7 @@ interface ZoneDetails {
 }
 
 const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<deskMultipleChoicesZonesPaginationQuery, deskMultipleChoicesZones_query$key>(
+  const { data: rootData, refetch } = usePaginationFragment<deskMultipleChoicesZonesPaginationQuery, deskMultipleChoicesZones_query$key>(
     graphql`
       fragment deskMultipleChoicesZones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
@@ -51,7 +46,7 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
     rootDataRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const zones = useMemo<ZoneDetails[]>(() => {
     if (!rootData.paginatedLocationTags) {

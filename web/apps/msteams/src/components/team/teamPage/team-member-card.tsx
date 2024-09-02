@@ -31,25 +31,6 @@ type Props = {
   onRefetchNeeded: () => void;
 };
 
-interface CustomerDetails {
-  uniqueId: string;
-  name: string | null | undefined;
-  givenName: string | null | undefined;
-  middleName: string | null | undefined;
-  familyName: string | null | undefined;
-  photoUrl: string | null | undefined;
-}
-
-interface OrganizationMemberDetails {
-  customer: CustomerDetails;
-}
-
-interface TeamMemberDetails {
-  id: string;
-  member: CustomerDetails | null | undefined;
-  organizationMember: OrganizationMemberDetails | null | undefined;
-}
-
 const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId, onRefetchNeeded }: Props) => {
   const rootData = useFragment<teamMemberCard_query$key>(
     graphql`

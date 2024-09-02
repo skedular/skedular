@@ -129,7 +129,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
     rootDataOrganizationMembersRelay,
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const { enqueueSnackbar } = useSnackbar();
   const [commitInviteCustomersToJoinLocation] = useMutation<locationPeopleTab_inviteCustomersToJoinLocationMutation>(graphql`
     mutation locationPeopleTab_inviteCustomersToJoinLocationMutation($input: InviteCustomersToJoinLocationInput!) {
@@ -149,10 +149,6 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
   });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
-
-  const loadNext = organizationId ? loadNextcustomersByDefaultLocation : loadNextLocationMembers;
-  const isLoadingNext = organizationId ? isLoadingNextcustomersByDefaultLocation : isLoadingNextLocationMembers;
-
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
       loadNextPage();
