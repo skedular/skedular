@@ -6,7 +6,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
 import { toDayAndMonthDate, toFixed } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import { memo, useCallback } from 'react';
+import { memo, startTransition, useCallback } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
 
 type Props = {
@@ -35,17 +35,19 @@ const LocationAnalyticsTab = ({ rootDataRelay, locationId }: Props) => {
 
   const handleRefetch = useCallback(
     (locationAnalyticsFrom: Dayjs, locationAnalyticsUntil: Dayjs) => {
-      refetch(
-        {
-          locationId,
-          locationAnalyticsFrom: locationAnalyticsFrom.toISOString(),
-          locationAnalyticsUntil: locationAnalyticsUntil.toISOString(),
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {},
-        },
-      );
+      startTransition(() => {
+        refetch(
+          {
+            locationId,
+            locationAnalyticsFrom: locationAnalyticsFrom.toISOString(),
+            locationAnalyticsUntil: locationAnalyticsUntil.toISOString(),
+          },
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {},
+          },
+        );
+      });
     },
     [refetch, locationId],
   );

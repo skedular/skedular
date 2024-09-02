@@ -17,7 +17,7 @@ import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { endOfDay, keyboardDebounceTimeout, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import debounce from 'lodash.debounce';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -118,22 +118,24 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
         toToGetBookings = endOfDay(date).toISOString();
       }
 
-      refetch(
-        {
-          count: pageSize,
-          deskSortingValues: [order],
-          locationId,
-          fromToGetBookings,
-          toToGetBookings,
-          deskNameSearchText,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            deskSortingValues: [order],
+            locationId,
+            fromToGetBookings,
+            toToGetBookings,
+            deskNameSearchText,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch, locationId],
   );

@@ -15,7 +15,7 @@ import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -94,20 +94,22 @@ const TeamBookingsTab = ({ rootDataRelay, organizationId, teamId }: Props) => {
 
   const handleRefetch = useCallback(
     (pageSize: number, order: BookingOrderInput, from: Dayjs | null, until: Dayjs | null) => {
-      refetch(
-        {
-          count: pageSize,
-          bookingSortingValues: [order],
-          bookingsSearchCriteriaFrom: from && from.isValid() ? from.toISOString() : null,
-          bookingsSearchCriteriaUntil: until && until.isValid() ? until.toISOString() : null,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            bookingSortingValues: [order],
+            bookingsSearchCriteriaFrom: from && from.isValid() ? from.toISOString() : null,
+            bookingsSearchCriteriaUntil: until && until.isValid() ? until.toISOString() : null,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch],
   );

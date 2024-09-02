@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -59,13 +59,15 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
   }, [rootData.paginatedLocationTags]);
 
   const handleRefetch = useCallback(() => {
-    refetch(
-      {},
-      {
-        fetchPolicy: 'store-and-network',
-        onComplete: () => {},
-      },
-    );
+    startTransition(() => {
+      refetch(
+        {},
+        {
+          fetchPolicy: 'store-and-network',
+          onComplete: () => {},
+        },
+      );
+    });
   }, [refetch]);
 
   // Workaround to ensure we have all the zones if new zones added using zone dialog

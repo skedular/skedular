@@ -13,7 +13,7 @@ import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -82,19 +82,21 @@ const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
 
   const handleRefetch = useCallback(
     (pageSize: number, order: LocationTagOrderInput, zoneNameSearchText: string) => {
-      refetch(
-        {
-          count: pageSize,
-          zoneSortingValues: [order],
-          zoneNameSearchText,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            zoneSortingValues: [order],
+            zoneNameSearchText,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch],
   );

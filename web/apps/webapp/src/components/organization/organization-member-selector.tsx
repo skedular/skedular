@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -84,18 +84,20 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
 
   const handleRefetch = useCallback(
     (pageSize: number, bookingPeopleNameSearchText: string) => {
-      refetch(
-        {
-          count: pageSize,
-          bookingPeopleNameSearchText,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            bookingPeopleNameSearchText,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch],
   );

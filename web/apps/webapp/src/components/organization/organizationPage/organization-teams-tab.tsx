@@ -18,7 +18,7 @@ import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import Link from 'next/link';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -88,19 +88,21 @@ const OrganizationTeamsTab = ({ rootDataRelay }: Props) => {
 
   const handleRefetch = useCallback(
     (pageSize: number, order: TeamOrderInput, teamNameSearchText: string) => {
-      refetch(
-        {
-          count: pageSize,
-          organizationTeamsSortingValues: [order],
-          teamNameSearchText,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            organizationTeamsSortingValues: [order],
+            teamNameSearchText,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch],
   );

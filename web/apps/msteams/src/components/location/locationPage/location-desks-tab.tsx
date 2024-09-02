@@ -16,7 +16,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { BulkNewDeskDialog, DeskCard, NewDeskDialog } from 'components/desk';
 import { Dayjs } from 'dayjs';
 import debounce from 'lodash.debounce';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { DeskOrderField, DeskOrderInput, desksPaginationQuery } from './__generated__/desksPaginationQuery.graphql';
 import type { locationDesksTab_query$key } from './__generated__/locationDesksTab_query.graphql';
@@ -119,22 +119,24 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
         toToGetBookings = endOfDay(date).toISOString();
       }
 
-      refetch(
-        {
-          count: pageSize,
-          deskSortingValues: [order],
-          locationId,
-          fromToGetBookings,
-          toToGetBookings,
-          deskNameSearchText,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            deskSortingValues: [order],
+            locationId,
+            fromToGetBookings,
+            toToGetBookings,
+            deskNameSearchText,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch, locationId],
   );

@@ -33,7 +33,7 @@ import { joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, usePaginationFragment } from 'react-relay';
 import { v4 as uuidv4 } from 'uuid';
@@ -170,35 +170,37 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
 
   const handleRefetch = useCallback(
     (pageSize: number, locationMemberOrder: LocationMemberOrderInput, customerOrder: CustomerOrderInput, peopleNameSearchText: string) => {
-      if (organizationId) {
-        refetchcustomersByDefaultLocation(
-          {
-            count: pageSize,
-            locationOrganizationPeopleSortingValues: [customerOrder],
-            peopleNameSearchText,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-            onComplete: () => {
-              setPage(0);
+      startTransition(() => {
+        if (organizationId) {
+          refetchcustomersByDefaultLocation(
+            {
+              count: pageSize,
+              locationOrganizationPeopleSortingValues: [customerOrder],
+              peopleNameSearchText,
             },
-          },
-        );
-      } else {
-        refetchLocationMembers(
-          {
-            count: pageSize,
-            locationPeopleSortingValues: [locationMemberOrder],
-            peopleNameSearchText,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-            onComplete: () => {
-              setPage(0);
+            {
+              fetchPolicy: 'store-and-network',
+              onComplete: () => {
+                setPage(0);
+              },
             },
-          },
-        );
-      }
+          );
+        } else {
+          refetchLocationMembers(
+            {
+              count: pageSize,
+              locationPeopleSortingValues: [locationMemberOrder],
+              peopleNameSearchText,
+            },
+            {
+              fetchPolicy: 'store-and-network',
+              onComplete: () => {
+                setPage(0);
+              },
+            },
+          );
+        }
+      });
     },
     [organizationId, refetchLocationMembers, refetchcustomersByDefaultLocation],
   );

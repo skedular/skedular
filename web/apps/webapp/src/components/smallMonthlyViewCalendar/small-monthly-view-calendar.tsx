@@ -17,7 +17,7 @@ import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '@repo/shared/comp
 import { OrganizationIcon } from '@repo/shared/components/icons';
 import { endOfMonth, startOfMonth } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
-import { useEffect, useMemo, useState } from 'react';
+import { startTransition, useEffect, useMemo, useState } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 import SmallMonthlyViewCalendarDay from './small-monthly-view-calendar-day';
 
@@ -82,16 +82,18 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
 
   useEffect(() => {
     // TODO: 20230711 - Morteza: This will refetch in addition to the root query. The first refetch on initial render time must be prevented
-    refetch(
-      {
-        monthlyCalendarDateFrom: startOfMonth(date).toISOString(),
-        monthlyCalendarDateTo: endOfMonth(date).toISOString(),
-      },
-      {
-        fetchPolicy: 'store-and-network',
-        onComplete: () => {},
-      },
-    );
+    startTransition(() => {
+      refetch(
+        {
+          monthlyCalendarDateFrom: startOfMonth(date).toISOString(),
+          monthlyCalendarDateTo: endOfMonth(date).toISOString(),
+        },
+        {
+          fetchPolicy: 'store-and-network',
+          onComplete: () => {},
+        },
+      );
+    });
   }, [refetch, date]);
 
   const connectionIds = useMemo(() => [rootData.monthlyBookings.__id], [rootData.monthlyBookings]);

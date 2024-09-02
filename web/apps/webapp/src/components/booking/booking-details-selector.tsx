@@ -9,7 +9,7 @@ import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -192,22 +192,24 @@ const BookingDetailsSelector = ({
 
   const handleRefetch = useCallback(
     (pageSize: number, bookingPeopleNameSearchText: string, organizationId: string | null, locationId: string | null, deskIds: string[]) => {
-      refetch(
-        {
-          count: pageSize,
-          bookingPeopleNameSearchText,
-          organizationId: organizationId ?? '',
-          locationId: locationId ?? '',
-          deskIdsToIncludeToGetAvailableDesks: deskIds,
-          dateToGetAvailableDesks: bookingFrom,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            bookingPeopleNameSearchText,
+            organizationId: organizationId ?? '',
+            locationId: locationId ?? '',
+            deskIdsToIncludeToGetAvailableDesks: deskIds,
+            dateToGetAvailableDesks: bookingFrom,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch, bookingFrom],
   );

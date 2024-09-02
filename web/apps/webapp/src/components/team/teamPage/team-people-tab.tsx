@@ -30,7 +30,7 @@ import { joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, usePaginationFragment } from 'react-relay';
 import { v4 as uuidv4 } from 'uuid';
@@ -182,19 +182,21 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
 
   const handleRefetch = useCallback(
     (pageSize: number, order: TeamMemberOrderInput, peopleNameSearchText: string) => {
-      refetch(
-        {
-          count: pageSize,
-          teamPeopleSortingValues: [order],
-          peopleNameSearchText,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            teamPeopleSortingValues: [order],
+            peopleNameSearchText,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch],
   );

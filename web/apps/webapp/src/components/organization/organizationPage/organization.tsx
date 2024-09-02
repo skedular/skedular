@@ -9,7 +9,7 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSnackbar } from 'notistack';
-import { memo, useEffect, useState } from 'react';
+import { memo, startTransition, useEffect, useState } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
 import OrganizationAvatar from '../organization-avatar';
 import OrganizationAboutTab from './organization-about-tab';
@@ -118,7 +118,9 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
   };
 
   const handleRefetch = () => {
-    refetch({ organizationId: rootData.organization?.id }, { fetchPolicy: 'store-and-network' });
+    startTransition(() => {
+      refetch({ organizationId: rootData.organization?.id }, { fetchPolicy: 'store-and-network' });
+    });
   };
 
   if (!rootData.organization) {
