@@ -13,7 +13,7 @@ import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { TeamCard } from 'components/team';
 import debounce from 'lodash.debounce';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { TeamOrderField, TeamOrderInput, organizationTeamsPaginationQuery } from './__generated__/organizationTeamsPaginationQuery.graphql';
 import type { organizationTeamsTab_query$key } from './__generated__/organizationTeamsTab_query.graphql';
@@ -85,19 +85,21 @@ const OrganizationTeamsTab = ({ rootDataRelay }: Props) => {
 
   const handleRefetch = useCallback(
     (pageSize: number, order: TeamOrderInput, teamNameSearchText: string) => {
-      refetch(
-        {
-          count: pageSize,
-          organizationTeamsSortingValues: [order],
-          teamNameSearchText,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            organizationTeamsSortingValues: [order],
+            teamNameSearchText,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch],
   );

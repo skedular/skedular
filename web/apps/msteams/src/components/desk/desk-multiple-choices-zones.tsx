@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { deskMultipleChoicesZonesPaginationQuery } from './__generated__/deskMultipleChoicesZonesPaginationQuery.graphql';
 import type { deskMultipleChoicesZones_query$key } from './__generated__/deskMultipleChoicesZones_query.graphql';
@@ -60,13 +60,15 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
   }, [rootData.paginatedLocationTags]);
 
   const handleRefetch = useCallback(() => {
-    refetch(
-      {},
-      {
-        fetchPolicy: 'store-and-network',
-        onComplete: () => {},
-      },
-    );
+    startTransition(() => {
+      refetch(
+        {},
+        {
+          fetchPolicy: 'store-and-network',
+          onComplete: () => {},
+        },
+      );
+    });
   }, [refetch]);
 
   // Workaround to ensure we have all the zones if new zones added using zone dialog

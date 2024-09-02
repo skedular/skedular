@@ -3,7 +3,7 @@ import TablePagination from '@mui/material/TablePagination';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import graphql from 'babel-plugin-relay/macro';
 import { NotificationCard } from 'components/notification';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type {
   NotificationOrderField,
@@ -67,18 +67,20 @@ const Notifications = ({ rootDataRelay }: Props) => {
 
   const handleRefetch = useCallback(
     (pageSize: number, order: NotificationOrderInput) => {
-      refetch(
-        {
-          count: pageSize,
-          myNotificationsSortingValues: [order],
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            myNotificationsSortingValues: [order],
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch],
   );

@@ -14,7 +14,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { BookingCard } from 'components/booking';
 import { NewBookingDialog } from 'components/booking/addBooking';
 import dayjs, { Dayjs } from 'dayjs';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { BookingOrderField, BookingOrderInput, teamBookingsPaginationQuery } from './__generated__/teamBookingsPaginationQuery.graphql';
 import type { teamBookingsTab_query$key } from './__generated__/teamBookingsTab_query.graphql';
@@ -95,20 +95,22 @@ const TeamBookingsTab = ({ rootDataRelay, organizationId, teamId }: Props) => {
 
   const handleRefetch = useCallback(
     (pageSize: number, order: BookingOrderInput, from: Dayjs | null, until: Dayjs | null) => {
-      refetch(
-        {
-          count: pageSize,
-          bookingSortingValues: [order],
-          bookingsSearchCriteriaFrom: from && from.isValid() ? from.toISOString() : null,
-          bookingsSearchCriteriaUntil: until && until.isValid() ? until.toISOString() : null,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            bookingSortingValues: [order],
+            bookingsSearchCriteriaFrom: from && from.isValid() ? from.toISOString() : null,
+            bookingsSearchCriteriaUntil: until && until.isValid() ? until.toISOString() : null,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch],
   );

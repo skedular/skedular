@@ -8,7 +8,7 @@ import { CustomerAvatar } from 'components/customer';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from 'components/zone';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { bookingDetailsSelectorQuery } from './__generated__/bookingDetailsSelectorQuery.graphql';
 import type { bookingDetailsSelector_query$key } from './__generated__/bookingDetailsSelector_query.graphql';
@@ -188,22 +188,24 @@ const BookingDetailsSelector = ({
 
   const handleRefetch = useCallback(
     (pageSize: number, bookingPeopleNameSearchText: string, organizationId: string | null, locationId: string | null, deskIds: string[]) => {
-      refetch(
-        {
-          count: pageSize,
-          bookingPeopleNameSearchText,
-          organizationId: organizationId ?? '',
-          locationId: locationId ?? '',
-          deskIdsToIncludeToGetAvailableDesks: deskIds,
-          dateToGetAvailableDesks: bookingFrom,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            bookingPeopleNameSearchText,
+            organizationId: organizationId ?? '',
+            locationId: locationId ?? '',
+            deskIdsToIncludeToGetAvailableDesks: deskIds,
+            dateToGetAvailableDesks: bookingFrom,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch, bookingFrom],
   );

@@ -13,7 +13,7 @@ import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { LocationCard } from 'components/location';
 import debounce from 'lodash.debounce';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useMemo, useState } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type {
   LocationOrderField,
@@ -89,19 +89,21 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
 
   const handleRefetch = useCallback(
     (pageSize: number, order: LocationOrderInput, locationNameSearchText: string) => {
-      refetch(
-        {
-          count: pageSize,
-          organizationLocationsSortingValues: [order],
-          locationNameSearchText,
-        },
-        {
-          fetchPolicy: 'store-and-network',
-          onComplete: () => {
-            setPage(0);
+      startTransition(() => {
+        refetch(
+          {
+            count: pageSize,
+            organizationLocationsSortingValues: [order],
+            locationNameSearchText,
           },
-        },
-      );
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
     },
     [refetch],
   );
