@@ -123,6 +123,20 @@ public class LocationAuthorizationService(
         string locationId,
         CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(locationId))
+        {
+            return new LocationPermissions
+            {
+                CanViewBookings = false,
+                CanAddBooking = false,
+                CanUpdateBooking = false,
+                CanDeleteBooking = false,
+                CanAddBookingOnBehalf = false,
+                CanUpdateBookingOnBehalf = false,
+                CanDeleteBookingOnBehalf = false
+            };
+        }
+
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(
             locationId,

@@ -106,6 +106,20 @@ public class TeamAuthorizationService(
         string teamId,
         CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(teamId))
+        {
+            return new TeamPermissions
+            {
+                CanViewBookings = false,
+                CanAddBooking = false,
+                CanUpdateBooking = false,
+                CanDeleteBooking = false,
+                CanAddBookingOnBehalf = false,
+                CanUpdateBookingOnBehalf = false,
+                CanDeleteBookingOnBehalf = false
+            };
+        }
+
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(
             teamId,

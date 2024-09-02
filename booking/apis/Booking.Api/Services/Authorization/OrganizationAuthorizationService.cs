@@ -60,9 +60,24 @@ public class OrganizationAuthorizationService(ICustomerService customerService, 
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
             OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator;
 
-    public async Task<OrganizationPermissions> GetPermissionsAsync(string organizationId,
+    public async Task<OrganizationPermissions> GetPermissionsAsync(
+        string organizationId,
         CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(organizationId))
+        {
+            return new OrganizationPermissions
+            {
+                CanViewBookings = false,
+                CanAddBooking = false,
+                CanUpdateBooking = false,
+                CanDeleteBooking = false,
+                CanAddBookingOnBehalf = false,
+                CanUpdateBookingOnBehalf = false,
+                CanDeleteBookingOnBehalf = false
+            };
+        }
+
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             organizationId,
