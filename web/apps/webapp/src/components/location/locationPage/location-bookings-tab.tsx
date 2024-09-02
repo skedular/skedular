@@ -232,9 +232,12 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
           <Sorting
             options={[
               { id: 'from', label: 'Booking date' },
-              { id: 'CUSTOMER_name', label: 'Name' },
-              { id: 'ORGANIZATION_name', label: 'Organization' },
-              { id: 'TEAM_name', label: 'Team' },
+              { id: 'name', label: 'Name' },
+              { id: 'givenName', label: 'Given Name' },
+              { id: 'middleName', label: 'Middle Name' },
+              { id: 'familyName', label: 'Family Name' },
+              { id: 'organizationName', label: 'Organization' },
+              { id: 'teamName', label: 'Team' },
             ]}
             // @ts-expect-error
             defaultOption={sortingOrder.field}
