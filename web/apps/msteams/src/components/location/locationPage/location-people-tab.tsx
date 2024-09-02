@@ -21,7 +21,7 @@ import { CustomerCard } from 'components/customer';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { useSnackbar } from 'notistack';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { useMutation, usePaginationFragment } from 'react-relay';
 import { v4 as uuidv4 } from 'uuid';
@@ -130,6 +130,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
     rootDataOrganizationMembersRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const { enqueueSnackbar } = useSnackbar();
   const [commitInviteCustomersToJoinLocation] = useMutation<locationPeopleTab_inviteCustomersToJoinLocationMutation>(graphql`
     mutation locationPeopleTab_inviteCustomersToJoinLocationMutation($input: InviteCustomersToJoinLocationInput!) {

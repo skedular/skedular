@@ -13,7 +13,7 @@ import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { LocationCard } from 'components/location';
 import debounce from 'lodash.debounce';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type {
   LocationOrderField,
@@ -62,6 +62,7 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<LocationOrderInput>({
     direction: 'Ascending',
     field: 'name',

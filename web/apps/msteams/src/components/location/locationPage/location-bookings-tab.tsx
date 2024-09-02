@@ -14,7 +14,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { BookingCard } from 'components/booking';
 import { NewBookingDialog } from 'components/booking/addBooking';
 import dayjs, { Dayjs } from 'dayjs';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { BookingOrderField, BookingOrderInput, locationBookingsPaginationQuery } from './__generated__/locationBookingsPaginationQuery.graphql';
 import type { locationBookingsTab_query$key } from './__generated__/locationBookingsTab_query.graphql';
@@ -66,6 +66,7 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<BookingOrderInput>({
     direction: 'Ascending',
     field: 'from',

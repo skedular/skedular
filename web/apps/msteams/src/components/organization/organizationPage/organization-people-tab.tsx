@@ -21,7 +21,7 @@ import { OrganizationMemberCard } from 'components/organization';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { useSnackbar } from 'notistack';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { useMutation, usePaginationFragment } from 'react-relay';
 import { v4 as uuidv4 } from 'uuid';
@@ -100,6 +100,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
     }
   `);
 
+  const [isPending, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<OrganizationMemberOrderInput>({
     direction: 'Ascending',
     field: 'name',

@@ -9,7 +9,7 @@ import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
-import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -156,6 +156,7 @@ const BookingDetailsSelector = ({
   );
 
   const theme = useTheme();
+  const [isPending, startTransition] = useTransition();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');

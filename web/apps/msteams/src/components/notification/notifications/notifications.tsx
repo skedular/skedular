@@ -3,7 +3,7 @@ import TablePagination from '@mui/material/TablePagination';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import graphql from 'babel-plugin-relay/macro';
 import { NotificationCard } from 'components/notification';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type {
   NotificationOrderField,
@@ -42,6 +42,7 @@ const Notifications = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<NotificationOrderInput>({
     direction: 'Descending',
     field: 'eventRaisedAt',

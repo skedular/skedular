@@ -8,7 +8,7 @@ import type { notifications_query$key } from '@/queries/__generated__/notificati
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -41,6 +41,7 @@ const Notifications = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<NotificationOrderInput>({
     direction: 'Descending',
     field: 'eventRaisedAt',

@@ -5,7 +5,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { CustomerAvatar } from 'components/customer';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { organizationMemberSelector_organizationMembersPaginationQuery } from './__generated__/organizationMemberSelector_organizationMembersPaginationQuery.graphql';
 import type { organizationMemberSelector_query$key } from './__generated__/organizationMemberSelector_query.graphql';
@@ -69,6 +69,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const [page, setPage] = useState(0);
   const [pageSize] = useState(20);
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');

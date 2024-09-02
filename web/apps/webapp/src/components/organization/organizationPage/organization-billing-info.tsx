@@ -13,7 +13,7 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { useSnackbar } from 'notistack';
-import { memo, startTransition, useState } from 'react';
+import { memo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
 import { v4 as uuidv4 } from 'uuid';
@@ -87,6 +87,7 @@ const OrganizationBillingInfo = ({ rootDataRelay }: Props) => {
     }
   `);
 
+  const [isPending, startTransition] = useTransition();
   const { enqueueSnackbar } = useSnackbar();
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(organizationBillingInfoSchema);

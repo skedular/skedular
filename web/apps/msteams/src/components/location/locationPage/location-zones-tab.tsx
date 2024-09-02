@@ -12,7 +12,7 @@ import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewZoneDialog, ZoneCard } from 'components/zone';
 import debounce from 'lodash.debounce';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { locationZonesTab_query$key } from './__generated__/locationZonesTab_query.graphql';
 import type { LocationTagOrderField, LocationTagOrderInput, zonesPaginationQuery } from './__generated__/zonesPaginationQuery.graphql';
@@ -58,6 +58,7 @@ const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<LocationTagOrderInput>({
     direction: 'Ascending',
     field: 'name',

@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
-import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useTransition } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -50,6 +50,7 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const zones = useMemo<ZoneDetails[]>(() => {
     if (!rootData.paginatedLocationTags) {
       return [];

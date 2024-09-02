@@ -13,7 +13,7 @@ import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { TeamCard } from 'components/team';
 import debounce from 'lodash.debounce';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { TeamOrderField, TeamOrderInput, teamsPaginationQuery } from './__generated__/teamsPaginationQuery.graphql';
 import type { teams_query$key } from './__generated__/teams_query.graphql';
@@ -55,6 +55,7 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<TeamOrderInput>({
     direction: 'Ascending',
     field: 'name',

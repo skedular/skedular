@@ -8,7 +8,7 @@ import { CustomerAvatar } from 'components/customer';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from 'components/zone';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
-import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { bookingDetailsSelectorQuery } from './__generated__/bookingDetailsSelectorQuery.graphql';
 import type { bookingDetailsSelector_query$key } from './__generated__/bookingDetailsSelector_query.graphql';
@@ -152,6 +152,7 @@ const BookingDetailsSelector = ({
   );
 
   const theme = useTheme();
+  const [isPending, startTransition] = useTransition();
   const [page, setPage] = useState(0);
   const [pageSize] = useState(20);
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');

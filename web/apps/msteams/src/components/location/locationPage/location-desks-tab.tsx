@@ -16,7 +16,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { BulkNewDeskDialog, DeskCard, NewDeskDialog } from 'components/desk';
 import { Dayjs } from 'dayjs';
 import debounce from 'lodash.debounce';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { DeskOrderField, DeskOrderInput, desksPaginationQuery } from './__generated__/desksPaginationQuery.graphql';
 import type { locationDesksTab_query$key } from './__generated__/locationDesksTab_query.graphql';
@@ -78,6 +78,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<DeskOrderInput>({
     direction: 'Ascending',
     field: 'name',

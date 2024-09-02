@@ -5,7 +5,7 @@ import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
 import { toDayAndMonthDate, toFixed } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { Dayjs } from 'dayjs';
-import { memo, startTransition, useCallback } from 'react';
+import { memo, useCallback, useTransition } from 'react';
 import { useRefetchableFragment } from 'react-relay';
 import type { locationAnalyticsPaginationQuery } from './__generated__/locationAnalyticsPaginationQuery.graphql';
 import type { locationAnalyticsTab_query$key } from './__generated__/locationAnalyticsTab_query.graphql';
@@ -34,6 +34,7 @@ const LocationAnalyticsTab = ({ rootDataRelay, locationId }: Props) => {
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const handleRefetch = useCallback(
     (locationAnalyticsFrom: Dayjs, locationAnalyticsUntil: Dayjs) => {
       startTransition(() => {

@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
-import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { deskMultipleChoicesZonesPaginationQuery } from './__generated__/deskMultipleChoicesZonesPaginationQuery.graphql';
 import type { deskMultipleChoicesZones_query$key } from './__generated__/deskMultipleChoicesZones_query.graphql';
@@ -50,6 +50,8 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
     `,
     rootDataRelay,
   );
+
+  const [isPending, startTransition] = useTransition();
 
   const zones = useMemo<ZoneDetails[]>(() => {
     if (!rootData.paginatedLocationTags) {

@@ -17,7 +17,7 @@ import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { endOfDay, keyboardDebounceTimeout, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import debounce from 'lodash.debounce';
-import { memo, startTransition, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -77,6 +77,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
     rootDataRelay,
   );
 
+  const [isPending, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<DeskOrderInput>({
     direction: 'Ascending',
     field: 'name',
