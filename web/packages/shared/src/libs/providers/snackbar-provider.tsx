@@ -1,6 +1,7 @@
 'use client';
 
 import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { SnackbarProvider as Provider } from 'notistack';
 
 type Props = {
@@ -8,9 +9,10 @@ type Props = {
 };
 
 const SnackbarProvider = ({ children }: Props) => {
-  const isDesktop = useMediaQuery('(min-width: 600px)');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  return <Provider maxSnack={isDesktop ? 10 : 3}>{children}</Provider>;
+  return <Provider maxSnack={isMobile ? 3 : 10}>{children}</Provider>;
 };
 
 export default SnackbarProvider;

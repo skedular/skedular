@@ -27,7 +27,7 @@ const StyledAppBar = styled(AppBar)<MuiAppBarProps>(({ theme }) => ({
 const Header = () => {
   const [visibleMenu, setVisibleMenu] = useState<boolean>(false);
   const theme = useTheme();
-  const matchMobileView = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <StyledAppBar position="fixed">
@@ -54,7 +54,7 @@ const Header = () => {
               flexDirection: { xs: 'column', md: 'row' },
 
               transition: (theme) => theme.transitions.create(['top']),
-              ...(matchMobileView && {
+              ...(isMobile && {
                 py: 6,
                 backgroundColor: 'background.paper',
                 zIndex: 'appBar',
@@ -79,7 +79,7 @@ const Header = () => {
                 </Button>
               </Link>
             </Stack>
-            {visibleMenu && matchMobileView && (
+            {visibleMenu && isMobile && (
               <IconButton
                 sx={{
                   position: 'fixed',
