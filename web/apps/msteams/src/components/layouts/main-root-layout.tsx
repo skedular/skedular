@@ -12,7 +12,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { memo, useState } from 'react';
 
-const drawerWidth = 350;
+const drawerWidth = 250;
 
 const Main = styled('div', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;

@@ -5,7 +5,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
+import { BookingIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -26,6 +26,17 @@ const LeftSideNavigationMenu = () => {
 
   return (
     <List>
+      <Link href={`/organization/${finalOrganizationId}`}>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <BookingIcon />
+            </ListItemIcon>
+            <ListItemText>Bookings</ListItemText>
+          </ListItemButton>
+        </ListItem>
+      </Link>
+
       <Link href={`/organization/${finalOrganizationId}/location`}>
         <ListItem disablePadding>
           <ListItemButton>

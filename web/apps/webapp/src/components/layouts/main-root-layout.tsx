@@ -31,7 +31,7 @@ import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
-const drawerWidth = 350;
+const drawerWidth = 250;
 
 const Main = styled('div', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;

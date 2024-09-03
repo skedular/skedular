@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { Loading } from '@repo/shared/components/loading';
 import graphql from 'babel-plugin-relay/macro';
 import { MainRootLayout } from 'components/layouts';
-import { LeftSideNavigationMenu } from 'components/navigationMenu';
+import { FabNavigationMenu, LeftSideNavigationMenu } from 'components/navigationMenu';
 import { Observability } from 'components/observability';
 import { memo, useEffect, useState } from 'react';
 import { useFragment } from 'react-relay';
@@ -114,6 +114,7 @@ const RootShell = ({
           {children}
         </Box>
       </MainRootLayout>
+      <FabNavigationMenu />
     </>
   );
 };
