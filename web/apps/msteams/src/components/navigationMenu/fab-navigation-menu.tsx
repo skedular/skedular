@@ -8,7 +8,7 @@ import { memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const StyledSpeedDial = styled(SpeedDial)(({ theme }) => ({
-  position: 'absolute',
+  position: 'fixed',
   '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
     bottom: theme.spacing(2),
     right: theme.spacing(2),
