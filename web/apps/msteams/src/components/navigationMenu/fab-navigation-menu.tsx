@@ -1,9 +1,8 @@
-import NavigationIcon from '@mui/icons-material/Navigation';
 import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import { styled } from '@mui/material/styles';
-import { BookingIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
+import { BookingIcon, LocationIcon, MenuIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -37,7 +36,7 @@ const FabNavigationMenu = () => {
 
   return (
     <Box sx={{ position: 'relative', mt: 3, height: 320 }}>
-      <StyledSpeedDial ariaLabel="UnityHub" icon={<NavigationIcon />} direction="up">
+      <StyledSpeedDial ariaLabel="UnityHub" icon={<MenuIcon />} direction="up">
         <SpeedDialAction
           icon={<BookingIcon excludeTooltip={true} />}
           tooltipTitle="Booking"

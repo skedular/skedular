@@ -1,9 +1,7 @@
 import { Navigation } from '@/components/navigation';
-import { SlackIconButton } from '@repo/shared/components/slackButtons';
 import CloseIcon from '@mui/icons-material/Close';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import LoginIcon from '@mui/icons-material/Login';
-import MenuIcon from '@mui/icons-material/Menu';
 import AppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,7 +10,9 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { MenuIcon } from '@repo/shared/components/icons';
 import { Logo } from '@repo/shared/components/logo';
+import { SlackIconButton } from '@repo/shared/components/slackButtons';
 import Link from 'next/link';
 import { memo, useState } from 'react';
 
