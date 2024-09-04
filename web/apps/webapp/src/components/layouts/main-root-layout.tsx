@@ -110,7 +110,7 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
 
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
-  const matchMobileView = useMediaQuery(theme.breakpoints.down('md'));
+  const matchMobileView = useMediaQuery(theme.breakpoints.down('sm'));
   const router = useRouter();
   const [leftDraweropen, setLeftDrawerOpen] = useState(!matchMobileView);
   const [rightDraweropen, setRightDrawerOpen] = useState(false);

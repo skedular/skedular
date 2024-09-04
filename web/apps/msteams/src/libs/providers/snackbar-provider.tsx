@@ -8,7 +8,7 @@ type Props = {
 
 const SnackbarProvider = ({ children }: Props) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return <Provider maxSnack={isMobile ? 3 : 10}>{children}</Provider>;
 };

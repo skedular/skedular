@@ -71,7 +71,7 @@ type Props = {
 
 const MainRootLayout = ({ children, leftSideContent, rightSideContent }: Props) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [leftDraweropen, setLeftDrawerOpen] = useState(!isMobile);
   const [rightDraweropen, setRightDrawerOpen] = useState(false);
 

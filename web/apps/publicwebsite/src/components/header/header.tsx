@@ -27,7 +27,7 @@ const StyledAppBar = styled(AppBar)<MuiAppBarProps>(({ theme }) => ({
 const Header = () => {
   const [visibleMenu, setVisibleMenu] = useState<boolean>(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <StyledAppBar position="fixed">
