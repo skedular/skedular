@@ -18,7 +18,7 @@ const Pricing = () => {
           flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'left',
-          p: '6rem',
+          p: '3rem',
         }}
       >
         <Grid container sx={{ justifyContent: 'center' }}>

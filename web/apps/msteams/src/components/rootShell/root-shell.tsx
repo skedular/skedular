@@ -108,7 +108,7 @@ const RootShell = ({
             flexDirection: 'column',
             justifyContent: 'space-between',
             alignItems: 'left',
-            p: '6rem',
+            p: '3rem',
           }}
         >
           {children}

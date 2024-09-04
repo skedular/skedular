@@ -29,7 +29,7 @@ const Document = ({ lines }: Props) => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        p: '6rem',
+        p: '3rem',
       }}
     >
       {lines.map(({ lineType, line, bulletPointLines, variant, breakLineCount }, index) => {

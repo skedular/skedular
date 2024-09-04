@@ -14,7 +14,7 @@ const AttendanceVisibility = () => {
           flexDirection: 'column',
           justifyContent: 'space-between',
           alignItems: 'center',
-          p: '6rem',
+          p: '3rem',
         }}
       >
         <Typography variant="h1">You&apos;re all set!</Typography>
