@@ -9,6 +9,7 @@ namespace Slack.Shared.Repositories;
 public interface IWorkspaceRepository : IRepository<Workspace>
 {
     Task<Workspace?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Workspace?> GetByWorkspaceMemberIdAsync(string workspaceMemberId, CancellationToken cancellationToken);
     Task<Workspace?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
     Workspace Add(Workspace workspace);
     Workspace Update(Workspace workspace);
@@ -36,6 +37,27 @@ public class WorkspaceRepository(SlackDbContext dbContext, TimeProvider timeProv
             .AddDependentObjects()
             .OrderBy(query => query.Id)
             .FirstOrDefaultAsync(cancellationToken);
+
+    public async Task<Workspace?> GetByWorkspaceMemberIdAsync(
+        string workspaceMemberId,
+        CancellationToken cancellationToken)
+    {
+        var workspaceMember = await DbContext.WorkspaceMember
+            .Where(query => query.Id == workspaceMemberId)
+            .Include(query => query.Workspace)
+            .OrderBy(query => query.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+        if (workspaceMember is null)
+        {
+            return null;
+        }
+
+        return await DbContext.Workspace
+            .Where(query => query.Id == workspaceMember.Workspace.Id)
+            .AddDependentObjects()
+            .OrderBy(query => query.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 
     public async Task<Workspace?>
         GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>

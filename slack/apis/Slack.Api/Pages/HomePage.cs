@@ -314,13 +314,24 @@ public class HomePage(
         {
             case AppHomeTab.Home:
                 {
-                    ArgumentNullException.ThrowIfNull(slackEvent.View);
-                    ArgumentException.ThrowIfNullOrWhiteSpace(slackEvent.View.TeamId);
+                    Shared.Database.Entities.Workspace? workspaceEntity;
+                    if (slackEvent.View is null)
+                    {
+                        ArgumentException.ThrowIfNullOrWhiteSpace(slackEvent.User);
+                        workspaceEntity =
+                            await repositoryFactory.WorkspaceRepository.GetByWorkspaceMemberIdAsync(
+                                slackEvent.User,
+                                cancellationToken);
+                    }
+                    else
+                    {
+                        ArgumentException.ThrowIfNullOrWhiteSpace(slackEvent.View.TeamId);
+                        workspaceEntity =
+                            await repositoryFactory.WorkspaceRepository.GetByIdAsync(
+                                slackEvent.View.TeamId,
+                                cancellationToken);
+                    }
 
-                    var workspaceEntity =
-                        await repositoryFactory.WorkspaceRepository.GetByIdAsync(
-                            slackEvent.View.TeamId,
-                            cancellationToken);
                     if (workspaceEntity is null)
                     {
                         throw new SlackWorkspaceNotFound();
