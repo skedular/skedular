@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
@@ -38,6 +39,7 @@ public interface IHomePage
 }
 
 public class HomePage(
+    ILogger<HomePage> logger,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
     IWorkspaceMemberService workspaceMemberService,
@@ -304,6 +306,8 @@ public class HomePage(
     public async Task Handle(AppHomeOpened slackEvent)
     {
         ArgumentNullException.ThrowIfNull(slackEvent);
+
+        logger.LogInformation(JsonSerializer.Serialize(slackEvent));
 
         var cancellationToken = CancellationToken.None;
         switch (slackEvent.Tab)
