@@ -424,7 +424,7 @@ public class LocationsPage(
         ];
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Publish(
+        await slackApiClient.Views.PublishAsync(
             workspaceMember.Id,
             new HomeViewDefinition
             {
@@ -435,7 +435,8 @@ public class LocationsPage(
                     .ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
-            hash);
+            hash,
+            cancellationToken);
     }
 
     public static void RegisterHandlers(AspNetSlackServiceConfiguration options) =>

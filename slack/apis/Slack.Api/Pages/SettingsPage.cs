@@ -184,7 +184,7 @@ public class SettingsPage(
         ];
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Publish(
+        await slackApiClient.Views.PublishAsync(
             workspaceMember.Id,
             new HomeViewDefinition
             {
@@ -195,7 +195,8 @@ public class SettingsPage(
                     .ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
-            hash);
+            hash,
+            cancellationToken);
     }
 
     public static void RegisterHandlers(AspNetSlackServiceConfiguration options) =>

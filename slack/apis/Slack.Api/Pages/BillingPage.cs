@@ -42,7 +42,7 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
         ];
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Publish(
+        await slackApiClient.Views.PublishAsync(
             workspaceMember.Id,
             new HomeViewDefinition
             {
@@ -53,7 +53,8 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
                     .ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
-            hash);
+            hash,
+            cancellationToken);
     }
 
     public static void RegisterHandlers(AspNetSlackServiceConfiguration options) { }

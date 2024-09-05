@@ -368,7 +368,7 @@ public class BookingsPage(
         ];
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Publish(
+        await slackApiClient.Views.PublishAsync(
             workspaceMember.Id,
             new HomeViewDefinition
             {
@@ -379,7 +379,8 @@ public class BookingsPage(
                     .ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
-            hash);
+            hash,
+            cancellationToken);
     }
 
     public static void RegisterHandlers(AspNetSlackServiceConfiguration options) =>

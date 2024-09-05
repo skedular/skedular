@@ -1,5 +1,6 @@
 using Slack.Shared.Models;
 using SlackNet;
+using SlackNet.WebApi;
 
 namespace Slack.Shared;
 
@@ -28,4 +29,22 @@ public static class SlackExtensions
         new SlackServiceBuilder()
             .UseApiToken(workspace.BotUserAccessToken)
             .GetApiClient();
+
+    public static async Task PublishAsync(
+        this IViewsApi view,
+        string userId,
+        HomeViewDefinition viewDefinition,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await view.Publish(userId, viewDefinition, hash, cancellationToken);
+        }
+        catch (SlackException ex) when (ex.ErrorMessages.Any(errorMessage => errorMessage.Contains("hash_conflict")) ||
+                                        ex.ErrorCode.Contains("hash_conflict"))
+        {
+            await view.Publish(userId, viewDefinition, null, cancellationToken);
+        }
+    }
 }

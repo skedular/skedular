@@ -429,7 +429,7 @@ public class DesksPage(
         ];
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Publish(
+        await slackApiClient.Views.PublishAsync(
             workspaceMember.Id,
             new HomeViewDefinition
             {
@@ -440,7 +440,8 @@ public class DesksPage(
                     .ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
-            hash);
+            hash,
+            cancellationToken);
     }
 
     public static void RegisterHandlers(AspNetSlackServiceConfiguration options) =>
