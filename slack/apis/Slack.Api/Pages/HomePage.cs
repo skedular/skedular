@@ -307,7 +307,7 @@ public class HomePage(
     {
         ArgumentNullException.ThrowIfNull(slackEvent);
 
-        logger.LogInformation(JsonSerializer.Serialize(slackEvent));
+        logger.LogWarning(JsonSerializer.Serialize(slackEvent));
 
         var cancellationToken = CancellationToken.None;
         switch (slackEvent.Tab)
