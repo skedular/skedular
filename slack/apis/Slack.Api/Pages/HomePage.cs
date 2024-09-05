@@ -303,11 +303,16 @@ public class HomePage(
 
     public async Task Handle(AppHomeOpened slackEvent)
     {
+        ArgumentNullException.ThrowIfNull(slackEvent);
+
         var cancellationToken = CancellationToken.None;
         switch (slackEvent.Tab)
         {
             case AppHomeTab.Home:
                 {
+                    ArgumentNullException.ThrowIfNull(slackEvent.View);
+                    ArgumentException.ThrowIfNullOrWhiteSpace(slackEvent.View.TeamId);
+
                     var workspaceEntity =
                         await repositoryFactory.WorkspaceRepository.GetByIdAsync(
                             slackEvent.View.TeamId,
