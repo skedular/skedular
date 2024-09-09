@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fab98a1071c8dc9de5b4ec0ce2491a23>>
+ * @generated SignedSource<<befe0cd563666d0d82d4abc364e8e7c1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type UpdateBookingInput = {
   clientMutationId?: string | null | undefined;
   customerId: string;

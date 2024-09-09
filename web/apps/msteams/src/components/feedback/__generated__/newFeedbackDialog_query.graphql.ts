@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3077a61f49471d9271d66da9ff7e954b>>
+ * @generated SignedSource<<f3031eafadff6f9b3cfa38fab925f2b9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type newFeedbackDialog_query$data = {
   readonly me: {

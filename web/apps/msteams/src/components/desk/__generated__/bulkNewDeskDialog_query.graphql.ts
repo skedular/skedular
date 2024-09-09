@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6346838acff6bc60ea74c1e9fc95981c>>
+ * @generated SignedSource<<ca9c659dd6b1f45d6b673eead962633b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bulkNewDeskDialog_query$data = {
   readonly " $fragmentSpreads": FragmentRefs<"deskMultipleChoicesZones_query">;

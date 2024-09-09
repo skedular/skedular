@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c3c7986c9d93f546ee01f2dc267305cd>>
+ * @generated SignedSource<<60ed0f968d4f44a099969361058b9953>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type UpdateMyCustomerDetailsInput = {
   clientMutationId?: string | null | undefined;
   designation?: string | null | undefined;

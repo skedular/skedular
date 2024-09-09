@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6b257e48207a147d821b8a5640530bfd>>
+ * @generated SignedSource<<941ef83988c897ca35efa0c03c28fbf4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type OrganizationMemberMembershipType = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
 export type ChangeOrganizationMemberOwnershipTypeInput = {
   clientMutationId?: string | null | undefined;

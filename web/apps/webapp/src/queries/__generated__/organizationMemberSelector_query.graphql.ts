@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<38f0e514e80e29e19b2f1fbd6b372820>>
+ * @generated SignedSource<<ea2003ff48f7c19010a1cfddd9fa7447>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationMemberSelector_query$data = {
   readonly organizationMemberSelectorPaginatedOrganizationMembers: {

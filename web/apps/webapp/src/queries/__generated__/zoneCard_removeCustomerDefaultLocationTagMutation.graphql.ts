@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<14b4ce5f80b187da7c11e000e59c6a07>>
+ * @generated SignedSource<<34a530e3bdf3dc1306ad8e760b326f38>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type RemoveCustomerDefaultLocationTagInput = {
   clientMutationId?: string | null | undefined;
   locationTagId: string;

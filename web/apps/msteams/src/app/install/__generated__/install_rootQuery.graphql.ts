@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<060a268cc17e567d9ed61270c88447ee>>
+ * @generated SignedSource<<bcc550e0535711510e66aa56e9e38f78>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type install_rootQuery$variables = Record<PropertyKey, never>;
 export type install_rootQuery$data = {
   readonly azureTenantAdminConsentUrl: string;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<849d19cd3706035e07c1727d32b59389>>
+ * @generated SignedSource<<2d1e8b46f5704d4ae28e9805a62b545e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type zoneCard_Query$data = {
   readonly location: {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<efd98b9b2acd5de05f71039644a55715>>
+ * @generated SignedSource<<981838eae1b380a10b4a4b95528e3bfe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type RemoveOrganizationPaymentMethodInput = {
   clientMutationId?: string | null | undefined;
   id: string;

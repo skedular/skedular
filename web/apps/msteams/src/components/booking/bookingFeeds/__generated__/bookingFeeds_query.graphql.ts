@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d827fb919c8b1cfc13654f73cc20b92f>>
+ * @generated SignedSource<<0c0bc34ebd97c951ab4b37a34d2444ef>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingFeeds_query$data = {
   readonly bookings: {

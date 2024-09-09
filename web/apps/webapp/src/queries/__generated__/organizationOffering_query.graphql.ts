@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2548880a47e4f66d8520ed7073281bf3>>
+ * @generated SignedSource<<6d1f0056ee2d3b91c22a28cebba3c5b2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationOffering_query$data = {
   readonly organization: {

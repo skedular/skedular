@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b7e52236dadb07792feab4bd23961acf>>
+ * @generated SignedSource<<78afda7a786865efa6b584951d577dee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type RemoveCustomerDefaultDeskInput = {
   clientMutationId?: string | null | undefined;
   deskId: string;

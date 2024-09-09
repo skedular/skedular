@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75d974feea5d74eb98c18524421425b2>>
+ * @generated SignedSource<<6fa9131cbef419c1b4d008aa4c54779a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationBillingInfoQuery$variables = {
   organizationId: string;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f9988e1030ab178ec1c79873bb950eb2>>
+ * @generated SignedSource<<0d97128198810f3f7b479b1917e20ad8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type smallMonthlyViewCalendar_query$data = {
   readonly me: {

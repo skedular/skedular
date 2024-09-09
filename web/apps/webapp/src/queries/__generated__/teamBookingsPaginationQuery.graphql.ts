@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<294355082a72d0a33f9a43a0003ed58b>>
+ * @generated SignedSource<<8e60396c88884450f995f197a85547bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type BookingOrderField = "familyName" | "from" | "givenName" | "locationName" | "middleName" | "name" | "notes" | "organizationName" | "teamName" | "to" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";

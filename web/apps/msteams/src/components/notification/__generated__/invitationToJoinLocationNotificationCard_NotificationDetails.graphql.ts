@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7660fe5234a6dada562dcdb7dca5bae3>>
+ * @generated SignedSource<<1547f3d6d97588f04b3c8d081f9360d8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type invitationToJoinLocationNotificationCard_NotificationDetails$data = {
   readonly id: string;

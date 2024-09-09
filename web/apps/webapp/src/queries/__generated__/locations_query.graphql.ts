@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8d815667eec665b6e928073f65c5e880>>
+ * @generated SignedSource<<a71d218a3847a5ad0c835d380ae057ed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locations_query$data = {
   readonly locations: {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d68c7e06698e4887be1a9dc965f927fd>>
+ * @generated SignedSource<<678a52a31b2b3e565710ce9f81ff1dc5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingDetailsSelector_query$data = {
   readonly availableLocationDesks: ReadonlyArray<{

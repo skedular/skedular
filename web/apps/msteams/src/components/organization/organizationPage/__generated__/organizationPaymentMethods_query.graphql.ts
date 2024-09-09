@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<756dabf09e93524be101953410bf7648>>
+ * @generated SignedSource<<5ac6a5e1486ffe189097a4345b1937b8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationPaymentMethods_query$data = {
   readonly organization: {

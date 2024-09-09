@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1a6e43c077ecebe782a202486f643388>>
+ * @generated SignedSource<<857fb9db73575a51b9ece6afb7451d0f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LocationOrderField = "name" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";

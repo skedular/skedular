@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5f2cefbc7cce4bf0894a0f58f41ddfc8>>
+ * @generated SignedSource<<6e8ff9dc3a83ed08b6cdf554d89c85e8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingSingleChoiceOrganization_query$data = {
   readonly myOrganizations: ReadonlyArray<{

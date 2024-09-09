@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<98f983ef1d225b130e81bc15239a722b>>
+ * @generated SignedSource<<d099a481fb64c22d90e413af84804c05>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type deskMultipleChoicesZones_query$data = {
   readonly paginatedLocationTags: {

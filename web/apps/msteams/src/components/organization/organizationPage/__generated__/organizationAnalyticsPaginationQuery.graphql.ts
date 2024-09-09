@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<18670a68c65c50d41ccef10842b09f78>>
+ * @generated SignedSource<<364c92af74e2cabcd2805269b07368da>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationAnalyticsPaginationQuery$variables = {
   organizationAnalyticsFrom: any;

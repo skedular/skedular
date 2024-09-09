@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4e1663484bf183b1a27a4c3a2bc05007>>
+ * @generated SignedSource<<e0d68f3d8ab6417412bf99935584f21b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationZonesTab_query$data = {
   readonly location: {

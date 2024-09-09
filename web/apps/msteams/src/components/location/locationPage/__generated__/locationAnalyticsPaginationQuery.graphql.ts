@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a01f0373d6897d0c2e0d8d810c320b78>>
+ * @generated SignedSource<<b3a924ae4ebb5e77a67c4f7c204136d5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationAnalyticsPaginationQuery$variables = {
   locationAnalyticsFrom: any;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7be48d0dc52c57a99ebdc5fdade1bd6a>>
+ * @generated SignedSource<<dd4009143b0edd34ba5ba914ae0420b4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type DeskOrderField = "name" | "%future added value";
 export type LocationTagOrderField = "description" | "name" | "tagType" | "%future added value";

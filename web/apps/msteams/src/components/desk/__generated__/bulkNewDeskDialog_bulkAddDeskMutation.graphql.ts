@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<97b1eaa55de078edceeaf5ff12656096>>
+ * @generated SignedSource<<e3a680d26ebc4a39b9d8b0c1e7438124>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type BulkAddDeskInput = {
   clientMutationId?: string | null | undefined;
   count: number;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b61c2808a70e06fbdc3fc2f825a70308>>
+ * @generated SignedSource<<a881bd3d4a925390e4774cedc7fb62c0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type TeamOrderField = "about" | "name" | "website" | "%future added value";

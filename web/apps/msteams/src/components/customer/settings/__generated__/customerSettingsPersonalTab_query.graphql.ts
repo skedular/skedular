@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<683cf1a7d0ed8e56b9058023c927e4d0>>
+ * @generated SignedSource<<4526a470dd290f0f214b089a76628eaf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type customerSettingsPersonalTab_query$data = {
   readonly me: {

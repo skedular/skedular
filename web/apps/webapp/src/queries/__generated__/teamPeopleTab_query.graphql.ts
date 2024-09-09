@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9bbd2500e21204aec49a0c8c8f4bf678>>
+ * @generated SignedSource<<10b84ca4779a41805b541310ee554f6d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type teamPeopleTab_query$data = {
   readonly paginatedTeamMembers: {

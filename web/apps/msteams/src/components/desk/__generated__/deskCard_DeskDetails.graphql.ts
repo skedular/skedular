@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c240942ee97c77a85dd9e48fe57ff5fa>>
+ * @generated SignedSource<<83b8ebf49ca470acd7374bfcffd8c599>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type deskCard_DeskDetails$data = {
   readonly deactivated: boolean;

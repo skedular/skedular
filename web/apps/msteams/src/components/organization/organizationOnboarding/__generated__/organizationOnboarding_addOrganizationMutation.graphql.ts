@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e8112d9b060d35822857e60ccf60db88>>
+ * @generated SignedSource<<83d95c6f87c579dc521a0fb106b96db9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type AddOrganizationInput = {
   about?: string | null | undefined;
   agreedToTermsOfUse: boolean;

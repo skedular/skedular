@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f873bbb9922f23ba107b262ee5a1b139>>
+ * @generated SignedSource<<10630c9aad40b04735a157a660d5f45f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 export type LocationMemberMembershipType = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type locationSingleChoiceMembershipType_query$data = {

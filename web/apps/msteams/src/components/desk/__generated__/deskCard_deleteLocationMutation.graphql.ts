@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d92894aa8c60db0342ff67f41dbdc5dd>>
+ * @generated SignedSource<<38076c13cf7915dbf72a61d96ee66550>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type DeleteDeskInput = {
   clientMutationId?: string | null | undefined;
   id: string;

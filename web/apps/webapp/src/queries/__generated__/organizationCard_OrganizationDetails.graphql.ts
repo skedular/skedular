@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<14bc0320727674fbd4f41f93e89b8d82>>
+ * @generated SignedSource<<d2d1e88cb16efbcb9b9f38eb69aa3e9e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationCard_OrganizationDetails$data = {
   readonly about: string | null | undefined;

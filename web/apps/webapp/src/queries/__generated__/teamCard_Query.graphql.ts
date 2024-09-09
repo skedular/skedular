@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cad5b6351e43ee4f9184e2a2fd86a44d>>
+ * @generated SignedSource<<aa12d230d81b9d4fed3b7c515f5cb62a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type teamCard_Query$data = {
   readonly me: {

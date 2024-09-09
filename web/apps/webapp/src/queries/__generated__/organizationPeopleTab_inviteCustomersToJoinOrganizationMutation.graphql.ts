@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cb7eb3410cdd4e2ac73b79705e6922b3>>
+ * @generated SignedSource<<949229fdf070e1cc170f1be1d1cf6628>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type InviteCustomersToJoinOrganizationInput = {
   clientMutationId?: string | null | undefined;
   emails: ReadonlyArray<string>;

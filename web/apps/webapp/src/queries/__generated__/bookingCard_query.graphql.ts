@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5468034dfa8704491e330869fa94de35>>
+ * @generated SignedSource<<865fb91207636192c4e591207700317f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingCard_query$data = {
   readonly me: {

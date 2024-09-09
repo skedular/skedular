@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5793fb3078a9429b9f365fabdea55b56>>
+ * @generated SignedSource<<6b96a481cdf1cd1a4dfe525d3431bc22>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type mainRootLayout_query$data = {
   readonly me: {

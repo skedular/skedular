@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b230a98011eaf62657c09fd744a7382e>>
+ * @generated SignedSource<<18170a772b606810e720cf40e9337fab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type deskCard_query$data = {
   readonly location: {

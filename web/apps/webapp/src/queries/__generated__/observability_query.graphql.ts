@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<250d28205bea0fce6a90737d556d4ade>>
+ * @generated SignedSource<<57c478dabf3197c62f6bb3ff9b18f15d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type observability_query$data = {
   readonly " $fragmentSpreads": FragmentRefs<"logrocket_query">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dbc1666b6f9aa675df3aa1a369c96506>>
+ * @generated SignedSource<<f66bc0f88910919c98113e7afe28a3b8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 export type NotificationNotificationType = "INVITATION_TO_JOIN_LOCATION" | "INVITATION_TO_JOIN_ORGANIZATION" | "INVITATION_TO_JOIN_TEAM" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type notificationCard_NotificationDetails$data = {

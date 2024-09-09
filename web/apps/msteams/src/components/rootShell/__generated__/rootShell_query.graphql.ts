@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<173a63d29ff508da7c10b6cdc10a6eb6>>
+ * @generated SignedSource<<24bcf343c5ea345a384c12456186ae24>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type rootShell_query$data = {
   readonly azureTenantAdminConsentUrl: string;

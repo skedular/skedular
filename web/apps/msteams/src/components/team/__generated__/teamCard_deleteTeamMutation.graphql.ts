@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<350dfff77c4439ebc5529b8d12ab4b51>>
+ * @generated SignedSource<<36698d5ed0d23af738b8e66897fdd4c3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type DeleteTeamInput = {
   clientMutationId?: string | null | undefined;
   id: string;

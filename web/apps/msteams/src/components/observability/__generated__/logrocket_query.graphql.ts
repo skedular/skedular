@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ca4081fb49286b0d626f812520738363>>
+ * @generated SignedSource<<e803e019d81b07f2dfd021062e0c96be>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type logrocket_query$data = {
   readonly me: {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<89e03e7e4327492b7c2ba8c884f536cd>>
+ * @generated SignedSource<<8df9e9e358d7d3975ebbf388780c797f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type AddOrganizationPaymentMethodIntentInput = {
   clientMutationId?: string | null | undefined;
   organizationId: string;

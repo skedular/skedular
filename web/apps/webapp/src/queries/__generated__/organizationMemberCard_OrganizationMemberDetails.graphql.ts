@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2b36b2c8f8df536e8ed6245b1973181e>>
+ * @generated SignedSource<<7ce93b2c07e679cb04ea93b5b4238ca4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 export type OrganizationMemberMembershipType = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationMemberCard_OrganizationMemberDetails$data = {

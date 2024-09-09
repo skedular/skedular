@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9ba7c2794b95f72ee4e301da8a38b6bf>>
+ * @generated SignedSource<<99cb1b9f505378ffbb4667499d8d07a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationAboutTab_query$data = {
   readonly location: {

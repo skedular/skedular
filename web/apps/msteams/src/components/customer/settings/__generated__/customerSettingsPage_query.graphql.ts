@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<643468b2aed16bd41837cce9dbb9ad92>>
+ * @generated SignedSource<<652da6575348321c9fed0c9509afc644>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type customerSettingsPage_query$data = {
   readonly me: {

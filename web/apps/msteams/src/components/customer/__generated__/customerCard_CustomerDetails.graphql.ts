@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<24b49bdd28642511e6d15ab871e8e1fc>>
+ * @generated SignedSource<<0b93298b8ef672f2ebe70cfde51e9d80>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type customerCard_CustomerDetails$data = {
   readonly familyName: string | null | undefined;

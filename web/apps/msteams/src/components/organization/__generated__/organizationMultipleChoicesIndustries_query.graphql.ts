@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bd77873d6c78172bc330d7bcceb366a2>>
+ * @generated SignedSource<<556123f047742b781352fba4158a03d7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationMultipleChoicesIndustries_query$data = {
   readonly organizationIndustryMainCategoriesReferences: ReadonlyArray<{

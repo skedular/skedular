@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<95603b1bb097de19a86a3c90e99daead>>
+ * @generated SignedSource<<0ec8e27c8574f52e9d8787c5d0a160ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CustomerOrderField = "designation" | "familyName" | "givenName" | "locale" | "middleName" | "name" | "timezone" | "title" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";

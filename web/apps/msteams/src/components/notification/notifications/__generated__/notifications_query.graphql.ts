@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f8349fdc6e42be8172836789522a8a72>>
+ * @generated SignedSource<<34bd0135036bcc066c38237294249825>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type notifications_query$data = {
   readonly myNotifications: {

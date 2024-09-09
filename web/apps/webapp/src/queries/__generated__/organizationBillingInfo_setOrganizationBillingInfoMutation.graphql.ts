@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<06b5b424d95853aeb2bb065dca8d48a2>>
+ * @generated SignedSource<<46654b3ef2ca4248ea01005ec1eecc8e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type SetOrganizationBillingInfoInput = {
   addressLine1?: string | null | undefined;
   addressLine2?: string | null | undefined;

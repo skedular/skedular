@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6cae3147ae2ba871e0978c1e5c9bac8f>>
+ * @generated SignedSource<<9985f1168f9b90fb727620a546834661>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type newBookingDialog_query$data = {
   readonly me: {

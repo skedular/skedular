@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f7af86cf20f0480752caa0c7627c2dad>>
+ * @generated SignedSource<<5b1d6de7088442c5691638a913eab603>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type app_rootQuery$variables = Record<PropertyKey, never>;
 export type app_rootQuery$data = {
   readonly azureTenantOrganization: {
