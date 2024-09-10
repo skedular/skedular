@@ -395,13 +395,14 @@ namespace MsTeams.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("MembershipType");
 
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("CustomerId", "OrganizationId")
+                        .IsUnique();
 
                     b.ToTable("OrganizationMember");
                 });

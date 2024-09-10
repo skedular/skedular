@@ -11,7 +11,12 @@ public class OrganizationMember : ReplicatedEntityBaseWithDeleted
 {
     public OrganizationMembershipType? MembershipType { get; set; }
 
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string OrganizationId { get; set; } = string.Empty;
     public virtual Organization Organization { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string CustomerId { get; set; } = string.Empty;
     public virtual Customer Customer { get; set; }
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
 }
@@ -25,12 +30,15 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
 
         builder
             .HasOne(item => item.Organization)
-            .WithMany(item => item.OrganizationMembers);
+            .WithMany(item => item.OrganizationMembers)
+            .HasForeignKey(item => item.OrganizationId);
 
         builder
             .HasOne(item => item.Customer)
-            .WithMany(item => item.OrganizationMembers);
+            .WithMany(item => item.OrganizationMembers)
+            .HasForeignKey(item => item.CustomerId);
 
         builder.HasIndex(item => item.MembershipType);
+        builder.HasIndex(item => new { item.CustomerId, item.OrganizationId }).IsUnique();
     }
 }
