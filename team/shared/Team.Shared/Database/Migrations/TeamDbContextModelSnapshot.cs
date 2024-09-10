@@ -481,8 +481,6 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("MembershipType");
@@ -490,6 +488,9 @@ namespace Team.Shared.Database.Migrations
                     b.HasIndex("OrganizationMemberId");
 
                     b.HasIndex("TeamId");
+
+                    b.HasIndex("CustomerId", "TeamId")
+                        .IsUnique();
 
                     b.ToTable("TeamMember");
                 });

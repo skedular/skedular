@@ -10,7 +10,13 @@ namespace Location.Shared.Database.Entities;
 public class LocationMember : EntityBaseWithDeleted
 {
     public LocationMembershipType MembershipType { get; set; } = LocationMembershipType.Member;
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string LocationId { get; set; } = string.Empty;
     public virtual Location Location { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string CustomerId { get; set; } = string.Empty;
     public virtual Customer Customer { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -23,12 +29,15 @@ public class LocationMemberConfiguration : IEntityTypeConfiguration<LocationMemb
 
         builder
             .HasOne(item => item.Location)
-            .WithMany(item => item.LocationMembers);
+            .WithMany(item => item.LocationMembers)
+            .HasForeignKey(item => item.LocationId);
 
         builder
             .HasOne(item => item.Customer)
-            .WithMany(item => item.LocationMembers);
+            .WithMany(item => item.LocationMembers)
+            .HasForeignKey(item => item.CustomerId);
 
         builder.HasIndex(item => item.MembershipType);
+        builder.HasIndex(item => new { item.CustomerId, item.LocationId }).IsUnique();
     }
 }

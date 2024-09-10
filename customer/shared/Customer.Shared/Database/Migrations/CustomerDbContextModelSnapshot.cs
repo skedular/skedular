@@ -349,13 +349,14 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("LocationId");
 
                     b.HasIndex("MembershipType");
+
+                    b.HasIndex("CustomerId", "LocationId")
+                        .IsUnique();
 
                     b.ToTable("LocationMember");
                 });
@@ -568,6 +569,7 @@ namespace Customer.Shared.Database.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("TeamId")
+                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
@@ -578,8 +580,6 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("MembershipType");
@@ -587,6 +587,9 @@ namespace Customer.Shared.Database.Migrations
                     b.HasIndex("OrganizationMemberId");
 
                     b.HasIndex("TeamId");
+
+                    b.HasIndex("CustomerId", "TeamId")
+                        .IsUnique();
 
                     b.ToTable("TeamMember");
                 });
@@ -834,7 +837,9 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasOne("Customer.Shared.Database.Entities.Team", "Team")
                         .WithMany("TeamMembers")
-                        .HasForeignKey("TeamId");
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
 
