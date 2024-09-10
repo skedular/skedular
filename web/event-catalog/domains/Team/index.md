@@ -2,12 +2,10 @@
 id: Team
 name: Team
 version: 0.0.1
-summary: |
-  Domain that contains Team related services and messages.
 owners:
     - malizadeh
 services:
-    - id: PlaceholderService
+    - id: TeamService
       version: 0.0.1
 badges:
     - content: Team Domain
@@ -17,8 +15,23 @@ badges:
 
 ## Overview
 
-The Team Domain encompasses all services and components related to handling fteams within the system.
+The Team Domain encompasses all services and components related to handling teams within the organization.
 
 ## Bounded context
 
 <NodeGraph />
+
+### Order example (sequence diagram)
+
+```mermaid
+sequenceDiagram
+
+```
+
+## Flows
+
+### Add Team flow
+
+### Update Team flow
+
+### Delete Team flow
