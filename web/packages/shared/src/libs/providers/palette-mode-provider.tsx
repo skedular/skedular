@@ -1,22 +1,22 @@
 'use client';
 
 import { useMediaQuery } from '@mui/material';
+import { PaletteMode } from '@mui/material/styles';
 import { createContext, useEffect, useMemo } from 'react';
-import type { ColorMode } from '../theme';
 
-export const ColorModeContext = createContext({ toggleColorMode: () => {} });
+export const PaletteModeContext = createContext({ toggleMode: () => {} });
 
 type Props = {
   children?: React.ReactNode;
   loadDefaultSystemMode: boolean;
-  setMode?: React.Dispatch<React.SetStateAction<ColorMode>>;
+  setMode?: React.Dispatch<React.SetStateAction<PaletteMode>>;
 };
 
-const ColorModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props) => {
+const PaletteModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const colorMode = useMemo(
     () => ({
-      toggleColorMode: () => {
+      toggleMode: () => {
         if (setMode) {
           setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
         }
@@ -35,7 +35,7 @@ const ColorModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props) 
     }
   }, [prefersDarkMode, loadDefaultSystemMode, setMode]);
 
-  return <ColorModeContext.Provider value={colorMode}>{children}</ColorModeContext.Provider>;
+  return <PaletteModeContext.Provider value={colorMode}>{children}</PaletteModeContext.Provider>;
 };
 
-export default ColorModeProvider;
+export default PaletteModeProvider;

@@ -1,13 +1,13 @@
 'use client';
 
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
-import type { ColorMode } from '../theme';
-import createTheme from '../theme';
+import { PaletteMode } from '@mui/material/styles';
 import { useMemo } from 'react';
+import createTheme from '../theme';
 
 type Props = {
   children?: React.ReactNode;
-  mode: ColorMode;
+  mode: PaletteMode;
 };
 
 const ThemeProvider = ({ children, mode }: Props) => {

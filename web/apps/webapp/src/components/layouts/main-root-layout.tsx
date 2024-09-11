@@ -23,7 +23,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { FeedbackIcon, LogoutIcon, MenuIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { Logo } from '@repo/shared/components/logo';
-import { ColorModeContext } from '@repo/shared/libs/providers';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName } from '@repo/shared/libs/utils';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -109,7 +109,7 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
   );
 
   const theme = useTheme();
-  const colorMode = useContext(ColorModeContext);
+  const colorMode = useContext(PaletteModeContext);
   const matchMobileView = useMediaQuery(theme.breakpoints.down('sm'));
   const router = useRouter();
   const [leftDraweropen, setLeftDrawerOpen] = useState(!matchMobileView);
@@ -209,7 +209,7 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
                   <FeedbackIcon />
                 </IconButton>
               </Tooltip>
-              <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode}>
+              <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleMode}>
                 {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
               </IconButton>
               <IconButton onClick={handleProfileMenuOpenClick} sx={{ p: 0 }}>

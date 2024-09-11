@@ -1,15 +1,15 @@
 'use client';
 
+import { PaletteMode } from '@mui/material/styles';
 import { GoogleAnalytics, GoogleTagManager } from '@repo/shared/libs/analytics';
 import {
-  ColorModeProvider,
   DatePickerLocalizationProvider,
   GoogleAnalyticsProvider,
   NextAuthProvider,
+  PaletteModeProvider,
   SnackbarProvider,
   ThemeProvider,
 } from '@repo/shared/libs/providers';
-import type { ColorMode } from '@repo/shared/libs/theme';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Inter } from 'next/font/google';
@@ -19,7 +19,7 @@ import { useState } from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
-  const [mode, setMode] = useState<ColorMode>('light');
+  const [mode, setMode] = useState<PaletteMode>('light');
 
   return (
     <html lang="en">
@@ -38,7 +38,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         />
       )}
       <body>
-        <ColorModeProvider setMode={setMode} loadDefaultSystemMode={false}>
+        <PaletteModeProvider setMode={setMode} loadDefaultSystemMode={false}>
           <ThemeProvider mode={mode}>
             <SnackbarProvider>
               <DatePickerLocalizationProvider>
@@ -54,7 +54,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               </DatePickerLocalizationProvider>
             </SnackbarProvider>
           </ThemeProvider>
-        </ColorModeProvider>
+        </PaletteModeProvider>
         <Analytics />
         <SpeedInsights />
       </body>

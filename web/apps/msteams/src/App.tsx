@@ -15,9 +15,9 @@ import OrganizationTeam from 'app/organizations/organization/teams/team';
 import Settings from 'app/settings';
 import Teams from 'app/teams';
 import {
-  ColorModeProvider,
   DatePickerLocalizationProvider,
   LogRocketProvider,
+  PaletteModeProvider,
   RelayProvider,
   SnackbarProvider,
   TeamsFxContext,
@@ -122,7 +122,7 @@ const App = () => {
   return (
     <>
       <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
-        <ColorModeProvider loadDefaultSystemMode={false}>
+        <PaletteModeProvider loadDefaultSystemMode={false}>
           <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
             <SnackbarProvider>
               <DatePickerLocalizationProvider>
@@ -134,7 +134,7 @@ const App = () => {
               </DatePickerLocalizationProvider>
             </SnackbarProvider>
           </ThemeProvider>
-        </ColorModeProvider>
+        </PaletteModeProvider>
       </TeamsFxContext.Provider>
       <Analytics />
       <SpeedInsights />
