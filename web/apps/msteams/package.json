@@ -19,7 +19,7 @@
     "@date-io/date-fns": "^3.0.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@fluentui/react-components": "^9.54.13",
+    "@fluentui/react-components": "^9.54.14",
     "@microsoft/mgt": "^4.2.5",
     "@microsoft/mgt-element": "^4.2.5",
     "@microsoft/mgt-react": "^4.2.5",

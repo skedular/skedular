@@ -3,7 +3,7 @@
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import { PaletteMode } from '@mui/material/styles';
 import { useMemo } from 'react';
-import createTheme from '../theme';
+import { createTheme } from '../theme';
 
 type Props = {
   children?: React.ReactNode;
