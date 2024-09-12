@@ -1,9 +1,9 @@
 ---
-id: TeamDeleted
-name: Team Deleted
+id: CustomerDeleted
+name: Customer Deleted
 version: 0.0.1
 summary: |
-  Indicates an team has been deleted
+  Indicates an customer has been deleted
 owners:
     - malizadeh
 badges:
@@ -18,7 +18,7 @@ schemaPath: schema.proto
 
 ## Overview
 
-The TeamDeleted event is triggered whenever an existing team is deleted. This event ensures that all relevant services are notified of changes to a team,
+The CustomerDeleted event is triggered whenever an existing customer is deleted. This event ensures that all relevant services are notified of changes to a team,
 
 ## Example payload
 

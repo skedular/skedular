@@ -13,7 +13,7 @@ badges:
     - content: Channel:Apache Kafka
       backgroundColor: yellow
       textColor: yellow
-schemaPath: schema.avro
+schemaPath: schema.proto
 ---
 
 ## Overview

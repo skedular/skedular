@@ -1,9 +1,9 @@
 ---
-id: TeamDeleted
-name: Team Deleted
+id: CustomerUpserted
+name: Customer Upserted
 version: 0.0.1
 summary: |
-  Indicates an team has been deleted
+  Indicates an customer has been changed
 owners:
     - malizadeh
 badges:
@@ -18,13 +18,13 @@ schemaPath: schema.proto
 
 ## Overview
 
-The TeamDeleted event is triggered whenever an existing team is deleted. This event ensures that all relevant services are notified of changes to a team,
+The CustomerUpserted event is triggered whenever an existing customer is modified. This event ensures that all relevant services are notified of changes to a customer,
 
 ## Example payload
 
 ```json title="Example Payload"
 {
-  "will be provided"
+  "will be provided",
 }
 ```
 

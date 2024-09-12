@@ -1,27 +1,16 @@
 ---
-id: TeamService
+id: CustomerService
 version: 0.0.1
-name: Team Service
+name: Customer Service
 summary: |
-  Team Service that handles all commands 
+  Customer Service that handles all commands 
 owners:
     - malizadeh
     - full-stack
 receives:
-  - id: AddTeam
-    version: 0.0.1
-  - id: UpdateTeam
-    version: 0.0.1
-  - id: DeleteTeam
-    version: 0.0.1
   - id: CustomerUpserted
     version: 0.0.1
   - id: CustomerDeleted
-    version: 0.0.1    
-sends:
-  - id: TeamUpserted
-    version: 0.0.1
-  - id: TeamDeleted
     version: 0.0.1
 repository:
   language: C#
