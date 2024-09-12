@@ -1,31 +1,31 @@
 ---
-id: TeamService
+id: BookingService
 version: 0.0.1
-name: Team Service
+name: Booking Service
 summary: |
-  Team Service that handles all commands 
+  Booking Service that handles all commands 
 owners:
     - malizadeh
     - full-stack
 receives:
-  - id: AddTeam
+  - id: AddBooking
     version: 0.0.1
-  - id: UpdateTeam
+  - id: UpdateBooking
     version: 0.0.1
-  - id: DeleteTeam
+  - id: DeleteBooking
     version: 0.0.1
   - id: CustomerUpserted
     version: 0.0.1
   - id: CustomerDeleted
-    version: 0.0.1
-  - id: BookingUpserted
-    version: 0.0.1
-  - id: BookingDeleted
-    version: 0.0.1
-sends:
+    version: 0.0.1   
   - id: TeamUpserted
     version: 0.0.1
   - id: TeamDeleted
+    version: 0.0.1
+sends:
+  - id: BookingUpserted
+    version: 0.0.1
+  - id: BookingDeleted
     version: 0.0.1
 repository:
   language: C#

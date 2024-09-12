@@ -7,11 +7,6 @@ summary: |
 owners:
     - malizadeh
     - full-stack
-receives:
-  - id: CustomerUpserted
-    version: 0.0.1
-  - id: CustomerDeleted
-    version: 0.0.1
 repository:
   language: C#
   url: 
@@ -19,7 +14,7 @@ repository:
 
 ## Overview
 
-The Team Service is a component of the system responsible for managing team structure and roles. It interacts with other services to maintain accurate team members format.
+The Customer Service is a component of the system responsible for managing customer information. It interacts with other services to maintain accurate customer data.
 
 ## Architecture diagram
 
