@@ -11,7 +11,7 @@
         <PackageReference Include="Ardalis.GuardClauses" Version="4.6.0" />
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="8.0.1" />
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.2" />
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.401.8" />
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.401.9" />
         <PackageReference Include="Confluent.Kafka" Version="2.5.3" />
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.5.3" />
         <PackageReference Include="CountryData" Version="6.5.0" />
@@ -25,7 +25,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.8" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.8" />
-        <PackageReference Include="Microsoft.Graph" Version="5.57.0" />
+        <PackageReference Include="Microsoft.Graph" Version="5.58.0" />
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.1.0" />
         <PackageReference Include="Nanoid" Version="3.1.0" />
         <PackageReference Include="NSwag.AspNetCore" Version="14.1.0" />
@@ -35,7 +35,7 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
 
         <PackageReference Include="Grpc.AspNetCore" Version="2.65.0" />
-        <PackageReference Include="Google.Protobuf" Version="3.28.0" />
+        <PackageReference Include="Google.Protobuf" Version="3.28.1" />
         <PackageReference Include="Grpc.Net.Client" Version="2.65.0" />
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
