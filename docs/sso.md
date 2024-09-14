@@ -5,7 +5,7 @@ sequenceDiagram
     participant .NET Backend
     participant Azure AD
 
-    User->>React Frontend: Clicks "Login with Microsoft"
+    User->>React Frontend: Clicks "Login (Microsoft Azure AD)"
     React Frontend->>Azure AD: Redirect to /authorize (OAuth 2.0)
     Azure AD-->>User: Presents Microsoft login page
     User-->>Azure AD: Submits login credentials
@@ -18,6 +18,6 @@ sequenceDiagram
     .NET Backend->>Azure AD: (Optional) Fetch user details with access token
     Azure AD-->>.NET Backend: Responds with user information
 
-    .NET Backend-->>React Frontend: Return user details (e.g., name, email)
-    React Frontend-->>User: Displays user info (e.g., "Welcome, User!")
+    .NET Backend-->>React Frontend: Return user details (e.g., name, email, ..)
+    React Frontend-->>User: Displays user info (e.g., "Welcome, Jhon!")
 
