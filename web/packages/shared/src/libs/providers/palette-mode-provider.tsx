@@ -9,7 +9,7 @@ export const PaletteModeContext = createContext({ toggleMode: () => {} });
 type Props = {
   children?: React.ReactNode;
   loadDefaultSystemMode: boolean;
-  setMode?: React.Dispatch<React.SetStateAction<PaletteMode>>;
+  setMode: React.Dispatch<React.SetStateAction<PaletteMode>>;
 };
 
 const PaletteModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props) => {
@@ -18,7 +18,12 @@ const PaletteModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props
     () => ({
       toggleMode: () => {
         if (setMode) {
-          setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+          setMode((prevMode) => {
+            const newMode = prevMode === 'light' ? 'dark' : 'light';
+            localStorage.setItem('themeMode', newMode);
+
+            return newMode;
+          });
         }
       },
     }),
@@ -26,11 +31,15 @@ const PaletteModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props
   );
 
   useEffect(() => {
-    if (!loadDefaultSystemMode) {
-      return;
-    }
+    const savedMode = localStorage.getItem('themeMode') as PaletteMode | null;
 
-    if (setMode) {
+    if (savedMode) {
+      setMode(savedMode);
+    } else {
+      if (!loadDefaultSystemMode) {
+        return;
+      }
+
       setMode(prefersDarkMode ? 'dark' : 'light');
     }
   }, [prefersDarkMode, loadDefaultSystemMode, setMode]);

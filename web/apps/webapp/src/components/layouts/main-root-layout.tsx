@@ -116,7 +116,6 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
   const [rightDraweropen, setRightDrawerOpen] = useState(false);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
-
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
 
   const handleLeftDrawerOpen = () => {

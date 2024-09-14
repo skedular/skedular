@@ -41,7 +41,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         />
       )}
       <body>
-        <PaletteModeProvider setMode={setMode} loadDefaultSystemMode={false}>
+        <PaletteModeProvider setMode={setMode} loadDefaultSystemMode={true}>
           <ThemeProvider mode={mode}>
             <SnackbarProvider>
               <DatePickerLocalizationProvider>
