@@ -1,4 +1,3 @@
-import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -79,7 +78,6 @@ const LeftSideNavigationMenu = () => {
             <ListItemText>Settings</ListItemText>
           </ListItemButton>
         </ListItem>
-        <Divider />
       </Link>
     </List>
   );
