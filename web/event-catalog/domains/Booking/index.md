@@ -21,7 +21,7 @@ The Booking Domain encompasses all services and components related to handling b
 
 <NodeGraph />
 
-### Order example (sequence diagram)
+### Booking example (sequence diagram)
 
 ```mermaid
 sequenceDiagram

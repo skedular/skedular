@@ -21,7 +21,7 @@ The Team Domain encompasses all services and components related to handling team
 
 <NodeGraph />
 
-### Order example (sequence diagram)
+### Team example (sequence diagram)
 
 ```mermaid
 sequenceDiagram
@@ -31,7 +31,10 @@ sequenceDiagram
 ## Flows
 
 ### Add Team flow
+<Flow id="AddTeamFlow" version="latest" includeKey={false} />
 
 ### Update Team flow
+<Flow id="UpdatedTeamFlow" version="latest" includeKey={false} />
 
 ### Delete Team flow
+<Flow id="DeleteTeamFlow" version="latest" includeKey={false} />

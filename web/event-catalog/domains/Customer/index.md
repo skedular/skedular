@@ -21,7 +21,7 @@ The Customer Domain encompasses all services and components related to handling 
 
 <NodeGraph />
 
-### Order example (sequence diagram)
+### Customer example (sequence diagram)
 
 ```mermaid
 sequenceDiagram
