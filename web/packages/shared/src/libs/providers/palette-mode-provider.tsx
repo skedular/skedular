@@ -12,6 +12,8 @@ type Props = {
   setMode: React.Dispatch<React.SetStateAction<PaletteMode>>;
 };
 
+const localStorageThemeModeKey = 'themeMode';
+
 const PaletteModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const colorMode = useMemo(
@@ -20,7 +22,7 @@ const PaletteModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props
         if (setMode) {
           setMode((prevMode) => {
             const newMode = prevMode === 'light' ? 'dark' : 'light';
-            localStorage.setItem('themeMode', newMode);
+            localStorage.setItem(localStorageThemeModeKey, newMode);
 
             return newMode;
           });
@@ -31,8 +33,7 @@ const PaletteModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props
   );
 
   useEffect(() => {
-    const savedMode = localStorage.getItem('themeMode') as PaletteMode | null;
-
+    const savedMode = localStorage.getItem(localStorageThemeModeKey) as PaletteMode | null;
     if (savedMode) {
       setMode(savedMode);
     } else {
