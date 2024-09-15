@@ -1,4 +1,3 @@
-import { CustomerAvatar } from '@/components/customer';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@/components/zone';
 import type { bookingDetailsSelectorQuery } from '@/queries/__generated__/bookingDetailsSelectorQuery.graphql';
 import type { bookingDetailsSelector_query$key } from '@/queries/__generated__/bookingDetailsSelector_query.graphql';
@@ -6,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';

@@ -1,3 +1,4 @@
+import { SxProps } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import { memo } from 'react';
 
@@ -13,9 +14,10 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
   name: NameProps;
   photo: PhotoProps;
+  sx?: SxProps | null;
 };
 
-const LocationAvatar = ({ name, photo, size }: Props) => {
+const LocationAvatar = ({ name, photo, size, sx }: Props) => {
   let avatarLetters = '';
 
   if (name) {
@@ -28,17 +30,17 @@ const LocationAvatar = ({ name, photo, size }: Props) => {
     avatarLetters = '';
   }
 
-  let sx = {};
+  let finalSx = { ...sx };
   if (size === 'small') {
-    sx = { width: 24, height: 24 };
+    finalSx = { width: 24, height: 24 };
   } else if (size === 'medium') {
-    sx = { width: 32, height: 32 };
+    finalSx = { width: 32, height: 32 };
   } else if (size === 'large') {
-    sx = { width: 48, height: 48 };
+    finalSx = { width: 40, height: 40 };
   }
 
   return (
-    <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={sx}>
+    <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
       {avatarLetters}
     </Avatar>
   );

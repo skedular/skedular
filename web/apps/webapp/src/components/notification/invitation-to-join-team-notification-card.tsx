@@ -1,4 +1,3 @@
-import { CustomerAvatar } from '@/components/customer';
 import type { invitationToJoinTeamNotificationCard_NotificationDetails$key } from '@/queries/__generated__/invitationToJoinTeamNotificationCard_NotificationDetails.graphql';
 import type { invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation } from '@/queries/__generated__/invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation.graphql';
 import type { invitationToJoinTeamNotificationCard_rejectInvitationToJoinTeamMutation } from '@/queries/__generated__/invitationToJoinTeamNotificationCard_rejectInvitationToJoinTeamMutation.graphql';
@@ -9,6 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';

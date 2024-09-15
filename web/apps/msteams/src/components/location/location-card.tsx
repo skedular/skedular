@@ -14,6 +14,7 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { LocationAvatar } from '@repo/shared/components/avatars';
 import { AboutIcon, DangerIcon, DeleteIcon, DeskIcon, EditIcon, LocationIcon, OrganizationIcon, ViewIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
@@ -27,7 +28,6 @@ import type { locationCard_Query$key } from './__generated__/locationCard_Query.
 import type { locationCard_addCustomerDefaultLocationMutation } from './__generated__/locationCard_addCustomerDefaultLocationMutation.graphql';
 import type { locationCard_deleteLocationMutation } from './__generated__/locationCard_deleteLocationMutation.graphql';
 import type { locationCard_removeCustomerDefaultLocationMutation } from './__generated__/locationCard_removeCustomerDefaultLocationMutation.graphql';
-import LocationAvatar from './location-avatar';
 
 type Props = {
   rootDataRelay: locationCard_Query$key;

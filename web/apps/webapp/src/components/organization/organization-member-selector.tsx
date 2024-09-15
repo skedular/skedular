@@ -1,8 +1,8 @@
-import { CustomerAvatar } from '@/components/customer';
 import type { organizationMemberSelector_organizationMembersPaginationQuery } from '@/queries/__generated__/organizationMemberSelector_organizationMembersPaginationQuery.graphql';
 import type { organizationMemberSelector_query$key } from '@/queries/__generated__/organizationMemberSelector_query.graphql';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';

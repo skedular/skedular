@@ -1,4 +1,3 @@
-import { CustomerAvatar } from '@/components/customer';
 import { NewFeedbackDialog } from '@/components/feedback';
 import type { mainRootLayout_query$key } from '@/queries/__generated__/mainRootLayout_query.graphql';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -21,6 +20,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { FeedbackIcon, LogoutIcon, MenuIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { Logo } from '@repo/shared/components/logo';
 import { PaletteModeContext } from '@repo/shared/libs/providers';

@@ -8,6 +8,9 @@
     "./components/analytics": {
       "default": "./dist/components/analytics/index.js"
     },
+    "./components/avatars": {
+      "default": "./dist/components/avatars/index.js"
+    },
     "./components/document": {
       "default": "./dist/components/document/index.js"
     },

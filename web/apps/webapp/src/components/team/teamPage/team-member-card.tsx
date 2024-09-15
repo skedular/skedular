@@ -1,4 +1,3 @@
-import { CustomerAvatar } from '@/components/customer';
 import type { teamMemberCard_TeamMemberDetails$key } from '@/queries/__generated__/teamMemberCard_TeamMemberDetails.graphql';
 import type { teamMemberCard_query$key } from '@/queries/__generated__/teamMemberCard_query.graphql';
 import type { teamMemberCard_updateTeamMutation } from '@/queries/__generated__/teamMemberCard_updateTeamMutation.graphql';
@@ -15,6 +14,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { DangerIcon, DeleteIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';

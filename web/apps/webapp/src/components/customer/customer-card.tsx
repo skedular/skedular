@@ -4,10 +4,10 @@ import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getCustomerFullName } from '@repo/shared/libs/utils';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import CustomerAvatar from './customer-avatar';
 
 type Props = {
   customerDetailsRelay: customerCard_CustomerDetails$key;

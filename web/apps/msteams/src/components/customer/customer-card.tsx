@@ -3,12 +3,12 @@ import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getCustomerFullName } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { memo } from 'react';
 import { useFragment } from 'react-relay';
 import type { customerCard_CustomerDetails$key } from './__generated__/customerCard_CustomerDetails.graphql';
-import CustomerAvatar from './customer-avatar';
 
 type Props = {
   customerDetailsRelay: customerCard_CustomerDetails$key;

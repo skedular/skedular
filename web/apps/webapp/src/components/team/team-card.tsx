@@ -17,6 +17,7 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { TeamAvatar } from '@repo/shared/components/avatars';
 import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, TeamIcon, ViewIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
@@ -25,7 +26,6 @@ import Link from 'next/link';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
-import TeamAvatar from './team-avatar';
 
 type Props = {
   rootDataRelay: teamCard_Query$key;

@@ -14,6 +14,7 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { OrganizationAvatar } from '@repo/shared/components/avatars';
 import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, ViewIcon, WebsiteIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
@@ -27,7 +28,6 @@ import type { organizationCard_Query$key } from './__generated__/organizationCar
 import type { organizationCard_clearCustomerDefaultOrganizationMutation } from './__generated__/organizationCard_clearCustomerDefaultOrganizationMutation.graphql';
 import type { organizationCard_deleteOrganizationMutation } from './__generated__/organizationCard_deleteOrganizationMutation.graphql';
 import type { organizationCard_setCustomerDefaultOrganizationMutation } from './__generated__/organizationCard_setCustomerDefaultOrganizationMutation.graphql';
-import OrganizationAvatar from './organization-avatar';
 
 type Props = {
   rootDataRelay: organizationCard_Query$key;

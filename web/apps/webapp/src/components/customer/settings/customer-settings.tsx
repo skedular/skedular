@@ -1,9 +1,9 @@
-import { CustomerAvatar } from '@/components/customer';
 import type { customerSettingsPage_query$key } from '@/queries/__generated__/customerSettingsPage_query.graphql';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useState } from 'react';

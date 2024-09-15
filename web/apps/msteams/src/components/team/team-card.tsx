@@ -13,6 +13,7 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { TeamAvatar } from '@repo/shared/components/avatars';
 import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, TeamIcon, ViewIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
@@ -26,7 +27,6 @@ import type { teamCard_TeamDetails$key } from './__generated__/teamCard_TeamDeta
 import type { teamCard_addCustomerDefaultTeamMutation } from './__generated__/teamCard_addCustomerDefaultTeamMutation.graphql';
 import type { teamCard_deleteTeamMutation } from './__generated__/teamCard_deleteTeamMutation.graphql';
 import type { teamCard_removeCustomerDefaultTeamMutation } from './__generated__/teamCard_removeCustomerDefaultTeamMutation.graphql';
-import TeamAvatar from './team-avatar';
 
 type Props = {
   rootDataRelay: teamCard_Query$key;

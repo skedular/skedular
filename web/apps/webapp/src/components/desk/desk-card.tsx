@@ -1,4 +1,3 @@
-import { CustomerAvatar } from '@/components/customer';
 import { ZonesLine } from '@/components/zone';
 import type { deskCard_DeskDetails$key } from '@/queries/__generated__/deskCard_DeskDetails.graphql';
 import type { deskCard_addCustomerDefaultDeskMutation } from '@/queries/__generated__/deskCard_addCustomerDefaultDeskMutation.graphql';
@@ -28,6 +27,7 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { DangerIcon, DeleteIcon, DeskIcon, EditIcon, InfoIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';

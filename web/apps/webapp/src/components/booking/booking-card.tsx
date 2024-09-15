@@ -1,4 +1,3 @@
-import { CustomerAvatar } from '@/components/customer';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@/components/zone';
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
 import type { bookingCard_addBookingMutation } from '@/queries/__generated__/bookingCard_addBookingMutation.graphql';
@@ -16,6 +15,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   CustomerIcon,
   DeleteIcon,

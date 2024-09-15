@@ -19,6 +19,7 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { OrganizationAvatar } from '@repo/shared/components/avatars';
 import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, ViewIcon, WebsiteIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
@@ -27,7 +28,6 @@ import Link from 'next/link';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
-import OrganizationAvatar from './organization-avatar';
 
 type Props = {
   rootDataRelay: organizationCard_Query$key;

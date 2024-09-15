@@ -1,6 +1,7 @@
+import { SxProps } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
-import { NameDetails, getCustomerAvatarLetters } from '@repo/shared/libs/utils';
 import { memo } from 'react';
+import { NameDetails, getCustomerAvatarLetters } from '../../libs/utils';
 
 type PhotoDetails = {
   url?: string | null;
@@ -10,22 +11,23 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
   name: NameDetails;
   photo: PhotoDetails;
+  sx?: SxProps | null;
 };
 
-const CustomerAvatar = ({ name, photo, size }: Props) => {
+const CustomerAvatar = ({ name, photo, size, sx }: Props) => {
   const avatarLetters = getCustomerAvatarLetters(name);
 
-  let sx = {};
+  let finalSx = { ...sx };
   if (size === 'small') {
-    sx = { width: 24, height: 24 };
+    finalSx = { width: 24, height: 24 };
   } else if (size === 'medium') {
-    sx = { width: 32, height: 32 };
+    finalSx = { width: 32, height: 32 };
   } else if (size === 'large') {
-    sx = { width: 48, height: 48 };
+    finalSx = { width: 48, height: 48 };
   }
 
   return (
-    <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={sx}>
+    <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
       {avatarLetters}
     </Avatar>
   );
