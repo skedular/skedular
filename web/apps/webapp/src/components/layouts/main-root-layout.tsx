@@ -110,7 +110,7 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
 
   const theme = useTheme();
   const paletteMode = useContext(PaletteModeContext);
-  const updatePalletMode = useContext(UpdatePaletteModeContext);
+  const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const matchMobileView = useMediaQuery(theme.breakpoints.down('sm'));
   const router = useRouter();
   const [leftDraweropen, setLeftDrawerOpen] = useState(!matchMobileView);
@@ -211,13 +211,13 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
               </Tooltip>
 
               {paletteMode === 'dark' && (
-                <IconButton sx={{ ml: 1 }} onClick={() => updatePalletMode('light')}>
+                <IconButton sx={{ ml: 1 }} onClick={() => updatePaletteMode('light')}>
                   <LightModeIcon />
                 </IconButton>
               )}
 
               {paletteMode === 'light' && (
-                <IconButton sx={{ ml: 1 }} onClick={() => updatePalletMode('dark')}>
+                <IconButton sx={{ ml: 1 }} onClick={() => updatePaletteMode('dark')}>
                   <DarkModeIcon />
                 </IconButton>
               )}

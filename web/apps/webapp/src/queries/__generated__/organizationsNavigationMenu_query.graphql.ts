@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3d8054602628cfd6e347e6e6d41e1396>>
+ * @generated SignedSource<<11db2b8812dc61b32b4ff397a4cc924c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type organizationsNavigationMenu_query$data = {
     } | null | undefined;
   } | null | undefined;
   readonly myOrganizations: ReadonlyArray<{
-    readonly canDelete: boolean;
     readonly canModify: boolean;
     readonly canViewAnalytics: boolean;
     readonly id: string;
@@ -106,13 +105,6 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "canDelete",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
           "name": "canViewAnalytics",
           "storageKey": null
         }
@@ -124,6 +116,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "5c6b178b093e26886aa958569b0725f1";
+(node as any).hash = "129c2605febe167695e6c6f822e17dfe";
 
 export default node;
