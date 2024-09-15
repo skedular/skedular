@@ -11,7 +11,7 @@
         <PackageReference Include="Ardalis.GuardClauses" Version="4.6.0" />
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="8.0.1" />
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.2" />
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.401.9" />
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.401.10" />
         <PackageReference Include="Confluent.Kafka" Version="2.5.3" />
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.5.3" />
         <PackageReference Include="CountryData" Version="6.5.0" />
@@ -31,7 +31,7 @@
         <PackageReference Include="NSwag.AspNetCore" Version="14.1.0" />
         <PackageReference Include="Polly" Version="8.4.1" />
         <PackageReference Include="Scrutor" Version="4.2.2" />
-        <PackageReference Include="Stripe.net" Version="45.11.0" />
+        <PackageReference Include="Stripe.net" Version="45.13.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
 
         <PackageReference Include="Grpc.AspNetCore" Version="2.65.0" />

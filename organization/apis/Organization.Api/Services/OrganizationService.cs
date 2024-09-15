@@ -264,7 +264,14 @@ public class OrganizationService(
         var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(
             customer.Id,
             cancellationToken);
-        return organizations.Select(mapper.MapTo).ToList();
+
+        var result = new List<Shared.Models.Organization>();
+        foreach (var organization in organizations)
+        {
+            result.Add(await EnrichOrganizationAsync(customer, organization, cancellationToken));
+        }
+
+        return result;
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int)>

@@ -206,6 +206,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue &&
                             query.OrganizationMembers.Select(item => item.Customer.Id).Contains(customerId))
+            .AddDependentObjects()
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
