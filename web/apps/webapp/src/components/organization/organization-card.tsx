@@ -1,4 +1,3 @@
-import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, ViewIcon, WebsiteIcon } from '@repo/shared/components/icons';
 import type { organizationCard_OrganizationDetails$key } from '@/queries/__generated__/organizationCard_OrganizationDetails.graphql';
 import type { organizationCard_Query$key } from '@/queries/__generated__/organizationCard_Query.graphql';
 import type { organizationCard_clearCustomerDefaultOrganizationMutation } from '@/queries/__generated__/organizationCard_clearCustomerDefaultOrganizationMutation.graphql';
@@ -20,9 +19,10 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, ViewIcon, WebsiteIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { now, joinErrors } from '@repo/shared/libs/utils';
-import { v4 as uuidv4 } from 'uuid';
+import { joinErrors, now } from '@repo/shared/libs/utils';
+import { nanoid } from 'nanoid';
 import Link from 'next/link';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
@@ -128,7 +128,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: organizationDetails.id,
         },
       },
@@ -166,7 +166,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
       commitSetCustomerDefaultOrganization({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             organizationId: organizationDetails.id,
           },
         },
@@ -200,7 +200,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
       commitClearCustomerDefaultOrganization({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
           },
         },
         onCompleted: (_, errors) => {

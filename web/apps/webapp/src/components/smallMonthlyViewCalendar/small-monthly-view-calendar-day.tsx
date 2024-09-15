@@ -4,10 +4,10 @@ import type { smallMonthlyViewCalendar_query$data } from '@/queries/__generated_
 import Badge from '@mui/material/Badge';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { convertCalendarDayToStartOfDay, endOfDay, toShortDate, joinErrors } from '@repo/shared/libs/utils';
+import { convertCalendarDayToStartOfDay, endOfDay, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { graphql, useMutation } from 'react-relay';
 
@@ -92,7 +92,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
         {...props}
         selected={false}
         onClick={() => {
-          const id = matchingBookingFound ? matchingBookingFound.id : uuidv4();
+          const id = matchingBookingFound ? matchingBookingFound.id : nanoid();
           const startOfDay = convertCalendarDayToStartOfDay(props.day);
           const from = startOfDay.toISOString();
           const to = endOfDay(startOfDay).toISOString();
@@ -103,7 +103,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
               variables: {
                 connectionIds,
                 input: {
-                  clientMutationId: uuidv4(),
+                  clientMutationId: nanoid(),
                   id,
                 },
               },
@@ -131,7 +131,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
               variables: {
                 connectionIds,
                 input: {
-                  clientMutationId: uuidv4(),
+                  clientMutationId: nanoid(),
                   id,
                   customerId: rootData.me.id,
                   from,

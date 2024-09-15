@@ -13,11 +13,11 @@ import Stepper from '@mui/material/Stepper';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, boolean, object, string } from 'yup';
 
 type Props = {
@@ -100,13 +100,13 @@ const OrganizationOnboarding = ({ rootDataRelay }: Props) => {
   const validate = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
   const handleOrganizationCreateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
-    const id = uuidv4();
+    const id = nanoid();
     const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
 
     commitAddOrganization({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           name,
           about,
@@ -130,7 +130,7 @@ const OrganizationOnboarding = ({ rootDataRelay }: Props) => {
           commitCompleteOrganizationOnboarding({
             variables: {
               input: {
-                clientMutationId: uuidv4(),
+                clientMutationId: nanoid(),
               },
             },
             onCompleted: (_, errors) => {
@@ -192,7 +192,7 @@ const OrganizationOnboarding = ({ rootDataRelay }: Props) => {
     commitCompleteOrganizationOnboarding({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
         },
       },
       onCompleted: (_, errors) => {

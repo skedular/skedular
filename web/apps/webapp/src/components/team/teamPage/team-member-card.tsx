@@ -18,10 +18,10 @@ import { useTheme } from '@mui/material/styles';
 import { DangerIcon, DeleteIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 
 type Props = {
   rootDataRelay: teamMemberCard_query$key;
@@ -122,7 +122,7 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
     commitUpdateTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: rootData.team.id,
           name: rootData.team.name,
           about: rootData.team.about,

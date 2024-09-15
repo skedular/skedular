@@ -9,11 +9,11 @@ import Stack from '@mui/material/Stack';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, number, object, string } from 'yup';
 import DeskMultipleChoicesZones from './desk-multiple-choices-zones';
 
@@ -70,13 +70,13 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
   const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
 
   const handleAddClick = ({ namePrefix, count, locationTagIds }: DeskDetails) => {
-    const ids = Array.from(Array(count).keys()).map((_) => uuidv4());
+    const ids = Array.from(Array(count).keys()).map((_) => nanoid());
 
     commitAddDesk({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           namePrefix,
           locationId,
           count: parseInt(count.toString()),

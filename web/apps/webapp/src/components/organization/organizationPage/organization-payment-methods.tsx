@@ -1,4 +1,3 @@
-import { AddIcon, RemoveIcon } from '@repo/shared/components/icons';
 import type { organizationPaymentMethods_addOrganizationPaymentMethodIntentMutation } from '@/queries/__generated__/organizationPaymentMethods_addOrganizationPaymentMethodIntentMutation.graphql';
 import type { organizationPaymentMethods_query$key } from '@/queries/__generated__/organizationPaymentMethods_query.graphql';
 import type { organizationPaymentMethods_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationPaymentMethods_removeOrganizationPaymentMethodMutation.graphql';
@@ -10,12 +9,13 @@ import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { joinErrors } from '@repo/shared/libs/utils';
+import { AddIcon, RemoveIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { Elements } from '@stripe/react-stripe-js';
 import type { Stripe } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
@@ -84,7 +84,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
     commitAddOrganizationPaymentMethodIntent({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           organizationId: rootData.organization.id,
         },
       },
@@ -138,7 +138,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
     commitRemoveOrganizationPaymentMethod({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
         },
       },

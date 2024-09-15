@@ -1,6 +1,5 @@
 import { CustomerAvatar } from '@/components/customer';
 import { LocationSingleChoiceMembershipType } from '@/components/location';
-import { EditIcon } from '@repo/shared/components/icons';
 import type { locationMemberCard_LocationMemberDetails$key } from '@/queries/__generated__/locationMemberCard_LocationMemberDetails.graphql';
 import type {
   LocationMemberMembershipType,
@@ -15,10 +14,11 @@ import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { EditIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { joinErrors, convertStringToLowercaseExceptFirstLetter, getCustomerFullName } from '@repo/shared/libs/utils';
+import { convertStringToLowercaseExceptFirstLetter, getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -89,7 +89,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
     commitChangeLocationMemberOwnershipType({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: locationMemberDetails.id,
           membershipType,
         },

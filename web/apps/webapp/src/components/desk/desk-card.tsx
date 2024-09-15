@@ -1,6 +1,5 @@
 import { CustomerAvatar } from '@/components/customer';
 import { ZonesLine } from '@/components/zone';
-import { DangerIcon, DeleteIcon, DeskIcon, EditIcon, InfoIcon } from '@repo/shared/components/icons';
 import type { deskCard_DeskDetails$key } from '@/queries/__generated__/deskCard_DeskDetails.graphql';
 import type { deskCard_addCustomerDefaultDeskMutation } from '@/queries/__generated__/deskCard_addCustomerDefaultDeskMutation.graphql';
 import type { deskCard_deleteLocationMutation } from '@/queries/__generated__/deskCard_deleteLocationMutation.graphql';
@@ -29,10 +28,11 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { DangerIcon, DeleteIcon, DeskIcon, EditIcon, InfoIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -247,7 +247,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: deskDetails.id,
         },
       },
@@ -284,7 +284,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     commitUpdateDesk({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: deskDetails.id,
           name: deskDetails.name,
           deactivated: true,
@@ -336,7 +336,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     commitUpdateDesk({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: deskDetails.id,
           name: deskDetails.name,
           deactivated: false,
@@ -386,7 +386,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     commitUpdateDesk({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: deskDetails.id,
           name,
           deactivated: deskDetails.deactivated,
@@ -431,7 +431,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       commitAddCustomerDefaultDesk({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             deskId: deskDetails.id,
           },
         },
@@ -466,7 +466,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       commitRemoveCustomerDefaultDesk({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             deskId: deskDetails.id,
           },
         },
@@ -512,7 +512,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     commitUpdateDesk({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: deskDetails.id,
           name: deskDetails.name,
           deactivated: deskDetails.deactivated,
@@ -564,7 +564,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     commitUpdateDesk({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: deskDetails.id,
           name: deskDetails.name,
           deactivated: deskDetails.deactivated,

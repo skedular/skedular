@@ -29,11 +29,11 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, usePaginationFragment } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 import TeamMemberCard from './team-member-card';
 
@@ -229,7 +229,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
     commitUpdateTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: rootData.team.id,
           name: rootData.team.name,
           about: rootData.team.about,
@@ -290,7 +290,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
     commitInviteCustomersToJoinTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           teamId: rootData.team.id,
           emails: emails
             .split(/[\s,]+/)

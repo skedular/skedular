@@ -1,4 +1,3 @@
-import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, TeamIcon, ViewIcon } from '@repo/shared/components/icons';
 import type { teamCard_Query$key } from '@/queries/__generated__/teamCard_Query.graphql';
 import type { teamCard_TeamDetails$key } from '@/queries/__generated__/teamCard_TeamDetails.graphql';
 import type { teamCard_addCustomerDefaultTeamMutation } from '@/queries/__generated__/teamCard_addCustomerDefaultTeamMutation.graphql';
@@ -18,9 +17,10 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
-import { joinErrors } from '@repo/shared/libs/utils';
+import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, TeamIcon, ViewIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { v4 as uuidv4 } from 'uuid';
+import { joinErrors } from '@repo/shared/libs/utils';
+import { nanoid } from 'nanoid';
 import Link from 'next/link';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
@@ -119,7 +119,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
       commitAddCustomerDefaultTeam({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             teamId: teamDetails.id,
           },
         },
@@ -154,7 +154,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
       commitRemoveCustomerDefaultTeam({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             teamId: teamDetails.id,
           },
         },
@@ -195,7 +195,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: teamDetails.id,
         },
       },

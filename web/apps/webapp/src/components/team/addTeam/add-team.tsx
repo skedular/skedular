@@ -1,15 +1,15 @@
 import { OrganizationMemberSelector } from '@/components/organization';
-import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import type { addTeam_addTeamMutation } from '@/queries/__generated__/addTeam_addTeamMutation.graphql';
 import type { addTeam_query$key } from '@/queries/__generated__/addTeam_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { joinErrors } from '@repo/shared/libs/utils';
+import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo } from 'react';
@@ -76,13 +76,13 @@ const AddTeam = ({ rootDataRelay, organizationId }: Props) => {
       return;
     }
 
-    const id = uuidv4();
+    const id = nanoid();
     const customerIds = !organizationId ? [rootData.me.id] : [];
 
     commitAddTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           name,
           about,

@@ -6,10 +6,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
-import { joinErrors } from '@repo/shared/libs/utils';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -51,13 +51,13 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
   const [name, setName] = useState<string>('');
 
   const handleAddClick = ({ name }: ZoneDetails) => {
-    const id = uuidv4();
+    const id = nanoid();
 
     commitAddZone({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           locationId,
           name,

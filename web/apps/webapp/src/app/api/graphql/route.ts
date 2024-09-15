@@ -1,6 +1,6 @@
+import { nanoid } from 'nanoid';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
-import { v4 as uuidv4 } from 'uuid';
 
 const federatedGraphQLEndpoint = new URL('v1/graphql', process.env.GATEWAY_ENDPOINT).href;
 
@@ -12,7 +12,7 @@ const handler = async (request: NextRequest) => {
 
   const headers = {
     'Content-Type': request.headers.get('Content-Type') ?? 'application/json',
-    'X-Correlation-Id': request.headers.get('X-Correlation-Id') ?? uuidv4(),
+    'X-Correlation-Id': request.headers.get('X-Correlation-Id') ?? nanoid(),
     Authorization: `Bearer ${token.idToken}`,
   };
 

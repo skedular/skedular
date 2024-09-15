@@ -1,4 +1,3 @@
-import { AboutIcon, DangerIcon, DeleteIcon, DeskIcon, EditIcon, LocationIcon, OrganizationIcon, ViewIcon } from '@repo/shared/components/icons';
 import type { locationCard_LocationDetails$key } from '@/queries/__generated__/locationCard_LocationDetails.graphql';
 import type { locationCard_Query$key } from '@/queries/__generated__/locationCard_Query.graphql';
 import type { locationCard_addCustomerDefaultLocationMutation } from '@/queries/__generated__/locationCard_addCustomerDefaultLocationMutation.graphql';
@@ -19,9 +18,10 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { AboutIcon, DangerIcon, DeleteIcon, DeskIcon, EditIcon, LocationIcon, OrganizationIcon, ViewIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { now, joinErrors } from '@repo/shared/libs/utils';
-import { v4 as uuidv4 } from 'uuid';
+import { joinErrors, now } from '@repo/shared/libs/utils';
+import { nanoid } from 'nanoid';
 import Link from 'next/link';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
@@ -125,7 +125,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
       commitAddCustomerDefaultLocation({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             locationId: locationDetails.id,
           },
         },
@@ -160,7 +160,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
       commitRemoveCustomerDefaultLocation({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             locationId: locationDetails.id,
           },
         },
@@ -201,7 +201,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: locationDetails.id,
         },
       },

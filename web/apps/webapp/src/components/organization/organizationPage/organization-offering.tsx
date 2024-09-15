@@ -9,9 +9,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { joinErrors } from '@repo/shared/libs/utils';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { v4 as uuidv4 } from 'uuid';
+import { joinErrors } from '@repo/shared/libs/utils';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
@@ -63,7 +63,7 @@ const OrganizationOffering = ({ rootDataRelay, onRefetchRequired }: Props) => {
     commitCancelOrganizationOffering({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: rootData.organization.id,
         },
       },

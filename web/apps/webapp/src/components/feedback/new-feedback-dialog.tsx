@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerShortName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -61,12 +61,12 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
   const [feedbackContent, setFeedbackContent] = useState<string>('');
 
   const handleSendClick = ({ feedback: feedbackContent }: FeedbackDetails) => {
-    const id = uuidv4();
+    const id = nanoid();
 
     commitSubmitCustomerFeedback({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           feedbackContent,
         },

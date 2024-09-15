@@ -14,11 +14,11 @@ import { EditIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 
 type Props = {
@@ -107,7 +107,7 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
     commitUpdateOrganization({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: organization.id,
           name,
           about,

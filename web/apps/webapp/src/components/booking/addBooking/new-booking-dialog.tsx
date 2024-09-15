@@ -11,11 +11,11 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { endOfDay, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, date, object, string } from 'yup';
 
 type Props = {
@@ -119,7 +119,7 @@ const NewBookingDialog = ({
       return;
     }
 
-    const id = uuidv4();
+    const id = nanoid();
     const finalDate = date as unknown as Dayjs;
     const from = startOfDay(finalDate).toISOString();
     const to = endOfDay(finalDate).toISOString();
@@ -130,7 +130,7 @@ const NewBookingDialog = ({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           customerId,
           from,

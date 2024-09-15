@@ -6,10 +6,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
-import { joinErrors } from '@repo/shared/libs/utils';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -68,13 +68,13 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
   const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
 
   const handleAddClick = ({ name, locationTagIds }: DeskDetails) => {
-    const id = uuidv4();
+    const id = nanoid();
 
     commitAddDesk({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           locationId,
           name,

@@ -5,10 +5,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { joinErrors } from '@repo/shared/libs/utils';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo } from 'react';
@@ -73,12 +73,12 @@ const AddOrganization = ({ rootDataRelay }: Props) => {
   };
 
   const handleOrganizationCreateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
-    const id = uuidv4();
+    const id = nanoid();
 
     commitAddOrganization({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           name,
           about,

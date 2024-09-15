@@ -32,11 +32,11 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, usePaginationFragment } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 import LocationMemberCard from './location-member-card';
 
@@ -319,7 +319,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
     commitInviteCustomersToJoinLocation({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           locationId: rootDataLocation.location.id,
           emails: emails
             .split(/[\s,]+/)

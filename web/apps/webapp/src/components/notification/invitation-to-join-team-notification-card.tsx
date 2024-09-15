@@ -12,10 +12,10 @@ import Typography from '@mui/material/Typography';
 import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 
 type Props = {
   notificationDetailsRelay: invitationToJoinTeamNotificationCard_NotificationDetails$key;
@@ -82,7 +82,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
     commitRejectInvitationToJoinTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: notificationDetails.sourceId,
         },
       },
@@ -115,7 +115,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
     commitAcceptInvitationToJoinTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: notificationDetails.sourceId,
         },
       },

@@ -1,6 +1,5 @@
 import { CustomerAvatar } from '@/components/customer';
 import { OrganizationSingleChoiceMembershipType } from '@/components/organization';
-import { EditIcon } from '@repo/shared/components/icons';
 import type { organizationMemberCard_OrganizationMemberDetails$key } from '@/queries/__generated__/organizationMemberCard_OrganizationMemberDetails.graphql';
 import type {
   OrganizationMemberMembershipType,
@@ -15,10 +14,11 @@ import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { EditIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { convertStringToLowercaseExceptFirstLetter, getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -90,7 +90,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     commitChangeOrganizationMemberOwnershipType({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: organizationMemberDetails.id,
           membershipType,
         },

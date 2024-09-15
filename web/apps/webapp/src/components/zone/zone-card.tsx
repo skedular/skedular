@@ -1,5 +1,4 @@
 import { TAG_TYPE_LOCATION_ZONE } from '@/components/zone';
-import { DangerIcon, DeleteIcon, EditIcon, ZoneIcon } from '@repo/shared/components/icons';
 import type { zoneCard_LocationTagDetails$key } from '@/queries/__generated__/zoneCard_LocationTagDetails.graphql';
 import type { zoneCard_Query$key } from '@/queries/__generated__/zoneCard_Query.graphql';
 import type { zoneCard_addCustomerDefaultLocationTagMutation } from '@/queries/__generated__/zoneCard_addCustomerDefaultLocationTagMutation.graphql';
@@ -22,10 +21,11 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import { DangerIcon, DeleteIcon, EditIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { now, joinErrors } from '@repo/shared/libs/utils';
+import { joinErrors, now } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -148,7 +148,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: locationTagDetails.id,
         },
       },
@@ -191,7 +191,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     commitUpdateZone({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: locationTagDetails.id,
           name,
           tagType: TAG_TYPE_LOCATION_ZONE,
@@ -231,7 +231,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       commitAddCustomerDefaultLocationTag({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             locationTagId: locationTagDetails.id,
           },
         },
@@ -266,7 +266,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       commitRemoveCustomerDefaultLocationTag({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             locationTagId: locationTagDetails.id,
           },
         },
