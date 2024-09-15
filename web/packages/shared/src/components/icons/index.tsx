@@ -13,7 +13,7 @@ import Settings from '@mui/icons-material/Settings';
 import WbIridescent from '@mui/icons-material/WbIridescent';
 import TooltipIcon from './tooltip-icon';
 
-export { default as AddIcon } from '@mui/icons-material/Add';
+export { default as AddIcon, default as NewIcon } from '@mui/icons-material/Add';
 export { default as JoinIcon } from '@mui/icons-material/AddCircle';
 export { default as AscDirectionIcon } from '@mui/icons-material/ArrowDownward';
 export { default as DescDirectionIcon } from '@mui/icons-material/ArrowUpward';
