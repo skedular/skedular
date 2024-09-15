@@ -1,6 +1,5 @@
 'use client';
 
-import { PaletteMode } from '@mui/material/styles';
 import { GoogleAnalytics, GoogleTagManager } from '@repo/shared/libs/analytics';
 import { MuiXLicense } from '@repo/shared/libs/mui';
 import {
@@ -8,6 +7,7 @@ import {
   GoogleAnalyticsProvider,
   LogRocketProvider,
   NextAuthProvider,
+  PaletteModeContext,
   PaletteModeProvider,
   RelayProvider,
   SnackbarProvider,
@@ -17,13 +17,37 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
-import { useState } from 'react';
+import { useContext } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
-  const [mode, setMode] = useState<PaletteMode>('light');
+  const paletteMode = useContext(PaletteModeContext);
 
+  return (
+    <ThemeProvider mode={paletteMode}>
+      <SnackbarProvider>
+        <DatePickerLocalizationProvider>
+          <NextAuthProvider>
+            <LogRocketProvider ignoreOptOutCookie={true} forceOverride={false} logRocketAppId={process.env.NEXT_PUBLIC_LOGROCKET_APP_ID}>
+              <RelayProvider>
+                <GoogleAnalyticsProvider
+                  ignoreOptOutCookie={true}
+                  forceOverride={false}
+                  googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
+                >
+                  {children}
+                </GoogleAnalyticsProvider>
+              </RelayProvider>
+            </LogRocketProvider>
+          </NextAuthProvider>
+        </DatePickerLocalizationProvider>
+      </SnackbarProvider>
+    </ThemeProvider>
+  );
+};
+
+const ThemedRootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <title>UnityHub</title>
@@ -41,26 +65,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         />
       )}
       <body>
-        <PaletteModeProvider setMode={setMode} loadDefaultSystemMode={true}>
-          <ThemeProvider mode={mode}>
-            <SnackbarProvider>
-              <DatePickerLocalizationProvider>
-                <NextAuthProvider>
-                  <LogRocketProvider ignoreOptOutCookie={true} forceOverride={false} logRocketAppId={process.env.NEXT_PUBLIC_LOGROCKET_APP_ID}>
-                    <RelayProvider>
-                      <GoogleAnalyticsProvider
-                        ignoreOptOutCookie={true}
-                        forceOverride={false}
-                        googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
-                      >
-                        {children}
-                      </GoogleAnalyticsProvider>
-                    </RelayProvider>
-                  </LogRocketProvider>
-                </NextAuthProvider>
-              </DatePickerLocalizationProvider>
-            </SnackbarProvider>
-          </ThemeProvider>
+        <PaletteModeProvider>
+          <RootLayout>{children}</RootLayout>
         </PaletteModeProvider>
         <Analytics />
         <SpeedInsights />
@@ -72,4 +78,4 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default RootLayout;
+export default ThemedRootLayout;

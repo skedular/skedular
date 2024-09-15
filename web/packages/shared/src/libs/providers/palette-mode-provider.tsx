@@ -2,50 +2,64 @@
 
 import { useMediaQuery } from '@mui/material';
 import { PaletteMode } from '@mui/material/styles';
-import { createContext, useEffect, useMemo } from 'react';
+import { createContext, useEffect, useState } from 'react';
+import { useLocalStorage } from 'usehooks-ts';
 
-export const PaletteModeContext = createContext({ toggleMode: () => {} });
+export type ExtendedPaletteMode = PaletteMode | 'system';
+
+export const PaletteModeContext = createContext<PaletteMode>('light');
+export const UpdatePaletteModeContext = createContext<(mode: ExtendedPaletteMode) => void>(() => {});
 
 type Props = {
-  children?: React.ReactNode;
-  loadDefaultSystemMode: boolean;
-  setMode: React.Dispatch<React.SetStateAction<PaletteMode>>;
+  children: React.ReactNode;
 };
 
-const localStorageThemeModeKey = 'themeMode';
-
-const PaletteModeProvider = ({ children, loadDefaultSystemMode, setMode }: Props) => {
+const PaletteModeProvider = ({ children }: Props) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const colorMode = useMemo(
-    () => ({
-      toggleMode: () => {
-        if (setMode) {
-          setMode((prevMode) => {
-            const newMode = prevMode === 'light' ? 'dark' : 'light';
-            localStorage.setItem(localStorageThemeModeKey, newMode);
-
-            return newMode;
-          });
-        }
-      },
-    }),
-    [setMode],
-  );
+  const [persistedPaletteMode, setPersistedPaletteMode] = useLocalStorage<ExtendedPaletteMode | undefined>('paletteMode', undefined);
+  const [paletteMode, setPaletteMode] = useState<PaletteMode>('light');
 
   useEffect(() => {
-    const savedMode = localStorage.getItem(localStorageThemeModeKey) as PaletteMode | null;
-    if (savedMode) {
-      setMode(savedMode);
-    } else {
-      if (!loadDefaultSystemMode) {
-        return;
+    let finalPaletteMode: PaletteMode;
+    if (persistedPaletteMode) {
+      if (persistedPaletteMode === 'system') {
+        finalPaletteMode = prefersDarkMode ? 'dark' : 'light';
+      } else if (persistedPaletteMode === 'dark') {
+        finalPaletteMode = 'dark';
+      } else {
+        finalPaletteMode = 'light';
       }
-
-      setMode(prefersDarkMode ? 'dark' : 'light');
+    } else {
+      finalPaletteMode = prefersDarkMode ? 'dark' : 'light';
     }
-  }, [prefersDarkMode, loadDefaultSystemMode, setMode]);
 
-  return <PaletteModeContext.Provider value={colorMode}>{children}</PaletteModeContext.Provider>;
+    setPaletteMode(finalPaletteMode);
+  }, [persistedPaletteMode, prefersDarkMode]);
+
+  const updatePalletMode = (paletteMode: ExtendedPaletteMode) => {
+    switch (paletteMode) {
+      case 'system':
+        setPaletteMode(prefersDarkMode ? 'dark' : 'light');
+        break;
+      case 'dark':
+        setPaletteMode('dark');
+        break;
+      case 'light':
+        setPaletteMode('light');
+        break;
+      default:
+        setPaletteMode('light');
+        break;
+    }
+
+    setPersistedPaletteMode(paletteMode);
+  };
+
+  return (
+    <PaletteModeContext.Provider value={paletteMode}>
+      <UpdatePaletteModeContext.Provider value={updatePalletMode}>{children}</UpdatePaletteModeContext.Provider>
+    </PaletteModeContext.Provider>
+  );
 };
 
 export default PaletteModeProvider;

@@ -1,11 +1,11 @@
 'use client';
 
-import { PaletteMode } from '@mui/material/styles';
 import { GoogleAnalytics, GoogleTagManager } from '@repo/shared/libs/analytics';
 import {
   DatePickerLocalizationProvider,
   GoogleAnalyticsProvider,
   NextAuthProvider,
+  PaletteModeContext,
   PaletteModeProvider,
   SnackbarProvider,
   ThemeProvider,
@@ -14,13 +14,33 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
-import { useState } from 'react';
+import { useContext } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
-  const [mode, setMode] = useState<PaletteMode>('light');
+  const paletteMode = useContext(PaletteModeContext);
 
+  return (
+    <ThemeProvider mode={paletteMode}>
+      <SnackbarProvider>
+        <DatePickerLocalizationProvider>
+          <NextAuthProvider>
+            <GoogleAnalyticsProvider
+              ignoreOptOutCookie={false}
+              forceOverride={true}
+              googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
+            >
+              {children}
+            </GoogleAnalyticsProvider>
+          </NextAuthProvider>
+        </DatePickerLocalizationProvider>
+      </SnackbarProvider>
+    </ThemeProvider>
+  );
+};
+
+const ThemedRootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <title>UnityHub</title>
@@ -38,30 +58,16 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         />
       )}
       <body>
-        <PaletteModeProvider setMode={setMode} loadDefaultSystemMode={false}>
-          <ThemeProvider mode={mode}>
-            <SnackbarProvider>
-              <DatePickerLocalizationProvider>
-                <NextAuthProvider>
-                  <GoogleAnalyticsProvider
-                    ignoreOptOutCookie={false}
-                    forceOverride={true}
-                    googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
-                  >
-                    {children}
-                  </GoogleAnalyticsProvider>
-                </NextAuthProvider>
-              </DatePickerLocalizationProvider>
-            </SnackbarProvider>
-          </ThemeProvider>
+        <PaletteModeProvider>
+          <RootLayout>{children}</RootLayout>
         </PaletteModeProvider>
         <Analytics />
         <SpeedInsights />
       </body>
-      <GoogleAnalytics ignoreOptOutCookie={false} forceOverride={true} />
-      <GoogleTagManager ignoreOptOutCookie={false} forceOverride={true} />
+      <GoogleAnalytics ignoreOptOutCookie={true} forceOverride={false} />
+      <GoogleTagManager ignoreOptOutCookie={true} forceOverride={false} />
     </html>
   );
 };
 
-export default RootLayout;
+export default ThemedRootLayout;

@@ -23,7 +23,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { FeedbackIcon, LogoutIcon, MenuIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { Logo } from '@repo/shared/components/logo';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName } from '@repo/shared/libs/utils';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -109,7 +109,8 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
   );
 
   const theme = useTheme();
-  const colorMode = useContext(PaletteModeContext);
+  const paletteMode = useContext(PaletteModeContext);
+  const updatePalletMode = useContext(UpdatePaletteModeContext);
   const matchMobileView = useMediaQuery(theme.breakpoints.down('sm'));
   const router = useRouter();
   const [leftDraweropen, setLeftDrawerOpen] = useState(!matchMobileView);
@@ -208,9 +209,19 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
                   <FeedbackIcon />
                 </IconButton>
               </Tooltip>
-              <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleMode}>
-                {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
-              </IconButton>
+
+              {paletteMode === 'dark' && (
+                <IconButton sx={{ ml: 1 }} onClick={() => updatePalletMode('light')}>
+                  <LightModeIcon />
+                </IconButton>
+              )}
+
+              {paletteMode === 'light' && (
+                <IconButton sx={{ ml: 1 }} onClick={() => updatePalletMode('dark')}>
+                  <DarkModeIcon />
+                </IconButton>
+              )}
+
               <IconButton onClick={handleProfileMenuOpenClick} sx={{ p: 0 }}>
                 <CustomerAvatar
                   name={{
