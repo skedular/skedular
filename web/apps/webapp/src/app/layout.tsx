@@ -10,6 +10,7 @@ import {
   PaletteModeContext,
   PaletteModeProvider,
   RelayProvider,
+  SelectedOrganizationProvider,
   SnackbarProvider,
   ThemeProvider,
 } from '@repo/shared/libs/providers';
@@ -26,23 +27,25 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ThemeProvider mode={paletteMode}>
-      <SnackbarProvider>
-        <DatePickerLocalizationProvider>
-          <NextAuthProvider>
-            <LogRocketProvider ignoreOptOutCookie={true} forceOverride={false} logRocketAppId={process.env.NEXT_PUBLIC_LOGROCKET_APP_ID}>
-              <RelayProvider>
-                <GoogleAnalyticsProvider
-                  ignoreOptOutCookie={true}
-                  forceOverride={false}
-                  googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
-                >
-                  {children}
-                </GoogleAnalyticsProvider>
-              </RelayProvider>
-            </LogRocketProvider>
-          </NextAuthProvider>
-        </DatePickerLocalizationProvider>
-      </SnackbarProvider>
+      <SelectedOrganizationProvider>
+        <SnackbarProvider>
+          <DatePickerLocalizationProvider>
+            <NextAuthProvider>
+              <LogRocketProvider ignoreOptOutCookie={true} forceOverride={false} logRocketAppId={process.env.NEXT_PUBLIC_LOGROCKET_APP_ID}>
+                <RelayProvider>
+                  <GoogleAnalyticsProvider
+                    ignoreOptOutCookie={true}
+                    forceOverride={false}
+                    googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
+                  >
+                    {children}
+                  </GoogleAnalyticsProvider>
+                </RelayProvider>
+              </LogRocketProvider>
+            </NextAuthProvider>
+          </DatePickerLocalizationProvider>
+        </SnackbarProvider>
+      </SelectedOrganizationProvider>
     </ThemeProvider>
   );
 };

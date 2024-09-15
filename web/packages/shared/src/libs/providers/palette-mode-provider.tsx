@@ -36,7 +36,7 @@ const PaletteModeProvider = ({ children }: Props) => {
     setPaletteMode(finalPaletteMode);
   }, [persistedPaletteMode, prefersDarkMode]);
 
-  const updatePalletMode = (paletteMode: ExtendedPaletteMode) => {
+  const updatePaletteMode = (paletteMode: ExtendedPaletteMode) => {
     switch (paletteMode) {
       case 'system':
         setPaletteMode(prefersDarkMode ? 'dark' : 'light');
@@ -57,7 +57,7 @@ const PaletteModeProvider = ({ children }: Props) => {
 
   return (
     <PaletteModeContext.Provider value={paletteMode}>
-      <UpdatePaletteModeContext.Provider value={updatePalletMode}>{children}</UpdatePaletteModeContext.Provider>
+      <UpdatePaletteModeContext.Provider value={updatePaletteMode}>{children}</UpdatePaletteModeContext.Provider>
     </PaletteModeContext.Provider>
   );
 };

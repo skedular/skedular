@@ -5,5 +5,10 @@ export { default as NextAuthProvider } from './next-auth-provider';
 export { PaletteModeContext, default as PaletteModeProvider, UpdatePaletteModeContext } from './palette-mode-provider';
 export type { ExtendedPaletteMode } from './palette-mode-provider';
 export { default as RelayProvider } from './relay-provider';
+export {
+  SelectedOrganizationContext,
+  default as SelectedOrganizationProvider,
+  UpdateSelectedOrganizationContext,
+} from './selected-organization-provider';
 export { default as SnackbarProvider } from './snackbar-provider';
 export { default as ThemeProvider } from './theme-provider';
