@@ -1,5 +1,5 @@
-import Calendar from '@mui/icons-material/CalendarToday';
 import CorporateFare from '@mui/icons-material/CorporateFare';
+import DateRangeIcon from '@mui/icons-material/DateRange';
 import Desk from '@mui/icons-material/Desk';
 import Groups from '@mui/icons-material/Groups';
 import HomeWork from '@mui/icons-material/HomeWork';
@@ -23,6 +23,7 @@ export { default as CloseIcon } from '@mui/icons-material/Close';
 export { default as CollapseIcon } from '@mui/icons-material/CloseFullscreen';
 export { default as DangerIcon } from '@mui/icons-material/Dangerous';
 export { default as DarkModeIcon } from '@mui/icons-material/DarkMode';
+export { default as DashboardIcon } from '@mui/icons-material/Dashboard';
 export { default as DeleteIcon } from '@mui/icons-material/Delete';
 export { default as DoneIcon } from '@mui/icons-material/Done';
 export { default as EditIcon } from '@mui/icons-material/Edit';
@@ -153,18 +154,18 @@ export const InfoIcon = ({ fontSize, excludeTooltip }: Props) =>
 
 export const CalendarIcon = ({ fontSize, excludeTooltip }: Props) =>
   excludeTooltip ? (
-    <Calendar fontSize={fontSize} />
+    <DateRangeIcon fontSize={fontSize} />
   ) : (
     <TooltipIcon tip="Calendar">
-      <Calendar fontSize={fontSize} />
+      <DateRangeIcon fontSize={fontSize} />
     </TooltipIcon>
   );
 
 export const BookingIcon = ({ fontSize, excludeTooltip }: Props) =>
   excludeTooltip ? (
-    <Calendar fontSize={fontSize} />
+    <DateRangeIcon fontSize={fontSize} />
   ) : (
     <TooltipIcon tip="Booking">
-      <Calendar fontSize={fontSize} />
+      <DateRangeIcon fontSize={fontSize} />
     </TooltipIcon>
   );
