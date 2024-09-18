@@ -27,6 +27,7 @@ export { default as DashboardIcon } from '@mui/icons-material/Dashboard';
 export { default as DeleteIcon } from '@mui/icons-material/Delete';
 export { default as DoneIcon } from '@mui/icons-material/Done';
 export { default as EditIcon } from '@mui/icons-material/Edit';
+export { default as FeedIcon } from '@mui/icons-material/Feed';
 export { default as FeedbackIcon } from '@mui/icons-material/Feedback';
 export { default as AnalyticsIcon } from '@mui/icons-material/Insights';
 export { default as LogoutIcon } from '@mui/icons-material/Logout';
