@@ -53,7 +53,7 @@ const SettingsWithRelay = () => {
 
   const handleReloadRequire = () => {};
 
-  if (queryReference == null) {
+  if (!queryReference) {
     return <Loading />;
   }
 

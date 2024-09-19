@@ -139,7 +139,7 @@ const TeamPageWithRelay = () => {
     setTriggerReload(triggerReload + 1);
   };
 
-  if (queryReference == null) {
+  if (!queryReference) {
     return <Loading />;
   }
 

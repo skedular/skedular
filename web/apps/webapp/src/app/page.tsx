@@ -96,7 +96,7 @@ const HomeWithRelay = () => {
     setDate(startOfMonth(null));
   };
 
-  if (queryReference == null) {
+  if (!queryReference) {
     return <Loading />;
   }
 

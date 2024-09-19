@@ -61,7 +61,7 @@ const AddOrganizationPageWithRelay = () => {
     setTriggerReload(triggerReload + 1);
   };
 
-  if (queryReference == null) {
+  if (!queryReference) {
     return <Loading />;
   }
 

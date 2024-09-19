@@ -53,7 +53,7 @@ const InstallWithRelay = () => {
     );
   }, [loadQuery]);
 
-  if (queryReference == null) {
+  if (!queryReference) {
     return <Loading />;
   }
 

@@ -50,7 +50,7 @@ const HomeWithRelay = () => {
     );
   }, [loadQuery]);
 
-  if (queryReference == null) {
+  if (!queryReference) {
     return <Loading />;
   }
 
