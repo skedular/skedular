@@ -1,5 +1,6 @@
 import { SxProps } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
 import { memo } from 'react';
 
 type NameProps = {
@@ -15,9 +16,10 @@ type Props = {
   name: NameProps;
   photo: PhotoProps;
   sx?: SxProps | null;
+  showFullName?: boolean;
 };
 
-const LocationAvatar = ({ name, photo, size, sx }: Props) => {
+const LocationAvatar = ({ name, photo, size, sx, showFullName }: Props) => {
   let avatarLetters = '';
 
   if (name) {
@@ -39,10 +41,20 @@ const LocationAvatar = ({ name, photo, size, sx }: Props) => {
     finalSx = { width: 40, height: 40 };
   }
 
+  if (!showFullName) {
+    return (
+      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
+        {avatarLetters}
+      </Avatar>
+    );
+  }
+
   return (
-    <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
-      {avatarLetters}
-    </Avatar>
+    <Tooltip title={name.name}>
+      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
+        {avatarLetters}
+      </Avatar>
+    </Tooltip>
   );
 };
 

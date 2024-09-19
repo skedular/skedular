@@ -1,7 +1,8 @@
 import { SxProps } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
 import { memo } from 'react';
-import { NameDetails, getCustomerAvatarLetters } from '../../libs/utils';
+import { NameDetails, getCustomerAvatarLetters, getCustomerFullName } from '../../libs/utils';
 
 type PhotoDetails = {
   url?: string | null;
@@ -12,9 +13,10 @@ type Props = {
   name: NameDetails;
   photo: PhotoDetails;
   sx?: SxProps | null;
+  showFullName?: boolean;
 };
 
-const CustomerAvatar = ({ name, photo, size, sx }: Props) => {
+const CustomerAvatar = ({ name, photo, size, sx, showFullName }: Props) => {
   const avatarLetters = getCustomerAvatarLetters(name);
 
   let finalSx = { ...sx };
@@ -26,10 +28,20 @@ const CustomerAvatar = ({ name, photo, size, sx }: Props) => {
     finalSx = { width: 48, height: 48 };
   }
 
+  if (!showFullName) {
+    return (
+      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
+        {avatarLetters}
+      </Avatar>
+    );
+  }
+
   return (
-    <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
-      {avatarLetters}
-    </Avatar>
+    <Tooltip title={getCustomerFullName(name)}>
+      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
+        {avatarLetters}
+      </Avatar>
+    </Tooltip>
   );
 };
 
