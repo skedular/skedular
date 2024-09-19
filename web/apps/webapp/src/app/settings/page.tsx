@@ -1,11 +1,11 @@
 'use client';
 
 import { CustomerSettings } from '@/components/customer/settings';
+import { RootShell } from '@/components/rootShell';
+import type { pageSettings_rootQuery } from '@/queries/__generated__/pageSettings_rootQuery.graphql';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { RootShell } from '@/components/rootShell';
-import type { pageSettings_rootQuery } from '@/queries/__generated__/pageSettings_rootQuery.graphql';
 import { memo, useCallback, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -40,9 +40,7 @@ const Settings = ({ queryReference, onReloadRequire }: Props) => {
 
 const MemoSettings = memo(Settings);
 
-type PropsWithRelay = {};
-
-const SettingsWithRelay = ({}: PropsWithRelay) => {
+const SettingsWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageSettings_rootQuery>(RootQuery);
 
   useEffect(() => {

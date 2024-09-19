@@ -59,9 +59,7 @@ const TeamPage = ({ queryReference, onReloadRequire, teamId, organizationId }: P
 
 const MemoTeamPage = memo(TeamPage);
 
-type PropsWithRelay = {};
-
-const TeamPageWithRelay = ({}: PropsWithRelay) => {
+const TeamPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationTeam_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId, teamId } = useParams();

@@ -1,11 +1,11 @@
 'use client';
 
-import { Loading } from '@repo/shared/components/loading';
 import { Organizations } from '@/components/organization/organizations';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizations_rootQuery } from '@/queries/__generated__/pageOrganizations_rootQuery.graphql';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -44,9 +44,7 @@ const OrganizationsPage = ({ queryReference, onReloadRequire }: Props) => {
 
 const MemoOrganizationsPage = memo(OrganizationsPage);
 
-type PropsWithRelay = {};
-
-const OrganizationsPageWithRelay = ({}: PropsWithRelay) => {
+const OrganizationsPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizations_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
 

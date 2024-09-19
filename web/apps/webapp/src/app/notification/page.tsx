@@ -1,11 +1,11 @@
 'use client';
 
-import { Loading } from '@repo/shared/components/loading';
 import { Notifications } from '@/components/notification/notifications';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import type { pageNotifications_rootQuery } from '@/queries/__generated__/pageNotifications_rootQuery.graphql';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -44,9 +44,7 @@ const NotificationsPage = ({ queryReference, onReloadRequire }: Props) => {
 
 const MemoNotificationsPage = memo(NotificationsPage);
 
-type PropsWithRelay = {};
-
-const NotificationsPageWithRelay = ({}: PropsWithRelay) => {
+const NotificationsPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageNotifications_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
 

@@ -1,11 +1,11 @@
 'use client';
 
-import { Loading } from '@repo/shared/components/loading';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { Teams } from '@/components/team/teams';
 import type { pageTeams_rootQuery } from '@/queries/__generated__/pageTeams_rootQuery.graphql';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -41,9 +41,7 @@ const TeamsPage = ({ queryReference, onReloadRequire }: Props) => {
 
 const MemoTeamsPage = memo(TeamsPage);
 
-type PropsWithRelay = {};
-
-const TeamsPageWithRelay = ({}: PropsWithRelay) => {
+const TeamsPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageTeams_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
 

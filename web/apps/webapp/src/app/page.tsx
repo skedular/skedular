@@ -1,12 +1,12 @@
 'use client';
 
-import { Loading } from '@repo/shared/components/loading';
 import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { SmallMonthlyViewCalendar } from '@/components/smallMonthlyViewCalendar';
 import type { pageHome_rootQuery } from '@/queries/__generated__/pageHome_rootQuery.graphql';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { endOfMonth, startOfDay, startOfMonth } from '@repo/shared/libs/utils';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -59,9 +59,7 @@ const Home = ({ queryReference, onReloadRequire }: Props) => {
 
 const MemoHome = memo(Home);
 
-type PropsWithRelay = {};
-
-const HomeWithRelay = ({}: PropsWithRelay) => {
+const HomeWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageHome_rootQuery>(RootQuery);
   const [date, setDate] = useState(startOfMonth(null));
 

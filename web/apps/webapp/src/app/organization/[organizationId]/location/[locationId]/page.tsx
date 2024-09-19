@@ -69,9 +69,7 @@ const LocationPage = ({ queryReference, onReloadRequire, locationId, organizatio
 
 const MemoLocationPage = memo(LocationPage);
 
-type PropsWithRelay = {};
-
-const LocationPageWithRelay = ({}: PropsWithRelay) => {
+const LocationPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationLocation_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId, locationId } = useParams();
