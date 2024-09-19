@@ -60,15 +60,15 @@ const endOfMonth = (date: Dayjs | null | undefined) => {
 };
 
 const toShortDate = (date: Dayjs | null | undefined) => {
-  return date ? date.format('dddd, Do MMM YYYY') : '';
+  return date ? dayjs(date).format('dddd, Do MMM YYYY') : '';
 };
 
 const toShortDateTime = (date: Dayjs | null | undefined) => {
-  return date ? date.format('dddd, Do MMM YYYY, HH:mm') : '';
+  return date ? dayjs(date).format('dddd, Do MMM YYYY, HH:mm') : '';
 };
 
 const toShortWeekDay = (date: Dayjs | null | undefined) => {
-  return date ? date.format('ddd') : '';
+  return date ? dayjs(date).format('ddd') : '';
 };
 
 const toShortDateTimeInUtc = (date: Dayjs | null | undefined) => {
@@ -76,7 +76,7 @@ const toShortDateTimeInUtc = (date: Dayjs | null | undefined) => {
 };
 
 const toDayAndMonthDate = (date: Dayjs | null | undefined) => {
-  return date ? date.format('Do MMM') : '';
+  return date ? dayjs(date).format('Do MMM') : '';
 };
 
 const getPublicSiteUrl = () => {
@@ -202,5 +202,6 @@ export {
   toShortDate,
   toShortDateTime,
   toShortDateTimeInUtc,
-  toShortWeekDay,
+  toShortWeekDay
 };
+
