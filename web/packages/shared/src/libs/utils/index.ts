@@ -1,9 +1,11 @@
 import dayjs, { Dayjs } from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { PayloadError } from 'relay-runtime';
 
+dayjs.extend(isoWeek);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
@@ -37,6 +39,16 @@ const endOfDay = (date: Dayjs | null | undefined) => {
   return startOfDay(date).add(1, 'day').add(-1, 'milliseconds');
 };
 
+const startOfWeek = (date: Dayjs | null | undefined) => {
+  const finalDate = date ? date : dayjs().utc();
+
+  return finalDate.utc().startOf('isoWeek');
+};
+
+const endOfWeek = (date: Dayjs | null | undefined) => {
+  return startOfWeek(date).add(1, 'week');
+};
+
 const startOfMonth = (date: Dayjs | null | undefined) => {
   const finalDate = date ? date : dayjs().utc();
 
@@ -48,11 +60,15 @@ const endOfMonth = (date: Dayjs | null | undefined) => {
 };
 
 const toShortDate = (date: Dayjs | null | undefined) => {
-  return date ? dayjs(date).format('dddd, Do MMM YYYY') : '';
+  return date ? date.format('dddd, Do MMM YYYY') : '';
 };
 
 const toShortDateTime = (date: Dayjs | null | undefined) => {
-  return date ? dayjs(date).format('dddd, Do MMM YYYY, HH:mm') : '';
+  return date ? date.format('dddd, Do MMM YYYY, HH:mm') : '';
+};
+
+const toShortWeekDay = (date: Dayjs | null | undefined) => {
+  return date ? date.format('ddd') : '';
 };
 
 const toShortDateTimeInUtc = (date: Dayjs | null | undefined) => {
@@ -60,7 +76,7 @@ const toShortDateTimeInUtc = (date: Dayjs | null | undefined) => {
 };
 
 const toDayAndMonthDate = (date: Dayjs | null | undefined) => {
-  return date ? dayjs(date).format('Do MMM') : '';
+  return date ? date.format('Do MMM') : '';
 };
 
 const getPublicSiteUrl = () => {
@@ -170,6 +186,7 @@ export {
   encodeBase64,
   endOfDay,
   endOfMonth,
+  endOfWeek,
   getCurrentCompleteUrl,
   getCustomerAvatarLetters,
   getCustomerFullName,
@@ -179,9 +196,11 @@ export {
   now,
   startOfDay,
   startOfMonth,
+  startOfWeek,
   toDayAndMonthDate,
   toFixed,
   toShortDate,
   toShortDateTime,
   toShortDateTimeInUtc,
+  toShortWeekDay,
 };
