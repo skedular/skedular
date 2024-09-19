@@ -7,6 +7,15 @@ summary: |
 owners:
     - malizadeh
     - full-stack
+receives:
+  - id: OrganizationUpserted
+    version: 0.0.1
+  - id: OrganizationDeleted
+    version: 0.0.1
+  - id: TeamUpserted
+    version: 0.0.1
+  - id: TeamDeleted
+    version: 0.0.1
 repository:
   language: C#
   url: 

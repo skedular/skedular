@@ -22,6 +22,10 @@ receives:
     version: 0.0.1
   - id: TeamDeleted
     version: 0.0.1
+  - id: OrganizationUpserted
+    version: 0.0.1
+  - id: OrganizationDeleted
+    version: 0.0.1
 sends:
   - id: BookingUpserted
     version: 0.0.1

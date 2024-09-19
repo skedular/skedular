@@ -14,6 +14,8 @@ receives:
     version: 0.0.1
   - id: DeleteOrganization
     version: 0.0.1
+  - id: OrganizationPaymentMethodsUpdated
+    version: 0.0.1
 sends:
   - id: OrganizationDeleted
     version: 0.0.1
