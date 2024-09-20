@@ -202,6 +202,5 @@ export {
   toShortDate,
   toShortDateTime,
   toShortDateTimeInUtc,
-  toShortWeekDay
+  toShortWeekDay,
 };
-
