@@ -227,7 +227,9 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
                 team.Organization != null && team.Organization.Id == organizationId);
         }
 
-        return await query.AsNoTracking().ToListAsync(cancellationToken);
+        return await query
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<ICollection<Database.Entities.Team>> GetAllAsync(CancellationToken cancellationToken) =>

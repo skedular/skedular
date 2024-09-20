@@ -259,7 +259,8 @@ public class TeamService(
         return (paginatedInfo, mappedTeams, totalCount);
     }
 
-    public async Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(string? organizationId,
+    public async Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
+        string? organizationId,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
