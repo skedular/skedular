@@ -216,13 +216,8 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
         CancellationToken cancellationToken)
     {
         var query = DbContext.Team
-            .Where(location =>
-                !location.DeletedAt.HasValue && ((location.Organization == null &&
-                                                  location.TeamMembers.Any(item =>
-                                                      item.Customer.Id == customerId)) ||
-                                                 (location.Organization != null &&
-                                                  location.Organization.OrganizationMembers.Any(organizationMember =>
-                                                      organizationMember.Customer.Id == customerId))));
+            .Where(team =>
+                !team.DeletedAt.HasValue && team.TeamMembers.Any(item => item.Customer.Id == customerId));
 
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
