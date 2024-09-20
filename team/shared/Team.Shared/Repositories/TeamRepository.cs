@@ -59,22 +59,25 @@ internal static class TeamExtensions
 
         if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
         {
-            query = query.Where(item =>
-                (item.Organization == null && item.TeamMembers.Any(teamMember =>
-                    !teamMember.DeletedAt.HasValue && (searchCriteria.CustomerId != null ||
-                                                       teamMember.Customer.Id == searchCriteria.CustomerId))) ||
-                (item.Organization != null &&
-                 (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
-                     !organizationMember.DeletedAt.HasValue &&
-                     organizationMember.Customer.Id == searchCriteria.CustomerId))));
+            if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
+            {
+                query = query.Where(item =>
+                    item.TeamMembers.Any(teamMember =>
+                        !teamMember.DeletedAt.HasValue && teamMember.Customer.Id == searchCriteria.CustomerId));
+            }
         }
         else
         {
-            query = query.Where(item =>
-                item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId &&
-                (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
-                    !organizationMember.DeletedAt.HasValue &&
-                    organizationMember.Customer.Id == searchCriteria.CustomerId)));
+            query = string.IsNullOrWhiteSpace(searchCriteria.CustomerId)
+                ? query.Where(item =>
+                    item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId &&
+                    item.Organization.OrganizationMembers.Any(organizationMember =>
+                        !organizationMember.DeletedAt.HasValue))
+                : query.Where(item =>
+                    item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId &&
+                    item.Organization.OrganizationMembers.Any(organizationMember =>
+                        !organizationMember.DeletedAt.HasValue &&
+                        organizationMember.Customer.Id == searchCriteria.CustomerId));
         }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
