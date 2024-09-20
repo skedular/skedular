@@ -1,6 +1,5 @@
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Paper from '@mui/material/Paper';
+import CardHeader from '@mui/material/CardHeader';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
@@ -29,21 +28,10 @@ const CustomerCard = ({ customerDetailsRelay }: Props) => {
   );
 
   return (
-    <Paper
-      elevation={24}
-      sx={{
-        minWidth: 300,
-        maxWidth: 300,
-      }}
-    >
-      <Card
-        sx={{
-          minWidth: 300,
-          maxWidth: 300,
-        }}
-      >
-        <CardContent>
-          <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
+    <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
+      <CardHeader
+        title={
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <CustomerAvatar
               name={{
                 name: customerDetails.name,
@@ -55,16 +43,13 @@ const CustomerCard = ({ customerDetailsRelay }: Props) => {
                 url: customerDetails.photoUrl,
               }}
             />
-          </Stack>
-
-          <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
             <Typography gutterBottom variant="body1">
               {getCustomerFullName(customerDetails)}
             </Typography>
           </Stack>
-        </CardContent>
-      </Card>
-    </Paper>
+        }
+      />
+    </Card>
   );
 };
 

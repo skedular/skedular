@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d82f0f8ea50f4d2b2d45112ff0909762>>
+ * @generated SignedSource<<0aef235a003a513540b96f85cd4e5ccb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,23 +9,31 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type DeleteBookingInput = {
+export type AddBookingInput = {
   clientMutationId?: string | null | undefined;
-  id: string;
+  customerId: string;
+  deskIds: ReadonlyArray<string>;
+  from: any;
+  id?: string | null | undefined;
+  locationId?: string | null | undefined;
+  notes?: string | null | undefined;
+  organizationId?: string | null | undefined;
+  teamId?: string | null | undefined;
+  to: any;
 };
-export type teamBookingsCard_deleteBookingMutation$variables = {
-  input: DeleteBookingInput;
+export type teamPeopleBookingsMatrix_addBookingMutation$variables = {
+  input: AddBookingInput;
 };
-export type teamBookingsCard_deleteBookingMutation$data = {
-  readonly deleteBooking: {
+export type teamPeopleBookingsMatrix_addBookingMutation$data = {
+  readonly addBooking: {
     readonly booking: {
       readonly id: string;
     };
   } | null | undefined;
 };
-export type teamBookingsCard_deleteBookingMutation = {
-  response: teamBookingsCard_deleteBookingMutation$data;
-  variables: teamBookingsCard_deleteBookingMutation$variables;
+export type teamPeopleBookingsMatrix_addBookingMutation = {
+  response: teamPeopleBookingsMatrix_addBookingMutation$data;
+  variables: teamPeopleBookingsMatrix_addBookingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -48,7 +56,7 @@ v1 = [
     ],
     "concreteType": "BookingPayload",
     "kind": "LinkedField",
-    "name": "deleteBooking",
+    "name": "addBooking",
     "plural": false,
     "selections": [
       {
@@ -78,7 +86,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "teamBookingsCard_deleteBookingMutation",
+    "name": "teamPeopleBookingsMatrix_addBookingMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -87,20 +95,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "teamBookingsCard_deleteBookingMutation",
+    "name": "teamPeopleBookingsMatrix_addBookingMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "4103547b989404df8d0bb0cea7054395",
+    "cacheID": "41b82865265d4055229cfa11ec45f190",
     "id": null,
     "metadata": {},
-    "name": "teamBookingsCard_deleteBookingMutation",
+    "name": "teamPeopleBookingsMatrix_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation teamBookingsCard_deleteBookingMutation(\n  $input: DeleteBookingInput!\n) {\n  deleteBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
+    "text": "mutation teamPeopleBookingsMatrix_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8da5613ef311346d3d8f88224ac94c71";
+(node as any).hash = "be4dc5fd7f54df21e8e1ebb183e65c11";
 
 export default node;

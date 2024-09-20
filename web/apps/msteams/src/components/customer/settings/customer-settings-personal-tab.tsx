@@ -1,6 +1,4 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -149,136 +147,116 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <Stack direction="row" sx={{ justifyContent: 'flex-end' }} spacing={1}>
         {!editing && (
           <Button size="large" color="primary" onClick={handleEditClick}>
             <EditIcon />
           </Button>
         )}
-      </Box>
+      </Stack>
+
       {!editing && (
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'left',
-            marginBottom: 1,
-          }}
-        >
-          <Grid>
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Designation
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {rootData.me.designation}
-              </Typography>
-            </Stack>
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Title
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {rootData.me.title}
-              </Typography>
-            </Stack>
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Name
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {rootData.me.name}
-              </Typography>
-            </Stack>
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Given Name
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {rootData.me.givenName}
-              </Typography>
-            </Stack>
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Middle Name
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {rootData.me.middleName}
-              </Typography>
-            </Stack>
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Family Name
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {rootData.me.familyName}
-              </Typography>
-            </Stack>
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Timezone
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {rootData.me.timezone}
-              </Typography>
-            </Stack>
-          </Grid>
-        </Grid>
+        <Stack direction="column" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Designation
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {rootData.me.designation}
+            </Typography>
+          </Stack>
+
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Title
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {rootData.me.title}
+            </Typography>
+          </Stack>
+
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Name
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {rootData.me.name}
+            </Typography>
+          </Stack>
+
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Given Name
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {rootData.me.givenName}
+            </Typography>
+          </Stack>
+
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Middle Name
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {rootData.me.middleName}
+            </Typography>
+          </Stack>
+
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Family Name
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {rootData.me.familyName}
+            </Typography>
+          </Stack>
+
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Timezone
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {rootData.me.timezone}
+            </Typography>
+          </Stack>
+        </Stack>
       )}
       {editing && (
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 1,
-          }}
-        >
-          <Paper elevation={24} sx={{ padding: 3 }}>
-            <Form
-              onSubmit={handleSettingsUpdateClick}
-              initialValues={{
-                timezone: rootData.me.timezone,
-                designation: rootData.me.designation,
-                title: rootData.me.title,
-                name: rootData.me.name,
-                givenName: rootData.me.givenName,
-                middleName: rootData.me.middleName,
-                familyName: rootData.me.familyName,
-              }}
-              validate={validate}
-              render={({ handleSubmit }) => (
-                <Box
-                  component="form"
-                  sx={{
-                    '& > :not(style)': { m: 1 },
-                  }}
-                  autoComplete="off"
-                  noValidate
-                  onSubmit={handleSubmit}
-                >
-                  <TextField label="Designation" name="designation" required={requiredFields.designation} />
-                  <TextField label="Title" name="title" required={requiredFields.title} />
-                  <TextField label="Name" name="name" required={requiredFields.name} />
-                  <TextField label="Given Name" name="givenName" required={requiredFields.givenName} />
-                  <TextField label="Middle Name" name="middleName" required={requiredFields.middleName} />
-                  <TextField label="Family Name" name="familyName" required={requiredFields.familyName} />
-                  <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-                  <Stack sx={{ flex: 1, justifyContent: 'flex-end' }} direction="row" spacing={2}>
-                    <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                      Cancel
-                    </Button>
-                    <Button color="primary" variant="contained" type="submit">
-                      Update
-                    </Button>
-                  </Stack>
-                </Box>
-              )}
-            />
-          </Paper>
-        </Grid>
+        <Paper elevation={24} sx={{ padding: 2 }}>
+          <Form
+            onSubmit={handleSettingsUpdateClick}
+            initialValues={{
+              timezone: rootData.me.timezone,
+              designation: rootData.me.designation,
+              title: rootData.me.title,
+              name: rootData.me.name,
+              givenName: rootData.me.givenName,
+              middleName: rootData.me.middleName,
+              familyName: rootData.me.familyName,
+            }}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+                <TextField label="Designation" name="designation" required={requiredFields.designation} />
+                <TextField label="Title" name="title" required={requiredFields.title} />
+                <TextField label="Name" name="name" required={requiredFields.name} />
+                <TextField label="Given Name" name="givenName" required={requiredFields.givenName} />
+                <TextField label="Middle Name" name="middleName" required={requiredFields.middleName} />
+                <TextField label="Family Name" name="familyName" required={requiredFields.familyName} />
+                <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+
+                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                  <Button color="primary" variant="contained" type="submit">
+                    Update
+                  </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
+                </Stack>
+              </Stack>
+            )}
+          />
+        </Paper>
       )}
     </>
   );

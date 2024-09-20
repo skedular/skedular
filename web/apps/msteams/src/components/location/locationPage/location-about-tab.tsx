@@ -1,6 +1,4 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -134,102 +132,74 @@ const LocationAboutTab = ({ rootDataRelay, organizationId }: Props) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <Stack direction="row" sx={{ justifyContent: 'flex-end' }} spacing={1}>
         {!editing && rootData.location.canModify && (
           <Button size="large" color="primary" onClick={handleEditClick}>
             <EditIcon />
           </Button>
         )}
-      </Box>
+      </Stack>
       {!editing && (
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'left',
-            marginBottom: 1,
-          }}
-        >
-          <Grid>
-            <Stack direction={'row'}>
+        <Stack direction="column" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              About
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {location.about}
+            </Typography>
+          </Stack>
+
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Timezone
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {location.timezone}
+            </Typography>
+          </Stack>
+
+          {location.organization && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <Typography gutterBottom variant="h6">
-                About
+                Organization
               </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {location.about}
+
+              <Typography gutterBottom variant="body1">
+                {location.organization.name}
               </Typography>
             </Stack>
-
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Timezone
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {location.timezone}
-              </Typography>
-            </Stack>
-
-            {location.organization && (
-              <Stack direction={'row'}>
-                <Typography gutterBottom variant="h6">
-                  Organization
-                </Typography>
-
-                <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                  {location.organization.name}
-                </Typography>
-              </Stack>
-            )}
-          </Grid>
-        </Grid>
+          )}
+        </Stack>
       )}
       {editing && (
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 1,
-          }}
-        >
-          <Paper elevation={24} sx={{ padding: 3 }}>
-            <Form
-              onSubmit={handleLocationUpdateClick}
-              initialValues={{
-                name: location.name,
-                about: location.about,
-                timezone: location.timezone,
-              }}
-              validate={validate}
-              render={({ handleSubmit }) => (
-                <Box
-                  component="form"
-                  sx={{
-                    '& > :not(style)': { m: 1 },
-                  }}
-                  autoComplete="off"
-                  noValidate
-                  onSubmit={handleSubmit}
-                >
-                  <TextField label="Name" name="name" required={requiredFields.name} />
-                  <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-                  <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+        <Paper elevation={24} sx={{ padding: 2 }}>
+          <Form
+            onSubmit={handleLocationUpdateClick}
+            initialValues={{
+              name: location.name,
+              about: location.about,
+              timezone: location.timezone,
+            }}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+                <TextField label="Name" name="name" required={requiredFields.name} />
+                <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
+                <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
 
-                  <Stack sx={{ flex: 1, justifyContent: 'flex-end' }} direction="row" spacing={2}>
-                    <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                      Cancel
-                    </Button>
-                    <Button color="primary" variant="contained" type="submit">
-                      Update
-                    </Button>
-                  </Stack>
-                </Box>
-              )}
-            />
-          </Paper>
-        </Grid>
+                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                  <Button color="primary" variant="contained" type="submit">
+                    Update
+                  </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
+                </Stack>
+              </Stack>
+            )}
+          />
+        </Paper>
       )}
     </>
   );

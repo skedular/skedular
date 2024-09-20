@@ -7,6 +7,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
@@ -177,55 +178,49 @@ const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
   return (
     <>
       {rootData.location.canModify && (
-        <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-          <Grid sx={{ marginRight: 1 }}>
-            <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddZoneClick}>
-              Add Zone
-            </Button>
-          </Grid>
-        </Grid>
+        <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddZoneClick}>
+            Add Zone
+          </Button>
+        </Stack>
       )}
 
-      <Grid sx={{ marginTop: 1 }}>
-        <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} />
-          <AccordionDetails>
-            <TextField
-              defaultValue={zoneNameSearchText}
-              helperText="Enter zone name to narrow down the zones list"
-              onChange={(event) => debounceSearchTextChange(event?.target.value)}
-            />
-          </AccordionDetails>
-        </Accordion>
-      </Grid>
+      <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} />
+        <AccordionDetails>
+          <TextField
+            defaultValue={zoneNameSearchText}
+            helperText="Enter zone name to narrow down the zones list"
+            onChange={(event) => debounceSearchTextChange(event?.target.value)}
+          />
+        </AccordionDetails>
+      </Accordion>
 
-      <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid>
-          <TablePagination
-            count={rootData.locationZonesTabPaginatedTags.totalCount ? rootData.locationZonesTabPaginatedTags.totalCount : 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-          />
-        </Grid>
-        <Grid>
-          <Sorting
-            options={[{ id: 'name', label: 'Name' }]}
-            // @ts-expect-error
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
-          />
-        </Grid>
-      </Grid>
-      <Grid container spacing={{ xs: 2, md: 3 }}>
+      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+        <TablePagination
+          count={rootData.locationZonesTabPaginatedTags.totalCount ? rootData.locationZonesTabPaginatedTags.totalCount : 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[{ id: 'name', label: 'Name' }]}
+          // @ts-expect-error
+          defaultOption={sortingOrder.field}
+          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+          onValueChange={handleSortingChanged}
+        />
+      </Stack>
+
+      <Grid container spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <ZoneCard rootDataRelay={rootData} locationTagDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}
       </Grid>
+
       <NewZoneDialog
         connectionIds={connectionIds}
         isDialogOpen={isAddZoneDialogOpen}

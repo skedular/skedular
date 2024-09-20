@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -72,26 +71,26 @@ const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Stack direction="column">
-        <Stack direction="column">
-          <TeamAvatar name={{ name: rootData.team?.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
-          <Typography gutterBottom variant="h6">
-            {rootData.team?.name}
-          </Typography>
-        </Stack>
-        <Tabs value={tabIndex} onChange={handleTabChange}>
-          <Tab label="Bookings" />
-          <Tab label="About" />
-          <Tab label="People" />
-        </Tabs>
-        <Stack direction="column">
-          {tabIndex === 0 && <TeamBookingsTab rootDataRelay={rootData} organizationId={organizationId} teamId={teamId} />}
-          {tabIndex === 1 && <TeamAboutTab rootDataRelay={rootData} organizationId={organizationId} />}
-          {tabIndex === 2 && <TeamPeopleTab rootDataRelay={rootData} organizationId={organizationId} />}
-        </Stack>
+    <Stack direction="column" spacing={1}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <TeamAvatar name={{ name: rootData.team?.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
+        <Typography gutterBottom variant="h6">
+          {rootData.team?.name}
+        </Typography>
       </Stack>
-    </Box>
+
+      <Tabs value={tabIndex} onChange={handleTabChange}>
+        <Tab label="Bookings" />
+        <Tab label="About" />
+        <Tab label="People" />
+      </Tabs>
+
+      <>
+        {tabIndex === 0 && <TeamBookingsTab rootDataRelay={rootData} organizationId={organizationId} teamId={teamId} />}
+        {tabIndex === 1 && <TeamAboutTab rootDataRelay={rootData} organizationId={organizationId} />}
+        {tabIndex === 2 && <TeamPeopleTab rootDataRelay={rootData} organizationId={organizationId} />}
+      </>
+    </Stack>
   );
 };
 

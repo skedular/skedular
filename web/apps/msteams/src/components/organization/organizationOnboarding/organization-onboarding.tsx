@@ -1,6 +1,4 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
@@ -227,69 +225,50 @@ const OrganizationOnboarding = ({ rootDataRelay }: Props) => {
   return (
     <>
       {isOnboardingOpen && (
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 1,
-          }}
-        >
-          <Paper elevation={24} sx={{ padding: 3 }}>
-            <Stepper activeStep={activeStep}>
-              <Step>
-                <StepLabel>Create Organization</StepLabel>
-              </Step>
-            </Stepper>
-            <>
-              {activeStep === 0 && (
-                <Form
-                  onSubmit={handleOrganizationCreateClick}
-                  initialValues={{
-                    name: '',
-                    about: null,
-                    website: null,
-                    agreedToTermsOfUse: false,
-                    industrySubCategoryIds: [],
-                    offeringFlexibilityIds: [],
-                    companyValueIds: [],
-                  }}
-                  validate={validate}
-                  render={({ handleSubmit }) => (
-                    <Box
-                      component="form"
-                      sx={{
-                        '& > :not(style)': { m: 1 },
-                      }}
-                      autoComplete="off"
-                      noValidate
-                      onSubmit={handleSubmit}
-                    >
-                      <TextField label="Name" name="name" required={requiredFields.name} />
-                      <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-                      <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />
-                      <OrganizationMultipleChoicesIndustries
-                        rootDataRelay={rootData}
-                        name="industrySubCategoryIds"
-                        required={requiredFields.industrySubCategoryIds}
-                      />
-                      <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
-                      <Stack sx={{ flex: 1, justifyContent: 'flex-end' }} direction="row" spacing={2}>
-                        <Button color="secondary" variant="contained" onClick={handleDismissClick}>
-                          Dismiss
-                        </Button>
-                        <Button color="primary" variant="contained" type="submit">
-                          Create
-                        </Button>
-                      </Stack>
-                    </Box>
-                  )}
-                />
+        <Paper elevation={24} sx={{ padding: 2 }}>
+          <Stepper activeStep={activeStep}>
+            <Step>
+              <StepLabel>Create Organization</StepLabel>
+            </Step>
+          </Stepper>
+          {activeStep === 0 && (
+            <Form
+              onSubmit={handleOrganizationCreateClick}
+              initialValues={{
+                name: '',
+                about: null,
+                website: null,
+                agreedToTermsOfUse: false,
+                industrySubCategoryIds: [],
+                offeringFlexibilityIds: [],
+                companyValueIds: [],
+              }}
+              validate={validate}
+              render={({ handleSubmit }) => (
+                <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+                  <TextField label="Name" name="name" required={requiredFields.name} />
+                  <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
+                  <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />
+                  <OrganizationMultipleChoicesIndustries
+                    rootDataRelay={rootData}
+                    name="industrySubCategoryIds"
+                    required={requiredFields.industrySubCategoryIds}
+                  />
+                  <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
+
+                  <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                    <Button color="primary" variant="contained" type="submit">
+                      Create
+                    </Button>
+                    <Button color="secondary" variant="contained" onClick={handleDismissClick}>
+                      Dismiss
+                    </Button>
+                  </Stack>
+                </Stack>
               )}
-            </>
-          </Paper>
-        </Grid>
+            />
+          )}
+        </Paper>
       )}
     </>
   );

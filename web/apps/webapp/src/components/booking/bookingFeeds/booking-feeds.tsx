@@ -48,7 +48,7 @@ const BookingFeeds = ({ rootDataRelay }: Props) => {
   const bookings = useMemo(() => rootData.bookings, [rootData.bookings]);
 
   return (
-    <Grid container spacing={{ xs: 2, md: 3 }}>
+    <Grid container spacing={1}>
       {bookings.edges.map((edge) => (
         <Grid key={edge.node.id}>
           <BookingCard

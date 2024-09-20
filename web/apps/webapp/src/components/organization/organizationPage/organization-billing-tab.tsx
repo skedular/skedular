@@ -1,5 +1,4 @@
 import type { organizationBillingTab_query$key } from '@/queries/__generated__/organizationBillingTab_query.graphql';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -23,12 +22,10 @@ const OrganizationBillingTab = ({ rootDataRelay, onRefetchRequired }: Props) => 
   );
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-      <Stack direction="column">
-        <OrganizationBillingInfo rootDataRelay={rootData} />
-        <OrganizationPaymentMethods rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
-      </Stack>
-    </Box>
+    <Stack direction="column" spacing={1}>
+      <OrganizationBillingInfo rootDataRelay={rootData} />
+      <OrganizationPaymentMethods rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
+    </Stack>
   );
 };
 

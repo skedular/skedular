@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ccd284cdc9405980667173fb24584dea>>
+ * @generated SignedSource<<21a5b3f503b20af59feaf8ac756750ea>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,64 +16,83 @@ export type TeamMemberOrderInput = {
   direction: OrderDirection;
   field?: TeamMemberOrderField | null | undefined;
 };
-export type teamBookingsCard_rootQuery$variables = {
+export type teamPeopleBookingsMatrixTeamMembersPaginationQuery$variables = {
+  count?: number | null | undefined;
+  cursor?: string | null | undefined;
   fetchBookingPermission: boolean;
-  from: any;
+  from?: any | null | undefined;
   organizationId: string;
-  peopleNameSearchText: string;
-  peopleSortingValues: ReadonlyArray<TeamMemberOrderInput>;
+  peopleNameSearchText?: string | null | undefined;
+  peopleSortingValues?: ReadonlyArray<TeamMemberOrderInput> | null | undefined;
   teamId: string;
-  to: any;
+  to?: any | null | undefined;
 };
-export type teamBookingsCard_rootQuery$data = {
+export type teamPeopleBookingsMatrixTeamMembersPaginationQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"teamPeopleBookingsMatrix_query">;
 };
-export type teamBookingsCard_rootQuery = {
-  response: teamBookingsCard_rootQuery$data;
-  variables: teamBookingsCard_rootQuery$variables;
+export type teamPeopleBookingsMatrixTeamMembersPaginationQuery = {
+  response: teamPeopleBookingsMatrixTeamMembersPaginationQuery$data;
+  variables: teamPeopleBookingsMatrixTeamMembersPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "fetchBookingPermission"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "from"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationId"
-},
-v3 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "peopleNameSearchText"
-},
-v4 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "peopleSortingValues"
-},
-v5 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "teamId"
-},
-v6 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "to"
-},
-v7 = [
+var v0 = [
   {
-    "kind": "Literal",
+    "defaultValue": 10000,
+    "kind": "LocalArgument",
+    "name": "count"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "fetchBookingPermission"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "from"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "peopleNameSearchText"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "peopleSortingValues"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "teamId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "to"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "cursor"
+  },
+  {
+    "kind": "Variable",
     "name": "first",
-    "value": 10000
+    "variableName": "count"
   },
   {
     "kind": "Variable",
@@ -97,21 +116,21 @@ v7 = [
     "name": "where"
   }
 ],
-v8 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v9 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v10 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -120,21 +139,24 @@ v10 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/),
-      (v3/*: any*/),
-      (v4/*: any*/),
-      (v5/*: any*/),
-      (v6/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "teamBookingsCard_rootQuery",
+    "name": "teamPeopleBookingsMatrixTeamMembersPaginationQuery",
     "selections": [
       {
-        "args": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "count",
+            "variableName": "count"
+          },
+          {
+            "kind": "Variable",
+            "name": "cursor",
+            "variableName": "cursor"
+          }
+        ],
         "kind": "FragmentSpread",
         "name": "teamPeopleBookingsMatrix_query"
       }
@@ -144,21 +166,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v3/*: any*/),
-      (v4/*: any*/),
-      (v0/*: any*/),
-      (v2/*: any*/),
-      (v5/*: any*/),
-      (v1/*: any*/),
-      (v6/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "teamBookingsCard_rootQuery",
+    "name": "teamPeopleBookingsMatrixTeamMembersPaginationQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "TeamMemberConnection",
         "kind": "LinkedField",
         "name": "paginatedTeamMembers",
@@ -212,7 +226,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -221,8 +235,8 @@ return {
                     "name": "customer",
                     "plural": false,
                     "selections": [
-                      (v9/*: any*/),
-                      (v10/*: any*/),
+                      (v3/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -291,7 +305,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v1/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -309,7 +323,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v8/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       },
@@ -380,7 +394,7 @@ return {
         "name": "allBookings",
         "plural": true,
         "selections": [
-          (v8/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -396,7 +410,7 @@ return {
             "name": "customer",
             "plural": false,
             "selections": [
-              (v9/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -408,7 +422,7 @@ return {
             "name": "location",
             "plural": false,
             "selections": [
-              (v10/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
@@ -420,7 +434,7 @@ return {
             "name": "desks",
             "plural": true,
             "selections": [
-              (v10/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -429,8 +443,8 @@ return {
                 "name": "locationTags",
                 "plural": true,
                 "selections": [
-                  (v9/*: any*/),
-                  (v10/*: any*/),
+                  (v3/*: any*/),
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -450,16 +464,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e36fd403cf42c4755e71df1d4e014c39",
+    "cacheID": "c7c4c9f01e41c01028df63df6640ee7d",
     "id": null,
     "metadata": {},
-    "name": "teamBookingsCard_rootQuery",
+    "name": "teamPeopleBookingsMatrixTeamMembersPaginationQuery",
     "operationKind": "query",
-    "text": "query teamBookingsCard_rootQuery(\n  $peopleNameSearchText: String!\n  $peopleSortingValues: [TeamMemberOrderInput!]!\n  $fetchBookingPermission: Boolean!\n  $organizationId: String!\n  $teamId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...teamPeopleBookingsMatrix_query\n}\n\nfragment teamPeopleBookingsMatrix_query on Query {\n  paginatedTeamMembers(first: 10000, where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    totalCount\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n  }\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {\n    canAddBookingOnBehalf\n  }\n  allBookings(where: {teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query teamPeopleBookingsMatrixTeamMembersPaginationQuery(\n  $count: Int = 10000\n  $cursor: String\n  $fetchBookingPermission: Boolean!\n  $from: DateTime\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [TeamMemberOrderInput!]\n  $teamId: String!\n  $to: DateTime\n) {\n  ...teamPeopleBookingsMatrix_query_1G22uz\n}\n\nfragment teamPeopleBookingsMatrix_query_1G22uz on Query {\n  paginatedTeamMembers(first: $count, after: $cursor, where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    totalCount\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n  }\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {\n    canAddBookingOnBehalf\n  }\n  allBookings(where: {teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3e670ba7bb40dbfdd7c4c032d556cb23";
+(node as any).hash = "3acf7b838882eb8a948ebd27c0936475";
 
 export default node;

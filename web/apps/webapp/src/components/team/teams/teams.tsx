@@ -7,6 +7,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
@@ -145,59 +146,49 @@ const Teams = ({ rootDataRelay }: Props) => {
   };
 
   return (
-    <>
-      <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-        <Grid>
-          <Link href="/team/add">
-            <Button variant="contained" startIcon={<AddIcon />}>
-              Add Team
-            </Button>
-          </Link>
-        </Grid>
-      </Grid>
+    <Stack direction="column" spacing={1}>
+      <Link href="/team/add">
+        <Button variant="contained" startIcon={<AddIcon />}>
+          Add Team
+        </Button>
+      </Link>
 
-      <Grid sx={{ marginTop: 1 }}>
-        <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} />
-          <AccordionDetails>
-            <TextField
-              defaultValue={teamNameSearchText}
-              helperText="Enter team name to narrow down the teams list"
-              onChange={(event) => debounceSearchTextChange(event?.target.value)}
-            />
-          </AccordionDetails>
-        </Accordion>
-      </Grid>
-
-      <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid>
-          <TablePagination
-            count={teams?.totalCount ? teams.totalCount : 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
+      <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} />
+        <AccordionDetails>
+          <TextField
+            defaultValue={teamNameSearchText}
+            helperText="Enter team name to narrow down the teams list"
+            onChange={(event) => debounceSearchTextChange(event?.target.value)}
           />
-        </Grid>
-        <Grid>
-          <Sorting
-            options={[{ id: 'name', label: 'Name' }]}
-            // @ts-expect-error
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
-          />
-        </Grid>
-      </Grid>
+        </AccordionDetails>
+      </Accordion>
 
-      <Grid container spacing={{ xs: 2, md: 3 }}>
+      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+        <TablePagination
+          count={teams?.totalCount ? teams.totalCount : 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[{ id: 'name', label: 'Name' }]}
+          // @ts-expect-error
+          defaultOption={sortingOrder.field}
+          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+          onValueChange={handleSortingChanged}
+        />
+      </Stack>
+
+      <Grid container spacing={2}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <TeamCard rootDataRelay={rootData} teamDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}
       </Grid>
-    </>
+    </Stack>
   );
 };
 

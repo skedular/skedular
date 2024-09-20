@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -47,25 +46,18 @@ const OrganizationPaymentMethodSetupForm = ({ onCancelClick }: Props) => {
     <Form
       onSubmit={handleAddClick}
       render={({ handleSubmit }) => (
-        <Box
-          component="form"
-          sx={{
-            '& > :not(style)': { m: 1 },
-          }}
-          autoComplete="off"
-          noValidate
-          onSubmit={handleSubmit}
-        >
+        <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
           <PaymentElement id="payment-element" />
-          <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-            <Button color="secondary" variant="contained" onClick={handleCancelClick} disabled={isAdding || !stripe || !elements}>
-              Cancel
-            </Button>
+
+          <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
             <Button color="primary" variant="contained" type="submit" disabled={isAdding || !stripe || !elements}>
               Add
             </Button>
+            <Button color="secondary" variant="contained" onClick={handleCancelClick} disabled={isAdding || !stripe || !elements}>
+              Cancel
+            </Button>
           </Stack>
-        </Box>
+        </Stack>
       )}
     />
   );

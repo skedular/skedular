@@ -1,11 +1,11 @@
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Container from '@mui/material/Container';
+import CardHeader from '@mui/material/CardHeader';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
@@ -94,60 +94,52 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onRefetchRequired }: Pr
   };
 
   return (
-    <Container>
+    <>
       <Typography variant="h6">Available offerings</Typography>
       {!availableOfferingExist && <Typography variant="h6">No offering is available</Typography>}
       {availableOfferingExist && (
         <>
           {rootData.organization?.availableOfferings?.map(({ code, name, unitPrice, featureSet }) => {
             return (
-              <Paper
-                elevation={12}
-                sx={{
-                  minWidth: 500,
-                  maxWidth: 500,
-                }}
-                key={code}
-              >
-                <Card
-                  sx={{
-                    minWidth: 500,
-                    maxWidth: 500,
-                  }}
-                >
-                  <CardContent
-                    sx={{
-                      margin: '5px',
-                    }}
-                  >
-                    <Typography variant="body1">{name}</Typography>
-                    <Typography variant="body1">{`Unit price: $${(unitPrice / 100).toFixed(2)}`}</Typography>
-                    <List sx={{ listStyleType: 'disc' }}>
-                      Feature set:
-                      {featureSet.map(({ name, description }, index) => (
-                        <ListItem key={index} sx={{ display: 'list-item' }}>
-                          <ListItemText>{`${name}: ${description}`}</ListItemText>
-                        </ListItem>
-                      ))}
-                    </List>
-                    {!rootData.organization?.hasAttachedPaymentMethod && (
-                      <Typography variant="body1">
-                        You need to have payment method setup in order to upgrade to this offering. Please setup payment method under Billing tab.
-                      </Typography>
-                    )}
-                    {rootData.organization?.hasAttachedPaymentMethod && (
-                      <Button color="primary" variant="contained" onClick={() => handleUpgradeClick(code)}>
-                        Upgrade
-                      </Button>
-                    )}
-                  </CardContent>
-                </Card>
-              </Paper>
+              <Card elevation={24} sx={{ maxWidth: 500, height: '100%' }} key={code}>
+                <CardHeader
+                  title={
+                    <>
+                      <Typography variant="body1">{name}</Typography>
+                      <Typography variant="body1">{`Unit price: $${(unitPrice / 100).toFixed(2)}`}</Typography>
+                    </>
+                  }
+                />
+
+                <CardContent sx={{ marginLeft: 1 }}>
+                  <List sx={{ listStyleType: 'disc' }}>
+                    Feature set:
+                    {featureSet.map(({ name, description }, index) => (
+                      <ListItem key={index} sx={{ display: 'list-item' }}>
+                        <ListItemText>{`${name}: ${description}`}</ListItemText>
+                      </ListItem>
+                    ))}
+                  </List>
+                  {!rootData.organization?.hasAttachedPaymentMethod && (
+                    <Typography variant="body1">
+                      You need to have payment method setup in order to upgrade to this offering. Please setup payment method under Billing tab.
+                    </Typography>
+                  )}
+                </CardContent>
+
+                {rootData.organization?.hasAttachedPaymentMethod && (
+                  <CardActions sx={{ justifyContent: 'flex-end' }}>
+                    <Button color="primary" variant="contained" onClick={() => handleUpgradeClick(code)}>
+                      Upgrade
+                    </Button>
+                  </CardActions>
+                )}
+              </Card>
             );
           })}
         </>
       )}
-    </Container>
+    </>
   );
 };
 

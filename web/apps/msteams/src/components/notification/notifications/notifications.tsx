@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import graphql from 'babel-plugin-relay/macro';
@@ -113,35 +114,32 @@ const Notifications = ({ rootDataRelay }: Props) => {
   };
 
   return (
-    <>
-      <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid>
-          <TablePagination
-            count={myNotifications?.totalCount ? myNotifications.totalCount : 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-          />
-        </Grid>
-        <Grid>
-          <Sorting
-            options={[{ id: 'eventRaisedAt', label: 'Date' }]}
-            // @ts-expect-error
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
-          />
-        </Grid>
-      </Grid>
-      <Grid container spacing={{ xs: 2, md: 3 }}>
+    <Stack direction="column" spacing={1}>
+      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+        <TablePagination
+          count={myNotifications?.totalCount ? myNotifications.totalCount : 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[{ id: 'eventRaisedAt', label: 'Date' }]}
+          // @ts-expect-error
+          defaultOption={sortingOrder.field}
+          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+          onValueChange={handleSortingChanged}
+        />
+      </Stack>
+
+      <Grid container spacing={2}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <NotificationCard notificationDetailsRelay={edge.node} />
           </Grid>
         ))}
       </Grid>
-    </>
+    </Stack>
   );
 };
 

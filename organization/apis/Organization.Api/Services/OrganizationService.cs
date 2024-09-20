@@ -320,9 +320,21 @@ public class OrganizationService(
                 repositoryFactory.OrganizationRepository.UnitOfWork,
                 cancellationToken);
 
+        var industrySubCategoryIds = organization.IndustrySubCategories.Select(item => item.Id).ToList();
+        var industrySubCategoryEntities = industrySubCategoryIds.Count == 0
+            ? []
+            : await repositoryFactory.IndustrySubCategoryRepository
+                .Query(new Specification<IndustrySubCategory>
+                    {
+                        Criteria = query => !query.DeletedAt.HasValue && industrySubCategoryIds.Contains(query.Id)
+                    }
+                    .AddInclude(query => query.IndustryMainCategory))
+                .ToListAsync(cancellationToken);
+
         organization =
             mapper.MapTo(
-                repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization)));
+                repositoryFactory.OrganizationRepository.Update(
+                    mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)));
 
         await organizationOutboxPublisher.PublishOrganizationAsync(
             [organization],

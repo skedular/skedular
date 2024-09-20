@@ -1,6 +1,5 @@
 import type { locationAnalyticsPaginationQuery } from '@/queries/__generated__/locationAnalyticsPaginationQuery.graphql';
 import type { locationAnalyticsTab_query$key } from '@/queries/__generated__/locationAnalyticsTab_query.graphql';
-import Grid from '@mui/material/Grid2';
 import { axisClasses } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
@@ -112,11 +111,7 @@ const LocationAnalyticsTab = ({ rootDataRelay, locationId }: Props) => {
 
   return (
     <>
-      <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid>
-          <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
-        </Grid>
-      </Grid>
+      <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
       <BarChart
         dataset={deskOccupancyPercentageDataset}
         xAxis={[{ scaleType: 'band', dataKey: 'date' }]}

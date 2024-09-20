@@ -5,11 +5,10 @@ import type { zoneCard_addCustomerDefaultLocationTagMutation } from '@/queries/_
 import type { zoneCard_deleteLocationMutation } from '@/queries/__generated__/zoneCard_deleteLocationMutation.graphql';
 import type { zoneCard_removeCustomerDefaultLocationTagMutation } from '@/queries/__generated__/zoneCard_removeCustomerDefaultLocationTagMutation.graphql';
 import type { zoneCard_updateZoneMutation } from '@/queries/__generated__/zoneCard_updateZoneMutation.graphql';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -303,59 +302,42 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
   return (
     <>
       {!editing && (
-        <Paper
-          elevation={24}
-          sx={{
-            minWidth: 300,
-            maxWidth: 300,
-          }}
-        >
-          <Card
-            sx={{
-              minWidth: 300,
-              maxWidth: 300,
-            }}
-          >
-            <CardContent>
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
+        <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
+          <CardHeader
+            title={
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <ZoneIcon />
                 <Typography gutterBottom variant="body1">
                   {locationTagDetails.name}
                 </Typography>
               </Stack>
-            </CardContent>
+            }
+          />
 
-            <CardActions>
-              {rootData.location.canModify && (
-                <Tooltip title={'Edit zone details'}>
-                  <Button size="small" color="primary" onClick={handleEditClick}>
-                    <EditIcon />
-                  </Button>
-                </Tooltip>
-              )}
-              {rootData.location.canModify && (
-                <Tooltip title={'Delete zone'}>
-                  <Button size="small" color="warning" onClick={handleDeleteClick}>
-                    <DeleteIcon />
-                  </Button>
-                </Tooltip>
-              )}
-              <Tooltip title={isPreferredZone ? 'Remove preferred zone' : 'Set as preferred zone'}>
-                <Switch checked={isPreferredZone} onChange={handleDefaultLocationTagStateChange} />
+          <CardActions sx={{ justifyContent: 'flex-end' }}>
+            {rootData.location.canModify && (
+              <Tooltip title={'Edit zone details'}>
+                <Button size="small" color="primary" onClick={handleEditClick}>
+                  <EditIcon />
+                </Button>
               </Tooltip>
-            </CardActions>
-          </Card>
-        </Paper>
+            )}
+            {rootData.location.canModify && (
+              <Tooltip title={'Delete zone'}>
+                <Button size="small" color="warning" onClick={handleDeleteClick}>
+                  <DeleteIcon />
+                </Button>
+              </Tooltip>
+            )}
+            <Tooltip title={isPreferredZone ? 'Remove preferred zone' : 'Set as preferred zone'}>
+              <Switch checked={isPreferredZone} onChange={handleDefaultLocationTagStateChange} />
+            </Tooltip>
+          </CardActions>
+        </Card>
       )}
 
       {editing && (
-        <Paper
-          elevation={24}
-          sx={{
-            minWidth: 300,
-            maxWidth: 600,
-          }}
-        >
+        <Paper elevation={24} sx={{ padding: 2 }}>
           <Form
             onSubmit={handleSaveClick}
             initialValues={{
@@ -363,26 +345,19 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Box
-                component="form"
-                sx={{
-                  '& > :not(style)': { m: 1 },
-                }}
-                autoComplete="off"
-                noValidate
-                onSubmit={handleSubmit}
-              >
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
                 <ZoneName name="name" required={requiredFields.name} />
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
+
+                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
                   <Button color="primary" variant="contained" type="submit">
                     Save
                   </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
                 </Stack>
                 <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
-              </Box>
+              </Stack>
             )}
           />
         </Paper>
@@ -396,11 +371,11 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
           >{`Are you sure you want to remove this zone "${locationTagDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingZoneClick}>
-              Cancel
-            </Button>
             <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingZoneClick}>
               Remove
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingZoneClick}>
+              Cancel
             </Button>
           </DialogActions>
         </DialogContent>

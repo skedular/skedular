@@ -1,5 +1,3 @@
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import graphql from 'babel-plugin-relay/macro';
 import { memo } from 'react';
@@ -31,18 +29,12 @@ const OrganizationOfferingTab = ({ rootDataRelay, onRefetchRequired }: Props) =>
   );
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-      <Stack direction="column">
-        <Container sx={{ marginBottom: '5px' }}>
-          <OrganizationOffering rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
-        </Container>
-        {rootData.organization?.availableOfferings && rootData.organization?.availableOfferings.length > 0 && (
-          <Container sx={{ marginTop: '5px', marginBottom: '5px' }}>
-            <OrganizationAvailableOfferings rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
-          </Container>
-        )}
-      </Stack>
-    </Box>
+    <Stack direction="column" spacing={1}>
+      <OrganizationOffering rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
+      {rootData.organization?.availableOfferings && rootData.organization?.availableOfferings.length > 0 && (
+        <OrganizationAvailableOfferings rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
+      )}
+    </Stack>
   );
 };
 

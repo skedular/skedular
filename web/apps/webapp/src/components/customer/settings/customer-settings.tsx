@@ -1,5 +1,4 @@
 import type { customerSettingsPage_query$key } from '@/queries/__generated__/customerSettingsPage_query.graphql';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -64,28 +63,28 @@ const CustomerSettings = ({ rootDataRelay }: Props) => {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Stack direction="column">
-        <Stack direction="column">
-          <CustomerAvatar
-            name={{
-              name: rootData.me.name,
-              givenName: rootData.me.givenName,
-              middleName: rootData.me.middleName,
-              familyName: rootData.me.familyName,
-            }}
-            photo={{
-              url: rootData.me.photoUrl,
-            }}
-            sx={{ marginBottom: 1 }}
-          />
-        </Stack>
-        <Tabs value={tabIndex} onChange={handleTabChange}>
-          <Tab label="Personal" />
-        </Tabs>
-        <Stack direction="column">{tabIndex === 0 && <CustomerSettingsPersonalTab rootDataRelay={rootData} />}</Stack>
+    <Stack direction="column" spacing={1}>
+      <Stack direction="column" spacing={1}>
+        <CustomerAvatar
+          name={{
+            name: rootData.me.name,
+            givenName: rootData.me.givenName,
+            middleName: rootData.me.middleName,
+            familyName: rootData.me.familyName,
+          }}
+          photo={{
+            url: rootData.me.photoUrl,
+          }}
+          sx={{ marginBottom: 1 }}
+        />
       </Stack>
-    </Box>
+      <Tabs value={tabIndex} onChange={handleTabChange}>
+        <Tab label="Personal" />
+      </Tabs>
+      <Stack direction="column" spacing={1}>
+        {tabIndex === 0 && <CustomerSettingsPersonalTab rootDataRelay={rootData} />}
+      </Stack>
+    </Stack>
   );
 };
 

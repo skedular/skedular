@@ -2,20 +2,20 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { LocationAvatar } from '@repo/shared/components/avatars';
-import { AboutIcon, DangerIcon, DeleteIcon, DeskIcon, EditIcon, LocationIcon, OrganizationIcon, ViewIcon } from '@repo/shared/components/icons';
+import { AboutIcon, DangerIcon, DeleteIcon, DeskIcon, EditIcon, OrganizationIcon, ViewIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -233,88 +233,77 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
 
   return (
     <>
-      <Paper
-        elevation={24}
-        sx={{
-          minWidth: 350,
-          maxWidth: 350,
-        }}
-      >
-        <Card
-          sx={{
-            minWidth: 350,
-            maxWidth: 350,
-          }}
-        >
-          <CardContent>
-            <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
+      <Card elevation={24} sx={{ minWidth: 350, height: '100%' }}>
+        <CardHeader
+          title={
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <LocationAvatar name={{ name: locationDetails.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
-            </Stack>
 
-            {locationDetails.name && (
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <LocationIcon />
+              {locationDetails.name && (
                 <Typography gutterBottom variant="h5" noWrap={true}>
                   {locationDetails.name}
                 </Typography>
-              </Stack>
-            )}
+              )}
+            </Stack>
+          }
+        />
 
-            {locationDetails.about && (
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <AboutIcon />
-                <Typography gutterBottom variant="body1" noWrap={true}>
-                  {locationDetails.about}
-                </Typography>
-              </Stack>
-            )}
-
-            {locationDetails.organization && (
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <OrganizationIcon />
-                <Typography gutterBottom variant="body1" noWrap={true}>
-                  {locationDetails.organization.name}
-                </Typography>
-              </Stack>
-            )}
-
-            <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-              <DeskIcon />
+        <CardContent>
+          {locationDetails.about && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <AboutIcon />
               <Typography gutterBottom variant="body1" noWrap={true}>
-                {locationDetails.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${locationDetails.deskCapacity}`}
+                {locationDetails.about}
               </Typography>
             </Stack>
-          </CardContent>
+          )}
 
-          <CardActions>
-            <Tooltip title={locationDetails.canModify ? 'Edit location details' : 'View location details'}>
-              <Link
-                href={
-                  locationDetails.organization
-                    ? `/organization/${locationDetails.organization.uniqueId}/location/${locationDetails.id}`
-                    : `/location/${locationDetails.id}`
-                }
-              >
-                <Button size="small" color="primary">
-                  {locationDetails.canModify ? <EditIcon /> : <ViewIcon />}
-                </Button>
-              </Link>
+          {locationDetails.organization && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <OrganizationIcon />
+              <Typography gutterBottom variant="body1" noWrap={true}>
+                {locationDetails.organization.name}
+              </Typography>
+            </Stack>
+          )}
+
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <DeskIcon />
+            <Typography gutterBottom variant="body1" noWrap={true}>
+              {locationDetails.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${locationDetails.deskCapacity}`}
+            </Typography>
+          </Stack>
+        </CardContent>
+
+        <CardActions sx={{ justifyContent: 'flex-end' }}>
+          <Tooltip title={locationDetails.canModify ? 'Edit location details' : 'View location details'}>
+            <Link
+              href={
+                locationDetails.organization
+                  ? `/organization/${locationDetails.organization.uniqueId}/location/${locationDetails.id}`
+                  : `/location/${locationDetails.id}`
+              }
+            >
+              <Button size="small" color="primary">
+                {locationDetails.canModify ? <EditIcon /> : <ViewIcon />}
+              </Button>
+            </Link>
+          </Tooltip>
+
+          {locationDetails.canDelete && (
+            <Tooltip title={'Delete location'}>
+              <Button size="small" color="warning" onClick={handleDeleteClick}>
+                <DeleteIcon />
+              </Button>
             </Tooltip>
+          )}
 
-            {locationDetails.canDelete && (
-              <Tooltip title={'Delete location'}>
-                <Button size="small" color="warning" onClick={handleDeleteClick}>
-                  <DeleteIcon />
-                </Button>
-              </Tooltip>
-            )}
+          <Tooltip title={isPreferredLocation ? 'Remove preferred location' : 'Set as preferred location'}>
+            <Switch checked={isPreferredLocation} onChange={handleDefaultLocationStateChange} />
+          </Tooltip>
+        </CardActions>
+      </Card>
 
-            <Tooltip title={isPreferredLocation ? 'Remove preferred location' : 'Set as preferred location'}>
-              <Switch checked={isPreferredLocation} onChange={handleDefaultLocationStateChange} />
-            </Tooltip>
-          </CardActions>
-        </Card>
-      </Paper>
       <Dialog fullWidth={true} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
         <DialogTitle color={theme.palette.warning.main}>Remove location</DialogTitle>
         <DialogContent>
@@ -325,11 +314,11 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
           </DialogContentText>
 
           <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingLocationClick}>
-              Cancel
-            </Button>
             <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingLocationClick}>
               Remove
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingLocationClick}>
+              Cancel
             </Button>
           </DialogActions>
         </DialogContent>

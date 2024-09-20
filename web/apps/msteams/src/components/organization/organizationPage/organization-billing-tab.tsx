@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import graphql from 'babel-plugin-relay/macro';
 import { memo } from 'react';
@@ -24,12 +23,10 @@ const OrganizationBillingTab = ({ rootDataRelay, onRefetchRequired }: Props) => 
   );
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-      <Stack direction="column">
-        <OrganizationBillingInfo rootDataRelay={rootData} />
-        <OrganizationPaymentMethods rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
-      </Stack>
-    </Box>
+    <Stack direction="column" spacing={1}>
+      <OrganizationBillingInfo rootDataRelay={rootData} />
+      <OrganizationPaymentMethods rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
+    </Stack>
   );
 };
 

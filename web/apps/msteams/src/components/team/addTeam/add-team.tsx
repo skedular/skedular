@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -127,62 +126,43 @@ const AddTeam = ({ rootDataRelay, organizationId }: Props) => {
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        '& > :not(style)': {
-          m: 1,
-        },
-        maxWidth: 600,
-      }}
-    >
-      <Paper elevation={24} sx={{ padding: 3 }}>
-        <Form
-          onSubmit={handleTeamCreateClick}
-          initialValues={{
-            name: '',
-            about: null,
-            organizationMemberIds: [],
-          }}
-          validate={validate}
-          render={({ handleSubmit }) => (
-            <Box
-              component="form"
-              sx={{
-                '& > :not(style)': { m: 1 },
-              }}
-              autoComplete="off"
-              noValidate
-              onSubmit={handleSubmit}
-            >
-              <TextField label="Name" name="name" required={requiredFields.name} />
-              <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-              <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+    <Paper elevation={24} sx={{ padding: 2 }}>
+      <Form
+        onSubmit={handleTeamCreateClick}
+        initialValues={{
+          name: '',
+          about: null,
+          organizationMemberIds: [],
+        }}
+        validate={validate}
+        render={({ handleSubmit }) => (
+          <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+            <TextField label="Name" name="name" required={requiredFields.name} />
+            <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
+            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
 
-              {organizationId && (
-                <OrganizationMemberSelector
-                  rootDataRelay={rootData}
-                  name="organizationMemberIds"
-                  required={requiredFields.organizationMemberIds}
-                  multiple={true}
-                  useMemberId={true}
-                />
-              )}
+            {organizationId && (
+              <OrganizationMemberSelector
+                rootDataRelay={rootData}
+                name="organizationMemberIds"
+                required={requiredFields.organizationMemberIds}
+                multiple={true}
+                useMemberId={true}
+              />
+            )}
 
-              <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-                <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                  Cancel
-                </Button>
-                <Button color="primary" variant="contained" type="submit">
-                  Create
-                </Button>
-              </Stack>
-            </Box>
-          )}
-        />
-      </Paper>
-    </Box>
+            <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+              <Button color="primary" variant="contained" type="submit">
+                Create
+              </Button>
+              <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                Cancel
+              </Button>
+            </Stack>
+          </Stack>
+        )}
+      />
+    </Paper>
   );
 };
 

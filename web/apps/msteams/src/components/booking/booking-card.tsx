@@ -1,8 +1,8 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
@@ -538,22 +538,10 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
   return (
     <>
       {!editing && (
-        <Paper
-          elevation={24}
-          sx={{
-            minWidth: 500,
-            minHeight: 300,
-            textAlign: 'center',
-          }}
-        >
-          <Card
-            sx={{
-              minWidth: 500,
-              minHeight: 300,
-            }}
-          >
-            <CardContent>
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
+        <Card elevation={24} sx={{ minWidth: 400, height: '100%' }}>
+          <CardHeader
+            title={
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <CustomerAvatar
                   name={{
                     name: bookingDetails.customer?.name,
@@ -569,78 +557,82 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                   {shortDateFormatFrom}
                 </Typography>
               </Stack>
+            }
+          />
 
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <CustomerIcon />
-                <Typography gutterBottom variant="h6" component="div">
-                  {getCustomerFullName(bookingDetails.customer)}
+          <CardContent>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <CustomerIcon />
+              <Typography gutterBottom variant="h6" component="div">
+                {getCustomerFullName(bookingDetails.customer)}
+              </Typography>
+            </Stack>
+
+            {bookingDetails.notes && (
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <NotesIcon />
+                <Typography gutterBottom variant="body1" component="div">
+                  {bookingDetails.notes}
                 </Typography>
               </Stack>
+            )}
 
-              {bookingDetails.notes && (
-                <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                  <NotesIcon />
+            {bookingDetails.organization && (
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <OrganizationIcon />
+                <Typography gutterBottom variant="body1" component="div">
+                  {bookingDetails.organization.name}
+                </Typography>
+              </Stack>
+            )}
+
+            {bookingDetails.location && (
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <LocationIcon />
+                <Typography gutterBottom variant="body1" component="div">
+                  {bookingDetails.location.name}
+                </Typography>
+              </Stack>
+            )}
+
+            {bookingDetails.team && (
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <TeamIcon />
+                <Typography gutterBottom variant="body1" component="div">
+                  {bookingDetails.team.name}
+                </Typography>
+              </Stack>
+            )}
+
+            {bookingDetails.desks?.map(({ uniqueId, name, locationTags }) => {
+              const zones = locationTags.filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
+
+              return (
+                <Stack key={uniqueId} direction="row" spacing={2} sx={{ marginBottom: 1 }}>
+                  <DeskIcon />
                   <Typography gutterBottom variant="body1" component="div">
-                    {bookingDetails.notes}
+                    {name}
                   </Typography>
-                </Stack>
-              )}
-
-              {bookingDetails.organization && (
-                <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                  <OrganizationIcon />
-                  <Typography gutterBottom variant="body1" component="div">
-                    {bookingDetails.organization.name}
-                  </Typography>
-                </Stack>
-              )}
-
-              {bookingDetails.location && (
-                <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                  <LocationIcon />
-                  <Typography gutterBottom variant="body1" component="div">
-                    {bookingDetails.location.name}
-                  </Typography>
-                </Stack>
-              )}
-
-              {bookingDetails.team && (
-                <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                  <TeamIcon />
-                  <Typography gutterBottom variant="body1" component="div">
-                    {bookingDetails.team.name}
-                  </Typography>
-                </Stack>
-              )}
-
-              {bookingDetails.desks?.map(({ uniqueId, name, locationTags }) => {
-                const zones = locationTags.filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
-
-                return (
-                  <Stack key={uniqueId} direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                    <DeskIcon />
-                    <Typography gutterBottom variant="body1" component="div">
-                      {name}
-                    </Typography>
-                    {isMyBooking && (
-                      <Switch
-                        checked={!!rootData.me?.preferredDesks.find((desk) => desk.uniqueId === uniqueId)}
-                        onChange={(event) => handleDefaultDeskStateChange(event, uniqueId, name)}
-                      />
-                    )}
-
-                    <ZonesLine
-                      zones={zones.map(({ uniqueId, name }) => ({
-                        id: uniqueId,
-                        name,
-                      }))}
+                  {isMyBooking && (
+                    <Switch
+                      checked={!!rootData.me?.preferredDesks.find((desk) => desk.uniqueId === uniqueId)}
+                      onChange={(event) => handleDefaultDeskStateChange(event, uniqueId, name)}
                     />
-                  </Stack>
-                );
-              })}
-            </CardContent>
+                  )}
 
-            <CardActions>
+                  <ZonesLine
+                    zones={zones.map(({ uniqueId, name }) => ({
+                      id: uniqueId,
+                      name,
+                    }))}
+                  />
+                </Stack>
+              );
+            })}
+          </CardContent>
+
+          {(canUpdateBooking || canDeleteBooking || canJoinBooking) && (
+            <CardActions sx={{ justifyContent: 'flex-end' }}>
               {canUpdateBooking && (
                 <Button size="small" color="primary" onClick={handleEditClick}>
                   <EditIcon />
@@ -659,18 +651,12 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                 </Button>
               )}
             </CardActions>
-          </Card>
-        </Paper>
+          )}
+        </Card>
       )}
+
       {canUpdateBooking && editing && (
-        <Paper
-          elevation={24}
-          sx={{
-            minWidth: 300,
-            maxWidth: 600,
-            textAlign: 'center',
-          }}
-        >
+        <Paper elevation={24} sx={{ padding: 2 }}>
           <Form
             onSubmit={handleSaveClick}
             initialValues={{
@@ -686,15 +672,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
               setFrom(values.date);
 
               return (
-                <Box
-                  component="form"
-                  sx={{
-                    '& > :not(style)': { m: 1 },
-                  }}
-                  autoComplete="off"
-                  noValidate
-                  onSubmit={handleSubmit}
-                >
+                <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
                   <BookingDate name="date" required={requiredFields.date} />
                   <BookingNotes name="notes" required={requiredFields.notes} />
                   <BookingDetailsSelector
@@ -718,16 +696,16 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                     bookingTo={to}
                   />
 
-                  <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-                    <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                      Cancel
-                    </Button>
+                  <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
                     <Button color="primary" variant="contained" type="submit">
                       Save
                     </Button>
+                    <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                      Cancel
+                    </Button>
                   </Stack>
                   <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
-                </Box>
+                </Stack>
               );
             }}
           />

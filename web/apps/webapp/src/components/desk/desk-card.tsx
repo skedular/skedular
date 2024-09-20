@@ -7,7 +7,6 @@ import type { deskCard_removeCustomerDefaultDeskMutation } from '@/queries/__gen
 import type { deskCard_updateDeskMutation } from '@/queries/__generated__/deskCard_updateDeskMutation.graphql';
 import type { deskMultipleChoicesZones_query$key } from '@/queries/__generated__/deskMultipleChoicesZones_query.graphql';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -637,100 +636,82 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
   return (
     <>
       {!editing && (
-        <Paper
-          elevation={24}
-          sx={{
-            minWidth: 320,
-            minHeight: 200,
-          }}
-        >
-          <Card
-            sx={{
-              minWidth: 320,
-              minHeight: 200,
-            }}
-          >
-            {moreActionsOption.length > 0 && (
-              <CardHeader
-                action={
-                  <IconButton onClick={handleMoreActionsMenuClick}>
-                    <MoreVertIcon />
-                  </IconButton>
-                }
-              />
-            )}
+        <Card elevation={24} sx={{ minWidth: 320, height: '100%' }}>
+          {moreActionsOption.length > 0 && (
+            <CardHeader
+              title={
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <DeskIcon />
+                  <Typography gutterBottom variant="body1">
+                    {deskDetails.name}
+                  </Typography>
+                </Stack>
+              }
+              action={
+                <IconButton onClick={handleMoreActionsMenuClick}>
+                  <MoreVertIcon />
+                </IconButton>
+              }
+            />
+          )}
 
-            <CardContent>
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <DeskIcon />
+          <CardContent>
+            <ZonesLine zones={deskDetails.locationTags} />
+
+            {extraInfo.length > 0 && (
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <InfoIcon />
                 <Typography gutterBottom variant="body1">
-                  {deskDetails.name}
+                  {extraInfo.join(', ')}
                 </Typography>
               </Stack>
+            )}
 
-              <ZonesLine zones={deskDetails.locationTags} />
+            {customerDetails && (
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <CustomerAvatar
+                  name={{
+                    name: null,
+                    givenName: customerDetails.givenName,
+                    middleName: customerDetails.middleName,
+                    familyName: customerDetails.familyName,
+                  }}
+                  photo={{
+                    url: customerDetails.photoUrl,
+                  }}
+                />
+                <Typography gutterBottom variant="body1">
+                  {getCustomerFullName(customerDetails)}
+                </Typography>
+              </Stack>
+            )}
+          </CardContent>
 
-              {extraInfo.length > 0 && (
-                <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                  <InfoIcon />
-                  <Typography gutterBottom variant="body1">
-                    {extraInfo.join(', ')}
-                  </Typography>
-                </Stack>
-              )}
-
-              {customerDetails && (
-                <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                  <CustomerAvatar
-                    name={{
-                      name: null,
-                      givenName: customerDetails.givenName,
-                      middleName: customerDetails.middleName,
-                      familyName: customerDetails.familyName,
-                    }}
-                    photo={{
-                      url: customerDetails.photoUrl,
-                    }}
-                  />
-                  <Typography gutterBottom variant="body1">
-                    {getCustomerFullName(customerDetails)}
-                  </Typography>
-                </Stack>
-              )}
-            </CardContent>
-
-            <CardActions>
-              {rootData.location.canModify && (
-                <Tooltip title={'Edit desk details'}>
-                  <Button size="small" color="primary" onClick={handleEditClick}>
-                    <EditIcon />
-                  </Button>
-                </Tooltip>
-              )}
-
-              {rootData.location.canModify && (
-                <Tooltip title={'Delete desk'}>
-                  <Button size="small" color="warning" onClick={handleDeleteConfirmationDialogClick}>
-                    <DeleteIcon />
-                  </Button>
-                </Tooltip>
-              )}
-
-              <Tooltip title={isPreferredDesk ? 'Remove preferred desk' : 'Set as preferred desk'}>
-                <Switch checked={isPreferredDesk} onChange={handleDefaultDeskStateChange} />
+          <CardActions sx={{ justifyContent: 'flex-end' }}>
+            {rootData.location.canModify && (
+              <Tooltip title={'Edit desk details'}>
+                <Button size="small" color="primary" onClick={handleEditClick}>
+                  <EditIcon />
+                </Button>
               </Tooltip>
-            </CardActions>
-          </Card>
-        </Paper>
+            )}
+
+            {rootData.location.canModify && (
+              <Tooltip title={'Delete desk'}>
+                <Button size="small" color="warning" onClick={handleDeleteConfirmationDialogClick}>
+                  <DeleteIcon />
+                </Button>
+              </Tooltip>
+            )}
+
+            <Tooltip title={isPreferredDesk ? 'Remove preferred desk' : 'Set as preferred desk'}>
+              <Switch checked={isPreferredDesk} onChange={handleDefaultDeskStateChange} />
+            </Tooltip>
+          </CardActions>
+        </Card>
       )}
       {editing && (
-        <Paper
-          elevation={24}
-          sx={{
-            minWidth: 300,
-            maxWidth: 600,
-          }}
-        >
+        <Paper elevation={24} sx={{ padding: 2 }}>
           <Form
             onSubmit={handleSaveClick}
             initialValues={{
@@ -739,31 +720,24 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Box
-                component="form"
-                sx={{
-                  '& > :not(style)': { m: 1 },
-                }}
-                autoComplete="off"
-                noValidate
-                onSubmit={handleSubmit}
-              >
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
                 <DeskName name="name" required={requiredFields.name} />
                 <DeskMultipleChoicesZones
                   rootDataRelay={deskMultipleChoicesZonesData}
                   name="locationTagIds"
                   required={requiredFields.locationTagIds}
                 />
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
+
+                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
                   <Button color="primary" variant="contained" type="submit">
                     Save
                   </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
                 </Stack>
                 <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
-              </Box>
+              </Stack>
             )}
           />
         </Paper>
@@ -783,11 +757,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           <DialogContentText color={theme.palette.warning.main}>{`Are you sure you want to remove desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingDeskClick}>
-              Cancel
-            </Button>
             <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskClick}>
               Remove
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingDeskClick}>
+              Cancel
             </Button>
           </DialogActions>
         </DialogContent>
@@ -798,11 +772,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           <DialogContentText color={theme.palette.info.main}>{`Are you sure you want to deactivate desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelDeactivateDeskClick}>
-              Cancel
-            </Button>
             <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmDeactivatingDeskClick}>
               Deactivate
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelDeactivateDeskClick}>
+              Cancel
             </Button>
           </DialogActions>
         </DialogContent>
@@ -813,11 +787,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           <DialogContentText color={theme.palette.info.main}>{`Are you sure you want to activate desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelActivateDeskClick}>
-              Cancel
-            </Button>
             <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmActivatingDeskClick}>
               Activate
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelActivateDeskClick}>
+              Cancel
             </Button>
           </DialogActions>
         </DialogContent>
@@ -830,11 +804,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           >{`Are you sure you want to enable approval for desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelSetDeskApprovalRequirementClick}>
-              Cancel
-            </Button>
             <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleSetDeskApprovalRequirementClick}>
               Enable
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelSetDeskApprovalRequirementClick}>
+              Cancel
             </Button>
           </DialogActions>
         </DialogContent>
@@ -852,11 +826,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           >{`Are you sure you want to remove approval for desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemoveDeskApprovalRequirementDeskClick}>
-              Cancel
-            </Button>
             <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemoveDeskApprovalRequirementDeskClick}>
               Remove
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelRemoveDeskApprovalRequirementDeskClick}>
+              Cancel
             </Button>
           </DialogActions>
         </DialogContent>

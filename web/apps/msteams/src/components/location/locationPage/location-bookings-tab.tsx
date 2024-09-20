@@ -4,6 +4,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
@@ -188,34 +189,27 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
 
   return (
     <>
-      <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-        <Grid sx={{ marginRight: 1 }}>
+      <Stack direction="column" spacing={1}>
+        <Stack direction="row" sx={{ width: 'auto' }}>
           <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddBookingClick}>
             Add Booking
           </Button>
-        </Grid>
-      </Grid>
+        </Stack>
 
-      <Grid sx={{ marginTop: 1 }}>
-        <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
+        <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             {!pageContextOpen && <Typography>{`From ${toShortDate(selectedFromDate)} until ${toShortDate(selectedUntilDate)}`}</Typography>}
           </AccordionSummary>
           <AccordionDetails>
-            <Grid container sx={{ justifyContent: 'flex-start' }}>
-              <DateRangePicker
-                localeText={{ start: 'From', end: 'To' }}
-                defaultValue={[selectedFromDate, selectedUntilDate]}
-                onChange={(dateRangeValue) => handleSelectedDateChange(dateRangeValue[0], dateRangeValue[1])}
-              />
-              <Grid sx={{ margin: 1 }} />
-            </Grid>
+            <DateRangePicker
+              localeText={{ start: 'From', end: 'To' }}
+              defaultValue={[selectedFromDate, selectedUntilDate]}
+              onChange={(dateRangeValue) => handleSelectedDateChange(dateRangeValue[0], dateRangeValue[1])}
+            />
           </AccordionDetails>
         </Accordion>
-      </Grid>
 
-      <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid>
+        <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
           <TablePagination
             count={rootData.bookings.totalCount ? rootData.bookings.totalCount : 0}
             page={page}
@@ -223,8 +217,6 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
             rowsPerPage={pageSize}
             onRowsPerPageChange={handlePageSizeChange}
           />
-        </Grid>
-        <Grid>
           <Sorting
             options={[
               { id: 'from', label: 'Booking date' },
@@ -240,36 +232,38 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
+        </Stack>
+
+        <Grid container spacing={1}>
+          {bookings.map((booking) => {
+            const canJoinBooking =
+              booking.customer.uniqueId === rootData.me?.id
+                ? false
+                : !!!bookings
+                    .filter((otherBooking) => otherBooking.customer.uniqueId === rootData.me?.id)
+                    .find((myBooking) => {
+                      const from = dayjs(booking.from);
+                      const myFrom = dayjs(myBooking.from);
+
+                      return from.year() === myFrom.year() && from.month() === myFrom.month() && from.date() === myFrom.date();
+                    });
+
+            return (
+              <Grid key={booking.id}>
+                <BookingCard
+                  rootDataRelay={rootData}
+                  bookingDetailsRelay={booking}
+                  connectionIds={connectionIds}
+                  hideOrganizationControl={true}
+                  hideLocationControl={true}
+                  canJoinBooking={canJoinBooking}
+                />
+              </Grid>
+            );
+          })}
         </Grid>
-      </Grid>
-      <Grid container spacing={{ xs: 2, md: 3 }}>
-        {bookings.map((booking) => {
-          const canJoinBooking =
-            booking.customer.uniqueId === rootData.me?.id
-              ? false
-              : !!!bookings
-                  .filter((otherBooking) => otherBooking.customer.uniqueId === rootData.me?.id)
-                  .find((myBooking) => {
-                    const from = dayjs(booking.from);
-                    const myFrom = dayjs(myBooking.from);
+      </Stack>
 
-                    return from.year() === myFrom.year() && from.month() === myFrom.month() && from.date() === myFrom.date();
-                  });
-
-          return (
-            <Grid key={booking.id}>
-              <BookingCard
-                rootDataRelay={rootData}
-                bookingDetailsRelay={booking}
-                connectionIds={connectionIds}
-                hideOrganizationControl={true}
-                hideLocationControl={true}
-                canJoinBooking={canJoinBooking}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
       <NewBookingDialog
         rootDataRelay={rootData}
         connectionIds={connectionIds}

@@ -2,7 +2,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,6 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import MUITextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
@@ -354,61 +354,51 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
   return (
     <>
       {!organizationId && (
-        <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-          <Grid>
-            <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-              Invite People
-            </Button>
-          </Grid>
-        </Grid>
+        <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
+            Invite People
+          </Button>
+        </Stack>
       )}
 
-      <Grid sx={{ marginTop: 1 }}>
-        <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} />
-          <AccordionDetails>
-            <MUITextField
-              defaultValue={peopleNameSearchText}
-              helperText="Enter name to narrow down the people list"
-              onChange={(event) => debounceSearchTextChange(event?.target.value)}
-            />
-          </AccordionDetails>
-        </Accordion>
-      </Grid>
-
-      <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid>
-          <TablePagination
-            count={count}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
+      <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} />
+        <AccordionDetails>
+          <MUITextField
+            defaultValue={peopleNameSearchText}
+            helperText="Enter name to narrow down the people list"
+            onChange={(event) => debounceSearchTextChange(event?.target.value)}
           />
-        </Grid>
-        <Grid>
-          <Sorting
-            options={[
-              { id: 'name', label: 'Name' },
-              { id: 'givenName', label: 'Given name' },
-              { id: 'middleName', label: 'Middle name' },
-              { id: 'familyName', label: 'Family Name' },
-              { id: 'membershipType', label: 'Membership type' },
-              { id: 'createdAt', label: 'Join date' },
-            ]}
-            // @ts-expect-error
-            defaultOption={organizationId ? sortingCustomerOrder.field : sortingLocationMemberOrder.field}
-            defaultSortingDirectionValue={
-              organizationId
-                ? (sortingCustomerOrder.direction as unknown as Direction)
-                : (sortingLocationMemberOrder.direction as unknown as Direction)
-            }
-            onValueChange={handleSortingChanged}
-          />
-        </Grid>
-      </Grid>
+        </AccordionDetails>
+      </Accordion>
 
-      <Grid container spacing={{ xs: 2, md: 3 }}>
+      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+        <TablePagination
+          count={count}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[
+            { id: 'name', label: 'Name' },
+            { id: 'givenName', label: 'Given name' },
+            { id: 'middleName', label: 'Middle name' },
+            { id: 'familyName', label: 'Family Name' },
+            { id: 'membershipType', label: 'Membership type' },
+            { id: 'createdAt', label: 'Join date' },
+          ]}
+          // @ts-expect-error
+          defaultOption={organizationId ? sortingCustomerOrder.field : sortingLocationMemberOrder.field}
+          defaultSortingDirectionValue={
+            organizationId ? (sortingCustomerOrder.direction as unknown as Direction) : (sortingLocationMemberOrder.direction as unknown as Direction)
+          }
+          onValueChange={handleSortingChanged}
+        />
+      </Stack>
+
+      <Grid container spacing={1}>
         {organizationId &&
           slicedOrganizationMemberEdges &&
           slicedOrganizationMemberEdges.map((edge) => (
@@ -436,15 +426,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
             }}
             validate={validateMembersToInvite}
             render={({ handleSubmit }) => (
-              <Box
-                component="form"
-                sx={{
-                  '& > :not(style)': { m: 1 },
-                }}
-                autoComplete="off"
-                noValidate
-                onSubmit={handleSubmit}
-              >
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
                 <TextField
                   label="Emails"
                   name="emails"
@@ -453,14 +435,14 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
                   helperText="member1@example.com,member2@example.com"
                 />
                 <DialogActions>
-                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
-                    Cancel
-                  </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Invite
                   </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
+                    Cancel
+                  </Button>
                 </DialogActions>
-              </Box>
+              </Stack>
             )}
           />
         </DialogContent>

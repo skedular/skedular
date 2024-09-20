@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -92,34 +91,34 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Stack direction="column">
-        <Stack direction="column">
-          <LocationAvatar name={{ name: rootData.location?.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
-          <Typography gutterBottom variant="h6">
-            {rootData.location?.name}
-          </Typography>
-        </Stack>
-        <Tabs value={tabIndex} onChange={handleTabChange}>
-          <Tab label="Bookings" />
-          <Tab label="About" />
-          <Tab label="People" />
-          <Tab label="Zones" />
-          <Tab label="Desks" />
-          {rootData.location.canViewAnalytics && <Tab label="Analytics" />}
-        </Tabs>
-        <Stack direction="column">
-          {tabIndex === 0 && <LocationBookingsTab rootDataRelay={rootData} organizationId={organizationId} locationId={locationId} />}
-          {tabIndex === 1 && <LocationAboutTab rootDataRelay={rootData} organizationId={organizationId} />}
-          {tabIndex === 2 && (
-            <LocationPeopleTab rootDataLocationMembersRelay={rootData} rootDataOrganizationMembersRelay={rootData} organizationId={organizationId} />
-          )}
-          {tabIndex === 3 && <LocationZonesTab rootDataRelay={rootData} locationId={locationId} />}
-          {tabIndex === 4 && <LocationDesksTab rootDataRelay={rootData} locationId={locationId} />}
-          {tabIndex === 5 && rootData.location.canViewAnalytics && <LocationAnalyticsTab rootDataRelay={rootData} locationId={locationId} />}
-        </Stack>
+    <Stack direction="column" spacing={1}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <LocationAvatar name={{ name: rootData.location?.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
+        <Typography gutterBottom variant="h6">
+          {rootData.location?.name}
+        </Typography>
       </Stack>
-    </Box>
+
+      <Tabs value={tabIndex} onChange={handleTabChange}>
+        <Tab label="Bookings" />
+        <Tab label="About" />
+        <Tab label="People" />
+        <Tab label="Zones" />
+        <Tab label="Desks" />
+        {rootData.location.canViewAnalytics && <Tab label="Analytics" />}
+      </Tabs>
+
+      <>
+        {tabIndex === 0 && <LocationBookingsTab rootDataRelay={rootData} organizationId={organizationId} locationId={locationId} />}
+        {tabIndex === 1 && <LocationAboutTab rootDataRelay={rootData} organizationId={organizationId} />}
+        {tabIndex === 2 && (
+          <LocationPeopleTab rootDataLocationMembersRelay={rootData} rootDataOrganizationMembersRelay={rootData} organizationId={organizationId} />
+        )}
+        {tabIndex === 3 && <LocationZonesTab rootDataRelay={rootData} locationId={locationId} />}
+        {tabIndex === 4 && <LocationDesksTab rootDataRelay={rootData} locationId={locationId} />}
+        {tabIndex === 5 && rootData.location.canViewAnalytics && <LocationAnalyticsTab rootDataRelay={rootData} locationId={locationId} />}
+      </>
+    </Stack>
   );
 };
 

@@ -2,7 +2,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,6 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import MUITextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
@@ -256,18 +256,16 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      {rootData.organization.canInvitePeople && (
-        <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-          <Grid>
+      <Stack direction="column" spacing={1}>
+        {rootData.organization.canInvitePeople && (
+          <Stack direction="row" sx={{ width: 'auto' }}>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
               Invite People
             </Button>
-          </Grid>
-        </Grid>
-      )}
+          </Stack>
+        )}
 
-      <Grid sx={{ marginTop: 1 }}>
-        <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
+        <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} />
           <AccordionDetails>
             <MUITextField
@@ -277,10 +275,8 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
             />
           </AccordionDetails>
         </Accordion>
-      </Grid>
 
-      <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid>
+        <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
           <TablePagination
             count={rootData.paginatedOrganizationMembers.totalCount ? rootData.paginatedOrganizationMembers.totalCount : 0}
             page={page}
@@ -288,8 +284,6 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
             rowsPerPage={pageSize}
             onRowsPerPageChange={handlePageSizeChange}
           />
-        </Grid>
-        <Grid>
           <Sorting
             options={[
               { id: 'name', label: 'Name' },
@@ -304,16 +298,16 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Grid>
-      </Grid>
+        </Stack>
 
-      <Grid container spacing={{ xs: 2, md: 3 }}>
-        {slicedEdges.map((edge) => (
-          <Grid key={edge.node.id}>
-            <OrganizationMemberCard data={rootData} organizationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
-          </Grid>
-        ))}
-      </Grid>
+        <Grid container spacing={1}>
+          {slicedEdges.map((edge) => (
+            <Grid key={edge.node.id}>
+              <OrganizationMemberCard data={rootData} organizationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
+            </Grid>
+          ))}
+        </Grid>
+      </Stack>
 
       <Dialog fullWidth={true} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
         <DialogTitle>Invite people to join your organization</DialogTitle>
@@ -327,15 +321,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Box
-                component="form"
-                sx={{
-                  '& > :not(style)': { m: 1 },
-                }}
-                autoComplete="off"
-                noValidate
-                onSubmit={handleSubmit}
-              >
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
                 <TextField
                   label="Emails"
                   name="emails"
@@ -345,14 +331,14 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
                 />
 
                 <DialogActions>
-                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
-                    Cancel
-                  </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Invite
                   </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
+                    Cancel
+                  </Button>
                 </DialogActions>
-              </Box>
+              </Stack>
             )}
           />
         </DialogContent>

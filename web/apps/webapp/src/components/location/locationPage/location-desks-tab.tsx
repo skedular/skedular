@@ -7,6 +7,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -228,66 +229,57 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
   return (
     <>
       {rootData.location.canModify && (
-        <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-          <Grid sx={{ marginRight: 1 }}>
-            <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddDeskClick}>
-              Add Desk
-            </Button>
-          </Grid>
-          <Grid sx={{ marginRight: 1 }}>
-            <Button variant="contained" startIcon={<AddIcon />} onClick={handleBulkAddDeskClick}>
-              Bulk Add Desk
-            </Button>
-          </Grid>
-        </Grid>
+        <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddDeskClick}>
+            Add Desk
+          </Button>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={handleBulkAddDeskClick}>
+            Bulk Add Desk
+          </Button>
+        </Stack>
       )}
 
-      <Grid sx={{ marginTop: 1 }}>
-        <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            {!pageContextOpen && <Typography>{toShortDate(selectedDate)}</Typography>}
-          </AccordionSummary>
-          <AccordionDetails>
-            <StaticDatePicker
-              slots={{
-                toolbar: EmptyCalendarToolbar,
-              }}
-              // @ts-expect-error
-              slotProps={SimpleCalendarSlotProps}
-              // @ts-expect-error
-              defaultValue={selectedDate}
-              onChange={handleSelectedDateChange}
-            />
-            <TextField
-              defaultValue={deskNameSearchText}
-              helperText="Enter desk or zone name to narrow down the desks list"
-              onChange={(event) => debounceSearchTextChange(event?.target.value)}
-            />
-          </AccordionDetails>
-        </Accordion>
-      </Grid>
-
-      <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid>
-          <TablePagination
-            count={rootData.paginatedLocationDesks.totalCount ? rootData.paginatedLocationDesks.totalCount : 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-          />
-        </Grid>
-        <Grid>
-          <Sorting
-            options={[{ id: 'name', label: 'Name' }]}
+      <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          {!pageContextOpen && <Typography>{toShortDate(selectedDate)}</Typography>}
+        </AccordionSummary>
+        <AccordionDetails>
+          <StaticDatePicker
+            slots={{
+              toolbar: EmptyCalendarToolbar,
+            }}
             // @ts-expect-error
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
+            slotProps={SimpleCalendarSlotProps}
+            // @ts-expect-error
+            defaultValue={selectedDate}
+            onChange={handleSelectedDateChange}
           />
-        </Grid>
-      </Grid>
-      <Grid container spacing={{ xs: 2, md: 3 }}>
+          <TextField
+            defaultValue={deskNameSearchText}
+            helperText="Enter desk or zone name to narrow down the desks list"
+            onChange={(event) => debounceSearchTextChange(event?.target.value)}
+          />
+        </AccordionDetails>
+      </Accordion>
+
+      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+        <TablePagination
+          count={rootData.paginatedLocationDesks.totalCount ? rootData.paginatedLocationDesks.totalCount : 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[{ id: 'name', label: 'Name' }]}
+          // @ts-expect-error
+          defaultOption={sortingOrder.field}
+          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+          onValueChange={handleSortingChanged}
+        />
+      </Stack>
+
+      <Grid container spacing={1}>
         {slicedEdges.map((edge) => {
           const foundBooking = rootData.allBookings.find((booking) => booking.desks.find(({ uniqueId }) => uniqueId === edge.node.id));
 
@@ -304,6 +296,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
           );
         })}
       </Grid>
+
       <NewDeskDialog
         rootDataRelay={rootData}
         connectionIds={connectionIds}
@@ -312,6 +305,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
         onCancelClicked={handleAddDeskDialogCancelClick}
         locationId={locationId}
       />
+
       <BulkNewDeskDialog
         rootDataRelay={rootData}
         connectionIds={connectionIds}

@@ -4,13 +4,12 @@ import type { teamMemberCard_updateTeamMutation } from '@/queries/__generated__/
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
@@ -162,27 +161,17 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
       },
     });
   };
+
   if (!customer || !rootData.team) {
     return <></>;
   }
 
   return (
     <>
-      <Paper
-        elevation={24}
-        sx={{
-          minWidth: 300,
-          maxWidth: 300,
-        }}
-      >
-        <Card
-          sx={{
-            minWidth: 300,
-            maxWidth: 300,
-          }}
-        >
-          <CardContent>
-            <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
+      <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
+        <CardHeader
+          title={
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <CustomerAvatar
                 name={{
                   name: customer.name,
@@ -194,24 +183,21 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
                   url: customer.photoUrl,
                 }}
               />
-            </Stack>
-
-            <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
               <Typography gutterBottom variant="body1">
                 {getCustomerFullName(customer)}
               </Typography>
             </Stack>
+          }
+        />
 
-            <CardActions>
-              {rootData.team.canModify && (
-                <Button size="small" color="warning" onClick={handleDeleteClick}>
-                  <DeleteIcon />
-                </Button>
-              )}
-            </CardActions>
-          </CardContent>
-        </Card>
-      </Paper>
+        {rootData.team.canModify && (
+          <CardActions sx={{ justifyContent: 'flex-end' }}>
+            <Button size="small" color="warning" onClick={handleDeleteClick}>
+              <DeleteIcon />
+            </Button>
+          </CardActions>
+        )}
+      </Card>
 
       <Dialog fullWidth={true} open={teamMemberRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamMemberClick}>
         <DialogTitle color={theme.palette.warning.main}>Remove desk</DialogTitle>
@@ -221,11 +207,11 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
           >{`Are you sure you want to remove "${getCustomerFullName(customer)}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamMemberClick}>
-              Cancel
-            </Button>
             <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskClick}>
               Remove
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamMemberClick}>
+              Cancel
             </Button>
           </DialogActions>
         </DialogContent>

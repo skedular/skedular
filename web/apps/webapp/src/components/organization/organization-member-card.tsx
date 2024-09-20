@@ -5,11 +5,11 @@ import type {
   organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation,
 } from '@/queries/__generated__/organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation.graphql';
 import type { organizationSingleChoiceMembershipType_query$key } from '@/queries/__generated__/organizationSingleChoiceMembershipType_query.graphql';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -120,68 +120,52 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     });
   };
 
+  const avatar = (
+    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+      <CustomerAvatar
+        name={{
+          name: organizationMemberDetails.customer?.name,
+          givenName: organizationMemberDetails.customer?.givenName,
+          middleName: organizationMemberDetails.customer?.middleName,
+          familyName: organizationMemberDetails.customer?.familyName,
+        }}
+        photo={{
+          url: organizationMemberDetails.customer?.photoUrl,
+        }}
+        showFullName
+      />
+      <Typography gutterBottom variant="body1">
+        {getCustomerFullName(organizationMemberDetails.customer)}
+      </Typography>
+    </Stack>
+  );
+
   return (
     <>
       {!editing && (
-        <Paper
-          elevation={24}
-          sx={{
-            minWidth: 300,
-            maxWidth: 300,
-          }}
-        >
-          <Card
-            sx={{
-              minWidth: 300,
-              maxWidth: 300,
-            }}
-          >
-            <CardContent>
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <CustomerAvatar
-                  name={{
-                    name: organizationMemberDetails.customer?.name,
-                    givenName: organizationMemberDetails.customer?.givenName,
-                    middleName: organizationMemberDetails.customer?.middleName,
-                    familyName: organizationMemberDetails.customer?.familyName,
-                  }}
-                  photo={{
-                    url: organizationMemberDetails.customer?.photoUrl,
-                  }}
-                />
-              </Stack>
+        <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
+          <CardHeader title={<>{avatar}</>} />
 
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <Typography gutterBottom variant="body1">
-                  {getCustomerFullName(organizationMemberDetails.customer)}
-                </Typography>
-              </Stack>
-
+          <CardContent>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               {organizationMemberDetails.membershipType && (
-                <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                  <Typography gutterBottom variant="body1">
-                    {convertStringToLowercaseExceptFirstLetter(organizationMemberDetails.membershipType)}
-                  </Typography>
-                </Stack>
+                <Typography gutterBottom variant="body1">
+                  {convertStringToLowercaseExceptFirstLetter(organizationMemberDetails.membershipType)}
+                </Typography>
               )}
+            </Stack>
 
-              <CardActions>
-                <Button size="small" color="primary" onClick={handleEditClick}>
-                  <EditIcon />
-                </Button>
-              </CardActions>
-            </CardContent>
-          </Card>
-        </Paper>
+            <CardActions sx={{ justifyContent: 'flex-end' }}>
+              <Button size="small" color="primary" onClick={handleEditClick}>
+                <EditIcon />
+              </Button>
+            </CardActions>
+          </CardContent>
+        </Card>
       )}
+
       {editing && (
-        <Paper
-          elevation={24}
-          sx={{
-            minWidth: 300,
-            maxWidth: 300,
-          }}
-        >
+        <Paper elevation={24} sx={{ padding: 2 }}>
           <Form
             onSubmit={handleSaveClick}
             initialValues={{
@@ -189,29 +173,20 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Box
-                component="form"
-                sx={{
-                  '& > :not(style)': { m: 1 },
-                }}
-                autoComplete="off"
-                noValidate
-                onSubmit={handleSubmit}
-              >
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+                {avatar}
 
                 <OrganizationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />
 
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
+                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
                   <Button color="primary" variant="contained" type="submit">
                     Save
                   </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
                 </Stack>
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
-              </Box>
+              </Stack>
             )}
           />
         </Paper>

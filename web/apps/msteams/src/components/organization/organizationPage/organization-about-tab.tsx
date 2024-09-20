@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid2';
@@ -158,116 +157,89 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <Stack direction="row" sx={{ justifyContent: 'flex-end' }} spacing={1}>
         {!editing && rootData.organization.canModify && (
           <Button size="small" color="primary" onClick={handleEditClick}>
             <EditIcon />
           </Button>
         )}
-      </Box>
+      </Stack>
       {!editing && (
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'left',
-            marginBottom: 1,
-          }}
-        >
-          <Grid>
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                About
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {organization.about}
-              </Typography>
-            </Stack>
+        <Stack direction="column" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              About
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {organization.about}
+            </Typography>
+          </Stack>
 
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Website
-              </Typography>
-              {organization.website && (
-                <MuiLink href={organization?.website} target="_blank" rel="noopener noreferrer">
-                  {organization.website}
-                </MuiLink>
-              )}
-            </Stack>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Website
+            </Typography>
+            {organization.website && (
+              <MuiLink href={organization?.website} target="_blank" rel="noopener noreferrer">
+                {organization.website}
+              </MuiLink>
+            )}
+          </Stack>
 
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Industry
-              </Typography>
-              <Grid sx={{ marginLeft: 1 }}>
-                {organization.industrySubCategories.map(({ id, name }) => (
-                  <Tooltip key={id} title={name}>
-                    <Chip
-                      label={name}
-                      sx={{
-                        marginRight: 1,
-                        maxWidth: maxChipTextWidthToDisplay,
-                      }}
-                    />
-                  </Tooltip>
-                ))}
-              </Grid>
-            </Stack>
-          </Grid>
-        </Grid>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Industry
+            </Typography>
+            <Grid sx={{ marginLeft: 1 }}>
+              {organization.industrySubCategories.map(({ id, name }) => (
+                <Tooltip key={id} title={name}>
+                  <Chip
+                    label={name}
+                    sx={{
+                      marginRight: 1,
+                      maxWidth: maxChipTextWidthToDisplay,
+                    }}
+                  />
+                </Tooltip>
+              ))}
+            </Grid>
+          </Stack>
+        </Stack>
       )}
       {editing && (
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 1,
-          }}
-        >
-          <Paper elevation={24} sx={{ padding: 3 }}>
-            <Form
-              onSubmit={handleUpdateClick}
-              initialValues={{
-                name: organization.name,
-                about: organization.about,
-                website: organization.website,
-                industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
-              }}
-              validate={validate}
-              render={({ handleSubmit }) => (
-                <Box
-                  component="form"
-                  sx={{
-                    '& > :not(style)': { m: 1 },
-                  }}
-                  autoComplete="off"
-                  noValidate
-                  onSubmit={handleSubmit}
-                >
-                  <TextField label="Name" name="name" required={requiredFields.name} />
-                  <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-                  <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />
-                  <OrganizationMultipleChoicesIndustries
-                    rootDataRelay={rootData}
-                    name="industrySubCategoryIds"
-                    required={requiredFields.industrySubCategoryIds}
-                  />
-                  <Stack sx={{ flex: 1, justifyContent: 'flex-end' }} direction="row" spacing={2}>
-                    <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                      Cancel
-                    </Button>
-                    <Button color="primary" variant="contained" type="submit">
-                      Update
-                    </Button>
-                  </Stack>
-                </Box>
-              )}
-            />
-          </Paper>
-        </Grid>
+        <Paper elevation={24} sx={{ padding: 2 }}>
+          <Form
+            onSubmit={handleUpdateClick}
+            initialValues={{
+              name: organization.name,
+              about: organization.about,
+              website: organization.website,
+              industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
+            }}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+                <TextField label="Name" name="name" required={requiredFields.name} />
+                <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
+                <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />
+                <OrganizationMultipleChoicesIndustries
+                  rootDataRelay={rootData}
+                  name="industrySubCategoryIds"
+                  required={requiredFields.industrySubCategoryIds}
+                />
+
+                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                  <Button color="primary" variant="contained" type="submit">
+                    Update
+                  </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
+                </Stack>
+              </Stack>
+            )}
+          />
+        </Paper>
       )}
     </>
   );

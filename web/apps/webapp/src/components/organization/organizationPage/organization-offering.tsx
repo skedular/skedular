@@ -2,12 +2,12 @@ import type { organizationOffering_cancelOrganizationOfferingMutation } from '@/
 import type { organizationOffering_query$key } from '@/queries/__generated__/organizationOffering_query.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Container from '@mui/material/Container';
+import CardHeader from '@mui/material/CardHeader';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
@@ -97,52 +97,44 @@ const OrganizationOffering = ({ rootDataRelay, onRefetchRequired }: Props) => {
   }
 
   return (
-    <Container>
+    <>
       <Typography variant="h6" gutterBottom>
         Active offering
       </Typography>
+      <Card elevation={24} sx={{ maxWidth: 500, height: '100%' }}>
+        <CardHeader
+          title={
+            <>
+              <Typography gutterBottom variant="body1">
+                {offering.name}
+              </Typography>
+              <Typography gutterBottom variant="body1">
+                {`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`}
+              </Typography>
+            </>
+          }
+        />
 
-      <Paper
-        elevation={12}
-        sx={{
-          minWidth: 500,
-          maxWidth: 500,
-        }}
-      >
-        <Card
-          sx={{
-            minWidth: 500,
-            maxWidth: 500,
-          }}
-        >
-          <CardContent
-            sx={{
-              margin: '5px',
-            }}
-          >
-            <Typography gutterBottom variant="body1">
-              {offering.name}
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`}
-            </Typography>
-            <List sx={{ listStyleType: 'disc' }}>
-              Feature set:
-              {offering.featureSet.map(({ name, description }, index) => (
-                <ListItem key={index} sx={{ display: 'list-item' }}>
-                  <ListItemText>{`${name}: ${description}`}</ListItemText>
-                </ListItem>
-              ))}
-            </List>
-            {offering.unitPrice > 0 && (
-              <Button color="primary" variant="contained" onClick={() => handleCancelClick()}>
+        <CardContent sx={{ marginLeft: 1 }}>
+          <List sx={{ listStyleType: 'disc' }}>
+            Feature set:
+            {offering.featureSet.map(({ name, description }, index) => (
+              <ListItem key={index} sx={{ display: 'list-item' }}>
+                <ListItemText>{`${name}: ${description}`}</ListItemText>
+              </ListItem>
+            ))}
+          </List>
+
+          {offering.unitPrice > 0 && (
+            <CardActions sx={{ justifyContent: 'flex-end' }}>
+              <Button color="secondary" variant="contained" onClick={() => handleCancelClick()}>
                 Cancel
               </Button>
-            )}
-          </CardContent>
-        </Card>
-      </Paper>
-    </Container>
+            </CardActions>
+          )}
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

@@ -1,9 +1,9 @@
 import { BookingDate, BookingDetailsSelector, BookingNotes } from '@/components/booking';
 import type { newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
 import type { newBookingDialog_query$key } from '@/queries/__generated__/newBookingDialog_query.graphql';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
@@ -197,15 +197,7 @@ const NewBookingDialog = ({
             setFrom(values.date);
 
             return (
-              <Box
-                component="form"
-                sx={{
-                  '& > :not(style)': { m: 1 },
-                }}
-                autoComplete="off"
-                noValidate
-                onSubmit={handleSubmit}
-              >
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
                 <BookingDate name="date" required={requiredFields.date} />
                 <BookingNotes name="notes" required={requiredFields.notes} />
                 <BookingDetailsSelector
@@ -229,15 +221,15 @@ const NewBookingDialog = ({
                   bookingTo={to}
                 />
 
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-                  <Button color="secondary" variant="contained" onClick={onCancelClicked}>
-                    Cancel
-                  </Button>
+                <DialogActions>
                   <Button color="primary" variant="contained" type="submit">
                     Add
                   </Button>
-                </Stack>
-              </Box>
+                  <Button color="secondary" variant="contained" onClick={onCancelClicked}>
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </Stack>
             );
           }}
         />

@@ -1,6 +1,5 @@
 import type { organizationPageQuery } from '@/queries/__generated__/organizationPageQuery.graphql';
 import type { organizationPage_query$key } from '@/queries/__generated__/organizationPage_query.graphql';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -129,41 +128,38 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Stack direction="column">
-        <Stack direction="column">
-          <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} sx={{ marginBottom: 1 }} />
-          <Typography gutterBottom variant="h6">
-            {rootData.organization?.name}
-          </Typography>
-        </Stack>
-        <Tabs value={tabIndex} onChange={handleTabChange}>
-          <Tab label="Bookings" />
-          <Tab label="About" />
-          <Tab label="People" />
-          <Tab label="Locations" />
-          <Tab label="Teams" />
-          {rootData.organization.canModify && <Tab label="Offering" />}
-          {rootData.organization.canModify && <Tab label="Billing" />}
-          {rootData.organization.canViewAnalytics && <Tab label="Analytics" />}
-        </Tabs>
-
-        <Stack direction="column">
-          {tabIndex === 0 && <OrganizationBookingsTab rootDataRelay={rootData} organizationId={organizationId} />}
-          {tabIndex === 1 && <OrganizationAboutTab rootDataRelay={rootData} />}
-          {tabIndex === 2 && <OrganizationPeopleTab rootDataRelay={rootData} />}
-          {tabIndex === 3 && <OrganizationLocationsTab rootDataRelay={rootData} />}
-          {tabIndex === 4 && <OrganizationTeamsTab rootDataRelay={rootData} />}
-          {tabIndex === 5 && rootData.organization.canModify && (
-            <OrganizationOfferingTab rootDataRelay={rootData} onRefetchRequired={handleRefetch} />
-          )}
-          {tabIndex === 6 && rootData.organization.canModify && <OrganizationBillingTab rootDataRelay={rootData} onRefetchRequired={handleRefetch} />}
-          {tabIndex === 7 && rootData.organization.canViewAnalytics && (
-            <OrganizationAnalyticsTab rootDataRelay={rootData} organizationId={organizationId} />
-          )}
-        </Stack>
+    <Stack direction="column" spacing={1}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} sx={{ marginBottom: 1 }} />
+        <Typography gutterBottom variant="h6">
+          {rootData.organization?.name}
+        </Typography>
       </Stack>
-    </Box>
+
+      <Tabs value={tabIndex} onChange={handleTabChange}>
+        <Tab label="Bookings" />
+        <Tab label="About" />
+        <Tab label="People" />
+        <Tab label="Locations" />
+        <Tab label="Teams" />
+        {rootData.organization.canModify && <Tab label="Offering" />}
+        {rootData.organization.canModify && <Tab label="Billing" />}
+        {rootData.organization.canViewAnalytics && <Tab label="Analytics" />}
+      </Tabs>
+
+      <>
+        {tabIndex === 0 && <OrganizationBookingsTab rootDataRelay={rootData} organizationId={organizationId} />}
+        {tabIndex === 1 && <OrganizationAboutTab rootDataRelay={rootData} />}
+        {tabIndex === 2 && <OrganizationPeopleTab rootDataRelay={rootData} />}
+        {tabIndex === 3 && <OrganizationLocationsTab rootDataRelay={rootData} />}
+        {tabIndex === 4 && <OrganizationTeamsTab rootDataRelay={rootData} />}
+        {tabIndex === 5 && rootData.organization.canModify && <OrganizationOfferingTab rootDataRelay={rootData} onRefetchRequired={handleRefetch} />}
+        {tabIndex === 6 && rootData.organization.canModify && <OrganizationBillingTab rootDataRelay={rootData} onRefetchRequired={handleRefetch} />}
+        {tabIndex === 7 && rootData.organization.canViewAnalytics && (
+          <OrganizationAnalyticsTab rootDataRelay={rootData} organizationId={organizationId} />
+        )}
+      </>
+    </Stack>
   );
 };
 

@@ -5,6 +5,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
@@ -150,59 +151,49 @@ const Locations = ({ rootDataRelay, organizationId }: Props) => {
   };
 
   return (
-    <>
-      <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
-        <Grid>
-          <Link href={`/organization/${organizationId}/location/add`}>
-            <Button variant="contained" startIcon={<AddIcon />}>
-              Add Location
-            </Button>
-          </Link>
-        </Grid>
-      </Grid>
+    <Stack direction="column" spacing={1}>
+      <Link href="/location/add">
+        <Button variant="contained" startIcon={<AddIcon />}>
+          Add Location
+        </Button>
+      </Link>
 
-      <Grid sx={{ marginTop: 1 }}>
-        <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} />
-          <AccordionDetails>
-            <TextField
-              defaultValue={locationNameSearchText}
-              helperText="Enter location name to narrow down the locations list"
-              onChange={(event) => debounceSearchTextChange(event?.target.value)}
-            />
-          </AccordionDetails>
-        </Accordion>
-      </Grid>
-
-      <Grid container sx={{ justifyContent: 'flex-end' }}>
-        <Grid>
-          <TablePagination
-            count={locations?.totalCount ? locations.totalCount : 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
+      <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} />
+        <AccordionDetails>
+          <TextField
+            defaultValue={locationNameSearchText}
+            helperText="Enter location name to narrow down the locations list"
+            onChange={(event) => debounceSearchTextChange(event?.target.value)}
           />
-        </Grid>
-        <Grid>
-          <Sorting
-            options={[{ id: 'name', label: 'Name' }]}
-            // @ts-expect-error
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
-          />
-        </Grid>
-      </Grid>
+        </AccordionDetails>
+      </Accordion>
 
-      <Grid container spacing={{ xs: 2, md: 3 }}>
+      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+        <TablePagination
+          count={locations?.totalCount ? locations.totalCount : 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[{ id: 'name', label: 'Name' }]}
+          // @ts-expect-error
+          defaultOption={sortingOrder.field}
+          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+          onValueChange={handleSortingChanged}
+        />
+      </Stack>
+
+      <Grid container spacing={2}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <LocationCard rootDataRelay={rootData} locationDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}
       </Grid>
-    </>
+    </Stack>
   );
 };
 

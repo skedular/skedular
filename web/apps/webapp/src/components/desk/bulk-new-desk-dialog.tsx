@@ -1,8 +1,8 @@
 import type { bulkNewDeskDialog_bulkAddDeskMutation } from '@/queries/__generated__/bulkNewDeskDialog_bulkAddDeskMutation.graphql';
 import type { bulkNewDeskDialog_query$key } from '@/queries/__generated__/bulkNewDeskDialog_query.graphql';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
@@ -126,28 +126,20 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <Box
-              component="form"
-              sx={{
-                '& > :not(style)': { m: 1 },
-              }}
-              autoComplete="off"
-              noValidate
-              onSubmit={handleSubmit}
-            >
+            <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
               <TextField label="Optional name prefix" name="namePrefix" required={requiredFields.namePrefix} helperText="Add your desk name prefix" />
               <TextField label="Count" name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
               <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
 
-              <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-                <Button color="secondary" variant="contained" onClick={onCancelClicked}>
-                  Cancel
-                </Button>
+              <DialogActions>
                 <Button color="primary" variant="contained" type="submit">
                   Add
                 </Button>
-              </Stack>
-            </Box>
+                <Button color="secondary" variant="contained" onClick={onCancelClicked}>
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Stack>
           )}
         />
       </DialogContent>

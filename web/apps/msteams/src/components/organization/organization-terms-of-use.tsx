@@ -1,4 +1,5 @@
 import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
 import graphql from 'babel-plugin-relay/macro';
 import { Checkboxes } from 'mui-rff';
 import { memo } from 'react';
@@ -25,7 +26,7 @@ const OrganizationTermsOfUse = ({ rootDataRelay, name, required }: Props) => {
   );
 
   return (
-    <>
+    <Stack direction="column" spacing={1}>
       <Checkboxes
         name={name}
         required={required}
@@ -37,7 +38,7 @@ const OrganizationTermsOfUse = ({ rootDataRelay, name, required }: Props) => {
       <Link href="https://unityhub.io/terms-of-service" target="_blank" rel="noopener noreferrer">
         UnityHub Terms of Use.
       </Link>
-    </>
+    </Stack>
   );
 };
 

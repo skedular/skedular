@@ -2,19 +2,19 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { TeamAvatar } from '@repo/shared/components/avatars';
-import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, TeamIcon, ViewIcon } from '@repo/shared/components/icons';
+import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, ViewIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -219,79 +219,67 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
 
   return (
     <>
-      <Paper
-        elevation={24}
-        sx={{
-          minWidth: 350,
-          maxWidth: 350,
-        }}
-      >
-        <Card
-          sx={{
-            minWidth: 350,
-            maxWidth: 350,
-          }}
-        >
-          <CardContent>
-            <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-              <TeamAvatar name={{ name: teamDetails.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
-            </Stack>
-
-            {teamDetails.name && (
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <TeamIcon />
+      <Card elevation={24} sx={{ minWidth: 350, height: '100%' }}>
+        <CardHeader
+          title={
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <TeamAvatar name={{ name: teamDetails.name }} photo={{ url: null }} />
+              {teamDetails.name && (
                 <Typography gutterBottom variant="h5" noWrap={true}>
                   {teamDetails.name}
                 </Typography>
-              </Stack>
-            )}
+              )}
+            </Stack>
+          }
+        />
 
-            {teamDetails.about && (
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <AboutIcon />
-                <Typography gutterBottom variant="body1" noWrap={true}>
-                  {teamDetails.about}
-                </Typography>
-              </Stack>
-            )}
+        <CardContent>
+          {teamDetails.about && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <AboutIcon />
+              <Typography gutterBottom variant="body1" noWrap={true}>
+                {teamDetails.about}
+              </Typography>
+            </Stack>
+          )}
 
-            {teamDetails.organization && (
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <OrganizationIcon />
-                <Typography gutterBottom variant="body1" noWrap={true}>
-                  {teamDetails.organization.name}
-                </Typography>
-              </Stack>
-            )}
-          </CardContent>
+          {teamDetails.organization && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <OrganizationIcon />
+              <Typography gutterBottom variant="body1" noWrap={true}>
+                {teamDetails.organization.name}
+              </Typography>
+            </Stack>
+          )}
+        </CardContent>
 
-          <CardActions>
-            {teamDetails.organization && (
-              <Link href={`/organization/${teamDetails.organization.uniqueId}/team/${teamDetails.id}`}>
-                <Button size="small" color="primary">
-                  {teamDetails.canModify ? <EditIcon /> : <ViewIcon />}
-                </Button>
-              </Link>
-            )}
-
-            {!teamDetails.organization && (
-              <Link href={`/team/${teamDetails.id}`}>
-                <Button size="small" color="primary">
-                  {teamDetails.canModify ? <EditIcon /> : <ViewIcon />}
-                </Button>
-              </Link>
-            )}
-
-            {teamDetails.canDelete && (
-              <Button size="small" color="warning" onClick={handleDeleteClick}>
-                <DeleteIcon />
+        <CardActions sx={{ justifyContent: 'flex-end' }}>
+          {teamDetails.organization && (
+            <Link href={`/organization/${teamDetails.organization.uniqueId}/team/${teamDetails.id}`}>
+              <Button size="small" color="primary">
+                {teamDetails.canModify ? <EditIcon /> : <ViewIcon />}
               </Button>
-            )}
+            </Link>
+          )}
 
-            <Switch checked={!!rootData.me?.defaultTeams.find((team) => team.uniqueId === teamDetails.id)} onChange={handleDefaultTeamStateChange} />
-          </CardActions>
-        </Card>
-      </Paper>
+          {!teamDetails.organization && (
+            <Link href={`/team/${teamDetails.id}`}>
+              <Button size="small" color="primary">
+                {teamDetails.canModify ? <EditIcon /> : <ViewIcon />}
+              </Button>
+            </Link>
+          )}
+
+          {teamDetails.canDelete && (
+            <Button size="small" color="warning" onClick={handleDeleteClick}>
+              <DeleteIcon />
+            </Button>
+          )}
+
+          <Switch checked={!!rootData.me?.defaultTeams.find((team) => team.uniqueId === teamDetails.id)} onChange={handleDefaultTeamStateChange} />
+        </CardActions>
+      </Card>
+
       <Dialog fullWidth={true} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
         <DialogTitle color={theme.palette.warning.main}>Remove team</DialogTitle>
         <DialogContent>
@@ -302,11 +290,11 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
           </DialogContentText>
 
           <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamClick}>
-              Cancel
-            </Button>
             <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingTeamClick}>
               Remove
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamClick}>
+              Cancel
             </Button>
           </DialogActions>
         </DialogContent>

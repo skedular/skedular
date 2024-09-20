@@ -1,6 +1,4 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -172,153 +170,126 @@ const OrganizationBillingInfo = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <Stack direction="row" sx={{ justifyContent: 'flex-end' }} spacing={1}>
         {!editing && (
           <Button size="small" color="primary" onClick={handleEditClick}>
             <EditIcon />
           </Button>
         )}
-      </Box>
+      </Stack>
       {!editing && (
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'left',
-            marginBottom: 1,
-          }}
-        >
-          <Grid>
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Email
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {email}
-              </Typography>
-            </Stack>
+        <Stack direction="column" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Email
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {email}
+            </Typography>
+          </Stack>
 
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Address Line 1
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {addressLine1}
-              </Typography>
-            </Stack>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Address Line 1
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {addressLine1}
+            </Typography>
+          </Stack>
 
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Address Line 2
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {addressLine2}
-              </Typography>
-            </Stack>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Address Line 2
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {addressLine2}
+            </Typography>
+          </Stack>
 
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Suburb
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {suburb}
-              </Typography>
-            </Stack>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Suburb
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {suburb}
+            </Typography>
+          </Stack>
 
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                City
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {city}
-              </Typography>
-            </Stack>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              City
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {city}
+            </Typography>
+          </Stack>
 
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Province
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {province}
-              </Typography>
-            </Stack>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Province
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {province}
+            </Typography>
+          </Stack>
 
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Zipcode
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {zipcode}
-              </Typography>
-            </Stack>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Zipcode
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {zipcode}
+            </Typography>
+          </Stack>
 
-            <Stack direction={'row'}>
-              <Typography gutterBottom variant="h6">
-                Country
-              </Typography>
-              <Typography gutterBottom variant="body1" sx={{ whiteSpace: 'pre-line', marginLeft: 1 }}>
-                {country}
-              </Typography>
-            </Stack>
-          </Grid>
-        </Grid>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Country
+            </Typography>
+            <Typography gutterBottom variant="body1">
+              {country}
+            </Typography>
+          </Stack>
+        </Stack>
       )}
       {editing && (
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 1,
-          }}
-        >
-          <Paper elevation={24} sx={{ padding: 3 }}>
-            <Form
-              onSubmit={handleUpdateClick}
-              initialValues={{
-                email,
-                addressLine1,
-                addressLine2,
-                suburb,
-                city,
-                province,
-                zipcode,
-                country,
-              }}
-              validate={validate}
-              render={({ handleSubmit }) => (
-                <Box
-                  component="form"
-                  sx={{
-                    '& > :not(style)': { m: 1 },
-                  }}
-                  autoComplete="off"
-                  noValidate
-                  onSubmit={handleSubmit}
-                >
-                  <TextField label="Email" name="email" required={requiredFields.email} helperText="Email to send invoice to" />
-                  <TextField label="Address line 1" name="addressLine1" required={requiredFields.addressLine1} />
-                  <TextField label="Address line 2" name="addressLine2" required={requiredFields.addressLine2} />
-                  <TextField label="Suburb" name="suburb" required={requiredFields.suburb} />
-                  <TextField label="City" name="city" required={requiredFields.city} />
-                  <TextField label="Province" name="province" required={requiredFields.province} />
-                  <TextField label="Zipcode" name="zipcode" required={requiredFields.zipcode} />
-                  <SingleChoiceCountry name="country" required={requiredFields.country} />
-                  <Stack sx={{ flex: 1, justifyContent: 'flex-end' }} direction="row" spacing={2}>
-                    <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                      Cancel
-                    </Button>
-                    <Button color="primary" variant="contained" type="submit">
-                      Update
-                    </Button>
-                  </Stack>
-                </Box>
-              )}
-            />
-          </Paper>
-        </Grid>
+        <Paper elevation={24} sx={{ padding: 2 }}>
+          <Form
+            onSubmit={handleUpdateClick}
+            initialValues={{
+              email,
+              addressLine1,
+              addressLine2,
+              suburb,
+              city,
+              province,
+              zipcode,
+              country,
+            }}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+                <TextField label="Email" name="email" required={requiredFields.email} helperText="Email to send invoice to" />
+                <TextField label="Address line 1" name="addressLine1" required={requiredFields.addressLine1} />
+                <TextField label="Address line 2" name="addressLine2" required={requiredFields.addressLine2} />
+                <TextField label="Suburb" name="suburb" required={requiredFields.suburb} />
+                <TextField label="City" name="city" required={requiredFields.city} />
+                <TextField label="Province" name="province" required={requiredFields.province} />
+                <TextField label="Zipcode" name="zipcode" required={requiredFields.zipcode} />
+                <SingleChoiceCountry name="country" required={requiredFields.country} />
+
+                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                  <Button color="primary" variant="contained" type="submit">
+                    Update
+                  </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
+                </Stack>
+              </Stack>
+            )}
+          />
+        </Paper>
       )}
     </>
   );

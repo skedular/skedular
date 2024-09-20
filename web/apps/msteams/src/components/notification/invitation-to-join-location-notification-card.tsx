@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Paper from '@mui/material/Paper';
+import CardHeader from '@mui/material/CardHeader';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
@@ -146,87 +146,77 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
   };
 
   return (
-    <Paper
-      elevation={24}
-      sx={{
-        minWidth: 350,
-        maxWidth: 350,
-      }}
-    >
-      <Card
-        sx={{
-          minWidth: 350,
-          maxWidth: 350,
-        }}
-      >
-        {cardState === CardState.Pending && (
-          <CardContent>
-            <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-              <CustomerAvatar
-                name={{
-                  name: null,
-                  givenName: invitedBy?.givenName,
-                  middleName: invitedBy?.middleName,
-                  familyName: invitedBy?.familyName,
-                }}
-                photo={{
-                  url: invitedBy?.photoUrl,
-                }}
-              />
-            </Stack>
-
-            <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-              <Typography gutterBottom variant="body1">
-                {`${getCustomerFullName(invitedBy)} has invited you to join location ${location?.name}`}
-              </Typography>
-            </Stack>
-
-            <CardActions>
-              <Stack sx={{ flex: 1, justifyContent: 'flex-end' }} direction="row" spacing={2}>
-                <Button color="secondary" variant="contained" startIcon={<CancelIcon />} onClick={handleRejectClick}>
-                  Reject
-                </Button>
-                <Button color="primary" variant="contained" type="submit" startIcon={<CheckIcon />} onClick={handleAcceptClick}>
-                  Accept
-                </Button>
+    <Card elevation={24} sx={{ minWidth: 350, height: '100%' }}>
+      {cardState === CardState.Pending && (
+        <>
+          <CardHeader
+            title={
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <CustomerAvatar
+                  name={{
+                    name: null,
+                    givenName: invitedBy?.givenName,
+                    middleName: invitedBy?.middleName,
+                    familyName: invitedBy?.familyName,
+                  }}
+                  photo={{
+                    url: invitedBy?.photoUrl,
+                  }}
+                />
               </Stack>
-            </CardActions>
-          </CardContent>
-        )}
+            }
+            subheader={
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <Typography gutterBottom variant="body1">
+                  {`${getCustomerFullName(invitedBy)} has invited you to join location ${location?.name}`}
+                </Typography>
+              </Stack>
+            }
+          />
 
-        {cardState === CardState.Rejecting && (
-          <CardContent>
-            <Typography gutterBottom variant="body1">
-              {`Rejecting invitation to join ${location?.name}`}
-            </Typography>
-          </CardContent>
-        )}
+          <CardActions sx={{ justifyContent: 'flex-end' }}>
+            <Button color="primary" variant="contained" type="submit" startIcon={<CheckIcon />} onClick={handleAcceptClick}>
+              Accept
+            </Button>
+            <Button color="secondary" variant="contained" startIcon={<CancelIcon />} onClick={handleRejectClick}>
+              Reject
+            </Button>
+          </CardActions>
+        </>
+      )}
 
-        {cardState === CardState.Rejected && (
-          <CardContent>
-            <Typography gutterBottom variant="body1">
-              {`Rejected invitation to join ${location?.name}`}
-            </Typography>
-          </CardContent>
-        )}
+      {cardState === CardState.Rejecting && (
+        <CardContent>
+          <Typography gutterBottom variant="body1">
+            {`Rejecting invitation to join ${location?.name}`}
+          </Typography>
+        </CardContent>
+      )}
 
-        {cardState === CardState.Accepting && (
-          <CardContent>
-            <Typography gutterBottom variant="body1">
-              {`Accepting invitation to join ${location?.name}`}
-            </Typography>
-          </CardContent>
-        )}
+      {cardState === CardState.Rejected && (
+        <CardContent>
+          <Typography gutterBottom variant="body1">
+            {`Rejected invitation to join ${location?.name}`}
+          </Typography>
+        </CardContent>
+      )}
 
-        {cardState === CardState.Accepted && (
-          <CardContent>
-            <Typography gutterBottom variant="body1">
-              {`Accepted invitation to join ${location?.name}`}
-            </Typography>
-          </CardContent>
-        )}
-      </Card>
-    </Paper>
+      {cardState === CardState.Accepting && (
+        <CardContent>
+          <Typography gutterBottom variant="body1">
+            {`Accepting invitation to join ${location?.name}`}
+          </Typography>
+        </CardContent>
+      )}
+
+      {cardState === CardState.Accepted && (
+        <CardContent>
+          <Typography gutterBottom variant="body1">
+            {`Accepted invitation to join ${location?.name}`}
+          </Typography>
+        </CardContent>
+      )}
+    </Card>
   );
 };
 

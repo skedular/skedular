@@ -147,73 +147,67 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
   };
 
   return (
-    <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <Stack direction="column">
-        <Paper elevation={24} sx={{ marginBottom: 1 }}>
-          <StaticDatePicker
-            slots={{
-              toolbar: EmptyCalendarToolbar,
-              // @ts-expect-error
-              day: SmallMonthlyViewCalendarDay({
-                rootData: rootData,
-                connectionIds,
-                organizationId: selectedOrganization ? selectedOrganization.id : null,
-              }),
-            }}
+    <Stack sx={{ alignItems: 'center' }} direction="column">
+      <Paper elevation={24} sx={{ marginBottom: 1 }}>
+        <StaticDatePicker
+          slots={{
+            toolbar: EmptyCalendarToolbar,
             // @ts-expect-error
-            slotProps={SimpleCalendarSlotProps}
-            onMonthChange={handleMonthChange}
-            sx={{ marginBottom: 1 }}
+            day: SmallMonthlyViewCalendarDay({
+              rootData: rootData,
+              connectionIds,
+              organizationId: selectedOrganization ? selectedOrganization.id : null,
+            }),
+          }}
+          // @ts-expect-error
+          slotProps={SimpleCalendarSlotProps}
+          onMonthChange={handleMonthChange}
+          sx={{ marginBottom: 1 }}
+        />
+      </Paper>
+
+      <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%', marginBottom: 1 }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          {!pageContextOpen && selectedOrganization && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <OrganizationIcon />
+              <Typography>{selectedOrganization.name}</Typography>
+            </Stack>
+          )}
+        </AccordionSummary>
+        <AccordionDetails>
+          <Autocomplete
+            options={organizations}
+            onChange={(event, option) => {
+              const castedOption = option as OrganizationDetails;
+
+              setSelectedOrganization(castedOption);
+            }}
+            defaultValue={selectedOrganization}
+            getOptionLabel={(option: string | OrganizationDetails) => (option as OrganizationDetails).name}
+            renderOption={(props, option) => {
+              const castedOption = option as OrganizationDetails;
+
+              return (
+                <li {...props}>
+                  <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
+                    <Typography variant="body1">{castedOption.name}</Typography>
+                  </Stack>
+                </li>
+              );
+            }}
+            renderInput={(params) => <TextField {...params} label="Organization" />}
+            disableCloseOnSelect={false}
+            freeSolo={true}
+            filterOptions={(options, params) => filter(options as OrganizationDetails[], params)}
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
           />
-        </Paper>
-      </Stack>
+        </AccordionDetails>
+      </Accordion>
 
-      <Stack direction="column" sx={{ width: '100%' }}>
-        <Grid sx={{ marginBottom: 1 }}>
-          <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              {!pageContextOpen && selectedOrganization && (
-                <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                  <OrganizationIcon />
-                  <Typography>{selectedOrganization.name}</Typography>
-                </Stack>
-              )}
-            </AccordionSummary>
-            <AccordionDetails>
-              <Autocomplete
-                options={organizations}
-                onChange={(event, option) => {
-                  const castedOption = option as OrganizationDetails;
-
-                  setSelectedOrganization(castedOption);
-                }}
-                defaultValue={selectedOrganization}
-                getOptionLabel={(option: string | OrganizationDetails) => (option as OrganizationDetails).name}
-                renderOption={(props, option) => {
-                  const castedOption = option as OrganizationDetails;
-
-                  return (
-                    <li {...props}>
-                      <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-                        <Typography variant="body1">{castedOption.name}</Typography>
-                      </Stack>
-                    </li>
-                  );
-                }}
-                renderInput={(params) => <TextField {...params} label="Organization" />}
-                disableCloseOnSelect={false}
-                freeSolo={true}
-                filterOptions={(options, params) => filter(options as OrganizationDetails[], params)}
-                selectOnFocus
-                clearOnBlur
-                handleHomeEndKeys
-              />
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-      </Stack>
-
-      <Grid container spacing={{ xs: 2, md: 3 }}>
+      <Grid container spacing={2}>
         {nodes.map((node) => (
           <Grid key={node.id}>
             <BookingCard
@@ -227,7 +221,7 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
           </Grid>
         ))}
       </Grid>
-    </Grid>
+    </Stack>
   );
 };
 

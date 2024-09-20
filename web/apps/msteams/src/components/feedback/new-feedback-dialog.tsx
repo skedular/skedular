@@ -1,6 +1,6 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
@@ -104,15 +104,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <Box
-              component="form"
-              sx={{
-                '& > :not(style)': { m: 1 },
-              }}
-              autoComplete="off"
-              noValidate
-              onSubmit={handleSubmit}
-            >
+            <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
               <Typography>
                 Hi
                 <span style={{ fontWeight: 'bold' }}>{' ' + getCustomerShortName(rootData.me)}</span>, what feedback would you like to share with us?
@@ -136,15 +128,15 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
                 promptly!
               </Typography>
 
-              <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-                <Button color="secondary" variant="contained" onClick={onCancelClicked}>
-                  Cancel
-                </Button>
+              <DialogActions>
                 <Button color="primary" variant="contained" type="submit">
                   Send
                 </Button>
-              </Stack>
-            </Box>
+                <Button color="secondary" variant="contained" onClick={onCancelClicked}>
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Stack>
           )}
         />
       </DialogContent>

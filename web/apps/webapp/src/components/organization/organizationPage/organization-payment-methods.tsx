@@ -3,10 +3,9 @@ import type { organizationPaymentMethods_query$key } from '@/queries/__generated
 import type { organizationPaymentMethods_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationPaymentMethods_removeOrganizationPaymentMethodMutation.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { AddIcon, RemoveIcon } from '@repo/shared/components/icons';
@@ -170,53 +169,44 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
   const paymentMethodExist = rootData.organizationPaymentMethodsDetails.length > 0;
 
   return (
-    <Container>
+    <>
       <Typography variant="h6" gutterBottom>
-        Payment method
+        Payment methods
       </Typography>
       {paymentMethodExist && (
         <>
           {rootData.organizationPaymentMethodsDetails.map(({ id, cardBrand, cardExpiryMonth, cardExpiryYear, cardLastFourDigit }) => {
             return (
-              <Paper
-                elevation={24}
-                sx={{
-                  minWidth: 300,
-                  maxWidth: 300,
-                }}
-                key={id}
-              >
-                <Card
-                  sx={{
-                    minWidth: 300,
-                    maxWidth: 300,
-                  }}
-                >
-                  <CardContent>
-                    <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                      <Typography gutterBottom variant="body1">
-                        {`${cardBrand} •••• ${cardLastFourDigit}`}
-                      </Typography>
-                    </Stack>
+              <Card elevation={24} key={id}>
+                <CardContent>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                    <Typography gutterBottom variant="body1">
+                      {`${cardBrand} •••• ${cardLastFourDigit}`}
+                    </Typography>
+                  </Stack>
 
-                    <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                      <Typography gutterBottom variant="body1">
-                        {`Expires ${cardExpiryMonth}/${cardExpiryYear?.toString().slice(-2)}`}
-                      </Typography>
-                    </Stack>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                    <Typography gutterBottom variant="body1">
+                      {`Expires ${cardExpiryMonth}/${cardExpiryYear?.toString().slice(-2)}`}
+                    </Typography>
+                  </Stack>
 
+                  <CardActions sx={{ justifyContent: 'flex-end' }}>
                     <Button startIcon={<RemoveIcon />} onClick={() => handleRemovePaymentMethodClick(id)}>
                       Remove
                     </Button>
-                  </CardContent>
-                </Card>
-              </Paper>
+                  </CardActions>
+                </CardContent>
+              </Card>
             );
           })}
         </>
       )}
       {!paymentMethodExist && addNewPaymentMethodState === AddOrganizationPaymentMethodState.NOT_STARTED && (
         <>
+          <Typography variant="h6" gutterBottom>
+            Payment method
+          </Typography>
           <Typography>No payment method setup yet</Typography>
           <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddNewPaymentMethodClick}>
             Add payment method
@@ -232,7 +222,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
       {!paymentMethodExist && addNewPaymentMethodState === AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_CONFIRMATION && (
         <CircularProgress />
       )}
-    </Container>
+    </>
   );
 };
 

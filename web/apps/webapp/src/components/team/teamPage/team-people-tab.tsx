@@ -11,7 +11,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -366,69 +365,62 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
   return (
     <>
       {!organizationId && (
-        <Grid container sx={{ justifyContent: 'flex-start', marginTop: 1 }}>
+        <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
           <Grid>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
               Invite People
             </Button>
           </Grid>
-        </Grid>
+        </Stack>
       )}
 
       {rootData.team?.organization && (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Stack direction="row" sx={{ justifyContent: 'flex-end' }} spacing={1}>
           {!editingOrganizationMembers && rootData.team.canModify && (
             <Button size="large" color="primary" onClick={handleEditOrganizationMembersClick}>
               <EditIcon />
             </Button>
           )}
-        </Box>
+        </Stack>
       )}
 
       {!editingOrganizationMembers && (
         <>
-          <Grid sx={{ marginTop: 1 }}>
-            <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} />
-              <AccordionDetails>
-                <MUITextField
-                  defaultValue={peopleNameSearchText}
-                  helperText="Enter name to narrow down the members list"
-                  onChange={(event) => debouncePeopleSearchTextChange(event?.target.value)}
-                />
-              </AccordionDetails>
-            </Accordion>
-          </Grid>
-
-          <Grid container sx={{ justifyContent: 'flex-end' }}>
-            <Grid>
-              <TablePagination
-                count={count}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={pageSize}
-                onRowsPerPageChange={handlePageSizeChange}
+          <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} />
+            <AccordionDetails>
+              <MUITextField
+                defaultValue={peopleNameSearchText}
+                helperText="Enter name to narrow down the members list"
+                onChange={(event) => debouncePeopleSearchTextChange(event?.target.value)}
               />
-            </Grid>
+            </AccordionDetails>
+          </Accordion>
 
-            <Grid>
-              <Sorting
-                options={[
-                  { id: 'createdAt', label: 'Join date' },
-                  { id: 'name', label: 'Name' },
-                  { id: 'givenName', label: 'Given name' },
-                  { id: 'middleName', label: 'Middle name' },
-                  { id: 'familyName', label: 'Family Name' },
-                ]}
-                // @ts-expect-error
-                defaultOption={sortingOrder.field}
-                defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-                onValueChange={handleSortingChanged}
-              />
-            </Grid>
-          </Grid>
+          <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+            <TablePagination
+              count={count}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={pageSize}
+              onRowsPerPageChange={handlePageSizeChange}
+            />
+            <Sorting
+              options={[
+                { id: 'createdAt', label: 'Join date' },
+                { id: 'name', label: 'Name' },
+                { id: 'givenName', label: 'Given name' },
+                { id: 'middleName', label: 'Middle name' },
+                { id: 'familyName', label: 'Family Name' },
+              ]}
+              // @ts-expect-error
+              defaultOption={sortingOrder.field}
+              defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+              onValueChange={handleSortingChanged}
+            />
+          </Stack>
 
-          <Grid container spacing={{ xs: 2, md: 3 }}>
+          <Grid container spacing={1}>
             {slicedrEdges.map((edge) => (
               <Grid key={edge.node.id}>
                 <TeamMemberCard
@@ -444,57 +436,39 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
       )}
 
       {editingOrganizationMembers && (
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 1,
-          }}
-        >
-          <Paper elevation={24} sx={{ padding: 3 }}>
-            <Form
-              onSubmit={handleTeamUpdateClick}
-              initialValues={{
-                organizationMemberIds: rootData.team.members
-                  .filter((member) => member.organizationMember)
-                  // @ts-expect-error
-                  .map(({ organizationMember }) => organizationMember.uniqueId),
-              }}
-              validate={validateTeam}
-              render={({ handleSubmit }) => (
-                <Box
-                  component="form"
-                  sx={{
-                    '& > :not(style)': { m: 1 },
-                  }}
-                  autoComplete="off"
-                  noValidate
-                  onSubmit={handleSubmit}
-                >
-                  {rootData.team?.organization && (
-                    <OrganizationMemberSelector
-                      rootDataRelay={rootData}
-                      name="organizationMemberIds"
-                      required={requiredTeamFields.organizationMemberIds}
-                      multiple={true}
-                      useMemberId={true}
-                    />
-                  )}
-                  <Stack sx={{ flex: 1, justifyContent: 'flex-end' }} direction="row" spacing={2}>
-                    <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                      Cancel
-                    </Button>
-                    <Button color="primary" variant="contained" type="submit">
-                      Update
-                    </Button>
-                  </Stack>
-                </Box>
-              )}
-            />
-          </Paper>
-        </Grid>
+        <Paper elevation={24} sx={{ padding: 2 }}>
+          <Form
+            onSubmit={handleTeamUpdateClick}
+            initialValues={{
+              organizationMemberIds: rootData.team.members
+                .filter((member) => member.organizationMember)
+                // @ts-expect-error
+                .map(({ organizationMember }) => organizationMember.uniqueId),
+            }}
+            validate={validateTeam}
+            render={({ handleSubmit }) => (
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+                {rootData.team?.organization && (
+                  <OrganizationMemberSelector
+                    rootDataRelay={rootData}
+                    name="organizationMemberIds"
+                    required={requiredTeamFields.organizationMemberIds}
+                    multiple={true}
+                    useMemberId={true}
+                  />
+                )}
+                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                  <Button color="primary" variant="contained" type="submit">
+                    Update
+                  </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
+                </Stack>
+              </Stack>
+            )}
+          />
+        </Paper>
       )}
 
       <Dialog fullWidth={true} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
@@ -509,15 +483,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
             }}
             validate={validateMembersToInvite}
             render={({ handleSubmit }) => (
-              <Box
-                component="form"
-                sx={{
-                  '& > :not(style)': { m: 1 },
-                }}
-                autoComplete="off"
-                noValidate
-                onSubmit={handleSubmit}
-              >
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
                 <TextField
                   label="Emails"
                   name="emails"
@@ -526,14 +492,14 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
                   helperText="member1@example.com,member2@example.com"
                 />
                 <DialogActions>
-                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
-                    Cancel
-                  </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Invite
                   </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
+                    Cancel
+                  </Button>
                 </DialogActions>
-              </Box>
+              </Stack>
             )}
           />
         </DialogContent>

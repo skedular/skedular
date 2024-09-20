@@ -88,7 +88,7 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
   };
 
   return (
-    <Stack direction="column">
+    <Stack direction="column" spacing={1}>
       <ToggleButtonGroup color="primary" value={period} exclusive onChange={handlePeriodChange} aria-label="Platform">
         <ToggleButton value="week">1 Week</ToggleButton>
         <ToggleButton value="month">1 Month</ToggleButton>

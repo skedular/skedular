@@ -5,11 +5,11 @@ import type {
   locationMemberCard_changeLocationMemberOwnershipTypeMutation,
 } from '@/queries/__generated__/locationMemberCard_changeLocationMemberOwnershipTypeMutation.graphql';
 import type { locationSingleChoiceMembershipType_query$key } from '@/queries/__generated__/locationSingleChoiceMembershipType_query.graphql';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -119,52 +119,41 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
     });
   };
 
+  const avatar = (
+    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+      <CustomerAvatar
+        name={{
+          name: locationMemberDetails.customer?.name,
+          givenName: locationMemberDetails.customer?.givenName,
+          middleName: locationMemberDetails.customer?.middleName,
+          familyName: locationMemberDetails.customer?.familyName,
+        }}
+        photo={{
+          url: locationMemberDetails.customer?.photoUrl,
+        }}
+      />
+      <Typography gutterBottom variant="body1">
+        {getCustomerFullName(locationMemberDetails.customer)}
+      </Typography>
+    </Stack>
+  );
+
   return (
     <>
       {!editing && (
-        <Paper
-          elevation={24}
-          sx={{
-            minWidth: 300,
-            maxWidth: 300,
-          }}
-        >
-          <Card
-            sx={{
-              minWidth: 300,
-              maxWidth: 300,
-            }}
-          >
+        <Paper elevation={24} sx={{ padding: 2 }}>
+          <Card>
+            <CardHeader title={<>{avatar}</>} />
             <CardContent>
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <CustomerAvatar
-                  name={{
-                    name: locationMemberDetails.customer?.name,
-                    givenName: locationMemberDetails.customer?.givenName,
-                    middleName: locationMemberDetails.customer?.middleName,
-                    familyName: locationMemberDetails.customer?.familyName,
-                  }}
-                  photo={{
-                    url: locationMemberDetails.customer?.photoUrl,
-                  }}
-                />
-              </Stack>
-
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <Typography gutterBottom variant="body1">
-                  {getCustomerFullName(locationMemberDetails.customer)}
-                </Typography>
-              </Stack>
-
-              {locationMemberDetails.membershipType && (
-                <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                {locationMemberDetails.membershipType && (
                   <Typography gutterBottom variant="body1">
                     {convertStringToLowercaseExceptFirstLetter(locationMemberDetails.membershipType)}
                   </Typography>
-                </Stack>
-              )}
+                )}
+              </Stack>
 
-              <CardActions>
+              <CardActions sx={{ justifyContent: 'flex-end' }}>
                 <Button size="small" color="primary" onClick={handleEditClick}>
                   <EditIcon />
                 </Button>
@@ -175,13 +164,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
       )}
 
       {editing && (
-        <Paper
-          elevation={24}
-          sx={{
-            minWidth: 300,
-            maxWidth: 300,
-          }}
-        >
+        <Paper elevation={24} sx={{ padding: 2 }}>
           <Form
             onSubmit={handleSaveClick}
             initialValues={{
@@ -189,28 +172,20 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Box
-                component="form"
-                sx={{
-                  '& > :not(style)': { m: 1 },
-                }}
-                autoComplete="off"
-                noValidate
-                onSubmit={handleSubmit}
-              >
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
+              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+                {avatar}
+
                 <LocationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />
 
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
+                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
                   <Button color="primary" variant="contained" type="submit">
                     Save
                   </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
                 </Stack>
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
-              </Box>
+              </Stack>
             )}
           />
         </Paper>

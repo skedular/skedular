@@ -2,20 +2,20 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { default as Link, default as MuiLink } from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { OrganizationAvatar } from '@repo/shared/components/avatars';
-import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, ViewIcon, WebsiteIcon } from '@repo/shared/components/icons';
+import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, ViewIcon, WebsiteIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -243,83 +243,71 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
 
   return (
     <>
-      <Paper
-        elevation={24}
-        sx={{
-          minWidth: 350,
-          maxWidth: 350,
-        }}
-      >
-        <Card
-          sx={{
-            minWidth: 350,
-            maxWidth: 350,
-          }}
-        >
-          <CardContent>
-            <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-              <OrganizationAvatar name={{ name: organizationDetails.name }} photo={{ url: organizationDetails.logoUrl }} sx={{ marginBottom: 1 }} />
-            </Stack>
-
-            {organizationDetails.name && (
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <OrganizationIcon />
+      <Card elevation={24} sx={{ minWidth: 350, height: '100%' }}>
+        <CardHeader
+          title={
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <OrganizationAvatar name={{ name: organizationDetails.name }} photo={{ url: organizationDetails.logoUrl }} />
+              {organizationDetails.name && (
                 <Typography gutterBottom variant="h5" noWrap={true}>
                   {organizationDetails.name}
                 </Typography>
-              </Stack>
-            )}
+              )}
+            </Stack>
+          }
+        />
 
-            {organizationDetails.about && (
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <AboutIcon />
-                <Typography gutterBottom variant="h5" noWrap={true}>
-                  {organizationDetails.about}
-                </Typography>
-              </Stack>
-            )}
+        <CardContent>
+          {organizationDetails.about && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <AboutIcon />
+              <Typography gutterBottom variant="h5" noWrap={true}>
+                {organizationDetails.about}
+              </Typography>
+            </Stack>
+          )}
 
-            {organizationDetails.website && (
-              <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                <WebsiteIcon />
-                <MuiLink href={organizationDetails.website} target="_blank" rel="noopener noreferrer">
-                  {organizationDetails.website}
-                </MuiLink>
-              </Stack>
-            )}
-          </CardContent>
+          {organizationDetails.website && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <WebsiteIcon />
+              <MuiLink href={organizationDetails.website} target="_blank" rel="noopener noreferrer">
+                {organizationDetails.website}
+              </MuiLink>
+            </Stack>
+          )}
+        </CardContent>
 
-          <CardActions>
-            <Tooltip title={organizationDetails.canModify ? 'Edit organization details' : 'View organization details'}>
-              <Link href={`/organization/${organizationDetails.id}`}>
-                <Button size="small" color="primary">
-                  {organizationDetails.canModify ? <EditIcon /> : <ViewIcon />}
-                </Button>
-              </Link>
+        <CardActions sx={{ justifyContent: 'flex-end' }}>
+          <Tooltip title={organizationDetails.canModify ? 'Edit organization details' : 'View organization details'}>
+            <Link href={`/organization/${organizationDetails.id}`}>
+              <Button size="small" color="primary">
+                {organizationDetails.canModify ? <EditIcon /> : <ViewIcon />}
+              </Button>
+            </Link>
+          </Tooltip>
+          {organizationDetails.canDelete && (
+            <Tooltip title={'Delete organization'}>
+              <Button size="small" color="warning" onClick={handleDeleteClick}>
+                <DeleteIcon />
+              </Button>
             </Tooltip>
-            {organizationDetails.canDelete && (
-              <Tooltip title={'Delete organization'}>
-                <Button size="small" color="warning" onClick={handleDeleteClick}>
-                  <DeleteIcon />
-                </Button>
-              </Tooltip>
-            )}
-            <Tooltip title={isDefaultOrganization ? 'Remove default organization' : 'Set as default organization'}>
-              <Switch checked={isDefaultOrganization} onChange={handleDefaultOrganizationStateChange} />
-            </Tooltip>
-          </CardActions>
-        </Card>
-      </Paper>
+          )}
+          <Tooltip title={isDefaultOrganization ? 'Remove default organization' : 'Set as default organization'}>
+            <Switch checked={isDefaultOrganization} onChange={handleDefaultOrganizationStateChange} />
+          </Tooltip>
+        </CardActions>
+      </Card>
+
       <Dialog fullWidth={true} open={organizationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingOrganizationClick}>
         <DialogTitle color={theme.palette.warning.main}>Remove organization</DialogTitle>
         <DialogContent>
           <DialogContentText color={theme.palette.warning.main}>{organizationDeletionMessage}</DialogContentText>
           <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingOrganizationClick}>
-              Cancel
-            </Button>
             <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingOrganizatioClick}>
               Remove
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingOrganizationClick}>
+              Cancel
             </Button>
           </DialogActions>
         </DialogContent>

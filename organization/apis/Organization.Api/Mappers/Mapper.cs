@@ -37,8 +37,10 @@ public interface IMapper
         TermsOfUse termsOfUse,
         ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories);
 
-    Shared.Database.Entities.Organization MergeTo(Shared.Models.Organization src,
-        Shared.Database.Entities.Organization dest);
+    Shared.Database.Entities.Organization MergeTo(
+        Shared.Models.Organization src,
+        Shared.Database.Entities.Organization dest,
+        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories);
 
     IEnumerable<OrganizationMember> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationMember> src, Shared.Models.Organization organization);
@@ -173,7 +175,8 @@ public class Mapper : IMapper
 
     public Shared.Database.Entities.Organization MergeTo(
         Shared.Models.Organization src,
-        Shared.Database.Entities.Organization dest)
+        Shared.Database.Entities.Organization dest,
+        ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -181,6 +184,7 @@ public class Mapper : IMapper
         dest.Website = src.Website;
         dest.AgreedToTermsOfUse = src.AgreedToTermsOfUse;
         dest.LogoUrl = src.LogoUrl;
+        dest.IndustrySubCategories = industrySubCategories;
         return dest;
     }
 
@@ -575,7 +579,8 @@ public class Mapper : IMapper
                 : organizationIndustryMainCategoryReferenceDetails.Name
         };
 
-    private IndustrySubCategory? MapTo(Shared.Database.Entities.IndustrySubCategory? src,
+    private IndustrySubCategory? MapTo(
+        Shared.Database.Entities.IndustrySubCategory? src,
         IndustryMainCategory? industryMainCategory)
     {
         if (src is null)

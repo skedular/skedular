@@ -1,10 +1,10 @@
-import { CollapseIcon, MoreItemsIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { Typography } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
+import { CollapseIcon, MoreItemsIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { memo, useState } from 'react';
 
 export type Zone = {
@@ -37,14 +37,14 @@ const ZonesLine = ({ zones, zoneTotalDisplayLimit = preferredZonesTotalDisplayLi
   return (
     <>
       {zones.length === 0 && (
-        <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <ZoneIcon />
           <Typography>No zone</Typography>
         </Stack>
       )}
 
       {zones.length !== 0 && (
-        <Stack direction="row" spacing={2} sx={{ marginBottom: 1 }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <ZoneIcon />
           {zonesToDisplay.map(({ id, name }) => (
             <Tooltip key={id} title={name}>
