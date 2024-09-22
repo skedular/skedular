@@ -59,6 +59,7 @@ type Props = {
   teamId: string;
   teamName: string;
   teamsConnectionIds: string[];
+  hideRemoveTeamOption?: boolean;
 };
 
 enum DateRangeType {
@@ -159,7 +160,7 @@ const getBookingIcon = ({ booking }: BookingDetails) => {
   return booking ? <WorkingFromOfficeIcon tip={tip} /> : <WorkingFromHomeIcon />;
 };
 
-const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamName, teamsConnectionIds }: Props) => {
+const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: Props) => {
   const { data: rootData, refetch } = usePaginationFragment<teamPeopleBookingsMatrixTeamMembersPaginationQuery, teamPeopleBookingsMatrix_query$key>(
     graphql`
       fragment teamPeopleBookingsMatrix_query on Query
@@ -625,7 +626,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.Settings]);
   }
 
-  if (rootData.team.canDelete) {
+  if (rootData.team.canDelete && !hideRemoveTeamOption) {
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveTeam]);
   }
 

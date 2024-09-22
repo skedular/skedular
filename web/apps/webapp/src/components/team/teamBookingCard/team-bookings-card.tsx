@@ -17,6 +17,7 @@ type Props = {
   teamId: string;
   teamName: string;
   teamsConnectionIds: string[];
+  hideRemoveTeamOption?: boolean;
 };
 
 const RootQuery = graphql`
@@ -33,7 +34,7 @@ const RootQuery = graphql`
   }
 `;
 
-const TeamBookingsCard = ({ queryReference, organizationId, teamId, teamName, teamsConnectionIds }: Props) => {
+const TeamBookingsCard = ({ queryReference, organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: Props) => {
   const rootData = usePreloadedQuery<teamBookingsCard_rootQuery>(RootQuery, queryReference);
 
   return (
@@ -43,6 +44,7 @@ const TeamBookingsCard = ({ queryReference, organizationId, teamId, teamName, te
       teamId={teamId}
       teamName={teamName}
       teamsConnectionIds={teamsConnectionIds}
+      hideRemoveTeamOption={hideRemoveTeamOption}
     />
   );
 };
@@ -54,9 +56,10 @@ type RelayProps = {
   teamId: string;
   teamName: string;
   teamsConnectionIds: string[];
+  hideRemoveTeamOption?: boolean;
 };
 
-const TeamBookingsWithRelay = ({ organizationId, teamId, teamName, teamsConnectionIds }: RelayProps) => {
+const TeamBookingsWithRelay = ({ organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<teamBookingsCard_rootQuery>(RootQuery);
   const [startDate, setStart] = useState(startOfWeek(null));
 
@@ -103,6 +106,7 @@ const TeamBookingsWithRelay = ({ organizationId, teamId, teamName, teamsConnecti
         teamId={teamId}
         teamName={teamName}
         teamsConnectionIds={teamsConnectionIds}
+        hideRemoveTeamOption={hideRemoveTeamOption}
       />
     </ErrorBoundary>
   );
