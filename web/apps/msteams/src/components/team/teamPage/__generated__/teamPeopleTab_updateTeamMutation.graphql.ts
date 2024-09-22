@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<29a12982f0f55a210ec1c7796d664122>>
+ * @generated SignedSource<<0ddee666ca732f18bd5329a267fc9951>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,7 +30,7 @@ export type teamPeopleTab_updateTeamMutation$data = {
       readonly members: ReadonlyArray<{
         readonly customer: {
           readonly uniqueId: string;
-        } | null | undefined;
+        };
         readonly organizationMember: {
           readonly uniqueId: string;
         } | null | undefined;
@@ -50,7 +50,7 @@ export type teamPeopleTab_updateTeamMutation$rawResponse = {
       readonly members: ReadonlyArray<{
         readonly customer: {
           readonly uniqueId: string;
-        } | null | undefined;
+        };
         readonly id: string;
         readonly organizationMember: {
           readonly uniqueId: string;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<464d21720f41d571573bece89ff5f75f>>
+ * @generated SignedSource<<265456702efe8da2d825e7df18f96377>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type teamMemberCard_query$data = {
     readonly members: ReadonlyArray<{
       readonly customer: {
         readonly uniqueId: string;
-      } | null | undefined;
+      };
       readonly id: string;
       readonly organizationMember: {
         readonly uniqueId: string;

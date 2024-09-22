@@ -125,7 +125,6 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
           about: rootData.team.about,
           customerIds: rootData.team.members
             .filter((member) => member.customer && member.id !== teamMemberDetails.id)
-            // @ts-expect-error
             .map((member) => member.customer.uniqueId),
           organizationId,
           organizationMemberIds: rootData.team.members

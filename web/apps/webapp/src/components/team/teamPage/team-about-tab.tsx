@@ -110,8 +110,7 @@ const TeamAboutTab = ({ rootDataRelay, organizationId }: Props) => {
           name,
           about,
           timezone,
-          // @ts-expect-error
-          customerIds: rootData.team.members.filter((member) => member.customer).map((member) => member.customer?.uniqueId),
+          customerIds: rootData.team.members.filter((member) => member.customer).map((member) => member.customer.uniqueId),
           organizationId,
           organizationMemberIds: [...new Set(organizationMemberIds)],
         },
