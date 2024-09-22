@@ -95,9 +95,7 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
     <Stack direction="column" spacing={1}>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
         <LocationAvatar name={{ name: rootData.location?.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
-        <Typography gutterBottom variant="h6">
-          {rootData.location?.name}
-        </Typography>
+        <Typography variant="h6">{rootData.location?.name}</Typography>
       </Stack>
 
       <Tabs value={tabIndex} onChange={handleTabChange}>

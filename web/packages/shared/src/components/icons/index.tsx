@@ -1,6 +1,6 @@
-import BusinessIcon from '@mui/icons-material/Business';
+import Business from '@mui/icons-material/Business';
 import CorporateFare from '@mui/icons-material/CorporateFare';
-import DateRangeIcon from '@mui/icons-material/DateRange';
+import DateRange from '@mui/icons-material/DateRange';
 import Desk from '@mui/icons-material/Desk';
 import Groups from '@mui/icons-material/Groups';
 import HomeIcon from '@mui/icons-material/Home';
@@ -10,6 +10,7 @@ import Link from '@mui/icons-material/Link';
 import LocalOffer from '@mui/icons-material/LocalOffer';
 import Notes from '@mui/icons-material/Notes';
 import NotificationsActive from '@mui/icons-material/NotificationsActive';
+import People from '@mui/icons-material/People';
 import Refresh from '@mui/icons-material/Refresh';
 import Settings from '@mui/icons-material/Settings';
 import WbIridescent from '@mui/icons-material/WbIridescent';
@@ -38,7 +39,6 @@ export { default as MoreItemsIcon } from '@mui/icons-material/MoreHoriz';
 export { default as EllipseMenuIcon } from '@mui/icons-material/MoreVert';
 export { default as ExpandIcon } from '@mui/icons-material/OpenInFull';
 export { default as BillingAndPaymentIcon } from '@mui/icons-material/Payment';
-export { default as MembersIcon } from '@mui/icons-material/People';
 export { default as CustomerIcon } from '@mui/icons-material/Person';
 export { default as RemoveIcon } from '@mui/icons-material/Remove';
 export { default as ViewIcon } from '@mui/icons-material/Visibility';
@@ -49,6 +49,15 @@ type Props = {
   excludeTooltip?: boolean;
   tip?: string;
 };
+
+export const MembersIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+  excludeTooltip ? (
+    <People fontSize={fontSize} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'Members'}>
+      <People fontSize={fontSize} color={color} />
+    </TooltipIcon>
+  );
 
 export const OrganizationIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
   excludeTooltip ? (
@@ -160,28 +169,28 @@ export const InfoIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
 
 export const CalendarIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
   excludeTooltip ? (
-    <DateRangeIcon fontSize={fontSize} color={color} />
+    <DateRange fontSize={fontSize} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Calendar'}>
-      <DateRangeIcon fontSize={fontSize} color={color} />
+      <DateRange fontSize={fontSize} color={color} />
     </TooltipIcon>
   );
 
 export const BookingIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
   excludeTooltip ? (
-    <DateRangeIcon fontSize={fontSize} color={color} />
+    <DateRange fontSize={fontSize} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Booking'}>
-      <DateRangeIcon fontSize={fontSize} color={color} />
+      <DateRange fontSize={fontSize} color={color} />
     </TooltipIcon>
   );
 
 export const WorkingFromOfficeIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
   excludeTooltip ? (
-    <BusinessIcon fontSize={fontSize} />
+    <Business fontSize={fontSize} />
   ) : (
     <TooltipIcon tip={tip ?? 'Working from office'}>
-      <BusinessIcon fontSize={fontSize} color={color ?? 'primary'} />
+      <Business fontSize={fontSize} color={color ?? 'primary'} />
     </TooltipIcon>
   );
 

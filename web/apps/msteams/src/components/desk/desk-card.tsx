@@ -79,7 +79,7 @@ interface MoreActionsMenuItemType {
   label: String;
 }
 
-const moreActionsMenuAllOptions = {
+const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
   [MoreActionsMenuOptionType.ActivateDesk]: {
     id: MoreActionsMenuOptionType.ActivateDesk,
     label: 'Activate desk',
@@ -633,23 +633,23 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     <>
       {!editing && (
         <Card elevation={24} sx={{ minWidth: 320, height: '100%' }}>
-            <CardHeader
-              title={
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <DeskIcon />
-                  <Typography gutterBottom variant="body1">
-                    {deskDetails.name}
-                  </Typography>
-                </Stack>
-              }
-              action={
-                <>
-                {moreActionsOption.length > 0 && (<IconButton onClick={handleMoreActionsMenuClick}>
-                  <EllipseMenuIcon />
-                </IconButton>)}
-                </>
-              }
-            />
+          <CardHeader
+            title={
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <DeskIcon />
+                <Typography variant="body1">{deskDetails.name}</Typography>
+              </Stack>
+            }
+            action={
+              <>
+                {moreActionsOption.length > 0 && (
+                  <IconButton onClick={handleMoreActionsMenuClick}>
+                    <EllipseMenuIcon />
+                  </IconButton>
+                )}
+              </>
+            }
+          />
 
           <CardContent>
             <ZonesLine zones={deskDetails.locationTags} />
@@ -657,9 +657,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             {extraInfo.length > 0 && (
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <InfoIcon />
-                <Typography gutterBottom variant="body1">
-                  {extraInfo.join(', ')}
-                </Typography>
+                <Typography variant="body1">{extraInfo.join(', ')}</Typography>
               </Stack>
             )}
 
@@ -676,9 +674,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
                     url: customerDetails.photoUrl,
                   }}
                 />
-                <Typography gutterBottom variant="body1">
-                  {getCustomerFullName(customerDetails)}
-                </Typography>
+                <Typography variant="body1">{getCustomerFullName(customerDetails)}</Typography>
               </Stack>
             )}
           </CardContent>

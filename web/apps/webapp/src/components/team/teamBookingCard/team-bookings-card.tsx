@@ -76,7 +76,7 @@ const TeamBookingsWithRelay = ({ organizationId, teamId, teamName }: RelayProps)
 
   if (!queryReference) {
     return (
-      <Card style={{ maxWidth: 500, height: '100%', overflow: 'auto' }}>
+      <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader title={teamName} />
         <CardContent>
           <Skeleton variant="rounded" width={470} height={350} />

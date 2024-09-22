@@ -42,9 +42,7 @@ const CustomerCard = ({ customerDetailsRelay }: Props) => {
                 url: customerDetails.photoUrl,
               }}
             />
-            <Typography gutterBottom variant="body1">
-              {getCustomerFullName(customerDetails)}
-            </Typography>
+            <Typography variant="body1">{getCustomerFullName(customerDetails)}</Typography>
           </Stack>
         }
       />

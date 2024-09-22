@@ -127,9 +127,7 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
     <Stack direction="column" spacing={1}>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
         <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} sx={{ marginBottom: 1 }} />
-        <Typography gutterBottom variant="h6">
-          {rootData.organization?.name}
-        </Typography>
+        <Typography variant="h6">{rootData.organization?.name}</Typography>
       </Stack>
 
       <Tabs value={tabIndex} onChange={handleTabChange}>

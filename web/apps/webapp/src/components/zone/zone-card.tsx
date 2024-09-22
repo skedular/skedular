@@ -307,9 +307,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
             title={
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <ZoneIcon />
-                <Typography gutterBottom variant="body1">
-                  {locationTagDetails.name}
-                </Typography>
+                <Typography variant="body1">{locationTagDetails.name}</Typography>
               </Stack>
             }
           />

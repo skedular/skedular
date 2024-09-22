@@ -169,32 +169,20 @@ const TeamAboutTab = ({ rootDataRelay, organizationId }: Props) => {
       {!editing && (
         <Stack direction="column" spacing={1}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              About
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {team.about}
-            </Typography>
+            <Typography variant="h6">About</Typography>
+            <Typography variant="body1">{team.about}</Typography>
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Timezone
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {team.timezone}
-            </Typography>
+            <Typography variant="h6">Timezone</Typography>
+            <Typography variant="body1">{team.timezone}</Typography>
           </Stack>
 
           {team.organization && (
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-              <Typography gutterBottom variant="h6">
-                Organization
-              </Typography>
+              <Typography variant="h6">Organization</Typography>
 
-              <Typography gutterBottom variant="body1">
-                {team.organization.name}
-              </Typography>
+              <Typography variant="body1">{team.organization.name}</Typography>
             </Stack>
           )}
         </Stack>

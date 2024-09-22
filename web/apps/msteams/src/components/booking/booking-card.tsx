@@ -553,7 +553,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                     url: bookingDetails.customer?.photoUrl,
                   }}
                 />
-                <Typography gutterBottom variant="h6" component="div">
+                <Typography variant="h6" component="div">
                   {shortDateFormatFrom}
                 </Typography>
               </Stack>
@@ -563,7 +563,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           <CardContent>
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <CustomerIcon />
-              <Typography gutterBottom variant="h6" component="div">
+              <Typography variant="h6" component="div">
                 {getCustomerFullName(bookingDetails.customer)}
               </Typography>
             </Stack>
@@ -571,7 +571,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             {bookingDetails.notes && (
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <NotesIcon />
-                <Typography gutterBottom variant="body1" component="div">
+                <Typography variant="body1" component="div">
                   {bookingDetails.notes}
                 </Typography>
               </Stack>
@@ -580,7 +580,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             {bookingDetails.organization && (
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <OrganizationIcon />
-                <Typography gutterBottom variant="body1" component="div">
+                <Typography variant="body1" component="div">
                   {bookingDetails.organization.name}
                 </Typography>
               </Stack>
@@ -589,7 +589,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             {bookingDetails.location && (
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <LocationIcon />
-                <Typography gutterBottom variant="body1" component="div">
+                <Typography variant="body1" component="div">
                   {bookingDetails.location.name}
                 </Typography>
               </Stack>
@@ -598,7 +598,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             {bookingDetails.team && (
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <TeamIcon />
-                <Typography gutterBottom variant="body1" component="div">
+                <Typography variant="body1" component="div">
                   {bookingDetails.team.name}
                 </Typography>
               </Stack>
@@ -610,7 +610,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
               return (
                 <Stack key={uniqueId} direction="row" spacing={2} sx={{ marginBottom: 1 }}>
                   <DeskIcon />
-                  <Typography gutterBottom variant="body1" component="div">
+                  <Typography variant="body1" component="div">
                     {name}
                   </Typography>
                   {isMyBooking && (

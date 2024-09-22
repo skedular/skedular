@@ -167,18 +167,12 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
       {!editing && (
         <Stack direction="column" spacing={1}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              About
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {organization.about}
-            </Typography>
+            <Typography variant="h6">About</Typography>
+            <Typography variant="body1">{organization.about}</Typography>
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Website
-            </Typography>
+            <Typography variant="h6">Website</Typography>
             {organization.website && (
               <MuiLink href={organization?.website} target="_blank" rel="noopener noreferrer">
                 {organization.website}
@@ -187,9 +181,7 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Industry
-            </Typography>
+            <Typography variant="h6">Industry</Typography>
             <Grid sx={{ marginLeft: 1 }}>
               {organization.industrySubCategories.map(({ id, name }) => (
                 <Tooltip key={id} title={name}>

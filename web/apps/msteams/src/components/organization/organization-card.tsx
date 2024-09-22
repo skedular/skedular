@@ -249,7 +249,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <OrganizationAvatar name={{ name: organizationDetails.name }} photo={{ url: organizationDetails.logoUrl }} />
               {organizationDetails.name && (
-                <Typography gutterBottom variant="h5" noWrap={true}>
+                <Typography variant="h5" noWrap={true}>
                   {organizationDetails.name}
                 </Typography>
               )}
@@ -261,7 +261,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
           {organizationDetails.about && (
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <AboutIcon />
-              <Typography gutterBottom variant="h5" noWrap={true}>
+              <Typography variant="h5" noWrap={true}>
                 {organizationDetails.about}
               </Typography>
             </Stack>

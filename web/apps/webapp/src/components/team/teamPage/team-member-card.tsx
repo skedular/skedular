@@ -183,9 +183,7 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
                   url: customer.photoUrl,
                 }}
               />
-              <Typography gutterBottom variant="body1">
-                {getCustomerFullName(customer)}
-              </Typography>
+              <Typography variant="body1">{getCustomerFullName(customer)}</Typography>
             </Stack>
           }
         />

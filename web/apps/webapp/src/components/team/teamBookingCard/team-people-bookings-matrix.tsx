@@ -9,20 +9,25 @@ import type {
   TeamMemberOrderInput,
   teamPeopleBookingsMatrixTeamMembersPaginationQuery,
 } from '@/queries/__generated__/teamPeopleBookingsMatrixTeamMembersPaginationQuery.graphql';
+import { Stack, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import type { GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { WorkingFromHomeIcon, WorkingFromOfficeIcon } from '@repo/shared/components/icons';
+import { BookingIcon, DeleteIcon, EllipseMenuIcon, SettingsIcon, WorkingFromHomeIcon, WorkingFromOfficeIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { endOfDay, endOfWeek, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
+import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
+import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { graphql, useMutation, usePaginationFragment } from 'react-relay';
@@ -40,6 +45,33 @@ enum DateRangeType {
   ThisWeek,
   NextWeek,
 }
+
+enum MoreActionsMenuOptionType {
+  Settings,
+  RemoveTeam,
+}
+
+interface MoreActionsMenuItemType {
+  id: MoreActionsMenuOptionType;
+  label: String;
+  icon: JSX.Element;
+  color: 'inherit' | 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
+}
+
+const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
+  [MoreActionsMenuOptionType.Settings]: {
+    id: MoreActionsMenuOptionType.Settings,
+    label: 'Settings',
+    icon: <SettingsIcon />,
+    color: 'secondary',
+  },
+  [MoreActionsMenuOptionType.RemoveTeam]: {
+    id: MoreActionsMenuOptionType.RemoveTeam,
+    label: 'Remove',
+    icon: <DeleteIcon />,
+    color: 'warning',
+  },
+};
 
 type CustomerDetails = {
   uniqueId: string;
@@ -69,24 +101,17 @@ type RowType = {
 
 const dayIndex: { [key: string]: number } = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
 
-const getDateRangeSelector = (value: DateRangeType, onDateRangeTypeChange?: (event: React.MouseEvent<HTMLElement>, value: DateRangeType) => void) => (
-  <ToggleButtonGroup color="primary" value={value} exclusive onChange={onDateRangeTypeChange} size="small">
-    <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
-    <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
-  </ToggleButtonGroup>
-);
-
 const getBookingIcon = ({ booking }: BookingDetails) => {
   let tip = '';
 
   if (booking) {
     tip = `Working`;
     if (booking.location) {
-      tip += ` from "${booking.location!.name}"`;
+      tip += ` from the "${booking.location!.name}"`;
     }
 
     if (booking.desks.length > 0) {
-      tip += ` at "${booking.desks.map(({ name }) => name).join(', ')}"`;
+      tip += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
 
       const zones = booking.desks.flatMap(({ locationTags }) => locationTags).filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
       if (zones.length > 0) {
@@ -101,12 +126,7 @@ const getBookingIcon = ({ booking }: BookingDetails) => {
 };
 
 const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamName }: Props) => {
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<teamPeopleBookingsMatrixTeamMembersPaginationQuery, teamPeopleBookingsMatrix_query$key>(
+  const { data: rootData, refetch } = usePaginationFragment<teamPeopleBookingsMatrixTeamMembersPaginationQuery, teamPeopleBookingsMatrix_query$key>(
     graphql`
       fragment teamPeopleBookingsMatrix_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 10000 })
@@ -139,6 +159,10 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         me {
           id
         }
+        team(id: $teamId) {
+          canModify
+          canDelete
+        }
         organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {
           canAddBookingOnBehalf
         }
@@ -147,6 +171,11 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
           from
           customer {
             uniqueId
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
           }
           location {
             name
@@ -170,6 +199,24 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       addBooking(input: $input) {
         booking {
           id
+          from
+          customer {
+            name
+            givenName
+            middleName
+            familyName
+          }
+          location {
+            name
+          }
+          desks {
+            name
+            locationTags {
+              uniqueId
+              name
+              tagType
+            }
+          }
         }
       }
     }
@@ -186,6 +233,9 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
   `);
 
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
+  const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
   const [, startTransition] = useTransition();
   const [sortingTeamMemberOrder] = useState<TeamMemberOrderInput>({
@@ -399,7 +449,16 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
             });
           }
 
+          let message = `Booking removed for ${getCustomerFullName(booking.customer)}`;
+
+          if (booking.location) {
+            message += ` at the "${booking.location!.name}"`;
+          }
+
+          message += ` on ${toShortDate(booking.from)}`;
+
           handleRefetch(pageSize, startDate);
+          enqueueSnackbar(message, { variant: 'success', anchorOrigin });
         },
         onError: (error) => {
           enqueueSnackbar(`Failed to delete booking '${fromToPrint}'. Error: ${error.message}`, {
@@ -422,7 +481,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
             deskIds: [],
           },
         },
-        onCompleted: (_, errors) => {
+        onCompleted: (response, errors) => {
           if (errors && errors.length > 0) {
             enqueueSnackbar(`Failed to add booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
               variant: 'error',
@@ -430,20 +489,34 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
             });
           }
 
+          const booking = response.addBooking?.booking!;
+          let message = `Booking added for ${getCustomerFullName(booking.customer)} to work`;
+
+          if (booking.location) {
+            message += ` from the "${booking.location!.name}"`;
+          }
+
+          if (booking.desks.length > 0) {
+            message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
+
+            const zones = booking.desks.flatMap(({ locationTags }) => locationTags).filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
+            if (zones.length > 0) {
+              const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+
+              message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
+            }
+          }
+
+          message += ` on ${toShortDate(booking.from)}`;
+
           handleRefetch(pageSize, startDate);
+          enqueueSnackbar(message, { variant: 'success', anchorOrigin });
         },
         onError: (error) => {
           enqueueSnackbar(`Failed to add booking '${fromToPrint}'. Error: ${error.message}`, {
             variant: 'error',
             anchorOrigin,
           });
-        },
-        optimisticResponse: {
-          addBooking: {
-            booking: {
-              id,
-            },
-          },
         },
       });
     }
@@ -461,35 +534,101 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     handleRefetch(pageSize, start);
   };
 
-  if (!rootData.me) {
+  if (!rootData.me || !rootData.team) {
     return <></>;
   }
 
   const rowCount = rootData.paginatedTeamMembers?.totalCount ?? 0;
 
+  let moreActionsOption: MoreActionsMenuItemType[] = [];
+  if (rootData.team.canModify) {
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.Settings]);
+  }
+
+  if (rootData.team.canDelete) {
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveTeam]);
+  }
+
+  const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setMoreActionsAnchorEl(event.currentTarget);
+  };
+  const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.Settings:
+        handleSettingsClicked();
+        break;
+    }
+  };
+
+  const handleBookingsClicked = () => {
+    router.push(organizationId ? `/organization/${organizationId}/team/${teamId}?tab=bookings` : `/team/${teamId}?tab=bookings`);
+  };
+
+  const handleSettingsClicked = () => {
+    router.push(organizationId ? `/organization/${organizationId}/team/${teamId}?tab=about` : `/team/${teamId}?tab=about`);
+  };
+
   return (
-    <Card style={{ maxWidth: 500, height: '100%', overflow: 'auto' }}>
-      <CardHeader title={teamName} subheader={<>{getDateRangeSelector(dateRangeType, handleDateRangeTypeChange)}</>} />
-      <CardContent>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          hideFooterPagination={rowCount <= 10}
-          initialState={{
-            pagination: {
-              rowCount,
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          pageSizeOptions={[10]}
-          disableRowSelectionOnClick
-          density="compact"
-          onCellClick={handleCellClick}
+    <>
+      <Card sx={{ maxWidth: 500, height: '100%' }}>
+        <CardHeader
+          title={teamName}
+          subheader={
+            <Stack direction="row" justifyContent="space-between" width="100%">
+              <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
+                <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
+                <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
+              </ToggleButtonGroup>
+              <Stack direction="row">
+                <IconButton color="primary" onClick={handleBookingsClicked}>
+                  <BookingIcon />
+                </IconButton>
+              </Stack>
+            </Stack>
+          }
+          action={
+            <>
+              {moreActionsOption.length > 0 && (
+                <IconButton onClick={handleMoreActionsMenuClick}>
+                  <EllipseMenuIcon />
+                </IconButton>
+              )}
+            </>
+          }
         />
-      </CardContent>
-    </Card>
+        <CardContent>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            hideFooterPagination={rowCount <= 10}
+            initialState={{
+              pagination: {
+                rowCount,
+                paginationModel: {
+                  pageSize: 10,
+                },
+              },
+            }}
+            pageSizeOptions={[10]}
+            disableRowSelectionOnClick
+            density="compact"
+            onCellClick={handleCellClick}
+          />
+        </CardContent>
+      </Card>
+      <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
+        {moreActionsOption.map((option) => (
+          <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <IconButton color={option.color}>{option.icon}</IconButton>
+              <Typography variant="body1">{option.label}</Typography>
+            </Stack>
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
   );
 };
 

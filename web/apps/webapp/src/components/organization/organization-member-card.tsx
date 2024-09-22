@@ -134,9 +134,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
         }}
         showFullName
       />
-      <Typography gutterBottom variant="body1">
-        {getCustomerFullName(organizationMemberDetails.customer)}
-      </Typography>
+      <Typography variant="body1">{getCustomerFullName(organizationMemberDetails.customer)}</Typography>
     </Stack>
   );
 
@@ -149,9 +147,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
           <CardContent>
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               {organizationMemberDetails.membershipType && (
-                <Typography gutterBottom variant="body1">
-                  {convertStringToLowercaseExceptFirstLetter(organizationMemberDetails.membershipType)}
-                </Typography>
+                <Typography variant="body1">{convertStringToLowercaseExceptFirstLetter(organizationMemberDetails.membershipType)}</Typography>
               )}
             </Stack>
 

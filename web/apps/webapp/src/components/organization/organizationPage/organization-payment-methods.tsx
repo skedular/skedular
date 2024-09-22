@@ -170,9 +170,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
 
   return (
     <>
-      <Typography variant="h6" gutterBottom>
-        Payment methods
-      </Typography>
+      <Typography variant="h6">Payment methods</Typography>
       {paymentMethodExist && (
         <>
           {rootData.organizationPaymentMethodsDetails.map(({ id, cardBrand, cardExpiryMonth, cardExpiryYear, cardLastFourDigit }) => {
@@ -180,15 +178,11 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
               <Card elevation={24} key={id}>
                 <CardContent>
                   <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                    <Typography gutterBottom variant="body1">
-                      {`${cardBrand} •••• ${cardLastFourDigit}`}
-                    </Typography>
+                    <Typography variant="body1">{`${cardBrand} •••• ${cardLastFourDigit}`}</Typography>
                   </Stack>
 
                   <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                    <Typography gutterBottom variant="body1">
-                      {`Expires ${cardExpiryMonth}/${cardExpiryYear?.toString().slice(-2)}`}
-                    </Typography>
+                    <Typography variant="body1">{`Expires ${cardExpiryMonth}/${cardExpiryYear?.toString().slice(-2)}`}</Typography>
                   </Stack>
 
                   <CardActions sx={{ justifyContent: 'flex-end' }}>
@@ -204,9 +198,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
       )}
       {!paymentMethodExist && addNewPaymentMethodState === AddOrganizationPaymentMethodState.NOT_STARTED && (
         <>
-          <Typography variant="h6" gutterBottom>
-            Payment method
-          </Typography>
+          <Typography variant="h6">Payment method</Typography>
           <Typography>No payment method setup yet</Typography>
           <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddNewPaymentMethodClick}>
             Add payment method

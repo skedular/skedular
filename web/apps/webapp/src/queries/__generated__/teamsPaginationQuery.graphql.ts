@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<07a48d9a9b46df8e79ad3fe6557f13b2>>
+ * @generated SignedSource<<7e259bd78c1790d57f78dac3b43159bd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -171,13 +171,6 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "about",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
                     "concreteType": "TeamOrganizationDetails",
                     "kind": "LinkedField",
                     "name": "organization",
@@ -186,6 +179,13 @@ return {
                       (v4/*: any*/),
                       (v3/*: any*/)
                     ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "about",
                     "storageKey": null
                   },
                   {
@@ -308,16 +308,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3712c533f100a96bbeb2efd8fd72d677",
+    "cacheID": "3c368d046cfa46cd8405443a56b647e4",
     "id": null,
     "metadata": {},
     "name": "teamsPaginationQuery",
     "operationKind": "query",
-    "text": "query teamsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $teamNameSearchText: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...teams_query_1G22uz\n}\n\nfragment teamCard_Query on Query {\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment teams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...teamCard_Query\n}\n"
+    "text": "query teamsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $teamNameSearchText: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...teams_query_1G22uz\n}\n\nfragment teamCard_Query on Query {\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment teams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...teamCard_Query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "943d56e5a9aff10a5dfe0d3cc86f0983";
+(node as any).hash = "530692a783d2a591c0555236143df6aa";
 
 export default node;

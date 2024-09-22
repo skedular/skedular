@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b224907b007af622e9acfc2b7caf1f56>>
+ * @generated SignedSource<<0fb3a49270b435618730e6fc7f96ca94>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,11 @@ import { FragmentRefs } from "relay-runtime";
 export type teamPeopleBookingsMatrix_query$data = {
   readonly allBookings: ReadonlyArray<{
     readonly customer: {
+      readonly familyName: string | null | undefined;
+      readonly givenName: string | null | undefined;
+      readonly middleName: string | null | undefined;
+      readonly name: string | null | undefined;
+      readonly photoUrl: string | null | undefined;
       readonly uniqueId: string;
     };
     readonly desks: ReadonlyArray<{
@@ -55,6 +60,10 @@ export type teamPeopleBookingsMatrix_query$data = {
     };
     readonly totalCount: number | null | undefined;
   };
+  readonly team: {
+    readonly canDelete: boolean;
+    readonly canModify: boolean;
+  } | null | undefined;
   readonly " $fragmentType": "teamPeopleBookingsMatrix_query";
 };
 export type teamPeopleBookingsMatrix_query$key = {
@@ -86,7 +95,39 @@ v3 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-};
+},
+v4 = [
+  (v2/*: any*/),
+  (v3/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "givenName",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "middleName",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "familyName",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "photoUrl",
+    "storageKey": null
+  }
+];
 return {
   "argumentDefinitions": [
     {
@@ -239,38 +280,7 @@ return {
                   "kind": "LinkedField",
                   "name": "customer",
                   "plural": false,
-                  "selections": [
-                    (v2/*: any*/),
-                    (v3/*: any*/),
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "givenName",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "middleName",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "familyName",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "photoUrl",
-                      "storageKey": null
-                    }
-                  ],
+                  "selections": (v4/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -317,6 +327,37 @@ return {
       "plural": false,
       "selections": [
         (v1/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "id",
+          "variableName": "teamId"
+        }
+      ],
+      "concreteType": "TeamDetails",
+      "kind": "LinkedField",
+      "name": "team",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canModify",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canDelete",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -402,9 +443,7 @@ return {
           "kind": "LinkedField",
           "name": "customer",
           "plural": false,
-          "selections": [
-            (v2/*: any*/)
-          ],
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -460,6 +499,6 @@ return {
 };
 })();
 
-(node as any).hash = "3acf7b838882eb8a948ebd27c0936475";
+(node as any).hash = "1ba38ae057231ef9c4942ac12fc7614e";
 
 export default node;

@@ -132,9 +132,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
           url: locationMemberDetails.customer?.photoUrl,
         }}
       />
-      <Typography gutterBottom variant="body1">
-        {getCustomerFullName(locationMemberDetails.customer)}
-      </Typography>
+      <Typography variant="body1">{getCustomerFullName(locationMemberDetails.customer)}</Typography>
     </Stack>
   );
 
@@ -147,9 +145,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
             <CardContent>
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 {locationMemberDetails.membershipType && (
-                  <Typography gutterBottom variant="body1">
-                    {convertStringToLowercaseExceptFirstLetter(locationMemberDetails.membershipType)}
-                  </Typography>
+                  <Typography variant="body1">{convertStringToLowercaseExceptFirstLetter(locationMemberDetails.membershipType)}</Typography>
                 )}
               </Stack>
 

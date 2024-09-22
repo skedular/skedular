@@ -239,7 +239,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
               <LocationAvatar name={{ name: locationDetails.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
 
               {locationDetails.name && (
-                <Typography gutterBottom variant="h5" noWrap={true}>
+                <Typography variant="h5" noWrap={true}>
                   {locationDetails.name}
                 </Typography>
               )}
@@ -251,7 +251,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
           {locationDetails.about && (
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <AboutIcon />
-              <Typography gutterBottom variant="body1" noWrap={true}>
+              <Typography variant="body1" noWrap={true}>
                 {locationDetails.about}
               </Typography>
             </Stack>
@@ -260,7 +260,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
           {locationDetails.organization && (
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <OrganizationIcon />
-              <Typography gutterBottom variant="body1" noWrap={true}>
+              <Typography variant="body1" noWrap={true}>
                 {locationDetails.organization.name}
               </Typography>
             </Stack>
@@ -268,7 +268,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <DeskIcon />
-            <Typography gutterBottom variant="body1" noWrap={true}>
+            <Typography variant="body1" noWrap={true}>
               {locationDetails.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${locationDetails.deskCapacity}`}
             </Typography>
           </Stack>

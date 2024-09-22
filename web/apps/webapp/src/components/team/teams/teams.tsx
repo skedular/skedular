@@ -1,4 +1,4 @@
-import { TeamCard } from '@/components/team';
+import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type { TeamOrderField, TeamOrderInput, teamsPaginationQuery } from '@/queries/__generated__/teamsPaginationQuery.graphql';
 import type { teams_query$key } from '@/queries/__generated__/teams_query.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -40,6 +40,10 @@ const Teams = ({ rootDataRelay }: Props) => {
           edges {
             node {
               id
+              name
+              organization {
+                uniqueId
+              }
               ...teamCard_TeamDetails
             }
           }
@@ -184,7 +188,7 @@ const Teams = ({ rootDataRelay }: Props) => {
       <Grid container spacing={2}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
-            <TeamCard rootDataRelay={rootData} teamDetailsRelay={edge.node} connectionIds={connectionIds} />
+            <TeamBookingsCard organizationId={edge.node.organization?.uniqueId} teamId={edge.node.id} teamName={edge.node.name} />
           </Grid>
         ))}
       </Grid>

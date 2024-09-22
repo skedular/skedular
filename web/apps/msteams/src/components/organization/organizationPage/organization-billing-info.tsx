@@ -180,75 +180,43 @@ const OrganizationBillingInfo = ({ rootDataRelay }: Props) => {
       {!editing && (
         <Stack direction="column" spacing={1}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Email
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {email}
-            </Typography>
+            <Typography variant="h6">Email</Typography>
+            <Typography variant="body1">{email}</Typography>
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Address Line 1
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {addressLine1}
-            </Typography>
+            <Typography variant="h6">Address Line 1</Typography>
+            <Typography variant="body1">{addressLine1}</Typography>
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Address Line 2
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {addressLine2}
-            </Typography>
+            <Typography variant="h6">Address Line 2</Typography>
+            <Typography variant="body1">{addressLine2}</Typography>
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Suburb
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {suburb}
-            </Typography>
+            <Typography variant="h6">Suburb</Typography>
+            <Typography variant="body1">{suburb}</Typography>
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              City
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {city}
-            </Typography>
+            <Typography variant="h6">City</Typography>
+            <Typography variant="body1">{city}</Typography>
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Province
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {province}
-            </Typography>
+            <Typography variant="h6">Province</Typography>
+            <Typography variant="body1">{province}</Typography>
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Zipcode
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {zipcode}
-            </Typography>
+            <Typography variant="h6">Zipcode</Typography>
+            <Typography variant="body1">{zipcode}</Typography>
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Country
-            </Typography>
-            <Typography gutterBottom variant="body1">
-              {country}
-            </Typography>
+            <Typography variant="h6">Country</Typography>
+            <Typography variant="body1">{country}</Typography>
           </Stack>
         </Stack>
       )}

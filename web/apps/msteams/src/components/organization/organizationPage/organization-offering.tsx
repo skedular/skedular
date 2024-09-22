@@ -99,19 +99,13 @@ const OrganizationOffering = ({ rootDataRelay, onRefetchRequired }: Props) => {
 
   return (
     <>
-      <Typography variant="h6" gutterBottom>
-        Active offering
-      </Typography>
+      <Typography variant="h6">Active offering</Typography>
       <Card elevation={24} sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={
             <>
-              <Typography gutterBottom variant="body1">
-                {offering.name}
-              </Typography>
-              <Typography gutterBottom variant="body1">
-                {`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`}
-              </Typography>
+              <Typography variant="body1">{offering.name}</Typography>
+              <Typography variant="body1">{`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`}</Typography>
             </>
           }
         />

@@ -166,9 +166,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
             }
             subheader={
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <Typography gutterBottom variant="body1">
-                  {`${getCustomerFullName(invitedBy)} has invited you to join team ${team?.name}`}
-                </Typography>
+                <Typography variant="body1">{`${getCustomerFullName(invitedBy)} has invited you to join team ${team?.name}`}</Typography>
               </Stack>
             }
           />
@@ -188,33 +186,25 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
 
       {cardState === CardState.Rejecting && (
         <CardContent>
-          <Typography gutterBottom variant="body1">
-            {`Rejecting invitation to join ${team?.name}`}
-          </Typography>
+          <Typography variant="body1">{`Rejecting invitation to join ${team?.name}`}</Typography>
         </CardContent>
       )}
 
       {cardState === CardState.Rejected && (
         <CardContent>
-          <Typography gutterBottom variant="body1">
-            {`Rejected invitation to join ${team?.name}`}
-          </Typography>
+          <Typography variant="body1">{`Rejected invitation to join ${team?.name}`}</Typography>
         </CardContent>
       )}
 
       {cardState === CardState.Accepting && (
         <CardContent>
-          <Typography gutterBottom variant="body1">
-            {`Accepting invitation to join ${team?.name}`}
-          </Typography>
+          <Typography variant="body1">{`Accepting invitation to join ${team?.name}`}</Typography>
         </CardContent>
       )}
 
       {cardState === CardState.Accepted && (
         <CardContent>
-          <Typography gutterBottom variant="body1">
-            {`Accepted invitation to join ${team?.name}`}
-          </Typography>
+          <Typography variant="body1">{`Accepted invitation to join ${team?.name}`}</Typography>
         </CardContent>
       )}
     </Card>
