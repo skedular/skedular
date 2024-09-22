@@ -6,7 +6,6 @@ import type { deskCard_query$key } from '@/queries/__generated__/deskCard_query.
 import type { deskCard_removeCustomerDefaultDeskMutation } from '@/queries/__generated__/deskCard_removeCustomerDefaultDeskMutation.graphql';
 import type { deskCard_updateDeskMutation } from '@/queries/__generated__/deskCard_updateDeskMutation.graphql';
 import type { deskMultipleChoicesZones_query$key } from '@/queries/__generated__/deskMultipleChoicesZones_query.graphql';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -27,7 +26,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { DangerIcon, DeleteIcon, DeskIcon, EditIcon, InfoIcon } from '@repo/shared/components/icons';
+import { DangerIcon, DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, InfoIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
@@ -645,7 +644,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
               }
               action={
                 <IconButton onClick={handleMoreActionsMenuClick}>
-                  <MoreVertIcon />
+                  <EllipseMenuIcon />
                 </IconButton>
               }
             />

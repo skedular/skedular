@@ -35,6 +35,7 @@ export { default as AnalyticsIcon } from '@mui/icons-material/Insights';
 export { default as LogoutIcon } from '@mui/icons-material/Logout';
 export { default as MenuIcon } from '@mui/icons-material/Menu';
 export { default as MoreItemsIcon } from '@mui/icons-material/MoreHoriz';
+export { default as EllipseMenuIcon } from '@mui/icons-material/MoreVert';
 export { default as ExpandIcon } from '@mui/icons-material/OpenInFull';
 export { default as BillingAndPaymentIcon } from '@mui/icons-material/Payment';
 export { default as MembersIcon } from '@mui/icons-material/People';

@@ -1,4 +1,3 @@
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -19,7 +18,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { DangerIcon, DeleteIcon, DeskIcon, EditIcon, InfoIcon } from '@repo/shared/components/icons';
+import { DangerIcon, DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, InfoIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -81,19 +80,19 @@ interface MoreActionsMenuItemType {
 }
 
 const moreActionsMenuAllOptions = {
-  [MoreActionsMenuOptionType.ActivateDesk]:{
+  [MoreActionsMenuOptionType.ActivateDesk]: {
     id: MoreActionsMenuOptionType.ActivateDesk,
     label: 'Activate desk',
   },
-  [MoreActionsMenuOptionType.DeactivateDesk]:{
+  [MoreActionsMenuOptionType.DeactivateDesk]: {
     id: MoreActionsMenuOptionType.DeactivateDesk,
     label: 'Dectivate desk',
   },
-  [MoreActionsMenuOptionType.EnableDeskApprovalRequirement]:{
+  [MoreActionsMenuOptionType.EnableDeskApprovalRequirement]: {
     id: MoreActionsMenuOptionType.EnableDeskApprovalRequirement,
     label: 'Enable desk approval requirement',
   },
-  [MoreActionsMenuOptionType.RemoveDeskApprovalRequirement]:{
+  [MoreActionsMenuOptionType.RemoveDeskApprovalRequirement]: {
     id: MoreActionsMenuOptionType.RemoveDeskApprovalRequirement,
     label: 'Remove desk approval requirement',
   },
@@ -646,7 +645,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
               }
               action={
                 <IconButton onClick={handleMoreActionsMenuClick}>
-                  <MoreVertIcon />
+                  <EllipseMenuIcon />
                 </IconButton>
               }
             />
