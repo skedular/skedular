@@ -20,7 +20,8 @@ type Query {
   teamBookingPermissions(teamId: String!): TeamBookingPermissions!
   customerVersion: Version!
   me: CustomerDetails
-  customersByDefaultLocation(after: String, first: Int, before: String, last: Int, where: CustomerWhereInput!, orderBy: [CustomerOrderInput!]): CustomerConnection!
+  paginatedCustomersByDefaultLocation(after: String, first: Int, before: String, last: Int, where: CustomerWhereInput!, orderBy: [CustomerOrderInput!]): CustomerConnection!
+  customersByDefaultLocation(where: CustomerWhereInput!, orderBy: [CustomerOrderInput!]): [CustomerDetails!]!
   locationVersion: Version!
   locationCustomerRecordSynced: Boolean!
   locationMemberMembershipTypes: [LocationMemberMembershipType!]!

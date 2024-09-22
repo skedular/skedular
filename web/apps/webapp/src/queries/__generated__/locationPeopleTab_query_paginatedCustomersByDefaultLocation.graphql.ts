@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0ec8e27c8574f52e9d8787c5d0a160ec>>
+ * @generated SignedSource<<e14e0af7e25230211e5b528c2ca37eab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,19 +16,19 @@ export type CustomerOrderInput = {
   direction: OrderDirection;
   field?: CustomerOrderField | null | undefined;
 };
-export type locationPeopleTab_query_customersByDefaultLocation$variables = {
+export type locationPeopleTab_query_paginatedCustomersByDefaultLocation$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   locationId: string;
   locationOrganizationPeopleSortingValues?: ReadonlyArray<CustomerOrderInput> | null | undefined;
   peopleNameSearchText?: string | null | undefined;
 };
-export type locationPeopleTab_query_customersByDefaultLocation$data = {
+export type locationPeopleTab_query_paginatedCustomersByDefaultLocation$data = {
   readonly " $fragmentSpreads": FragmentRefs<"locationPeopleTab_query_organizationMembers">;
 };
-export type locationPeopleTab_query_customersByDefaultLocation = {
-  response: locationPeopleTab_query_customersByDefaultLocation$data;
-  variables: locationPeopleTab_query_customersByDefaultLocation$variables;
+export type locationPeopleTab_query_paginatedCustomersByDefaultLocation = {
+  response: locationPeopleTab_query_paginatedCustomersByDefaultLocation$data;
+  variables: locationPeopleTab_query_paginatedCustomersByDefaultLocation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -97,7 +97,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "locationPeopleTab_query_customersByDefaultLocation",
+    "name": "locationPeopleTab_query_paginatedCustomersByDefaultLocation",
     "selections": [
       {
         "args": [
@@ -123,14 +123,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "locationPeopleTab_query_customersByDefaultLocation",
+    "name": "locationPeopleTab_query_paginatedCustomersByDefaultLocation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "CustomerConnection",
         "kind": "LinkedField",
-        "name": "customersByDefaultLocation",
+        "name": "paginatedCustomersByDefaultLocation",
         "plural": false,
         "selections": [
           {
@@ -266,23 +266,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "locationPeopleTab_customersByDefaultLocation",
+        "key": "locationPeopleTab_paginatedCustomersByDefaultLocation",
         "kind": "LinkedHandle",
-        "name": "customersByDefaultLocation"
+        "name": "paginatedCustomersByDefaultLocation"
       }
     ]
   },
   "params": {
-    "cacheID": "bc525c9438e89c60b977ab00ec3fb170",
+    "cacheID": "3d8e0de1c6d55cdd86436e7f052f0776",
     "id": null,
     "metadata": {},
-    "name": "locationPeopleTab_query_customersByDefaultLocation",
+    "name": "locationPeopleTab_query_paginatedCustomersByDefaultLocation",
     "operationKind": "query",
-    "text": "query locationPeopleTab_query_customersByDefaultLocation(\n  $count: Int = 50\n  $cursor: String\n  $locationId: String!\n  $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...locationPeopleTab_query_organizationMembers_1G22uz\n}\n\nfragment customerCard_CustomerDetails on CustomerDetails {\n  name\n  givenName\n  middleName\n  familyName\n  photoUrl\n}\n\nfragment locationPeopleTab_query_organizationMembers_1G22uz on Query {\n  customersByDefaultLocation(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationOrganizationPeopleSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...customerCard_CustomerDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query locationPeopleTab_query_paginatedCustomersByDefaultLocation(\n  $count: Int = 50\n  $cursor: String\n  $locationId: String!\n  $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...locationPeopleTab_query_organizationMembers_1G22uz\n}\n\nfragment customerCard_CustomerDetails on CustomerDetails {\n  name\n  givenName\n  middleName\n  familyName\n  photoUrl\n}\n\nfragment locationPeopleTab_query_organizationMembers_1G22uz on Query {\n  paginatedCustomersByDefaultLocation(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationOrganizationPeopleSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...customerCard_CustomerDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "96b6bc1b055fe904a32f7df1ef086f01";
+(node as any).hash = "3436bb42cdeff6688cfdd9e7509b9360";
 
 export default node;

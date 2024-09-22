@@ -6,12 +6,12 @@ import type {
 } from '@/queries/__generated__/locationMembersPaginationQuery.graphql';
 import type { locationPeopleTab_inviteCustomersToJoinLocationMutation } from '@/queries/__generated__/locationPeopleTab_inviteCustomersToJoinLocationMutation.graphql';
 import type { locationPeopleTab_query$key } from '@/queries/__generated__/locationPeopleTab_query.graphql';
+import type { locationPeopleTab_query_organizationMembers$key } from '@/queries/__generated__/locationPeopleTab_query_organizationMembers.graphql';
 import type {
   CustomerOrderField,
   CustomerOrderInput,
-  locationPeopleTab_query_customersByDefaultLocation,
-} from '@/queries/__generated__/locationPeopleTab_query_customersByDefaultLocation.graphql';
-import type { locationPeopleTab_query_organizationMembers$key } from '@/queries/__generated__/locationPeopleTab_query_organizationMembers.graphql';
+  locationPeopleTab_query_paginatedCustomersByDefaultLocation,
+} from '@/queries/__generated__/locationPeopleTab_query_paginatedCustomersByDefaultLocation.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -100,21 +100,21 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
   );
 
   const {
-    data: rootDatacustomersByDefaultLocation,
-    loadNext: loadNextcustomersByDefaultLocation,
-    isLoadingNext: isLoadingNextcustomersByDefaultLocation,
-    refetch: refetchcustomersByDefaultLocation,
-  } = usePaginationFragment<locationPeopleTab_query_customersByDefaultLocation, locationPeopleTab_query_organizationMembers$key>(
+    data: rootDataPaginatedCustomersByDefaultLocation,
+    loadNext: loadNextpaginatedCustomersByDefaultLocation,
+    isLoadingNext: isLoadingNextpaginatedCustomersByDefaultLocation,
+    refetch: refetchpaginatedCustomersByDefaultLocation,
+  } = usePaginationFragment<locationPeopleTab_query_paginatedCustomersByDefaultLocation, locationPeopleTab_query_organizationMembers$key>(
     graphql`
       fragment locationPeopleTab_query_organizationMembers on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationPeopleTab_query_customersByDefaultLocation") {
-        customersByDefaultLocation(
+      @refetchable(queryName: "locationPeopleTab_query_paginatedCustomersByDefaultLocation") {
+        paginatedCustomersByDefaultLocation(
           first: $count
           after: $cursor
           where: { locationId: $locationId, nameContains: $peopleNameSearchText }
           orderBy: $locationOrganizationPeopleSortingValues
-        ) @connection(key: "locationPeopleTab_customersByDefaultLocation") {
+        ) @connection(key: "locationPeopleTab_paginatedCustomersByDefaultLocation") {
           __id
           totalCount
           edges {
@@ -169,7 +169,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
     (pageSize: number, locationMemberOrder: LocationMemberOrderInput, customerOrder: CustomerOrderInput, peopleNameSearchText: string) => {
       startTransition(() => {
         if (organizationId) {
-          refetchcustomersByDefaultLocation(
+          refetchpaginatedCustomersByDefaultLocation(
             {
               count: pageSize,
               locationOrganizationPeopleSortingValues: [customerOrder],
@@ -199,16 +199,16 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
         }
       });
     },
-    [organizationId, refetchLocationMembers, refetchcustomersByDefaultLocation],
+    [organizationId, refetchLocationMembers, refetchpaginatedCustomersByDefaultLocation],
   );
 
   const loadNextPage = useCallback(() => {
     if (organizationId) {
-      if (isLoadingNextcustomersByDefaultLocation) {
+      if (isLoadingNextpaginatedCustomersByDefaultLocation) {
         return;
       }
 
-      loadNextcustomersByDefaultLocation(pageSize);
+      loadNextpaginatedCustomersByDefaultLocation(pageSize);
     } else {
       if (isLoadingNextLocationMembers) {
         return;
@@ -220,8 +220,8 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
     organizationId,
     loadNextLocationMembers,
     isLoadingNextLocationMembers,
-    loadNextcustomersByDefaultLocation,
-    isLoadingNextcustomersByDefaultLocation,
+    loadNextpaginatedCustomersByDefaultLocation,
+    isLoadingNextpaginatedCustomersByDefaultLocation,
     pageSize,
   ]);
 
@@ -249,21 +249,21 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
 
   const connectionIds = useMemo(() => {
     if (organizationId) {
-      return [rootDatacustomersByDefaultLocation.customersByDefaultLocation.__id];
+      return [rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.__id];
     } else {
       return rootDataLocation.paginatedLocationMembers ? [rootDataLocation.paginatedLocationMembers.__id] : [];
     }
-  }, [organizationId, rootDataLocation.paginatedLocationMembers, rootDatacustomersByDefaultLocation.customersByDefaultLocation]);
+  }, [organizationId, rootDataLocation.paginatedLocationMembers, rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation]);
 
   if (!rootDataLocation.location) {
     return <></>;
   }
 
   const locationMemberEdges = rootDataLocation.paginatedLocationMembers.edges;
-  const organizationMemberEdges = rootDatacustomersByDefaultLocation.customersByDefaultLocation.edges;
+  const organizationMemberEdges = rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.edges;
   const count = organizationId
-    ? rootDatacustomersByDefaultLocation.customersByDefaultLocation.totalCount
-      ? rootDatacustomersByDefaultLocation.customersByDefaultLocation.totalCount
+    ? rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.totalCount
+      ? rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.totalCount
       : 0
     : rootDataLocation.paginatedLocationMembers.totalCount
       ? rootDataLocation.paginatedLocationMembers.totalCount

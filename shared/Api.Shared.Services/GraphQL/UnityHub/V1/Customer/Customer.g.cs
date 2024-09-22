@@ -705,13 +705,30 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
             
 
                 
-                public abstract Task<CustomerConnection> CustomersByDefaultLocationAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] CustomerWhereInput where, [HotChocolate.GraphQLName("orderBy")] CustomerOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<CustomerConnection> PaginatedCustomersByDefaultLocationAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] CustomerWhereInput where, [HotChocolate.GraphQLName("orderBy")] CustomerOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+            
+
+                
+                public abstract Task<CustomerDetails[]> CustomersByDefaultLocationAsync([HotChocolate.GraphQLName("where")] CustomerWhereInput where, [HotChocolate.GraphQLName("orderBy")] CustomerOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
         }
         
 
         
         [HotChocolate.GraphQLName("Query_CustomersByDefaultLocation_Arguments")]
         public class Query_CustomersByDefaultLocation_Arguments
+        {
+            [HotChocolate.GraphQLName("where")]
+            public CustomerWhereInput Where { get; set; }
+
+            [HotChocolate.GraphQLName("orderBy")]
+            public CustomerOrderInput[]? OrderBy { get; set; }
+
+        }
+        
+
+        
+        [HotChocolate.GraphQLName("Query_PaginatedCustomersByDefaultLocation_Arguments")]
+        public class Query_PaginatedCustomersByDefaultLocation_Arguments
         {
             [HotChocolate.GraphQLName("after")]
             public string? After { get; set; }

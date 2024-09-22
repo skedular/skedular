@@ -39,7 +39,7 @@ public class CustomerQuery(IMapper mapper) : Query
         return mapper.MapTo(customer);
     }
 
-    public override async Task<CustomerConnection> CustomersByDefaultLocationAsync(
+    public override async Task<CustomerConnection> PaginatedCustomersByDefaultLocationAsync(
         string? after,
         int? first,
         string? before,
@@ -99,5 +99,16 @@ public class CustomerQuery(IMapper mapper) : Query
             Edges = edges.Select(mapper.MapTo).ToArray(),
             TotalCount = totalCount
         };
+    }
+
+    public override async Task<CustomerDetails[]> CustomersByDefaultLocationAsync(
+        CustomerWhereInput where,
+        CustomerOrderInput[]? orderBy,
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
+    {
+        var result = await PaginatedCustomersByDefaultLocationAsync(null, null, null, null, where, [], serviceProvider,
+            cancellationToken);
+        return result.Edges.Select(item => item.Node).ToArray();
     }
 }

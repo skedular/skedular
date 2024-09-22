@@ -30,7 +30,7 @@ type Query {
     customerVersion: Version!
     me: CustomerDetails
 
-    customersByDefaultLocation(
+    paginatedCustomersByDefaultLocation(
         after: String
         first: Int
         before: String
@@ -38,6 +38,10 @@ type Query {
         where: CustomerWhereInput!
         orderBy: [CustomerOrderInput!]
     ): CustomerConnection!
+    customersByDefaultLocation(
+        where: CustomerWhereInput!
+        orderBy: [CustomerOrderInput!]
+    ): [CustomerDetails!]!
 }
 
 input CustomerWhereInput {
