@@ -1,17 +1,17 @@
 import { TAG_TYPE_LOCATION_ZONE } from '@/components/zone';
-import type { teamPeopleBookingsMatrix_addBookingMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_addBookingMutation.graphql';
-import type { teamPeopleBookingsMatrix_addCustomerDefaultTeamMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_addCustomerDefaultTeamMutation.graphql';
-import type { teamPeopleBookingsMatrix_deleteBookingMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_deleteBookingMutation.graphql';
-import type { teamPeopleBookingsMatrix_deleteTeamMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_deleteTeamMutation.graphql';
+import type { locationPeopleBookingsMatrix_addBookingMutation } from '@/queries/__generated__/locationPeopleBookingsMatrix_addBookingMutation.graphql';
+import type { locationPeopleBookingsMatrix_addCustomerDefaultLocationMutation } from '@/queries/__generated__/locationPeopleBookingsMatrix_addCustomerDefaultLocationMutation.graphql';
+import type { locationPeopleBookingsMatrix_deleteBookingMutation } from '@/queries/__generated__/locationPeopleBookingsMatrix_deleteBookingMutation.graphql';
+import type { locationPeopleBookingsMatrix_deleteLocationMutation } from '@/queries/__generated__/locationPeopleBookingsMatrix_deleteLocationMutation.graphql';
 import type {
-  teamPeopleBookingsMatrix_query$data,
-  teamPeopleBookingsMatrix_query$key,
-} from '@/queries/__generated__/teamPeopleBookingsMatrix_query.graphql';
-import type { teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation.graphql';
+  locationPeopleBookingsMatrix_query$data,
+  locationPeopleBookingsMatrix_query$key,
+} from '@/queries/__generated__/locationPeopleBookingsMatrix_query.graphql';
+import type { locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation } from '@/queries/__generated__/locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation.graphql';
 import type {
-  TeamMemberOrderInput,
-  teamPeopleBookingsMatrixTeamMembersPaginationQuery,
-} from '@/queries/__generated__/teamPeopleBookingsMatrixTeamMembersPaginationQuery.graphql';
+  LocationMemberOrderInput,
+  locationPeopleBookingsMatrixLocationMembersPaginationQuery,
+} from '@/queries/__generated__/locationPeopleBookingsMatrixLocationMembersPaginationQuery.graphql';
 import { Stack, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -54,12 +54,12 @@ import { graphql, useMutation, usePaginationFragment } from 'react-relay';
 const defaultPageSize = 10000;
 
 type Props = {
-  rootDataRelay: teamPeopleBookingsMatrix_query$key;
+  rootDataRelay: locationPeopleBookingsMatrix_query$key;
   organizationId?: string;
-  teamId: string;
-  teamName: string;
-  teamsConnectionIds: string[];
-  hideRemoveTeamOption?: boolean;
+  locationId: string;
+  locationName: string;
+  locationsConnectionIds: string[];
+  hideRemoveLocationOption?: boolean;
 };
 
 enum DateRangeType {
@@ -68,10 +68,10 @@ enum DateRangeType {
 }
 
 enum MoreActionsMenuOptionType {
-  SetAsPreferredTeam,
-  RemoveAsPreferredTeam,
+  SetAsPreferredLocation,
+  RemoveAsPreferredLocation,
   Settings,
-  RemoveTeam,
+  RemoveLocation,
 }
 
 interface MoreActionsMenuItemType {
@@ -82,15 +82,15 @@ interface MoreActionsMenuItemType {
 }
 
 const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
-  [MoreActionsMenuOptionType.SetAsPreferredTeam]: {
-    id: MoreActionsMenuOptionType.SetAsPreferredTeam,
-    label: 'Set as preferred team',
+  [MoreActionsMenuOptionType.SetAsPreferredLocation]: {
+    id: MoreActionsMenuOptionType.SetAsPreferredLocation,
+    label: 'Set as preferred location',
     icon: <NotPreferredIcon />,
     color: 'primary',
   },
-  [MoreActionsMenuOptionType.RemoveAsPreferredTeam]: {
-    id: MoreActionsMenuOptionType.RemoveAsPreferredTeam,
-    label: 'Remove as preferred team',
+  [MoreActionsMenuOptionType.RemoveAsPreferredLocation]: {
+    id: MoreActionsMenuOptionType.RemoveAsPreferredLocation,
+    label: 'Remove as preferred location',
     icon: <PreferredIcon />,
     color: 'primary',
   },
@@ -100,9 +100,9 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
     icon: <SettingsIcon />,
     color: 'secondary',
   },
-  [MoreActionsMenuOptionType.RemoveTeam]: {
-    id: MoreActionsMenuOptionType.RemoveTeam,
-    label: 'Remove team',
+  [MoreActionsMenuOptionType.RemoveLocation]: {
+    id: MoreActionsMenuOptionType.RemoveLocation,
+    label: 'Remove location',
     icon: <DeleteIcon />,
     color: 'warning',
   },
@@ -119,7 +119,7 @@ type CustomerDetails = {
 
 type BookingDetails = {
   customer: CustomerDetails;
-  booking: teamPeopleBookingsMatrix_query$data['allBookings'][number] | undefined;
+  booking: locationPeopleBookingsMatrix_query$data['allBookings'][number] | undefined;
 };
 
 type RowType = {
@@ -160,18 +160,28 @@ const getBookingIcon = ({ booking }: BookingDetails) => {
   return booking ? <WorkingFromOfficeIcon tip={tip} /> : <WorkingFromHomeIcon />;
 };
 
-const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: Props) => {
-  const { data: rootData, refetch } = usePaginationFragment<teamPeopleBookingsMatrixTeamMembersPaginationQuery, teamPeopleBookingsMatrix_query$key>(
+const LocationPeopleBookingsMatrix = ({
+  rootDataRelay,
+  organizationId,
+  locationId,
+  locationName,
+  locationsConnectionIds,
+  hideRemoveLocationOption,
+}: Props) => {
+  const { data: rootData, refetch } = usePaginationFragment<
+    locationPeopleBookingsMatrixLocationMembersPaginationQuery,
+    locationPeopleBookingsMatrix_query$key
+  >(
     graphql`
-      fragment teamPeopleBookingsMatrix_query on Query
+      fragment locationPeopleBookingsMatrix_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 10000 })
-      @refetchable(queryName: "teamPeopleBookingsMatrixTeamMembersPaginationQuery") {
-        paginatedTeamMembers(
+      @refetchable(queryName: "locationPeopleBookingsMatrixLocationMembersPaginationQuery") {
+        paginatedLocationMembers(
           first: $count
           after: $cursor
-          where: { teamId: $teamId, nameContains: $peopleNameSearchText }
+          where: { locationId: $locationId, nameContains: $peopleNameSearchText }
           orderBy: $peopleSortingValues
-        ) @connection(key: "teamPeopleBookingsMatrix_paginatedTeamMembers") {
+        ) @connection(key: "locationPeopleBookingsMatrix_paginatedLocationMembers") {
           __id
           totalCount
           pageInfo {
@@ -193,11 +203,12 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         }
         me {
           id
-          defaultTeams {
+          defaultLocations {
             uniqueId
           }
         }
-        team(id: $teamId) {
+        location(id: $locationId) {
+          deskCapacity
           hasFutureBooking
           canModify
           canDelete
@@ -205,7 +216,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {
           canAddBookingOnBehalf
         }
-        allBookings(where: { teamIds: [$teamId], fromGTE: $from, toLT: $to }) {
+        allBookings(where: { locationIds: [$locationId], fromGTE: $from, toLT: $to }) {
           id
           from
           customer {
@@ -233,8 +244,8 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     rootDataRelay,
   );
 
-  const [commitAddBooking] = useMutation<teamPeopleBookingsMatrix_addBookingMutation>(graphql`
-    mutation teamPeopleBookingsMatrix_addBookingMutation($input: AddBookingInput!) {
+  const [commitAddBooking] = useMutation<locationPeopleBookingsMatrix_addBookingMutation>(graphql`
+    mutation locationPeopleBookingsMatrix_addBookingMutation($input: AddBookingInput!) {
       addBooking(input: $input) {
         booking {
           id
@@ -261,8 +272,8 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     }
   `);
 
-  const [commitDeleteBooking] = useMutation<teamPeopleBookingsMatrix_deleteBookingMutation>(graphql`
-    mutation teamPeopleBookingsMatrix_deleteBookingMutation($input: DeleteBookingInput!) {
+  const [commitDeleteBooking] = useMutation<locationPeopleBookingsMatrix_deleteBookingMutation>(graphql`
+    mutation locationPeopleBookingsMatrix_deleteBookingMutation($input: DeleteBookingInput!) {
       deleteBooking(input: $input) {
         booking {
           id
@@ -271,22 +282,22 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     }
   `);
 
-  const [commitDeleteTeam] = useMutation<teamPeopleBookingsMatrix_deleteTeamMutation>(graphql`
-    mutation teamPeopleBookingsMatrix_deleteTeamMutation($connectionIds: [ID!]!, $input: DeleteTeamInput!) {
-      deleteTeam(input: $input) {
-        team {
+  const [commitDeleteLocation] = useMutation<locationPeopleBookingsMatrix_deleteLocationMutation>(graphql`
+    mutation locationPeopleBookingsMatrix_deleteLocationMutation($connectionIds: [ID!]!, $input: DeleteLocationInput!) {
+      deleteLocation(input: $input) {
+        location {
           id @deleteEdge(connections: $connectionIds)
         }
       }
     }
   `);
 
-  const [commitAddCustomerDefaultTeam] = useMutation<teamPeopleBookingsMatrix_addCustomerDefaultTeamMutation>(graphql`
-    mutation teamPeopleBookingsMatrix_addCustomerDefaultTeamMutation($input: AddCustomerDefaultTeamInput!) {
-      addCustomerDefaultTeam(input: $input) {
+  const [commitAddCustomerDefaultLocation] = useMutation<locationPeopleBookingsMatrix_addCustomerDefaultLocationMutation>(graphql`
+    mutation locationPeopleBookingsMatrix_addCustomerDefaultLocationMutation($input: AddCustomerDefaultLocationInput!) {
+      addCustomerDefaultLocation(input: $input) {
         customer {
           id
-          defaultTeams {
+          defaultLocations {
             uniqueId
           }
         }
@@ -294,12 +305,12 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     }
   `);
 
-  const [commitRemoveCustomerDefaultTeam] = useMutation<teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation>(graphql`
-    mutation teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation($input: RemoveCustomerDefaultTeamInput!) {
-      removeCustomerDefaultTeam(input: $input) {
+  const [commitRemoveCustomerDefaultLocation] = useMutation<locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation>(graphql`
+    mutation locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation($input: RemoveCustomerDefaultLocationInput!) {
+      removeCustomerDefaultLocation(input: $input) {
         customer {
           id
-          defaultTeams {
+          defaultLocations {
             uniqueId
           }
         }
@@ -313,11 +324,11 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
   const [, startTransition] = useTransition();
-  const [sortingTeamMemberOrder] = useState<TeamMemberOrderInput>({
+  const [sortingLocationMemberOrder] = useState<LocationMemberOrderInput>({
     direction: 'Ascending',
     field: 'name',
   });
-  const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
+  const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [startDate, setStartDate] = useState<Dayjs>(startOfWeek(null));
   const [peopleNameSearchText] = useState<string>('');
   const [page, setPage] = useState(0);
@@ -331,11 +342,11 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         refetch(
           {
             count: pageSize,
-            peopleSortingValues: [sortingTeamMemberOrder],
+            peopleSortingValues: [sortingLocationMemberOrder],
             peopleNameSearchText,
             organizationId: organizationId ?? '',
             fetchBookingPermission: !!organizationId,
-            teamId,
+            locationId,
             from: startDate.toISOString(),
             to: endDate.toISOString(),
           },
@@ -348,10 +359,10 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         );
       });
     },
-    [refetch, sortingTeamMemberOrder, peopleNameSearchText, organizationId, teamId],
+    [refetch, sortingLocationMemberOrder, peopleNameSearchText, organizationId, locationId],
   );
 
-  const memebrs = useMemo(() => rootData.paginatedTeamMembers, [rootData.paginatedTeamMembers]);
+  const memebrs = useMemo(() => rootData.paginatedLocationMembers, [rootData.paginatedLocationMembers]);
   const slicedEdges = memebrs.edges?.slice(
     page * pageSize,
     page * pageSize + pageSize > memebrs.edges.length ? memebrs.edges.length : page * pageSize + pageSize,
@@ -552,7 +563,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
             from,
             to,
             organizationId,
-            teamId,
+            locationId,
             deskIds: [],
           },
         },
@@ -609,25 +620,25 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     handleRefetch(pageSize, start);
   };
 
-  if (!rootData.me || !rootData.team) {
+  if (!rootData.me || !rootData.location) {
     return <></>;
   }
 
-  const rowCount = rootData.paginatedTeamMembers?.totalCount ?? 0;
+  const rowCount = rootData.paginatedLocationMembers?.totalCount ?? 0;
 
   let moreActionsOption: MoreActionsMenuItemType[] = [];
-  if (rootData.me.defaultTeams.some((team) => team.uniqueId === teamId)) {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveAsPreferredTeam]);
+  if (rootData.me.defaultLocations.some((location) => location.uniqueId === locationId)) {
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveAsPreferredLocation]);
   } else {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetAsPreferredTeam]);
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetAsPreferredLocation]);
   }
 
-  if (rootData.team.canModify) {
+  if (rootData.location.canModify) {
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.Settings]);
   }
 
-  if (rootData.team.canDelete && !hideRemoveTeamOption) {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveTeam]);
+  if (rootData.location.canDelete && !hideRemoveLocationOption) {
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveLocation]);
   }
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -637,70 +648,70 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     setMoreActionsAnchorEl(null);
 
     switch (id) {
-      case MoreActionsMenuOptionType.SetAsPreferredTeam:
-        handleSetAsPreferredTeamClicked();
+      case MoreActionsMenuOptionType.SetAsPreferredLocation:
+        handleSetAsPreferredLocationClicked();
         break;
 
-      case MoreActionsMenuOptionType.RemoveAsPreferredTeam:
-        handleSetAsNotPreferredTeamClicked();
+      case MoreActionsMenuOptionType.RemoveAsPreferredLocation:
+        handleSetAsNotPreferredLocationClicked();
         break;
 
       case MoreActionsMenuOptionType.Settings:
         handleSettingsClicked();
         break;
 
-      case MoreActionsMenuOptionType.RemoveTeam:
-        handleRemoveTeamClicked();
+      case MoreActionsMenuOptionType.RemoveLocation:
+        handleRemoveLocationClicked();
         break;
     }
   };
 
   const handleBookingsClicked = () => {
-    router.push(organizationId ? `/organization/${organizationId}/team/${teamId}?tab=bookings` : `/team/${teamId}?tab=bookings`);
+    router.push(organizationId ? `/organization/${organizationId}/location/${locationId}?tab=bookings` : `/location/${locationId}?tab=bookings`);
   };
 
   const handleSettingsClicked = () => {
-    router.push(organizationId ? `/organization/${organizationId}/team/${teamId}?tab=about` : `/team/${teamId}?tab=about`);
+    router.push(organizationId ? `/organization/${organizationId}/location/${locationId}?tab=about` : `/location/${locationId}?tab=about`);
   };
 
-  const handleSetAsPreferredTeamClicked = () => {
+  const handleSetAsPreferredLocationClicked = () => {
     if (!rootData.me) {
       return;
     }
 
-    commitAddCustomerDefaultTeam({
+    commitAddCustomerDefaultLocation({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          teamId: teamId,
+          locationId: locationId,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to set team '${teamName}' as the preferred team. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to set location '${locationName}' as the preferred location. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
         }
 
-        enqueueSnackbar(`Team '${teamName}' has been set as the preferred team.`, {
+        enqueueSnackbar(`Location '${locationName}' has been set as the preferred location.`, {
           variant: 'success',
           anchorOrigin,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to set team '${teamName}' as the preferred team. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to set location '${locationName}' as the preferred location. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
       },
       optimisticResponse: {
-        addCustomerDefaultTeam: {
+        addCustomerDefaultLocation: {
           customer: {
             id: rootData.me.id,
-            defaultTeams: rootData.me.defaultTeams.concat([
+            defaultLocations: rootData.me.defaultLocations.concat([
               {
-                uniqueId: teamId,
+                uniqueId: locationId,
               },
             ]),
           },
@@ -709,84 +720,84 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     });
   };
 
-  const handleSetAsNotPreferredTeamClicked = () => {
+  const handleSetAsNotPreferredLocationClicked = () => {
     if (!rootData.me) {
       return;
     }
 
-    commitRemoveCustomerDefaultTeam({
+    commitRemoveCustomerDefaultLocation({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          teamId: teamId,
+          locationId: locationId,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove the team '${teamName}' as your preferred team. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to remove the location '${locationName}' as your preferred location. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
         }
 
-        enqueueSnackbar(`Team '${teamName}' has been removed as your preferred team.`, {
+        enqueueSnackbar(`Location '${locationName}' has been removed as your preferred location.`, {
           variant: 'success',
           anchorOrigin,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove the team '${teamName}' as your preferred team. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to remove the location '${locationName}' as your preferred location. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
       },
       optimisticResponse: {
-        addCustomerDefaultTeam: {
+        addCustomerDefaultLocation: {
           customer: {
             id: rootData.me.id,
-            defaultTeams: rootData.me.defaultTeams.filter(({ uniqueId }) => uniqueId === teamId),
+            defaultLocations: rootData.me.defaultLocations.filter(({ uniqueId }) => uniqueId === locationId),
           },
         },
       },
     });
   };
 
-  const handleRemoveTeamClicked = () => {
-    setTeamRemoveConfirmationDialogOpen(true);
+  const handleRemoveLocationClicked = () => {
+    setLocationRemoveConfirmationDialogOpen(true);
   };
 
-  const handleCancelRemovingTeamClick = () => {
-    setTeamRemoveConfirmationDialogOpen(false);
+  const handleCancelRemovingLocationClick = () => {
+    setLocationRemoveConfirmationDialogOpen(false);
   };
 
-  const handleConfirmRemovingTeamClick = () => {
+  const handleConfirmRemovingLocationClick = () => {
     if (!rootData.me) {
       return;
     }
 
-    commitDeleteTeam({
+    commitDeleteLocation({
       variables: {
-        connectionIds: teamsConnectionIds,
+        connectionIds: locationsConnectionIds,
         input: {
           clientMutationId: nanoid(),
-          id: teamId,
+          id: locationId,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove team '${teamName}'. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to remove location '${locationName}'. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
         }
 
-        enqueueSnackbar(`Team '${teamName}' has been successfully removed.`, {
+        enqueueSnackbar(`Location '${locationName}' has been successfully removed.`, {
           variant: 'success',
           anchorOrigin,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove team '${teamName}'. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to remove location '${locationName}'. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
@@ -798,7 +809,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     <>
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
-          title={teamName}
+          title={locationName}
           subheader={
             <Stack direction="row" justifyContent="space-between" width="100%">
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
@@ -853,20 +864,20 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         ))}
       </Menu>
 
-      <Dialog fullWidth={true} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
-        <DialogTitle>Remove team</DialogTitle>
+      <Dialog fullWidth={true} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
+        <DialogTitle>Remove location</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {rootData.team.hasFutureBooking
-              ? `Bookings are scheduled for the team "${teamName}". Are you sure you want to remove it?`
-              : `Are you sure you want to remove the team "${teamName}"?`}
+            {rootData.location.hasFutureBooking
+              ? `Bookings are scheduled for the location "${locationName}". Are you sure you want to remove it?`
+              : `Are you sure you want to remove the location "${locationName}"?`}
           </DialogContentText>
 
           <DialogActions>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingTeamClick}>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingLocationClick}>
               Remove
             </Button>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamClick}>
+            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingLocationClick}>
               Cancel
             </Button>
           </DialogActions>
@@ -876,4 +887,4 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
   );
 };
 
-export default memo(TeamPeopleBookingsMatrix);
+export default memo(LocationPeopleBookingsMatrix);

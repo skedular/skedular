@@ -1,0 +1,122 @@
+import type { locationBookingsCard_rootQuery } from '@/queries/__generated__/locationBookingsCard_rootQuery.graphql';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Skeleton from '@mui/material/Skeleton';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
+import { endOfWeek, startOfWeek } from '@repo/shared/libs/utils';
+import { memo, useEffect, useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import LocationPeopleBookingsMatrix from './location-people-bookings-matrix';
+
+type Props = {
+  queryReference: PreloadedQuery<locationBookingsCard_rootQuery, Record<string, unknown>>;
+  organizationId?: string;
+  locationId: string;
+  locationName: string;
+  locationsConnectionIds: string[];
+  hideRemoveLocationOption?: boolean;
+};
+
+const RootQuery = graphql`
+  query locationBookingsCard_rootQuery(
+    $peopleNameSearchText: String!
+    $peopleSortingValues: [LocationMemberOrderInput!]!
+    $fetchBookingPermission: Boolean!
+    $organizationId: String!
+    $locationId: String!
+    $from: DateTime!
+    $to: DateTime!
+  ) {
+    ...locationPeopleBookingsMatrix_query
+  }
+`;
+
+const LocationBookingsCard = ({
+  queryReference,
+  organizationId,
+  locationId,
+  locationName,
+  locationsConnectionIds,
+  hideRemoveLocationOption,
+}: Props) => {
+  const rootData = usePreloadedQuery<locationBookingsCard_rootQuery>(RootQuery, queryReference);
+
+  return (
+    <LocationPeopleBookingsMatrix
+      rootDataRelay={rootData}
+      organizationId={organizationId}
+      locationId={locationId}
+      locationName={locationName}
+      locationsConnectionIds={locationsConnectionIds}
+      hideRemoveLocationOption={hideRemoveLocationOption}
+    />
+  );
+};
+
+const MemoLocationBookingsCard = memo(LocationBookingsCard);
+
+type RelayProps = {
+  organizationId?: string;
+  locationId: string;
+  locationName: string;
+  locationsConnectionIds: string[];
+  hideRemoveLocationOption?: boolean;
+};
+
+const LocationBookingsWithRelay = ({ organizationId, locationId, locationName, locationsConnectionIds, hideRemoveLocationOption }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<locationBookingsCard_rootQuery>(RootQuery);
+  const [startDate, setStart] = useState(startOfWeek(null));
+
+  useEffect(() => {
+    const endDate = endOfWeek(startDate);
+
+    loadQuery(
+      {
+        peopleSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        peopleNameSearchText: '',
+        organizationId: organizationId ?? '',
+        fetchBookingPermission: !!organizationId,
+        locationId: locationId,
+        from: startDate.toISOString(),
+        to: endDate.toISOString(),
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, locationId, startDate, organizationId]);
+
+  if (!queryReference) {
+    return (
+      <Card sx={{ maxWidth: 500, height: '100%' }}>
+        <CardHeader title={locationName} />
+        <CardContent>
+          <Skeleton variant="rounded" width={470} height={350} />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoLocationBookingsCard
+        queryReference={queryReference}
+        organizationId={organizationId}
+        locationId={locationId}
+        locationName={locationName}
+        locationsConnectionIds={locationsConnectionIds}
+        hideRemoveLocationOption={hideRemoveLocationOption}
+      />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(LocationBookingsWithRelay);
