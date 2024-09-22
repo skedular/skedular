@@ -80,24 +80,24 @@ interface MoreActionsMenuItemType {
   label: String;
 }
 
-const moreactionsMenuAllOptions: MoreActionsMenuItemType[] = [
-  {
+const moreActionsMenuAllOptions = {
+  [MoreActionsMenuOptionType.ActivateDesk]:{
     id: MoreActionsMenuOptionType.ActivateDesk,
     label: 'Activate desk',
   },
-  {
+  [MoreActionsMenuOptionType.DeactivateDesk]:{
     id: MoreActionsMenuOptionType.DeactivateDesk,
     label: 'Dectivate desk',
   },
-  {
+  [MoreActionsMenuOptionType.EnableDeskApprovalRequirement]:{
     id: MoreActionsMenuOptionType.EnableDeskApprovalRequirement,
     label: 'Enable desk approval requirement',
   },
-  {
+  [MoreActionsMenuOptionType.RemoveDeskApprovalRequirement]:{
     id: MoreActionsMenuOptionType.RemoveDeskApprovalRequirement,
     label: 'Remove desk approval requirement',
   },
-];
+};
 
 const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesData, connectionIds, customerDetails }: Props) => {
   const rootData = useFragment<deskCard_query$key>(
@@ -608,19 +608,15 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
 
   if (rootData.location.canModify) {
     if (deskDetails.deactivated) {
-      // @ts-expect-error
-      moreActionsOption = moreActionsOption.concat(moreactionsMenuAllOptions[MoreActionsMenuOptionType.ActivateDesk]);
+      moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateDesk]);
     } else {
-      // @ts-expect-error
-      moreActionsOption = moreActionsOption.concat(moreactionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateDesk]);
+      moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateDesk]);
     }
 
     if (deskDetails.requireBookingApproval) {
-      // @ts-expect-error
-      moreActionsOption = moreActionsOption.concat(moreactionsMenuAllOptions[MoreActionsMenuOptionType.RemoveDeskApprovalRequirement]);
+      moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveDeskApprovalRequirement]);
     } else {
-      // @ts-expect-error
-      moreActionsOption = moreActionsOption.concat(moreactionsMenuAllOptions[MoreActionsMenuOptionType.EnableDeskApprovalRequirement]);
+      moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.EnableDeskApprovalRequirement]);
     }
   }
 
