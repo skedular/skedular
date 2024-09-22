@@ -22,7 +22,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import type { GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BookingIcon, DeleteIcon, EllipseMenuIcon, SettingsIcon, WorkingFromHomeIcon, WorkingFromOfficeIcon } from '@repo/shared/components/icons';
+import { BookingIcon, EllipseMenuIcon, SettingsIcon, WorkingFromHomeIcon, WorkingFromOfficeIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
@@ -48,7 +48,6 @@ enum DateRangeType {
 
 enum MoreActionsMenuOptionType {
   Settings,
-  RemoveTeam,
 }
 
 interface MoreActionsMenuItemType {
@@ -64,12 +63,6 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
     label: 'Settings',
     icon: <SettingsIcon />,
     color: 'secondary',
-  },
-  [MoreActionsMenuOptionType.RemoveTeam]: {
-    id: MoreActionsMenuOptionType.RemoveTeam,
-    label: 'Remove',
-    icon: <DeleteIcon />,
-    color: 'warning',
   },
 };
 
@@ -543,10 +536,6 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
   let moreActionsOption: MoreActionsMenuItemType[] = [];
   if (rootData.team.canModify) {
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.Settings]);
-  }
-
-  if (rootData.team.canDelete) {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveTeam]);
   }
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
