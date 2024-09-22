@@ -862,11 +862,11 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
           </DialogContentText>
 
           <DialogActions>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingTeamClick}>
-              Remove
-            </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamClick}>
               Cancel
+            </Button>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingTeamClick}>
+              Remove
             </Button>
           </DialogActions>
         </DialogContent>

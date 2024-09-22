@@ -50,11 +50,11 @@ const OrganizationPaymentMethodSetupForm = ({ onCancelClick }: Props) => {
           <PaymentElement id="payment-element" />
 
           <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-            <Button color="primary" variant="contained" type="submit" disabled={isAdding || !stripe || !elements}>
-              Add
-            </Button>
             <Button color="secondary" variant="contained" onClick={handleCancelClick} disabled={isAdding || !stripe || !elements}>
               Cancel
+            </Button>
+            <Button color="primary" variant="contained" type="submit" disabled={isAdding || !stripe || !elements}>
+              Add
             </Button>
           </Stack>
         </Stack>

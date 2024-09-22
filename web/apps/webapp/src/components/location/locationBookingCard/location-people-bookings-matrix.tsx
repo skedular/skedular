@@ -886,11 +886,11 @@ const LocationPeopleBookingsMatrix = ({
           </DialogContentText>
 
           <DialogActions>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingLocationClick}>
-              Remove
-            </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelRemovingLocationClick}>
               Cancel
+            </Button>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingLocationClick}>
+              Remove
             </Button>
           </DialogActions>
         </DialogContent>

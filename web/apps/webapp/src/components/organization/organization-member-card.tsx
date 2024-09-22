@@ -175,11 +175,11 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
                 <OrganizationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />
 
                 <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                  <Button color="primary" variant="contained" type="submit">
-                    Save
-                  </Button>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
+                  </Button>
+                  <Button color="primary" variant="contained" type="submit">
+                    Save
                   </Button>
                 </Stack>
               </Stack>

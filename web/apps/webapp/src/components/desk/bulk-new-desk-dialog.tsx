@@ -132,11 +132,11 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
               <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
 
               <DialogActions>
-                <Button color="primary" variant="contained" type="submit">
-                  Add
-                </Button>
                 <Button color="secondary" variant="contained" onClick={onCancelClicked}>
                   Cancel
+                </Button>
+                <Button color="primary" variant="contained" type="submit">
+                  Add
                 </Button>
               </DialogActions>
             </Stack>

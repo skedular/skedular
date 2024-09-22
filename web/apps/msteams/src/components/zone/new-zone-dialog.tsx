@@ -109,11 +109,11 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
               <ZoneName name="name" required={requiredFields.name} />
 
               <DialogActions>
-                <Button color="primary" variant="contained" type="submit">
-                  Add
-                </Button>
                 <Button color="secondary" variant="contained" onClick={onCancelClicked}>
                   Cancel
+                </Button>
+                <Button color="primary" variant="contained" type="submit">
+                  Add
                 </Button>
               </DialogActions>
             </Stack>

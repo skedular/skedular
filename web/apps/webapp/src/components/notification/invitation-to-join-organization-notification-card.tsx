@@ -181,11 +181,11 @@ const InvitationToJoinOrganizationNotificationCard = ({ notificationDetailsRelay
           />
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <Button color="primary" variant="contained" type="submit" startIcon={<CheckIcon />} onClick={handleAcceptClick}>
-              Accept
-            </Button>
             <Button color="secondary" variant="contained" startIcon={<CancelIcon />} onClick={handleRejectClick}>
               Reject
+            </Button>
+            <Button color="primary" variant="contained" type="submit" startIcon={<CheckIcon />} onClick={handleAcceptClick}>
+              Accept
             </Button>
           </CardActions>
         </>

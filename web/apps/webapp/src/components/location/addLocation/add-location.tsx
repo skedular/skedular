@@ -113,11 +113,11 @@ const AddLocation = ({ organizationId }: Props) => {
             <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
 
             <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-              <Button color="primary" variant="contained" type="submit">
-                Create
-              </Button>
               <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                 Cancel
+              </Button>
+              <Button color="primary" variant="contained" type="submit">
+                Create
               </Button>
             </Stack>
           </Stack>

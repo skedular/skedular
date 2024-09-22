@@ -346,11 +346,11 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
                 <ZoneName name="name" required={requiredFields.name} />
 
                 <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                  <Button color="primary" variant="contained" type="submit">
-                    Save
-                  </Button>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
+                  </Button>
+                  <Button color="primary" variant="contained" type="submit">
+                    Save
                   </Button>
                 </Stack>
                 <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
@@ -366,11 +366,11 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
           <DialogContentText>{`Are you sure you want to remove the zone "${locationTagDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingZoneClick}>
-              Remove
-            </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelRemovingZoneClick}>
               Cancel
+            </Button>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingZoneClick}>
+              Remove
             </Button>
           </DialogActions>
         </DialogContent>

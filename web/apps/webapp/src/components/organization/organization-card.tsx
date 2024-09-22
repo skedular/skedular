@@ -301,11 +301,11 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
         <DialogContent>
           <DialogContentText>{organizationDeletionMessage}</DialogContentText>
           <DialogActions>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingOrganizatioClick}>
-              Remove
-            </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelRemovingOrganizationClick}>
               Cancel
+            </Button>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingOrganizatioClick}>
+              Remove
             </Button>
           </DialogActions>
         </DialogContent>

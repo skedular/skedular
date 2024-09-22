@@ -458,11 +458,11 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
                   />
                 )}
                 <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                  <Button color="primary" variant="contained" type="submit">
-                    Update
-                  </Button>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
+                  </Button>
+                  <Button color="primary" variant="contained" type="submit">
+                    Update
                   </Button>
                 </Stack>
               </Stack>
@@ -492,11 +492,11 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
                   helperText="member1@example.com,member2@example.com"
                 />
                 <DialogActions>
-                  <Button color="primary" variant="contained" type="submit">
-                    Invite
-                  </Button>
                   <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
                     Cancel
+                  </Button>
+                  <Button color="primary" variant="contained" type="submit">
+                    Invite
                   </Button>
                 </DialogActions>
               </Stack>

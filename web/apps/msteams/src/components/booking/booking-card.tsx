@@ -697,11 +697,11 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                   />
 
                   <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                    <Button color="primary" variant="contained" type="submit">
-                      Save
-                    </Button>
                     <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                       Cancel
+                    </Button>
+                    <Button color="primary" variant="contained" type="submit">
+                      Save
                     </Button>
                   </Stack>
                   <Stack sx={{ flex: 1 }} direction="row" spacing={2} />

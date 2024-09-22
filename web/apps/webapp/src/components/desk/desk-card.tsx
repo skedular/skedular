@@ -718,11 +718,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
                 />
 
                 <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                  <Button color="primary" variant="contained" type="submit">
-                    Save
-                  </Button>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
+                  </Button>
+                  <Button color="primary" variant="contained" type="submit">
+                    Save
                   </Button>
                 </Stack>
                 <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
@@ -746,11 +746,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           <DialogContentText>{`Are you sure you want to remove desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskClick}>
-              Remove
-            </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelRemovingDeskClick}>
               Cancel
+            </Button>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskClick}>
+              Remove
             </Button>
           </DialogActions>
         </DialogContent>
@@ -761,11 +761,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           <DialogContentText>{`Are you sure you want to deactivate desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmDeactivatingDeskClick}>
-              Deactivate
-            </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelDeactivateDeskClick}>
               Cancel
+            </Button>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmDeactivatingDeskClick}>
+              Deactivate
             </Button>
           </DialogActions>
         </DialogContent>
@@ -776,11 +776,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           <DialogContentText>{`Are you sure you want to activate desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmActivatingDeskClick}>
-              Activate
-            </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelActivateDeskClick}>
               Cancel
+            </Button>
+            <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmActivatingDeskClick}>
+              Activate
             </Button>
           </DialogActions>
         </DialogContent>
@@ -791,11 +791,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           <DialogContentText color="info">{`Are you sure you want to enable approval for desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleSetDeskApprovalRequirementClick}>
-              Enable
-            </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelSetDeskApprovalRequirementClick}>
               Cancel
+            </Button>
+            <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleSetDeskApprovalRequirementClick}>
+              Enable
             </Button>
           </DialogActions>
         </DialogContent>
@@ -811,11 +811,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           <DialogContentText color="info">{`Are you sure you want to remove approval for desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemoveDeskApprovalRequirementDeskClick}>
-              Remove
-            </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelRemoveDeskApprovalRequirementDeskClick}>
               Cancel
+            </Button>
+            <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemoveDeskApprovalRequirementDeskClick}>
+              Remove
             </Button>
           </DialogActions>
         </DialogContent>

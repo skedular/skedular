@@ -200,11 +200,11 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove "${getCustomerFullName(customer)}"?`}</DialogContentText>
           <DialogActions>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskClick}>
-              Remove
-            </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamMemberClick}>
               Cancel
+            </Button>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskClick}>
+              Remove
             </Button>
           </DialogActions>
         </DialogContent>

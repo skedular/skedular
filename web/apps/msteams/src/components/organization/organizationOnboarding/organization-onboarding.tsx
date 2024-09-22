@@ -257,11 +257,11 @@ const OrganizationOnboarding = ({ rootDataRelay }: Props) => {
                   <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
 
                   <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                    <Button color="primary" variant="contained" type="submit">
-                      Create
-                    </Button>
                     <Button color="secondary" variant="contained" onClick={handleDismissClick}>
                       Dismiss
+                    </Button>
+                    <Button color="primary" variant="contained" type="submit">
+                      Create
                     </Button>
                   </Stack>
                 </Stack>
