@@ -109,7 +109,7 @@ type TeamDetails implements Node {
 type TeamMemberDetails implements Node {
     id: ID!
     membershipType: TeamMemberMembershipType
-    customer: TeamCustomerDetails
+    customer: TeamCustomerDetails!
     organizationMember: TeamOrganizationMemberDetails
 }
 

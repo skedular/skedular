@@ -700,7 +700,7 @@ type TeamMemberConnection {
 type TeamMemberDetails implements Node {
   id: ID!
   membershipType: TeamMemberMembershipType
-  customer: TeamCustomerDetails
+  customer: TeamCustomerDetails!
   organizationMember: TeamOrganizationMemberDetails
 }
 type TeamMemberDetailsPayload {

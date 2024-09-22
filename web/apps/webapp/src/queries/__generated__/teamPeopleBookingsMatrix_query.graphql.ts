@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<033b92011d0ed9750f13c6f3ba1394ac>>
+ * @generated SignedSource<<0e5ea174a34227f432104417f13c9ae2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -54,7 +54,7 @@ export type teamPeopleBookingsMatrix_query$data = {
           readonly name: string | null | undefined;
           readonly photoUrl: string | null | undefined;
           readonly uniqueId: string;
-        } | null | undefined;
+        };
         readonly id: string;
       };
     }>;

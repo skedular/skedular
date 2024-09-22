@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2278a6dc5df5f459ded034137fc6de7d>>
+ * @generated SignedSource<<e14e0af7e25230211e5b528c2ca37eab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,24 +10,25 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LocationOrderField = "name" | "%future added value";
+export type CustomerOrderField = "designation" | "familyName" | "givenName" | "locale" | "middleName" | "name" | "timezone" | "title" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type LocationOrderInput = {
+export type CustomerOrderInput = {
   direction: OrderDirection;
-  field?: LocationOrderField | null | undefined;
+  field?: CustomerOrderField | null | undefined;
 };
-export type locationsPaginationQuery$variables = {
+export type locationPeopleTab_query_paginatedCustomersByDefaultLocation$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  locationNameSearchText?: string | null | undefined;
-  locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
+  locationId: string;
+  locationOrganizationPeopleSortingValues?: ReadonlyArray<CustomerOrderInput> | null | undefined;
+  peopleNameSearchText?: string | null | undefined;
 };
-export type locationsPaginationQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locations_query">;
+export type locationPeopleTab_query_paginatedCustomersByDefaultLocation$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"locationPeopleTab_query_organizationMembers">;
 };
-export type locationsPaginationQuery = {
-  response: locationsPaginationQuery$data;
-  variables: locationsPaginationQuery$variables;
+export type locationPeopleTab_query_paginatedCustomersByDefaultLocation = {
+  response: locationPeopleTab_query_paginatedCustomersByDefaultLocation$data;
+  variables: locationPeopleTab_query_paginatedCustomersByDefaultLocation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -45,12 +46,17 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "locationNameSearchText"
+    "name": "locationId"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "locationsSortingValues"
+    "name": "locationOrganizationPeopleSortingValues"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "peopleNameSearchText"
   }
 ],
 v1 = [
@@ -67,47 +73,31 @@ v1 = [
   {
     "kind": "Variable",
     "name": "orderBy",
-    "variableName": "locationsSortingValues"
+    "variableName": "locationOrganizationPeopleSortingValues"
   },
   {
     "fields": [
       {
         "kind": "Variable",
+        "name": "locationId",
+        "variableName": "locationId"
+      },
+      {
+        "kind": "Variable",
         "name": "nameContains",
-        "variableName": "locationNameSearchText"
+        "variableName": "peopleNameSearchText"
       }
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "locationsPaginationQuery",
+    "name": "locationPeopleTab_query_paginatedCustomersByDefaultLocation",
     "selections": [
       {
         "args": [
@@ -123,7 +113,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "locations_query"
+        "name": "locationPeopleTab_query_organizationMembers"
       }
     ],
     "type": "Query",
@@ -133,14 +123,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "locationsPaginationQuery",
+    "name": "locationPeopleTab_query_paginatedCustomersByDefaultLocation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "LocationConnection",
+        "concreteType": "CustomerConnection",
         "kind": "LinkedField",
-        "name": "locations",
+        "name": "paginatedCustomersByDefaultLocation",
         "plural": false,
         "selections": [
           {
@@ -153,7 +143,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "LocationEdge",
+            "concreteType": "CustomerEdge",
             "kind": "LinkedField",
             "name": "edges",
             "plural": true,
@@ -161,59 +151,51 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "LocationDetails",
+                "concreteType": "CustomerDetails",
                 "kind": "LinkedField",
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
-                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "LocationOrganizationDetails",
-                    "kind": "LinkedField",
-                    "name": "organization",
-                    "plural": false,
-                    "selections": [
-                      (v4/*: any*/),
-                      (v3/*: any*/)
-                    ],
+                    "kind": "ScalarField",
+                    "name": "id",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "about",
+                    "name": "name",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "deskCapacity",
+                    "name": "givenName",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "hasFutureBooking",
+                    "name": "middleName",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "canModify",
+                    "name": "familyName",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "canDelete",
+                    "name": "photoUrl",
                     "storageKey": null
                   },
                   {
@@ -284,47 +266,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "locations_locations",
+        "key": "locationPeopleTab_paginatedCustomersByDefaultLocation",
         "kind": "LinkedHandle",
-        "name": "locations"
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "CustomerDetails",
-        "kind": "LinkedField",
-        "name": "me",
-        "plural": false,
-        "selections": [
-          (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CustomerLocationDetails",
-            "kind": "LinkedField",
-            "name": "defaultLocations",
-            "plural": true,
-            "selections": [
-              (v4/*: any*/)
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
+        "name": "paginatedCustomersByDefaultLocation"
       }
     ]
   },
   "params": {
-    "cacheID": "02477d5452d99f152499fdbd442c5b41",
+    "cacheID": "3d8e0de1c6d55cdd86436e7f052f0776",
     "id": null,
     "metadata": {},
-    "name": "locationsPaginationQuery",
+    "name": "locationPeopleTab_query_paginatedCustomersByDefaultLocation",
     "operationKind": "query",
-    "text": "query locationsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $locationNameSearchText: String\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...locations_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  deskCapacity\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment locationCard_Query on Query {\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n}\n\nfragment locations_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...locationCard_Query\n}\n"
+    "text": "query locationPeopleTab_query_paginatedCustomersByDefaultLocation(\n  $count: Int = 50\n  $cursor: String\n  $locationId: String!\n  $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...locationPeopleTab_query_organizationMembers_1G22uz\n}\n\nfragment customerCard_CustomerDetails on CustomerDetails {\n  name\n  givenName\n  middleName\n  familyName\n  photoUrl\n}\n\nfragment locationPeopleTab_query_organizationMembers_1G22uz on Query {\n  paginatedCustomersByDefaultLocation(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationOrganizationPeopleSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...customerCard_CustomerDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5df1058fd9c67b8f06f2d8df9faf738f";
+(node as any).hash = "3436bb42cdeff6688cfdd9e7509b9360";
 
 export default node;

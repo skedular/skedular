@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<82063718be88ae717872347cf4e07522>>
+ * @generated SignedSource<<d117f6f015043cf818095c8654ab9a17>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,11 +34,22 @@ export type locationPeopleBookingsMatrix_query$data = {
       readonly name: string;
     } | null | undefined;
   }>;
+  readonly customersByDefaultLocation: ReadonlyArray<{
+    readonly familyName: string | null | undefined;
+    readonly givenName: string | null | undefined;
+    readonly id: string;
+    readonly middleName: string | null | undefined;
+    readonly name: string | null | undefined;
+    readonly photoUrl: string | null | undefined;
+  }>;
   readonly location: {
     readonly canDelete: boolean;
     readonly canModify: boolean;
     readonly deskCapacity: number;
     readonly hasFutureBooking: boolean;
+    readonly organization: {
+      readonly uniqueId: string;
+    } | null | undefined;
   } | null | undefined;
   readonly me: {
     readonly defaultLocations: ReadonlyArray<{
@@ -81,57 +92,80 @@ var v0 = [
   "paginatedLocationMembers"
 ],
 v1 = {
+  "fields": [
+    {
+      "kind": "Variable",
+      "name": "locationId",
+      "variableName": "locationId"
+    },
+    {
+      "kind": "Variable",
+      "name": "nameContains",
+      "variableName": "peopleNameSearchText"
+    }
+  ],
+  "kind": "ObjectValue",
+  "name": "where"
+},
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = [
-  (v2/*: any*/),
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "givenName",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "middleName",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "familyName",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "photoUrl",
+  "storageKey": null
+},
+v9 = [
   (v3/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "givenName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "middleName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "familyName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "photoUrl",
-    "storageKey": null
-  }
+  (v4/*: any*/),
+  (v5/*: any*/),
+  (v6/*: any*/),
+  (v7/*: any*/),
+  (v8/*: any*/)
+],
+v10 = [
+  (v3/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -207,22 +241,7 @@ return {
           "name": "orderBy",
           "variableName": "peopleSortingValues"
         },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "locationId",
-              "variableName": "locationId"
-            },
-            {
-              "kind": "Variable",
-              "name": "nameContains",
-              "variableName": "peopleNameSearchText"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
-        }
+        (v1/*: any*/)
       ],
       "concreteType": "LocationMemberConnection",
       "kind": "LinkedField",
@@ -277,7 +296,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -285,7 +304,7 @@ return {
                   "kind": "LinkedField",
                   "name": "customer",
                   "plural": false,
-                  "selections": (v4/*: any*/),
+                  "selections": (v9/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -325,13 +344,32 @@ return {
     },
     {
       "alias": null,
+      "args": [
+        (v1/*: any*/)
+      ],
+      "concreteType": "CustomerDetails",
+      "kind": "LinkedField",
+      "name": "customersByDefaultLocation",
+      "plural": true,
+      "selections": [
+        (v2/*: any*/),
+        (v4/*: any*/),
+        (v5/*: any*/),
+        (v6/*: any*/),
+        (v7/*: any*/),
+        (v8/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
       "args": null,
       "concreteType": "CustomerDetails",
       "kind": "LinkedField",
       "name": "me",
       "plural": false,
       "selections": [
-        (v1/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -339,9 +377,7 @@ return {
           "kind": "LinkedField",
           "name": "defaultLocations",
           "plural": true,
-          "selections": [
-            (v2/*: any*/)
-          ],
+          "selections": (v10/*: any*/),
           "storageKey": null
         }
       ],
@@ -387,6 +423,16 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "canDelete",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LocationOrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": (v10/*: any*/),
           "storageKey": null
         }
       ],
@@ -459,7 +505,7 @@ return {
       "name": "allBookings",
       "plural": true,
       "selections": [
-        (v1/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -474,7 +520,7 @@ return {
           "kind": "LinkedField",
           "name": "customer",
           "plural": false,
-          "selections": (v4/*: any*/),
+          "selections": (v9/*: any*/),
           "storageKey": null
         },
         {
@@ -485,7 +531,7 @@ return {
           "name": "location",
           "plural": false,
           "selections": [
-            (v3/*: any*/)
+            (v4/*: any*/)
           ],
           "storageKey": null
         },
@@ -497,7 +543,7 @@ return {
           "name": "desks",
           "plural": true,
           "selections": [
-            (v3/*: any*/),
+            (v4/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -506,8 +552,8 @@ return {
               "name": "locationTags",
               "plural": true,
               "selections": [
-                (v2/*: any*/),
                 (v3/*: any*/),
+                (v4/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -530,6 +576,6 @@ return {
 };
 })();
 
-(node as any).hash = "524bb2e5a220f200b4d8fd6337f38d3f";
+(node as any).hash = "21b80da78a219e76f62f59eb873574b2";
 
 export default node;

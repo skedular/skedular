@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a71d218a3847a5ad0c835d380ae057ed>>
+ * @generated SignedSource<<e7d5346286e70217abf84f61095bd142>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,10 @@ export type locations_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
+        readonly name: string;
+        readonly organization: {
+          readonly uniqueId: string;
+        } | null | undefined;
         readonly " $fragmentSpreads": FragmentRefs<"locationCard_LocationDetails">;
       };
     }>;
@@ -135,6 +139,31 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "LocationOrganizationDetails",
+                  "kind": "LinkedField",
+                  "name": "organization",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueId",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "locationCard_LocationDetails"
@@ -210,6 +239,6 @@ return {
 };
 })();
 
-(node as any).hash = "fd217ebba59eedf46a040ea58ccac8eb";
+(node as any).hash = "5df1058fd9c67b8f06f2d8df9faf738f";
 
 export default node;

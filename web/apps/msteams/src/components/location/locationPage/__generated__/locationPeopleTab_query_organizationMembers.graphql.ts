@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6669647cb0a944eb6ec3de43c41b3dc6>>
+ * @generated SignedSource<<13ac50c531cd4511b02d44edc8bcb5ae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationPeopleTab_query_organizationMembers$data = {
-  readonly customersByDefaultLocation: {
+  readonly paginatedCustomersByDefaultLocation: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -30,7 +30,7 @@ export type locationPeopleTab_query_organizationMembers$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "customersByDefaultLocation"
+  "paginatedCustomersByDefaultLocation"
 ];
 return {
   "argumentDefinitions": [
@@ -77,13 +77,13 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./locationPeopleTab_query_customersByDefaultLocation.graphql')
+      "operation": require('./locationPeopleTab_query_paginatedCustomersByDefaultLocation.graphql')
     }
   },
   "name": "locationPeopleTab_query_organizationMembers",
   "selections": [
     {
-      "alias": "customersByDefaultLocation",
+      "alias": "paginatedCustomersByDefaultLocation",
       "args": [
         {
           "kind": "Variable",
@@ -109,7 +109,7 @@ return {
       ],
       "concreteType": "CustomerConnection",
       "kind": "LinkedField",
-      "name": "__locationPeopleTab_customersByDefaultLocation_connection",
+      "name": "__locationPeopleTab_paginatedCustomersByDefaultLocation_connection",
       "plural": false,
       "selections": [
         {
@@ -213,6 +213,6 @@ return {
 };
 })();
 
-(node as any).hash = "96b6bc1b055fe904a32f7df1ef086f01";
+(node as any).hash = "3436bb42cdeff6688cfdd9e7509b9360";
 
 export default node;

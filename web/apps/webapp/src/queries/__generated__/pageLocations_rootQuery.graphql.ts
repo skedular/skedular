@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8561f31e27413bb07a86d84846fd3f50>>
+ * @generated SignedSource<<365388fb6ab7492e6625384c19fc0f12>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -248,13 +248,6 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "about",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
                     "concreteType": "LocationOrganizationDetails",
                     "kind": "LinkedField",
                     "name": "organization",
@@ -263,6 +256,13 @@ return {
                       (v5/*: any*/),
                       (v4/*: any*/)
                     ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "about",
                     "storageKey": null
                   },
                   {
@@ -368,12 +368,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "63ab232d652bcaec68977cacc62dc98d",
+    "cacheID": "b375e973f5510b760bed8c602899647d",
     "id": null,
     "metadata": {},
     "name": "pageLocations_rootQuery",
     "operationKind": "query",
-    "text": "query pageLocations_rootQuery(\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String!\n) {\n  locationCustomerRecordSynced\n  ...rootShell_query\n  ...locations_query\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  deskCapacity\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment locationCard_Query on Query {\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n}\n\nfragment locations_query on Query {\n  locations(first: 50, where: {nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...locationCard_Query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query pageLocations_rootQuery(\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String!\n) {\n  locationCustomerRecordSynced\n  ...rootShell_query\n  ...locations_query\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  deskCapacity\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment locationCard_Query on Query {\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n}\n\nfragment locations_query on Query {\n  locations(first: 50, where: {nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...locationCard_Query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
   }
 };
 })();

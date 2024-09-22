@@ -201,6 +201,14 @@ const LocationPeopleBookingsMatrix = ({
             }
           }
         }
+        customersByDefaultLocation(where: { locationId: $locationId, nameContains: $peopleNameSearchText }) {
+          id
+          name
+          givenName
+          middleName
+          familyName
+          photoUrl
+        }
         me {
           id
           defaultLocations {
@@ -212,6 +220,9 @@ const LocationPeopleBookingsMatrix = ({
           hasFutureBooking
           canModify
           canDelete
+          organization {
+            uniqueId
+          }
         }
         organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {
           canAddBookingOnBehalf
@@ -367,16 +378,17 @@ const LocationPeopleBookingsMatrix = ({
     page * pageSize,
     page * pageSize + pageSize > memebrs.edges.length ? memebrs.edges.length : page * pageSize + pageSize,
   );
-  const allMembers = slicedEdges.map((member) => member.node);
-  const meAsMember = allMembers.find((member) => member.customer!.uniqueId === rootData.me!.id);
-  const otherMembers = allMembers.filter((member) => member.customer!.uniqueId !== rootData.me!.id);
+  const allMembers = rootData.location?.organization
+    ? rootData.customersByDefaultLocation.map((customer) => ({ ...customer, uniqueId: customer.id }))
+    : slicedEdges.map((member) => member.node.customer);
+  const meAsMember = allMembers.find((customer) => customer.uniqueId === rootData.me!.id);
+  const otherMembers = allMembers.filter((customer) => customer.uniqueId !== rootData.me!.id);
   let finalMembersList = otherMembers;
   if (meAsMember) {
     finalMembersList = [meAsMember, ...otherMembers];
   }
 
-  const rows: RowType[] = finalMembersList.map((member) => {
-    const customer = member.customer!;
+  const rows: RowType[] = finalMembersList.map((customer) => {
     const customerId = customer.uniqueId;
 
     return {
@@ -624,7 +636,7 @@ const LocationPeopleBookingsMatrix = ({
     return <></>;
   }
 
-  const rowCount = rootData.paginatedLocationMembers?.totalCount ?? 0;
+  const rowCount = rootData.location.organization ? rootData.customersByDefaultLocation.length : (rootData.paginatedLocationMembers?.totalCount ?? 0);
 
   let moreActionsOption: MoreActionsMenuItemType[] = [];
   if (rootData.me.defaultLocations.some((location) => location.uniqueId === locationId)) {

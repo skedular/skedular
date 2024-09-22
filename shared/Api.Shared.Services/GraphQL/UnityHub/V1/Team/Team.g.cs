@@ -567,7 +567,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Team;
             public TeamMemberMembershipType? MembershipType { get; set; }
 
             [HotChocolate.GraphQLName("customer")]
-            public TeamCustomerDetails? Customer { get; set; }
+            public TeamCustomerDetails Customer { get; set; }
 
             [HotChocolate.GraphQLName("organizationMember")]
             public TeamOrganizationMemberDetails? OrganizationMember { get; set; }

@@ -1,4 +1,4 @@
-import { LocationCard } from '@/components/location';
+import { LocationBookingsCard } from '@/components/location/locationBookingCard';
 import type { LocationOrderField, LocationOrderInput, locationsPaginationQuery } from '@/queries/__generated__/locationsPaginationQuery.graphql';
 import type { locations_query$key } from '@/queries/__generated__/locations_query.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -40,6 +40,10 @@ const Locations = ({ rootDataRelay }: Props) => {
           edges {
             node {
               id
+              name
+              organization {
+                uniqueId
+              }
               ...locationCard_LocationDetails
             }
           }
@@ -182,7 +186,12 @@ const Locations = ({ rootDataRelay }: Props) => {
       <Grid container spacing={2}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
-            <LocationCard rootDataRelay={rootData} locationDetailsRelay={edge.node} connectionIds={connectionIds} />
+            <LocationBookingsCard
+              organizationId={edge.node.organization?.uniqueId}
+              locationId={edge.node.id}
+              locationName={edge.node.name}
+              locationsConnectionIds={connectionIds}
+            />
           </Grid>
         ))}
       </Grid>

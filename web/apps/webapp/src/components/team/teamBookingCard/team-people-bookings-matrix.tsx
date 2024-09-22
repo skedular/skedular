@@ -356,16 +356,15 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     page * pageSize,
     page * pageSize + pageSize > memebrs.edges.length ? memebrs.edges.length : page * pageSize + pageSize,
   );
-  const allMembers = slicedEdges.map((member) => member.node);
-  const meAsMember = allMembers.find((member) => member.customer!.uniqueId === rootData.me!.id);
-  const otherMembers = allMembers.filter((member) => member.customer!.uniqueId !== rootData.me!.id);
+  const allMembers = slicedEdges.map((member) => member.node.customer);
+  const meAsMember = allMembers.find((customer) => customer.uniqueId === rootData.me!.id);
+  const otherMembers = allMembers.filter((customer) => customer.uniqueId !== rootData.me!.id);
   let finalMembersList = otherMembers;
   if (meAsMember) {
     finalMembersList = [meAsMember, ...otherMembers];
   }
 
-  const rows: RowType[] = finalMembersList.map((member) => {
-    const customer = member.customer!;
+  const rows: RowType[] = finalMembersList.map((customer) => {
     const customerId = customer.uniqueId;
 
     return {

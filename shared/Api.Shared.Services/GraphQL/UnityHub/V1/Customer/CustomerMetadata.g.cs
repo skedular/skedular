@@ -29,7 +29,6 @@ type Version {
 type Query {
     customerVersion: Version!
     me: CustomerDetails
-
     paginatedCustomersByDefaultLocation(
         after: String
         first: Int
