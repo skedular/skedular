@@ -1,10 +1,13 @@
 import { TAG_TYPE_LOCATION_ZONE } from '@/components/zone';
 import type { teamPeopleBookingsMatrix_addBookingMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_addBookingMutation.graphql';
+import type { teamPeopleBookingsMatrix_addCustomerDefaultTeamMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_addCustomerDefaultTeamMutation.graphql';
 import type { teamPeopleBookingsMatrix_deleteBookingMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_deleteBookingMutation.graphql';
+import type { teamPeopleBookingsMatrix_deleteTeamMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_deleteTeamMutation.graphql';
 import type {
   teamPeopleBookingsMatrix_query$data,
   teamPeopleBookingsMatrix_query$key,
 } from '@/queries/__generated__/teamPeopleBookingsMatrix_query.graphql';
+import type { teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation.graphql';
 import type {
   TeamMemberOrderInput,
   teamPeopleBookingsMatrixTeamMembersPaginationQuery,
@@ -22,7 +25,15 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import type { GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BookingIcon, EllipseMenuIcon, SettingsIcon, WorkingFromHomeIcon, WorkingFromOfficeIcon } from '@repo/shared/components/icons';
+import {
+  BookingIcon,
+  EllipseMenuIcon,
+  NotPreferredIcon,
+  PreferredIcon,
+  SettingsIcon,
+  WorkingFromHomeIcon,
+  WorkingFromOfficeIcon,
+} from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
@@ -47,6 +58,8 @@ enum DateRangeType {
 }
 
 enum MoreActionsMenuOptionType {
+  SetAsPreferredTeam,
+  RemoveAsPreferredTeam,
   Settings,
 }
 
@@ -58,6 +71,18 @@ interface MoreActionsMenuItemType {
 }
 
 const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
+  [MoreActionsMenuOptionType.SetAsPreferredTeam]: {
+    id: MoreActionsMenuOptionType.SetAsPreferredTeam,
+    label: 'Set as preferred team',
+    icon: <NotPreferredIcon />,
+    color: 'primary',
+  },
+  [MoreActionsMenuOptionType.RemoveAsPreferredTeam]: {
+    id: MoreActionsMenuOptionType.RemoveAsPreferredTeam,
+    label: 'Remove as preferred team',
+    icon: <PreferredIcon />,
+    color: 'primary',
+  },
   [MoreActionsMenuOptionType.Settings]: {
     id: MoreActionsMenuOptionType.Settings,
     label: 'Settings',
@@ -151,6 +176,9 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         }
         me {
           id
+          defaultTeams {
+            uniqueId
+          }
         }
         team(id: $teamId) {
           canModify
@@ -220,6 +248,42 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       deleteBooking(input: $input) {
         booking {
           id
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteTeam] = useMutation<teamPeopleBookingsMatrix_deleteTeamMutation>(graphql`
+    mutation teamPeopleBookingsMatrix_deleteTeamMutation($input: DeleteTeamInput!) {
+      deleteTeam(input: $input) {
+        team {
+          id
+        }
+      }
+    }
+  `);
+
+  const [commitAddCustomerDefaultTeam] = useMutation<teamPeopleBookingsMatrix_addCustomerDefaultTeamMutation>(graphql`
+    mutation teamPeopleBookingsMatrix_addCustomerDefaultTeamMutation($input: AddCustomerDefaultTeamInput!) {
+      addCustomerDefaultTeam(input: $input) {
+        customer {
+          id
+          defaultTeams {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveCustomerDefaultTeam] = useMutation<teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation>(graphql`
+    mutation teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation($input: RemoveCustomerDefaultTeamInput!) {
+      removeCustomerDefaultTeam(input: $input) {
+        customer {
+          id
+          defaultTeams {
+            uniqueId
+          }
         }
       }
     }
@@ -534,6 +598,12 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
   const rowCount = rootData.paginatedTeamMembers?.totalCount ?? 0;
 
   let moreActionsOption: MoreActionsMenuItemType[] = [];
+  if (rootData.me.defaultTeams.some((team) => team.uniqueId === teamId)) {
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveAsPreferredTeam]);
+  } else {
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetAsPreferredTeam]);
+  }
+
   if (rootData.team.canModify) {
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.Settings]);
   }
@@ -545,6 +615,14 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     setMoreActionsAnchorEl(null);
 
     switch (id) {
+      case MoreActionsMenuOptionType.SetAsPreferredTeam:
+        handleSetAsPreferredTeamClicked();
+        break;
+
+      case MoreActionsMenuOptionType.RemoveAsPreferredTeam:
+        handleSetAsNotPreferredTeamClicked();
+        break;
+
       case MoreActionsMenuOptionType.Settings:
         handleSettingsClicked();
         break;
@@ -557,6 +635,94 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
 
   const handleSettingsClicked = () => {
     router.push(organizationId ? `/organization/${organizationId}/team/${teamId}?tab=about` : `/team/${teamId}?tab=about`);
+  };
+
+  const handleSetAsPreferredTeamClicked = () => {
+    if (!rootData.me) {
+      return;
+    }
+
+    commitAddCustomerDefaultTeam({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          teamId: teamId,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          enqueueSnackbar(`Failed to set team '${teamName}' as the preferred team. Error: ${joinErrors(errors)}`, {
+            variant: 'error',
+            anchorOrigin,
+          });
+        }
+
+        enqueueSnackbar(`Team '${teamName}' has been set as the preferred team.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
+      },
+      onError: (error) => {
+        enqueueSnackbar(`Failed to set team '${teamName}' as the preferred team. Error: ${error.message}`, {
+          variant: 'error',
+          anchorOrigin,
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultTeam: {
+          customer: {
+            id: rootData.me.id,
+            defaultTeams: rootData.me.defaultTeams.concat([
+              {
+                uniqueId: teamId,
+              },
+            ]),
+          },
+        },
+      },
+    });
+  };
+
+  const handleSetAsNotPreferredTeamClicked = () => {
+    if (!rootData.me) {
+      return;
+    }
+
+    commitRemoveCustomerDefaultTeam({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          teamId: teamId,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          enqueueSnackbar(`Failed to remove Tea team '${teamName}' as your preferred team. Error: ${joinErrors(errors)}`, {
+            variant: 'error',
+            anchorOrigin,
+          });
+        }
+
+        enqueueSnackbar(`Team '${teamName}' has been removed as your preferred team.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
+      },
+      onError: (error) => {
+        enqueueSnackbar(`Failed to remove Tea team '${teamName}' as your preferred team. Error: ${error.message}`, {
+          variant: 'error',
+          anchorOrigin,
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultTeam: {
+          customer: {
+            id: rootData.me.id,
+            defaultTeams: rootData.me.defaultTeams.filter(({ uniqueId }) => uniqueId === teamId),
+          },
+        },
+      },
+    });
   };
 
   return (

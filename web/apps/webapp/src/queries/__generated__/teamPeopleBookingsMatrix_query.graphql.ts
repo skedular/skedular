@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0fb3a49270b435618730e6fc7f96ca94>>
+ * @generated SignedSource<<606eb9a7594766e6b85b28759e720f17>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,6 +35,9 @@ export type teamPeopleBookingsMatrix_query$data = {
     } | null | undefined;
   }>;
   readonly me: {
+    readonly defaultTeams: ReadonlyArray<{
+      readonly uniqueId: string;
+    }>;
     readonly id: string;
   } | null | undefined;
   readonly organizationBookingPermissions?: {
@@ -326,7 +329,19 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v1/*: any*/)
+        (v1/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CustomerTeamDetails",
+          "kind": "LinkedField",
+          "name": "defaultTeams",
+          "plural": true,
+          "selections": [
+            (v2/*: any*/)
+          ],
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -499,6 +514,6 @@ return {
 };
 })();
 
-(node as any).hash = "1ba38ae057231ef9c4942ac12fc7614e";
+(node as any).hash = "ec6277745068f011423cccf7ffa537c0";
 
 export default node;
