@@ -220,6 +220,17 @@ public class OrganizationQuery(IMapper mapper) : Query
         };
     }
 
+    public override async Task<OrganizationMemberDetails[]> OrganizationMembersAsync(
+        OrganizationMemberWhereInput where,
+        OrganizationMemberOrderInput[]? orderBy,
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
+    {
+        var result = await PaginatedOrganizationMembersAsync(null, null, null, null, where, [], serviceProvider,
+            cancellationToken);
+        return result.Edges.Select(item => item.Node).ToArray();
+    }
+
     public override async Task<OrganizationAnalytics> OrganizationAnalyticsAsync(
         string organizationId,
         DateTimeOffset from,

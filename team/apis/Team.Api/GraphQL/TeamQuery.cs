@@ -193,4 +193,15 @@ public class TeamQuery(IMapper mapper) : Query
             TotalCount = totalCount
         };
     }
+
+    public override async Task<TeamMemberDetails[]> TeamMembersAsync(
+        TeamMemberWhereInput where,
+        TeamMemberOrderInput[]? orderBy,
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
+    {
+        var result = await PaginatedTeamMembersAsync(null, null, null, null, where, [], serviceProvider,
+            cancellationToken);
+        return result.Edges.Select(item => item.Node).ToArray();
+    }
 }

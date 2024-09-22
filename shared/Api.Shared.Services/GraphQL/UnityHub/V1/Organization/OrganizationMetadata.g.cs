@@ -50,6 +50,10 @@ type Query {
         where: OrganizationMemberWhereInput!
         orderBy: [OrganizationMemberOrderInput!]
     ): OrganizationMemberConnection!
+    organizationMembers(
+        where: OrganizationMemberWhereInput!
+        orderBy: [OrganizationMemberOrderInput!]
+    ): [OrganizationMemberDetails!]!
     organizationAnalytics(
         organizationId: String!
         from: DateTime!

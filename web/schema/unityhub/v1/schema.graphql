@@ -46,6 +46,7 @@ type Query {
   organizations(after: String, first: Int, before: String, last: Int, where: OrganizationWhereInput!, orderBy: [OrganizationOrderInput!]): OrganizationConnection!
   myOrganizations: [OrganizationDetails!]!
   paginatedOrganizationMembers(after: String, first: Int, before: String, last: Int, where: OrganizationMemberWhereInput!, orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection!
+  organizationMembers(where: OrganizationMemberWhereInput!, orderBy: [OrganizationMemberOrderInput!]): [OrganizationMemberDetails!]!
   organizationAnalytics(organizationId: String!, from: DateTime!, until: DateTime!): OrganizationAnalytics!
   isAzureTenantInstalled: Boolean!
   azureTenantAdminConsentUrl: String!
@@ -62,6 +63,7 @@ type Query {
   teams(after: String, first: Int, before: String, last: Int, where: TeamWhereInput!, orderBy: [TeamOrderInput!]): TeamConnection!
   myTeams(organizationId: String): [TeamDetails!]!
   paginatedTeamMembers(after: String, first: Int, before: String, last: Int, where: TeamMemberWhereInput!, orderBy: [TeamMemberOrderInput!]): TeamMemberConnection!
+  teamMembers(where: TeamMemberWhereInput!, orderBy: [TeamMemberOrderInput!]): [TeamMemberDetails!]!
 }
 type Mutation {
   setOrganizationBillingInfo(input: SetOrganizationBillingInfoInput!): OrganizationBillingInfoPayload

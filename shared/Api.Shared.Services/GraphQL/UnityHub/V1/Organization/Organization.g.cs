@@ -818,6 +818,10 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
             
 
                 
+                public abstract Task<OrganizationMemberDetails[]> OrganizationMembersAsync([HotChocolate.GraphQLName("where")] OrganizationMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] OrganizationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+            
+
+                
                 public abstract Task<OrganizationAnalytics> OrganizationAnalyticsAsync([HotChocolate.GraphQLName("organizationId")] string organizationId, [HotChocolate.GraphQLName("from")] DateTimeOffset from, [HotChocolate.GraphQLName("until")] DateTimeOffset until, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
@@ -856,6 +860,19 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
 
             [HotChocolate.GraphQLName("until")]
             public DateTimeOffset Until { get; set; }
+
+        }
+        
+
+        
+        [HotChocolate.GraphQLName("Query_OrganizationMembers_Arguments")]
+        public class Query_OrganizationMembers_Arguments
+        {
+            [HotChocolate.GraphQLName("where")]
+            public OrganizationMemberWhereInput Where { get; set; }
+
+            [HotChocolate.GraphQLName("orderBy")]
+            public OrganizationMemberOrderInput[]? OrderBy { get; set; }
 
         }
         

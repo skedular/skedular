@@ -48,6 +48,10 @@ type Query {
         where: TeamMemberWhereInput!
         orderBy: [TeamMemberOrderInput!]
     ): TeamMemberConnection!
+    teamMembers(
+        where: TeamMemberWhereInput!
+        orderBy: [TeamMemberOrderInput!]
+    ): [TeamMemberDetails!]!
 }
 
 input TeamWhereInput {
