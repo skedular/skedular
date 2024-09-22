@@ -632,23 +632,25 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     <>
       {!editing && (
         <Card elevation={24} sx={{ minWidth: 320, height: '100%' }}>
-          {moreActionsOption.length > 0 && (
-            <CardHeader
-              title={
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <DeskIcon />
-                  <Typography gutterBottom variant="body1">
-                    {deskDetails.name}
-                  </Typography>
-                </Stack>
-              }
-              action={
-                <IconButton onClick={handleMoreActionsMenuClick}>
-                  <EllipseMenuIcon />
-                </IconButton>
-              }
-            />
-          )}
+          <CardHeader
+            title={
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <DeskIcon />
+                <Typography gutterBottom variant="body1">
+                  {deskDetails.name}
+                </Typography>
+              </Stack>
+            }
+            action={
+              <>
+                {moreActionsOption.length > 0 && (
+                  <IconButton onClick={handleMoreActionsMenuClick}>
+                    <EllipseMenuIcon />
+                  </IconButton>
+                )}
+              </>
+            }
+          />
 
           <CardContent>
             <ZonesLine zones={deskDetails.locationTags} />
