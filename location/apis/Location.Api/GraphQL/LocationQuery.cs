@@ -196,6 +196,17 @@ public class LocationQuery(IMapper mapper) : Query
         };
     }
 
+    public override async Task<LocationMemberDetails[]> LocationMembersAsync(
+        LocationMemberWhereInput where,
+        LocationMemberOrderInput[]? orderBy,
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
+    {
+        var result = await PaginatedLocationMembersAsync(null, null, null, null, where, [], serviceProvider,
+            cancellationToken);
+        return result.Edges.Select(item => item.Node).ToArray();
+    }
+
     public override async Task<LocationTagConnection> PaginatedLocationTagsAsync(
         string? after,
         int? first,

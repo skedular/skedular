@@ -48,6 +48,10 @@ type Query {
         where: LocationMemberWhereInput!
         orderBy: [LocationMemberOrderInput!]
     ): LocationMemberConnection!
+    locationMembers(
+        where: LocationMemberWhereInput!
+        orderBy: [LocationMemberOrderInput!]
+    ): [LocationMemberDetails!]!
     paginatedLocationTags(
         after: String
         first: Int

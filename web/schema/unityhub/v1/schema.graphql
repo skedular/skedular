@@ -29,6 +29,7 @@ type Query {
   locations(after: String, first: Int, before: String, last: Int, where: LocationWhereInput!, orderBy: [LocationOrderInput!]): LocationConnection!
   myLocations(organizationId: String): [LocationDetails!]!
   paginatedLocationMembers(after: String, first: Int, before: String, last: Int, where: LocationMemberWhereInput!, orderBy: [LocationMemberOrderInput!]): LocationMemberConnection!
+  locationMembers(where: LocationMemberWhereInput!, orderBy: [LocationMemberOrderInput!]): [LocationMemberDetails!]!
   paginatedLocationTags(after: String, first: Int, before: String, last: Int, where: LocationTagWhereInput!, orderBy: [LocationTagOrderInput!]): LocationTagConnection!
   paginatedLocationDesks(after: String, first: Int, before: String, last: Int, where: DeskWhereInput!, orderBy: [DeskOrderInput!]): DeskConnection!
   locationAnalytics(locationId: String!, from: DateTime!, until: DateTime!): LocationAnalytics!
