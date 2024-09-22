@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<606eb9a7594766e6b85b28759e720f17>>
+ * @generated SignedSource<<033b92011d0ed9750f13c6f3ba1394ac>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -66,6 +66,7 @@ export type teamPeopleBookingsMatrix_query$data = {
   readonly team: {
     readonly canDelete: boolean;
     readonly canModify: boolean;
+    readonly hasFutureBooking: boolean;
   } | null | undefined;
   readonly " $fragmentType": "teamPeopleBookingsMatrix_query";
 };
@@ -363,6 +364,13 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "hasFutureBooking",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "canModify",
           "storageKey": null
         },
@@ -514,6 +522,6 @@ return {
 };
 })();
 
-(node as any).hash = "ec6277745068f011423cccf7ffa537c0";
+(node as any).hash = "ba93e40a5c6116056874fb3814c45fdd";
 
 export default node;

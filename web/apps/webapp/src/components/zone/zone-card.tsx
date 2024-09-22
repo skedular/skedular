@@ -19,7 +19,6 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 import { DangerIcon, DeleteIcon, EditIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
@@ -121,7 +120,6 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     }
   `);
 
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(zoneSchema);
@@ -362,12 +360,9 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       )}
 
       <Dialog fullWidth={true} open={zoneRemoveConfirmationDialogOpen} onClose={handleCancelRemovingZoneClick}>
-        <DialogTitle color={theme.palette.warning.main}>Remove zone</DialogTitle>
+        <DialogTitle>Remove zone</DialogTitle>
         <DialogContent>
-          <DialogContentText
-            color={theme.palette.warning.main}
-          >{`Are you sure you want to remove this zone "${locationTagDetails.name}"?`}</DialogContentText>
-
+          <DialogContentText>{`Are you sure you want to remove the zone "${locationTagDetails.name}"?`}</DialogContentText>
           <DialogActions>
             <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingZoneClick}>
               Remove

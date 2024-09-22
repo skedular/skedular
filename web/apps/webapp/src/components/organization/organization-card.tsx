@@ -18,7 +18,6 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 import { OrganizationAvatar } from '@repo/shared/components/avatars';
 import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, ViewIcon, WebsiteIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -105,7 +104,6 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
     }
   `);
 
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const [organizationRemoveConfirmationDialogOpen, setOrganizationRemoveConfirmationDialogOpen] = useState(false);
   const isDefaultOrganization = useMemo(
@@ -232,9 +230,9 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
   let organizationDeletionMessage = '';
 
   if (organizationDetails.hasFutureBooking && organizationDetails.hasLocation) {
-    organizationDeletionMessage = `Bookings have been scheduled for this organization "${organizationDetails.name}" and there are locations under this organization. Are you sure you want to remove it?`;
+    organizationDeletionMessage = `Bookings are scheduled for the organization "${organizationDetails.name}" and there are locations under this organization. Are you sure you want to remove it?`;
   } else if (organizationDetails.hasFutureBooking && !organizationDetails.hasLocation) {
-    organizationDeletionMessage = `Bookings have been scheduled for this organization "${organizationDetails.name}". Are you sure you want to remove it?`;
+    organizationDeletionMessage = `Bookings are scheduled for the organization "${organizationDetails.name}". Are you sure you want to remove it?`;
   } else if (!organizationDetails.hasFutureBooking && organizationDetails.hasLocation) {
     organizationDeletionMessage = `There are locations under this organization "${organizationDetails.name}". Are you sure you want to remove it?`;
   } else {
@@ -299,9 +297,9 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
       </Card>
 
       <Dialog fullWidth={true} open={organizationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingOrganizationClick}>
-        <DialogTitle color={theme.palette.warning.main}>Remove organization</DialogTitle>
+        <DialogTitle>Remove organization</DialogTitle>
         <DialogContent>
-          <DialogContentText color={theme.palette.warning.main}>{organizationDeletionMessage}</DialogContentText>
+          <DialogContentText>{organizationDeletionMessage}</DialogContentText>
           <DialogActions>
             <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingOrganizatioClick}>
               Remove

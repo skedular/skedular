@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e6fa1df2e58d2b64a1484af82f07dd14>>
+ * @generated SignedSource<<a1280e819d4b47755ea288f7e0cf31c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type DeleteTeamInput = {
   id: string;
 };
 export type teamPeopleBookingsMatrix_deleteTeamMutation$variables = {
+  connectionIds: ReadonlyArray<string>;
   input: DeleteTeamInput;
 };
 export type teamPeopleBookingsMatrix_deleteTeamMutation$data = {
@@ -33,53 +34,59 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
+    "name": "connectionIds"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
     "name": "input"
   }
 ],
 v1 = [
   {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "TeamPayload",
-    "kind": "LinkedField",
-    "name": "deleteTeam",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "TeamDetails",
-        "kind": "LinkedField",
-        "name": "team",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
   }
-];
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "teamPeopleBookingsMatrix_deleteTeamMutation",
-    "selections": (v1/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "TeamPayload",
+        "kind": "LinkedField",
+        "name": "deleteTeam",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "TeamDetails",
+            "kind": "LinkedField",
+            "name": "team",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Mutation",
     "abstractKey": null
   },
@@ -88,7 +95,47 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "teamPeopleBookingsMatrix_deleteTeamMutation",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "TeamPayload",
+        "kind": "LinkedField",
+        "name": "deleteTeam",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "TeamDetails",
+            "kind": "LinkedField",
+            "name": "team",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "filters": null,
+                "handle": "deleteEdge",
+                "key": "",
+                "kind": "ScalarHandle",
+                "name": "id",
+                "handleArgs": [
+                  {
+                    "kind": "Variable",
+                    "name": "connections",
+                    "variableName": "connectionIds"
+                  }
+                ]
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
     "cacheID": "2b6de521d3b57c0747aee32350ae6a4f",
@@ -101,6 +148,6 @@ return {
 };
 })();
 
-(node as any).hash = "ebacd0d1ce7ab6081373bee469b20b1f";
+(node as any).hash = "b89a02142a9b1802f884f40955fe92ec";
 
 export default node;

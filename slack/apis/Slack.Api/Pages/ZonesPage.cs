@@ -455,7 +455,8 @@ public class ZonesPage(
             Last = last.ToNullInt(),
             Where = new TagWhereInput
             {
-                LocationId = commonPageContext.PageContext.ZonesPage.LocationId, Type = LocationTagType.Zone
+                LocationId = commonPageContext.PageContext.ZonesPage.LocationId,
+                Type = LocationTagType.Zone
             }
         };
 
@@ -566,7 +567,8 @@ public class ZonesPage(
             Label = "Name".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = ZoneActionTypes.Name, InitialValue = zone.Name.ToSafeString()
+                ActionId = ZoneActionTypes.Name,
+                InitialValue = zone.Name.ToSafeString()
             },
             Optional = false
         };
@@ -615,7 +617,7 @@ public class ZonesPage(
 
         var confirmationMessage = new SectionBlock
         {
-            Text = $"Are you sure you want to remove this zone {zone.Name.ToSafeString()}?"
+            Text = $"Are you sure you want to remove the zone {zone.Name.ToSafeString()}?"
         };
 
         var slackApiClient = workspace.GetApiClient();

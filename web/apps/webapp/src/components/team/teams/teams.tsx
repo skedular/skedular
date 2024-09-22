@@ -125,9 +125,7 @@ const Teams = ({ rootDataRelay }: Props) => {
   }, [loadNext, isLoadingNext, pageSize]);
 
   const connectionIds = useMemo(() => [rootData.teams?.__id], [rootData.teams]);
-
   const teams = useMemo(() => rootData.teams, [rootData.teams]);
-
   const slicedEdges = teams.edges?.slice(
     page * pageSize,
     page * pageSize + pageSize > teams.edges.length ? teams.edges.length : page * pageSize + pageSize,
@@ -188,7 +186,12 @@ const Teams = ({ rootDataRelay }: Props) => {
       <Grid container spacing={2}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
-            <TeamBookingsCard organizationId={edge.node.organization?.uniqueId} teamId={edge.node.id} teamName={edge.node.name} />
+            <TeamBookingsCard
+              organizationId={edge.node.organization?.uniqueId}
+              teamId={edge.node.id}
+              teamName={edge.node.name}
+              teamsConnectionIds={connectionIds}
+            />
           </Grid>
         ))}
       </Grid>

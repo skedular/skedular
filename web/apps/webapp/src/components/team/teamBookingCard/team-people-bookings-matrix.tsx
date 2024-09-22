@@ -14,9 +14,15 @@ import type {
 } from '@/queries/__generated__/teamPeopleBookingsMatrixTeamMembersPaginationQuery.graphql';
 import { Stack, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -27,6 +33,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   BookingIcon,
+  DangerIcon,
+  DeleteIcon,
   EllipseMenuIcon,
   NotPreferredIcon,
   PreferredIcon,
@@ -50,6 +58,7 @@ type Props = {
   organizationId?: string;
   teamId: string;
   teamName: string;
+  teamsConnectionIds: string[];
 };
 
 enum DateRangeType {
@@ -61,6 +70,7 @@ enum MoreActionsMenuOptionType {
   SetAsPreferredTeam,
   RemoveAsPreferredTeam,
   Settings,
+  RemoveTeam,
 }
 
 interface MoreActionsMenuItemType {
@@ -88,6 +98,12 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
     label: 'Settings',
     icon: <SettingsIcon />,
     color: 'secondary',
+  },
+  [MoreActionsMenuOptionType.RemoveTeam]: {
+    id: MoreActionsMenuOptionType.RemoveTeam,
+    label: 'Remove team',
+    icon: <DeleteIcon />,
+    color: 'warning',
   },
 };
 
@@ -143,7 +159,7 @@ const getBookingIcon = ({ booking }: BookingDetails) => {
   return booking ? <WorkingFromOfficeIcon tip={tip} /> : <WorkingFromHomeIcon />;
 };
 
-const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamName }: Props) => {
+const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamName, teamsConnectionIds }: Props) => {
   const { data: rootData, refetch } = usePaginationFragment<teamPeopleBookingsMatrixTeamMembersPaginationQuery, teamPeopleBookingsMatrix_query$key>(
     graphql`
       fragment teamPeopleBookingsMatrix_query on Query
@@ -181,6 +197,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
           }
         }
         team(id: $teamId) {
+          hasFutureBooking
           canModify
           canDelete
         }
@@ -254,10 +271,10 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
   `);
 
   const [commitDeleteTeam] = useMutation<teamPeopleBookingsMatrix_deleteTeamMutation>(graphql`
-    mutation teamPeopleBookingsMatrix_deleteTeamMutation($input: DeleteTeamInput!) {
+    mutation teamPeopleBookingsMatrix_deleteTeamMutation($connectionIds: [ID!]!, $input: DeleteTeamInput!) {
       deleteTeam(input: $input) {
         team {
-          id
+          id @deleteEdge(connections: $connectionIds)
         }
       }
     }
@@ -299,7 +316,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     direction: 'Ascending',
     field: 'name',
   });
-
+  const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
   const [startDate, setStartDate] = useState<Dayjs>(startOfWeek(null));
   const [peopleNameSearchText] = useState<string>('');
   const [page, setPage] = useState(0);
@@ -608,6 +625,10 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.Settings]);
   }
 
+  if (rootData.team.canDelete) {
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveTeam]);
+  }
+
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
   };
@@ -625,6 +646,10 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
 
       case MoreActionsMenuOptionType.Settings:
         handleSettingsClicked();
+        break;
+
+      case MoreActionsMenuOptionType.RemoveTeam:
+        handleRemoveTeamClicked();
         break;
     }
   };
@@ -725,6 +750,49 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     });
   };
 
+  const handleRemoveTeamClicked = () => {
+    setTeamRemoveConfirmationDialogOpen(true);
+  };
+
+  const handleCancelRemovingTeamClick = () => {
+    setTeamRemoveConfirmationDialogOpen(false);
+  };
+
+  const handleConfirmRemovingTeamClick = () => {
+    if (!rootData.me) {
+      return;
+    }
+
+    commitDeleteTeam({
+      variables: {
+        connectionIds: teamsConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          id: teamId,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          enqueueSnackbar(`Failed to remove team '${teamName}'. Error: ${joinErrors(errors)}`, {
+            variant: 'error',
+            anchorOrigin,
+          });
+        }
+
+        enqueueSnackbar(`Team '${teamName}' has been successfully removed.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
+      },
+      onError: (error) => {
+        enqueueSnackbar(`Failed to remove team '${teamName}'. Error: ${error.message}`, {
+          variant: 'error',
+          anchorOrigin,
+        });
+      },
+    });
+  };
+
   return (
     <>
       <Card sx={{ maxWidth: 500, height: '100%' }}>
@@ -783,6 +851,26 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
           </MenuItem>
         ))}
       </Menu>
+
+      <Dialog fullWidth={true} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
+        <DialogTitle>Remove team</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {rootData.team.hasFutureBooking
+              ? `Bookings are scheduled for the team "${teamName}". Are you sure you want to remove it?`
+              : `Are you sure you want to remove the team "${teamName}"?`}
+          </DialogContentText>
+
+          <DialogActions>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingTeamClick}>
+              Remove
+            </Button>
+            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamClick}>
+              Cancel
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

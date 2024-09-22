@@ -633,7 +633,8 @@ public class DesksPage(
             Label = "Name".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = DeskActionTypes.Name, InitialValue = desk.Name.ToSafeString()
+                ActionId = DeskActionTypes.Name,
+                InitialValue = desk.Name.ToSafeString()
             },
             Optional = false
         };
@@ -733,7 +734,7 @@ public class DesksPage(
 
         var confirmationMessage = new SectionBlock
         {
-            Text = $"Are you sure you want to remove this desk {desk.Name.ToSafeString()}?"
+            Text = $"Are you sure you want to remove the desk {desk.Name.ToSafeString()}?"
         };
 
         var slackApiClient = workspace.GetApiClient();

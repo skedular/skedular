@@ -24,7 +24,6 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { DangerIcon, DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, InfoIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -184,7 +183,6 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     }
   `);
 
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(deskSchema);
@@ -743,9 +741,9 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       </Menu>
 
       <Dialog fullWidth={true} open={deskRemoveConfirmationDialogOpen} onClose={handleCancelRemovingDeskClick}>
-        <DialogTitle color={theme.palette.warning.main}>Remove desk</DialogTitle>
+        <DialogTitle>Remove desk</DialogTitle>
         <DialogContent>
-          <DialogContentText color={theme.palette.warning.main}>{`Are you sure you want to remove desk "${deskDetails.name}"?`}</DialogContentText>
+          <DialogContentText>{`Are you sure you want to remove desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
             <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskClick}>
@@ -758,12 +756,12 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
         </DialogContent>
       </Dialog>
       <Dialog fullWidth={true} open={deskDeactivateConfirmationDialogOpen} onClose={handleCancelDeactivateDeskClick}>
-        <DialogTitle color={theme.palette.info.main}>Deactivate desk</DialogTitle>
+        <DialogTitle>Deactivate desk</DialogTitle>
         <DialogContent>
-          <DialogContentText color={theme.palette.info.main}>{`Are you sure you want to deactivate desk "${deskDetails.name}"?`}</DialogContentText>
+          <DialogContentText>{`Are you sure you want to deactivate desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
-            <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmDeactivatingDeskClick}>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmDeactivatingDeskClick}>
               Deactivate
             </Button>
             <Button color="secondary" variant="outlined" onClick={handleCancelDeactivateDeskClick}>
@@ -773,9 +771,9 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
         </DialogContent>
       </Dialog>
       <Dialog fullWidth={true} open={deskActivateConfirmationDialogOpen} onClose={handleCancelActivateDeskClick}>
-        <DialogTitle color={theme.palette.info.main}>Activate desk</DialogTitle>
+        <DialogTitle>Activate desk</DialogTitle>
         <DialogContent>
-          <DialogContentText color={theme.palette.info.main}>{`Are you sure you want to activate desk "${deskDetails.name}"?`}</DialogContentText>
+          <DialogContentText>{`Are you sure you want to activate desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
             <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmActivatingDeskClick}>
@@ -788,11 +786,9 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
         </DialogContent>
       </Dialog>
       <Dialog fullWidth={true} open={setDeskApprovalRequirementConfirmationDialogOpen} onClose={handleCancelSetDeskApprovalRequirementClick}>
-        <DialogTitle color={theme.palette.info.main}>Set Desk Approval Requirement</DialogTitle>
+        <DialogTitle>Set Desk Approval Requirement</DialogTitle>
         <DialogContent>
-          <DialogContentText
-            color={theme.palette.info.main}
-          >{`Are you sure you want to enable approval for desk "${deskDetails.name}"?`}</DialogContentText>
+          <DialogContentText color="info">{`Are you sure you want to enable approval for desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
             <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleSetDeskApprovalRequirementClick}>
@@ -810,11 +806,9 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
         open={removeDeskApprovalRequirementConfirmationDialogOpen}
         onClose={handleCancelRemoveDeskApprovalRequirementDeskClick}
       >
-        <DialogTitle color={theme.palette.info.main}>Remove Approval Requirement for Desk</DialogTitle>
+        <DialogTitle>Remove Approval Requirement for Desk</DialogTitle>
         <DialogContent>
-          <DialogContentText
-            color={theme.palette.info.main}
-          >{`Are you sure you want to remove approval for desk "${deskDetails.name}"?`}</DialogContentText>
+          <DialogContentText color="info">{`Are you sure you want to remove approval for desk "${deskDetails.name}"?`}</DialogContentText>
 
           <DialogActions>
             <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemoveDeskApprovalRequirementDeskClick}>

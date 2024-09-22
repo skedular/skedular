@@ -16,6 +16,7 @@ type Props = {
   organizationId?: string;
   teamId: string;
   teamName: string;
+  teamsConnectionIds: string[];
 };
 
 const RootQuery = graphql`
@@ -32,10 +33,18 @@ const RootQuery = graphql`
   }
 `;
 
-const TeamBookingsCard = ({ queryReference, organizationId, teamId, teamName }: Props) => {
+const TeamBookingsCard = ({ queryReference, organizationId, teamId, teamName, teamsConnectionIds }: Props) => {
   const rootData = usePreloadedQuery<teamBookingsCard_rootQuery>(RootQuery, queryReference);
 
-  return <TeamPeopleBookingsMatrix rootDataRelay={rootData} organizationId={organizationId} teamId={teamId} teamName={teamName} />;
+  return (
+    <TeamPeopleBookingsMatrix
+      rootDataRelay={rootData}
+      organizationId={organizationId}
+      teamId={teamId}
+      teamName={teamName}
+      teamsConnectionIds={teamsConnectionIds}
+    />
+  );
 };
 
 const MemoTeamBookingsCard = memo(TeamBookingsCard);
@@ -44,9 +53,10 @@ type RelayProps = {
   organizationId?: string;
   teamId: string;
   teamName: string;
+  teamsConnectionIds: string[];
 };
 
-const TeamBookingsWithRelay = ({ organizationId, teamId, teamName }: RelayProps) => {
+const TeamBookingsWithRelay = ({ organizationId, teamId, teamName, teamsConnectionIds }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<teamBookingsCard_rootQuery>(RootQuery);
   const [startDate, setStart] = useState(startOfWeek(null));
 
@@ -87,7 +97,13 @@ const TeamBookingsWithRelay = ({ organizationId, teamId, teamName }: RelayProps)
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeamBookingsCard queryReference={queryReference} organizationId={organizationId} teamId={teamId} teamName={teamName} />
+      <MemoTeamBookingsCard
+        queryReference={queryReference}
+        organizationId={organizationId}
+        teamId={teamId}
+        teamName={teamName}
+        teamsConnectionIds={teamsConnectionIds}
+      />
     </ErrorBoundary>
   );
 };

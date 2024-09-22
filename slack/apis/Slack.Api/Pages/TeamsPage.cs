@@ -358,9 +358,9 @@ public class TeamsPage(
         var teamIds = teams.Select(item => item.Id).ToList();
         var teamsWithChannel = await repositoryFactory.TeamRepository
             .Query(new Specification<Team>
-                {
-                    Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id)
-                }
+            {
+                Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id)
+            }
                 .AddInclude(query => query.DailyUpdateChannel))
             .ToListAsync(cancellationToken);
         teams = teams.Select(item =>
@@ -573,7 +573,8 @@ public class TeamsPage(
             Label = "Name".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = TeamActionTypes.Name, InitialValue = team.Name.ToSafeString()
+                ActionId = TeamActionTypes.Name,
+                InitialValue = team.Name.ToSafeString()
             },
             Optional = false
         };
@@ -584,7 +585,9 @@ public class TeamsPage(
             Label = "About".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = TeamActionTypes.About, InitialValue = team.About.ToSafeString(), Multiline = true
+                ActionId = TeamActionTypes.About,
+                InitialValue = team.About.ToSafeString(),
+                Multiline = true
             },
             Optional = true
         };
@@ -675,7 +678,7 @@ public class TeamsPage(
 
         var confirmationMessage = new SectionBlock
         {
-            Text = $"Are you sure you want to remove this team {team.Name.ToSafeString()}?"
+            Text = $"Are you sure you want to remove the team {team.Name.ToSafeString()}?"
         };
 
         var slackApiClient = workspace.GetApiClient();

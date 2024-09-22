@@ -1,6 +1,5 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
@@ -151,7 +150,6 @@ const BookingDetailsSelector = ({
     rootDataRelay,
   );
 
-  const theme = useTheme();
   const [, startTransition] = useTransition();
   const [, setPage] = useState(0);
   const [pageSize] = useState(20);
@@ -385,7 +383,7 @@ const BookingDetailsSelector = ({
           )}
 
           {locationId && desks.length === 0 && (
-            <Typography variant="body1" color={theme.palette.warning.main}>
+            <Typography variant="body1" color="warning">
               There are currently no available desks in the chosen location.
             </Typography>
           )}

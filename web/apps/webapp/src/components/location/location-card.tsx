@@ -17,7 +17,6 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 import { LocationAvatar } from '@repo/shared/components/avatars';
 import { AboutIcon, DangerIcon, DeleteIcon, DeskIcon, EditIcon, OrganizationIcon, ViewIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -104,7 +103,6 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
     }
   `);
 
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const isPreferredLocation = useMemo(
@@ -304,12 +302,12 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
       </Card>
 
       <Dialog fullWidth={true} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
-        <DialogTitle color={theme.palette.warning.main}>Remove location</DialogTitle>
+        <DialogTitle>Remove location</DialogTitle>
         <DialogContent>
-          <DialogContentText color={theme.palette.warning.main}>
+          <DialogContentText>
             {locationDetails.hasFutureBooking
-              ? `Bookings have been scheduled for this location "${locationDetails.name}". Are you sure you want to remove it?`
-              : `Are you sure you want to remove this location "${locationDetails.name}"?`}
+              ? `Bookings are scheduled for the location "${locationDetails.name}". Are you sure you want to remove it?`
+              : `Are you sure you want to remove the location "${locationDetails.name}"?`}
           </DialogContentText>
 
           <DialogActions>

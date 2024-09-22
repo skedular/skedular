@@ -16,7 +16,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 import { TeamAvatar } from '@repo/shared/components/avatars';
 import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, ViewIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -102,7 +101,6 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
     }
   `);
 
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
 
@@ -280,12 +278,12 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
       </Card>
 
       <Dialog fullWidth={true} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
-        <DialogTitle color={theme.palette.warning.main}>Remove team</DialogTitle>
+        <DialogTitle>Remove team</DialogTitle>
         <DialogContent>
-          <DialogContentText color={theme.palette.warning.main}>
+          <DialogContentText>
             {teamDetails.hasFutureBooking
-              ? `Bookings have been scheduled for this team "${teamDetails.name}". Are you sure you want to remove it?`
-              : `Are you sure you want to remove this team "${teamDetails.name}"?`}
+              ? `Bookings are scheduled for the team "${teamDetails.name}". Are you sure you want to remove it?`
+              : `Are you sure you want to remove the team "${teamDetails.name}"?`}
           </DialogContentText>
 
           <DialogActions>

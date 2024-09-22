@@ -390,9 +390,9 @@ public class LocationsPage(
         var locationIds = locations.Select(item => item.Id).ToList();
         var locationsWithChannel = await repositoryFactory.LocationRepository
             .Query(new Specification<Location>
-                {
-                    Criteria = query => !query.DeletedAt.HasValue && locationIds.Contains(query.Id)
-                }
+            {
+                Criteria = query => !query.DeletedAt.HasValue && locationIds.Contains(query.Id)
+            }
                 .AddInclude(query => query.DailyUpdateChannel))
             .ToListAsync(cancellationToken);
         locations = locations.Select(item =>
@@ -606,7 +606,8 @@ public class LocationsPage(
             Label = "Name".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = LocationActionTypes.Name, InitialValue = location.Name.ToSafeString()
+                ActionId = LocationActionTypes.Name,
+                InitialValue = location.Name.ToSafeString()
             },
             Optional = false
         };
@@ -688,7 +689,7 @@ public class LocationsPage(
 
         var confirmationMessage = new SectionBlock
         {
-            Text = $"Are you sure you want to remove this location {location.Name.ToSafeString()}?"
+            Text = $"Are you sure you want to remove the location {location.Name.ToSafeString()}?"
         };
 
         var slackApiClient = workspace.GetApiClient();

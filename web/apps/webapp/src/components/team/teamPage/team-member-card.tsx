@@ -12,7 +12,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { DangerIcon, DeleteIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -88,7 +87,6 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
     }
   `);
 
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const [teamMemberRemoveConfirmationDialogOpen, setTeamMemberRemoveConfirmationDialogOpen] = useState(false);
   const customer = useMemo(() => {
@@ -198,12 +196,9 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
       </Card>
 
       <Dialog fullWidth={true} open={teamMemberRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamMemberClick}>
-        <DialogTitle color={theme.palette.warning.main}>Remove desk</DialogTitle>
+        <DialogTitle>Remove desk</DialogTitle>
         <DialogContent>
-          <DialogContentText
-            color={theme.palette.warning.main}
-          >{`Are you sure you want to remove "${getCustomerFullName(customer)}"?`}</DialogContentText>
-
+          <DialogContentText>{`Are you sure you want to remove "${getCustomerFullName(customer)}"?`}</DialogContentText>
           <DialogActions>
             <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskClick}>
               Remove
