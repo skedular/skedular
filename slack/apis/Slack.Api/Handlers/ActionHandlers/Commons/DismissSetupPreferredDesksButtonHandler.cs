@@ -14,17 +14,16 @@ using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerSe
 namespace Slack.Api.Handlers.ActionHandlers.Commons;
 
 public class DismissSetupPreferredDesksButtonHandler(
+    AsyncPageRenderingService<DismissSetupPreferredDesksButtonHandler> asyncPageRenderingService,
     CustomerConfiguration customerConfiguration,
     CustomerService.CustomerServiceClient customerServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
-    IPageNavigator pageNavigator) : IBlockActionHandler<ButtonAction>
+    IPageNavigator pageNavigator) : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>
 {
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -53,5 +52,12 @@ public class DismissSetupPreferredDesksButtonHandler(
             new CommonPageContext(context.PageContext),
             request.View.Hash,
             cancellationToken);
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 }

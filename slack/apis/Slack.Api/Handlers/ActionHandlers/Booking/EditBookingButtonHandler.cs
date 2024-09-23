@@ -30,6 +30,7 @@ using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirect
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class EditBookingButtonHandler(
+    AsyncPageRenderingService<EditBookingButtonHandler> asyncPageRenderingService,
     BookingConfiguration bookingConfiguration,
     LocationConfiguration locationConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
@@ -38,15 +39,14 @@ public class EditBookingButtonHandler(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
-    IPageNavigator pageNavigator) : IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
+    IPageNavigator pageNavigator)
+    : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     private const string LocationsDesksKey = "LocationsDesks";
     private const string NotesKey = "BookingNotes";
 
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -153,6 +153,13 @@ public class EditBookingButtonHandler(
                 Blocks = blocks,
                 PrivateMetadata = action.Value
             });
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)

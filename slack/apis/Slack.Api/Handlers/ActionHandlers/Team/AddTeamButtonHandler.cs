@@ -20,6 +20,7 @@ using TeamService = Api.Shared.Services.Grpc.UnityHub.Team.V1.TeamService;
 namespace Slack.Api.Handlers.ActionHandlers.Team;
 
 public class AddTeamButtonHandler(
+    AsyncPageRenderingService<AddTeamButtonHandler> asyncPageRenderingService,
     TeamConfiguration teamConfiguration,
     TeamService.TeamServiceClient teamServiceClient,
     ICustomerService customerService,
@@ -28,12 +29,11 @@ public class AddTeamButtonHandler(
     IWorkspaceChannelService workspaceChannelService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    IPageNavigator pageNavigator) : IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
+    IPageNavigator pageNavigator)
+    : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -107,6 +107,13 @@ public class AddTeamButtonHandler(
                 Blocks = [name, about, timezone, updateChannel, organizationMembers],
                 PrivateMetadata = action.Value
             });
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)

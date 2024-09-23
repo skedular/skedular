@@ -21,6 +21,7 @@ using BookingService = Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingServi
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class InstantAddBookingButtonHandler(
+    AsyncPageRenderingService<InstantAddBookingButtonHandler> asyncPageRenderingService,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
     IRepositoryFactory repositoryFactory,
@@ -28,12 +29,10 @@ public class InstantAddBookingButtonHandler(
     IBookingComponents bookingComponents,
     IRandomHelper randomHelper,
     IMapper mapper,
-    IPageNavigator pageNavigator) : IBlockActionHandler<ButtonAction>
+    IPageNavigator pageNavigator) : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>
 {
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -169,5 +168,12 @@ public class InstantAddBookingButtonHandler(
                 request.View.Hash,
                 cancellationToken);
         }
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 }

@@ -19,20 +19,20 @@ using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerSe
 namespace Slack.Api.Handlers.ActionHandlers.Feedback;
 
 public class SendUsFeedbackButtonHandler(
+    AsyncPageRenderingService<SendUsFeedbackButtonHandler> asyncPageRenderingService,
     CustomerConfiguration customerConfiguration,
     CustomerService.CustomerServiceClient customerServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    IPageNavigator pageNavigator) : IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
+    IPageNavigator pageNavigator)
+    : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     private const string FeedbackKey = "Feedback";
 
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -79,6 +79,13 @@ public class SendUsFeedbackButtonHandler(
                 Blocks = [greetings, feedback, notes],
                 PrivateMetadata = action.Value
             });
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)

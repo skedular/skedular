@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
@@ -39,7 +38,7 @@ public interface IHomePage
 }
 
 public class HomePage(
-    ILogger<HomePage> logger,
+    AsyncPageRenderingService<HomePage> asyncPageRenderingService,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
     IWorkspaceMemberService workspaceMemberService,
@@ -56,9 +55,14 @@ public class HomePage(
     ICustomerService customerService,
     IBookingService bookingService,
     TimeProvider timeProvider,
-    IBookingsPageContextService bookingsPageContextService)
-    : IHomePage, IBlockActionHandler<ButtonAction>, IBlockActionHandler<DatePickerAction>, IEventHandler<AppHomeOpened>,
-        IBlockActionHandler<StaticSelectAction>, IBlockActionHandler<CheckboxGroupAction>
+    IBookingsPageContextService bookingsPageContextService) :
+    IHomePage,
+    IAsyncPageRenderingCallbacks,
+    IEventHandler<AppHomeOpened>,
+    IBlockActionHandler<ButtonAction>,
+    IBlockActionHandler<DatePickerAction>,
+    IBlockActionHandler<StaticSelectAction>,
+    IBlockActionHandler<CheckboxGroupAction>
 {
     private const int BookingsPageSize = 5;
     private const string HomeCallback = "Home";
@@ -70,10 +74,62 @@ public class HomePage(
     private const string LastPageBookings = "Home_LastPageBookings";
     private const string IncludeMyBookingsOnly = "Home_IncludeMyBookingsOnly";
 
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(AppHomeOpened appHomeOpenedEvent, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
+        ArgumentNullException.ThrowIfNull(appHomeOpenedEvent);
 
+        switch (appHomeOpenedEvent.Tab)
+        {
+            case AppHomeTab.Home:
+                {
+                    Shared.Database.Entities.Workspace? workspaceEntity;
+                    if (appHomeOpenedEvent.View is null)
+                    {
+                        ArgumentException.ThrowIfNullOrWhiteSpace(appHomeOpenedEvent.User);
+                        workspaceEntity =
+                            await repositoryFactory.WorkspaceRepository.GetByWorkspaceMemberIdAsync(
+                                appHomeOpenedEvent.User,
+                                cancellationToken);
+                    }
+                    else
+                    {
+                        ArgumentException.ThrowIfNullOrWhiteSpace(appHomeOpenedEvent.View.TeamId);
+                        workspaceEntity =
+                            await repositoryFactory.WorkspaceRepository.GetByIdAsync(
+                                appHomeOpenedEvent.View.TeamId,
+                                cancellationToken);
+                    }
+
+                    if (workspaceEntity is null)
+                    {
+                        throw new SlackWorkspaceNotFound();
+                    }
+
+                    var (workspaceMemberEntity, _) =
+                        await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+                            workspaceEntity,
+                            appHomeOpenedEvent.User,
+                            cancellationToken);
+
+                    var workspace = mapper.MapTo(workspaceEntity);
+                    await RenderAsync(
+                        workspace,
+                        mapper.MapTo(workspaceMemberEntity, workspace),
+                        appHomeOpenedEvent.View?.Hash,
+                        cancellationToken);
+                }
+                break;
+
+            case AppHomeTab.Messages:
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
+    {
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -139,49 +195,11 @@ public class HomePage(
         }
     }
 
-    public async Task Handle(CheckboxGroupAction action, BlockActionRequest request)
+    public async Task HandleAsync(
+        DatePickerAction action,
+        BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
-        if (workspaceEntity is null)
-        {
-            throw new SlackWorkspaceNotFound();
-        }
-
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
-
-        var workspace = mapper.MapTo(workspaceEntity);
-        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
-
-        switch (action.ActionId)
-        {
-            case IncludeMyBookingsOnly:
-                var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
-                var selectedOption = action.SelectedOptions.FirstOrDefault();
-                context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext();
-                context.PageContext.HomePage.IncludeMyBookingsOnly = selectedOption is not null &&
-                                                                     selectedOption.Value ==
-                                                                     IncludeMyBookingsOnly;
-                await RenderWithContextAsync(
-                    workspace,
-                    workspaceMember,
-                    new CommonPageContext(context.PageContext),
-                    request.View.Hash,
-                    cancellationToken);
-
-                break;
-        }
-    }
-
-    public async Task Handle(DatePickerAction action, BlockActionRequest request)
-    {
-        var cancellationToken = CancellationToken.None;
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -207,10 +225,11 @@ public class HomePage(
         }
     }
 
-    public async Task Handle(StaticSelectAction action, BlockActionRequest request)
+    public async Task HandleAsync(
+        StaticSelectAction action,
+        BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -303,61 +322,80 @@ public class HomePage(
         }
     }
 
-    public async Task Handle(AppHomeOpened slackEvent)
+    public async Task HandleAsync(
+        CheckboxGroupAction action,
+        BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(slackEvent);
-
-        logger.LogWarning(JsonSerializer.Serialize(slackEvent));
-
-        var cancellationToken = CancellationToken.None;
-        switch (slackEvent.Tab)
+        var workspaceEntity =
+            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        if (workspaceEntity is null)
         {
-            case AppHomeTab.Home:
-                {
-                    Shared.Database.Entities.Workspace? workspaceEntity;
-                    if (slackEvent.View is null)
-                    {
-                        ArgumentException.ThrowIfNullOrWhiteSpace(slackEvent.User);
-                        workspaceEntity =
-                            await repositoryFactory.WorkspaceRepository.GetByWorkspaceMemberIdAsync(
-                                slackEvent.User,
-                                cancellationToken);
-                    }
-                    else
-                    {
-                        ArgumentException.ThrowIfNullOrWhiteSpace(slackEvent.View.TeamId);
-                        workspaceEntity =
-                            await repositoryFactory.WorkspaceRepository.GetByIdAsync(
-                                slackEvent.View.TeamId,
-                                cancellationToken);
-                    }
-
-                    if (workspaceEntity is null)
-                    {
-                        throw new SlackWorkspaceNotFound();
-                    }
-
-                    var (workspaceMemberEntity, _) =
-                        await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                            workspaceEntity,
-                            slackEvent.User,
-                            cancellationToken);
-
-                    var workspace = mapper.MapTo(workspaceEntity);
-                    await RenderAsync(
-                        workspace,
-                        mapper.MapTo(workspaceMemberEntity, workspace),
-                        slackEvent.View?.Hash,
-                        cancellationToken);
-                }
-                break;
-
-            case AppHomeTab.Messages:
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException();
+            throw new SlackWorkspaceNotFound();
         }
+
+        var (workspaceMemberEntity, _) =
+            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+                workspaceEntity,
+                request.User.Id,
+                cancellationToken);
+
+        var workspace = mapper.MapTo(workspaceEntity);
+        var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
+
+        switch (action.ActionId)
+        {
+            case IncludeMyBookingsOnly:
+                var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
+                var selectedOption = action.SelectedOptions.FirstOrDefault();
+                context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext();
+                context.PageContext.HomePage.IncludeMyBookingsOnly = selectedOption is not null &&
+                                                                     selectedOption.Value ==
+                                                                     IncludeMyBookingsOnly;
+                await RenderWithContextAsync(
+                    workspace,
+                    workspaceMember,
+                    new CommonPageContext(context.PageContext),
+                    request.View.Hash,
+                    cancellationToken);
+
+                break;
+        }
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(CheckboxGroupAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(DatePickerAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(StaticSelectAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(AppHomeOpened slackEvent)
+    {
+        asyncPageRenderingService.EventHandlerStream.OnNext(slackEvent);
+
+        return Task.CompletedTask;
     }
 
     public async Task RenderWithContextAsync(

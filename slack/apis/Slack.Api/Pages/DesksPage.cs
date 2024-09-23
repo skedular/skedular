@@ -42,6 +42,7 @@ public interface IDesksPage
 }
 
 public class DesksPage(
+    AsyncPageRenderingService<DesksPage> asyncPageRenderingService,
     LocationConfiguration locationConfiguration,
     CustomerConfiguration customerConfiguration,
     BookingConfiguration bookingConfiguration,
@@ -58,10 +59,11 @@ public class DesksPage(
     IMapper mapper,
     TimeProvider timeProvider,
     IBookingsPageContextService bookingsPageContextService) :
+    IDesksPage,
+    IAsyncPageRenderingCallbacks,
     IBlockActionHandler<StaticSelectAction>,
     IBlockActionHandler<ButtonAction>,
-    IBlockActionHandler<DatePickerAction>,
-    IDesksPage
+    IBlockActionHandler<DatePickerAction>
 {
     private const int DesksPageSize = 5;
     private const string DesksCallback = "Desks";
@@ -71,10 +73,8 @@ public class DesksPage(
     private const string NextPageDesks = "Desks_NextPageDesks";
     private const string LastPageDesks = "Desks_LastPageDesks";
 
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -149,9 +149,56 @@ public class DesksPage(
         }
     }
 
-    public async Task Handle(DatePickerAction action, BlockActionRequest request)
+    public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        var cancellationToken = CancellationToken.None;
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(DatePickerAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(StaticSelectAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public async Task RenderWithContextAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CommonPageContext commonPageContext,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DesksPage);
+        if (commonPageContext.PageContext.DesksPage.DesksPagination.IsEmpty())
+        {
+            await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
+        }
+        else
+        {
+            await RenderInternalAsync(
+                workspace,
+                workspaceMember,
+                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentAfter,
+                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentFirst,
+                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentBefore,
+                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentLast,
+                commonPageContext,
+                hash,
+                cancellationToken);
+        }
+    }
+
+    public async Task Handle(DatePickerAction action, BlockActionRequest request, CancellationToken cancellationToken)
+    {
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -177,10 +224,8 @@ public class DesksPage(
         }
     }
 
-    public async Task Handle(StaticSelectAction action, BlockActionRequest request)
+    public async Task Handle(StaticSelectAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -269,33 +314,6 @@ public class DesksPage(
                 workspaceMember,
                 request.TriggerId,
                 context,
-                cancellationToken);
-        }
-    }
-
-    public async Task RenderWithContextAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        CommonPageContext commonPageContext,
-        string? hash,
-        CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DesksPage);
-        if (commonPageContext.PageContext.DesksPage.DesksPagination.IsEmpty())
-        {
-            await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
-        }
-        else
-        {
-            await RenderInternalAsync(
-                workspace,
-                workspaceMember,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentAfter,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentFirst,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentBefore,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentLast,
-                commonPageContext,
-                hash,
                 cancellationToken);
         }
     }
@@ -633,8 +651,7 @@ public class DesksPage(
             Label = "Name".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = DeskActionTypes.Name,
-                InitialValue = desk.Name.ToSafeString()
+                ActionId = DeskActionTypes.Name, InitialValue = desk.Name.ToSafeString()
             },
             Optional = false
         };

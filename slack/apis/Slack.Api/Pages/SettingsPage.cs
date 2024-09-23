@@ -33,6 +33,7 @@ public interface ISettingsPage
 }
 
 public class SettingsPage(
+    AsyncPageRenderingService<SettingsPage> asyncPageRenderingService,
     BillingConfiguration billingConfiguration,
     IWorkspaceMemberService workspaceMemberService,
     IRepositoryFactory repositoryFactory,
@@ -40,19 +41,24 @@ public class SettingsPage(
     ICommonComponents commonComponents,
     IBillingService billingService,
     BillingService.BillingServiceClient billingServiceClient,
-    IWorkspaceChannelService workspaceChannelService)
-    : ISettingsPage, IBlockActionHandler<StaticSelectAction>, IBlockActionHandler<ChannelSelectAction>,
-        IBlockActionHandler<CheckboxGroupAction>
+    IWorkspaceChannelService workspaceChannelService) :
+    ITeamsPage,
+    IAsyncPageRenderingCallbacks,
+    ISettingsPage,
+    IBlockActionHandler<StaticSelectAction>,
+    IBlockActionHandler<ChannelSelectAction>,
+    IBlockActionHandler<CheckboxGroupAction>
 {
     private const string SettingsCallback = "Settings";
     private const string ActionsMenu = "Settings_ActionsMenu";
     private const string AutomaticallyUpdateProfileStatus = "AutomaticallyUpdateProfileStatus";
     private const string UpdateOrganizationSlackUpdateChannel = "UpdateOrganizationSlackUpdateChannel";
 
-    public async Task Handle(ChannelSelectAction action, BlockActionRequest request)
+    public async Task HandleAsync(
+        ChannelSelectAction action,
+        BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -82,10 +88,11 @@ public class SettingsPage(
         }
     }
 
-    public async Task Handle(CheckboxGroupAction action, BlockActionRequest request)
+    public async Task HandleAsync(
+        CheckboxGroupAction action,
+        BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -113,10 +120,11 @@ public class SettingsPage(
         }
     }
 
-    public async Task Handle(StaticSelectAction action, BlockActionRequest request)
+    public async Task HandleAsync(
+        StaticSelectAction action,
+        BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -162,6 +170,27 @@ public class SettingsPage(
 
                 break;
         }
+    }
+
+    public Task Handle(ChannelSelectAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ChannelSelectActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(CheckboxGroupAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(StaticSelectAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task RenderWithContextAsync(

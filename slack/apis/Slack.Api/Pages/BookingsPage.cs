@@ -35,6 +35,7 @@ public interface IBookingsPage
 }
 
 public class BookingsPage(
+    AsyncPageRenderingService<BookingsPage> asyncPageRenderingService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ICommonComponents commonComponents,
@@ -44,8 +45,12 @@ public class BookingsPage(
     IBookingComponents bookingComponents,
     IBookingsPageContextService bookingsPageContextService,
     IMapper mapper,
-    TimeProvider timeProvider) : IBlockActionHandler<ButtonAction>, IBlockActionHandler<DatePickerAction>,
-    IBlockActionHandler<CheckboxGroupAction>, IBookingsPage
+    TimeProvider timeProvider) :
+    IBookingsPage,
+    IAsyncPageRenderingCallbacks,
+    IBlockActionHandler<ButtonAction>,
+    IBlockActionHandler<CheckboxGroupAction>,
+    IBlockActionHandler<DatePickerAction>
 {
     private const int BookingsPageSize = 5;
     private const string BookingsCallback = "Bookings";
@@ -57,10 +62,8 @@ public class BookingsPage(
     private const string LastPageBookings = "Bookings_LastPageBookings";
     private const string IncludeMyBookingsOnly = "Bookings_IncludeMyBookingsOnly";
 
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -117,10 +120,11 @@ public class BookingsPage(
         }
     }
 
-    public async Task Handle(CheckboxGroupAction action, BlockActionRequest request)
+    public async Task HandleAsync(
+        CheckboxGroupAction action,
+        BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -157,9 +161,11 @@ public class BookingsPage(
         }
     }
 
-    public async Task Handle(DatePickerAction action, BlockActionRequest request)
+    public async Task HandleAsync(
+        DatePickerAction action,
+        BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -196,6 +202,27 @@ public class BookingsPage(
                     cancellationToken);
                 break;
         }
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(CheckboxGroupAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(DatePickerAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task RenderWithContextAsync(

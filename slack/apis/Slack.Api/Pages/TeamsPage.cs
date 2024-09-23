@@ -41,6 +41,7 @@ public interface ITeamsPage
 }
 
 public class TeamsPage(
+    AsyncPageRenderingService<TeamsPage> asyncPageRenderingService,
     TeamConfiguration teamConfiguration,
     CustomerConfiguration customerConfiguration,
     IRepositoryFactory repositoryFactory,
@@ -53,8 +54,11 @@ public class TeamsPage(
     ITeamService teamService,
     IBookingService bookingService,
     IMapper mapper,
-    IBookingsPageContextService bookingsPageContextService)
-    : IBlockActionHandler<StaticSelectAction>, IBlockActionHandler<ButtonAction>, ITeamsPage
+    IBookingsPageContextService bookingsPageContextService) :
+    ITeamsPage,
+    IAsyncPageRenderingCallbacks,
+    IBlockActionHandler<StaticSelectAction>,
+    IBlockActionHandler<ButtonAction>
 {
     private const int TeamsPageSize = 5;
     private const string TeamsCallback = "Teams";
@@ -63,10 +67,8 @@ public class TeamsPage(
     private const string NextPageTeams = "Teams_NextPageTeams";
     private const string LastPageTeams = "Teams_LastPageTeams";
 
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -139,10 +141,49 @@ public class TeamsPage(
         }
     }
 
-    public async Task Handle(StaticSelectAction action, BlockActionRequest request)
+    public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        var cancellationToken = CancellationToken.None;
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
 
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(StaticSelectAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public async Task RenderWithContextAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CommonPageContext commonPageContext,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.TeamsPage);
+        if (commonPageContext.PageContext.TeamsPage.TeamsPagination.IsEmpty())
+        {
+            await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
+        }
+        else
+        {
+            await RenderInternalAsync(
+                workspace,
+                workspaceMember,
+                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentAfter,
+                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentFirst,
+                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentBefore,
+                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentLast,
+                commonPageContext,
+                hash,
+                cancellationToken);
+        }
+    }
+
+    public async Task Handle(StaticSelectAction action, BlockActionRequest request, CancellationToken cancellationToken)
+    {
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -219,33 +260,6 @@ public class TeamsPage(
                 workspaceMember,
                 request.TriggerId,
                 context,
-                cancellationToken);
-        }
-    }
-
-    public async Task RenderWithContextAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        CommonPageContext commonPageContext,
-        string? hash,
-        CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.TeamsPage);
-        if (commonPageContext.PageContext.TeamsPage.TeamsPagination.IsEmpty())
-        {
-            await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
-        }
-        else
-        {
-            await RenderInternalAsync(
-                workspace,
-                workspaceMember,
-                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentAfter,
-                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentFirst,
-                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentBefore,
-                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentLast,
-                commonPageContext,
-                hash,
                 cancellationToken);
         }
     }
@@ -358,9 +372,9 @@ public class TeamsPage(
         var teamIds = teams.Select(item => item.Id).ToList();
         var teamsWithChannel = await repositoryFactory.TeamRepository
             .Query(new Specification<Team>
-            {
-                Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id)
-            }
+                {
+                    Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id)
+                }
                 .AddInclude(query => query.DailyUpdateChannel))
             .ToListAsync(cancellationToken);
         teams = teams.Select(item =>
@@ -573,8 +587,7 @@ public class TeamsPage(
             Label = "Name".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = TeamActionTypes.Name,
-                InitialValue = team.Name.ToSafeString()
+                ActionId = TeamActionTypes.Name, InitialValue = team.Name.ToSafeString()
             },
             Optional = false
         };
@@ -585,9 +598,7 @@ public class TeamsPage(
             Label = "About".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = TeamActionTypes.About,
-                InitialValue = team.About.ToSafeString(),
-                Multiline = true
+                ActionId = TeamActionTypes.About, InitialValue = team.About.ToSafeString(), Multiline = true
             },
             Optional = true
         };

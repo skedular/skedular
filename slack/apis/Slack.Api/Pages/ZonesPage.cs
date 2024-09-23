@@ -36,6 +36,7 @@ public interface IZonesPage
 }
 
 public class ZonesPage(
+    AsyncPageRenderingService<ZonesPage> asyncPageRenderingService,
     LocationConfiguration locationConfiguration,
     CustomerConfiguration customerConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
@@ -48,8 +49,11 @@ public class ZonesPage(
     IZoneComponents zoneComponents,
     ICommonComponents commonComponents,
     IMapper mapper,
-    IBookingsPageContextService bookingsPageContextService)
-    : IBlockActionHandler<StaticSelectAction>, IBlockActionHandler<ButtonAction>, IZonesPage
+    IBookingsPageContextService bookingsPageContextService) :
+    IZonesPage,
+    IAsyncPageRenderingCallbacks,
+    IBlockActionHandler<StaticSelectAction>,
+    IBlockActionHandler<ButtonAction>
 {
     private const int ZonesPageSize = 5;
     private const string ZonesCallback = "Zones";
@@ -58,10 +62,8 @@ public class ZonesPage(
     private const string NextPageZones = "Zones_NextPageZones";
     private const string LastPageZones = "Zones_LastPageZones";
 
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -136,10 +138,9 @@ public class ZonesPage(
         }
     }
 
-    public async Task Handle(StaticSelectAction action, BlockActionRequest request)
+    public async Task HandleAsync(StaticSelectAction action, BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -230,6 +231,20 @@ public class ZonesPage(
                 context,
                 cancellationToken);
         }
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(StaticSelectAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task RenderWithContextAsync(
@@ -455,8 +470,7 @@ public class ZonesPage(
             Last = last.ToNullInt(),
             Where = new TagWhereInput
             {
-                LocationId = commonPageContext.PageContext.ZonesPage.LocationId,
-                Type = LocationTagType.Zone
+                LocationId = commonPageContext.PageContext.ZonesPage.LocationId, Type = LocationTagType.Zone
             }
         };
 
@@ -567,8 +581,7 @@ public class ZonesPage(
             Label = "Name".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = ZoneActionTypes.Name,
-                InitialValue = zone.Name.ToSafeString()
+                ActionId = ZoneActionTypes.Name, InitialValue = zone.Name.ToSafeString()
             },
             Optional = false
         };

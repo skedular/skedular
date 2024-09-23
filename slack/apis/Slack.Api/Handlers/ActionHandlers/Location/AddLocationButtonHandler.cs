@@ -19,6 +19,7 @@ using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationSe
 namespace Slack.Api.Handlers.ActionHandlers.Location;
 
 public class AddLocationButtonHandler(
+    AsyncPageRenderingService<AddLocationButtonHandler> asyncPageRenderingService,
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
     ICustomerService customerService,
@@ -27,12 +28,11 @@ public class AddLocationButtonHandler(
     IWorkspaceChannelService workspaceChannelService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    IPageNavigator pageNavigator) : IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
+    IPageNavigator pageNavigator)
+    : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -95,6 +95,13 @@ public class AddLocationButtonHandler(
                 Blocks = [name, about, timezone, updateChannel],
                 PrivateMetadata = action.Value
             });
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)

@@ -22,6 +22,7 @@ public interface IPageNavigator
 }
 
 public class PageNavigator(
+    AsyncPageRenderingService<PageNavigator> asyncPageRenderingService,
     IHomePage homePage,
     IBookingsPage bookingsPage,
     ILocationsPage locationsPage,
@@ -32,11 +33,13 @@ public class PageNavigator(
     IBillingPage billingPage,
     IWorkspaceMemberService workspaceMemberService,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper) : IPageNavigator, IBlockActionHandler<ButtonAction>
+    IMapper mapper) :
+    IPageNavigator,
+    IAsyncPageRenderingCallbacks,
+    IBlockActionHandler<ButtonAction>
 {
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -59,6 +62,13 @@ public class PageNavigator(
             CommonPageContext.Deserialize(action.Value),
             request.View.Hash,
             cancellationToken);
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task BackAsync(

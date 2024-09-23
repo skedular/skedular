@@ -22,6 +22,7 @@ using Option = SlackNet.Blocks.Option;
 namespace Slack.Api.Handlers.ActionHandlers.Desk;
 
 public class BulkAddDesksButtonHandler(
+    AsyncPageRenderingService<BulkAddDesksButtonHandler> asyncPageRenderingService,
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
     ICustomerService customerService,
@@ -29,15 +30,14 @@ public class BulkAddDesksButtonHandler(
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    IPageNavigator pageNavigator) : IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
+    IPageNavigator pageNavigator)
+    : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     private const string NamePrefixKey = "NamePrefix";
     private const string CountKey = "Count";
 
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -145,6 +145,13 @@ public class BulkAddDesksButtonHandler(
                 Blocks = blocks,
                 PrivateMetadata = action.Value
             });
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)

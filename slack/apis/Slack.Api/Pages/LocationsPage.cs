@@ -40,6 +40,7 @@ public interface ILocationsPage
 }
 
 public class LocationsPage(
+    AsyncPageRenderingService<LocationsPage> asyncPageRenderingService,
     LocationConfiguration locationConfiguration,
     CustomerConfiguration customerConfiguration,
     IRepositoryFactory repositoryFactory,
@@ -55,8 +56,11 @@ public class LocationsPage(
     IBookingService bookingService,
     IDesksPageContextService desksPageContextService,
     IMapper mapper,
-    IBookingsPageContextService bookingsPageContextService) : IBlockActionHandler<StaticSelectAction>,
-    IBlockActionHandler<ButtonAction>, ILocationsPage
+    IBookingsPageContextService bookingsPageContextService) :
+    ILocationsPage,
+    IAsyncPageRenderingCallbacks,
+    IBlockActionHandler<ButtonAction>,
+    IBlockActionHandler<StaticSelectAction>
 {
     private const int LocationsPageSize = 5;
     private const string LocationsCallback = "Locations";
@@ -65,10 +69,8 @@ public class LocationsPage(
     private const string NextPageLocations = "Locations_NextPageLocations";
     private const string LastPageLocations = "Locations_LastPageLocations";
 
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -143,10 +145,11 @@ public class LocationsPage(
         }
     }
 
-    public async Task Handle(StaticSelectAction action, BlockActionRequest request)
+    public async Task HandleAsync(
+        StaticSelectAction action,
+        BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -253,6 +256,20 @@ public class LocationsPage(
                 request.View.Hash,
                 cancellationToken);
         }
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(StaticSelectAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task RenderWithContextAsync(
@@ -390,9 +407,9 @@ public class LocationsPage(
         var locationIds = locations.Select(item => item.Id).ToList();
         var locationsWithChannel = await repositoryFactory.LocationRepository
             .Query(new Specification<Location>
-            {
-                Criteria = query => !query.DeletedAt.HasValue && locationIds.Contains(query.Id)
-            }
+                {
+                    Criteria = query => !query.DeletedAt.HasValue && locationIds.Contains(query.Id)
+                }
                 .AddInclude(query => query.DailyUpdateChannel))
             .ToListAsync(cancellationToken);
         locations = locations.Select(item =>
@@ -606,8 +623,7 @@ public class LocationsPage(
             Label = "Name".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = LocationActionTypes.Name,
-                InitialValue = location.Name.ToSafeString()
+                ActionId = LocationActionTypes.Name, InitialValue = location.Name.ToSafeString()
             },
             Optional = false
         };

@@ -24,6 +24,7 @@ using Option = SlackNet.Blocks.Option;
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class AddBookingButtonHandler(
+    AsyncPageRenderingService<AddBookingButtonHandler> asyncPageRenderingService,
     BookingConfiguration bookingConfiguration,
     ICustomerService customerService,
     ILocationService locationService,
@@ -35,15 +36,14 @@ public class AddBookingButtonHandler(
     IMapper mapper,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
-    IPageNavigator pageNavigator) : IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
+    IPageNavigator pageNavigator)
+    : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     private const string DateKey = "Date";
     private const string NotesKey = "BookingNotes";
 
-    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var cancellationToken = CancellationToken.None;
-
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
@@ -107,6 +107,13 @@ public class AddBookingButtonHandler(
                     .Concat([notes]).ToList(),
                 PrivateMetadata = action.Value
             });
+    }
+
+    public Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+
+        return Task.CompletedTask;
     }
 
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
