@@ -7,6 +7,12 @@ owners:
 services:
     - id: CustomerService
       version: 0.0.1
+    - id: CustomerTeamSubscriberService
+      version: 0.0.1
+    - id: CustomerOrganizationSubscriberService
+      version: 0.0.1
+    - id: CustomerLocationSubscriberService
+      version: 0.0.1
 badges:
     - content: Customer Domain
       backgroundColor: blue

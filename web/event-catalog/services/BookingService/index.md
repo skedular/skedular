@@ -18,10 +18,6 @@ receives:
     version: 0.0.1
   - id: CustomerDeleted
     version: 0.0.1   
-  - id: TeamUpserted
-    version: 0.0.1
-  - id: TeamDeleted
-    version: 0.0.1
   - id: OrganizationUpserted
     version: 0.0.1
   - id: OrganizationDeleted
@@ -38,7 +34,7 @@ repository:
 
 ## Overview
 
-The Team Service is a component of the system responsible for managing team structure and roles. It interacts with other services to maintain accurate team members format.
+The Booking Service is a component of the system responsible for managing booking. It interacts with other services to maintain accurate Booking information.
 
 ## Architecture diagram
 

@@ -13,11 +13,11 @@ services:
       version: 0.0.1
     - id: TeamOrganizationSubscriberService
       version: 0.0.1
-    - id: BoookingService
+    - id: CustomerTeamSubscriberService
       version: 0.0.1
-    - id: OrganizationService
+    - id: BookingTeamSubscriberService
       version: 0.0.1
-    - id: CustomerService
+    - id: OrganizationTeamSubscriberService
       version: 0.0.1
 badges:
     - content: Team Domain

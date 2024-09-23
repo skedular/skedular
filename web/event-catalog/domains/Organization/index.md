@@ -7,6 +7,8 @@ owners:
 services:
     - id: OrganizationService
       version: 0.0.1
+    - id: OrganizationTeamSubscriberService
+      version: 0.0.1
 badges:
     - content: Organization Domain
       backgroundColor: blue
