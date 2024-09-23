@@ -331,11 +331,11 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
                 />
 
                 <DialogActions>
-                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
-                    Cancel
-                  </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Invite
+                  </Button>
+                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
+                    Cancel
                   </Button>
                 </DialogActions>
               </Stack>

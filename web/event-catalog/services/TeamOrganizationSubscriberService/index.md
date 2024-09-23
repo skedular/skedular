@@ -1,23 +1,16 @@
 ---
-id: TeamService
+id: TeamOrganizationSubscriberService
 version: 0.0.1
-name: Team Service
+name: Team Organization Subscriber Service
 summary: |
   Team Service that handles all commands 
 owners:
     - malizadeh
     - full-stack
 receives:
-  - id: AddTeam
+  - id: OrganizationUpserted
     version: 0.0.1
-  - id: UpdateTeam
-    version: 0.0.1
-  - id: DeleteTeam
-    version: 0.0.1   
-sends:
-  - id: TeamUpserted
-    version: 0.0.1
-  - id: TeamDeleted
+  - id: OrganizationDeleted
     version: 0.0.1
 repository:
   language: C#
