@@ -25,7 +25,7 @@ RUN apk update && \
     apk add --upgrade apk-tools && \
     apk upgrade --available
 
-WORKDIR /web/
+RUN mkdir -p /web/apps/msteams
 WORKDIR /web/apps/msteams
 COPY --from=build /src/web/apps/msteams /web/apps/msteams
 

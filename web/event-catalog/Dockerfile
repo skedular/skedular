@@ -1,11 +1,28 @@
-FROM node:lts AS build
-WORKDIR /app
-COPY . .
-# Fix for astro in docker https://github.com/withastro/astro/issues/2596
-ENV NODE_OPTIONS=--max_old_space_size=2048
-RUN npm i
+# syntax = docker/dockerfile:1.7.0
+ARG FINAL_IMAGE=node:20-alpine
+ARG BUILD_IMAGE=node:20-alpine
+
+FROM $BUILD_IMAGE AS build
+
+RUN mkdir -p /src/web
+COPY web/event-catalog /src/web/event-catalog
+WORKDIR /src/web/event-catalog
+
+RUN npm install --frozen-lockfile
 RUN npm run build
 
-FROM httpd:2.4 AS runtime
-COPY --from=build /app/dist /usr/local/apache2/htdocs/
-EXPOSE 80
+FROM build AS test
+RUN mkdir -p /coverage/reports
+
+FROM $FINAL_IMAGE AS final
+LABEL maintainer="morteza.alizadeh@gmail.com"
+
+RUN apk update && \
+    apk add --upgrade apk-tools && \
+    apk upgrade --available
+
+RUN mkdir -p /web/event-catalog
+WORKDIR /web/event-catalog
+COPY --from=build /src/web/event-catalog /web/event-catalog
+
+CMD ["npm", "run", "start"]

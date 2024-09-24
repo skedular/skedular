@@ -82,6 +82,10 @@ output "msteams_webapp_domain_name" {
   value = var.environment == "production" ? "msteams.${local.domain}" : "msteams.${var.environment}.${local.domain}"
 }
 
+output "eventcatalog_webapp_domain_name" {
+  value = var.environment == "production" ? "eventcatalog.${local.domain}" : "eventcatalog.${var.environment}.${local.domain}"
+}
+
 output "logrocket_publicwebsite_app_id" {
   value = "unity-hub/unityhub-public-website-${var.environment}"
 }
