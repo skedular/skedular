@@ -29,5 +29,3 @@ repository:
 The Team Service is a component of the system responsible for managing team structure and roles. It interacts with other services to maintain accurate team members format.
 
 ## Architecture diagram
-
-<NodeGraph title="Hello world" />

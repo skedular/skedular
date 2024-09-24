@@ -9,6 +9,8 @@ services:
       version: 0.0.1
     - id: OrganizationTeamSubscriberService
       version: 0.0.1
+    - id: OrganizationLocationSubscriberService
+      version: 0.0.1
 badges:
     - content: Organization Domain
       backgroundColor: blue
