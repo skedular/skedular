@@ -5,13 +5,13 @@ module "common" {
 }
 
 module "web_common" {
-  source = "../../../../../infrastructure/workspaces/common"
+  source = "../../../../infrastructure/workspaces/common"
 
   environment = var.environment
 }
 
 module "shared_common" {
-  source = "../../../../../../shared/infrastructure/workspaces/common"
+  source = "../../../../../shared/infrastructure/workspaces/common"
 
   environment = var.environment
 }
@@ -30,7 +30,7 @@ resource "vercel_project" "default" {
   build_command    = "npm run build"
   dev_command      = "npm run start"
   install_command  = "npm install --frozen-lockfile"
-  output_directory = "./event-catalog/dist"
+  output_directory = "./dist"
   vercel_authentication = {
     deployment_type = "standard_protection"
   }
@@ -43,7 +43,7 @@ resource "vercel_project_domain" "default" {
 }
 
 data "vercel_project_directory" "default" {
-  path = "../../../../.."
+  path = "../../.."
 }
 
 resource "vercel_deployment" "default" {

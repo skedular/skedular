@@ -1,5 +1,5 @@
 module "shared_common" {
-  source = "../../../../../../shared/infrastructure/workspaces/common"
+  source = "../../../../../shared/infrastructure/workspaces/common"
 
   environment = local.environment
 }
