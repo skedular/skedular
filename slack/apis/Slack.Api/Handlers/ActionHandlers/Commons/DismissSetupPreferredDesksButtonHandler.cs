@@ -14,7 +14,7 @@ using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerSe
 namespace Slack.Api.Handlers.ActionHandlers.Commons;
 
 public class DismissSetupPreferredDesksButtonHandler(
-    AsyncPageRenderingService<DismissSetupPreferredDesksButtonHandler> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     CustomerConfiguration customerConfiguration,
     CustomerService.CustomerServiceClient customerServiceClient,
     IRepositoryFactory repositoryFactory,
@@ -56,7 +56,7 @@ public class DismissSetupPreferredDesksButtonHandler(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

@@ -30,7 +30,7 @@ using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirect
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class EditBookingButtonHandler(
-    AsyncPageRenderingService<EditBookingButtonHandler> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     BookingConfiguration bookingConfiguration,
     LocationConfiguration locationConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
@@ -157,7 +157,7 @@ public class EditBookingButtonHandler(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

@@ -41,7 +41,7 @@ public interface ITeamsPage
 }
 
 public class TeamsPage(
-    AsyncPageRenderingService<TeamsPage> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     TeamConfiguration teamConfiguration,
     CustomerConfiguration customerConfiguration,
     IRepositoryFactory repositoryFactory,
@@ -143,14 +143,14 @@ public class TeamsPage(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

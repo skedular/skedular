@@ -42,7 +42,7 @@ public interface IDesksPage
 }
 
 public class DesksPage(
-    AsyncPageRenderingService<DesksPage> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     LocationConfiguration locationConfiguration,
     CustomerConfiguration customerConfiguration,
     BookingConfiguration bookingConfiguration,
@@ -151,21 +151,21 @@ public class DesksPage(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(DatePickerAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

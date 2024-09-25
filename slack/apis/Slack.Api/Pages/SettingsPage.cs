@@ -33,7 +33,7 @@ public interface ISettingsPage
 }
 
 public class SettingsPage(
-    AsyncPageRenderingService<SettingsPage> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     BillingConfiguration billingConfiguration,
     IWorkspaceMemberService workspaceMemberService,
     IRepositoryFactory repositoryFactory,
@@ -174,21 +174,21 @@ public class SettingsPage(
 
     public Task Handle(ChannelSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ChannelSelectActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ChannelSelectActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(CheckboxGroupAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

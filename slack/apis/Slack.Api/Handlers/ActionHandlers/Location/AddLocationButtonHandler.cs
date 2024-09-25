@@ -19,7 +19,7 @@ using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationSe
 namespace Slack.Api.Handlers.ActionHandlers.Location;
 
 public class AddLocationButtonHandler(
-    AsyncPageRenderingService<AddLocationButtonHandler> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
     ICustomerService customerService,
@@ -99,7 +99,7 @@ public class AddLocationButtonHandler(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

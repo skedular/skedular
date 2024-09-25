@@ -14,7 +14,7 @@ using BookingService = Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingServi
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class CancelBookingButtonHandler(
-    AsyncPageRenderingService<CancelBookingButtonHandler> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
     IBookingService bookingService,
@@ -72,7 +72,7 @@ public class CancelBookingButtonHandler(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

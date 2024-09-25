@@ -24,7 +24,7 @@ using Option = SlackNet.Blocks.Option;
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class AddBookingButtonHandler(
-    AsyncPageRenderingService<AddBookingButtonHandler> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     BookingConfiguration bookingConfiguration,
     ICustomerService customerService,
     ILocationService locationService,
@@ -111,7 +111,7 @@ public class AddBookingButtonHandler(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

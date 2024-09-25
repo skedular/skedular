@@ -20,7 +20,7 @@ using TeamService = Api.Shared.Services.Grpc.UnityHub.Team.V1.TeamService;
 namespace Slack.Api.Handlers.ActionHandlers.Team;
 
 public class AddTeamButtonHandler(
-    AsyncPageRenderingService<AddTeamButtonHandler> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     TeamConfiguration teamConfiguration,
     TeamService.TeamServiceClient teamServiceClient,
     ICustomerService customerService,
@@ -111,7 +111,7 @@ public class AddTeamButtonHandler(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

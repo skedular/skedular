@@ -25,18 +25,18 @@ public interface IAsyncPageRenderingCallbacks
         Task.CompletedTask;
 }
 
-public class AsyncPageRenderingService<T>(
-    ILogger<AsyncPageRenderingService<T>> logger,
+public class AsyncPageRenderingService(
+    ILogger<AsyncPageRenderingService> logger,
     IServiceProvider serviceProvider,
     IHostApplicationLifetime hostApplicationLifetime)
-    : BackgroundService where T : IAsyncPageRenderingCallbacks
+    : BackgroundService
 {
-    public Subject<AppHomeOpened> EventHandlerStream { get; } = new();
-    public Subject<(ButtonAction, BlockActionRequest)> ButtonActionHandlerStream { get; } = new();
-    public Subject<(DatePickerAction, BlockActionRequest)> DatePickerActionHandlerStream { get; } = new();
-    public Subject<(StaticSelectAction, BlockActionRequest)> StaticSelectActionHandlerStream { get; } = new();
-    public Subject<(CheckboxGroupAction, BlockActionRequest)> CheckboxGroupActionHandlerStream { get; } = new();
-    public Subject<(ChannelSelectAction, BlockActionRequest)> ChannelSelectActionHandlerStream { get; } = new();
+    public Subject<(Type, AppHomeOpened)> EventHandlerStream { get; } = new();
+    public Subject<(Type, ButtonAction, BlockActionRequest)> ButtonActionHandlerStream { get; } = new();
+    public Subject<(Type, DatePickerAction, BlockActionRequest)> DatePickerActionHandlerStream { get; } = new();
+    public Subject<(Type, StaticSelectAction, BlockActionRequest)> StaticSelectActionHandlerStream { get; } = new();
+    public Subject<(Type, CheckboxGroupAction, BlockActionRequest)> CheckboxGroupActionHandlerStream { get; } = new();
+    public Subject<(Type, ChannelSelectAction, BlockActionRequest)> ChannelSelectActionHandlerStream { get; } = new();
 
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
@@ -58,8 +58,10 @@ public class AsyncPageRenderingService<T>(
                 value => Task.Run(async () =>
                     {
                         await using var scope = serviceProvider.CreateAsyncScope();
-                        var service = scope.ServiceProvider.GetRequiredService<T>();
-                        await service.HandleAsync(value, cancellationToken);
+                        var service =
+                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                        ArgumentNullException.ThrowIfNull(service);
+                        await service.HandleAsync(value.Item2, cancellationToken);
                     },
                     cancellationToken));
 
@@ -67,8 +69,10 @@ public class AsyncPageRenderingService<T>(
                 value => Task.Run(async () =>
                     {
                         await using var scope = serviceProvider.CreateAsyncScope();
-                        var service = scope.ServiceProvider.GetRequiredService<T>();
-                        await service.HandleAsync(value.Item1, value.Item2, cancellationToken);
+                        var service =
+                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                        ArgumentNullException.ThrowIfNull(service);
+                        await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
                     },
                     cancellationToken));
 
@@ -76,8 +80,10 @@ public class AsyncPageRenderingService<T>(
                 value => Task.Run(async () =>
                     {
                         await using var scope = serviceProvider.CreateAsyncScope();
-                        var service = scope.ServiceProvider.GetRequiredService<T>();
-                        await service.HandleAsync(value.Item1, value.Item2, cancellationToken);
+                        var service =
+                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                        ArgumentNullException.ThrowIfNull(service);
+                        await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
                     },
                     cancellationToken));
 
@@ -85,8 +91,10 @@ public class AsyncPageRenderingService<T>(
                 value => Task.Run(async () =>
                     {
                         await using var scope = serviceProvider.CreateAsyncScope();
-                        var service = scope.ServiceProvider.GetRequiredService<T>();
-                        await service.HandleAsync(value.Item1, value.Item2, cancellationToken);
+                        var service =
+                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                        ArgumentNullException.ThrowIfNull(service);
+                        await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
                     },
                     cancellationToken));
 
@@ -94,8 +102,10 @@ public class AsyncPageRenderingService<T>(
                 value => Task.Run(async () =>
                     {
                         await using var scope = serviceProvider.CreateAsyncScope();
-                        var service = scope.ServiceProvider.GetRequiredService<T>();
-                        await service.HandleAsync(value.Item1, value.Item2, cancellationToken);
+                        var service =
+                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                        ArgumentNullException.ThrowIfNull(service);
+                        await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
                     },
                     cancellationToken));
 
@@ -103,8 +113,10 @@ public class AsyncPageRenderingService<T>(
                 value => Task.Run(async () =>
                     {
                         await using var scope = serviceProvider.CreateAsyncScope();
-                        var service = scope.ServiceProvider.GetRequiredService<T>();
-                        await service.HandleAsync(value.Item1, value.Item2, cancellationToken);
+                        var service =
+                            scope.ServiceProvider.GetRequiredService(value.Item1) as IAsyncPageRenderingCallbacks;
+                        ArgumentNullException.ThrowIfNull(service);
+                        await service.HandleAsync(value.Item2, value.Item3, cancellationToken);
                     },
                     cancellationToken));
 

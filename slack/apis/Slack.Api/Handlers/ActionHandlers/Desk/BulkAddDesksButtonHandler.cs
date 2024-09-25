@@ -22,7 +22,7 @@ using Option = SlackNet.Blocks.Option;
 namespace Slack.Api.Handlers.ActionHandlers.Desk;
 
 public class BulkAddDesksButtonHandler(
-    AsyncPageRenderingService<BulkAddDesksButtonHandler> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
     ICustomerService customerService,
@@ -149,7 +149,7 @@ public class BulkAddDesksButtonHandler(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

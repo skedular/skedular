@@ -22,7 +22,7 @@ public interface IPageNavigator
 }
 
 public class PageNavigator(
-    AsyncPageRenderingService<PageNavigator> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     IHomePage homePage,
     IBookingsPage bookingsPage,
     ILocationsPage locationsPage,
@@ -66,7 +66,7 @@ public class PageNavigator(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }

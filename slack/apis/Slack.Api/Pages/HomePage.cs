@@ -38,7 +38,7 @@ public interface IHomePage
 }
 
 public class HomePage(
-    AsyncPageRenderingService<HomePage> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
     IWorkspaceMemberService workspaceMemberService,
@@ -365,35 +365,35 @@ public class HomePage(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(CheckboxGroupAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(DatePickerAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(AppHomeOpened slackEvent)
     {
-        asyncPageRenderingService.EventHandlerStream.OnNext(slackEvent);
+        asyncPageRenderingService.EventHandlerStream.OnNext((this.GetType(), slackEvent));
 
         return Task.CompletedTask;
     }

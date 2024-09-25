@@ -17,7 +17,7 @@ using BookingService = Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingServi
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class JoinBookingButtonHandler(
-    AsyncPageRenderingService<JoinBookingButtonHandler> asyncPageRenderingService,
+    AsyncPageRenderingService asyncPageRenderingService,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
     IRepositoryFactory repositoryFactory,
@@ -78,7 +78,7 @@ public class JoinBookingButtonHandler(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
 
         return Task.CompletedTask;
     }
