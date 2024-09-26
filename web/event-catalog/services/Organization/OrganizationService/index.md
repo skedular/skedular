@@ -14,7 +14,19 @@ receives:
     version: 0.0.1
   - id: DeleteOrganization
     version: 0.0.1
-  - id: OrganizationPaymentMethodsUpdated
+  - id: AcceptInvitationToJoinOrganization
+    version: 0.0.1
+  - id: CancelInvitationToJoinOrganization
+    version: 0.0.1
+  - id: CancelOrganizationOffering
+    version: 0.0.1
+  - id: ChangeOrganizationMemberOwnershipType
+    version: 0.0.1
+  - id: InviteCustomersToJoinOrganization
+    version: 0.0.1
+  - id: RejectInvitationToJoinOrganization
+    version: 0.0.1
+  - id: UpdateOrganizationOffering
     version: 0.0.1
 sends:
   - id: OrganizationDeleted
@@ -22,7 +34,13 @@ sends:
   - id: OrganizationUpserted
     version: 0.0.1
   - id: OrganizationOfferingUpdated
-    version: 0.0.1    
+    version: 0.0.1
+  - id: OrganizationMemberUpserted
+    version: 0.0.1
+  - id: OrganizationMemberDeleted
+    version: 0.0.1
+  - id: OrganizationMemberStatusUpdated
+    service: 0.0.1
 repository:
   language: C#
   url: 
