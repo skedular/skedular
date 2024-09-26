@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<986e72c03f4c60d610ad2bbe968cfd7c>>
+ * @generated SignedSource<<a55e971316f6a777a0f59d000d0f472c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,8 +17,6 @@ export type TeamMemberOrderInput = {
   field?: TeamMemberOrderField | null | undefined;
 };
 export type teamPeopleBookingsMatrixTeamMembersPaginationQuery$variables = {
-  count?: number | null | undefined;
-  cursor?: string | null | undefined;
   fetchBookingPermission: boolean;
   from?: any | null | undefined;
   organizationId: string;
@@ -37,16 +35,6 @@ export type teamPeopleBookingsMatrixTeamMembersPaginationQuery = {
 
 const node: ConcreteRequest = (function(){
 var v0 = [
-  {
-    "defaultValue": 10000,
-    "kind": "LocalArgument",
-    "name": "count"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "cursor"
-  },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
@@ -83,63 +71,30 @@ var v0 = [
     "name": "to"
   }
 ],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "cursor"
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "count"
-  },
-  {
-    "kind": "Variable",
-    "name": "orderBy",
-    "variableName": "peopleSortingValues"
-  },
-  {
-    "fields": [
-      {
-        "kind": "Variable",
-        "name": "nameContains",
-        "variableName": "peopleNameSearchText"
-      },
-      {
-        "kind": "Variable",
-        "name": "teamId",
-        "variableName": "teamId"
-      }
-    ],
-    "kind": "ObjectValue",
-    "name": "where"
-  }
-],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v5 = [
+v4 = [
+  (v2/*: any*/),
   (v3/*: any*/),
-  (v4/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -177,18 +132,7 @@ return {
     "name": "teamPeopleBookingsMatrixTeamMembersPaginationQuery",
     "selections": [
       {
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "count",
-            "variableName": "count"
-          },
-          {
-            "kind": "Variable",
-            "name": "cursor",
-            "variableName": "cursor"
-          }
-        ],
+        "args": null,
         "kind": "FragmentSpread",
         "name": "teamPeopleBookingsMatrix_query"
       }
@@ -204,117 +148,47 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "TeamMemberConnection",
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "orderBy",
+            "variableName": "peopleSortingValues"
+          },
+          {
+            "fields": [
+              {
+                "kind": "Variable",
+                "name": "nameContains",
+                "variableName": "peopleNameSearchText"
+              },
+              {
+                "kind": "Variable",
+                "name": "teamId",
+                "variableName": "teamId"
+              }
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
+        ],
+        "concreteType": "TeamMemberDetails",
         "kind": "LinkedField",
-        "name": "paginatedTeamMembers",
-        "plural": false,
+        "name": "teamMembers",
+        "plural": true,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "totalCount",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
+            "concreteType": "TeamCustomerDetails",
             "kind": "LinkedField",
-            "name": "pageInfo",
+            "name": "customer",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              }
-            ],
+            "selections": (v4/*: any*/),
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "TeamMemberEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "TeamMemberDetails",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "TeamCustomerDetails",
-                    "kind": "LinkedField",
-                    "name": "customer",
-                    "plural": false,
-                    "selections": (v5/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "kind": "ClientExtension",
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__id",
-                "storageKey": null
-              }
-            ]
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "filters": [
-          "where",
-          "orderBy"
-        ],
-        "handle": "connection",
-        "key": "teamPeopleBookingsMatrix_paginatedTeamMembers",
-        "kind": "LinkedHandle",
-        "name": "paginatedTeamMembers"
       },
       {
         "alias": null,
@@ -324,7 +198,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -333,7 +207,7 @@ return {
             "name": "defaultTeams",
             "plural": true,
             "selections": [
-              (v3/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
           }
@@ -375,7 +249,7 @@ return {
             "name": "canDelete",
             "storageKey": null
           },
-          (v2/*: any*/)
+          (v1/*: any*/)
         ],
         "storageKey": null
       },
@@ -446,7 +320,7 @@ return {
         "name": "allBookings",
         "plural": true,
         "selections": [
-          (v2/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -461,7 +335,7 @@ return {
             "kind": "LinkedField",
             "name": "customer",
             "plural": false,
-            "selections": (v5/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -472,7 +346,7 @@ return {
             "name": "location",
             "plural": false,
             "selections": [
-              (v4/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
@@ -484,7 +358,7 @@ return {
             "name": "desks",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -493,8 +367,8 @@ return {
                 "name": "locationTags",
                 "plural": true,
                 "selections": [
+                  (v2/*: any*/),
                   (v3/*: any*/),
-                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -514,16 +388,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a8c3de7f65ab23524e6bcee980d86042",
+    "cacheID": "837868419b520c16ddf52f67ee9252dd",
     "id": null,
     "metadata": {},
     "name": "teamPeopleBookingsMatrixTeamMembersPaginationQuery",
     "operationKind": "query",
-    "text": "query teamPeopleBookingsMatrixTeamMembersPaginationQuery(\n  $count: Int = 10000\n  $cursor: String\n  $fetchBookingPermission: Boolean!\n  $from: DateTime\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [TeamMemberOrderInput!]\n  $teamId: String!\n  $to: DateTime\n) {\n  ...teamPeopleBookingsMatrix_query_1G22uz\n}\n\nfragment teamPeopleBookingsMatrix_query_1G22uz on Query {\n  paginatedTeamMembers(first: $count, after: $cursor, where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    totalCount\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n  }\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n  team(id: $teamId) {\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {\n    canAddBookingOnBehalf\n  }\n  allBookings(where: {teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query teamPeopleBookingsMatrixTeamMembersPaginationQuery(\n  $fetchBookingPermission: Boolean!\n  $from: DateTime\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [TeamMemberOrderInput!]\n  $teamId: String!\n  $to: DateTime\n) {\n  ...teamPeopleBookingsMatrix_query\n}\n\nfragment teamPeopleBookingsMatrix_query on Query {\n  teamMembers(where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n  team(id: $teamId) {\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {\n    canAddBookingOnBehalf\n  }\n  allBookings(where: {teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ba93e40a5c6116056874fb3814c45fdd";
+(node as any).hash = "fdcdb46f8587f30f190fe46e59d856bb";
 
 export default node;

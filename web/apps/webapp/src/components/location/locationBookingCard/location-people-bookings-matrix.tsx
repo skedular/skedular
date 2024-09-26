@@ -8,10 +8,7 @@ import type {
   locationPeopleBookingsMatrix_query$key,
 } from '@/queries/__generated__/locationPeopleBookingsMatrix_query.graphql';
 import type { locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation } from '@/queries/__generated__/locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation.graphql';
-import type {
-  LocationMemberOrderInput,
-  locationPeopleBookingsMatrixLocationMembersPaginationQuery,
-} from '@/queries/__generated__/locationPeopleBookingsMatrixLocationMembersPaginationQuery.graphql';
+import type { LocationMemberOrderInput } from '@/queries/__generated__/locationPeopleBookingsMatrixLocationMembersPaginationQuery.graphql';
 import { Stack, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -48,10 +45,8 @@ import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
-import { graphql, useMutation, usePaginationFragment } from 'react-relay';
-
-const defaultPageSize = 10000;
+import { memo, useCallback, useState, useTransition } from 'react';
+import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: locationPeopleBookingsMatrix_query$key;
@@ -124,7 +119,7 @@ type BookingDetails = {
 
 type RowType = {
   id: string;
-  customer: CustomerDetails;
+  person: CustomerDetails;
   mon: BookingDetails;
   tue: BookingDetails;
   wed: BookingDetails;
@@ -168,37 +163,18 @@ const LocationPeopleBookingsMatrix = ({
   locationsConnectionIds,
   hideRemoveLocationOption,
 }: Props) => {
-  const { data: rootData, refetch } = usePaginationFragment<
-    locationPeopleBookingsMatrixLocationMembersPaginationQuery,
-    locationPeopleBookingsMatrix_query$key
-  >(
+  const [rootData, refetch] = useRefetchableFragment(
     graphql`
-      fragment locationPeopleBookingsMatrix_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 10000 })
-      @refetchable(queryName: "locationPeopleBookingsMatrixLocationMembersPaginationQuery") {
-        paginatedLocationMembers(
-          first: $count
-          after: $cursor
-          where: { locationId: $locationId, nameContains: $peopleNameSearchText }
-          orderBy: $peopleSortingValues
-        ) @connection(key: "locationPeopleBookingsMatrix_paginatedLocationMembers") {
-          __id
-          totalCount
-          pageInfo {
-            hasNextPage
-          }
-          edges {
-            node {
-              id
-              customer {
-                uniqueId
-                name
-                givenName
-                middleName
-                familyName
-                photoUrl
-              }
-            }
+      fragment locationPeopleBookingsMatrix_query on Query @refetchable(queryName: "locationPeopleBookingsMatrixLocationMembersPaginationQuery") {
+        locationMembers(where: { locationId: $locationId, nameContains: $peopleNameSearchText }, orderBy: $peopleSortingValues) {
+          id
+          customer {
+            uniqueId
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
           }
         }
         customersByDefaultLocation(where: { locationId: $locationId, nameContains: $peopleNameSearchText }) {
@@ -342,17 +318,14 @@ const LocationPeopleBookingsMatrix = ({
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [startDate, setStartDate] = useState<Dayjs>(startOfWeek(null));
   const [peopleNameSearchText] = useState<string>('');
-  const [page, setPage] = useState(0);
-  const [pageSize] = useState(defaultPageSize);
 
   const handleRefetch = useCallback(
-    (pageSize: number, startDate: Dayjs) => {
+    (startDate: Dayjs) => {
       startTransition(() => {
         const endDate = endOfWeek(startDate);
 
         refetch(
           {
-            count: pageSize,
             peopleSortingValues: [sortingLocationMemberOrder],
             peopleNameSearchText,
             organizationId: organizationId ?? '',
@@ -363,9 +336,6 @@ const LocationPeopleBookingsMatrix = ({
           },
           {
             fetchPolicy: 'store-and-network',
-            onComplete: () => {
-              setPage(0);
-            },
           },
         );
       });
@@ -373,14 +343,9 @@ const LocationPeopleBookingsMatrix = ({
     [refetch, sortingLocationMemberOrder, peopleNameSearchText, organizationId, locationId],
   );
 
-  const memebrs = useMemo(() => rootData.paginatedLocationMembers, [rootData.paginatedLocationMembers]);
-  const slicedEdges = memebrs.edges?.slice(
-    page * pageSize,
-    page * pageSize + pageSize > memebrs.edges.length ? memebrs.edges.length : page * pageSize + pageSize,
-  );
   const allMembers = rootData.location?.organization
     ? rootData.customersByDefaultLocation.map((customer) => ({ ...customer, uniqueId: customer.id }))
-    : slicedEdges.map((member) => member.node.customer);
+    : rootData.locationMembers.map((member) => member.customer);
   const meAsMember = allMembers.find((customer) => customer.uniqueId === rootData.me!.id);
   const otherMembers = allMembers.filter((customer) => customer.uniqueId !== rootData.me!.id);
   let finalMembersList = otherMembers;
@@ -393,7 +358,7 @@ const LocationPeopleBookingsMatrix = ({
 
     return {
       id: customerId,
-      customer,
+      person: customer,
       mon: {
         customer,
         booking: rootData.allBookings.find((booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString()),
@@ -439,7 +404,7 @@ const LocationPeopleBookingsMatrix = ({
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
-      field: 'customer',
+      field: 'person',
       headerName: '',
       renderCell: (params) => (
         // TODO: 20240919 - Morteza: I don't like below 80% custom height setup, get rid of it in future.
@@ -521,6 +486,11 @@ const LocationPeopleBookingsMatrix = ({
   const handleCellClick = (params: GridCellParams, event: MuiEvent, details: GridCallbackDetails) => {
     const { customer, booking } = params.value as BookingDetails;
     if (!rootData.organizationBookingPermissions?.canAddBookingOnBehalf && rootData.me?.id !== customer.uniqueId) {
+      enqueueSnackbar(`You are not authorized to make a booking on behalf of someone else`, {
+        variant: 'error',
+        anchorOrigin,
+      });
+
       return;
     }
 
@@ -555,7 +525,7 @@ const LocationPeopleBookingsMatrix = ({
 
           message += ` on ${toShortDate(booking.from)}`;
 
-          handleRefetch(pageSize, startDate);
+          handleRefetch(startDate);
           enqueueSnackbar(message, { variant: 'success', anchorOrigin });
         },
         onError: (error) => {
@@ -607,7 +577,7 @@ const LocationPeopleBookingsMatrix = ({
 
           message += ` on ${toShortDate(booking.from)}`;
 
-          handleRefetch(pageSize, startDate);
+          handleRefetch(startDate);
           enqueueSnackbar(message, { variant: 'success', anchorOrigin });
         },
         onError: (error) => {
@@ -629,14 +599,14 @@ const LocationPeopleBookingsMatrix = ({
     setStartDate(start);
     setDateRangeType(value);
 
-    handleRefetch(pageSize, start);
+    handleRefetch(start);
   };
 
   if (!rootData.me || !rootData.location) {
     return <></>;
   }
 
-  const rowCount = rootData.location.organization ? rootData.customersByDefaultLocation.length : (rootData.paginatedLocationMembers?.totalCount ?? 0);
+  const rowCount = rootData.location.organization ? rootData.customersByDefaultLocation.length : rootData.locationMembers.length;
 
   let moreActionsOption: MoreActionsMenuItemType[] = [];
   if (rootData.me.defaultLocations.some((location) => location.uniqueId === locationId)) {
@@ -859,6 +829,7 @@ const LocationPeopleBookingsMatrix = ({
               },
             }}
             pageSizeOptions={[10]}
+            ignoreDiacritics
             disableRowSelectionOnClick
             density="compact"
             onCellClick={handleCellClick}

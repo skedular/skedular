@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0e5ea174a34227f432104417f13c9ae2>>
+ * @generated SignedSource<<b4d4b739f54e99dc852b54375fd36d52>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -43,31 +43,22 @@ export type teamPeopleBookingsMatrix_query$data = {
   readonly organizationBookingPermissions?: {
     readonly canAddBookingOnBehalf: boolean;
   };
-  readonly paginatedTeamMembers: {
-    readonly __id: string;
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly customer: {
-          readonly familyName: string | null | undefined;
-          readonly givenName: string | null | undefined;
-          readonly middleName: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly photoUrl: string | null | undefined;
-          readonly uniqueId: string;
-        };
-        readonly id: string;
-      };
-    }>;
-    readonly pageInfo: {
-      readonly hasNextPage: boolean;
-    };
-    readonly totalCount: number | null | undefined;
-  };
   readonly team: {
     readonly canDelete: boolean;
     readonly canModify: boolean;
     readonly hasFutureBooking: boolean;
   } | null | undefined;
+  readonly teamMembers: ReadonlyArray<{
+    readonly customer: {
+      readonly familyName: string | null | undefined;
+      readonly givenName: string | null | undefined;
+      readonly middleName: string | null | undefined;
+      readonly name: string | null | undefined;
+      readonly photoUrl: string | null | undefined;
+      readonly uniqueId: string;
+    };
+    readonly id: string;
+  }>;
   readonly " $fragmentType": "teamPeopleBookingsMatrix_query";
 };
 export type teamPeopleBookingsMatrix_query$key = {
@@ -76,33 +67,30 @@ export type teamPeopleBookingsMatrix_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  "paginatedTeamMembers"
-],
-v1 = {
+var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = [
+v3 = [
+  (v1/*: any*/),
   (v2/*: any*/),
-  (v3/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -135,16 +123,6 @@ v4 = [
 return {
   "argumentDefinitions": [
     {
-      "defaultValue": 10000,
-      "kind": "LocalArgument",
-      "name": "count"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "cursor"
-    },
-    {
       "kind": "RootArgument",
       "name": "fetchBookingPermission"
     },
@@ -175,23 +153,8 @@ return {
   ],
   "kind": "Fragment",
   "metadata": {
-    "connection": [
-      {
-        "count": "count",
-        "cursor": "cursor",
-        "direction": "forward",
-        "path": (v0/*: any*/)
-      }
-    ],
     "refetch": {
-      "connection": {
-        "forward": {
-          "count": "count",
-          "cursor": "cursor"
-        },
-        "backward": null,
-        "path": (v0/*: any*/)
-      },
+      "connection": null,
       "fragmentPathInResult": [],
       "operation": require('./teamPeopleBookingsMatrixTeamMembersPaginationQuery.graphql')
     }
@@ -199,7 +162,7 @@ return {
   "name": "teamPeopleBookingsMatrix_query",
   "selections": [
     {
-      "alias": "paginatedTeamMembers",
+      "alias": null,
       "args": [
         {
           "kind": "Variable",
@@ -223,101 +186,21 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "TeamMemberConnection",
+      "concreteType": "TeamMemberDetails",
       "kind": "LinkedField",
-      "name": "__teamPeopleBookingsMatrix_paginatedTeamMembers_connection",
-      "plural": false,
+      "name": "teamMembers",
+      "plural": true,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
+          "concreteType": "TeamCustomerDetails",
           "kind": "LinkedField",
-          "name": "pageInfo",
+          "name": "customer",
           "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            }
-          ],
+          "selections": (v3/*: any*/),
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "TeamMemberEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "TeamMemberDetails",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                (v1/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "TeamCustomerDetails",
-                  "kind": "LinkedField",
-                  "name": "customer",
-                  "plural": false,
-                  "selections": (v4/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
       ],
       "storageKey": null
@@ -330,7 +213,7 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v1/*: any*/),
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -339,7 +222,7 @@ return {
           "name": "defaultTeams",
           "plural": true,
           "selections": [
-            (v2/*: any*/)
+            (v1/*: any*/)
           ],
           "storageKey": null
         }
@@ -451,7 +334,7 @@ return {
       "name": "allBookings",
       "plural": true,
       "selections": [
-        (v1/*: any*/),
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -466,7 +349,7 @@ return {
           "kind": "LinkedField",
           "name": "customer",
           "plural": false,
-          "selections": (v4/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -477,7 +360,7 @@ return {
           "name": "location",
           "plural": false,
           "selections": [
-            (v3/*: any*/)
+            (v2/*: any*/)
           ],
           "storageKey": null
         },
@@ -489,7 +372,7 @@ return {
           "name": "desks",
           "plural": true,
           "selections": [
-            (v3/*: any*/),
+            (v2/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -498,8 +381,8 @@ return {
               "name": "locationTags",
               "plural": true,
               "selections": [
+                (v1/*: any*/),
                 (v2/*: any*/),
-                (v3/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -522,6 +405,6 @@ return {
 };
 })();
 
-(node as any).hash = "ba93e40a5c6116056874fb3814c45fdd";
+(node as any).hash = "fdcdb46f8587f30f190fe46e59d856bb";
 
 export default node;

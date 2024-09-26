@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d117f6f015043cf818095c8654ab9a17>>
+ * @generated SignedSource<<5aae87271ddd1518f192ca4f53dfe2c8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -51,6 +51,17 @@ export type locationPeopleBookingsMatrix_query$data = {
       readonly uniqueId: string;
     } | null | undefined;
   } | null | undefined;
+  readonly locationMembers: ReadonlyArray<{
+    readonly customer: {
+      readonly familyName: string | null | undefined;
+      readonly givenName: string | null | undefined;
+      readonly middleName: string | null | undefined;
+      readonly name: string | null | undefined;
+      readonly photoUrl: string | null | undefined;
+      readonly uniqueId: string;
+    };
+    readonly id: string;
+  }>;
   readonly me: {
     readonly defaultLocations: ReadonlyArray<{
       readonly uniqueId: string;
@@ -60,26 +71,6 @@ export type locationPeopleBookingsMatrix_query$data = {
   readonly organizationBookingPermissions?: {
     readonly canAddBookingOnBehalf: boolean;
   };
-  readonly paginatedLocationMembers: {
-    readonly __id: string;
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly customer: {
-          readonly familyName: string | null | undefined;
-          readonly givenName: string | null | undefined;
-          readonly middleName: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly photoUrl: string | null | undefined;
-          readonly uniqueId: string;
-        };
-        readonly id: string;
-      };
-    }>;
-    readonly pageInfo: {
-      readonly hasNextPage: boolean;
-    };
-    readonly totalCount: number | null | undefined;
-  };
   readonly " $fragmentType": "locationPeopleBookingsMatrix_query";
 };
 export type locationPeopleBookingsMatrix_query$key = {
@@ -88,10 +79,7 @@ export type locationPeopleBookingsMatrix_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  "paginatedLocationMembers"
-],
-v1 = {
+var v0 = {
   "fields": [
     {
       "kind": "Variable",
@@ -107,78 +95,68 @@ v1 = {
   "kind": "ObjectValue",
   "name": "where"
 },
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "givenName",
   "storageKey": null
 },
-v6 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "middleName",
   "storageKey": null
 },
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "familyName",
   "storageKey": null
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "photoUrl",
   "storageKey": null
 },
-v9 = [
+v8 = [
+  (v2/*: any*/),
   (v3/*: any*/),
   (v4/*: any*/),
   (v5/*: any*/),
   (v6/*: any*/),
-  (v7/*: any*/),
-  (v8/*: any*/)
+  (v7/*: any*/)
 ],
-v10 = [
-  (v3/*: any*/)
+v9 = [
+  (v2/*: any*/)
 ];
 return {
   "argumentDefinitions": [
-    {
-      "defaultValue": 10000,
-      "kind": "LocalArgument",
-      "name": "count"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "cursor"
-    },
     {
       "kind": "RootArgument",
       "name": "fetchBookingPermission"
@@ -210,23 +188,8 @@ return {
   ],
   "kind": "Fragment",
   "metadata": {
-    "connection": [
-      {
-        "count": "count",
-        "cursor": "cursor",
-        "direction": "forward",
-        "path": (v0/*: any*/)
-      }
-    ],
     "refetch": {
-      "connection": {
-        "forward": {
-          "count": "count",
-          "cursor": "cursor"
-        },
-        "backward": null,
-        "path": (v0/*: any*/)
-      },
+      "connection": null,
       "fragmentPathInResult": [],
       "operation": require('./locationPeopleBookingsMatrixLocationMembersPaginationQuery.graphql')
     }
@@ -234,110 +197,30 @@ return {
   "name": "locationPeopleBookingsMatrix_query",
   "selections": [
     {
-      "alias": "paginatedLocationMembers",
+      "alias": null,
       "args": [
         {
           "kind": "Variable",
           "name": "orderBy",
           "variableName": "peopleSortingValues"
         },
-        (v1/*: any*/)
+        (v0/*: any*/)
       ],
-      "concreteType": "LocationMemberConnection",
+      "concreteType": "LocationMemberDetails",
       "kind": "LinkedField",
-      "name": "__locationPeopleBookingsMatrix_paginatedLocationMembers_connection",
-      "plural": false,
+      "name": "locationMembers",
+      "plural": true,
       "selections": [
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
+          "concreteType": "LocationCustomerDetails",
           "kind": "LinkedField",
-          "name": "pageInfo",
+          "name": "customer",
           "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            }
-          ],
+          "selections": (v8/*: any*/),
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "LocationMemberEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "LocationMemberDetails",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                (v2/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "LocationCustomerDetails",
-                  "kind": "LinkedField",
-                  "name": "customer",
-                  "plural": false,
-                  "selections": (v9/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
       ],
       "storageKey": null
@@ -345,19 +228,19 @@ return {
     {
       "alias": null,
       "args": [
-        (v1/*: any*/)
+        (v0/*: any*/)
       ],
       "concreteType": "CustomerDetails",
       "kind": "LinkedField",
       "name": "customersByDefaultLocation",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
+        (v1/*: any*/),
+        (v3/*: any*/),
         (v4/*: any*/),
         (v5/*: any*/),
         (v6/*: any*/),
-        (v7/*: any*/),
-        (v8/*: any*/)
+        (v7/*: any*/)
       ],
       "storageKey": null
     },
@@ -369,7 +252,7 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v2/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -377,7 +260,7 @@ return {
           "kind": "LinkedField",
           "name": "defaultLocations",
           "plural": true,
-          "selections": (v10/*: any*/),
+          "selections": (v9/*: any*/),
           "storageKey": null
         }
       ],
@@ -432,7 +315,7 @@ return {
           "kind": "LinkedField",
           "name": "organization",
           "plural": false,
-          "selections": (v10/*: any*/),
+          "selections": (v9/*: any*/),
           "storageKey": null
         }
       ],
@@ -505,7 +388,7 @@ return {
       "name": "allBookings",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -520,7 +403,7 @@ return {
           "kind": "LinkedField",
           "name": "customer",
           "plural": false,
-          "selections": (v9/*: any*/),
+          "selections": (v8/*: any*/),
           "storageKey": null
         },
         {
@@ -531,7 +414,7 @@ return {
           "name": "location",
           "plural": false,
           "selections": [
-            (v4/*: any*/)
+            (v3/*: any*/)
           ],
           "storageKey": null
         },
@@ -543,7 +426,7 @@ return {
           "name": "desks",
           "plural": true,
           "selections": [
-            (v4/*: any*/),
+            (v3/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -552,8 +435,8 @@ return {
               "name": "locationTags",
               "plural": true,
               "selections": [
+                (v2/*: any*/),
                 (v3/*: any*/),
-                (v4/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -576,6 +459,6 @@ return {
 };
 })();
 
-(node as any).hash = "21b80da78a219e76f62f59eb873574b2";
+(node as any).hash = "2a684fc600f1b1fd25b6ddcbf3f0e347";
 
 export default node;
