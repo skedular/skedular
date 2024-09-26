@@ -25,8 +25,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import type { GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
+import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   BookingIcon,
@@ -154,6 +154,8 @@ const getBookingIcon = ({ booking }: BookingDetails) => {
 
   return booking ? <WorkingFromOfficeIcon tip={tip} /> : <WorkingFromHomeIcon />;
 };
+
+const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Find a person..." />;
 
 const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: Props) => {
   const [rootData, refetch] = useRefetchableFragment(
@@ -381,13 +383,23 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     };
   });
 
+  const getApplyQuickFilterNameSearch: GetApplyQuickFilterFn<any, unknown> = (value) => {
+    return (cellValue) => {
+      const lowercaseValue = value.toLowerCase();
+      const customer = cellValue as CustomerDetails;
+
+      return Object.entries(customer).some(
+        ([key, value]) => key !== 'uniqueId' && key !== 'photoUrl' && typeof value === 'string' && value.toLowerCase().includes(lowercaseValue),
+      );
+    };
+  };
+
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
       field: 'person',
       headerName: '',
       renderCell: (params) => (
-        // TODO: 20240919 - Morteza: I don't like below 80% custom height setup, get rid of it in future.
-        <Box display="flex" justifyContent="center" alignItems="center" height="80%">
+        <Box display="flex" justifyContent="center" alignItems="center" height="100%">
           <CustomerAvatar
             name={{
               name: params.value.name,
@@ -403,6 +415,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
           />
         </Box>
       ),
+      getApplyQuickFilterFn: getApplyQuickFilterNameSearch,
     },
     {
       field: 'mon',
@@ -411,6 +424,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       editable: false,
       renderCell: (params) => getBookingIcon(params.value),
       align: 'center',
+      display: 'flex',
     },
     {
       field: 'tue',
@@ -419,6 +433,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       editable: false,
       renderCell: (params) => getBookingIcon(params.value),
       align: 'center',
+      display: 'flex',
     },
     {
       field: 'wed',
@@ -427,6 +442,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       editable: false,
       renderCell: (params) => getBookingIcon(params.value),
       align: 'center',
+      display: 'flex',
     },
     {
       field: 'thu',
@@ -435,6 +451,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       editable: false,
       renderCell: (params) => getBookingIcon(params.value),
       align: 'center',
+      display: 'flex',
     },
     {
       field: 'fri',
@@ -443,6 +460,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       editable: false,
       renderCell: (params) => getBookingIcon(params.value),
       align: 'center',
+      display: 'flex',
     },
     {
       field: 'sat',
@@ -451,6 +469,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       editable: false,
       renderCell: (params) => getBookingIcon(params.value),
       align: 'center',
+      display: 'flex',
     },
     {
       field: 'sun',
@@ -459,6 +478,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       editable: false,
       renderCell: (params) => getBookingIcon(params.value),
       align: 'center',
+      display: 'flex',
     },
   ];
 
@@ -812,6 +832,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
             disableRowSelectionOnClick
             density="compact"
             onCellClick={handleCellClick}
+            slots={{ toolbar: QuickSearchToolbar }}
           />
         </CardContent>
       </Card>
