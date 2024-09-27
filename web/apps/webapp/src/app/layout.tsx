@@ -1,5 +1,6 @@
 'use client';
 
+import { ThemeProvider } from '@/libs/providers';
 import { GoogleAnalytics, GoogleTagManager } from '@repo/shared/libs/analytics';
 import { MuiXLicense } from '@repo/shared/libs/mui';
 import {
@@ -12,15 +13,11 @@ import {
   RelayProvider,
   SelectedOrganizationProvider,
   SnackbarProvider,
-  ThemeProvider,
 } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import { useContext } from 'react';
-
-const inter = Inter({ subsets: ['latin'] });
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const paletteMode = useContext(PaletteModeContext);

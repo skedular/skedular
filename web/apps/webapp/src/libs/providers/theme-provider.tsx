@@ -2,8 +2,7 @@
 
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import { PaletteMode } from '@mui/material/styles';
-import { useMemo } from 'react';
-import { createTheme } from '../theme';
+import { createTheme } from '@repo/shared/libs/theme';
 
 type Props = {
   children?: React.ReactNode;
@@ -11,7 +10,7 @@ type Props = {
 };
 
 const ThemeProvider = ({ children, mode }: Props) => {
-  const theme = useMemo(() => createTheme(mode), [mode]);
+  const theme = createTheme(mode);
 
   return <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>;
 };

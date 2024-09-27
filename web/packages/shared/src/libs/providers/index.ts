@@ -11,4 +11,3 @@ export {
   UpdateSelectedOrganizationContext,
 } from './selected-organization-provider';
 export { default as SnackbarProvider } from './snackbar-provider';
-export { default as ThemeProvider } from './theme-provider';
