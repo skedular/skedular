@@ -1,5 +1,6 @@
 'use client';
 
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@repo/shared/libs/analytics';
 import {
   DatePickerLocalizationProvider,
@@ -12,31 +13,38 @@ import {
 } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { Inter } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import Script from 'next/script';
 import { useContext } from 'react';
 
-const inter = Inter({ subsets: ['latin'] });
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto',
+});
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const paletteMode = useContext(PaletteModeContext);
 
   return (
-    <ThemeProvider mode={paletteMode}>
-      <SnackbarProvider>
-        <DatePickerLocalizationProvider>
-          <NextAuthProvider>
-            <GoogleAnalyticsProvider
-              ignoreOptOutCookie={false}
-              forceOverride={true}
-              googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
-            >
-              {children}
-            </GoogleAnalyticsProvider>
-          </NextAuthProvider>
-        </DatePickerLocalizationProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
+    <AppRouterCacheProvider>
+      <ThemeProvider mode={paletteMode}>
+        <SnackbarProvider>
+          <DatePickerLocalizationProvider>
+            <NextAuthProvider>
+              <GoogleAnalyticsProvider
+                ignoreOptOutCookie={false}
+                forceOverride={true}
+                googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
+              >
+                {children}
+              </GoogleAnalyticsProvider>
+            </NextAuthProvider>
+          </DatePickerLocalizationProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </AppRouterCacheProvider>
   );
 };
 
@@ -57,7 +65,7 @@ const ThemedRootLayout = ({ children }: { children: React.ReactNode }) => {
           defer
         />
       )}
-      <body>
+      <body className={roboto.variable}>
         <PaletteModeProvider>
           <RootLayout>{children}</RootLayout>
         </PaletteModeProvider>

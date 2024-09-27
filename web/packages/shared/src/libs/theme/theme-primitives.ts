@@ -75,6 +75,7 @@ const getDesignTokens = (mode: PaletteMode) => {
       : 'hsla(220, 30%, 5%, 0.07) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.07) 0px 8px 16px -5px';
 
   return {
+    cssVariables: true,
     palette: {
       mode,
       primary: {
@@ -156,7 +157,7 @@ const getDesignTokens = (mode: PaletteMode) => {
       },
     },
     typography: {
-      fontFamily: ['"Inter", "sans-serif"'].join(','),
+      fontFamily: 'var(--font-roboto)',
       h1: {
         fontSize: defaultTheme.typography.pxToRem(48),
         fontWeight: 600,
