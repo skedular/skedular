@@ -365,35 +365,35 @@ public class HomePage(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(CheckboxGroupAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((this.GetType(), action, request));
+        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(DatePickerAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((this.GetType(), action, request));
+        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((this.GetType(), action, request));
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(AppHomeOpened slackEvent)
     {
-        asyncPageRenderingService.EventHandlerStream.OnNext((this.GetType(), slackEvent));
+        asyncPageRenderingService.EventHandlerStream.OnNext((GetType(), slackEvent));
 
         return Task.CompletedTask;
     }

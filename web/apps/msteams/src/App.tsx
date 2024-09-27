@@ -1,5 +1,6 @@
 import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
+import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
@@ -115,6 +116,7 @@ const App = () => {
     <>
       <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
         <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
+          <CssBaseline />
           <SnackbarProvider>
             <DatePickerLocalizationProvider>
               <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>

@@ -11,10 +11,10 @@
         <PackageReference Include="Ardalis.GuardClauses" Version="4.6.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="8.0.1"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.2"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.401.13"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.401.16"/>
         <PackageReference Include="Confluent.Kafka" Version="2.5.3"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.5.3"/>
-        <PackageReference Include="CountryData" Version="6.5.0"/>
+        <PackageReference Include="CountryData" Version="6.6.0"/>
         <PackageReference Include="EmailValidation" Version="1.2.0"/>
         <PackageReference Include="Flurl.Http" Version="4.0.2"/>
         <PackageReference Include="Google.Apis.Auth" Version="1.68.0"/>
@@ -29,8 +29,8 @@
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.2.0"/>
         <PackageReference Include="Nanoid" Version="3.1.0"/>
         <PackageReference Include="NSwag.AspNetCore" Version="14.1.0"/>
-        <PackageReference Include="Polly" Version="8.4.1"/>
-        <PackageReference Include="Scrutor" Version="4.2.2"/>
+        <PackageReference Include="Polly" Version="8.4.2"/>
+        <PackageReference Include="Scrutor" Version="5.0.1"/>
         <PackageReference Include="Stripe.net" Version="45.14.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.0"/>
 
@@ -38,18 +38,18 @@
         <PackageReference Include="Google.Protobuf" Version="3.28.2"/>
         <PackageReference Include="Grpc.Net.Client" Version="2.66.0"/>
 
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.8"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="HotChocolate" Version="13.9.12"/>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.12"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="13.9.12"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.9.12"/>
-        <PackageReference Include="HotChocolate.Diagnostics" Version="13.9.12"/>
+        <PackageReference Include="HotChocolate" Version="13.9.13"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.13"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="13.9.13"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.9.13"/>
+        <PackageReference Include="HotChocolate.Diagnostics" Version="13.9.13"/>
 
         <PackageReference Include="OpenTelemetry.Api" Version="1.9.0"/>
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.9.0"/>

@@ -83,7 +83,7 @@ public class AddZoneButtonHandler(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
 
         return Task.CompletedTask;
     }

@@ -174,21 +174,21 @@ public class SettingsPage(
 
     public Task Handle(ChannelSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ChannelSelectActionHandlerStream.OnNext((this.GetType(), action, request));
+        asyncPageRenderingService.ChannelSelectActionHandlerStream.OnNext((GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(CheckboxGroupAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((this.GetType(), action, request));
+        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((this.GetType(), action, request));
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
 
         return Task.CompletedTask;
     }

@@ -235,14 +235,14 @@ public class ZonesPage(
 
     public Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((this.GetType(), action, request));
+        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
 
         return Task.CompletedTask;
     }
 
     public Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((this.GetType(), action, request));
+        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
 
         return Task.CompletedTask;
     }
