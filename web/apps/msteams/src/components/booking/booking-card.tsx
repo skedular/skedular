@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
@@ -15,8 +15,10 @@ import {
   EditIcon,
   JoinIcon,
   LocationIcon,
+  NotPreferredIcon,
   NotesIcon,
   OrganizationIcon,
+  PreferredIcon,
   TeamIcon,
 } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -449,78 +451,92 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     });
   };
 
-  const handleDefaultDeskStateChange = (event: React.ChangeEvent<HTMLInputElement>, deskId: string, deskName: string) => {
+  const handleSetAsPreferredDeskClicked = (deskId: string, deskName: string) => {
     if (!rootData.me) {
       return;
     }
 
-    if (event.target.checked) {
-      commitAddCustomerDefaultDesk({
-        variables: {
-          input: {
-            clientMutationId: nanoid(),
-            deskId,
-          },
+    commitAddCustomerDefaultDesk({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          deskId,
         },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to set desk '${deskName}' as default. Error: ${joinErrors(errors)}`, {
-              variant: 'error',
-              anchorOrigin,
-            });
-          }
-        },
-        onError: (error) => {
-          enqueueSnackbar(`Failed to set desk '${deskName}' as default. Error: ${error.message}`, {
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          enqueueSnackbar(`Failed to set desk '${deskName}' as your preferred desk. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
-        },
-        optimisticResponse: {
-          addCustomerDefaultDesk: {
-            customer: {
-              id: rootData.me.id,
-              preferredDesks: rootData.me.preferredDesks.concat([
-                {
-                  uniqueId: deskId,
-                },
-              ]),
-            },
+        }
+
+        enqueueSnackbar(`Desk '${deskName}' has been set as the preferred desk.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
+      },
+      onError: (error) => {
+        enqueueSnackbar(`Failed to set desk '${deskName}' as your preferred desk. Error: ${error.message}`, {
+          variant: 'error',
+          anchorOrigin,
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultDesk: {
+          customer: {
+            id: rootData.me.id,
+            preferredDesks: rootData.me.preferredDesks.concat([
+              {
+                uniqueId: deskId,
+              },
+            ]),
           },
         },
-      });
-    } else {
-      commitRemoveCustomerDefaultDesk({
-        variables: {
-          input: {
-            clientMutationId: nanoid(),
-            deskId,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to clear default desk '${deskName}'. Error: ${joinErrors(errors)}`, {
-              variant: 'error',
-              anchorOrigin,
-            });
-          }
-        },
-        onError: (error) => {
-          enqueueSnackbar(`Failed to clear default desk '${deskName}'. Error: ${error.message}`, {
-            variant: 'error',
-            anchorOrigin,
-          });
-        },
-        optimisticResponse: {
-          removeCustomerDefaultDesk: {
-            customer: {
-              id: rootData.me.id,
-              preferredDesks: rootData.me.preferredDesks.filter(({ uniqueId }) => uniqueId === deskId),
-            },
-          },
-        },
-      });
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredDeskClicked = (deskId: string, deskName: string) => {
+    if (!rootData.me) {
+      return;
     }
+
+    commitRemoveCustomerDefaultDesk({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          deskId,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          enqueueSnackbar(`Failed to remove the desk '${deskName}' as your preferred desk. Error: ${joinErrors(errors)}`, {
+            variant: 'error',
+            anchorOrigin,
+          });
+        }
+
+        enqueueSnackbar(`Desk '${deskName}' has been removed as your preferred desk.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
+      },
+      onError: (error) => {
+        enqueueSnackbar(`Failed to remove the desk '${deskName}' as your preferred desk. Error: ${error.message}`, {
+          variant: 'error',
+          anchorOrigin,
+        });
+      },
+      optimisticResponse: {
+        removeCustomerDefaultDesk: {
+          customer: {
+            id: rootData.me.id,
+            preferredDesks: rootData.me.preferredDesks.filter(({ uniqueId }) => uniqueId === deskId),
+          },
+        },
+      },
+    });
   };
 
   if (!rootData.me) {
@@ -606,6 +622,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
 
             {bookingDetails.desks?.map(({ uniqueId, name, locationTags }) => {
               const zones = locationTags.filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
+              const isPreferredDesk = !!rootData.me?.preferredDesks.find((desk) => desk.uniqueId === uniqueId);
 
               return (
                 <Stack key={uniqueId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
@@ -613,11 +630,19 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                   <Typography variant="body1" component="div">
                     {name}
                   </Typography>
-                  {isMyBooking && (
-                    <Switch
-                      checked={!!rootData.me?.preferredDesks.find((desk) => desk.uniqueId === uniqueId)}
-                      onChange={(event) => handleDefaultDeskStateChange(event, uniqueId, name)}
-                    />
+                  {isPreferredDesk && (
+                    <Tooltip title={'Remove as preferred desk'}>
+                      <Button size="small" color="primary" onClick={() => handleRemoveAsPreferredDeskClicked(uniqueId, name)}>
+                        <PreferredIcon />
+                      </Button>
+                    </Tooltip>
+                  )}
+                  {!isPreferredDesk && (
+                    <Tooltip title={'Set as preferred desk'}>
+                      <Button size="small" color="primary" onClick={() => handleSetAsPreferredDeskClicked(uniqueId, name)}>
+                        <NotPreferredIcon />
+                      </Button>
+                    </Tooltip>
                   )}
 
                   <ZonesLine
