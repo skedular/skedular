@@ -131,7 +131,7 @@ const Notifications = ({ rootDataRelay }: Props) => {
         />
       </Stack>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <NotificationCard notificationDetailsRelay={edge.node} />

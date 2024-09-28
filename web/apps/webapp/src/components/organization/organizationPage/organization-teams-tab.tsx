@@ -1,4 +1,4 @@
-import { TeamCard } from '@/components/team';
+import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type {
   TeamOrderField,
   TeamOrderInput,
@@ -48,11 +48,13 @@ const OrganizationTeamsTab = ({ rootDataRelay }: Props) => {
           edges {
             node {
               id
-              ...teamCard_TeamDetails
+              name
+              organization {
+                uniqueId
+              }
             }
           }
         }
-        ...teamCard_Query
         organization(id: $organizationId) {
           id
           canModify
@@ -198,7 +200,12 @@ const OrganizationTeamsTab = ({ rootDataRelay }: Props) => {
       <Grid container spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
-            <TeamCard rootDataRelay={rootData} teamDetailsRelay={edge.node} connectionIds={connectionIds} />
+            <TeamBookingsCard
+              organizationId={edge.node.organization?.uniqueId}
+              teamId={edge.node.id}
+              teamName={edge.node.name}
+              teamsConnectionIds={connectionIds}
+            />
           </Grid>
         ))}
       </Grid>

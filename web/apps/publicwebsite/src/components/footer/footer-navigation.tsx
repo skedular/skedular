@@ -26,7 +26,7 @@ const companyMenu: Array<Navigation> = [
 
 const FooterNavigation = () => {
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={1}>
       <Grid sx={{ sx: 12, md: 4 }}>
         <FooterSectionTitle title="Product" />
         {productMenu.map(({ label, path }, index) => (

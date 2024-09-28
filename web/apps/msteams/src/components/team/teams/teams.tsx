@@ -188,7 +188,7 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
         />
       </Stack>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <TeamCard rootDataRelay={rootData} teamDetailsRelay={edge.node} connectionIds={connectionIds} />

@@ -44,11 +44,9 @@ const Locations = ({ rootDataRelay }: Props) => {
               organization {
                 uniqueId
               }
-              ...locationCard_LocationDetails
             }
           }
         }
-        ...locationCard_Query
       }
     `,
     rootDataRelay,
@@ -183,7 +181,7 @@ const Locations = ({ rootDataRelay }: Props) => {
         />
       </Stack>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <LocationBookingsCard

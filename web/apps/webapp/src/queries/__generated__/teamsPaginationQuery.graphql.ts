@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e259bd78c1790d57f78dac3b43159bd>>
+ * @generated SignedSource<<260ddf75ffbf30c7987fad8a843b7ef0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -80,28 +80,7 @@ v1 = [
     "kind": "ObjectValue",
     "name": "where"
   }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -166,8 +145,20 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
-                  (v3/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "id",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "name",
+                    "storageKey": null
+                  },
                   {
                     "alias": null,
                     "args": null,
@@ -176,37 +167,14 @@ return {
                     "name": "organization",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
-                      (v3/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "uniqueId",
+                        "storageKey": null
+                      }
                     ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "about",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "hasFutureBooking",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "canModify",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "canDelete",
                     "storageKey": null
                   },
                   {
@@ -280,44 +248,20 @@ return {
         "key": "teams_teams",
         "kind": "LinkedHandle",
         "name": "teams"
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "CustomerDetails",
-        "kind": "LinkedField",
-        "name": "me",
-        "plural": false,
-        "selections": [
-          (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CustomerTeamDetails",
-            "kind": "LinkedField",
-            "name": "defaultTeams",
-            "plural": true,
-            "selections": [
-              (v4/*: any*/)
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "3c368d046cfa46cd8405443a56b647e4",
+    "cacheID": "2ea31570f225f86a9f3a5691a80f4470",
     "id": null,
     "metadata": {},
     "name": "teamsPaginationQuery",
     "operationKind": "query",
-    "text": "query teamsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $teamNameSearchText: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...teams_query_1G22uz\n}\n\nfragment teamCard_Query on Query {\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment teams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...teamCard_Query\n}\n"
+    "text": "query teamsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $teamNameSearchText: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...teams_query_1G22uz\n}\n\nfragment teams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "530692a783d2a591c0555236143df6aa";
+(node as any).hash = "2c1afc662353b7072eb710b9546cdd38";
 
 export default node;

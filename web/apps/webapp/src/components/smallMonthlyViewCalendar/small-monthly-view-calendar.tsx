@@ -207,7 +207,7 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
         </AccordionDetails>
       </Accordion>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {nodes.map((node) => (
           <Grid key={node.id}>
             <BookingCard

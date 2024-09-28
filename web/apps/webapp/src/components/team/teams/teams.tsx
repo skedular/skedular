@@ -44,11 +44,9 @@ const Teams = ({ rootDataRelay }: Props) => {
               organization {
                 uniqueId
               }
-              ...teamCard_TeamDetails
             }
           }
         }
-        ...teamCard_Query
       }
     `,
     rootDataRelay,
@@ -183,7 +181,7 @@ const Teams = ({ rootDataRelay }: Props) => {
         />
       </Stack>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <TeamBookingsCard

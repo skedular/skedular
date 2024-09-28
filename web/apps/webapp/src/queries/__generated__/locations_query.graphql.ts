@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e7d5346286e70217abf84f61095bd142>>
+ * @generated SignedSource<<b1cf289da6dadca4981060d7054dbdad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,12 +20,10 @@ export type locations_query$data = {
         readonly organization: {
           readonly uniqueId: string;
         } | null | undefined;
-        readonly " $fragmentSpreads": FragmentRefs<"locationCard_LocationDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"locationCard_Query">;
   readonly " $fragmentType": "locations_query";
 };
 export type locations_query$key = {
@@ -164,11 +162,6 @@ return {
                   "storageKey": null
                 },
                 {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "locationCard_LocationDetails"
-                },
-                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -227,11 +220,6 @@ return {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "locationCard_Query"
     }
   ],
   "type": "Query",
@@ -239,6 +227,6 @@ return {
 };
 })();
 
-(node as any).hash = "5df1058fd9c67b8f06f2d8df9faf738f";
+(node as any).hash = "d158edcce4007ff93ea9d938982e8ab9";
 
 export default node;
