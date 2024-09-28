@@ -74,6 +74,27 @@ publicwebsite-stop:
 publicwebsite-terminate:
 	docker compose -p unityhubio_publicwebsite -f docker-compose-publicwebsite.yml --env-file .env down -v
 
+.PHONY: publicwebsite-dev-restart
+publicwebsite-dev-restart:
+	docker compose -p unityhubio_publicwebsite_dev -f docker-compose-publicwebsite-dev.yml --env-file .env pull
+	docker compose -p unityhubio_publicwebsite_dev -f docker-compose-publicwebsite-dev.yml --env-file .env build
+	docker compose -p unityhubio_publicwebsite_dev -f docker-compose-publicwebsite-dev.yml --env-file .env down
+	docker compose -p unityhubio_publicwebsite_dev -f docker-compose-publicwebsite-dev.yml --env-file .env up --build -d
+
+.PHONY: publicwebsite-dev-start
+publicwebsite-dev-start:
+	docker compose -p unityhubio_publicwebsite_dev -f docker-compose-publicwebsite-dev.yml --env-file .env pull
+	docker compose -p unityhubio_publicwebsite_dev -f docker-compose-publicwebsite-dev.yml --env-file .env build
+	docker compose -p unityhubio_publicwebsite_dev -f docker-compose-publicwebsite-dev.yml --env-file .env up --build -d
+
+.PHONY: publicwebsite-dev-stop
+publicwebsite-dev-stop:
+	docker compose -p unityhubio_publicwebsite_dev -f docker-compose-publicwebsite-dev.yml --env-file .env down
+
+.PHONY: publicwebsite-dev-terminate
+publicwebsite-dev-terminate:
+	docker compose -p unityhubio_publicwebsite_dev -f docker-compose-publicwebsite-dev.yml --env-file .env down -v
+
 .PHONY: help
 .DEFAULT_GOAL := help
 help: ## Get help output

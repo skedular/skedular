@@ -34,6 +34,10 @@ unityhub.io {
 	reverse_proxy localhost:8081
 }
 
+dev1.unityhub.io {
+	reverse_proxy localhost:8082
+}
+
 stagingpublic.unityhub.io {
 	reverse_proxy localhost:8080
 }

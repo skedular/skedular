@@ -2,9 +2,9 @@ networks:
   unityhubio_publicwebsite_network:
 
 volumes:
+  db:
   staging_publicwebsite:
   prod_publicwebsite:
-  db:
 
 services:
   mariadb:
