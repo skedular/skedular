@@ -10,10 +10,10 @@ import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import type { invitationToJoinTeamNotificationCard_NotificationDetails$key } from './__generated__/invitationToJoinTeamNotificationCard_NotificationDetails.graphql';
 import type { invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation } from './__generated__/invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation.graphql';
 import type { invitationToJoinTeamNotificationCard_rejectInvitationToJoinTeamMutation } from './__generated__/invitationToJoinTeamNotificationCard_rejectInvitationToJoinTeamMutation.graphql';
@@ -83,7 +83,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
     commitRejectInvitationToJoinTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: notificationDetails.sourceId,
         },
       },
@@ -116,7 +116,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
     commitAcceptInvitationToJoinTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: notificationDetails.sourceId,
         },
       },

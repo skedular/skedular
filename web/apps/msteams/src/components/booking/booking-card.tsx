@@ -25,11 +25,11 @@ import graphql from 'babel-plugin-relay/macro';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from 'components/zone';
 import dayjs, { Dayjs } from 'dayjs';
 import { makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, date, object, string } from 'yup';
 import type { bookingCard_BookingDetails$key } from './__generated__/bookingCard_BookingDetails.graphql';
 import type { bookingCard_addBookingMutation } from './__generated__/bookingCard_addBookingMutation.graphql';
@@ -276,13 +276,13 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       return;
     }
 
-    const id = uuidv4();
+    const id = nanoid();
 
     commitAddBooking({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           customerId: rootData.me.id,
           from: bookingDetails.from,
@@ -352,7 +352,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       variables: {
         connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: bookingDetails.id,
         },
       },
@@ -397,7 +397,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     commitUpdateBooking({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: bookingDetails.id,
           customerId: memberId,
           from,
@@ -458,7 +458,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       commitAddCustomerDefaultDesk({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             deskId,
           },
         },
@@ -493,7 +493,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       commitRemoveCustomerDefaultDesk({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             deskId,
           },
         },

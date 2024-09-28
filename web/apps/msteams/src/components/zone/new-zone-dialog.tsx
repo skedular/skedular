@@ -9,11 +9,11 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { TAG_TYPE_LOCATION_ZONE } from 'components/zone';
 import { makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { object, string } from 'yup';
 import type { newZoneDialog_addZoneMutation } from './__generated__/newZoneDialog_addZoneMutation.graphql';
 import ZoneName from './zone-name';
@@ -52,13 +52,13 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
   const [name, setName] = useState<string>('');
 
   const handleAddClick = ({ name }: ZoneDetails) => {
-    const id = uuidv4();
+    const id = nanoid();
 
     commitAddZone({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           locationId,
           name,

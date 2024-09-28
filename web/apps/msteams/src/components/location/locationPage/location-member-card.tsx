@@ -14,11 +14,11 @@ import graphql from 'babel-plugin-relay/macro';
 import { LocationSingleChoiceMembershipType } from 'components/location';
 import type { locationSingleChoiceMembershipType_query$key } from 'components/location/__generated__/locationSingleChoiceMembershipType_query.graphql';
 import { makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { object, string } from 'yup';
 import type { locationMemberCard_LocationMemberDetails$key } from './__generated__/locationMemberCard_LocationMemberDetails.graphql';
 import type {
@@ -90,7 +90,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
     commitChangeLocationMemberOwnershipType({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: locationMemberDetails.id,
           membershipType,
         },

@@ -13,11 +13,11 @@ import { convertStringToLowercaseExceptFirstLetter, getCustomerFullName, joinErr
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationSingleChoiceMembershipType } from 'components/organization';
 import { makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { object, string } from 'yup';
 import type { organizationMemberCard_OrganizationMemberDetails$key } from './__generated__/organizationMemberCard_OrganizationMemberDetails.graphql';
 import type {
@@ -91,7 +91,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     commitChangeOrganizationMemberOwnershipType({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: organizationMemberDetails.id,
           membershipType,
         },

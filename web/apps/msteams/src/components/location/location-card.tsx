@@ -18,10 +18,10 @@ import { AboutIcon, DangerIcon, DeleteIcon, DeskIcon, EditIcon, OrganizationIcon
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import type { locationCard_LocationDetails$key } from './__generated__/locationCard_LocationDetails.graphql';
 import type { locationCard_Query$key } from './__generated__/locationCard_Query.graphql';
 import type { locationCard_addCustomerDefaultLocationMutation } from './__generated__/locationCard_addCustomerDefaultLocationMutation.graphql';
@@ -124,7 +124,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
       commitAddCustomerDefaultLocation({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             locationId: locationDetails.id,
           },
         },
@@ -159,7 +159,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
       commitRemoveCustomerDefaultLocation({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             locationId: locationDetails.id,
           },
         },
@@ -200,7 +200,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: locationDetails.id,
         },
       },

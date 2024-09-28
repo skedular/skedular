@@ -17,10 +17,10 @@ import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, ViewIcon
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import type { teamCard_Query$key } from './__generated__/teamCard_Query.graphql';
 import type { teamCard_TeamDetails$key } from './__generated__/teamCard_TeamDetails.graphql';
 import type { teamCard_addCustomerDefaultTeamMutation } from './__generated__/teamCard_addCustomerDefaultTeamMutation.graphql';
@@ -118,7 +118,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
       commitAddCustomerDefaultTeam({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             teamId: teamDetails.id,
           },
         },
@@ -153,7 +153,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
       commitRemoveCustomerDefaultTeam({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             teamId: teamDetails.id,
           },
         },
@@ -194,7 +194,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: teamDetails.id,
         },
       },

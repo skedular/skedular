@@ -9,11 +9,11 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMemberSelector } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 import type { teamAboutTab_query$key } from './__generated__/teamAboutTab_query.graphql';
 import type { teamAboutTab_updateTeamMutation } from './__generated__/teamAboutTab_updateTeamMutation.graphql';
@@ -106,7 +106,7 @@ const TeamAboutTab = ({ rootDataRelay, organizationId }: Props) => {
     commitUpdateTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: rootData.team.id,
           name,
           about,

@@ -17,11 +17,11 @@ import { joinErrors, now } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { TAG_TYPE_LOCATION_ZONE } from 'components/zone';
 import { makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { object, string } from 'yup';
 import type { zoneCard_LocationTagDetails$key } from './__generated__/zoneCard_LocationTagDetails.graphql';
 import type { zoneCard_Query$key } from './__generated__/zoneCard_Query.graphql';
@@ -145,7 +145,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: locationTagDetails.id,
         },
       },
@@ -188,7 +188,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     commitUpdateZone({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: locationTagDetails.id,
           name,
           tagType: TAG_TYPE_LOCATION_ZONE,
@@ -227,7 +227,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     commitAddCustomerDefaultLocationTag({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           locationTagId: locationTagDetails.id,
         },
       },
@@ -273,7 +273,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     commitRemoveCustomerDefaultLocationTag({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           locationTagId: locationTagDetails.id,
         },
       },

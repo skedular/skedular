@@ -9,11 +9,11 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from 'components/organization';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, boolean, object, string } from 'yup';
 import type { organizationOnboarding_addOrganizationMutation } from './__generated__/organizationOnboarding_addOrganizationMutation.graphql';
 import type { organizationOnboarding_completeOrganizationOnboardingMutation } from './__generated__/organizationOnboarding_completeOrganizationOnboardingMutation.graphql';
@@ -99,13 +99,13 @@ const OrganizationOnboarding = ({ rootDataRelay }: Props) => {
   const validate = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
   const handleOrganizationCreateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
-    const id = uuidv4();
+    const id = nanoid();
     const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
 
     commitAddOrganization({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           name,
           about,
@@ -129,7 +129,7 @@ const OrganizationOnboarding = ({ rootDataRelay }: Props) => {
           commitCompleteOrganizationOnboarding({
             variables: {
               input: {
-                clientMutationId: uuidv4(),
+                clientMutationId: nanoid(),
               },
             },
             onCompleted: (_, errors) => {
@@ -191,7 +191,7 @@ const OrganizationOnboarding = ({ rootDataRelay }: Props) => {
     commitCompleteOrganizationOnboarding({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
         },
       },
       onCompleted: (_, errors) => {

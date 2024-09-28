@@ -8,11 +8,11 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 import type { newDeskDialog_addDeskMutation } from './__generated__/newDeskDialog_addDeskMutation.graphql';
 import type { newDeskDialog_query$key } from './__generated__/newDeskDialog_query.graphql';
@@ -69,13 +69,13 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
   const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
 
   const handleAddClick = ({ name, locationTagIds }: DeskDetails) => {
-    const id = uuidv4();
+    const id = nanoid();
 
     commitAddDesk({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           locationId,
           name,

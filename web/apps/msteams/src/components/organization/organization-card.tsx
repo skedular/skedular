@@ -18,10 +18,10 @@ import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, ViewIcon, WebsiteIcon } fr
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import type { organizationCard_OrganizationDetails$key } from './__generated__/organizationCard_OrganizationDetails.graphql';
 import type { organizationCard_Query$key } from './__generated__/organizationCard_Query.graphql';
 import type { organizationCard_clearCustomerDefaultOrganizationMutation } from './__generated__/organizationCard_clearCustomerDefaultOrganizationMutation.graphql';
@@ -126,7 +126,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
       variables: {
         connectionIds: connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: organizationDetails.id,
         },
       },
@@ -164,7 +164,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
       commitSetCustomerDefaultOrganization({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
             organizationId: organizationDetails.id,
           },
         },
@@ -198,7 +198,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
       commitClearCustomerDefaultOrganization({
         variables: {
           input: {
-            clientMutationId: uuidv4(),
+            clientMutationId: nanoid(),
           },
         },
         onCompleted: (_, errors) => {

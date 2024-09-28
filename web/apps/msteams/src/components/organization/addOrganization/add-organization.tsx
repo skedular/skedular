@@ -6,12 +6,12 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from 'components/organization';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 import { array, boolean, object, string } from 'yup';
 import type { addOrganization_addOrganizationMutation } from './__generated__/addOrganization_addOrganizationMutation.graphql';
 import type { addOrganization_query$key } from './__generated__/addOrganization_query.graphql';
@@ -73,12 +73,12 @@ const AddOrganization = ({ rootDataRelay }: Props) => {
   };
 
   const handleOrganizationCreateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
-    const id = uuidv4();
+    const id = nanoid();
 
     commitAddOrganization({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           name,
           about,

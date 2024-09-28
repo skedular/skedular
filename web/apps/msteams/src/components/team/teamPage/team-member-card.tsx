@@ -14,10 +14,10 @@ import { DangerIcon, DeleteIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import type { teamMemberCard_TeamMemberDetails$key } from './__generated__/teamMemberCard_TeamMemberDetails.graphql';
 import type { teamMemberCard_query$key } from './__generated__/teamMemberCard_query.graphql';
 import type { teamMemberCard_updateTeamMutation } from './__generated__/teamMemberCard_updateTeamMutation.graphql';
@@ -120,7 +120,7 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
     commitUpdateTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: rootData.team.id,
           name: rootData.team.name,
           about: rootData.team.about,

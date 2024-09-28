@@ -12,10 +12,10 @@ import { Elements } from '@stripe/react-stripe-js';
 import type { Stripe } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import graphql from 'babel-plugin-relay/macro';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import type { organizationPaymentMethods_addOrganizationPaymentMethodIntentMutation } from './__generated__/organizationPaymentMethods_addOrganizationPaymentMethodIntentMutation.graphql';
 import type { organizationPaymentMethods_query$key } from './__generated__/organizationPaymentMethods_query.graphql';
 import type { organizationPaymentMethods_removeOrganizationPaymentMethodMutation } from './__generated__/organizationPaymentMethods_removeOrganizationPaymentMethodMutation.graphql';
@@ -84,7 +84,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
     commitAddOrganizationPaymentMethodIntent({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           organizationId: rootData.organization.id,
         },
       },
@@ -138,7 +138,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
     commitRemoveOrganizationPaymentMethod({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
         },
       },

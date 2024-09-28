@@ -10,11 +10,11 @@ import graphql from 'babel-plugin-relay/macro';
 import { BookingDate, BookingDetailsSelector, BookingNotes } from 'components/booking';
 import dayjs, { Dayjs } from 'dayjs';
 import { makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, date, object, string } from 'yup';
 import type { newBookingDialog_addBookingMutation } from './__generated__/newBookingDialog_addBookingMutation.graphql';
 import type { newBookingDialog_query$key } from './__generated__/newBookingDialog_query.graphql';
@@ -120,7 +120,7 @@ const NewBookingDialog = ({
       return;
     }
 
-    const id = uuidv4();
+    const id = nanoid();
     const finalDate = date as unknown as Dayjs;
     const from = startOfDay(finalDate).toISOString();
     const to = endOfDay(finalDate).toISOString();
@@ -131,7 +131,7 @@ const NewBookingDialog = ({
       variables: {
         connectionIds,
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id,
           customerId,
           from,

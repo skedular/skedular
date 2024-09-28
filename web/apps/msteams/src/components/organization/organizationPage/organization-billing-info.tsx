@@ -8,11 +8,11 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { useMutation, useRefetchableFragment } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { object, string } from 'yup';
 import type { organizationBillingInfoQuery } from './__generated__/organizationBillingInfoQuery.graphql';
 import type { organizationBillingInfo_query$key } from './__generated__/organizationBillingInfo_query.graphql';
@@ -106,7 +106,7 @@ const OrganizationBillingInfo = ({ rootDataRelay }: Props) => {
     commitSetOrganizationBillingInfo({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           organizationId: rootData.organization.id,
           email,
           addressLine1,

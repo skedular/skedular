@@ -21,11 +21,11 @@ import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMemberSelector } from 'components/organization';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { useMutation, usePaginationFragment } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 import type { TeamMemberOrderField, TeamMemberOrderInput, teamMembersPaginationQuery } from './__generated__/teamMembersPaginationQuery.graphql';
 import type { teamPeopleTab_inviteCustomersToJoinTeamMutation } from './__generated__/teamPeopleTab_inviteCustomersToJoinTeamMutation.graphql';
@@ -225,7 +225,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
     commitUpdateTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: rootData.team.id,
           name: rootData.team.name,
           about: rootData.team.about,
@@ -286,7 +286,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
     commitInviteCustomersToJoinTeam({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           teamId: rootData.team.id,
           emails: emails
             .split(/[\s,]+/)

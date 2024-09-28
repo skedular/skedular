@@ -20,11 +20,11 @@ import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMemberCard } from 'components/organization';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { useMutation, usePaginationFragment } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 import type {
   OrganizationMemberOrderField,
@@ -129,7 +129,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
     commitInviteCustomersToJoinOrganization({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           organizationId: rootData.organization.id,
           emails: emails
             .split(/[\s,]+/)

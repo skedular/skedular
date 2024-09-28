@@ -12,14 +12,15 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMultipleChoicesIndustries } from 'components/organization';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
-import { v4 as uuidv4 } from 'uuid';
 import { array, object, string } from 'yup';
 import type { organizationAboutTab_query$key } from './__generated__/organizationAboutTab_query.graphql';
 import type { organizationAboutTab_updateOrganizationMutation } from './__generated__/organizationAboutTab_updateOrganizationMutation.graphql';
+
 type Props = {
   rootDataRelay: organizationAboutTab_query$key;
 };
@@ -106,7 +107,7 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
     commitUpdateOrganization({
       variables: {
         input: {
-          clientMutationId: uuidv4(),
+          clientMutationId: nanoid(),
           id: organization.id,
           name,
           about,
