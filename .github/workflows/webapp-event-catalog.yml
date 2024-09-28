@@ -55,6 +55,7 @@ jobs:
           dockerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
           dockerNamespace: unityhubio
           dockerRepository: webappevent-catalog
+          scanForSecurityVulnerabilities: "false"
 
       - name: Configure AWS credentials - staging
         uses: aws-actions/configure-aws-credentials@v4
