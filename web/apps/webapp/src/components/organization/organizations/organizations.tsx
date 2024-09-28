@@ -1,4 +1,4 @@
-import { OrganizationCard } from '@/components/organization';
+import { OrganizationBookingsCard } from '@/components/organization/organizationBookingCard';
 import type {
   OrganizationOrderField,
   OrganizationOrderInput,
@@ -44,6 +44,7 @@ const Organizations = ({ rootDataRelay }: Props) => {
           edges {
             node {
               id
+              name
               ...organizationCard_OrganizationDetails
             }
           }
@@ -188,7 +189,7 @@ const Organizations = ({ rootDataRelay }: Props) => {
       <Grid container spacing={2}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
-            <OrganizationCard rootDataRelay={rootData} organizationDetailsRelay={edge.node} connectionIds={connectionIds} />
+            <OrganizationBookingsCard organizationId={edge.node.id} organizationName={edge.node.name} organizationsConnectionIds={connectionIds} />
           </Grid>
         ))}
       </Grid>

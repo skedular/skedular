@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0c2d0083deb8d2e739b2b33bce2e81bc>>
+ * @generated SignedSource<<ae4e48ff9fd156d1bf3dd0eca8147ab6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type organizations_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
+        readonly name: string;
         readonly " $fragmentSpreads": FragmentRefs<"organizationCard_OrganizationDetails">;
       };
     }>;
@@ -135,6 +136,13 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "organizationCard_OrganizationDetails"
@@ -210,6 +218,6 @@ return {
 };
 })();
 
-(node as any).hash = "110cfe3721326ef426e87750ee04ba64";
+(node as any).hash = "9d9e5da11be987f6365ffcd9be5f3cb5";
 
 export default node;

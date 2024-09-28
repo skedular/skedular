@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2759a2e7d3896113d649f1871132f9d>>
+ * @generated SignedSource<<7bc3a394ed483c2270cce924d448a908>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -314,16 +314,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "70e5f53e9c9f452981a9e1817f2a617b",
+    "cacheID": "74fbbbf0c24b923ad1ed1c7f392c2ab3",
     "id": null,
     "metadata": {},
     "name": "organizationsPaginationQuery",
     "operationKind": "query",
-    "text": "query organizationsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $organizationNameSearchText: String\n  $organizationsSortingValues: [OrganizationOrderInput!]\n) {\n  ...organizations_query_1G22uz\n}\n\nfragment organizationCard_OrganizationDetails on OrganizationDetails {\n  id\n  name\n  about\n  website\n  logoUrl\n  hasFutureBooking\n  hasLocation\n  canModify\n  canDelete\n}\n\nfragment organizationCard_Query on Query {\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n}\n\nfragment organizations_query_1G22uz on Query {\n  organizations(first: $count, after: $cursor, where: {nameContains: $organizationNameSearchText}, orderBy: $organizationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationCard_OrganizationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...organizationCard_Query\n}\n"
+    "text": "query organizationsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $organizationNameSearchText: String\n  $organizationsSortingValues: [OrganizationOrderInput!]\n) {\n  ...organizations_query_1G22uz\n}\n\nfragment organizationCard_OrganizationDetails on OrganizationDetails {\n  id\n  name\n  about\n  website\n  logoUrl\n  hasFutureBooking\n  hasLocation\n  canModify\n  canDelete\n}\n\nfragment organizationCard_Query on Query {\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n}\n\nfragment organizations_query_1G22uz on Query {\n  organizations(first: $count, after: $cursor, where: {nameContains: $organizationNameSearchText}, orderBy: $organizationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        ...organizationCard_OrganizationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...organizationCard_Query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "110cfe3721326ef426e87750ee04ba64";
+(node as any).hash = "9d9e5da11be987f6365ffcd9be5f3cb5";
 
 export default node;

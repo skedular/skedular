@@ -170,14 +170,14 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to set organization '${organizationDetails.name}' as default. Error: ${joinErrors(errors)}`, {
+            enqueueSnackbar(`Failed to mark '${organizationDetails.name}' as your default organization. Error: ${joinErrors(errors)}`, {
               variant: 'error',
               anchorOrigin,
             });
           }
         },
         onError: (error) => {
-          enqueueSnackbar(`Failed to set organization '${organizationDetails.name}' as default. Error: ${error.message}`, {
+          enqueueSnackbar(`Failed to mark '${organizationDetails.name}' as your default organization. Error: ${error.message}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -203,14 +203,14 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to clear default organization '${organizationDetails.name}'. Error: ${joinErrors(errors)}`, {
+            enqueueSnackbar(`Failed to clear '${organizationDetails.name}' as your default organization. Error: ${joinErrors(errors)}`, {
               variant: 'error',
               anchorOrigin,
             });
           }
         },
         onError: (error) => {
-          enqueueSnackbar(`Failed to clear default organization '${organizationDetails.name}'. Error: ${error.message}`, {
+          enqueueSnackbar(`Failed to clear '${organizationDetails.name}' as your default organization. Error: ${error.message}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -290,7 +290,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
               </Button>
             </Tooltip>
           )}
-          <Tooltip title={isDefaultOrganization ? 'Remove default organization' : 'Set as default organization'}>
+          <Tooltip title={isDefaultOrganization ? 'Clear as default organization' : 'Mark as default organization'}>
             <Switch checked={isDefaultOrganization} onChange={handleDefaultOrganizationStateChange} />
           </Tooltip>
         </CardActions>

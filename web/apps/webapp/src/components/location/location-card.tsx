@@ -129,14 +129,14 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to set location '${locationDetails.name}' as preferred. Error: ${joinErrors(errors)}`, {
+            enqueueSnackbar(`Failed to set location '${locationDetails.name}' as the preferred location. Error: ${joinErrors(errors)}`, {
               variant: 'error',
               anchorOrigin,
             });
           }
         },
         onError: (error) => {
-          enqueueSnackbar(`Failed to set location '${locationDetails.name}' as preferred. Error: ${error.message}`, {
+          enqueueSnackbar(`Failed to set location '${locationDetails.name}' as the preferred location. Error: ${error.message}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -164,14 +164,14 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to clear preferred location '${locationDetails.name}'. Error: ${joinErrors(errors)}`, {
+            enqueueSnackbar(`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}`, {
               variant: 'error',
               anchorOrigin,
             });
           }
         },
         onError: (error) => {
-          enqueueSnackbar(`Failed to clear preferred location '${locationDetails.name}'. Error: ${error.message}`, {
+          enqueueSnackbar(`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${error.message}`, {
             variant: 'error',
             anchorOrigin,
           });
