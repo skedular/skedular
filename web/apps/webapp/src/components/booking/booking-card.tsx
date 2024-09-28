@@ -607,7 +607,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
               const zones = locationTags.filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
 
               return (
-                <Stack key={uniqueId} direction="row" spacing={2} sx={{ marginBottom: 1 }}>
+                <Stack key={uniqueId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <DeskIcon />
                   <Typography variant="body1" component="div">
                     {name}
