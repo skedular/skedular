@@ -66,7 +66,6 @@ enum DateRangeType {
 enum MoreActionsMenuOptionType {
   SetAsPreferredLocation,
   RemoveAsPreferredLocation,
-  Settings,
   RemoveLocation,
 }
 
@@ -89,12 +88,6 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
     label: 'Remove as preferred location',
     icon: <PreferredIcon />,
     color: 'primary',
-  },
-  [MoreActionsMenuOptionType.Settings]: {
-    id: MoreActionsMenuOptionType.Settings,
-    label: 'Settings',
-    icon: <SettingsIcon />,
-    color: 'secondary',
   },
   [MoreActionsMenuOptionType.RemoveLocation]: {
     id: MoreActionsMenuOptionType.RemoveLocation,
@@ -636,10 +629,6 @@ const LocationPeopleBookingsMatrix = ({
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetAsPreferredLocation]);
   }
 
-  if (rootData.location.canModify) {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.Settings]);
-  }
-
   if (rootData.location.canDelete && !hideRemoveLocationOption) {
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveLocation]);
   }
@@ -657,10 +646,6 @@ const LocationPeopleBookingsMatrix = ({
 
       case MoreActionsMenuOptionType.RemoveAsPreferredLocation:
         handleSetAsNotPreferredLocationClicked();
-        break;
-
-      case MoreActionsMenuOptionType.Settings:
-        handleSettingsClicked();
         break;
 
       case MoreActionsMenuOptionType.RemoveLocation:
@@ -823,6 +808,11 @@ const LocationPeopleBookingsMatrix = ({
                 <IconButton color="primary" onClick={handleBookingsClicked}>
                   <BookingIcon />
                 </IconButton>
+                {rootData.location.canModify && (
+                  <IconButton color="secondary" onClick={handleSettingsClicked}>
+                    <SettingsIcon />
+                  </IconButton>
+                )}
               </Stack>
             </Stack>
           }

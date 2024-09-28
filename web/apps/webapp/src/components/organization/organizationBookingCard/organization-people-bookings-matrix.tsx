@@ -65,7 +65,6 @@ enum DateRangeType {
 enum MoreActionsMenuOptionType {
   MarkAsDefaultOrganization,
   ClearAsPreferredOrganization,
-  Settings,
   RemoveOrganization,
 }
 
@@ -88,12 +87,6 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
     label: 'Clear as default organization',
     icon: <PreferredIcon />,
     color: 'primary',
-  },
-  [MoreActionsMenuOptionType.Settings]: {
-    id: MoreActionsMenuOptionType.Settings,
-    label: 'Settings',
-    icon: <SettingsIcon />,
-    color: 'secondary',
   },
   [MoreActionsMenuOptionType.RemoveOrganization]: {
     id: MoreActionsMenuOptionType.RemoveOrganization,
@@ -618,10 +611,6 @@ const OrganizationPeopleBookingsMatrix = ({
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.MarkAsDefaultOrganization]);
   }
 
-  if (rootData.organization.canModify) {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.Settings]);
-  }
-
   if (rootData.organization.canDelete && !hideRemoveOrganizationOption) {
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveOrganization]);
   }
@@ -639,10 +628,6 @@ const OrganizationPeopleBookingsMatrix = ({
 
       case MoreActionsMenuOptionType.ClearAsPreferredOrganization:
         handleSetAsNotPreferredOrganizationClicked();
-        break;
-
-      case MoreActionsMenuOptionType.Settings:
-        handleSettingsClicked();
         break;
 
       case MoreActionsMenuOptionType.RemoveOrganization:
@@ -800,6 +785,11 @@ const OrganizationPeopleBookingsMatrix = ({
                 <IconButton color="primary" onClick={handleBookingsClicked}>
                   <BookingIcon />
                 </IconButton>
+                {rootData.organization.canModify && (
+                  <IconButton color="secondary" onClick={handleSettingsClicked}>
+                    <SettingsIcon />
+                  </IconButton>
+                )}
               </Stack>
             </Stack>
           }

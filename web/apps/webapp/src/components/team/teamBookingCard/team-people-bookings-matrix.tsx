@@ -66,7 +66,6 @@ enum DateRangeType {
 enum MoreActionsMenuOptionType {
   SetAsPreferredTeam,
   RemoveAsPreferredTeam,
-  Settings,
   RemoveTeam,
 }
 
@@ -89,12 +88,6 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
     label: 'Remove as preferred team',
     icon: <PreferredIcon />,
     color: 'primary',
-  },
-  [MoreActionsMenuOptionType.Settings]: {
-    id: MoreActionsMenuOptionType.Settings,
-    label: 'Settings',
-    icon: <SettingsIcon />,
-    color: 'secondary',
   },
   [MoreActionsMenuOptionType.RemoveTeam]: {
     id: MoreActionsMenuOptionType.RemoveTeam,
@@ -615,10 +608,6 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.SetAsPreferredTeam]);
   }
 
-  if (rootData.team.canModify) {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.Settings]);
-  }
-
   if (rootData.team.canDelete && !hideRemoveTeamOption) {
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveTeam]);
   }
@@ -636,10 +625,6 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
 
       case MoreActionsMenuOptionType.RemoveAsPreferredTeam:
         handleSetAsNotPreferredTeamClicked();
-        break;
-
-      case MoreActionsMenuOptionType.Settings:
-        handleSettingsClicked();
         break;
 
       case MoreActionsMenuOptionType.RemoveTeam:
@@ -802,6 +787,11 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
                 <IconButton color="primary" onClick={handleBookingsClicked}>
                   <BookingIcon />
                 </IconButton>
+                {rootData.team.canModify && (
+                  <IconButton color="secondary" onClick={handleSettingsClicked}>
+                    <SettingsIcon />
+                  </IconButton>
+                )}
               </Stack>
             </Stack>
           }
