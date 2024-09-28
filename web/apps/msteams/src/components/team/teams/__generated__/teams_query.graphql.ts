@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<33990500da6cdae4c997bbc81d68427c>>
+ * @generated SignedSource<<9ec13fc09cf0c1f627b58a1b3555a920>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,12 +16,14 @@ export type teams_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"teamCard_TeamDetails">;
+        readonly name: string;
+        readonly organization: {
+          readonly uniqueId: string;
+        } | null | undefined;
       };
     }>;
     readonly totalCount: number | null | undefined;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"teamCard_Query">;
   readonly " $fragmentType": "teams_query";
 };
 export type teams_query$key = {
@@ -144,9 +146,29 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
                   "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "teamCard_TeamDetails"
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "TeamOrganizationDetails",
+                  "kind": "LinkedField",
+                  "name": "organization",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueId",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
                 },
                 {
                   "alias": null,
@@ -207,11 +229,6 @@ return {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "teamCard_Query"
     }
   ],
   "type": "Query",
@@ -219,6 +236,6 @@ return {
 };
 })();
 
-(node as any).hash = "7d57824b3a11e35ee7299b9a7df1c7fa";
+(node as any).hash = "8c179655c4728d2b4f08e520e9124159";
 
 export default node;

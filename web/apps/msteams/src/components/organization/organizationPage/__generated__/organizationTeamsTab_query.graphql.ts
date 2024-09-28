@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cccb86e33c8e7ac717c4c8fc491c6af0>>
+ * @generated SignedSource<<aadf013f691b31b6bdc0e773830d2eaa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,12 +20,14 @@ export type organizationTeamsTab_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"teamCard_TeamDetails">;
+        readonly name: string;
+        readonly organization: {
+          readonly uniqueId: string;
+        } | null | undefined;
       };
     }>;
     readonly totalCount: number | null | undefined;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"teamCard_Query">;
   readonly " $fragmentType": "organizationTeamsTab_query";
 };
 export type organizationTeamsTab_query$key = {
@@ -149,9 +151,29 @@ return {
               "selections": [
                 (v1/*: any*/),
                 {
+                  "alias": null,
                   "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "teamCard_TeamDetails"
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "TeamOrganizationDetails",
+                  "kind": "LinkedField",
+                  "name": "organization",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueId",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
                 },
                 {
                   "alias": null,
@@ -214,11 +236,6 @@ return {
       "storageKey": null
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "teamCard_Query"
-    },
-    {
       "alias": null,
       "args": [
         {
@@ -249,6 +266,6 @@ return {
 };
 })();
 
-(node as any).hash = "5316fda62023b3f48e23f6afb6190706";
+(node as any).hash = "0c8f5fdcf7b8cb9140156c5e63d73c8e";
 
 export default node;

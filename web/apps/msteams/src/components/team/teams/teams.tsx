@@ -12,7 +12,7 @@ import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { TeamCard } from 'components/team';
+import { TeamBookingsCard } from 'components/team/teamBookingCard';
 import debounce from 'lodash.debounce';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
@@ -46,11 +46,13 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
           edges {
             node {
               id
-              ...teamCard_TeamDetails
+              name
+              organization {
+                uniqueId
+              }
             }
           }
         }
-        ...teamCard_Query
       }
     `,
     rootDataRelay,
@@ -191,7 +193,12 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
       <Grid container spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
-            <TeamCard rootDataRelay={rootData} teamDetailsRelay={edge.node} connectionIds={connectionIds} />
+            <TeamBookingsCard
+              organizationId={edge.node.organization?.uniqueId}
+              teamId={edge.node.id}
+              teamName={edge.node.name}
+              teamsConnectionIds={connectionIds}
+            />
           </Grid>
         ))}
       </Grid>

@@ -139,8 +139,8 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
                 photo={{
                   url: castedOption.photoUrl,
                 }}
+                size="small"
               />
-
               <Typography variant="body1">{getCustomerFullName(castedOption)}</Typography>
             </Stack>
           </li>
