@@ -129,14 +129,14 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to set location '${locationDetails.name}' as the preferred location. Error: ${joinErrors(errors)}`, {
+            enqueueSnackbar(`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}`, {
               variant: 'error',
               anchorOrigin,
             });
           }
         },
         onError: (error) => {
-          enqueueSnackbar(`Failed to set location '${locationDetails.name}' as the preferred location. Error: ${error.message}`, {
+          enqueueSnackbar(`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -273,7 +273,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
         </CardContent>
 
         <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Tooltip title={locationDetails.canModify ? 'Edit location details' : 'View location details'}>
+          <Tooltip title={locationDetails.canModify ? 'Edit location details' : 'View location'}>
             <Link
               href={
                 locationDetails.organization
@@ -288,7 +288,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
           </Tooltip>
 
           {locationDetails.canDelete && (
-            <Tooltip title={'Delete location'}>
+            <Tooltip title={'Remove location'}>
               <Button size="small" color="warning" onClick={handleDeleteClick}>
                 <DeleteIcon />
               </Button>

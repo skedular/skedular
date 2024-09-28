@@ -276,7 +276,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
         </CardContent>
 
         <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Tooltip title={organizationDetails.canModify ? 'Edit organization details' : 'View organization details'}>
+          <Tooltip title={organizationDetails.canModify ? 'Edit organization details' : 'View organization'}>
             <Link href={`/organization/${organizationDetails.id}`}>
               <Button size="small" color="primary">
                 {organizationDetails.canModify ? <EditIcon /> : <ViewIcon />}
@@ -284,7 +284,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
             </Link>
           </Tooltip>
           {organizationDetails.canDelete && (
-            <Tooltip title={'Delete organization'}>
+            <Tooltip title={'Remove organization'}>
               <Button size="small" color="warning" onClick={handleDeleteClick}>
                 <DeleteIcon />
               </Button>

@@ -16,10 +16,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { DangerIcon, DeleteIcon, EditIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { DangerIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
@@ -219,78 +218,92 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     });
   };
 
-  const handleDefaultLocationTagStateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSetAsPreferredZoneClicked = () => {
     if (!rootData.me) {
       return;
     }
 
-    if (event.target.checked) {
-      commitAddCustomerDefaultLocationTag({
-        variables: {
-          input: {
-            clientMutationId: nanoid(),
-            locationTagId: locationTagDetails.id,
-          },
+    commitAddCustomerDefaultLocationTag({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          locationTagId: locationTagDetails.id,
         },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to set zone '${locationTagDetails.name}' as default. Error: ${joinErrors(errors)}`, {
-              variant: 'error',
-              anchorOrigin,
-            });
-          }
-        },
-        onError: (error) => {
-          enqueueSnackbar(`Failed to set zone '${locationTagDetails.name}' as default. Error: ${error.message}`, {
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          enqueueSnackbar(`Failed to set zone '${locationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
-        },
-        optimisticResponse: {
-          addCustomerDefaultLocationTag: {
-            customer: {
-              id: rootData.me.id,
-              preferredZones: rootData.me.preferredZones.concat([
-                {
-                  uniqueId: locationTagDetails.id,
-                },
-              ]),
-            },
+        }
+
+        enqueueSnackbar(`Zone '${locationTagDetails.name}' has been set as the preferred zone.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
+      },
+      onError: (error) => {
+        enqueueSnackbar(`Failed to set zone '${locationTagDetails.name}' as your preferred zone. Error: ${error.message}`, {
+          variant: 'error',
+          anchorOrigin,
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultLocationTag: {
+          customer: {
+            id: rootData.me.id,
+            preferredZones: rootData.me.preferredZones.concat([
+              {
+                uniqueId: locationTagDetails.id,
+              },
+            ]),
           },
         },
-      });
-    } else {
-      commitRemoveCustomerDefaultLocationTag({
-        variables: {
-          input: {
-            clientMutationId: nanoid(),
-            locationTagId: locationTagDetails.id,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to clear default zone '${locationTagDetails.name}'. Error: ${joinErrors(errors)}`, {
-              variant: 'error',
-              anchorOrigin,
-            });
-          }
-        },
-        onError: (error) => {
-          enqueueSnackbar(`Failed to clear default zone '${locationTagDetails.name}'. Error: ${error.message}`, {
-            variant: 'error',
-            anchorOrigin,
-          });
-        },
-        optimisticResponse: {
-          removeCustomerDefaultLocationTag: {
-            customer: {
-              id: rootData.me.id,
-              preferredZones: rootData.me.preferredZones.filter(({ uniqueId }) => uniqueId === locationTagDetails.id),
-            },
-          },
-        },
-      });
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredZoneClicked = () => {
+    if (!rootData.me) {
+      return;
     }
+
+    commitRemoveCustomerDefaultLocationTag({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          locationTagId: locationTagDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          enqueueSnackbar(`Failed to remove the zone '${locationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}`, {
+            variant: 'error',
+            anchorOrigin,
+          });
+        }
+
+        enqueueSnackbar(`Zone '${locationTagDetails.name}' has been removed as your preferred zone.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
+      },
+      onError: (error) => {
+        enqueueSnackbar(`Failed to remove the zone '${locationTagDetails.name}' as your preferred zone. Error: ${error.message}`, {
+          variant: 'error',
+          anchorOrigin,
+        });
+      },
+      optimisticResponse: {
+        removeCustomerDefaultLocationTag: {
+          customer: {
+            id: rootData.me.id,
+            preferredZones: rootData.me.preferredZones.filter(({ uniqueId }) => uniqueId === locationTagDetails.id),
+          },
+        },
+      },
+    });
   };
 
   if (!rootData.location) {
@@ -312,22 +325,33 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
             {rootData.location.canModify && (
-              <Tooltip title={'Edit zone details'}>
+              <Tooltip title={'Edit zone'}>
                 <Button size="small" color="primary" onClick={handleEditClick}>
                   <EditIcon />
                 </Button>
               </Tooltip>
             )}
             {rootData.location.canModify && (
-              <Tooltip title={'Delete zone'}>
+              <Tooltip title={'Remove zone'}>
                 <Button size="small" color="warning" onClick={handleDeleteClick}>
                   <DeleteIcon />
                 </Button>
               </Tooltip>
             )}
-            <Tooltip title={isPreferredZone ? 'Remove preferred zone' : 'Set as preferred zone'}>
-              <Switch checked={isPreferredZone} onChange={handleDefaultLocationTagStateChange} />
-            </Tooltip>
+            {isPreferredZone && (
+              <Tooltip title={'Remove as preferred zone'}>
+                <Button size="small" color="primary" onClick={handleRemoveAsPreferredZoneClicked}>
+                  <PreferredIcon />
+                </Button>
+              </Tooltip>
+            )}
+            {!isPreferredZone && (
+              <Tooltip title={'Set as preferred zone'}>
+                <Button size="small" color="primary" onClick={handleSetAsPreferredZoneClicked}>
+                  <NotPreferredIcon />
+                </Button>
+              </Tooltip>
+            )}
           </CardActions>
         </Card>
       )}

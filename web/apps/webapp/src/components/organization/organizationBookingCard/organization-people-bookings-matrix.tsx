@@ -623,11 +623,11 @@ const OrganizationPeopleBookingsMatrix = ({
 
     switch (id) {
       case MoreActionsMenuOptionType.MarkAsDefaultOrganization:
-        handleSetAsPreferredOrganizationClicked();
+        handleMarkAsDefaultOrganizationClicked();
         break;
 
       case MoreActionsMenuOptionType.ClearAsPreferredOrganization:
-        handleSetAsNotPreferredOrganizationClicked();
+        handleClearAsDefaultOrganizationClicked();
         break;
 
       case MoreActionsMenuOptionType.RemoveOrganization:
@@ -644,7 +644,7 @@ const OrganizationPeopleBookingsMatrix = ({
     router.push(`/organization/${organizationId}?tab=about`);
   };
 
-  const handleSetAsPreferredOrganizationClicked = () => {
+  const handleMarkAsDefaultOrganizationClicked = () => {
     if (!rootData.me) {
       return;
     }
@@ -686,7 +686,7 @@ const OrganizationPeopleBookingsMatrix = ({
     });
   };
 
-  const handleSetAsNotPreferredOrganizationClicked = () => {
+  const handleClearAsDefaultOrganizationClicked = () => {
     if (!rootData.me) {
       return;
     }

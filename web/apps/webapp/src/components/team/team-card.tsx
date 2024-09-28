@@ -123,14 +123,14 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to set team '${teamDetails.name}' as the preferred team. Error: ${joinErrors(errors)}`, {
+            enqueueSnackbar(`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}`, {
               variant: 'error',
               anchorOrigin,
             });
           }
         },
         onError: (error) => {
-          enqueueSnackbar(`Failed to set team '${teamDetails.name}' as the preferred team. Error: ${error.message}`, {
+          enqueueSnackbar(`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${error.message}`, {
             variant: 'error',
             anchorOrigin,
           });

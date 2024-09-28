@@ -624,7 +624,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         break;
 
       case MoreActionsMenuOptionType.RemoveAsPreferredTeam:
-        handleSetAsNotPreferredTeamClicked();
+        handleRemoveAsPreferredTeamClicked();
         break;
 
       case MoreActionsMenuOptionType.RemoveTeam:
@@ -655,7 +655,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to set team '${teamName}' as the preferred team. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to set team '${teamName}' as your preferred team. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -667,7 +667,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to set team '${teamName}' as the preferred team. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to set team '${teamName}' as your preferred team. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
@@ -687,7 +687,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     });
   };
 
-  const handleSetAsNotPreferredTeamClicked = () => {
+  const handleRemoveAsPreferredTeamClicked = () => {
     if (!rootData.me) {
       return;
     }

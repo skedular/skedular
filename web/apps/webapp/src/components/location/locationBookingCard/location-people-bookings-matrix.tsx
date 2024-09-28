@@ -645,7 +645,7 @@ const LocationPeopleBookingsMatrix = ({
         break;
 
       case MoreActionsMenuOptionType.RemoveAsPreferredLocation:
-        handleSetAsNotPreferredLocationClicked();
+        handleRemoveAsPreferredLocationClicked();
         break;
 
       case MoreActionsMenuOptionType.RemoveLocation:
@@ -676,7 +676,7 @@ const LocationPeopleBookingsMatrix = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to set location '${locationName}' as the preferred location. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to set location '${locationName}' as your preferred location. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -688,7 +688,7 @@ const LocationPeopleBookingsMatrix = ({
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to set location '${locationName}' as the preferred location. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to set location '${locationName}' as your preferred location. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
@@ -708,7 +708,7 @@ const LocationPeopleBookingsMatrix = ({
     });
   };
 
-  const handleSetAsNotPreferredLocationClicked = () => {
+  const handleRemoveAsPreferredLocationClicked = () => {
     if (!rootData.me) {
       return;
     }

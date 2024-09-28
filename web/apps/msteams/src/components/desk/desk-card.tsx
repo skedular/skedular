@@ -679,7 +679,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
             {rootData.location.canModify && (
-              <Tooltip title={'Edit desk details'}>
+              <Tooltip title={'Edit desk'}>
                 <Button size="small" color="primary" onClick={handleEditClick}>
                   <EditIcon />
                 </Button>
@@ -687,7 +687,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             )}
 
             {rootData.location.canModify && (
-              <Tooltip title={'Delete desk'}>
+              <Tooltip title={'Remove desk'}>
                 <Button size="small" color="warning" onClick={handleDeleteConfirmationDialogClick}>
                   <DeleteIcon />
                 </Button>
