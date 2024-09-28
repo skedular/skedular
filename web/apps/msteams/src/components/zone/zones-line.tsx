@@ -1,9 +1,9 @@
-import { Typography } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { CollapseIcon, MoreItemsIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { memo, useState } from 'react';
 

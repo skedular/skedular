@@ -9,7 +9,6 @@ import type {
 } from '@/queries/__generated__/locationPeopleBookingsMatrix_query.graphql';
 import type { locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation } from '@/queries/__generated__/locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation.graphql';
 import type { LocationMemberOrderInput } from '@/queries/__generated__/locationPeopleBookingsMatrixLocationMembersPaginationQuery.graphql';
-import { Stack, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -23,8 +22,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Typography from '@mui/material/Typography';
 import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
