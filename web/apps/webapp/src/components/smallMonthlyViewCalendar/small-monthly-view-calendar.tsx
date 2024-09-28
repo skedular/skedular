@@ -190,7 +190,7 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
 
               return (
                 <li {...props}>
-                  <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                     <Typography variant="body1">{castedOption.name}</Typography>
                   </Stack>
                 </li>

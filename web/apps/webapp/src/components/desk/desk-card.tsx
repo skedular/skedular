@@ -740,7 +740,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+              <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
                 <DeskName name="name" required={requiredFields.name} />
                 <DeskMultipleChoicesZones
                   rootDataRelay={deskMultipleChoicesZonesData}
@@ -756,7 +756,6 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
                     Save
                   </Button>
                 </Stack>
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
               </Stack>
             )}
           />

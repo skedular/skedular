@@ -697,7 +697,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
               setFrom(values.date);
 
               return (
-                <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+                <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
                   <BookingDate name="date" required={requiredFields.date} />
                   <BookingNotes name="notes" required={requiredFields.notes} />
                   <BookingDetailsSelector
@@ -729,7 +729,6 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                       Save
                     </Button>
                   </Stack>
-                  <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
                 </Stack>
               );
             }}

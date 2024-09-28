@@ -170,7 +170,7 @@ const LocationAboutTab = ({ rootDataRelay, organizationId }: Props) => {
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+              <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
                 <TextField label="Name" name="name" required={requiredFields.name} />
                 <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
                 <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />

@@ -365,7 +365,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+              <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
                 <ZoneName name="name" required={requiredFields.name} />
 
                 <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
@@ -376,7 +376,6 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
                     Save
                   </Button>
                 </Stack>
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2} />
               </Stack>
             )}
           />

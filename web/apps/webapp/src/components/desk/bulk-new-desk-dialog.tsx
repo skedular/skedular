@@ -126,7 +126,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+            <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
               <TextField label="Optional name prefix" name="namePrefix" required={requiredFields.namePrefix} helperText="Add your desk name prefix" />
               <TextField label="Count" name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
               <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />

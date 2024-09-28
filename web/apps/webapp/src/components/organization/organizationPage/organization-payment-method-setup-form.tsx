@@ -46,7 +46,7 @@ const OrganizationPaymentMethodSetupForm = ({ onCancelClick }: Props) => {
     <Form
       onSubmit={handleAddClick}
       render={({ handleSubmit }) => (
-        <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+        <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
           <PaymentElement id="payment-element" />
 
           <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>

@@ -129,7 +129,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
 
         return (
           <li {...props}>
-            <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <CustomerAvatar
                 name={{
                   name: castedOption.name,

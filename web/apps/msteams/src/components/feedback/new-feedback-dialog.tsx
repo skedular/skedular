@@ -104,7 +104,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+            <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
               <Typography>
                 Hi
                 <span style={{ fontWeight: 'bold' }}>{' ' + getCustomerShortName(rootData.me)}</span>, what feedback would you like to share with us?

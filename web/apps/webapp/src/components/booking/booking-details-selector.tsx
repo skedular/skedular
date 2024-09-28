@@ -261,7 +261,7 @@ const BookingDetailsSelector = ({
 
             return (
               <li {...props}>
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <Typography variant="body1">{castedOption.name}</Typography>
                 </Stack>
               </li>
@@ -291,7 +291,7 @@ const BookingDetailsSelector = ({
 
             return (
               <li {...props}>
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <CustomerAvatar
                     name={{
                       name: castedOption.name,
@@ -302,8 +302,8 @@ const BookingDetailsSelector = ({
                     photo={{
                       url: castedOption.photoUrl,
                     }}
+                    size="small"
                   />
-
                   <Typography variant="body1">{getCustomerFullName(castedOption)}</Typography>
                 </Stack>
               </li>
@@ -338,7 +338,7 @@ const BookingDetailsSelector = ({
 
             return (
               <li {...props}>
-                <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <Typography variant="body1">{castedOption.name}</Typography>
                 </Stack>
               </li>
@@ -370,7 +370,7 @@ const BookingDetailsSelector = ({
 
                 return (
                   <li {...props}>
-                    <Stack sx={{ flex: 1 }} direction="row" spacing={2}>
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                       <Typography variant="body1">{castedOption.name}</Typography>
                       <ZonesLine zones={castedOption.zones} />
                     </Stack>

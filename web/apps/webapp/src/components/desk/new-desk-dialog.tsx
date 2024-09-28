@@ -124,7 +124,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+            <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
               <DeskName name="name" required={requiredFields.name} />
               <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
               <DialogActions>

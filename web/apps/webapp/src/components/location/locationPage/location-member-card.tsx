@@ -168,7 +168,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+              <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
                 {avatar}
 
                 <LocationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />

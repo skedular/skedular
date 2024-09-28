@@ -105,7 +105,7 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <Stack direction="column" component="form" noValidate onSubmit={handleSubmit} spacing={2}>
+            <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
               <ZoneName name="name" required={requiredFields.name} />
 
               <DialogActions>

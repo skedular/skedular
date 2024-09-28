@@ -264,7 +264,7 @@ const MainRootLayout = ({ rootDataRelay, children, leftSideContent, rightSideCon
                 onClose={handleProfileMenuCloseClick}
               >
                 <MenuItem onClick={handleProfileMenuCloseClick}>
-                  <Stack spacing={2}>
+                  <Stack direction="column">
                     <ListItemText
                       primary={
                         <Typography variant="body1" style={{ color: 'primary' }}>
