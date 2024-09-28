@@ -6,7 +6,7 @@ import Skeleton from '@mui/material/Skeleton';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { endOfWeek, startOfWeek } from '@repo/shared/libs/utils';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import TeamPeopleBookingsMatrix from './team-people-bookings-matrix';
@@ -61,9 +61,9 @@ type RelayProps = {
 
 const TeamBookingsWithRelay = ({ organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<teamBookingsCard_rootQuery>(RootQuery);
-  const [startDate, setStart] = useState(startOfWeek(null));
 
   useEffect(() => {
+    const startDate = startOfWeek(null);
     const endDate = endOfWeek(startDate);
 
     loadQuery(
@@ -85,7 +85,7 @@ const TeamBookingsWithRelay = ({ organizationId, teamId, teamName, teamsConnecti
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, teamId, startDate, organizationId]);
+  }, [loadQuery, teamId, organizationId]);
 
   if (!queryReference) {
     return (
