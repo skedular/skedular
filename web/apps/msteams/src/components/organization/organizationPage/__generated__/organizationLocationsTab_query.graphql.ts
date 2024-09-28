@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4dd5f17c8b0bf3a4a9c876cb24a99969>>
+ * @generated SignedSource<<ccdce4fda413b37bd201cce26ef01c0f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,10 @@ export type organizationLocationsTab_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"locationCard_LocationDetails">;
+        readonly name: string;
+        readonly organization: {
+          readonly uniqueId: string;
+        } | null | undefined;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -25,7 +28,6 @@ export type organizationLocationsTab_query$data = {
     readonly canModify: boolean;
     readonly id: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"locationCard_Query">;
   readonly " $fragmentType": "organizationLocationsTab_query";
 };
 export type organizationLocationsTab_query$key = {
@@ -149,9 +151,29 @@ return {
               "selections": [
                 (v1/*: any*/),
                 {
+                  "alias": null,
                   "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "locationCard_LocationDetails"
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "LocationOrganizationDetails",
+                  "kind": "LinkedField",
+                  "name": "organization",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueId",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
                 },
                 {
                   "alias": null,
@@ -214,11 +236,6 @@ return {
       "storageKey": null
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "locationCard_Query"
-    },
-    {
       "alias": null,
       "args": [
         {
@@ -249,6 +266,6 @@ return {
 };
 })();
 
-(node as any).hash = "a4460f4f001b1a55359a09ada211b815";
+(node as any).hash = "d2828f3cfa07187e46de7d6a895c6538";
 
 export default node;

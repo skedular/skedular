@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<94d9ab5710e78e0323f45b80fdffc98b>>
+ * @generated SignedSource<<42b4af8990e1f012c17ca7690be8a058>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,12 +16,14 @@ export type locations_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"locationCard_LocationDetails">;
+        readonly name: string;
+        readonly organization: {
+          readonly uniqueId: string;
+        } | null | undefined;
       };
     }>;
     readonly totalCount: number | null | undefined;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"locationCard_Query">;
   readonly " $fragmentType": "locations_query";
 };
 export type locations_query$key = {
@@ -144,9 +146,29 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
                   "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "locationCard_LocationDetails"
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "LocationOrganizationDetails",
+                  "kind": "LinkedField",
+                  "name": "organization",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "uniqueId",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
                 },
                 {
                   "alias": null,
@@ -207,11 +229,6 @@ return {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "locationCard_Query"
     }
   ],
   "type": "Query",
@@ -219,6 +236,6 @@ return {
 };
 })();
 
-(node as any).hash = "2f456ceb4368de832eeac4a67d5e17d7";
+(node as any).hash = "0e7d724f683d1464bb167fa28faa391b";
 
 export default node;

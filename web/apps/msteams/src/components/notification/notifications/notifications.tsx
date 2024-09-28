@@ -7,9 +7,9 @@ import { NotificationCard } from 'components/notification';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type {
-    NotificationOrderField,
-    NotificationOrderInput,
-    notificationsPaginationQuery,
+  NotificationOrderField,
+  NotificationOrderInput,
+  notificationsPaginationQuery,
 } from './__generated__/notificationsPaginationQuery.graphql';
 import type { notifications_query$key } from './__generated__/notifications_query.graphql';
 

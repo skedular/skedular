@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<81863276989f851989575245e9dc7cdf>>
+ * @generated SignedSource<<fbcfdd520aa935982e4c3dc580724ca9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -60,14 +60,7 @@ v4 = {
   "name": "id",
   "storageKey": null
 },
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-},
-v6 = [
+v5 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -94,14 +87,7 @@ v6 = [
     "kind": "ObjectValue",
     "name": "where"
   }
-],
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -194,18 +180,6 @@ return {
             "kind": "ScalarField",
             "name": "familyName",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CustomerLocationDetails",
-            "kind": "LinkedField",
-            "name": "defaultLocations",
-            "plural": true,
-            "selections": [
-              (v5/*: any*/)
-            ],
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -226,7 +200,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v6/*: any*/),
+        "args": (v5/*: any*/),
         "concreteType": "LocationConnection",
         "kind": "LinkedField",
         "name": "locations",
@@ -256,12 +230,11 @@ return {
                 "plural": false,
                 "selections": [
                   (v4/*: any*/),
-                  (v7/*: any*/),
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "about",
+                    "name": "name",
                     "storageKey": null
                   },
                   {
@@ -272,37 +245,14 @@ return {
                     "name": "organization",
                     "plural": false,
                     "selections": [
-                      (v5/*: any*/),
-                      (v7/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "uniqueId",
+                        "storageKey": null
+                      }
                     ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "deskCapacity",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "hasFutureBooking",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "canModify",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "canDelete",
                     "storageKey": null
                   },
                   {
@@ -367,7 +317,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v6/*: any*/),
+        "args": (v5/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -380,12 +330,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fb0e1f18072bf1ad00905552051d1c50",
+    "cacheID": "be96f6501c7437cf047a9d857ace99ea",
     "id": null,
     "metadata": {},
     "name": "locations_rootQuery",
     "operationKind": "query",
-    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String!\n) {\n  locationCustomerRecordSynced\n  ...rootShell_query\n  ...locations_query\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  deskCapacity\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment locationCard_Query on Query {\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n}\n\nfragment locations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...locationCard_Query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
+    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String!\n) {\n  locationCustomerRecordSynced\n  ...rootShell_query\n  ...locations_query\n}\n\nfragment locations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();

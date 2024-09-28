@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<857fb9db73575a51b9ece6afb7451d0f>>
+ * @generated SignedSource<<a8fb729acb7c53c0398304a2bd6fb1ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -91,28 +91,7 @@ v1 = [
     "kind": "ObjectValue",
     "name": "where"
   }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -177,13 +156,18 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
-                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "about",
+                    "name": "id",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "name",
                     "storageKey": null
                   },
                   {
@@ -194,37 +178,14 @@ return {
                     "name": "organization",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
-                      (v3/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "uniqueId",
+                        "storageKey": null
+                      }
                     ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "deskCapacity",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "hasFutureBooking",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "canModify",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "canDelete",
                     "storageKey": null
                   },
                   {
@@ -298,44 +259,20 @@ return {
         "key": "locations_locations",
         "kind": "LinkedHandle",
         "name": "locations"
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "CustomerDetails",
-        "kind": "LinkedField",
-        "name": "me",
-        "plural": false,
-        "selections": [
-          (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CustomerLocationDetails",
-            "kind": "LinkedField",
-            "name": "defaultLocations",
-            "plural": true,
-            "selections": [
-              (v4/*: any*/)
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "0c1173c398f6d161d697fc2e80523bf5",
+    "cacheID": "44fc214a7d415a10186e5526b79b13b9",
     "id": null,
     "metadata": {},
     "name": "locationsPaginationQuery",
     "operationKind": "query",
-    "text": "query locationsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $locationNameSearchText: String\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String\n) {\n  ...locations_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  about\n  organization {\n    uniqueId\n    name\n  }\n  deskCapacity\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment locationCard_Query on Query {\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n}\n\nfragment locations_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...locationCard_Query\n}\n"
+    "text": "query locationsPaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $locationNameSearchText: String\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String\n) {\n  ...locations_query_1G22uz\n}\n\nfragment locations_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2f456ceb4368de832eeac4a67d5e17d7";
+(node as any).hash = "0e7d724f683d1464bb167fa28faa391b";
 
 export default node;

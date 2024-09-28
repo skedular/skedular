@@ -12,7 +12,7 @@ import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { LocationCard } from 'components/location';
+import { LocationBookingsCard } from 'components/location/locationBookingCard';
 import debounce from 'lodash.debounce';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
@@ -49,11 +49,13 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
           edges {
             node {
               id
-              ...locationCard_LocationDetails
+              name
+              organization {
+                uniqueId
+              }
             }
           }
         }
-        ...locationCard_Query
         organization(id: $organizationId) {
           id
           canModify
@@ -202,7 +204,12 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
       <Grid container spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
-            <LocationCard rootDataRelay={rootData} locationDetailsRelay={edge.node} connectionIds={connectionIds} />
+            <LocationBookingsCard
+              organizationId={edge.node.organization?.uniqueId}
+              locationId={edge.node.id}
+              locationName={edge.node.name}
+              locationsConnectionIds={connectionIds}
+            />
           </Grid>
         ))}
       </Grid>
