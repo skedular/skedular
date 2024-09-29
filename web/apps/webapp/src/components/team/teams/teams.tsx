@@ -173,7 +173,7 @@ const Teams = ({ rootDataRelay }: Props) => {
           onRowsPerPageChange={handlePageSizeChange}
         />
         <Sorting
-        options={[{ id: 'name', label: 'Name' }]}
+          options={[{ id: 'name', label: 'Name' }]}
           // @ts-expect-error
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}

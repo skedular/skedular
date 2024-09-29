@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8fb7677a7dc8d687af0f8cb8827d956c>>
+ * @generated SignedSource<<a1fe4eda39af220e9e0adb351ce70486>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -143,9 +143,6 @@ v9 = [
   (v6/*: any*/),
   (v7/*: any*/),
   (v8/*: any*/)
-],
-v10 = [
-  (v3/*: any*/)
 ];
 return {
   "fragment": {
@@ -233,7 +230,9 @@ return {
             "kind": "LinkedField",
             "name": "defaultLocations",
             "plural": true,
-            "selections": (v10/*: any*/),
+            "selections": [
+              (v3/*: any*/)
+            ],
             "storageKey": null
           }
         ],
@@ -288,7 +287,10 @@ return {
             "kind": "LinkedField",
             "name": "organization",
             "plural": false,
-            "selections": (v10/*: any*/),
+            "selections": [
+              (v3/*: any*/),
+              (v4/*: any*/)
+            ],
             "storageKey": null
           },
           (v2/*: any*/)
@@ -430,16 +432,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "564c924278a123db60501d9893476507",
+    "cacheID": "7922eb7be247e5929ebc9ab036dc0c80",
     "id": null,
     "metadata": {},
     "name": "locationPeopleBookingsMatrixLocationMembersPaginationQuery",
     "operationKind": "query",
-    "text": "query locationPeopleBookingsMatrixLocationMembersPaginationQuery(\n  $fetchBookingPermission: Boolean!\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [LocationMemberOrderInput!]\n  $to: DateTime\n) {\n  ...locationPeopleBookingsMatrix_query\n}\n\nfragment locationPeopleBookingsMatrix_query on Query {\n  locationMembers(where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  customersByDefaultLocation(where: {locationId: $locationId, nameContains: $peopleNameSearchText}) {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    deskCapacity\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n    }\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {\n    canAddBookingOnBehalf\n  }\n  allBookings(where: {locationIds: [$locationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query locationPeopleBookingsMatrixLocationMembersPaginationQuery(\n  $fetchBookingPermission: Boolean!\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [LocationMemberOrderInput!]\n  $to: DateTime\n) {\n  ...locationPeopleBookingsMatrix_query\n}\n\nfragment locationPeopleBookingsMatrix_query on Query {\n  locationMembers(where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  customersByDefaultLocation(where: {locationId: $locationId, nameContains: $peopleNameSearchText}) {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    deskCapacity\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {\n    canAddBookingOnBehalf\n  }\n  allBookings(where: {locationIds: [$locationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2a684fc600f1b1fd25b6ddcbf3f0e347";
+(node as any).hash = "a035d3308ee9f2fa5c62c33d316c7f5a";
 
 export default node;

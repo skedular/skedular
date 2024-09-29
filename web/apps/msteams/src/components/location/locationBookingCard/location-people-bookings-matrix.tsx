@@ -22,8 +22,10 @@ import {
   BookingIcon,
   DangerIcon,
   DeleteIcon,
+  DeskIcon,
   EllipseMenuIcon,
   NotPreferredIcon,
+  OrganizationIcon,
   PreferredIcon,
   SettingsIcon,
   WorkingFromHomeIcon,
@@ -195,6 +197,7 @@ const LocationPeopleBookingsMatrix = ({
           canDelete
           organization {
             uniqueId
+            name
           }
         }
         organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {
@@ -800,7 +803,7 @@ const LocationPeopleBookingsMatrix = ({
         <CardHeader
           title={locationName}
           subheader={
-            <Stack direction="row" justifyContent="space-between" width="100%">
+            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%' }}>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
                 <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
@@ -828,6 +831,21 @@ const LocationPeopleBookingsMatrix = ({
           }
         />
         <CardContent>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            {rootData.location.organization && (
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <OrganizationIcon />
+                <Typography variant="body1" noWrap={true}>
+                  {rootData.location.organization.name}
+                </Typography>
+              </Stack>
+            )}
+            <DeskIcon />
+            <Typography variant="body1" noWrap={true}>
+              {rootData.location.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${rootData.location.deskCapacity}`}
+            </Typography>
+          </Stack>
+
           <DataGrid
             rows={rows}
             columns={columns}

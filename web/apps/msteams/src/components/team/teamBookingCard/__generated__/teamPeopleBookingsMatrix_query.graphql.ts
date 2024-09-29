@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b4d4b739f54e99dc852b54375fd36d52>>
+ * @generated SignedSource<<08798824d8d547d2e790d28e36337d9a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -47,6 +47,10 @@ export type teamPeopleBookingsMatrix_query$data = {
     readonly canDelete: boolean;
     readonly canModify: boolean;
     readonly hasFutureBooking: boolean;
+    readonly organization: {
+      readonly name: string;
+      readonly uniqueId: string;
+    } | null | undefined;
   } | null | undefined;
   readonly teamMembers: ReadonlyArray<{
     readonly customer: {
@@ -263,6 +267,19 @@ return {
           "kind": "ScalarField",
           "name": "canDelete",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "TeamOrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": [
+            (v1/*: any*/),
+            (v2/*: any*/)
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -405,6 +422,6 @@ return {
 };
 })();
 
-(node as any).hash = "fdcdb46f8587f30f190fe46e59d856bb";
+(node as any).hash = "1d6aede3f9df7fc362ed948ef0a867b6";
 
 export default node;

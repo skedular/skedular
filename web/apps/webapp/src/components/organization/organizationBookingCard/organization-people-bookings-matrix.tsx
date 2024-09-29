@@ -776,7 +776,7 @@ const OrganizationPeopleBookingsMatrix = ({
         <CardHeader
           title={organizationName}
           subheader={
-            <Stack direction="row" justifyContent="space-between" width="100%">
+            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%' }}>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
                 <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>

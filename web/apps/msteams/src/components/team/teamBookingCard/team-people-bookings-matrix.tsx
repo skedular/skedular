@@ -24,6 +24,7 @@ import {
   DeleteIcon,
   EllipseMenuIcon,
   NotPreferredIcon,
+  OrganizationIcon,
   PreferredIcon,
   SettingsIcon,
   WorkingFromHomeIcon,
@@ -174,6 +175,10 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
           hasFutureBooking
           canModify
           canDelete
+          organization {
+            uniqueId
+            name
+          }
         }
         organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {
           canAddBookingOnBehalf
@@ -776,7 +781,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         <CardHeader
           title={teamName}
           subheader={
-            <Stack direction="row" justifyContent="space-between" width="100%">
+            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%' }}>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
                 <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
@@ -804,6 +809,17 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
           }
         />
         <CardContent>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            {rootData.team.organization && (
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <OrganizationIcon />
+                <Typography variant="body1" noWrap={true}>
+                  {rootData.team.organization.name}
+                </Typography>
+              </Stack>
+            )}
+          </Stack>
+
           <DataGrid
             rows={rows}
             columns={columns}

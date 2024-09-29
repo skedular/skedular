@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5aae87271ddd1518f192ca4f53dfe2c8>>
+ * @generated SignedSource<<1144e97443974e5925ef33acd9588190>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -48,6 +48,7 @@ export type locationPeopleBookingsMatrix_query$data = {
     readonly deskCapacity: number;
     readonly hasFutureBooking: boolean;
     readonly organization: {
+      readonly name: string;
       readonly uniqueId: string;
     } | null | undefined;
   } | null | undefined;
@@ -151,9 +152,6 @@ v8 = [
   (v5/*: any*/),
   (v6/*: any*/),
   (v7/*: any*/)
-],
-v9 = [
-  (v2/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -260,7 +258,9 @@ return {
           "kind": "LinkedField",
           "name": "defaultLocations",
           "plural": true,
-          "selections": (v9/*: any*/),
+          "selections": [
+            (v2/*: any*/)
+          ],
           "storageKey": null
         }
       ],
@@ -315,7 +315,10 @@ return {
           "kind": "LinkedField",
           "name": "organization",
           "plural": false,
-          "selections": (v9/*: any*/),
+          "selections": [
+            (v2/*: any*/),
+            (v3/*: any*/)
+          ],
           "storageKey": null
         }
       ],
@@ -459,6 +462,6 @@ return {
 };
 })();
 
-(node as any).hash = "2a684fc600f1b1fd25b6ddcbf3f0e347";
+(node as any).hash = "a035d3308ee9f2fa5c62c33d316c7f5a";
 
 export default node;
