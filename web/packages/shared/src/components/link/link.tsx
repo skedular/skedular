@@ -16,9 +16,9 @@ type Props = {
 };
 
 const Link = ({ children, href, target, rel, passHref }: Props) => (
-  <NextLink href={href} target={target} rel={rel} passHref={passHref}>
-    <MUILink>{children}</MUILink>
-  </NextLink>
+  <MUILink component={NextLink} href={href} target={target} rel={rel} passHref={passHref}>
+    {children}
+  </MUILink>
 );
 
 export default memo(Link);
