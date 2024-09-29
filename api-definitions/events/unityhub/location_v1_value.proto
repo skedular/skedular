@@ -8,8 +8,8 @@ option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.Location.V1.Value"
 enum Type {
   LocationUpserted = 0;
   LocationDeleted = 1;
-  NotificationUpserted = 2;
-  NotificationDeleted = 3;
+  InvitationToJoinLocationUpserted = 2;
+  InvitationToJoinLocationDeleted = 3;
 }
 
 message Event {
@@ -29,7 +29,7 @@ message Metadata {
 message Data { 
   oneof payload {
     Location locationAfterState = 1;
-    Notification notificationAfterState = 2;
+    InvitationToJoinLocation invitationToJoinLocationAfterState = 2;
   }
 }
 
@@ -72,17 +72,10 @@ message LocationTag {
   string tagType = 4;
 }
 
-message Notification {
+message InvitationToJoinLocation {
   string id = 1;
   google.protobuf.Timestamp deletedAt = 2;
-  NotificationType notificationType = 3;
-  InvitationToJoinLocationDetails invitationToJoinLocationDetails = 4;
-}
-
-enum NotificationType { InvitationToJoinLocation = 0; }
-
-message InvitationToJoinLocationDetails {
-  string locationId = 1;
-  string invitedById = 2;
-  string inviteeId = 3;
+  string locationId = 3;
+  string invitedById = 4;
+  string inviteeId = 5;
 }

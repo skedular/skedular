@@ -58,15 +58,9 @@ public class LocationSubscriber(
                 }
                 break;
 
-            case Type.NotificationUpserted:
+            case Type.InvitationToJoinLocationUpserted:
                 {
-                    if (@event.Data.NotificationAfterState.NotificationType !=
-                        NotificationType.InvitationToJoinLocation)
-                    {
-                        return;
-                    }
-
-                    var notification = mapper.MapToNotification(@event);
+                    var notification = mapper.MapInvitationToJoinLocationToNotification(@event);
                     var existingNotification =
                         await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
                             notification.SourceId,
@@ -84,15 +78,9 @@ public class LocationSubscriber(
                 }
                 break;
 
-            case Type.NotificationDeleted:
+            case Type.InvitationToJoinLocationDeleted:
                 {
-                    if (@event.Data.NotificationAfterState.NotificationType !=
-                        NotificationType.InvitationToJoinLocation)
-                    {
-                        return;
-                    }
-
-                    var notification = mapper.MapToNotification(@event);
+                    var notification = mapper.MapInvitationToJoinLocationToNotification(@event);
                     var existingNotification =
                         await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
                             notification.SourceId,

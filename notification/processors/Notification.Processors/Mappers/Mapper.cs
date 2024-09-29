@@ -28,7 +28,9 @@ public interface IMapper
     Identity MapToEntity(Shared.Models.Identity src, Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer);
     Shared.Models.Notification MapToNotification(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
-    Shared.Models.Notification MapToNotification(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
+
+    Shared.Models.Notification MapInvitationToJoinLocationToNotification(
+        Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
 
     Shared.Models.Notification MapInvitationToJoinTeamToNotification(
         Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
@@ -217,9 +219,10 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         };
     }
 
-    public Shared.Models.Notification MapToNotification(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
+    public Shared.Models.Notification MapInvitationToJoinLocationToNotification(
+        Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
     {
-        var notification = src.Data.NotificationAfterState;
+        var notification = src.Data.InvitationToJoinLocationAfterState;
         var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -230,10 +233,9 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             EventRaisedAt = eventRaisedAt,
             SourceId = notification.Id,
             Type = NotificationType.InvitationToJoinLocation,
-            InvitedBy =
-                new Shared.Models.Customer { Id = notification.InvitationToJoinLocationDetails.InvitedById },
-            Invitee = new Shared.Models.Customer { Id = notification.InvitationToJoinLocationDetails.InviteeId },
-            Location = new Location { Id = notification.InvitationToJoinLocationDetails.LocationId }
+            InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
+            Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
+            Location = new Location { Id = notification.LocationId }
         };
     }
 

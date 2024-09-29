@@ -58,8 +58,8 @@ public class LocationSubscriber(
                 }
                 break;
 
-            case Type.NotificationUpserted:
-            case Type.NotificationDeleted:
+            case Type.InvitationToJoinLocationUpserted:
+            case Type.InvitationToJoinLocationDeleted:
             default:
                 return;
         }

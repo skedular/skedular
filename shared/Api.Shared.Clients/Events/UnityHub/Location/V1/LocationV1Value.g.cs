@@ -30,48 +30,43 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
             "YXRpb24uRGF0YSKeAQoITWV0YWRhdGESCgoCaWQYASABKAkSFAoMZG9tYWlu",
             "U291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIcCgR0eXBlGAQgASgO",
             "Mg4ubG9jYXRpb24uVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3Rv",
-            "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIn0KBERhdGES",
-            "MAoSbG9jYXRpb25BZnRlclN0YXRlGAEgASgLMhIubG9jYXRpb24uTG9jYXRp",
-            "b25IABI4ChZub3RpZmljYXRpb25BZnRlclN0YXRlGAIgASgLMhYubG9jYXRp",
-            "b24uTm90aWZpY2F0aW9uSABCCQoHcGF5bG9hZCLzAQoITG9jYXRpb24SCgoC",
-            "aWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm",
-            "LlRpbWVzdGFtcBIMCgRuYW1lGAMgASgJEg0KBWFib3V0GAQgASgJEiEKB21l",
-            "bWJlcnMYBSADKAsyEC5sb2NhdGlvbi5NZW1iZXISFgoOb3JnYW5pemF0aW9u",
-            "SWQYBiABKAkSEAoIdGltZXpvbmUYByABKAkSHQoFZGVza3MYCCADKAsyDi5s",
-            "b2NhdGlvbi5EZXNrEiMKBHRhZ3MYCSADKAsyFS5sb2NhdGlvbi5Mb2NhdGlv",
-            "blRhZyJaCgZNZW1iZXISCgoCaWQYASABKAkSMAoObWVtYmVyc2hpcFR5cGUY",
-            "AiABKA4yGC5sb2NhdGlvbi5NZW1iZXJzaGlwVHlwZRISCgpjdXN0b21lcklk",
-            "GAMgASgJIm0KBERlc2sSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIWCg5s",
-            "b2NhdGlvblRhZ0lkcxgDIAMoCRITCgtkZWFjdGl2YXRlZBgEIAEoCBIeChZy",
-            "ZXF1aXJlQm9va2luZ0FwcHJvdmFsGAUgASgIIk0KC0xvY2F0aW9uVGFnEgoK",
-            "AmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkS",
-            "DwoHdGFnVHlwZRgEIAEoCSLTAQoMTm90aWZpY2F0aW9uEgoKAmlkGAEgASgJ",
-            "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
-            "bXASNAoQbm90aWZpY2F0aW9uVHlwZRgDIAEoDjIaLmxvY2F0aW9uLk5vdGlm",
-            "aWNhdGlvblR5cGUSUgofaW52aXRhdGlvblRvSm9pbkxvY2F0aW9uRGV0YWls",
-            "cxgEIAEoCzIpLmxvY2F0aW9uLkludml0YXRpb25Ub0pvaW5Mb2NhdGlvbkRl",
-            "dGFpbHMiXQofSW52aXRhdGlvblRvSm9pbkxvY2F0aW9uRGV0YWlscxISCgps",
-            "b2NhdGlvbklkGAEgASgJEhMKC2ludml0ZWRCeUlkGAIgASgJEhEKCWludml0",
-            "ZWVJZBgDIAEoCSpkCgRUeXBlEhQKEExvY2F0aW9uVXBzZXJ0ZWQQABITCg9M",
-            "b2NhdGlvbkRlbGV0ZWQQARIYChROb3RpZmljYXRpb25VcHNlcnRlZBACEhcK",
-            "E05vdGlmaWNhdGlvbkRlbGV0ZWQQAypkCg5NZW1iZXJzaGlwVHlwZRIXChNN",
-            "ZW1iZXJzaGlwVHlwZU93bmVyEAASHwobTWVtYmVyc2hpcFR5cGVBZG1pbmlz",
-            "dHJhdG9yEAESGAoUTWVtYmVyc2hpcFR5cGVNZW1iZXIQAiowChBOb3RpZmlj",
-            "YXRpb25UeXBlEhwKGEludml0YXRpb25Ub0pvaW5Mb2NhdGlvbhAAQjeqAjRB",
-            "cGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlVuaXR5SHViLkxvY2F0aW9uLlYx",
-            "LlZhbHVlYgZwcm90bzM="));
+            "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIpUBCgREYXRh",
+            "EjAKEmxvY2F0aW9uQWZ0ZXJTdGF0ZRgBIAEoCzISLmxvY2F0aW9uLkxvY2F0",
+            "aW9uSAASUAoiaW52aXRhdGlvblRvSm9pbkxvY2F0aW9uQWZ0ZXJTdGF0ZRgC",
+            "IAEoCzIiLmxvY2F0aW9uLkludml0YXRpb25Ub0pvaW5Mb2NhdGlvbkgAQgkK",
+            "B3BheWxvYWQi8wEKCExvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRB",
+            "dBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgD",
+            "IAEoCRINCgVhYm91dBgEIAEoCRIhCgdtZW1iZXJzGAUgAygLMhAubG9jYXRp",
+            "b24uTWVtYmVyEhYKDm9yZ2FuaXphdGlvbklkGAYgASgJEhAKCHRpbWV6b25l",
+            "GAcgASgJEh0KBWRlc2tzGAggAygLMg4ubG9jYXRpb24uRGVzaxIjCgR0YWdz",
+            "GAkgAygLMhUubG9jYXRpb24uTG9jYXRpb25UYWciWgoGTWVtYmVyEgoKAmlk",
+            "GAEgASgJEjAKDm1lbWJlcnNoaXBUeXBlGAIgASgOMhgubG9jYXRpb24uTWVt",
+            "YmVyc2hpcFR5cGUSEgoKY3VzdG9tZXJJZBgDIAEoCSJtCgREZXNrEgoKAmlk",
+            "GAEgASgJEgwKBG5hbWUYAiABKAkSFgoObG9jYXRpb25UYWdJZHMYAyADKAkS",
+            "EwoLZGVhY3RpdmF0ZWQYBCABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3Zh",
+            "bBgFIAEoCCJNCgtMb2NhdGlvblRhZxIKCgJpZBgBIAEoCRIMCgRuYW1lGAIg",
+            "ASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEg8KB3RhZ1R5cGUYBCABKAkikQEK",
+            "GEludml0YXRpb25Ub0pvaW5Mb2NhdGlvbhIKCgJpZBgBIAEoCRItCglkZWxl",
+            "dGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhIKCmxv",
+            "Y2F0aW9uSWQYAyABKAkSEwoLaW52aXRlZEJ5SWQYBCABKAkSEQoJaW52aXRl",
+            "ZUlkGAUgASgJKnwKBFR5cGUSFAoQTG9jYXRpb25VcHNlcnRlZBAAEhMKD0xv",
+            "Y2F0aW9uRGVsZXRlZBABEiQKIEludml0YXRpb25Ub0pvaW5Mb2NhdGlvblVw",
+            "c2VydGVkEAISIwofSW52aXRhdGlvblRvSm9pbkxvY2F0aW9uRGVsZXRlZBAD",
+            "KmQKDk1lbWJlcnNoaXBUeXBlEhcKE01lbWJlcnNoaXBUeXBlT3duZXIQABIf",
+            "ChtNZW1iZXJzaGlwVHlwZUFkbWluaXN0cmF0b3IQARIYChRNZW1iZXJzaGlw",
+            "VHlwZU1lbWJlchACQjeqAjRBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlVu",
+            "aXR5SHViLkxvY2F0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType), typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Metadata), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Data), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Data.Parser, new[]{ "LocationAfterState", "NotificationAfterState" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Data), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Data.Parser, new[]{ "LocationAfterState", "InvitationToJoinLocationAfterState" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Location), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Desks", "Tags" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Member), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Member.Parser, new[]{ "Id", "MembershipType", "CustomerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "LocationTagIds", "Deactivated", "RequireBookingApproval" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.LocationTag), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.LocationTag.Parser, new[]{ "Id", "Name", "Description", "TagType" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Notification), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Notification.Parser, new[]{ "Id", "DeletedAt", "NotificationType", "InvitationToJoinLocationDetails" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocationDetails), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocationDetails.Parser, new[]{ "LocationId", "InvitedById", "InviteeId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -81,18 +76,14 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
   public enum Type {
     [pbr::OriginalName("LocationUpserted")] LocationUpserted = 0,
     [pbr::OriginalName("LocationDeleted")] LocationDeleted = 1,
-    [pbr::OriginalName("NotificationUpserted")] NotificationUpserted = 2,
-    [pbr::OriginalName("NotificationDeleted")] NotificationDeleted = 3,
+    [pbr::OriginalName("InvitationToJoinLocationUpserted")] InvitationToJoinLocationUpserted = 2,
+    [pbr::OriginalName("InvitationToJoinLocationDeleted")] InvitationToJoinLocationDeleted = 3,
   }
 
   public enum MembershipType {
     [pbr::OriginalName("MembershipTypeOwner")] Owner = 0,
     [pbr::OriginalName("MembershipTypeAdministrator")] Administrator = 1,
     [pbr::OriginalName("MembershipTypeMember")] Member = 2,
-  }
-
-  public enum NotificationType {
-    [pbr::OriginalName("InvitationToJoinLocation")] InvitationToJoinLocation = 0,
   }
 
   #endregion
@@ -782,8 +773,8 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
         case PayloadOneofCase.LocationAfterState:
           LocationAfterState = other.LocationAfterState.Clone();
           break;
-        case PayloadOneofCase.NotificationAfterState:
-          NotificationAfterState = other.NotificationAfterState.Clone();
+        case PayloadOneofCase.InvitationToJoinLocationAfterState:
+          InvitationToJoinLocationAfterState = other.InvitationToJoinLocationAfterState.Clone();
           break;
       }
 
@@ -808,15 +799,15 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "notificationAfterState" field.</summary>
-    public const int NotificationAfterStateFieldNumber = 2;
+    /// <summary>Field number for the "invitationToJoinLocationAfterState" field.</summary>
+    public const int InvitationToJoinLocationAfterStateFieldNumber = 2;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Notification NotificationAfterState {
-      get { return payloadCase_ == PayloadOneofCase.NotificationAfterState ? (global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Notification) payload_ : null; }
+    public global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation InvitationToJoinLocationAfterState {
+      get { return payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState ? (global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.NotificationAfterState;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.InvitationToJoinLocationAfterState;
       }
     }
 
@@ -825,7 +816,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
     public enum PayloadOneofCase {
       None = 0,
       LocationAfterState = 1,
-      NotificationAfterState = 2,
+      InvitationToJoinLocationAfterState = 2,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -857,7 +848,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
         return true;
       }
       if (!object.Equals(LocationAfterState, other.LocationAfterState)) return false;
-      if (!object.Equals(NotificationAfterState, other.NotificationAfterState)) return false;
+      if (!object.Equals(InvitationToJoinLocationAfterState, other.InvitationToJoinLocationAfterState)) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -867,7 +858,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (payloadCase_ == PayloadOneofCase.LocationAfterState) hash ^= LocationAfterState.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.NotificationAfterState) hash ^= NotificationAfterState.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) hash ^= InvitationToJoinLocationAfterState.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -891,9 +882,9 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
         output.WriteRawTag(10);
         output.WriteMessage(LocationAfterState);
       }
-      if (payloadCase_ == PayloadOneofCase.NotificationAfterState) {
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) {
         output.WriteRawTag(18);
-        output.WriteMessage(NotificationAfterState);
+        output.WriteMessage(InvitationToJoinLocationAfterState);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -909,9 +900,9 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
         output.WriteRawTag(10);
         output.WriteMessage(LocationAfterState);
       }
-      if (payloadCase_ == PayloadOneofCase.NotificationAfterState) {
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) {
         output.WriteRawTag(18);
-        output.WriteMessage(NotificationAfterState);
+        output.WriteMessage(InvitationToJoinLocationAfterState);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -926,8 +917,8 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
       if (payloadCase_ == PayloadOneofCase.LocationAfterState) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(LocationAfterState);
       }
-      if (payloadCase_ == PayloadOneofCase.NotificationAfterState) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(NotificationAfterState);
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(InvitationToJoinLocationAfterState);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -948,11 +939,11 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
           }
           LocationAfterState.MergeFrom(other.LocationAfterState);
           break;
-        case PayloadOneofCase.NotificationAfterState:
-          if (NotificationAfterState == null) {
-            NotificationAfterState = new global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Notification();
+        case PayloadOneofCase.InvitationToJoinLocationAfterState:
+          if (InvitationToJoinLocationAfterState == null) {
+            InvitationToJoinLocationAfterState = new global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation();
           }
-          NotificationAfterState.MergeFrom(other.NotificationAfterState);
+          InvitationToJoinLocationAfterState.MergeFrom(other.InvitationToJoinLocationAfterState);
           break;
       }
 
@@ -985,12 +976,12 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
             break;
           }
           case 18: {
-            global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Notification subBuilder = new global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Notification();
-            if (payloadCase_ == PayloadOneofCase.NotificationAfterState) {
-              subBuilder.MergeFrom(NotificationAfterState);
+            global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation subBuilder = new global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation();
+            if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) {
+              subBuilder.MergeFrom(InvitationToJoinLocationAfterState);
             }
             input.ReadMessage(subBuilder);
-            NotificationAfterState = subBuilder;
+            InvitationToJoinLocationAfterState = subBuilder;
             break;
           }
         }
@@ -1022,12 +1013,12 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
             break;
           }
           case 18: {
-            global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Notification subBuilder = new global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Notification();
-            if (payloadCase_ == PayloadOneofCase.NotificationAfterState) {
-              subBuilder.MergeFrom(NotificationAfterState);
+            global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation subBuilder = new global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation();
+            if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) {
+              subBuilder.MergeFrom(InvitationToJoinLocationAfterState);
             }
             input.ReadMessage(subBuilder);
-            NotificationAfterState = subBuilder;
+            InvitationToJoinLocationAfterState = subBuilder;
             break;
           }
         }
@@ -2424,16 +2415,16 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Notification : pb::IMessage<Notification>
+  public sealed partial class InvitationToJoinLocation : pb::IMessage<InvitationToJoinLocation>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<Notification> _parser = new pb::MessageParser<Notification>(() => new Notification());
+    private static readonly pb::MessageParser<InvitationToJoinLocation> _parser = new pb::MessageParser<InvitationToJoinLocation>(() => new InvitationToJoinLocation());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Notification> Parser { get { return _parser; } }
+    public static pb::MessageParser<InvitationToJoinLocation> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2449,7 +2440,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Notification() {
+    public InvitationToJoinLocation() {
       OnConstruction();
     }
 
@@ -2457,18 +2448,19 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Notification(Notification other) : this() {
+    public InvitationToJoinLocation(InvitationToJoinLocation other) : this() {
       id_ = other.id_;
       deletedAt_ = other.deletedAt_ != null ? other.deletedAt_.Clone() : null;
-      notificationType_ = other.notificationType_;
-      invitationToJoinLocationDetails_ = other.invitationToJoinLocationDetails_ != null ? other.invitationToJoinLocationDetails_.Clone() : null;
+      locationId_ = other.locationId_;
+      invitedById_ = other.invitedById_;
+      inviteeId_ = other.inviteeId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Notification Clone() {
-      return new Notification(this);
+    public InvitationToJoinLocation Clone() {
+      return new InvitationToJoinLocation(this);
     }
 
     /// <summary>Field number for the "id" field.</summary>
@@ -2495,310 +2487,8 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "notificationType" field.</summary>
-    public const int NotificationTypeFieldNumber = 3;
-    private global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType notificationType_ = global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType.InvitationToJoinLocation;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType NotificationType {
-      get { return notificationType_; }
-      set {
-        notificationType_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "invitationToJoinLocationDetails" field.</summary>
-    public const int InvitationToJoinLocationDetailsFieldNumber = 4;
-    private global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocationDetails invitationToJoinLocationDetails_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocationDetails InvitationToJoinLocationDetails {
-      get { return invitationToJoinLocationDetails_; }
-      set {
-        invitationToJoinLocationDetails_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as Notification);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Notification other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Id != other.Id) return false;
-      if (!object.Equals(DeletedAt, other.DeletedAt)) return false;
-      if (NotificationType != other.NotificationType) return false;
-      if (!object.Equals(InvitationToJoinLocationDetails, other.InvitationToJoinLocationDetails)) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (deletedAt_ != null) hash ^= DeletedAt.GetHashCode();
-      if (NotificationType != global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType.InvitationToJoinLocation) hash ^= NotificationType.GetHashCode();
-      if (invitationToJoinLocationDetails_ != null) hash ^= InvitationToJoinLocationDetails.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (deletedAt_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(DeletedAt);
-      }
-      if (NotificationType != global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType.InvitationToJoinLocation) {
-        output.WriteRawTag(24);
-        output.WriteEnum((int) NotificationType);
-      }
-      if (invitationToJoinLocationDetails_ != null) {
-        output.WriteRawTag(34);
-        output.WriteMessage(InvitationToJoinLocationDetails);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (deletedAt_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(DeletedAt);
-      }
-      if (NotificationType != global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType.InvitationToJoinLocation) {
-        output.WriteRawTag(24);
-        output.WriteEnum((int) NotificationType);
-      }
-      if (invitationToJoinLocationDetails_ != null) {
-        output.WriteRawTag(34);
-        output.WriteMessage(InvitationToJoinLocationDetails);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Id.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (deletedAt_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeletedAt);
-      }
-      if (NotificationType != global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType.InvitationToJoinLocation) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) NotificationType);
-      }
-      if (invitationToJoinLocationDetails_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(InvitationToJoinLocationDetails);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Notification other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Id.Length != 0) {
-        Id = other.Id;
-      }
-      if (other.deletedAt_ != null) {
-        if (deletedAt_ == null) {
-          DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-        }
-        DeletedAt.MergeFrom(other.DeletedAt);
-      }
-      if (other.NotificationType != global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType.InvitationToJoinLocation) {
-        NotificationType = other.NotificationType;
-      }
-      if (other.invitationToJoinLocationDetails_ != null) {
-        if (invitationToJoinLocationDetails_ == null) {
-          InvitationToJoinLocationDetails = new global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocationDetails();
-        }
-        InvitationToJoinLocationDetails.MergeFrom(other.InvitationToJoinLocationDetails);
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 18: {
-            if (deletedAt_ == null) {
-              DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(DeletedAt);
-            break;
-          }
-          case 24: {
-            NotificationType = (global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType) input.ReadEnum();
-            break;
-          }
-          case 34: {
-            if (invitationToJoinLocationDetails_ == null) {
-              InvitationToJoinLocationDetails = new global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocationDetails();
-            }
-            input.ReadMessage(InvitationToJoinLocationDetails);
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 18: {
-            if (deletedAt_ == null) {
-              DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(DeletedAt);
-            break;
-          }
-          case 24: {
-            NotificationType = (global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.NotificationType) input.ReadEnum();
-            break;
-          }
-          case 34: {
-            if (invitationToJoinLocationDetails_ == null) {
-              InvitationToJoinLocationDetails = new global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocationDetails();
-            }
-            input.ReadMessage(InvitationToJoinLocationDetails);
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class InvitationToJoinLocationDetails : pb::IMessage<InvitationToJoinLocationDetails>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<InvitationToJoinLocationDetails> _parser = new pb::MessageParser<InvitationToJoinLocationDetails>(() => new InvitationToJoinLocationDetails());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<InvitationToJoinLocationDetails> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[8]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public InvitationToJoinLocationDetails() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public InvitationToJoinLocationDetails(InvitationToJoinLocationDetails other) : this() {
-      locationId_ = other.locationId_;
-      invitedById_ = other.invitedById_;
-      inviteeId_ = other.inviteeId_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public InvitationToJoinLocationDetails Clone() {
-      return new InvitationToJoinLocationDetails(this);
-    }
-
     /// <summary>Field number for the "locationId" field.</summary>
-    public const int LocationIdFieldNumber = 1;
+    public const int LocationIdFieldNumber = 3;
     private string locationId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2810,7 +2500,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
     }
 
     /// <summary>Field number for the "invitedById" field.</summary>
-    public const int InvitedByIdFieldNumber = 2;
+    public const int InvitedByIdFieldNumber = 4;
     private string invitedById_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2822,7 +2512,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
     }
 
     /// <summary>Field number for the "inviteeId" field.</summary>
-    public const int InviteeIdFieldNumber = 3;
+    public const int InviteeIdFieldNumber = 5;
     private string inviteeId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2836,18 +2526,20 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as InvitationToJoinLocationDetails);
+      return Equals(other as InvitationToJoinLocation);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(InvitationToJoinLocationDetails other) {
+    public bool Equals(InvitationToJoinLocation other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (Id != other.Id) return false;
+      if (!object.Equals(DeletedAt, other.DeletedAt)) return false;
       if (LocationId != other.LocationId) return false;
       if (InvitedById != other.InvitedById) return false;
       if (InviteeId != other.InviteeId) return false;
@@ -2858,6 +2550,8 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
+      if (deletedAt_ != null) hash ^= DeletedAt.GetHashCode();
       if (LocationId.Length != 0) hash ^= LocationId.GetHashCode();
       if (InvitedById.Length != 0) hash ^= InvitedById.GetHashCode();
       if (InviteeId.Length != 0) hash ^= InviteeId.GetHashCode();
@@ -2879,16 +2573,24 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (LocationId.Length != 0) {
+      if (Id.Length != 0) {
         output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (deletedAt_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(DeletedAt);
+      }
+      if (LocationId.Length != 0) {
+        output.WriteRawTag(26);
         output.WriteString(LocationId);
       }
       if (InvitedById.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(34);
         output.WriteString(InvitedById);
       }
       if (InviteeId.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(42);
         output.WriteString(InviteeId);
       }
       if (_unknownFields != null) {
@@ -2901,16 +2603,24 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (LocationId.Length != 0) {
+      if (Id.Length != 0) {
         output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (deletedAt_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(DeletedAt);
+      }
+      if (LocationId.Length != 0) {
+        output.WriteRawTag(26);
         output.WriteString(LocationId);
       }
       if (InvitedById.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(34);
         output.WriteString(InvitedById);
       }
       if (InviteeId.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(42);
         output.WriteString(InviteeId);
       }
       if (_unknownFields != null) {
@@ -2923,6 +2633,12 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
+      }
+      if (deletedAt_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeletedAt);
+      }
       if (LocationId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(LocationId);
       }
@@ -2940,9 +2656,18 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(InvitationToJoinLocationDetails other) {
+    public void MergeFrom(InvitationToJoinLocation other) {
       if (other == null) {
         return;
+      }
+      if (other.Id.Length != 0) {
+        Id = other.Id;
+      }
+      if (other.deletedAt_ != null) {
+        if (deletedAt_ == null) {
+          DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+        }
+        DeletedAt.MergeFrom(other.DeletedAt);
       }
       if (other.LocationId.Length != 0) {
         LocationId = other.LocationId;
@@ -2973,14 +2698,25 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            LocationId = input.ReadString();
+            Id = input.ReadString();
             break;
           }
           case 18: {
-            InvitedById = input.ReadString();
+            if (deletedAt_ == null) {
+              DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(DeletedAt);
             break;
           }
           case 26: {
+            LocationId = input.ReadString();
+            break;
+          }
+          case 34: {
+            InvitedById = input.ReadString();
+            break;
+          }
+          case 42: {
             InviteeId = input.ReadString();
             break;
           }
@@ -3004,14 +2740,25 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            LocationId = input.ReadString();
+            Id = input.ReadString();
             break;
           }
           case 18: {
-            InvitedById = input.ReadString();
+            if (deletedAt_ == null) {
+              DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(DeletedAt);
             break;
           }
           case 26: {
+            LocationId = input.ReadString();
+            break;
+          }
+          case 34: {
+            InvitedById = input.ReadString();
+            break;
+          }
+          case 42: {
             InviteeId = input.ReadString();
             break;
           }

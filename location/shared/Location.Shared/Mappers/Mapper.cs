@@ -9,7 +9,7 @@ namespace Location.Shared.Mappers;
 public interface IMapper
 {
     Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Location MapTo(Models.Location src);
-    public Notification MapTo(JoinInvitation src, string? inviteeIdToOverride);
+    public InvitationToJoinLocation MapTo(JoinInvitation src, string? inviteeIdToOverride);
 }
 
 public class Mapper : IMapper
@@ -65,17 +65,12 @@ public class Mapper : IMapper
         return location;
     }
 
-    public Notification MapTo(JoinInvitation src, string? inviteeIdToOverride) =>
+    public InvitationToJoinLocation MapTo(JoinInvitation src, string? inviteeIdToOverride) =>
         new()
         {
             Id = src.Id,
-            NotificationType = NotificationType.InvitationToJoinLocation,
-            InvitationToJoinLocationDetails = new InvitationToJoinLocationDetails
-            {
-                LocationId = src.Location.Id,
-                InvitedById = src.CreatedBy.Id,
-                InviteeId = inviteeIdToOverride ??
-                            (src.Invitee is null ? string.Empty : src.Invitee.Id)
-            }
+            LocationId = src.Location.Id,
+            InvitedById = src.CreatedBy.Id,
+            InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
         };
 }
