@@ -41,6 +41,8 @@ sends:
     version: 0.0.1
   - id: OrganizationMemberStatusUpdated
     service: 0.0.1
+  - id: NotificationUpserted
+    version: 0.0.1    
 repository:
   language: C#
   url: 
@@ -51,5 +53,3 @@ repository:
 The organization Service is a component of the system responsible for managing organization details.
 
 ## Architecture diagram
-
-<NodeGraph title="Hello world" />

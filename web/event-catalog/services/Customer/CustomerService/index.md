@@ -40,7 +40,9 @@ sends:
   - id: CustomerUpserted
     version: 0.0.1
   - id: CustomerDeleted
-    version: 0.0.1    
+    version: 0.0.1
+  - id: NotificationUpserted
+    version: 0.0.1
 repository:
   language: C#
   url: 
@@ -51,5 +53,3 @@ repository:
 The Customer Service is a component of the system responsible for managing customer information. It interacts with other services to maintain accurate customer data.
 
 ## Architecture diagram
-
-<NodeGraph title="Hello world" />

@@ -29,5 +29,3 @@ repository:
 The Booking Service is a component of the system responsible for managing booking. It interacts with other services to maintain accurate Booking information.
 
 ## Architecture diagram
-
-<NodeGraph title="Hello world" />

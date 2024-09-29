@@ -19,6 +19,8 @@ sends:
     version: 0.0.1
   - id: TeamDeleted
     version: 0.0.1
+  - id: NotificationUpserted
+    version: 0.0.1
 repository:
   language: C#
   url: 
