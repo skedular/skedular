@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1144e97443974e5925ef33acd9588190>>
+ * @generated SignedSource<<160b7efbc6a4ece5b2ce69851da436cd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -47,6 +47,7 @@ export type locationPeopleBookingsMatrix_query$data = {
     readonly canModify: boolean;
     readonly deskCapacity: number;
     readonly hasFutureBooking: boolean;
+    readonly name: string;
     readonly organization: {
       readonly name: string;
       readonly uniqueId: string;
@@ -280,6 +281,7 @@ return {
       "name": "location",
       "plural": false,
       "selections": [
+        (v3/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -462,6 +464,6 @@ return {
 };
 })();
 
-(node as any).hash = "a035d3308ee9f2fa5c62c33d316c7f5a";
+(node as any).hash = "4dcb400f711522fe1237ba1d44e2c007";
 
 export default node;

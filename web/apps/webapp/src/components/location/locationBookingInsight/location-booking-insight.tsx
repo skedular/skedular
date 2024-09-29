@@ -98,7 +98,7 @@ const LocationBookingInsight = ({ rootDataRelay, organizationId, locationId, hid
                     organizationId ? `/organization/${organizationId}/location/${locationId}?tab=analytics` : `/location/${locationId}?tab=analytics`
                   }
                 >
-                  {rootData.location?.name && <Typography variant="h6">{rootData.location?.name}</Typography>}
+                  <Typography variant="h6">{rootData.location?.name}</Typography>
                 </Link>
               </Stack>
             )}

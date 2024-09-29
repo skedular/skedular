@@ -103,7 +103,7 @@ const OrganizationMemberAttendancyInsight = ({ rootDataRelay, organizationId, hi
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} size="small" />
                 <Link href={`/organization/${organizationId}?tab=analytics`}>
-                  {rootData.organization?.name && <Typography variant="h6">{rootData.organization?.name}</Typography>}
+                  <Typography variant="h6">{rootData.organization?.name}</Typography>
                 </Link>
               </Stack>
             )}

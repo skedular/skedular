@@ -18,7 +18,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { CustomerAvatar, LocationAvatar } from '@repo/shared/components/avatars';
 import {
   BookingIcon,
   DangerIcon,
@@ -191,6 +191,7 @@ const LocationPeopleBookingsMatrix = ({
           }
         }
         location(id: $locationId) {
+          name
           deskCapacity
           hasFutureBooking
           canModify
@@ -792,7 +793,12 @@ const LocationPeopleBookingsMatrix = ({
     <>
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
-          title={locationName}
+          title={
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <LocationAvatar name={{ name: rootData.location?.name }} photo={{ url: null }} size="small" />
+              <Typography variant="h6">{rootData.location?.name}</Typography>
+            </Stack>
+          }
           subheader={
             <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">

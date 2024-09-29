@@ -93,7 +93,7 @@ const OrganizationBookingInsight = ({ rootDataRelay, organizationId, hideOrganiz
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} size="small" />
                 <Link component={NextLink} href={`/organization/${organizationId}?tab=analytics`}>
-                  {rootData.organization?.name && <Typography variant="h6">{rootData.organization?.name}</Typography>}
+                  <Typography variant="h6">{rootData.organization?.name}</Typography>
                 </Link>
               </Stack>
             )}

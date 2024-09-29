@@ -3,6 +3,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { OrganizationAvatar } from '@repo/shared/components/avatars';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { endOfWeek, startOfWeek } from '@repo/shared/libs/utils';
@@ -94,7 +97,14 @@ const OrganizationBookingsWithRelay = ({
   if (!queryReference) {
     return (
       <Card sx={{ maxWidth: 500, height: '100%' }}>
-        <CardHeader title={organizationName} />
+        <CardHeader
+          title={
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <OrganizationAvatar name={{ name: organizationName }} photo={{ url: null }} size="small" />
+              <Typography variant="h6">{organizationName}</Typography>
+            </Stack>
+          }
+        />
         <CardContent>
           <Skeleton variant="rounded" width={470} height={350} />
         </CardContent>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85b2a29d19ff2afe7e21f652d2fda6dc>>
+ * @generated SignedSource<<7cd5637c131b11207062d7eb20698bb8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,6 +44,8 @@ export type organizationPeopleBookingsMatrix_query$data = {
     readonly canDelete: boolean;
     readonly canModify: boolean;
     readonly hasFutureBooking: boolean;
+    readonly logoUrl: string | null | undefined;
+    readonly name: string;
   } | null | undefined;
   readonly organizationBookingPermissions: {
     readonly canAddBookingOnBehalf: boolean;
@@ -236,6 +238,14 @@ return {
       "name": "organization",
       "plural": false,
       "selections": [
+        (v3/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "logoUrl",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -387,6 +397,6 @@ return {
 };
 })();
 
-(node as any).hash = "d87a786296a6c394d50d11606d28c8e4";
+(node as any).hash = "e29cc1b5d2e22d186c5108413a93d29e";
 
 export default node;
