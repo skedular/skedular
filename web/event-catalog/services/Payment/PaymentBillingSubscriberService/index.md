@@ -7,6 +7,9 @@ summary: |
 owners:
     - malizadeh
     - full-stack
+receives:
+  - id: BillingOrganizationOfferingDeleted
+    version: 0.0.1
 repository:
   language: C#
   url: 
