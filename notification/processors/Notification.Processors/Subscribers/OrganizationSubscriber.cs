@@ -64,15 +64,9 @@ public class OrganizationSubscriber(
                 }
                 break;
 
-            case Type.NotificationUpserted:
+            case Type.InvitationToJoinOrganizationUpserted:
                 {
-                    if (@event.Data.NotificationAfterState.NotificationType !=
-                        NotificationType.InvitationToJoinOrganization)
-                    {
-                        return;
-                    }
-
-                    var notification = mapper.MapToNotification(@event);
+                    var notification = mapper.MapInvitationToJoinOrganizationToNotification(@event);
                     var existingNotification =
                         await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
                             notification.SourceId,
@@ -90,15 +84,9 @@ public class OrganizationSubscriber(
                 }
                 break;
 
-            case Type.NotificationDeleted:
+            case Type.InvitationToJoinOrganizationDeleted:
                 {
-                    if (@event.Data.NotificationAfterState.NotificationType !=
-                        NotificationType.InvitationToJoinOrganization)
-                    {
-                        return;
-                    }
-
-                    var notification = mapper.MapToNotification(@event);
+                    var notification = mapper.MapInvitationToJoinOrganizationToNotification(@event);
                     var existingNotification =
                         await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
                             notification.SourceId,

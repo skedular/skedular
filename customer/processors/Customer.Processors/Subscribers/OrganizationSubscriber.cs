@@ -69,8 +69,8 @@ public class OrganizationSubscriber(
                 }
                 break;
 
-            case Type.NotificationUpserted:
-            case Type.NotificationDeleted:
+            case Type.InvitationToJoinOrganizationUpserted:
+            case Type.InvitationToJoinOrganizationDeleted:
             case Type.OrganizationOfferingUpdated:
             default:
                 return;

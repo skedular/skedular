@@ -61,9 +61,11 @@ public class OrganizationOutboxPublisher(
                     Metadata = Event.NewMetadata(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
-                        joinInvitation.IsNotDeleted() ? Type.NotificationUpserted : Type.NotificationDeleted,
+                        joinInvitation.IsNotDeleted()
+                            ? Type.InvitationToJoinOrganizationUpserted
+                            : Type.InvitationToJoinOrganizationDeleted,
                         context.PropertyBag.CorrelationId),
-                    Data = new Data { NotificationAfterState = mapper.MapTo(joinInvitation, null) }
+                    Data = new Data { InvitationToJoinOrganizationAfterState = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,
                 cancellationToken)));

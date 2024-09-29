@@ -11,7 +11,7 @@ namespace Organization.Shared.Mappers;
 public interface IMapper
 {
     Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization MapTo(Models.Organization src);
-    public Notification MapTo(JoinInvitation src, string? inviteeIdToOverride);
+    public InvitationToJoinOrganization MapTo(JoinInvitation src, string? inviteeIdToOverride);
 }
 
 public class Mapper : IMapper
@@ -61,17 +61,12 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Notification MapTo(JoinInvitation src, string? inviteeIdToOverride) =>
+    public InvitationToJoinOrganization MapTo(JoinInvitation src, string? inviteeIdToOverride) =>
         new()
         {
             Id = src.Id,
-            NotificationType = NotificationType.InvitationToJoinOrganization,
-            InvitationToJoinOrganizationDetails = new InvitationToJoinOrganizationDetails
-            {
-                OrganizationId = src.Organization.Id,
-                InvitedById = src.CreatedBy.Id,
-                InviteeId = inviteeIdToOverride ??
-                            (src.Invitee is null ? string.Empty : src.Invitee.Id)
-            }
+            OrganizationId = src.Organization.Id,
+            InvitedById = src.CreatedBy.Id,
+            InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
         };
 }

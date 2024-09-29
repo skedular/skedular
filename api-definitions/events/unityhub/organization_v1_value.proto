@@ -8,8 +8,8 @@ option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.Organization.V1.Va
 enum Type {
   OrganizationUpserted = 0;
   OrganizationDeleted = 1;
-  NotificationUpserted = 2;
-  NotificationDeleted = 3;
+  InvitationToJoinOrganizationUpserted = 2;
+  InvitationToJoinOrganizationDeleted = 3;
   OrganizationOfferingUpdated = 4;
 }
 
@@ -30,7 +30,7 @@ message Metadata {
 message Data {
   oneof payload {
     Organization organizationAfterState = 1;
-    Notification notificationAfterState = 2;
+    InvitationToJoinOrganization invitationToJoinOrganizationAfterState = 2;
     Offering offeringAfterState = 3;
   }
 }
@@ -72,17 +72,10 @@ message Offering {
 
 message Location { string id = 1; }
 
-message Notification {
+message InvitationToJoinOrganization {
   string id = 1;
   google.protobuf.Timestamp deletedAt = 2;
-  NotificationType notificationType = 3;
-  InvitationToJoinOrganizationDetails invitationToJoinOrganizationDetails = 4;
-}
-
-enum NotificationType { InvitationToJoinOrganization = 0; }
-
-message InvitationToJoinOrganizationDetails {
-  string organizationId = 1;
-  string invitedById = 2;
-  string inviteeId = 3;
+  string organizationId = 3;
+  string invitedById = 4;
+  string inviteeId = 5;
 }
