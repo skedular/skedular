@@ -68,7 +68,7 @@
         <PackageReference Include="Quartz.OpenTelemetry.Instrumentation" Version="3.13.0"/>
         <PackageReference Include="Quartz.Serialization.Json" Version="3.13.0"/>
 
-        <PackageReference Include="Serilog" Version="4.0.1"/>
+        <PackageReference Include="Serilog" Version="4.0.2"/>
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.2"/>
         <PackageReference Include="Serilog.Enrichers.Sensitive" Version="1.7.3"/>
         <PackageReference Include="Serilog.Enrichers.Span" Version="3.1.0"/>
