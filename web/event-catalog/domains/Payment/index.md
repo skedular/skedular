@@ -7,6 +7,12 @@ owners:
 services:
     - id: PaymentService
       version: 0.0.1
+    - id: PaymentCustomerSubscriberService
+      version: 0.0.1
+    - id: PaymentOrganizationSubscriberService
+      version: 0.0.1
+    - id: PaymentBillingSubscriberService
+      version: 0.0.1
 badges:
     - content: Payment Domain
       backgroundColor: blue

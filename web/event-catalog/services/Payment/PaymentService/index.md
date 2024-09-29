@@ -25,5 +25,3 @@ repository:
 The Payment Service is a component of the system responsible for managing payment details. It interacts with other services to maintain accurate financial matters.
 
 ## Architecture diagram
-
-<NodeGraph title="Hello world" />
