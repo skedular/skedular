@@ -556,7 +556,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
         <Card elevation={24} sx={{ minWidth: 400, height: '100%' }}>
           <CardHeader
             title={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <CustomerAvatar
                   name={{
                     name: bookingDetails.customer?.name,
@@ -576,7 +576,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           />
 
           <CardContent>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <CustomerIcon />
               <Typography variant="h6" component="div">
                 {getCustomerFullName(bookingDetails.customer)}
@@ -584,7 +584,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             </Stack>
 
             {bookingDetails.notes && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <NotesIcon />
                 <Typography variant="body1" component="div">
                   {bookingDetails.notes}
@@ -593,7 +593,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             )}
 
             {bookingDetails.organization && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <OrganizationIcon />
                 <Typography variant="body1" component="div">
                   {bookingDetails.organization.name}
@@ -602,7 +602,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             )}
 
             {bookingDetails.location && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <LocationIcon />
                 <Typography variant="body1" component="div">
                   {bookingDetails.location.name}
@@ -611,7 +611,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             )}
 
             {bookingDetails.team && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <TeamIcon />
                 <Typography variant="body1" component="div">
                   {bookingDetails.team.name}

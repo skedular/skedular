@@ -169,7 +169,7 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
       <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <CustomerAvatar
                 name={{
                   name: customer.name,

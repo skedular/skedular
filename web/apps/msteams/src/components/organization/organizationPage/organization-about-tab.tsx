@@ -167,12 +167,12 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
       </Stack>
       {!editing && (
         <Stack direction="column" spacing={1}>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">About</Typography>
             <Typography variant="body1">{organization.about}</Typography>
           </Stack>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Website</Typography>
             {organization.website && (
               <MuiLink href={organization?.website} target="_blank" rel="noopener noreferrer">
@@ -181,7 +181,7 @@ const OrganizationAboutTab = ({ rootDataRelay }: Props) => {
             )}
           </Stack>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Industry</Typography>
             <Grid sx={{ marginLeft: 1 }}>
               {organization.industrySubCategories.map(({ id, name }) => (

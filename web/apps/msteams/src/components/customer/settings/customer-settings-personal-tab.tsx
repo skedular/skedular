@@ -157,37 +157,37 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
 
       {!editing && (
         <Stack direction="column" spacing={1}>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Designation</Typography>
             <Typography variant="body1">{rootData.me.designation}</Typography>
           </Stack>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Title</Typography>
             <Typography variant="body1">{rootData.me.title}</Typography>
           </Stack>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Name</Typography>
             <Typography variant="body1">{rootData.me.name}</Typography>
           </Stack>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Given Name</Typography>
             <Typography variant="body1">{rootData.me.givenName}</Typography>
           </Stack>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Middle Name</Typography>
             <Typography variant="body1">{rootData.me.middleName}</Typography>
           </Stack>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Family Name</Typography>
             <Typography variant="body1">{rootData.me.familyName}</Typography>
           </Stack>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Timezone</Typography>
             <Typography variant="body1">{rootData.me.timezone}</Typography>
           </Stack>

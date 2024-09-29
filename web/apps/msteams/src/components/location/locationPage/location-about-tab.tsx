@@ -141,18 +141,18 @@ const LocationAboutTab = ({ rootDataRelay, organizationId }: Props) => {
       </Stack>
       {!editing && (
         <Stack direction="column" spacing={1}>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">About</Typography>
             <Typography variant="body1">{location.about}</Typography>
           </Stack>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Timezone</Typography>
             <Typography variant="body1">{location.timezone}</Typography>
           </Stack>
 
           {location.organization && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <Typography variant="h6">Organization</Typography>
 
               <Typography variant="body1">{location.organization.name}</Typography>

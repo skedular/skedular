@@ -655,7 +655,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
         <Card elevation={24} sx={{ minWidth: 320, height: '100%' }}>
           <CardHeader
             title={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <DeskIcon />
                 <Typography variant="body1">{deskDetails.name}</Typography>
               </Stack>
@@ -675,14 +675,14 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             <ZonesLine zones={deskDetails.locationTags} />
 
             {extraInfo.length > 0 && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <InfoIcon />
                 <Typography variant="body1">{extraInfo.join(', ')}</Typography>
               </Stack>
             )}
 
             {customerDetails && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <CustomerAvatar
                   name={{
                     name: null,

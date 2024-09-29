@@ -177,11 +177,11 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
             return (
               <Card elevation={24} key={id}>
                 <CardContent>
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                     <Typography variant="body1">{`${cardBrand} •••• ${cardLastFourDigit}`}</Typography>
                   </Stack>
 
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                     <Typography variant="body1">{`Expires ${cardExpiryMonth}/${cardExpiryYear?.toString().slice(-2)}`}</Typography>
                   </Stack>
 

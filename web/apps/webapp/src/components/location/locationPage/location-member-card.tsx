@@ -120,7 +120,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
   };
 
   const avatar = (
-    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
       <CustomerAvatar
         name={{
           name: locationMemberDetails.customer?.name,
@@ -143,7 +143,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
           <Card>
             <CardHeader title={<>{avatar}</>} />
             <CardContent>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 {locationMemberDetails.membershipType && (
                   <Typography variant="body1">{convertStringToLowercaseExceptFirstLetter(locationMemberDetails.membershipType)}</Typography>
                 )}

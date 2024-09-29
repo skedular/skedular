@@ -158,7 +158,7 @@ const InvitationToJoinOrganizationNotificationCard = ({ notificationDetailsRelay
         <>
           <CardHeader
             title={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <CustomerAvatar
                   name={{
                     name: null,
@@ -173,7 +173,7 @@ const InvitationToJoinOrganizationNotificationCard = ({ notificationDetailsRelay
               </Stack>
             }
             subheader={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <Typography variant="body1">
                   {`${getCustomerFullName(invitedBy)} has invited you to join organization ${organization?.name}`}
                 </Typography>

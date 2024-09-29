@@ -828,7 +828,7 @@ const OrganizationPeopleBookingsMatrix = ({
       <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
         {moreActionsOption.map((option) => (
           <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <IconButton color={option.color}>{option.icon}</IconButton>
               <Typography variant="body1">{option.label}</Typography>
             </Stack>

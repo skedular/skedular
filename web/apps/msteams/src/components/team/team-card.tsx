@@ -220,7 +220,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
       <Card elevation={24} sx={{ minWidth: 350, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <TeamAvatar name={{ name: teamDetails.name }} photo={{ url: null }} />
               {teamDetails.name && (
                 <Typography variant="h5" noWrap={true}>
@@ -233,7 +233,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
 
         <CardContent>
           {teamDetails.about && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <AboutIcon />
               <Typography variant="body1" noWrap={true}>
                 {teamDetails.about}
@@ -242,7 +242,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay: team, connectionIds }: Prop
           )}
 
           {teamDetails.organization && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <OrganizationIcon />
               <Typography variant="body1" noWrap={true}>
                 {teamDetails.organization.name}

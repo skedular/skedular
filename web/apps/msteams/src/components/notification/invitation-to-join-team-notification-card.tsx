@@ -151,7 +151,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
         <>
           <CardHeader
             title={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <CustomerAvatar
                   name={{
                     name: null,
@@ -166,7 +166,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
               </Stack>
             }
             subheader={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                 <Typography variant="body1">{`${getCustomerFullName(invitedBy)} has invited you to join team ${team?.name}`}</Typography>
               </Stack>
             }

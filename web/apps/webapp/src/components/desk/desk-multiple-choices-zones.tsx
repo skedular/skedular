@@ -91,7 +91,7 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
 
         return (
           <li {...props}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <Typography variant="body1">{castedOption.name}</Typography>
             </Stack>
           </li>

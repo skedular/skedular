@@ -169,7 +169,7 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
       <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%', marginBottom: 1 }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           {!pageContextOpen && selectedOrganization && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <OrganizationIcon />
               <Typography>{selectedOrganization.name}</Typography>
             </Stack>
@@ -190,7 +190,7 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
 
               return (
                 <li {...props}>
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                     <Typography variant="body1">{castedOption.name}</Typography>
                   </Stack>
                 </li>

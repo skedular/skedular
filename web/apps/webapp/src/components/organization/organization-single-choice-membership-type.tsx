@@ -44,7 +44,7 @@ const OrganizationSingleChoiceMembershipType = ({ rootDataRelay, name, required 
 
         return (
           <li {...props}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <Typography variant="body1">{convertStringToLowercaseExceptFirstLetter(castedOption)}</Typography>
             </Stack>
           </li>

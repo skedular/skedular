@@ -37,14 +37,14 @@ const ZonesLine = ({ zones, zoneTotalDisplayLimit = preferredZonesTotalDisplayLi
   return (
     <>
       {zones.length === 0 && (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <ZoneIcon />
           <Typography>No zone</Typography>
         </Stack>
       )}
 
       {zones.length !== 0 && (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <ZoneIcon />
           {zonesToDisplay.map(({ id, name }) => (
             <Tooltip key={id} title={name}>

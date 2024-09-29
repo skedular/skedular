@@ -73,7 +73,7 @@ const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         <TeamAvatar name={{ name: rootData.team?.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
         <Typography variant="h6">{rootData.team?.name}</Typography>
       </Stack>

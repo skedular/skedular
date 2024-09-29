@@ -37,7 +37,7 @@ const CookieConsent = () => {
           </Typography>
         </Grid>
         <Grid>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Button variant="contained" onClick={handleAccept} sx={{ margin: 1 }}>
               OK - continue browsing
             </Button>

@@ -810,10 +810,10 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
           }
         />
         <CardContent>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             {rootData.team.organization && (
               <Link href={`/organization/${rootData.team.organization.uniqueId}`}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                   <OrganizationIcon />
                   <Typography variant="body1" noWrap={true}>
                     {rootData.team.organization.name}
@@ -847,7 +847,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
         {moreActionsOption.map((option) => (
           <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <IconButton color={option.color}>{option.icon}</IconButton>
               <Typography variant="body1">{option.label}</Typography>
             </Stack>

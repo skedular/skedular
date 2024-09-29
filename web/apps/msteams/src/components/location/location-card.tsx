@@ -234,7 +234,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
       <Card elevation={24} sx={{ minWidth: 350, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <LocationAvatar name={{ name: locationDetails.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
 
               {locationDetails.name && (
@@ -248,7 +248,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
 
         <CardContent>
           {locationDetails.about && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <AboutIcon />
               <Typography variant="body1" noWrap={true}>
                 {locationDetails.about}
@@ -257,7 +257,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
           )}
 
           {locationDetails.organization && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <OrganizationIcon />
               <Typography variant="body1" noWrap={true}>
                 {locationDetails.organization.name}
@@ -265,7 +265,7 @@ const LocationCard = ({ rootDataRelay, locationDetailsRelay: location, connectio
             </Stack>
           )}
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <DeskIcon />
             <Typography variant="body1" noWrap={true}>
               {locationDetails.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${locationDetails.deskCapacity}`}

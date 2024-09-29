@@ -244,7 +244,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
       <Card elevation={24} sx={{ minWidth: 350, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <OrganizationAvatar name={{ name: organizationDetails.name }} photo={{ url: organizationDetails.logoUrl }} />
               {organizationDetails.name && (
                 <Typography variant="h5" noWrap={true}>
@@ -257,7 +257,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
 
         <CardContent>
           {organizationDetails.about && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <AboutIcon />
               <Typography variant="h5" noWrap={true}>
                 {organizationDetails.about}
@@ -266,7 +266,7 @@ const OrganizationCard = ({ rootDataRelay, organizationDetailsRelay, connectionI
           )}
 
           {organizationDetails.website && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <WebsiteIcon />
               <MuiLink href={organizationDetails.website} target="_blank" rel="noopener noreferrer">
                 {organizationDetails.website}
