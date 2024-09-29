@@ -8,8 +8,8 @@ option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.Team.V1.Value";
 enum Type {
   TeamUpserted = 0;
   TeamDeleted = 1;
-  NotificationUpserted = 2;
-  NotificationDeleted = 3;
+  InvitationToJoinTeamUpserted = 2;
+  InvitationToJoinTeamDeleted = 3;
 }
 
 message Event {
@@ -29,7 +29,7 @@ message Metadata {
 message Data { 
   oneof payload {
     Team teamAfterState = 1;
-    Notification notificationAfterState = 2;
+    InvitationToJoinTeam invitationToJoinTeamAfterState = 2;
   }
 }
 
@@ -62,17 +62,10 @@ message OrganizationMember {
   string organizationId = 3;
 }
 
-message Notification {
+message InvitationToJoinTeam {
   string id = 1;
   google.protobuf.Timestamp deletedAt = 2;
-  NotificationType notificationType = 3;
-  InvitationToJoinTeamDetails invitationToJoinTeamDetails = 4;
-}
-
-enum NotificationType { InvitationToJoinTeam = 0; }
-
-message InvitationToJoinTeamDetails {
-  string teamId = 1;
-  string invitedById = 2;
-  string inviteeId = 3;
+  string teamId = 3;
+  string invitedById = 4;
+  string inviteeId = 5;
 }

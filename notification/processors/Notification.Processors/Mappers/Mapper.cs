@@ -29,7 +29,9 @@ public interface IMapper
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer);
     Shared.Models.Notification MapToNotification(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
     Shared.Models.Notification MapToNotification(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
-    Shared.Models.Notification MapToNotification(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
+
+    Shared.Models.Notification MapInvitationToJoinTeamToNotification(
+        Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
 
     Shared.Database.Entities.Notification MapToEntity(
         Shared.Models.Notification src,
@@ -235,9 +237,10 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         };
     }
 
-    public Shared.Models.Notification MapToNotification(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src)
+    public Shared.Models.Notification MapInvitationToJoinTeamToNotification(
+        Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src)
     {
-        var notification = src.Data.NotificationAfterState;
+        var notification = src.Data.InvitationToJoinTeamAfterState;
         var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -248,10 +251,9 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             EventRaisedAt = eventRaisedAt,
             SourceId = notification.Id,
             Type = NotificationType.InvitationToJoinTeam,
-            InvitedBy =
-                new Shared.Models.Customer { Id = notification.InvitationToJoinTeamDetails.InvitedById },
-            Invitee = new Shared.Models.Customer { Id = notification.InvitationToJoinTeamDetails.InviteeId },
-            Team = new Team { Id = notification.InvitationToJoinTeamDetails.TeamId }
+            InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
+            Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
+            Team = new Team { Id = notification.TeamId }
         };
     }
 

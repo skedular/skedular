@@ -61,8 +61,8 @@ public class TeamSubscriber(
                 }
                 break;
 
-            case Type.NotificationUpserted:
-            case Type.NotificationDeleted:
+            case Type.InvitationToJoinTeamUpserted:
+            case Type.InvitationToJoinTeamDeleted:
             default:
                 return;
         }

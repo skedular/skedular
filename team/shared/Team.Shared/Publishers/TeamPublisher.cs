@@ -56,9 +56,14 @@ public class TeamPublisher(
                     Metadata = Event.NewMetadata(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
-                        joinInvitation.IsNotDeleted() ? Type.NotificationUpserted : Type.NotificationDeleted,
+                        joinInvitation.IsNotDeleted()
+                            ? Type.InvitationToJoinTeamUpserted
+                            : Type.InvitationToJoinTeamDeleted,
                         context.PropertyBag.CorrelationId),
-                    Data = new Data { NotificationAfterState = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
+                    Data = new Data
+                    {
+                        InvitationToJoinTeamAfterState = mapper.MapTo(joinInvitation, inviteeIdToOverride)
+                    }
                 },
                 cancellationToken)));
 }

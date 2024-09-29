@@ -55,14 +55,9 @@ public class TeamSubscriber(
                 }
                 break;
 
-            case Type.NotificationUpserted:
+            case Type.InvitationToJoinTeamUpserted:
                 {
-                    if (@event.Data.NotificationAfterState.NotificationType != NotificationType.InvitationToJoinTeam)
-                    {
-                        return;
-                    }
-
-                    var notification = mapper.MapToNotification(@event);
+                    var notification = mapper.MapInvitationToJoinTeamToNotification(@event);
                     var existingNotification =
                         await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
                             notification.SourceId,
@@ -80,14 +75,9 @@ public class TeamSubscriber(
                 }
                 break;
 
-            case Type.NotificationDeleted:
+            case Type.InvitationToJoinTeamDeleted:
                 {
-                    if (@event.Data.NotificationAfterState.NotificationType != NotificationType.InvitationToJoinTeam)
-                    {
-                        return;
-                    }
-
-                    var notification = mapper.MapToNotification(@event);
+                    var notification = mapper.MapInvitationToJoinTeamToNotification(@event);
                     var existingNotification =
                         await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
                             notification.SourceId,

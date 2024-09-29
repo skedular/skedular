@@ -9,7 +9,7 @@ namespace Team.Shared.Mappers;
 public interface IMapper
 {
     Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Team MapTo(Models.Team src);
-    public Notification MapTo(JoinInvitation src, string? inviteeIdToOverride);
+    public InvitationToJoinTeam MapTo(JoinInvitation src, string? inviteeIdToOverride);
 }
 
 public class Mapper : IMapper
@@ -52,17 +52,12 @@ public class Mapper : IMapper
         return team;
     }
 
-    public Notification MapTo(JoinInvitation src, string? inviteeIdToOverride) =>
+    public InvitationToJoinTeam MapTo(JoinInvitation src, string? inviteeIdToOverride) =>
         new()
         {
             Id = src.Id,
-            NotificationType = NotificationType.InvitationToJoinTeam,
-            InvitationToJoinTeamDetails = new InvitationToJoinTeamDetails
-            {
-                TeamId = src.Team.Id,
-                InvitedById = src.CreatedBy.Id,
-                InviteeId = inviteeIdToOverride ??
-                            (src.Invitee is null ? string.Empty : src.Invitee.Id)
-            }
+            TeamId = src.Team.Id,
+            InvitedById = src.CreatedBy.Id,
+            InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
         };
 }
