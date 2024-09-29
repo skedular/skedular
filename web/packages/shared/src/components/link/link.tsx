@@ -12,10 +12,11 @@ type Props = {
   href: Url;
   target?: HTMLAttributeAnchorTarget | undefined;
   rel?: string | undefined;
+  passHref?: boolean;
 };
 
-const Link = ({ children, href, target, rel }: Props) => (
-  <NextLink href={href} target={target} rel={rel}>
+const Link = ({ children, href, target, rel, passHref }: Props) => (
+  <NextLink href={href} target={target} rel={rel} passHref={passHref}>
     <MUILink>{children}</MUILink>
   </NextLink>
 );

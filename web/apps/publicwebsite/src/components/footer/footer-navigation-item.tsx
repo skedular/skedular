@@ -9,13 +9,8 @@ interface NavigationItemProps {
 
 const NavigationItem = ({ label, path }: NavigationItemProps) => {
   return (
-    <Link href={path} passHref style={{ textDecoration: 'none' }}>
-      <Typography
-        variant="body2"
-        sx={{
-          color: 'primary.contrastText',
-        }}
-      >
+    <Link href={path} passHref>
+      <Typography variant="body2" sx={{ color: 'primary.contrastText' }}>
         {label}
       </Typography>
     </Link>

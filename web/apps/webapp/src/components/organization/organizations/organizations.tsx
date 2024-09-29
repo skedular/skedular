@@ -46,11 +46,9 @@ const Organizations = ({ rootDataRelay }: Props) => {
             node {
               id
               name
-              ...organizationCard_OrganizationDetails
             }
           }
         }
-        ...organizationCard_Query
       }
     `,
     rootDataRelay,

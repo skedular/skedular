@@ -1,4 +1,3 @@
-export { default as OrganizationCard } from './organization-card';
 export { default as OrganizationMemberCard } from './organization-member-card';
 export { default as OrganizationMemberSelector } from './organization-member-selector';
 export { default as OrganizationMultipleChoicesIndustries } from './organization-multiple-choices-industries';
