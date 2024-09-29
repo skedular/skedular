@@ -18,10 +18,11 @@ import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { TeamAvatar } from '@repo/shared/components/avatars';
 import { AboutIcon, DangerIcon, DeleteIcon, EditIcon, OrganizationIcon, ViewIcon } from '@repo/shared/components/icons';
+import { Link } from '@repo/shared/components/link';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
-import Link from 'next/link';
+
 import { useSnackbar } from 'notistack';
 import { memo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';

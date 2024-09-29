@@ -23,6 +23,9 @@
     "./components/icons": {
       "default": "./dist/components/icons/index.js"
     },
+    "./components/link": {
+      "default": "./dist/components/link/index.js"
+    },
     "./components/loading": {
       "default": "./dist/components/loading/index.js"
     },

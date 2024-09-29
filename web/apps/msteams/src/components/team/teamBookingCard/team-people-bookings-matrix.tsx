@@ -9,6 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
@@ -811,12 +812,14 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         <CardContent>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             {rootData.team.organization && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <OrganizationIcon />
-                <Typography variant="body1" noWrap={true}>
-                  {rootData.team.organization.name}
-                </Typography>
-              </Stack>
+              <Link href={`/organization/${rootData.team.organization.uniqueId}`}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <OrganizationIcon />
+                  <Typography variant="body1" noWrap={true}>
+                    {rootData.team.organization.name}
+                  </Typography>
+                </Stack>
+              </Link>
             )}
           </Stack>
 

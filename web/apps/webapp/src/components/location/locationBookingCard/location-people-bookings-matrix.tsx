@@ -42,6 +42,7 @@ import {
   WorkingFromHomeIcon,
   WorkingFromOfficeIcon,
 } from '@repo/shared/components/icons';
+import { Link } from '@repo/shared/components/link';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
@@ -832,12 +833,14 @@ const LocationPeopleBookingsMatrix = ({
         <CardContent>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             {rootData.location.organization && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <OrganizationIcon />
-                <Typography variant="body1" noWrap={true}>
-                  {rootData.location.organization.name}
-                </Typography>
-              </Stack>
+              <Link href={`/organization/${rootData.location.organization.uniqueId}`}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <OrganizationIcon />
+                  <Typography variant="body1" noWrap={true}>
+                    {rootData.location.organization.name}
+                  </Typography>
+                </Stack>
+              </Link>
             )}
             <DeskIcon />
             <Typography variant="body1" noWrap={true}>

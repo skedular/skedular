@@ -1,7 +1,7 @@
 import type { organizationTermsOfUse_query$key } from '@/queries/__generated__/organizationTermsOfUse_query.graphql';
 import Stack from '@mui/material/Stack';
+import { Link } from '@repo/shared/components/link';
 import { Checkboxes } from 'mui-rff';
-import Link from 'next/link';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 

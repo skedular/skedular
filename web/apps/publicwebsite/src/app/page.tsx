@@ -8,9 +8,9 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { Link } from '@repo/shared/components/link';
 import { SlackButton } from '@repo/shared/components/slackButtons';
 import Image from 'next/image';
-import Link from 'next/link';
 import { memo } from 'react';
 
 const Home = () => {

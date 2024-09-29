@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography';
-import Link from 'next/link';
+import { Link } from '@repo/shared/components/link';
 import { memo } from 'react';
 
 interface NavigationItemProps {

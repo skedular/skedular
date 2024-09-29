@@ -41,6 +41,7 @@ import {
   WorkingFromHomeIcon,
   WorkingFromOfficeIcon,
 } from '@repo/shared/components/icons';
+import { Link } from '@repo/shared/components/link';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
@@ -813,12 +814,14 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         <CardContent>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             {rootData.team.organization && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <OrganizationIcon />
-                <Typography variant="body1" noWrap={true}>
-                  {rootData.team.organization.name}
-                </Typography>
-              </Stack>
+              <Link href={`/organization/${rootData.team.organization.uniqueId}`}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <OrganizationIcon />
+                  <Typography variant="body1" noWrap={true}>
+                    {rootData.team.organization.name}
+                  </Typography>
+                </Stack>
+              </Link>
             )}
           </Stack>
 

@@ -4,7 +4,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { CalendarIcon, LocationIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
-import Link from 'next/link';
+import { Link } from '@repo/shared/components/link';
 import { memo } from 'react';
 
 const LeftSideNavigationMenu = () => {

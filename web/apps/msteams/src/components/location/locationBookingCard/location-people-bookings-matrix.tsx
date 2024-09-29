@@ -9,6 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
@@ -833,12 +834,14 @@ const LocationPeopleBookingsMatrix = ({
         <CardContent>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             {rootData.location.organization && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <OrganizationIcon />
-                <Typography variant="body1" noWrap={true}>
-                  {rootData.location.organization.name}
-                </Typography>
-              </Stack>
+              <Link href={`/organization/${rootData.location.organization.uniqueId}`}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <OrganizationIcon />
+                  <Typography variant="body1" noWrap={true}>
+                    {rootData.location.organization.name}
+                  </Typography>
+                </Stack>
+              </Link>
             )}
             <DeskIcon />
             <Typography variant="body1" noWrap={true}>

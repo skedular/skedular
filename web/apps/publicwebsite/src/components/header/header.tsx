@@ -11,9 +11,9 @@ import Stack from '@mui/material/Stack';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { MenuIcon } from '@repo/shared/components/icons';
+import { Link } from '@repo/shared/components/link';
 import { Logo } from '@repo/shared/components/logo';
 import { SlackIconButton } from '@repo/shared/components/slackButtons';
-import Link from 'next/link';
 import { memo, useState } from 'react';
 
 const StyledAppBar = styled(AppBar)<MuiAppBarProps>(({ theme }) => ({
