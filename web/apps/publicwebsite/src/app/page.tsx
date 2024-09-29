@@ -6,11 +6,12 @@ import TryIcon from '@mui/icons-material/Try';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Link } from '@repo/shared/components/link';
 import { SlackButton } from '@repo/shared/components/slackButtons';
 import Image from 'next/image';
+import NextLink from 'next/link';
 import { memo } from 'react';
 
 const Home = () => {
@@ -57,7 +58,7 @@ const Home = () => {
 
             <Stack direction="row">
               <SlackButton />
-              <Link href="https://app.unityhub.io">
+              <Link component={NextLink} href="https://app.unityhub.io">
                 <Button variant="contained" sx={{ marginLeft: 2, borderRadius: '50px' }} size="large" startIcon={<TryIcon />}>
                   Try for free
                 </Button>

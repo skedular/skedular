@@ -7,14 +7,15 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
-import { Link } from '@repo/shared/components/link';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
+import NextLink from 'next/link';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
@@ -147,7 +148,7 @@ const Locations = ({ rootDataRelay }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Link href="/location/add">
+      <Link component={NextLink} href="/location/add">
         <Button variant="contained" startIcon={<AddIcon />}>
           Add Location
         </Button>

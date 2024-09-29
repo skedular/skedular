@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { Link } from '@repo/shared/components/link';
+import Link from '@mui/material/Link';
 import { ReactNode, memo } from 'react';
 import { Navigation } from './navigation.data';
 

@@ -7,13 +7,14 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { MenuIcon } from '@repo/shared/components/icons';
-import { Link } from '@repo/shared/components/link';
 import { Logo } from '@repo/shared/components/logo';
 import { SlackIconButton } from '@repo/shared/components/slackButtons';
+import NextLink from 'next/link';
 import { memo, useState } from 'react';
 
 const StyledAppBar = styled(AppBar)<MuiAppBarProps>(({ theme }) => ({
@@ -68,12 +69,12 @@ const Header = () => {
             <Navigation />
             <Stack direction="row">
               <SlackIconButton />
-              <Link href="https://app.unityhub.io">
+              <Link component={NextLink} href="https://app.unityhub.io">
                 <Button variant="outlined" sx={{ marginLeft: 1 }} size="small" startIcon={<LoginIcon />}>
                   Login
                 </Button>
               </Link>
-              <Link href="https://app.unityhub.io">
+              <Link component={NextLink} href="https://app.unityhub.io">
                 <Button variant="contained" sx={{ marginLeft: 1 }} size="small" startIcon={<ExitToAppIcon />}>
                   Sign up
                 </Button>

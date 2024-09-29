@@ -1,7 +1,8 @@
 import type { organizationTermsOfUse_query$key } from '@/queries/__generated__/organizationTermsOfUse_query.graphql';
+import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import { Link } from '@repo/shared/components/link';
 import { Checkboxes } from 'mui-rff';
+import NextLink from 'next/link';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -34,7 +35,7 @@ const OrganizationTermsOfUse = ({ rootDataRelay, name, required }: Props) => {
           value: true,
         }}
       />
-      <Link href="https://unityhub.io/terms-of-service" target="_blank" rel="noopener noreferrer">
+      <Link component={NextLink} href="https://unityhub.io/terms-of-service" target="_blank" rel="noopener noreferrer">
         UnityHub Terms of Use.
       </Link>
     </Stack>

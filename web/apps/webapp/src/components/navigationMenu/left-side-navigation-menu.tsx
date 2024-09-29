@@ -1,16 +1,17 @@
+import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { CalendarIcon, LocationIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
-import { Link } from '@repo/shared/components/link';
+import NextLink from 'next/link';
 import { memo } from 'react';
 
 const LeftSideNavigationMenu = () => {
   return (
     <List>
-      <Link href="/">
+      <Link component={NextLink} href="/">
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -21,7 +22,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href="/organization">
+      <Link component={NextLink} href="/organization">
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -32,7 +33,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href="/location">
+      <Link component={NextLink} href="/location">
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -43,7 +44,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href="/team">
+      <Link component={NextLink} href="/team">
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -54,7 +55,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href="/notification">
+      <Link component={NextLink} href="/notification">
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -65,7 +66,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href="/settings">
+      <Link component={NextLink} href="/settings">
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>

@@ -20,6 +20,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
@@ -41,11 +42,11 @@ import {
   WorkingFromHomeIcon,
   WorkingFromOfficeIcon,
 } from '@repo/shared/components/icons';
-import { Link } from '@repo/shared/components/link';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
+import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useState, useTransition } from 'react';
@@ -814,7 +815,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         <CardContent>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             {rootData.team.organization && (
-              <Link href={`/organization/${rootData.team.organization.uniqueId}`}>
+              <Link component={NextLink} href={`/organization/${rootData.team.organization.uniqueId}`}>
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                   <OrganizationIcon />
                   <Typography variant="body1" noWrap={true}>

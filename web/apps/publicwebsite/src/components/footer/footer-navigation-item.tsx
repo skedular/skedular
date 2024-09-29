@@ -1,5 +1,6 @@
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import { Link } from '@repo/shared/components/link';
+import NextLink from 'next/link';
 import { memo } from 'react';
 
 interface NavigationItemProps {
@@ -9,7 +10,7 @@ interface NavigationItemProps {
 
 const NavigationItem = ({ label, path }: NavigationItemProps) => {
   return (
-    <Link href={path} passHref>
+    <Link component={NextLink} href={path} passHref>
       <Typography variant="body2" sx={{ color: 'primary.contrastText' }}>
         {label}
       </Typography>
