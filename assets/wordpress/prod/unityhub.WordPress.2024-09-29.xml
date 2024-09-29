@@ -16,7 +16,7 @@
 <!-- 7. WordPress will then import each of the posts, pages, comments, categories, etc. -->
 <!--    contained in this file into your site. -->
 
-	<!-- generator="WordPress/6.6.1" created="2024-08-03 09:54" -->
+	<!-- generator="WordPress/6.6.2" created="2024-09-29 00:13" -->
 <rss version="2.0"
 	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -29,7 +29,7 @@
 	<title>UnityHub</title>
 	<link>https://unityhub.io</link>
 	<description></description>
-	<pubDate>Sat, 03 Aug 2024 09:54:33 +0000</pubDate>
+	<pubDate>Sun, 29 Sep 2024 00:13:33 +0000</pubDate>
 	<language>en-US</language>
 	<wp:wxr_version>1.2</wp:wxr_version>
 	<wp:base_site_url>https://unityhub.io</wp:base_site_url>
@@ -92,7 +92,7 @@
 	<wp:term><wp:term_id>17</wp:term_id><wp:term_taxonomy>nav_menu</wp:term_taxonomy><wp:term_slug><![CDATA[product-footer-menu]]></wp:term_slug><wp:term_name><![CDATA[Product Footer Menu]]></wp:term_name>
 </wp:term>
 
-	<generator>https://wordpress.org/?v=6.6.1</generator>
+	<generator>https://wordpress.org/?v=6.6.2</generator>
 
 <image>
 	<url>https://unityhub.io/wp-content/uploads/2024/07/cropped-logo-32x32.png</url>
@@ -473,324 +473,14 @@
 		<wp:meta_key><![CDATA[_wp_suggested_privacy_policy_content]]></wp:meta_key>
 		<wp:meta_value><![CDATA[a:3:{s:11:"plugin_name";s:7:"Akismet";s:11:"policy_text";s:400:"We collect information about visitors who comment on Sites that use our Akismet Anti-spam service. The information we collect depends on how the User sets up Akismet for the Site, but typically includes the commenter's IP address, user agent, referrer, and Site URL (along with other information directly provided by the commenter such as their name, username, email address, and the comment itself).";s:5:"added";i:1719900508;}]]></wp:meta_value>
 		</wp:postmeta>
-							</item>
-					<item>
-		<title><![CDATA[Home]]></title>
-		<link>https://unityhub.io/</link>
-		<pubDate>Mon, 01 Jul 2024 10:02:38 +0000</pubDate>
-		<dc:creator><![CDATA[morteza]]></dc:creator>
-		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?page_id=7</guid>
-		<description></description>
-		<content:encoded><![CDATA[<!-- wp:cover {"minHeight":720,"minHeightUnit":"px","customGradient":"linear-gradient(35deg,rgb(6,0,151) 0%,rgb(130,4,255) 73%,rgb(193,15,255) 100%)","isDark":false,"align":"full"} -->
-<div class="wp-block-cover alignfull is-light" style="min-height:720px"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-100 has-background-dim has-background-gradient" style="background:linear-gradient(35deg,rgb(6,0,151) 0%,rgb(130,4,255) 73%,rgb(193,15,255) 100%)"></span><div class="wp-block-cover__inner-container"><!-- wp:group {"align":"wide","layout":{"inherit":true,"type":"constrained"}} -->
-<div class="wp-block-group alignwide"><!-- wp:media-text {"align":"wide","mediaPosition":"right","mediaId":118,"mediaLink":"","mediaType":"image","mediaWidth":43,"verticalAlignment":"center"} -->
-<div class="wp-block-media-text alignwide has-media-on-the-right is-stacked-on-mobile is-vertically-aligned-center" style="grid-template-columns:auto 43%"><div class="wp-block-media-text__content"><!-- wp:heading {"textAlign":"left","textColor":"white"} -->
-<h2 class="wp-block-heading has-text-align-left has-white-color has-text-color">Enhance your hybrid office with a single tool for booking desks and boosting attendance, available on Slack and web platforms.</h2>
-<!-- /wp:heading -->
-
-<!-- wp:heading {"level":5} -->
-<h5 class="wp-block-heading"></h5>
-<!-- /wp:heading -->
-
-<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"}} -->
-<div class="wp-block-group"><!-- wp:html -->
-<a href="https://slack.com/oauth/v2/authorize?scope=app_mentions%3Aread%2Cchannels%3Ajoin%2Cchannels%3Amanage%2Cchannels%3Aread%2Cchat%3Awrite%2Cteam%3Aread%2Cusers%3Aread%2Cusers%3Aread.email%2Cusers.profile%3Aread&user_scope=users.profile%3Aread%2Cusers.profile%3Awrite&state=eyJjb3JyZWxhdGlvbklkIjoiVEZSajZEQTFZSmttY2ZYZjRUSEl6In0%3D&redirect_uri=https%3A%2F%2Fslackapi.unityhub.io%2Fslack%2Fapi%2Fv1%2Fcallback&client_id=118234978193.5578039519830
-" style="align-items:center;color:#fff;background-color:#4A154B;border:0;border-radius:56px;display:inline-flex;font-family:Lato, sans-serif;font-size:18px;font-weight:600;height:56px;justify-content:center;text-decoration:none;width:276px"><svg xmlns="http://www.w3.org/2000/svg" style="height:24px;width:24px;margin-right:12px" viewBox="0 0 122.8 122.8"><path d="M25.8 77.6c0 7.1-5.8 12.9-12.9 12.9S0 84.7 0 77.6s5.8-12.9 12.9-12.9h12.9v12.9zm6.5 0c0-7.1 5.8-12.9 12.9-12.9s12.9 5.8 12.9 12.9v32.3c0 7.1-5.8 12.9-12.9 12.9s-12.9-5.8-12.9-12.9V77.6z" fill="#e01e5a"></path><path d="M45.2 25.8c-7.1 0-12.9-5.8-12.9-12.9S38.1 0 45.2 0s12.9 5.8 12.9 12.9v12.9H45.2zm0 6.5c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H12.9C5.8 58.1 0 52.3 0 45.2s5.8-12.9 12.9-12.9h32.3z" fill="#36c5f0"></path><path d="M97 45.2c0-7.1 5.8-12.9 12.9-12.9s12.9 5.8 12.9 12.9-5.8 12.9-12.9 12.9H97V45.2zm-6.5 0c0 7.1-5.8 12.9-12.9 12.9s-12.9-5.8-12.9-12.9V12.9C64.7 5.8 70.5 0 77.6 0s12.9 5.8 12.9 12.9v32.3z" fill="#2eb67d"></path><path d="M77.6 97c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9-12.9-5.8-12.9-12.9V97h12.9zm0-6.5c-7.1 0-12.9-5.8-12.9-12.9s5.8-12.9 12.9-12.9h32.3c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H77.6z" fill="#ecb22e"></path></svg>Add to Slack</a>
-<!-- /wp:html -->
-
-<!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button {"className":"is-style-fill"} -->
-<div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button" href="https://app.unityhub.io">Try for free</a></div>
-<!-- /wp:button --></div>
-<!-- /wp:buttons --></div>
-<!-- /wp:group --></div><figure class="wp-block-media-text__media"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/hero-img.svg" alt="" class="wp-image-118 size-full"/></figure></div>
-<!-- /wp:media-text --></div>
-<!-- /wp:group --></div></div>
-<!-- /wp:cover -->
-
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"bottom":"0px"}}},"backgroundColor":"ast-global-color-5","layout":{"inherit":false,"contentSize":"1200px","type":"constrained"}} -->
-<div class="wp-block-group alignfull has-ast-global-color-5-background-color has-background" style="padding-bottom:0px"><!-- wp:columns {"verticalAlignment":"top","style":{"spacing":{"blockGap":"40px"}}} -->
-<div class="wp-block-columns are-vertically-aligned-top"><!-- wp:column {"verticalAlignment":"top","style":{"spacing":{"blockGap":"8px"}}} -->
-<div class="wp-block-column is-vertically-aligned-top"><!-- wp:image {"id":134,"sizeSlug":"large","linkDestination":"none"} -->
-<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/building.svg" alt="" class="wp-image-134"/></figure>
-<!-- /wp:image -->
-
-<!-- wp:heading {"textAlign":"left","level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
-<h3 class="wp-block-heading has-text-align-left" style="margin-top:16px">Streamline Office Days</h3>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph {"align":"left"} -->
-<p class="has-text-align-left">Discover the ideal days for office attendance, seamlessly integrated with Slack and Web platforms.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column -->
-
-<!-- wp:column {"verticalAlignment":"top","style":{"spacing":{"blockGap":"8px"}}} -->
-<div class="wp-block-column is-vertically-aligned-top"><!-- wp:image {"id":135,"sizeSlug":"large","linkDestination":"none"} -->
-<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/shopping-bag.svg" alt="" class="wp-image-135"/></figure>
-<!-- /wp:image -->
-
-<!-- wp:heading {"textAlign":"left","level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
-<h3 class="wp-block-heading has-text-align-left" style="margin-top:16px">Master Hybrid Work</h3>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph {"align":"left"} -->
-<p class="has-text-align-left">Empower teams to navigate hybrid work arrangements with ease, balancing office collaboration with remote productivity.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column -->
-
-<!-- wp:column {"verticalAlignment":"top","style":{"spacing":{"blockGap":"8px"}}} -->
-<div class="wp-block-column is-vertically-aligned-top"><!-- wp:image {"id":136,"sizeSlug":"large","linkDestination":"none"} -->
-<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/blog.svg" alt="" class="wp-image-136"/></figure>
-<!-- /wp:image -->
-
-<!-- wp:heading {"textAlign":"left","level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
-<h3 class="wp-block-heading has-text-align-left" style="margin-top:16px">Smart Space Management</h3>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph {"align":"left"} -->
-<p class="has-text-align-left">Efficiently manage office space utilization and expenses through workplace scheduling and desk booking solutions.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column -->
-
-<!-- wp:column {"verticalAlignment":"top","style":{"spacing":{"blockGap":"8px"}}} -->
-<div class="wp-block-column is-vertically-aligned-top"><!-- wp:image {"id":137,"sizeSlug":"large","linkDestination":"none"} -->
-<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/portfolio.svg" alt="" class="wp-image-137"/></figure>
-<!-- /wp:image -->
-
-<!-- wp:heading {"textAlign":"left","level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
-<h3 class="wp-block-heading has-text-align-left" style="margin-top:16px">Office Updates</h3>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph {"align":"left"} -->
-<p class="has-text-align-left">UnityHub keeps your team informed about office occupancy and activities, directly accessible via Slack and Web interfaces.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column --></div>
-<!-- /wp:columns --></div>
-<!-- /wp:group -->
-
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"143px","bottom":"144px"}}},"backgroundColor":"ast-global-color-5","layout":{"inherit":false,"contentSize":"1200px","type":"constrained"}} -->
-<div class="wp-block-group alignfull has-ast-global-color-5-background-color has-background" id="about" style="padding-top:143px;padding-bottom:144px"><!-- wp:media-text {"align":"","mediaPosition":"right","mediaId":24,"mediaLink":"https://public.unityhub.io/web/","mediaType":"image","verticalAlignment":"center"} -->
-<div class="wp-block-media-text has-media-on-the-right is-stacked-on-mobile is-vertically-aligned-center"><div class="wp-block-media-text__content"><!-- wp:group {"style":{"spacing":{"padding":{"right":"80px"}}},"layout":{"inherit":true,"type":"constrained"}} -->
-<div class="wp-block-group" style="padding-right:80px"><!-- wp:heading {"style":{"spacing":{"padding":{"right":"40px"}}}} -->
-<h2 class="wp-block-heading" style="padding-right:40px">Reserve your desk effortlessly with just one click.</h2>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph -->
-<p>Sure, you could opt for a complex desk booking system featuring interactive maps and a lengthy many-step booking process. But does your team have the time for that every day? If not, chances are they won't bother using it.</p>
-<!-- /wp:paragraph -->
-
-<!-- wp:paragraph -->
-<p>UnityHub simplifies the process by eliminating unnecessary clutter and remembering your preferred seating arrangements. Now, you can book your spot with a single click directly within Slack &amp; Web. You can even set it to autopilot for added convenience.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:group --></div><figure class="wp-block-media-text__media"><img src="https://public.unityhub.io/wp-content/uploads/2024/07/web-1024x519.png" alt="" class="wp-image-24 size-full"/></figure></div>
-<!-- /wp:media-text -->
-
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"143px","bottom":"144px"}}},"backgroundColor":"ast-global-color-5","layout":{"inherit":false,"contentSize":"1200px","type":"constrained"}} -->
-<div class="wp-block-group alignfull has-ast-global-color-5-background-color has-background" id="about" style="padding-top:143px;padding-bottom:144px"><!-- wp:media-text {"align":"","mediaPosition":"right","mediaId":26,"mediaLink":"https://public.unityhub.io/slack-desktop/","mediaType":"image","verticalAlignment":"center"} -->
-<div class="wp-block-media-text has-media-on-the-right is-stacked-on-mobile is-vertically-aligned-center"><div class="wp-block-media-text__content"><!-- wp:group {"style":{"spacing":{"padding":{"right":"80px"}}},"layout":{"inherit":true,"type":"constrained"}} -->
-<div class="wp-block-group" style="padding-right:80px"><!-- wp:heading {"style":{"spacing":{"padding":{"right":"40px"}}}} -->
-<h2 class="wp-block-heading" style="padding-right:40px">Share who's planning to be present.</h2>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph -->
-<p>If your team members aren't aware of who's coming into the office, they might opt to stay home (after all, nobody enjoys commuting to an empty workspace). This could leave your office feeling underutilized, despite the costs involved.</p>
-<!-- /wp:paragraph -->
-
-<!-- wp:paragraph -->
-<p>UnityHub simplifies this by broadcasting the list of employees expected in the office each day via a dedicated channel in Slack &amp; Web. This way, everyone stays informed and connected, fostering a more vibrant office culture while ensuring optimal space utilization.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:group --></div><figure class="wp-block-media-text__media"><img src="https://public.unityhub.io/wp-content/uploads/2024/07/slack-desktop-1024x560.png" alt="" class="wp-image-26 size-full"/></figure></div>
-<!-- /wp:media-text --></div>
-<!-- /wp:group --></div>
-<!-- /wp:group -->
-
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"144px","bottom":"144px"}}},"layout":{"inherit":false,"contentSize":"1200px","type":"constrained"}} -->
-<div class="wp-block-group alignfull" id="whyus" style="padding-top:144px;padding-bottom:144px"><!-- wp:heading -->
-<h2 class="wp-block-heading">Why Choose Us</h2>
-<!-- /wp:heading -->
-
-<!-- wp:columns {"style":{"spacing":{"blockGap":"80px","margin":{"top":"60px"}}}} -->
-<div class="wp-block-columns" style="margin-top:60px"><!-- wp:column {"style":{"spacing":{"blockGap":"8px"}}} -->
-<div class="wp-block-column"><!-- wp:image {"id":162,"sizeSlug":"large","linkDestination":"none"} -->
-<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/passionate.svg" alt="" class="wp-image-162"/></figure>
-<!-- /wp:image -->
-
-<!-- wp:heading {"level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
-<h3 class="wp-block-heading" style="margin-top:16px">Intelligent office alerts</h3>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph -->
-<p>With UnityHub, receive smart notifications that inform employees when their manager, team leader, or key contacts are planning to be in the office. This feature helps team members coordinate their schedules effectively, ensuring seamless alignment and collaboration.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column -->
-
-<!-- wp:column {"style":{"spacing":{"blockGap":"8px"}}} -->
-<div class="wp-block-column"><!-- wp:image {"id":163,"sizeSlug":"large","linkDestination":"none"} -->
-<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/professional.svg" alt="" class="wp-image-163"/></figure>
-<!-- /wp:image -->
-
-<!-- wp:heading {"level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
-<h3 class="wp-block-heading" style="margin-top:16px">Office Utilization Insights.</h3>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph -->
-<p>Your office space is a significant expense, and it's crucial to ensure you're optimizing its usage to avoid unnecessary costs.</p>
-<!-- /wp:paragraph -->
-
-<!-- wp:paragraph -->
-<p>With UnityHub, gain insights into daily attendance numbers, popular days, and individual attendance trends. This data empowers you to right-size your office space according to your actual needs, helping you make informed decisions to optimize costs effectively.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column -->
-
-<!-- wp:column {"style":{"spacing":{"blockGap":"8px"}}} -->
-<div class="wp-block-column"><!-- wp:image {"id":164,"sizeSlug":"large","linkDestination":"none"} -->
-<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/support.svg" alt="" class="wp-image-164"/></figure>
-<!-- /wp:image -->
-
-<!-- wp:heading {"level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
-<h3 class="wp-block-heading" style="margin-top:16px">All are Integrated with Slack and Web platforms</h3>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph -->
-<p>Unlike other desk booking tools that require your employees to download yet another app, UnityHub integrates seamlessly with their existing workflow in Slack. This integration ensures high adoption rates among your team members, eliminating the need for separate applications and the associated costs of low usage.</p>
-<!-- /wp:paragraph --></div>
-<!-- /wp:column --></div>
-<!-- /wp:columns --></div>
-<!-- /wp:group -->]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>7</wp:post_id>
-		<wp:post_date><![CDATA[2024-07-01 10:02:38]]></wp:post_date>
-		<wp:post_date_gmt><![CDATA[2024-07-01 10:02:38]]></wp:post_date_gmt>
-		<wp:post_modified><![CDATA[2024-07-03 21:36:23]]></wp:post_modified>
-		<wp:post_modified_gmt><![CDATA[2024-07-03 09:36:23]]></wp:post_modified_gmt>
-		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
-		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
-		<wp:post_name><![CDATA[home]]></wp:post_name>
-		<wp:status><![CDATA[publish]]></wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type><![CDATA[page]]></wp:post_type>
-		<wp:post_password><![CDATA[]]></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-														<wp:postmeta>
-		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
-		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
+";s:2:"js";s:0:"";s:18:"current_block_list";a:10:{i:0;s:12:"core/heading";i:1;s:14:"core/paragraph";i:2;s:9:"core/list";i:3;s:14:"core/list-item";i:4;s:11:"core/search";i:5;s:10:"core/group";i:6;s:17:"core/latest-posts";i:7;s:20:"core/latest-comments";i:8;s:13:"core/archives";i:9;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1727150569";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
 		</wp:postmeta>
 							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
-		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
-		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
-		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
-		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
-		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
-		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
-		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
-		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
-		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
-		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
-		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
-		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
-		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
-		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
-		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
-		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
-		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
-		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
+		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
+		<wp:meta_value><![CDATA[uag-css-3.css]]></wp:meta_value>
 		</wp:postmeta>
 							</item>
 					<item>
@@ -1218,16 +908,16 @@
 		<content:encoded><![CDATA[ ]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>200</wp:post_id>
-		<wp:post_date><![CDATA[2024-07-08 14:34:27]]></wp:post_date>
+		<wp:post_date><![CDATA[2024-08-15 17:38:15]]></wp:post_date>
 		<wp:post_date_gmt><![CDATA[2024-07-08 02:34:27]]></wp:post_date_gmt>
-		<wp:post_modified><![CDATA[2024-07-08 14:34:27]]></wp:post_modified>
-		<wp:post_modified_gmt><![CDATA[2024-07-08 02:34:27]]></wp:post_modified_gmt>
+		<wp:post_modified><![CDATA[2024-08-15 17:38:15]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2024-08-15 05:38:15]]></wp:post_modified_gmt>
 		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
 		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
 		<wp:post_name><![CDATA[200]]></wp:post_name>
 		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>2</wp:menu_order>
+		<wp:menu_order>3</wp:menu_order>
 		<wp:post_type><![CDATA[nav_menu_item]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
@@ -1268,6 +958,10 @@
 		<wp:meta_key><![CDATA[_menu_item_content]]></wp:meta_key>
 		<wp:meta_value><![CDATA[]]></wp:meta_value>
 		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_old_date]]></wp:meta_key>
+		<wp:meta_value><![CDATA[2024-07-08]]></wp:meta_value>
+		</wp:postmeta>
 							</item>
 					<item>
 		<title><![CDATA[Sign In]]></title>
@@ -1279,16 +973,16 @@
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>201</wp:post_id>
-		<wp:post_date><![CDATA[2024-07-08 14:34:27]]></wp:post_date>
+		<wp:post_date><![CDATA[2024-08-15 17:38:15]]></wp:post_date>
 		<wp:post_date_gmt><![CDATA[2024-07-08 02:34:27]]></wp:post_date_gmt>
-		<wp:post_modified><![CDATA[2024-07-08 14:34:27]]></wp:post_modified>
-		<wp:post_modified_gmt><![CDATA[2024-07-08 02:34:27]]></wp:post_modified_gmt>
+		<wp:post_modified><![CDATA[2024-08-15 17:38:15]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2024-08-15 05:38:15]]></wp:post_modified_gmt>
 		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
 		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
 		<wp:post_name><![CDATA[sign-in]]></wp:post_name>
 		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>3</wp:menu_order>
+		<wp:menu_order>4</wp:menu_order>
 		<wp:post_type><![CDATA[nav_menu_item]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
@@ -1329,6 +1023,10 @@
 		<wp:meta_key><![CDATA[_menu_item_content]]></wp:meta_key>
 		<wp:meta_value><![CDATA[]]></wp:meta_value>
 		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_old_date]]></wp:meta_key>
+		<wp:meta_value><![CDATA[2024-07-08]]></wp:meta_value>
+		</wp:postmeta>
 							</item>
 					<item>
 		<title><![CDATA[Sign Up]]></title>
@@ -1340,16 +1038,16 @@
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>202</wp:post_id>
-		<wp:post_date><![CDATA[2024-07-08 14:34:27]]></wp:post_date>
+		<wp:post_date><![CDATA[2024-08-15 17:38:15]]></wp:post_date>
 		<wp:post_date_gmt><![CDATA[2024-07-08 02:34:27]]></wp:post_date_gmt>
-		<wp:post_modified><![CDATA[2024-07-08 14:34:27]]></wp:post_modified>
-		<wp:post_modified_gmt><![CDATA[2024-07-08 02:34:27]]></wp:post_modified_gmt>
+		<wp:post_modified><![CDATA[2024-08-15 17:38:15]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2024-08-15 05:38:15]]></wp:post_modified_gmt>
 		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
 		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
 		<wp:post_name><![CDATA[sign-up]]></wp:post_name>
 		<wp:status><![CDATA[publish]]></wp:status>
 		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>4</wp:menu_order>
+		<wp:menu_order>5</wp:menu_order>
 		<wp:post_type><![CDATA[nav_menu_item]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
@@ -1389,6 +1087,10 @@
 							<wp:postmeta>
 		<wp:meta_key><![CDATA[_menu_item_content]]></wp:meta_key>
 		<wp:meta_value><![CDATA[]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_wp_old_date]]></wp:meta_key>
+		<wp:meta_value><![CDATA[2024-07-08]]></wp:meta_value>
 		</wp:postmeta>
 							</item>
 					<item>
@@ -1636,6 +1338,67 @@
 		</wp:postmeta>
 							</item>
 					<item>
+		<title><![CDATA[]]></title>
+		<link>https://unityhub.io/218/</link>
+		<pubDate>Thu, 15 Aug 2024 05:38:15 +0000</pubDate>
+		<dc:creator><![CDATA[morteza]]></dc:creator>
+		<guid isPermaLink="false">https://unityhub.io/218/</guid>
+		<description></description>
+		<content:encoded><![CDATA[ ]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>218</wp:post_id>
+		<wp:post_date><![CDATA[2024-08-15 17:38:15]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2024-08-15 05:38:15]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2024-08-15 17:38:15]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2024-08-15 05:38:15]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[218]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>2</wp:menu_order>
+		<wp:post_type><![CDATA[nav_menu_item]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+										<category domain="nav_menu" nicename="primary"><![CDATA[Primary]]></category>
+						<wp:postmeta>
+		<wp:meta_key><![CDATA[_menu_item_type]]></wp:meta_key>
+		<wp:meta_value><![CDATA[post_type]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_menu_item_menu_item_parent]]></wp:meta_key>
+		<wp:meta_value><![CDATA[0]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_menu_item_object_id]]></wp:meta_key>
+		<wp:meta_value><![CDATA[213]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_menu_item_object]]></wp:meta_key>
+		<wp:meta_value><![CDATA[page]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_menu_item_target]]></wp:meta_key>
+		<wp:meta_value><![CDATA[]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_menu_item_classes]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:1:{i:0;s:0:"";}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_menu_item_xfn]]></wp:meta_key>
+		<wp:meta_value><![CDATA[]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_menu_item_url]]></wp:meta_key>
+		<wp:meta_value><![CDATA[]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_menu_item_content]]></wp:meta_key>
+		<wp:meta_value><![CDATA[]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
 		<title><![CDATA[Hello world!]]></title>
 		<link>https://unityhub.io/hello-world/</link>
 		<pubDate>Wed, 03 Jul 2024 08:00:50 +0000</pubDate>
@@ -1661,7 +1424,12 @@
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
 										<category domain="category" nicename="uncategorized"><![CDATA[Uncategorized]]></category>
-						<wp:comment>
+						<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
+";s:2:"js";s:0:"";s:18:"current_block_list";a:8:{i:0;s:14:"core/paragraph";i:1;s:11:"core/search";i:2;s:10:"core/group";i:3;s:12:"core/heading";i:4;s:17:"core/latest-posts";i:5;s:20:"core/latest-comments";i:6;s:13:"core/archives";i:7;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1727150569";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:comment>
 			<wp:comment_id>1</wp:comment_id>
 			<wp:comment_author><![CDATA[A WordPress Commenter]]></wp:comment_author>
 			<wp:comment_author_email><![CDATA[wapuu@wordpress.example]]></wp:comment_author_email>
@@ -1702,6 +1470,334 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
 														</item>
+					<item>
+		<title><![CDATA[Home]]></title>
+		<link>https://unityhub.io/</link>
+		<pubDate>Mon, 01 Jul 2024 10:02:38 +0000</pubDate>
+		<dc:creator><![CDATA[morteza]]></dc:creator>
+		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?page_id=7</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:cover {"minHeight":720,"minHeightUnit":"px","customGradient":"linear-gradient(35deg,rgb(6,0,151) 0%,rgb(130,4,255) 73%,rgb(193,15,255) 100%)","isDark":false,"align":"full"} -->
+<div class="wp-block-cover alignfull is-light" style="min-height:720px"><span aria-hidden="true" class="wp-block-cover__background has-background-dim-100 has-background-dim has-background-gradient" style="background:linear-gradient(35deg,rgb(6,0,151) 0%,rgb(130,4,255) 73%,rgb(193,15,255) 100%)"></span><div class="wp-block-cover__inner-container"><!-- wp:group {"align":"wide","layout":{"inherit":true,"type":"constrained"}} -->
+<div class="wp-block-group alignwide"><!-- wp:media-text {"align":"wide","mediaPosition":"right","mediaId":118,"mediaLink":"","mediaType":"image","mediaWidth":43,"verticalAlignment":"center"} -->
+<div class="wp-block-media-text alignwide has-media-on-the-right is-stacked-on-mobile is-vertically-aligned-center" style="grid-template-columns:auto 43%"><div class="wp-block-media-text__content"><!-- wp:heading {"textAlign":"left","textColor":"white"} -->
+<h2 class="wp-block-heading has-text-align-left has-white-color has-text-color">Enhance your hybrid office with a single tool for booking desks and boosting attendance, available on Slack and web platforms.</h2>
+<!-- /wp:heading -->
+
+<!-- wp:heading {"level":5} -->
+<h5 class="wp-block-heading"></h5>
+<!-- /wp:heading -->
+
+<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"}} -->
+<div class="wp-block-group"><!-- wp:html -->
+<a href="https://slack.com/oauth/v2/authorize?scope=app_mentions%3Aread%2Cchannels%3Ajoin%2Cchannels%3Amanage%2Cchannels%3Aread%2Cchat%3Awrite%2Cteam%3Aread%2Cusers%3Aread%2Cusers%3Aread.email%2Cusers.profile%3Aread&user_scope=users.profile%3Aread%2Cusers.profile%3Awrite&state=eyJjb3JyZWxhdGlvbklkIjoiVEZSajZEQTFZSmttY2ZYZjRUSEl6In0%3D&redirect_uri=https%3A%2F%2Fslackapi.unityhub.io%2Fslack%2Fapi%2Fv1%2Fcallback&client_id=118234978193.5578039519830
+" style="align-items:center;color:#fff;background-color:#4A154B;border:0;border-radius:56px;display:inline-flex;font-family:Lato, sans-serif;font-size:18px;font-weight:600;height:56px;justify-content:center;text-decoration:none;width:276px"><svg xmlns="http://www.w3.org/2000/svg" style="height:24px;width:24px;margin-right:12px" viewBox="0 0 122.8 122.8"><path d="M25.8 77.6c0 7.1-5.8 12.9-12.9 12.9S0 84.7 0 77.6s5.8-12.9 12.9-12.9h12.9v12.9zm6.5 0c0-7.1 5.8-12.9 12.9-12.9s12.9 5.8 12.9 12.9v32.3c0 7.1-5.8 12.9-12.9 12.9s-12.9-5.8-12.9-12.9V77.6z" fill="#e01e5a"></path><path d="M45.2 25.8c-7.1 0-12.9-5.8-12.9-12.9S38.1 0 45.2 0s12.9 5.8 12.9 12.9v12.9H45.2zm0 6.5c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H12.9C5.8 58.1 0 52.3 0 45.2s5.8-12.9 12.9-12.9h32.3z" fill="#36c5f0"></path><path d="M97 45.2c0-7.1 5.8-12.9 12.9-12.9s12.9 5.8 12.9 12.9-5.8 12.9-12.9 12.9H97V45.2zm-6.5 0c0 7.1-5.8 12.9-12.9 12.9s-12.9-5.8-12.9-12.9V12.9C64.7 5.8 70.5 0 77.6 0s12.9 5.8 12.9 12.9v32.3z" fill="#2eb67d"></path><path d="M77.6 97c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9-12.9-5.8-12.9-12.9V97h12.9zm0-6.5c-7.1 0-12.9-5.8-12.9-12.9s5.8-12.9 12.9-12.9h32.3c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H77.6z" fill="#ecb22e"></path></svg>Add to Slack</a>
+<!-- /wp:html -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button {"className":"is-style-fill"} -->
+<div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button" href="https://app.unityhub.io">Try for free</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:group --></div><figure class="wp-block-media-text__media"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/hero-img.svg" alt="" class="wp-image-118 size-full"/></figure></div>
+<!-- /wp:media-text --></div>
+<!-- /wp:group --></div></div>
+<!-- /wp:cover -->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"bottom":"0px"}}},"backgroundColor":"ast-global-color-5","layout":{"inherit":false,"contentSize":"1200px","type":"constrained"}} -->
+<div class="wp-block-group alignfull has-ast-global-color-5-background-color has-background" style="padding-bottom:0px"><!-- wp:columns {"verticalAlignment":"top","style":{"spacing":{"blockGap":"40px"}}} -->
+<div class="wp-block-columns are-vertically-aligned-top"><!-- wp:column {"verticalAlignment":"top","style":{"spacing":{"blockGap":"8px"}}} -->
+<div class="wp-block-column is-vertically-aligned-top"><!-- wp:image {"id":134,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/building.svg" alt="" class="wp-image-134"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:heading {"textAlign":"left","level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
+<h3 class="wp-block-heading has-text-align-left" style="margin-top:16px">Streamline Office Days</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"align":"left"} -->
+<p class="has-text-align-left">Discover the ideal days for office attendance, seamlessly integrated with Slack and Web platforms.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"verticalAlignment":"top","style":{"spacing":{"blockGap":"8px"}}} -->
+<div class="wp-block-column is-vertically-aligned-top"><!-- wp:image {"id":135,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/shopping-bag.svg" alt="" class="wp-image-135"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:heading {"textAlign":"left","level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
+<h3 class="wp-block-heading has-text-align-left" style="margin-top:16px">Master Hybrid Work</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"align":"left"} -->
+<p class="has-text-align-left">Empower teams to navigate hybrid work arrangements with ease, balancing office collaboration with remote productivity.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"verticalAlignment":"top","style":{"spacing":{"blockGap":"8px"}}} -->
+<div class="wp-block-column is-vertically-aligned-top"><!-- wp:image {"id":136,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/blog.svg" alt="" class="wp-image-136"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:heading {"textAlign":"left","level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
+<h3 class="wp-block-heading has-text-align-left" style="margin-top:16px">Smart Space Management</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"align":"left"} -->
+<p class="has-text-align-left">Efficiently manage office space utilization and expenses through workplace scheduling and desk booking solutions.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"verticalAlignment":"top","style":{"spacing":{"blockGap":"8px"}}} -->
+<div class="wp-block-column is-vertically-aligned-top"><!-- wp:image {"id":137,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/portfolio.svg" alt="" class="wp-image-137"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:heading {"textAlign":"left","level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
+<h3 class="wp-block-heading has-text-align-left" style="margin-top:16px">Office Updates</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"align":"left"} -->
+<p class="has-text-align-left">UnityHub keeps your team informed about office occupancy and activities, directly accessible via Slack and Web interfaces.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"143px","bottom":"144px"}}},"backgroundColor":"ast-global-color-5","layout":{"inherit":false,"contentSize":"1200px","type":"constrained"}} -->
+<div class="wp-block-group alignfull has-ast-global-color-5-background-color has-background" id="about" style="padding-top:143px;padding-bottom:144px"><!-- wp:media-text {"align":"","mediaPosition":"right","mediaId":24,"mediaLink":"https://public.unityhub.io/web/","mediaType":"image","verticalAlignment":"center"} -->
+<div class="wp-block-media-text has-media-on-the-right is-stacked-on-mobile is-vertically-aligned-center"><div class="wp-block-media-text__content"><!-- wp:group {"style":{"spacing":{"padding":{"right":"80px"}}},"layout":{"inherit":true,"type":"constrained"}} -->
+<div class="wp-block-group" style="padding-right:80px"><!-- wp:heading {"style":{"spacing":{"padding":{"right":"40px"}}}} -->
+<h2 class="wp-block-heading" style="padding-right:40px">Reserve your desk effortlessly with just one click.</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Sure, you could opt for a complex desk booking system featuring interactive maps and a lengthy many-step booking process. But does your team have the time for that every day? If not, chances are they won't bother using it.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>UnityHub simplifies the process by eliminating unnecessary clutter and remembering your preferred seating arrangements. Now, you can book your spot with a single click directly within Slack &amp; Web. You can even set it to autopilot for added convenience.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group --></div><figure class="wp-block-media-text__media"><img src="https://public.unityhub.io/wp-content/uploads/2024/07/web-1024x519.png" alt="" class="wp-image-24 size-full"/></figure></div>
+<!-- /wp:media-text -->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"143px","bottom":"144px"}}},"backgroundColor":"ast-global-color-5","layout":{"inherit":false,"contentSize":"1200px","type":"constrained"}} -->
+<div class="wp-block-group alignfull has-ast-global-color-5-background-color has-background" id="about" style="padding-top:143px;padding-bottom:144px"><!-- wp:media-text {"align":"","mediaPosition":"right","mediaId":26,"mediaLink":"https://public.unityhub.io/slack-desktop/","mediaType":"image","verticalAlignment":"center"} -->
+<div class="wp-block-media-text has-media-on-the-right is-stacked-on-mobile is-vertically-aligned-center"><div class="wp-block-media-text__content"><!-- wp:group {"style":{"spacing":{"padding":{"right":"80px"}}},"layout":{"inherit":true,"type":"constrained"}} -->
+<div class="wp-block-group" style="padding-right:80px"><!-- wp:heading {"style":{"spacing":{"padding":{"right":"40px"}}}} -->
+<h2 class="wp-block-heading" style="padding-right:40px">Share who's planning to be present.</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>If your team members aren't aware of who's coming into the office, they might opt to stay home (after all, nobody enjoys commuting to an empty workspace). This could leave your office feeling underutilized, despite the costs involved.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>UnityHub simplifies this by broadcasting the list of employees expected in the office each day via a dedicated channel in Slack &amp; Web. This way, everyone stays informed and connected, fostering a more vibrant office culture while ensuring optimal space utilization.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group --></div><figure class="wp-block-media-text__media"><img src="https://public.unityhub.io/wp-content/uploads/2024/07/slack-desktop-1024x560.png" alt="" class="wp-image-26 size-full"/></figure></div>
+<!-- /wp:media-text --></div>
+<!-- /wp:group --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"144px","bottom":"144px"}}},"layout":{"inherit":false,"contentSize":"1200px","type":"constrained"}} -->
+<div class="wp-block-group alignfull" id="whyus" style="padding-top:144px;padding-bottom:144px"><!-- wp:heading -->
+<h2 class="wp-block-heading">Why Choose Us</h2>
+<!-- /wp:heading -->
+
+<!-- wp:columns {"style":{"spacing":{"blockGap":"80px","margin":{"top":"60px"}}}} -->
+<div class="wp-block-columns" style="margin-top:60px"><!-- wp:column {"style":{"spacing":{"blockGap":"8px"}}} -->
+<div class="wp-block-column"><!-- wp:image {"id":162,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/passionate.svg" alt="" class="wp-image-162"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:heading {"level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
+<h3 class="wp-block-heading" style="margin-top:16px">Intelligent office alerts</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>With UnityHub, receive smart notifications that inform employees when their manager, team leader, or key contacts are planning to be in the office. This feature helps team members coordinate their schedules effectively, ensuring seamless alignment and collaboration.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"style":{"spacing":{"blockGap":"8px"}}} -->
+<div class="wp-block-column"><!-- wp:image {"id":163,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/professional.svg" alt="" class="wp-image-163"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:heading {"level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
+<h3 class="wp-block-heading" style="margin-top:16px">Office Utilization Insights.</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Your office space is a significant expense, and it's crucial to ensure you're optimizing its usage to avoid unnecessary costs.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>With UnityHub, gain insights into daily attendance numbers, popular days, and individual attendance trends. This data empowers you to right-size your office space according to your actual needs, helping you make informed decisions to optimize costs effectively.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"style":{"spacing":{"blockGap":"8px"}}} -->
+<div class="wp-block-column"><!-- wp:image {"id":164,"sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image size-large"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/support.svg" alt="" class="wp-image-164"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:heading {"level":3,"style":{"spacing":{"margin":{"top":"16px"}}}} -->
+<h3 class="wp-block-heading" style="margin-top:16px">All are Integrated with Slack and Web platforms</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Unlike other desk booking tools that require your employees to download yet another app, UnityHub integrates seamlessly with their existing workflow in Slack. This integration ensures high adoption rates among your team members, eliminating the need for separate applications and the associated costs of low usage.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>7</wp:post_id>
+		<wp:post_date><![CDATA[2024-07-01 10:02:38]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2024-07-01 10:02:38]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2024-07-03 21:36:23]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2024-07-03 09:36:23]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[home]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[page]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+														<wp:postmeta>
+		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
+		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
+		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
+		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
+		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
+		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
+		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
+		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
+		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
+		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
+		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
+		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
+		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
+		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
+		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
+		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_customize_changeset_uuid]]></wp:meta_key>
+		<wp:meta_value><![CDATA[b33869dd-d656-462d-8b4e-bd5fda4c1a30]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-content-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[plain-container]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[theme-transparent-header-meta]]></wp:meta_key>
+		<wp:meta_value><![CDATA[enabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-sidebar-layout]]></wp:meta_key>
+		<wp:meta_value><![CDATA[no-sidebar]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[site-post-title]]></wp:meta_key>
+		<wp:meta_value><![CDATA[disabled]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
+";s:2:"js";s:0:"";s:18:"current_block_list";a:16:{i:0;s:10:"core/cover";i:1;s:10:"core/group";i:2;s:15:"core/media-text";i:3;s:12:"core/heading";i:5;s:9:"core/html";i:6;s:12:"core/buttons";i:7;s:11:"core/button";i:9;s:12:"core/columns";i:10;s:11:"core/column";i:11;s:10:"core/image";i:12;s:14:"core/paragraph";i:13;s:11:"core/search";i:14;s:17:"core/latest-posts";i:15;s:20:"core/latest-comments";i:16;s:13:"core/archives";i:17;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1727566992";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
+		<wp:meta_value><![CDATA[uag-css-7.css]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
 					<item>
 		<title><![CDATA[Custom Styles]]></title>
 		<link>https://unityhub.io/wp-global-styles-astra/</link>
@@ -2276,7 +2372,16 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 		<wp:post_type><![CDATA[page]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-														</item>
+														<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
+";s:2:"js";s:0:"";s:18:"current_block_list";a:10:{i:0;s:12:"core/heading";i:1;s:14:"core/paragraph";i:2;s:9:"core/list";i:3;s:14:"core/list-item";i:4;s:11:"core/search";i:5;s:10:"core/group";i:6;s:17:"core/latest-posts";i:7;s:20:"core/latest-comments";i:8;s:13:"core/archives";i:9;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1727150569";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
+		<wp:meta_value><![CDATA[uag-css-36.css]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
 					<item>
 		<title><![CDATA[Pricing]]></title>
 		<link>https://unityhub.io/pricing/</link>
@@ -2308,7 +2413,16 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 		<wp:post_type><![CDATA[page]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-														</item>
+														<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
+";s:2:"js";s:0:"";s:18:"current_block_list";a:8:{i:0;s:12:"core/heading";i:1;s:30:"fatcatapps/easy-pricing-tables";i:2;s:11:"core/search";i:3;s:10:"core/group";i:4;s:17:"core/latest-posts";i:5;s:20:"core/latest-comments";i:6;s:13:"core/archives";i:7;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1727150569";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
+		<wp:meta_value><![CDATA[uag-css-49.css]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
 					<item>
 		<title><![CDATA[Navigation]]></title>
 		<link>https://unityhub.io/navigation-2/</link>
@@ -2384,7 +2498,16 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
 										<category domain="category" nicename="uncategorized"><![CDATA[Uncategorized]]></category>
-						<wp:comment>
+						<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
+";s:2:"js";s:0:"";s:18:"current_block_list";a:8:{i:0;s:14:"core/paragraph";i:1;s:11:"core/search";i:2;s:10:"core/group";i:3;s:12:"core/heading";i:4;s:17:"core/latest-posts";i:5;s:20:"core/latest-comments";i:6;s:13:"core/archives";i:7;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1727150569";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
+		<wp:meta_value><![CDATA[uag-css-152.css]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:comment>
 			<wp:comment_id>3</wp:comment_id>
 			<wp:comment_author><![CDATA[A WordPress Commenter]]></wp:comment_author>
 			<wp:comment_author_email><![CDATA[wapuu@wordpress.example]]></wp:comment_author_email>
@@ -2454,7 +2577,86 @@ Commenter avatars come from <a href="https://en.gravatar.com/" rel="nofollow ugc
 		<wp:post_type><![CDATA[page]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-														</item>
+														<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
+";s:2:"js";s:0:"";s:18:"current_block_list";a:8:{i:0;s:14:"core/paragraph";i:1;s:11:"core/search";i:2;s:10:"core/group";i:3;s:12:"core/heading";i:4;s:17:"core/latest-posts";i:5;s:20:"core/latest-comments";i:6;s:13:"core/archives";i:7;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1727150569";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
+		<wp:meta_value><![CDATA[uag-css-207.css]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
+					<item>
+		<title><![CDATA[About us]]></title>
+		<link>https://unityhub.io/about-us/</link>
+		<pubDate>Thu, 15 Aug 2024 05:35:53 +0000</pubDate>
+		<dc:creator><![CDATA[morteza]]></dc:creator>
+		<guid isPermaLink="false">https://unityhub.io/?page_id=213</guid>
+		<description></description>
+		<content:encoded><![CDATA[<!-- wp:uagb/container {"block_id":"ahe984ga","alignItemsDesktop":"flex-start","backgroundType":"color","backgroundColor":"var(\u002d\u002dast-global-color-5)","topPaddingDesktop":112,"bottomPaddingDesktop":112,"leftPaddingDesktop":40,"rightPaddingDesktop":40,"topPaddingTablet":80,"bottomPaddingTablet":80,"leftPaddingTablet":32,"rightPaddingTablet":32,"topPaddingMobile":64,"bottomPaddingMobile":64,"leftPaddingMobile":24,"rightPaddingMobile":24,"paddingLink":false,"topMarginDesktop":0,"bottomMarginDesktop":0,"leftMarginDesktop":0,"rightMarginDesktop":0,"topMarginTablet":0,"bottomMarginTablet":0,"leftMarginTablet":0,"rightMarginTablet":0,"topMarginMobile":0,"bottomMarginMobile":0,"leftMarginMobile":0,"rightMarginMobile":0,"variationSelected":true,"rowGapDesktop":48,"rowGapTablet":50,"rowGapMobile":40,"columnGapDesktop":0,"columnGapTablet":0,"columnGapMobile":0,"isBlockRootParent":true} -->
+<div class="wp-block-uagb-container uagb-block-ahe984ga alignfull uagb-is-root-container"><div class="uagb-container-inner-blocks-wrap"><!-- wp:uagb/info-box {"classMigrate":true,"tempHeadingDesc":"At UnityHub, we specialize in streamlining the process of office desk booking for hybrid teams. Our platform allows team members to effortlessly share their in-office schedules and reserve desks, ensuring a flexible and connected work environment.\u003cbr\u003e\u003cbr\u003eOur mission is to make office collaboration seamless and efficient, enabling teams to work smarter, not harder.","headingAlign":"left","headingColor":"var(\u002d\u002dast-global-color-2)","subHeadingColor":"var(\u002d\u002dast-global-color-3)","prefixColor":"var(\u002d\u002dast-global-color-2)","prefixFontSize":16,"prefixFontSizeTablet":16,"prefixFontSizeMobile":15,"prefixFontWeight":"500","prefixLineHeight":1,"prefixLineHeightTablet":1,"prefixTransform":"uppercase","prefixLineHeightMobile":1,"prefixHeadingTag":"p","headingTag":"h2","headSpace":20,"subHeadSpace":0,"block_id":"lpgtjmms","ctaBorderColor":"","ctaBorderStyle":"","showPrefix":true,"showIcon":false,"prefixTopMargin":0,"prefixRightMargin":0,"prefixSpace":24,"prefixLeftMargin":0,"prefixMarginTopTablet":0,"prefixMarginRightTablet":0,"prefixTabletSpace":12,"prefixMarginLeftTablet":0,"prefixMarginTopMobile":0,"prefixMarginRightMobile":0,"prefixMobileSpace":12,"prefixMarginLeftMobile":0,"prefixLetterSpacing":2,"prefixLetterSpacingTablet":2,"prefixLetterSpacingMobile":2,"headTopMargin":0,"headRightMargin":0,"headLeftMargin":0,"headMarginTopTablet":0,"headMarginRightTablet":0,"headTabletSpace":0,"headMarginLeftTablet":0,"headMarginTopMobile":0,"headMarginRightMobile":0,"headMobileSpace":0,"headMarginLeftMobile":0,"blockTopPadding":0,"blockRightPadding":0,"blockLeftPadding":0,"blockBottomPadding":0,"blockTopPaddingTablet":0,"blockRightPaddingTablet":0,"blockLeftPaddingTablet":0,"blockBottomPaddingTablet":0,"blockTopPaddingMobile":0,"blockRightPaddingMobile":0,"blockLeftPaddingMobile":0,"blockBottomPaddingMobile":0,"blockPaddingLink":false,"subHeadTopMargin":0,"subHeadRightMargin":0,"subHeadLeftMargin":0,"subHeadMarginTopTablet":0,"subHeadMarginRightTablet":0,"subHeadTabletSpace":0,"subHeadMarginLeftTablet":0,"subHeadMarginTopMobile":0,"subHeadMarginRightMobile":0,"subHeadMobileSpace":0,"subHeadMarginLeftMobile":0,"btnBorderTopWidth":1,"btnBorderLeftWidth":1,"btnBorderRightWidth":1,"btnBorderBottomWidth":1,"btnBorderTopLeftRadius":0,"btnBorderTopRightRadius":0,"btnBorderBottomLeftRadius":0,"btnBorderBottomRightRadius":0,"btnBorderStyle":"solid","btnBorderColor":"#333"} -->
+<div class="wp-block-uagb-info-box uagb-block-lpgtjmms uagb-infobox__content-wrap  uagb-infobox-icon-above-title uagb-infobox-image-valign-top"><div class="uagb-ifb-content"><div class="uagb-ifb-title-wrap"><p class="uagb-ifb-title-prefix">Our Story</p><h2 class="uagb-ifb-title">Discover Our Journey So Far</h2></div><p class="uagb-ifb-desc">At UnityHub, we specialize in streamlining the process of office desk booking for hybrid teams. Our platform allows team members to effortlessly share their in-office schedules and reserve desks, ensuring a flexible and connected work environment.<br><br>Our mission is to make office collaboration seamless and efficient, enabling teams to work smarter, not harder.</p></div></div>
+<!-- /wp:uagb/info-box -->
+
+<!-- wp:uagb/container {"block_id":"udpwecyw","topPaddingDesktop":0,"bottomPaddingDesktop":0,"leftPaddingDesktop":0,"rightPaddingDesktop":0,"topPaddingTablet":0,"bottomPaddingTablet":0,"leftPaddingTablet":0,"rightPaddingTablet":0,"topPaddingMobile":0,"bottomPaddingMobile":0,"leftPaddingMobile":0,"rightPaddingMobile":0,"topMarginDesktop":0,"bottomMarginDesktop":0,"leftMarginDesktop":0,"rightMarginDesktop":0,"topMarginTablet":0,"bottomMarginTablet":0,"leftMarginTablet":0,"rightMarginTablet":0,"topMarginMobile":0,"bottomMarginMobile":0,"leftMarginMobile":0,"rightMarginMobile":0,"rowGapDesktop":24,"rowGapTablet":24,"rowGapMobile":24,"columnGapDesktop":0,"columnGapTablet":0,"columnGapMobile":0} -->
+<div class="wp-block-uagb-container uagb-block-udpwecyw"><!-- wp:uagb/container {"block_id":"mlgj0zyf","directionDesktop":"row","alignItemsDesktop":"flex-start","alignItemsTablet":"stretch","alignItemsMobile":"stretch","justifyContentDesktop":"flex-start","topPaddingDesktop":44,"bottomPaddingDesktop":0,"leftPaddingDesktop":0,"rightPaddingDesktop":0,"topPaddingTablet":24,"bottomPaddingTablet":0,"leftPaddingTablet":0,"rightPaddingTablet":0,"topPaddingMobile":24,"bottomPaddingMobile":0,"leftPaddingMobile":0,"rightPaddingMobile":0,"paddingLink":false,"topMarginDesktop":0,"bottomMarginDesktop":0,"leftMarginDesktop":0,"rightMarginDesktop":0,"topMarginTablet":0,"bottomMarginTablet":0,"leftMarginTablet":0,"rightMarginTablet":0,"topMarginMobile":0,"bottomMarginMobile":0,"leftMarginMobile":0,"rightMarginMobile":0,"variationSelected":true,"rowGapDesktop":0,"rowGapTablet":0,"rowGapMobile":16,"columnGapDesktop":72,"columnGapTablet":40,"columnGapMobile":0,"containerBorderTopWidth":1,"containerBorderLeftWidth":0,"containerBorderRightWidth":0,"containerBorderBottomWidth":0,"containerBorderTopWidthTablet":1,"containerBorderLeftWidthTablet":0,"containerBorderRightWidthTablet":0,"containerBorderBottomWidthTablet":0,"containerBorderTopWidthMobile":1,"containerBorderLeftWidthMobile":0,"containerBorderRightWidthMobile":0,"containerBorderBottomWidthMobile":0,"containerBorderLink":false,"containerBorderStyle":"solid","containerBorderColor":"var(\u002d\u002dast-global-color-6)"} -->
+<div class="wp-block-uagb-container uagb-block-mlgj0zyf"><!-- wp:uagb/container {"block_id":"450zcguv","widthDesktop":30,"alignItemsDesktop":"flex-start","justifyContentDesktop":"flex-start","topPaddingDesktop":0,"bottomPaddingDesktop":0,"leftPaddingDesktop":0,"rightPaddingDesktop":0,"topPaddingTablet":0,"bottomPaddingTablet":0,"leftPaddingTablet":0,"rightPaddingTablet":0,"topPaddingMobile":0,"bottomPaddingMobile":0,"leftPaddingMobile":0,"rightPaddingMobile":0,"topMarginDesktop":0,"bottomMarginDesktop":0,"leftMarginDesktop":0,"rightMarginDesktop":0,"topMarginTablet":0,"bottomMarginTablet":0,"leftMarginTablet":0,"rightMarginTablet":0,"topMarginMobile":0,"bottomMarginMobile":0,"leftMarginMobile":0,"rightMarginMobile":0,"rowGapDesktop":32,"rowGapTablet":0,"rowGapMobile":0,"columnGapDesktop":0,"columnGapTablet":0,"columnGapMobile":0,"widthSetByUser":true} -->
+<div class="wp-block-uagb-container uagb-block-450zcguv"><!-- wp:uagb/advanced-heading {"block_id":"u0nsiwig","classMigrate":true,"headingDescToggle":false,"headingTag":"h3"} -->
+<div class="wp-block-uagb-advanced-heading uagb-block-u0nsiwig"><h3 class="uagb-heading-text">Our Vision</h3></div>
+<!-- /wp:uagb/advanced-heading --></div>
+<!-- /wp:uagb/container -->
+
+<!-- wp:uagb/container {"block_id":"cichkv7q","widthDesktop":70,"alignItemsDesktop":"flex-start","justifyContentDesktop":"flex-start","topPaddingDesktop":0,"bottomPaddingDesktop":0,"leftPaddingDesktop":0,"rightPaddingDesktop":0,"topPaddingTablet":0,"bottomPaddingTablet":0,"leftPaddingTablet":0,"rightPaddingTablet":0,"topPaddingMobile":0,"bottomPaddingMobile":0,"leftPaddingMobile":0,"rightPaddingMobile":0,"topMarginDesktop":0,"bottomMarginDesktop":0,"leftMarginDesktop":0,"rightMarginDesktop":0,"topMarginTablet":0,"bottomMarginTablet":0,"leftMarginTablet":0,"rightMarginTablet":0,"topMarginMobile":0,"bottomMarginMobile":0,"leftMarginMobile":0,"rightMarginMobile":0,"rowGapDesktop":0,"rowGapTablet":0,"rowGapMobile":0,"columnGapDesktop":0,"columnGapTablet":0,"columnGapMobile":0,"widthSetByUser":true} -->
+<div class="wp-block-uagb-container uagb-block-cichkv7q"><!-- wp:uagb/advanced-heading {"block_id":"xeehftru","classMigrate":true,"headingDescToggle":false,"headingTag":"p"} -->
+<div class="wp-block-uagb-advanced-heading uagb-block-xeehftru"><p class="uagb-heading-text">Our vision is to revolutionize the way hybrid teams collaborate, making office work as flexible and efficient as remote work. We aim to create a world where teams, regardless of their location, can connect seamlessly, collaborate effortlessly, and innovate together. By bridging the gap between physical and virtual workplaces, we are shaping the future of work—one that is adaptable, inclusive, and built for the modern workforce.</p></div>
+<!-- /wp:uagb/advanced-heading --></div>
+<!-- /wp:uagb/container --></div>
+<!-- /wp:uagb/container -->
+
+<!-- wp:uagb/container {"block_id":"oulspur6","directionDesktop":"row","alignItemsDesktop":"flex-start","alignItemsTablet":"stretch","alignItemsMobile":"stretch","justifyContentDesktop":"flex-start","topPaddingDesktop":44,"bottomPaddingDesktop":0,"leftPaddingDesktop":0,"rightPaddingDesktop":0,"topPaddingTablet":24,"bottomPaddingTablet":0,"leftPaddingTablet":0,"rightPaddingTablet":0,"topPaddingMobile":24,"bottomPaddingMobile":0,"leftPaddingMobile":0,"rightPaddingMobile":0,"paddingLink":false,"topMarginDesktop":0,"bottomMarginDesktop":0,"leftMarginDesktop":0,"rightMarginDesktop":0,"topMarginTablet":0,"bottomMarginTablet":0,"leftMarginTablet":0,"rightMarginTablet":0,"topMarginMobile":0,"bottomMarginMobile":0,"leftMarginMobile":0,"rightMarginMobile":0,"variationSelected":true,"rowGapDesktop":0,"rowGapTablet":0,"rowGapMobile":16,"columnGapDesktop":72,"columnGapTablet":40,"columnGapMobile":0,"containerBorderTopWidth":1,"containerBorderLeftWidth":0,"containerBorderRightWidth":0,"containerBorderBottomWidth":0,"containerBorderTopWidthTablet":1,"containerBorderLeftWidthTablet":0,"containerBorderRightWidthTablet":0,"containerBorderBottomWidthTablet":0,"containerBorderTopWidthMobile":1,"containerBorderLeftWidthMobile":0,"containerBorderRightWidthMobile":0,"containerBorderBottomWidthMobile":0,"containerBorderLink":false,"containerBorderStyle":"solid","containerBorderColor":"var(\u002d\u002dast-global-color-6)"} -->
+<div class="wp-block-uagb-container uagb-block-oulspur6"><!-- wp:uagb/container {"block_id":"lqjivqsy","widthDesktop":30,"alignItemsDesktop":"flex-start","justifyContentDesktop":"flex-start","topPaddingDesktop":0,"bottomPaddingDesktop":0,"leftPaddingDesktop":0,"rightPaddingDesktop":0,"topPaddingTablet":0,"bottomPaddingTablet":0,"leftPaddingTablet":0,"rightPaddingTablet":0,"topPaddingMobile":0,"bottomPaddingMobile":0,"leftPaddingMobile":0,"rightPaddingMobile":0,"topMarginDesktop":0,"bottomMarginDesktop":0,"leftMarginDesktop":0,"rightMarginDesktop":0,"topMarginTablet":0,"bottomMarginTablet":0,"leftMarginTablet":0,"rightMarginTablet":0,"topMarginMobile":0,"bottomMarginMobile":0,"leftMarginMobile":0,"rightMarginMobile":0,"rowGapDesktop":32,"rowGapTablet":0,"rowGapMobile":0,"columnGapDesktop":0,"columnGapTablet":0,"columnGapMobile":0,"widthSetByUser":true} -->
+<div class="wp-block-uagb-container uagb-block-lqjivqsy"><!-- wp:uagb/advanced-heading {"block_id":"ndrokvsq","classMigrate":true,"headingDescToggle":false,"headingTag":"h3"} -->
+<div class="wp-block-uagb-advanced-heading uagb-block-ndrokvsq"><h3 class="uagb-heading-text">Our Mission</h3></div>
+<!-- /wp:uagb/advanced-heading --></div>
+<!-- /wp:uagb/container -->
+
+<!-- wp:uagb/container {"block_id":"hwp2xxml","widthDesktop":70,"alignItemsDesktop":"flex-start","justifyContentDesktop":"flex-start","topPaddingDesktop":0,"bottomPaddingDesktop":0,"leftPaddingDesktop":0,"rightPaddingDesktop":0,"topPaddingTablet":0,"bottomPaddingTablet":0,"leftPaddingTablet":0,"rightPaddingTablet":0,"topPaddingMobile":0,"bottomPaddingMobile":0,"leftPaddingMobile":0,"rightPaddingMobile":0,"topMarginDesktop":0,"bottomMarginDesktop":0,"leftMarginDesktop":0,"rightMarginDesktop":0,"topMarginTablet":0,"bottomMarginTablet":0,"leftMarginTablet":0,"rightMarginTablet":0,"topMarginMobile":0,"bottomMarginMobile":0,"leftMarginMobile":0,"rightMarginMobile":0,"rowGapDesktop":0,"rowGapTablet":0,"rowGapMobile":0,"columnGapDesktop":0,"columnGapTablet":0,"columnGapMobile":0,"widthSetByUser":true} -->
+<div class="wp-block-uagb-container uagb-block-hwp2xxml"><!-- wp:uagb/advanced-heading {"block_id":"gf3ygopx","classMigrate":true,"headingDescToggle":false,"headingTag":"p"} -->
+<div class="wp-block-uagb-advanced-heading uagb-block-gf3ygopx"><p class="uagb-heading-text">Our mission is to empower hybrid teams with innovative solutions that streamline office collaboration. We are committed to simplifying desk booking, enhancing team connectivity, and providing data-driven insights to optimize office space. By integrating seamlessly into existing workflows and fostering community building, we enable organizations to reduce costs, improve efficiency, and support a more connected and productive workplace.</p></div>
+<!-- /wp:uagb/advanced-heading --></div>
+<!-- /wp:uagb/container --></div>
+<!-- /wp:uagb/container --></div>
+<!-- /wp:uagb/container --></div></div>
+<!-- /wp:uagb/container -->]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>213</wp:post_id>
+		<wp:post_date><![CDATA[2024-08-15 17:35:53]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2024-08-15 05:35:53]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2024-08-15 17:37:43]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2024-08-15 05:37:43]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[about-us]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>0</wp:menu_order>
+		<wp:post_type><![CDATA[page]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+														<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:50373:".wp-block-uagb-container{display:flex;position:relative;box-sizing:border-box;transition-property:box-shadow;transition-duration:0.2s;transition-timing-function:ease}.wp-block-uagb-container .spectra-container-link-overlay{bottom:0;left:0;position:absolute;right:0;top:0;z-index:10}.wp-block-uagb-container.uagb-is-root-container{margin-left:auto;margin-right:auto}.wp-block-uagb-container.alignfull.uagb-is-root-container .uagb-container-inner-blocks-wrap{display:flex;position:relative;box-sizing:border-box;margin-left:auto !important;margin-right:auto !important}.wp-block-uagb-container .wp-block-uagb-blockquote,.wp-block-uagb-container .wp-block-spectra-pro-login,.wp-block-uagb-container .wp-block-spectra-pro-register{margin:unset}.wp-block-uagb-container .uagb-container__video-wrap{height:100%;width:100%;top:0;left:0;position:absolute;overflow:hidden;-webkit-transition:opacity 1s;-o-transition:opacity 1s;transition:opacity 1s}.wp-block-uagb-container .uagb-container__video-wrap video{max-width:100%;width:100%;height:100%;margin:0;line-height:1;border:none;display:inline-block;vertical-align:baseline;-o-object-fit:cover;object-fit:cover;background-size:cover}.wp-block-uagb-container.uagb-layout-grid{display:grid;width:100%}.wp-block-uagb-container.uagb-layout-grid>.uagb-container-inner-blocks-wrap{display:inherit;width:inherit}.wp-block-uagb-container.uagb-layout-grid>.uagb-container-inner-blocks-wrap>.wp-block-uagb-container{max-width:unset !important;width:unset !important}.wp-block-uagb-container.uagb-layout-grid>.wp-block-uagb-container{max-width:unset !important;width:unset !important}.wp-block-uagb-container.uagb-layout-grid.uagb-is-root-container{margin-left:auto;margin-right:auto}.wp-block-uagb-container.uagb-layout-grid.uagb-is-root-container>.wp-block-uagb-container{max-width:unset !important;width:unset !important}.wp-block-uagb-container.uagb-layout-grid.alignwide.uagb-is-root-container{margin-left:auto;margin-right:auto}.wp-block-uagb-container.uagb-layout-grid.alignfull.uagb-is-root-container .uagb-container-inner-blocks-wrap{display:inherit;position:relative;box-sizing:border-box;margin-left:auto !important;margin-right:auto !important}body .wp-block-uagb-container>.uagb-container-inner-blocks-wrap>*:not(.wp-block-uagb-container):not(.wp-block-uagb-column):not(.wp-block-uagb-container):not(.wp-block-uagb-section):not(.uagb-container__shape):not(.uagb-container__video-wrap):not(.wp-block-spectra-pro-register):not(.wp-block-spectra-pro-login):not(.uagb-slider-container):not(.spectra-image-gallery__control-lightbox):not(.wp-block-uagb-info-box),body .wp-block-uagb-container>.uagb-container-inner-blocks-wrap,body .wp-block-uagb-container>*:not(.wp-block-uagb-container):not(.wp-block-uagb-column):not(.wp-block-uagb-container):not(.wp-block-uagb-section):not(.uagb-container__shape):not(.uagb-container__video-wrap):not(.wp-block-spectra-pro-register):not(.wp-block-spectra-pro-login):not(.uagb-slider-container):not(.spectra-container-link-overlay):not(.spectra-image-gallery__control-lightbox):not(.wp-block-uagb-lottie):not(.uagb-faq__outer-wrap){min-width:unset !important;width:100%;position:relative}body .ast-container .wp-block-uagb-container>.uagb-container-inner-blocks-wrap>.wp-block-uagb-container>ul,body .ast-container .wp-block-uagb-container>.uagb-container-inner-blocks-wrap>.wp-block-uagb-container ol,body .ast-container .wp-block-uagb-container>.uagb-container-inner-blocks-wrap>ul,body .ast-container .wp-block-uagb-container>.uagb-container-inner-blocks-wrap ol{max-width:-webkit-fill-available;margin-block-start:0;margin-block-end:0;margin-left:20px}.ast-plain-container .editor-styles-wrapper .block-editor-block-list__layout.is-root-container .uagb-is-root-container.wp-block-uagb-container.alignwide{margin-left:auto;margin-right:auto}.uagb-container__shape{overflow:hidden;position:absolute;left:0;width:100%;line-height:0;direction:ltr}.uagb-container__shape-top{top:-3px}.uagb-container__shape-bottom{bottom:-3px}.uagb-container__shape.uagb-container__invert.uagb-container__shape-bottom,.uagb-container__shape.uagb-container__invert.uagb-container__shape-top{-webkit-transform:rotate(180deg);-ms-transform:rotate(180deg);transform:rotate(180deg)}.uagb-container__shape.uagb-container__shape-flip svg{transform:translateX(-50%) rotateY(180deg)}.uagb-container__shape svg{display:block;width:-webkit-calc(100% + 1.3px);width:calc(100% + 1.3px);position:relative;left:50%;-webkit-transform:translateX(-50%);-ms-transform:translateX(-50%);transform:translateX(-50%)}.uagb-container__shape .uagb-container__shape-fill{-webkit-transform-origin:center;-ms-transform-origin:center;transform-origin:center;-webkit-transform:rotateY(0deg);transform:rotateY(0deg)}.uagb-container__shape.uagb-container__shape-above-content{z-index:9;pointer-events:none}.nv-single-page-wrap .nv-content-wrap.entry-content .wp-block-uagb-container.alignfull{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw)}@media only screen and (max-width: 767px){.wp-block-uagb-container .wp-block-uagb-advanced-heading{width:-webkit-fill-available}}.wp-block-uagb-image--align-none{justify-content:center}
+.uagb-ifb-content>svg *{-webkit-transition:all 0.2s;-o-transition:all 0.2s;transition:all 0.2s}.uagb-ifb-content>svg,.uagb-ifb-content{display:inline-block}.uagb-ifb-content>svg{vertical-align:middle;width:inherit;height:inherit;font-style:initial}.uagb-ifb-content .uagb-ifb-icon-wrap svg{box-sizing:content-box;width:inherit;height:inherit}.uagb-ifb-button-wrapper:empty{display:none}div.uagb-ifb-button-wrapper a.uagb-infobox-cta-link,div.uagb-ifb-cta a.uagb-infobox-cta-link,.entry .entry-content a.uagb-infobox-cta-link,a.uagb-infobox-link-wrap,.entry .entry-content a.uagb-infobox-link-wrap{text-decoration:none;align-items:center}.uagb-infobox-icon-left-title.uagb-infobox-image-valign-middle .uagb-ifb-title-wrap,.uagb-infobox-icon-right-title.uagb-infobox-image-valign-middle .uagb-ifb-title-wrap,.uagb-infobox-image-valign-middle .uagb-ifb-icon-wrap,.uagb-infobox-image-valign-middle .uagb-ifb-image-content,.uagb-infobox-icon-left.uagb-infobox-image-valign-middle .uagb-ifb-content,.uagb-infobox-icon-right.uagb-infobox-image-valign-middle .uagb-ifb-content{-ms-flex-item-align:center;-webkit-align-self:center;align-self:center}.uagb-infobox-icon-left-title.uagb-infobox-image-valign-top .uagb-ifb-title-wrap,.uagb-infobox-icon-right-title.uagb-infobox-image-valign-top .uagb-ifb-title-wrap,.uagb-infobox-image-valign-top .uagb-ifb-icon-wrap,.uagb-infobox-image-valign-top .uagb-ifb-image-content,.uagb-infobox-icon-left.uagb-infobox-image-valign-top .uagb-ifb-content,.uagb-infobox-icon-right.uagb-infobox-image-valign-top .uagb-ifb-content{-webkit-align-self:self-start;align-self:self-start}.uagb-infobox-left{justify-content:flex-start;text-align:left;-webkit-box-pack:start;-ms-flex-pack:start;-webkit-justify-content:flex-start;-moz-box-pack:start}.uagb-infobox-center{justify-content:center;text-align:center;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;-moz-box-pack:center}.uagb-infobox-right{justify-content:flex-end;text-align:right;-webkit-box-pack:end;-ms-flex-pack:end;-webkit-justify-content:flex-end;-moz-box-pack:end}.uagb-infobox-icon-above-title.uagb-infobox__content-wrap,.uagb-infobox-icon-below-title.uagb-infobox__content-wrap{display:block;width:100%}.uagb-infobox-icon-left-title .uagb-ifb-content>svg,.uagb-infobox-icon-left .uagb-ifb-content>svg{margin-right:10px}.uagb-infobox-icon-right-title .uagb-ifb-content>svg,.uagb-infobox-icon-right .uagb-ifb-content>svg{margin-left:10px}.uagb-infobox-icon-left.uagb-infobox__content-wrap,.uagb-infobox-icon-right.uagb-infobox__content-wrap,.uagb-infobox-icon-left-title .uagb-ifb-left-title-image,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image{display:-webkit-box;display:-ms-flexbox;display:-webkit-flex;display:-moz-box;display:flex;-js-display:flex}.uagb-infobox-icon-left-title .uagb-ifb-left-title-image .uagb-ifb-image-content,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image .uagb-ifb-image-content,.uagb-infobox-icon-left .uagb-ifb-image-content,.uagb-infobox-icon-right .uagb-ifb-image-content{flex-shrink:0;line-height:0}.uagb-infobox-icon-left-title .uagb-ifb-left-title-image .uagb-ifb-title-wrap,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image .uagb-ifb-title-wrap,.uagb-infobox-icon-left .uagb-ifb-content,.uagb-infobox-icon-right .uagb-ifb-content{flex-grow:1}.uagb-infobox-icon-right.uagb-infobox__content-wrap,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image{-webkit-box-pack:end;-ms-flex-pack:end;-webkit-justify-content:flex-end;-moz-box-pack:end;justify-content:flex-end}.uagb-ifb-content img{position:relative;display:inline-block;line-height:0;width:auto;height:auto !important;max-width:100%;border-radius:inherit;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;-webkit-border-radius:inherit}.uagb-infobox-module-link{position:absolute;top:0;right:0;bottom:0;left:0;z-index:4;width:100%;height:100%}.uagb-edit-mode .uagb-infobox-module-link{z-index:2}.uagb-infobox-link-icon-after{margin-right:0;margin-left:5px}.uagb-infobox-link-icon-before{margin-right:5px;margin-left:0}.uagb-infobox-link-icon{-webkit-transition:all 200ms linear;transition:all 200ms linear}.uagb-infobox__content-wrap{box-sizing:border-box;position:relative;width:100%;word-break:break-word;z-index:1}.uagb-ifb-separator{display:inline-block;margin:0;border-top-color:#333;border-top-style:solid;border-top-width:2px;line-height:0}.uagb-ifb-button-wrapper{line-height:1}.uagb-ifb-button-wrapper.uagb-ifb-button-type-text .uagb-infobox-cta-link.wp-block-button__link{background-color:unset;border:none}.uagb-ifb-button-wrapper.uagb-ifb-button-type-text .uagb-infobox-cta-link.wp-block-button__link:hover{background-color:unset;border-color:unset}.uagb-ifb-button-wrapper .uagb-infobox-cta-link{cursor:pointer}.uagb-ifb-button-wrapper .wp-block-button__link svg,.uagb-ifb-button-wrapper .ast-outline-button svg{fill:currentColor}.uagb-infobox__content-wrap a{-webkit-box-shadow:none;box-shadow:none;text-decoration:none}.uagb-ifb-title-wrap{width:100%}.uagb-ifb-title{margin-block-start:0}.uagb-ifb-title-wrap .uagb-ifb-title-prefix{display:block;padding:0;margin:0}.uagb-infobox__content-wrap.uagb-infobox__content-wrap{position:relative}.uagb-ifb-content{width:100%}.uagb-infobox__content-wrap.uagb-infobox,.uagb-ifb-content,.uagb-ifb-title-wrap,.uagb-ifb-title-prefix *,svg.dashicon.dashicons-upload{z-index:1}a.uagb-infobox-link-wrap{color:inherit}.uagb-ifb-content p:empty{display:none}.uagb-infobox__content-wrap .uagb-ifb-content img{display:inline-block;max-width:100%}.uagb-infobox__content-wrap .uagb-ifb-content svg{display:inline-block}.uagb-infobox__content-wrap .uagb-ifb-icon-wrap,.uagb-infobox-icon-left .uagb-ifb-image-content,.uagb-infobox-icon-right .uagb-ifb-image-content{box-sizing:content-box}.uagb-infobox-cta-link>svg{vertical-align:middle;width:15px;height:15px;font-size:15px}.uagb-infobox-cta-link{display:inline-flex}.block-editor-page #wpwrap .uagb-infobox-cta-link svg,.uagb-infobox-cta-link svg{font-style:normal}.uagb-infobox-icon-left-title .uagb-ifb-icon-wrap,.uagb-infobox-icon-left .uagb-ifb-icon-wrap{margin-right:10px;line-height:0}.uagb-infobox-icon-right-title .uagb-ifb-icon-wrap,.uagb-infobox-icon-right .uagb-ifb-icon-wrap{margin-left:10px;line-height:0}.uagb-infobox-icon-left .uagb-ifb-left-right-wrap,.uagb-infobox-icon-right .uagb-ifb-left-right-wrap,.uagb-infobox-icon-left-title .uagb-ifb-left-title-image,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image{display:-webkit-box;display:-ms-flexbox;display:flex}.uagb-infobox-icon-right .uagb-ifb-left-right-wrap,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image{-webkit-box-pack:end;-ms-flex-pack:end;-webkit-justify-content:flex-end;-moz-box-pack:end;justify-content:flex-end}a.uagb-infbox__link-to-all{position:absolute;top:0;left:0;z-index:3;width:100%;height:100%;box-shadow:none;text-decoration:none;-webkit-box-shadow:none}@media only screen and (max-width: 976px){.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-image-content{padding:0;margin-bottom:20px}.uagb-infobox-stacked-tablet.uagb-reverse-order-tablet.uagb-infobox__content-wrap{display:-webkit-inline-box;display:-ms-inline-flexbox;display:-webkit-inline-flex;display:-moz-inline-box;display:inline-flex;flex-direction:column-reverse;-js-display:inline-flex;-webkit-box-orient:vertical;-webkit-box-direction:reverse;-ms-flex-direction:column-reverse;-webkit-flex-direction:column-reverse;-moz-box-orient:vertical;-moz-box-direction:reverse}.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-content,.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-icon-wrap,.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-image-content{display:block;width:100%;text-align:center}.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-icon-wrap,.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-image-content{margin-right:0;margin-left:0}.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap{display:inline-block}.uagb-infobox-icon-left-title.uagb-infobox-stacked-tablet .uagb-ifb-image-content,.uagb-infobox-icon-left-title.uagb-infobox-stacked-tablet .uagb-ifb-icon-wrap,.uagb-infobox-icon-left.uagb-infobox-stacked-tablet .uagb-ifb-image-content,.uagb-infobox-icon-left.uagb-infobox-stacked-tablet .uagb-ifb-icon-wrap{margin-right:0}.uagb-infobox-icon-right-title.uagb-infobox-stacked-tablet .uagb-ifb-image-content,.uagb-infobox-icon-right-title.uagb-infobox-stacked-tablet .uagb-ifb-icon-wrap,.uagb-infobox-icon-right.uagb-infobox-stacked-tablet .uagb-ifb-image-content,.uagb-infobox-icon-right.uagb-infobox-stacked-tablet .uagb-ifb-icon-wrap{margin-left:0}.uagb-infobox-icon-left-title .uagb-ifb-separator{margin:10px 0}}@media screen and (max-width: 767px){.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap{display:inline-block}.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap .uagb-ifb-image-content,.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap .uagb-ifb-icon-wrap{padding:0;margin-bottom:20px;margin-right:0;margin-left:0}.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap.uagb-reverse-order-mobile{display:-webkit-inline-box;display:-ms-inline-flexbox;display:-webkit-inline-flex;display:-moz-inline-box;display:inline-flex;flex-direction:column-reverse;-js-display:inline-flex;-webkit-box-orient:vertical;-webkit-box-direction:reverse;-ms-flex-direction:column-reverse;-webkit-flex-direction:column-reverse;-moz-box-orient:vertical;-moz-box-direction:reverse}.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap .uagb-ifb-image-content,.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap .uagb-ifb-icon-wrap,.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap .uagb-ifb-content{display:block;width:100%;text-align:center}.uagb-infobox-icon-left-title.uagb-infobox-stacked-mobile .uagb-ifb-image-content,.uagb-infobox-icon-left-title.uagb-infobox-stacked-mobile .uagb-ifb-icon-wrap,.uagb-infobox-icon-left.uagb-infobox-stacked-mobile .uagb-ifb-image-content,.uagb-infobox-icon-left.uagb-infobox-stacked-mobile .uagb-ifb-icon-wrap{margin-right:0}.uagb-infobox-icon-right-title.uagb-infobox-stacked-mobile .uagb-ifb-image-content,.uagb-infobox-icon-right-title.uagb-infobox-stacked-mobile .uagb-ifb-icon-wrap,.uagb-infobox-icon-right.uagb-infobox-stacked-mobile .uagb-ifb-image-content,.uagb-infobox-icon-right.uagb-infobox-stacked-mobile .uagb-ifb-icon-wrap{margin-left:0}.uagb-infobox-icon-left-title .uagb-ifb-separator{margin:10px 0}}.uagb-ifb-icon svg{width:inherit;height:inherit;vertical-align:middle}.uagb-ifb-button-icon{height:15px;width:15px;font-size:15px;vertical-align:middle}.uagb-ifb-button-icon svg{height:inherit;width:inherit;display:inline-block}.uagb-ifb-button-icon.uagb-ifb-align-icon-after{float:right}.uagb-ifb-cta-button{display:inline-block}.uagb-disable-link{pointer-events:none}@media only screen and (min-width: 977px){.uagb-infobox-margin-wrapper{display:flex}}.uagb-ifb-content .uagb-ifb-desc p:last-child{margin-bottom:0}
+.wp-block-uagb-advanced-heading h1,.wp-block-uagb-advanced-heading h2,.wp-block-uagb-advanced-heading h3,.wp-block-uagb-advanced-heading h4,.wp-block-uagb-advanced-heading h5,.wp-block-uagb-advanced-heading h6,.wp-block-uagb-advanced-heading p,.wp-block-uagb-advanced-heading div{word-break:break-word}.wp-block-uagb-advanced-heading .uagb-heading-text{margin:0}.wp-block-uagb-advanced-heading .uagb-desc-text{margin:0}.wp-block-uagb-advanced-heading .uagb-separator{font-size:0;border-top-style:solid;display:inline-block;margin:0 0 10px 0}.wp-block-uagb-advanced-heading .uagb-highlight{color:#f78a0c;border:0;transition:all 0.3s ease}.uag-highlight-toolbar{border-left:0;border-top:0;border-bottom:0;border-radius:0;border-right-color:#1e1e1e}.uag-highlight-toolbar .components-button{border-radius:0;outline:none}.uag-highlight-toolbar .components-button.is-primary{color:#fff}
+.wp-block-uagb-container.uagb-block-ahe984ga .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-ahe984ga .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-ahe984ga .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-ahe984ga .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-ahe984ga .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-ahe984ga{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-ahe984ga > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: flex-start;justify-content: center;flex-wrap: nowrap;row-gap: 48px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-ahe984ga{box-shadow: 0px 0px   #00000070 ;padding-top: 112px;padding-bottom: 112px;padding-left: 40px;padding-right: 40px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;background-color: var(--ast-global-color-5);;row-gap: 48px;column-gap: 0px;}.uagb-block-lpgtjmms .uagb-ifb-icon{width: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-ifb-icon > span{font-size: 30px;width: 30px;line-height: 30px;color: #333;}.uagb-block-lpgtjmms .uagb-ifb-icon svg{fill: #333;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-icon-wrap svg{width: 30px;height: 30px;line-height: 30px;font-size: 30px;color: #333;fill: #333;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-icon-wrap svg{line-height: 30px;font-size: 30px;color: #333;fill: #333;}.uagb-block-lpgtjmms .uagb-iconbox-icon-wrap{margin: auto;display: inline-flex;align-items: center;justify-content: center;box-sizing: content-box;width: 30px;height: 30px;line-height: 30px;padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-icon-wrap > svg{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content .uagb-ifb-icon-wrap > svg{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-left-title-image svg{width: 30px;line-height: 30px;font-size: 30px;color: #333;fill: #333;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-right-title-image svg{width: 30px;line-height: 30px;font-size: 30px;color: #333;fill: #333;}.uagb-block-lpgtjmms .uagb-infobox__content-wrap .uagb-ifb-imgicon-wrap{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;}.uagb-block-lpgtjmms .uagb-infobox .uagb-ifb-image-content img{border-radius: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap img{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;border-radius: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content .uagb-ifb-right-title-image > img{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;border-radius: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content .uagb-ifb-left-title-image > img{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;border-radius: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content > img{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;border-radius: 0px;}.uagb-block-lpgtjmms .uagb-ifb-title-wrap .uagb-ifb-title-prefix{color: var(--ast-global-color-2);margin-bottom: 24px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-title{color: var(--ast-global-color-2);margin-bottom: 20px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-desc{color: var(--ast-global-color-3);margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms .uagb-ifb-separator{width: 30%;border-top-width: 2px;border-top-color: #333;border-top-style: solid;margin-bottom: 0px;}.uagb-block-lpgtjmms .uagb-infobox__content-wrap .uagb-ifb-separator{width: 30%;border-top-width: 2px;border-top-color: #333;border-top-style: solid;}.uagb-block-lpgtjmms .uagb-ifb-align-icon-after{margin-left: 5px;}.uagb-block-lpgtjmms .uagb-ifb-align-icon-before{margin-right: 5px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content svg{box-sizing: content-box;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content img{box-sizing: content-box;}.uagb-block-lpgtjmms .uagb-infobox__content-wrap{text-align: left;}.uagb-block-lpgtjmms.uagb-infobox-icon-above-title{text-align: left;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap:not(.wp-block-uagb-info-box--has-margin){padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap.wp-block-uagb-info-box--has-margin .uagb-infobox-margin-wrapper{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-infobox-cta-link > svg {margin-left: 5px;}.uagb-block-lpgtjmms .uagb-ifb-title-prefix{text-transform: uppercase;font-weight: 500;font-size: 16px;line-height: 1em;letter-spacing: 2px;}.wp-block-uagb-container.uagb-block-udpwecyw .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-udpwecyw .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-udpwecyw .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-udpwecyw .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-udpwecyw .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-udpwecyw{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-udpwecyw > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: center;justify-content: center;flex-wrap: nowrap;row-gap: 24px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-udpwecyw{box-shadow: 0px 0px   #00000070 ;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;flex-direction: column;align-items: center;justify-content: center;flex-wrap: nowrap;row-gap: 24px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-mlgj0zyf .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-mlgj0zyf .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-mlgj0zyf .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-mlgj0zyf .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-mlgj0zyf .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-mlgj0zyf{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-mlgj0zyf > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: row;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 72px;}.wp-block-uagb-container.uagb-block-mlgj0zyf{box-shadow: 0px 0px   #00000070 ;padding-top: 44px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);flex-direction: row;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 72px;}.wp-block-uagb-container.uagb-block-450zcguv .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-450zcguv .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-450zcguv .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-450zcguv .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-450zcguv .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-450zcguv{max-width: 30%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-450zcguv > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 32px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-450zcguv{box-shadow: 0px 0px   #00000070 ;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 32px;column-gap: 0px;}.wp-block-uagb-advanced-heading.uagb-block-u0nsiwig.wp-block-uagb-advanced-heading .uagb-desc-text{margin-bottom: 15px;}.wp-block-uagb-advanced-heading.uagb-block-u0nsiwig.wp-block-uagb-advanced-heading .uagb-highlight{font-style: normal;font-weight: Default;background: #007cba;color: #fff;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-u0nsiwig.wp-block-uagb-advanced-heading .uagb-highlight::-moz-selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-u0nsiwig.wp-block-uagb-advanced-heading .uagb-highlight::selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-container.uagb-block-cichkv7q .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-cichkv7q .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-cichkv7q .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-cichkv7q .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-cichkv7q .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-cichkv7q{max-width: 70%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-cichkv7q > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-cichkv7q{box-shadow: 0px 0px   #00000070 ;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-advanced-heading.uagb-block-xeehftru.wp-block-uagb-advanced-heading .uagb-desc-text{margin-bottom: 15px;}.wp-block-uagb-advanced-heading.uagb-block-xeehftru.wp-block-uagb-advanced-heading .uagb-highlight{font-style: normal;font-weight: Default;background: #007cba;color: #fff;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-xeehftru.wp-block-uagb-advanced-heading .uagb-highlight::-moz-selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-xeehftru.wp-block-uagb-advanced-heading .uagb-highlight::selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-container.uagb-block-oulspur6 .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-oulspur6 .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-oulspur6 .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-oulspur6 .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-oulspur6 .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-oulspur6{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-oulspur6 > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: row;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 72px;}.wp-block-uagb-container.uagb-block-oulspur6{box-shadow: 0px 0px   #00000070 ;padding-top: 44px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);flex-direction: row;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 72px;}.wp-block-uagb-container.uagb-block-lqjivqsy .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-lqjivqsy .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-lqjivqsy .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-lqjivqsy .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-lqjivqsy .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-lqjivqsy{max-width: 30%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-lqjivqsy > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 32px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-lqjivqsy{box-shadow: 0px 0px   #00000070 ;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 32px;column-gap: 0px;}.wp-block-uagb-advanced-heading.uagb-block-ndrokvsq.wp-block-uagb-advanced-heading .uagb-desc-text{margin-bottom: 15px;}.wp-block-uagb-advanced-heading.uagb-block-ndrokvsq.wp-block-uagb-advanced-heading .uagb-highlight{font-style: normal;font-weight: Default;background: #007cba;color: #fff;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-ndrokvsq.wp-block-uagb-advanced-heading .uagb-highlight::-moz-selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-ndrokvsq.wp-block-uagb-advanced-heading .uagb-highlight::selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-container.uagb-block-hwp2xxml .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-hwp2xxml .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-hwp2xxml .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-hwp2xxml .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-hwp2xxml .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-hwp2xxml{max-width: 70%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-hwp2xxml > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-hwp2xxml{box-shadow: 0px 0px   #00000070 ;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-advanced-heading.uagb-block-gf3ygopx.wp-block-uagb-advanced-heading .uagb-desc-text{margin-bottom: 15px;}.wp-block-uagb-advanced-heading.uagb-block-gf3ygopx.wp-block-uagb-advanced-heading .uagb-highlight{font-style: normal;font-weight: Default;background: #007cba;color: #fff;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-gf3ygopx.wp-block-uagb-advanced-heading .uagb-highlight::-moz-selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-gf3ygopx.wp-block-uagb-advanced-heading .uagb-highlight::selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}@media only screen and (max-width: 976px) {.wp-block-uagb-container.uagb-is-root-container .uagb-block-ahe984ga{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-ahe984ga > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 50px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-ahe984ga{padding-top: 80px;padding-bottom: 80px;padding-left: 32px;padding-right: 32px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;background-color: var(--ast-global-color-5);;row-gap: 50px;column-gap: 0px;}.uagb-block-lpgtjmms .uagb-ifb-title-wrap .uagb-ifb-title-prefix{margin-bottom: 12px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-title{margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-desc{margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-icon-wrap > svg{width: 30px;height: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content .uagb-ifb-icon-wrap > svg{line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content img{box-sizing: content-box;}.uagb-block-lpgtjmms .uagb-ifb-icon{width: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-ifb-icon > span{font-size: 30px;width: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-iconbox-icon-wrap{width: 30px;height: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-left-title-image > svg{width: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-right-title-image > svg{width: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap:not(.wp-block-uagb-info-box--has-margin){padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap.wp-block-uagb-info-box--has-margin .uagb-infobox-margin-wrapper{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-infobox-cta-link > svg {margin-left: 5px;}.uagb-block-lpgtjmms .uagb-ifb-title-prefix{font-size: 16px;line-height: 1em;letter-spacing: 2px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-udpwecyw{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-udpwecyw > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 24px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-udpwecyw{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;row-gap: 24px;column-gap: 0px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-mlgj0zyf{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-mlgj0zyf > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;align-items: stretch;row-gap: 0px;column-gap: 40px;}.wp-block-uagb-container.uagb-block-mlgj0zyf{padding-top: 24px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);align-items: stretch;row-gap: 0px;column-gap: 40px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-450zcguv{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-450zcguv > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-450zcguv{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-cichkv7q{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-cichkv7q > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-cichkv7q{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-oulspur6{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-oulspur6 > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;align-items: stretch;row-gap: 0px;column-gap: 40px;}.wp-block-uagb-container.uagb-block-oulspur6{padding-top: 24px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);align-items: stretch;row-gap: 0px;column-gap: 40px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-lqjivqsy{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-lqjivqsy > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-lqjivqsy{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-hwp2xxml{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-hwp2xxml > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-hwp2xxml{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;row-gap: 0px;column-gap: 0px;}}@media only screen and (max-width: 767px) {.wp-block-uagb-container.uagb-is-root-container .uagb-block-ahe984ga{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-ahe984ga > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 40px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-ahe984ga{padding-top: 64px;padding-bottom: 64px;padding-left: 24px;padding-right: 24px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 40px;column-gap: 0px;order: initial;background-color: var(--ast-global-color-5);;}.uagb-block-lpgtjmms .uagb-ifb-title-wrap .uagb-ifb-title-prefix{margin-bottom: 12px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-title{margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-desc{margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-icon-wrap > svg{width: 30px;height: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content .uagb-ifb-icon-wrap > svg{line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-left-title-image > svg{width: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-right-title-image > svg{width: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content img{box-sizing: content-box;}.uagb-block-lpgtjmms .uagb-ifb-icon{width: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-ifb-icon > span{font-size: 30px;width: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-iconbox-icon-wrap{width: 30px;height: 30px;line-height: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap:not(.wp-block-uagb-info-box--has-margin){padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap.wp-block-uagb-info-box--has-margin .uagb-infobox-margin-wrapper{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-infobox-cta-link > svg {margin-left: 5px;}.uagb-block-lpgtjmms .uagb-ifb-title-prefix{font-size: 15px;line-height: 1em;letter-spacing: 2px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-udpwecyw{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-udpwecyw > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 24px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-udpwecyw{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 24px;column-gap: 0px;order: initial;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-mlgj0zyf{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-mlgj0zyf > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;align-items: stretch;flex-wrap: wrap;row-gap: 16px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-mlgj0zyf{padding-top: 24px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 16px;column-gap: 0px;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);align-items: stretch;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-450zcguv{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-450zcguv > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-450zcguv{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 0px;column-gap: 0px;order: initial;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-cichkv7q{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-cichkv7q > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-cichkv7q{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 0px;column-gap: 0px;order: initial;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-oulspur6{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-oulspur6 > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;align-items: stretch;flex-wrap: wrap;row-gap: 16px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-oulspur6{padding-top: 24px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 16px;column-gap: 0px;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);align-items: stretch;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-lqjivqsy{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-lqjivqsy > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-lqjivqsy{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 0px;column-gap: 0px;order: initial;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-hwp2xxml{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-hwp2xxml > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-hwp2xxml{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 0px;column-gap: 0px;order: initial;flex-wrap: wrap;}}.uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
+";s:2:"js";s:0:"";s:18:"current_block_list";a:10:{i:0;s:14:"uagb/container";i:1;s:13:"uagb/info-box";i:5;s:21:"uagb/advanced-heading";i:6;s:11:"core/search";i:7;s:10:"core/group";i:8;s:12:"core/heading";i:9;s:17:"core/latest-posts";i:10;s:20:"core/latest-comments";i:11;s:13:"core/archives";i:12;s:15:"core/categories";}s:8:"uag_flag";b:1;s:11:"uag_version";s:10:"1727150569";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
+		<wp:meta_value><![CDATA[uag-css-213.css]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
 				</channel>
 </rss>
 	
