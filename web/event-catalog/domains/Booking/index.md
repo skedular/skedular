@@ -11,8 +11,12 @@ services:
       version: 0.0.1
     - id: BookingLocationSubscriberService
       version: 0.0.1
+    - id: BookingCustomerSubscriberService
+      version: 0.0.1
+    - id: BookingOrganizationSubscriberService
+      version: 0.0.1
 badges:
-    - content: Team Domain
+    - content: Booking Domain
       backgroundColor: blue
       textColor: blue
 ---
