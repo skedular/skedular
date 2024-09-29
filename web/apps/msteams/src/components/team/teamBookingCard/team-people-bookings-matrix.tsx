@@ -20,16 +20,16 @@ import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridCo
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
-  BookingIcon,
-  DangerIcon,
-  DeleteIcon,
-  EllipseMenuIcon,
-  NotPreferredIcon,
-  OrganizationIcon,
-  PreferredIcon,
-  SettingsIcon,
-  WorkingFromHomeIcon,
-  WorkingFromOfficeIcon,
+    BookingIcon,
+    DangerIcon,
+    DeleteIcon,
+    EllipseMenuIcon,
+    NotPreferredIcon,
+    OrganizationIcon,
+    PreferredIcon,
+    SettingsIcon,
+    WorkingFromHomeIcon,
+    WorkingFromOfficeIcon,
 } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
@@ -782,7 +782,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         <CardHeader
           title={teamName}
           subheader={
-            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%' }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: "center" }}>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
                 <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>

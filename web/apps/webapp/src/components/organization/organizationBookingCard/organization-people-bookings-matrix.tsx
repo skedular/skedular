@@ -20,6 +20,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
@@ -44,6 +45,7 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
+import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useState, useTransition } from 'react';
@@ -636,14 +638,6 @@ const OrganizationPeopleBookingsMatrix = ({
     }
   };
 
-  const handleBookingsClicked = () => {
-    router.push(`/organization/${organizationId}?tab=bookings`);
-  };
-
-  const handleSettingsClicked = () => {
-    router.push(`/organization/${organizationId}?tab=about`);
-  };
-
   const handleMarkAsDefaultOrganizationClicked = () => {
     if (!rootData.me) {
       return;
@@ -776,19 +770,20 @@ const OrganizationPeopleBookingsMatrix = ({
         <CardHeader
           title={organizationName}
           subheader={
-            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%' }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: "center" }}>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
                 <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
               <Stack direction="row">
-                <IconButton color="primary" onClick={handleBookingsClicked}>
+                <Link component={NextLink} href={`/organization/${organizationId}?tab=bookings`}>
                   <BookingIcon />
-                </IconButton>
+                </Link>
+
                 {rootData.organization.canModify && (
-                  <IconButton color="secondary" onClick={handleSettingsClicked}>
-                    <SettingsIcon />
-                  </IconButton>
+                  <Link component={NextLink} href={`/organization/${organizationId}?tab=about`}>
+                    <SettingsIcon color="secondary" />
+                  </Link>
                 )}
               </Stack>
             </Stack>
