@@ -20,16 +20,16 @@ import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridCo
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
-    BookingIcon,
-    DangerIcon,
-    DeleteIcon,
-    EllipseMenuIcon,
-    NotPreferredIcon,
-    OrganizationIcon,
-    PreferredIcon,
-    SettingsIcon,
-    WorkingFromHomeIcon,
-    WorkingFromOfficeIcon,
+  BookingIcon,
+  DangerIcon,
+  DeleteIcon,
+  EllipseMenuIcon,
+  NotPreferredIcon,
+  OrganizationIcon,
+  PreferredIcon,
+  SettingsIcon,
+  WorkingFromHomeIcon,
+  WorkingFromOfficeIcon,
 } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
@@ -637,14 +637,6 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
     }
   };
 
-  const handleBookingsClicked = () => {
-    navigate(organizationId ? `/organization/${organizationId}/team/${teamId}?tab=bookings` : `/team/${teamId}?tab=bookings`);
-  };
-
-  const handleSettingsClicked = () => {
-    navigate(organizationId ? `/organization/${organizationId}/team/${teamId}?tab=about` : `/team/${teamId}?tab=about`);
-  };
-
   const handleSetAsPreferredTeamClicked = () => {
     if (!rootData.me) {
       return;
@@ -782,19 +774,20 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
         <CardHeader
           title={teamName}
           subheader={
-            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: "center" }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
                 <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
               <Stack direction="row">
-                <IconButton color="primary" onClick={handleBookingsClicked}>
+                <Link href={organizationId ? `/organization/${organizationId}/team/${teamId}?tab=bookings` : `/team/${teamId}?tab=bookings`}>
                   <BookingIcon />
-                </IconButton>
+                </Link>
+
                 {rootData.team.canModify && (
-                  <IconButton color="secondary" onClick={handleSettingsClicked}>
-                    <SettingsIcon />
-                  </IconButton>
+                  <Link href={organizationId ? `/organization/${organizationId}/team/${teamId}?tab=about` : `/team/${teamId}?tab=about`}>
+                    <SettingsIcon color="secondary" />
+                  </Link>
                 )}
               </Stack>
             </Stack>

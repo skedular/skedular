@@ -20,17 +20,17 @@ import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridCo
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
-    BookingIcon,
-    DangerIcon,
-    DeleteIcon,
-    DeskIcon,
-    EllipseMenuIcon,
-    NotPreferredIcon,
-    OrganizationIcon,
-    PreferredIcon,
-    SettingsIcon,
-    WorkingFromHomeIcon,
-    WorkingFromOfficeIcon,
+  BookingIcon,
+  DangerIcon,
+  DeleteIcon,
+  DeskIcon,
+  EllipseMenuIcon,
+  NotPreferredIcon,
+  OrganizationIcon,
+  PreferredIcon,
+  SettingsIcon,
+  WorkingFromHomeIcon,
+  WorkingFromOfficeIcon,
 } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
@@ -47,8 +47,8 @@ import type { locationPeopleBookingsMatrix_addCustomerDefaultLocationMutation } 
 import type { locationPeopleBookingsMatrix_deleteBookingMutation } from './__generated__/locationPeopleBookingsMatrix_deleteBookingMutation.graphql';
 import type { locationPeopleBookingsMatrix_deleteLocationMutation } from './__generated__/locationPeopleBookingsMatrix_deleteLocationMutation.graphql';
 import type {
-    locationPeopleBookingsMatrix_query$data,
-    locationPeopleBookingsMatrix_query$key,
+  locationPeopleBookingsMatrix_query$data,
+  locationPeopleBookingsMatrix_query$key,
 } from './__generated__/locationPeopleBookingsMatrix_query.graphql';
 import type { locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation } from './__generated__/locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation.graphql';
 import type { LocationMemberOrderInput } from './__generated__/locationPeopleBookingsMatrixLocationMembersPaginationQuery.graphql';
@@ -804,19 +804,26 @@ const LocationPeopleBookingsMatrix = ({
         <CardHeader
           title={locationName}
           subheader={
-            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: "center" }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
                 <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
               <Stack direction="row">
-                <IconButton color="primary" onClick={handleBookingsClicked}>
+                <Link
+                  href={
+                    organizationId ? `/organization/${organizationId}/location/${locationId}?tab=bookings` : `/location/${locationId}?tab=bookings`
+                  }
+                >
                   <BookingIcon />
-                </IconButton>
+                </Link>
+
                 {rootData.location.canModify && (
-                  <IconButton color="secondary" onClick={handleSettingsClicked}>
-                    <SettingsIcon />
-                  </IconButton>
+                  <Link
+                    href={organizationId ? `/organization/${organizationId}/location/${locationId}?tab=about` : `/location/${locationId}?tab=about`}
+                  >
+                    <SettingsIcon color="secondary" />
+                  </Link>
                 )}
               </Stack>
             </Stack>
