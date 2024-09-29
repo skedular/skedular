@@ -44,7 +44,6 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
         ...organizationTeamsTab_query
         ...organizationBillingTab_query
         ...organizationOfferingTab_query
-        ...organizationAnalyticsTab_query
       }
     `,
     rootDataRelay,
@@ -153,9 +152,7 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
         {tabIndex === 4 && <OrganizationTeamsTab rootDataRelay={rootData} />}
         {tabIndex === 5 && rootData.organization.canModify && <OrganizationOfferingTab rootDataRelay={rootData} onRefetchRequired={handleRefetch} />}
         {tabIndex === 6 && rootData.organization.canModify && <OrganizationBillingTab rootDataRelay={rootData} onRefetchRequired={handleRefetch} />}
-        {tabIndex === 7 && rootData.organization.canViewAnalytics && (
-          <OrganizationAnalyticsTab rootDataRelay={rootData} organizationId={organizationId} />
-        )}
+        {tabIndex === 7 && rootData.organization.canViewAnalytics && <OrganizationAnalyticsTab organizationId={organizationId} />}
       </>
     </Stack>
   );

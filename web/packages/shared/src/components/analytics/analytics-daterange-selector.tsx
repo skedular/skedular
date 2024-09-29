@@ -6,7 +6,7 @@ import type { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 import { startOfDay } from '../../libs/utils';
 
-export type Period = 'week' | 'month' | '3months' | '6months' | 'year' | 'custom';
+export type Period = 'week' | 'month' | '3months' | 'custom';
 
 type Props = {
   defaultPeriod: Period;
@@ -26,11 +26,7 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
           ? until.subtract(1, 'weeks')
           : defaultPeriod === 'month'
             ? until.subtract(1, 'months')
-            : defaultPeriod === '3months'
-              ? until.subtract(3, 'months')
-              : defaultPeriod === '6months'
-                ? until.subtract(6, 'months')
-                : until.subtract(1, 'years'),
+            : until.subtract(3, 'months'),
   );
   const [period, setPeriod] = useState(defaultPeriod === 'custom' && (defaultCustomFrom || !defaultCustomUntil) ? 'month' : defaultPeriod);
   const handlePeriodChange = (event: React.MouseEvent<HTMLElement>, newPeriod: Period) => {
@@ -56,18 +52,6 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
         from = start.subtract(3, 'months');
 
         break;
-
-      case '6months':
-        until = start;
-        from = start.subtract(6, 'months');
-
-        break;
-
-      case 'year':
-        until = start;
-        from = start.subtract(3, 'years');
-
-        break;
     }
 
     setFrom(from);
@@ -89,12 +73,10 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
 
   return (
     <Stack direction="column" spacing={1}>
-      <ToggleButtonGroup color="primary" value={period} exclusive onChange={handlePeriodChange} aria-label="Platform">
+      <ToggleButtonGroup color="primary" value={period} exclusive onChange={handlePeriodChange} size="small">
         <ToggleButton value="week">1 Week</ToggleButton>
         <ToggleButton value="month">1 Month</ToggleButton>
         <ToggleButton value="3months">3 Months</ToggleButton>
-        <ToggleButton value="6months">6 Months</ToggleButton>
-        <ToggleButton value="year">1 Year</ToggleButton>
         <ToggleButton value="custom">Custom</ToggleButton>
       </ToggleButtonGroup>
       {period === 'custom' && (

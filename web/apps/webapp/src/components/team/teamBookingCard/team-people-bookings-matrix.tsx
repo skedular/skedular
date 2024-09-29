@@ -817,9 +817,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
               <Link component={NextLink} href={`/organization/${rootData.team.organization.uniqueId}`}>
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                   <OrganizationIcon />
-                  <Typography variant="body1" noWrap={true}>
-                    {rootData.team.organization.name}
-                  </Typography>
+                  <Typography variant="body1">{rootData.team.organization.name}</Typography>
                 </Stack>
               </Link>
             )}

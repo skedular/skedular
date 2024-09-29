@@ -41,7 +41,6 @@ import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useState, useTransition } from 'react';
 import { useMutation, useRefetchableFragment } from 'react-relay';
-import { useNavigate } from 'react-router-dom';
 import type { locationPeopleBookingsMatrix_addBookingMutation } from './__generated__/locationPeopleBookingsMatrix_addBookingMutation.graphql';
 import type { locationPeopleBookingsMatrix_addCustomerDefaultLocationMutation } from './__generated__/locationPeopleBookingsMatrix_addCustomerDefaultLocationMutation.graphql';
 import type { locationPeopleBookingsMatrix_deleteBookingMutation } from './__generated__/locationPeopleBookingsMatrix_deleteBookingMutation.graphql';
@@ -307,7 +306,6 @@ const LocationPeopleBookingsMatrix = ({
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
@@ -659,14 +657,6 @@ const LocationPeopleBookingsMatrix = ({
     }
   };
 
-  const handleBookingsClicked = () => {
-    navigate(organizationId ? `/organization/${organizationId}/location/${locationId}?tab=bookings` : `/location/${locationId}?tab=bookings`);
-  };
-
-  const handleSettingsClicked = () => {
-    navigate(organizationId ? `/organization/${organizationId}/location/${locationId}?tab=about` : `/location/${locationId}?tab=about`);
-  };
-
   const handleSetAsPreferredLocationClicked = () => {
     if (!rootData.me) {
       return;
@@ -844,14 +834,12 @@ const LocationPeopleBookingsMatrix = ({
               <Link href={`/organization/${rootData.location.organization.uniqueId}`}>
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                   <OrganizationIcon />
-                  <Typography variant="body1" noWrap={true}>
-                    {rootData.location.organization.name}
-                  </Typography>
+                  <Typography variant="body1">{rootData.location.organization.name}</Typography>
                 </Stack>
               </Link>
             )}
             <DeskIcon />
-            <Typography variant="body1" noWrap={true}>
+            <Typography variant="body1">
               {rootData.location.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${rootData.location.deskCapacity}`}
             </Typography>
           </Stack>

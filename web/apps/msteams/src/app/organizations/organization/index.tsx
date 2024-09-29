@@ -34,8 +34,6 @@ const RootQuery = graphql`
     $bookingsSearchCriteriaUntil: DateTime!
     $locationNameSearchText: String!
     $teamNameSearchText: String!
-    $organizationAnalyticsFrom: DateTime!
-    $organizationAnalyticsUntil: DateTime!
   ) {
     organizationCustomerRecordSynced
     ...rootShell_query
@@ -85,9 +83,6 @@ const OrganizationPageWithRelay = () => {
     const from = startOfDay(null).toISOString();
     const until = startOfDay(null).add(1, 'month').toISOString();
 
-    const organizationAnalyticsFrom = startOfDay(null).subtract(30, 'days').toISOString();
-    const organizationAnalyticsUntil = startOfDay(null).toISOString();
-
     loadQuery(
       {
         organizationId: finalOrganizationId,
@@ -129,8 +124,6 @@ const OrganizationPageWithRelay = () => {
         bookingsSearchCriteriaUntil: until,
         locationNameSearchText: '',
         teamNameSearchText: '',
-        organizationAnalyticsFrom,
-        organizationAnalyticsUntil,
         dateToGetAvailableDesks: from,
       },
       {

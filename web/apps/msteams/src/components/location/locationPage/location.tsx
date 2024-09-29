@@ -35,7 +35,6 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
         ...locationPeopleTab_query_organizationMembers
         ...locationZonesTab_query
         ...locationDesksTab_query
-        ...locationAnalyticsTab_query
       }
     `,
     rootDataRelay,
@@ -114,7 +113,7 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
         )}
         {tabIndex === 3 && <LocationZonesTab rootDataRelay={rootData} locationId={locationId} />}
         {tabIndex === 4 && <LocationDesksTab rootDataRelay={rootData} locationId={locationId} />}
-        {tabIndex === 5 && rootData.location.canViewAnalytics && <LocationAnalyticsTab rootDataRelay={rootData} locationId={locationId} />}
+        {tabIndex === 5 && rootData.location.canViewAnalytics && <LocationAnalyticsTab organizationId={organizationId} locationId={locationId} />}
       </>
     </Stack>
   );

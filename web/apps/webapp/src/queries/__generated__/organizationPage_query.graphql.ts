@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<acf8ef9c2c5b10ea6e2f9c0f4179e4bf>>
+ * @generated SignedSource<<59130ee93ea129ea539e8c2de01d647d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type organizationPage_query$data = {
     readonly logoUrl: string | null | undefined;
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationAboutTab_query" | "organizationAnalyticsTab_query" | "organizationBillingTab_query" | "organizationBookingsTab_query" | "organizationLocationsTab_query" | "organizationMultipleChoicesIndustries_query" | "organizationOfferingTab_query" | "organizationPeopleTab_query" | "organizationTeamsTab_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationAboutTab_query" | "organizationBillingTab_query" | "organizationBookingsTab_query" | "organizationLocationsTab_query" | "organizationMultipleChoicesIndustries_query" | "organizationOfferingTab_query" | "organizationPeopleTab_query" | "organizationTeamsTab_query">;
   readonly " $fragmentType": "organizationPage_query";
 };
 export type organizationPage_query$key = {
@@ -63,14 +63,6 @@ const node: ReaderFragment = {
     {
       "kind": "RootArgument",
       "name": "locationNameSearchText"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationAnalyticsFrom"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationAnalyticsUntil"
     },
     {
       "kind": "RootArgument",
@@ -198,17 +190,12 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "organizationOfferingTab_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "organizationAnalyticsTab_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "b255c9a72ca1345de952b1eeed66e25e";
+(node as any).hash = "6918a9cfd17d10963050cddf2a72c76c";
 
 export default node;

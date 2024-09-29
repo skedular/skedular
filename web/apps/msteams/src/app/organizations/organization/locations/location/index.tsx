@@ -41,8 +41,6 @@ const RootQuery = graphql`
     $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaUntil: DateTime!
-    $locationAnalyticsFrom: DateTime!
-    $locationAnalyticsUntil: DateTime!
   ) {
     locationCustomerRecordSynced
     ...rootShell_query
@@ -103,9 +101,6 @@ const LocationPageWithRelay = () => {
     const to = endOfDay(null).toISOString();
     const until = startOfDay(null).add(1, 'month').toISOString();
 
-    const locationAnalyticsFrom = startOfDay(null).subtract(30, 'days').toISOString();
-    const locationAnalyticsUntil = startOfDay(null).toISOString();
-
     loadQuery(
       {
         organizationId: finalOrganizationId,
@@ -162,8 +157,6 @@ const LocationPageWithRelay = () => {
         ],
         bookingsSearchCriteriaFrom: from,
         bookingsSearchCriteriaUntil: until,
-        locationAnalyticsFrom,
-        locationAnalyticsUntil,
         dateToGetAvailableDesks: from,
       },
       {

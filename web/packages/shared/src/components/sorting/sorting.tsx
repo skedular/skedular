@@ -1,4 +1,3 @@
-import { AscDirectionIcon, DescDirectionIcon } from '../icons';
 import SortIcon from '@mui/icons-material/Sort';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -8,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { memo, useState } from 'react';
+import { AscDirectionIcon, DescDirectionIcon } from '../icons';
 
 export type Direction = 'Ascending' | 'Descending';
 
@@ -58,26 +58,11 @@ const SortingDirection = ({ options, defaultOption, defaultSortingDirectionValue
   return (
     <>
       <Tooltip title="Sort">
-        <IconButton
-          aria-label="more"
-          id="long-button"
-          aria-controls={open ? 'long-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
+        <IconButton id="long-button" onClick={handleClick}>
           <SortIcon />
         </IconButton>
       </Tooltip>
-      <Menu
-        id="long-menu"
-        MenuListProps={{
-          'aria-labelledby': 'long-button',
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleMenuClose}
-      >
+      <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
         <MenuItem selected={false}>
           <Typography textAlign="center">Direction</Typography>
         </MenuItem>

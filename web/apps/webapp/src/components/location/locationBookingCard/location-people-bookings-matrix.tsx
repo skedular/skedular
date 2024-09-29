@@ -838,14 +838,12 @@ const LocationPeopleBookingsMatrix = ({
               <Link component={NextLink} href={`/organization/${rootData.location.organization.uniqueId}`}>
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                   <OrganizationIcon />
-                  <Typography variant="body1" noWrap={true}>
-                    {rootData.location.organization.name}
-                  </Typography>
+                  <Typography variant="body1">{rootData.location.organization.name}</Typography>
                 </Stack>
               </Link>
             )}
             <DeskIcon />
-            <Typography variant="body1" noWrap={true}>
+            <Typography variant="body1">
               {rootData.location.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${rootData.location.deskCapacity}`}
             </Typography>
           </Stack>

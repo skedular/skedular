@@ -1,132 +1,21 @@
-import { axisClasses } from '@mui/x-charts';
-import { BarChart } from '@mui/x-charts/BarChart';
-import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
-import { toDayAndMonthDate, toFixed } from '@repo/shared/libs/utils';
-import graphql from 'babel-plugin-relay/macro';
-import { Dayjs } from 'dayjs';
-import { memo, useCallback, useTransition } from 'react';
-import { useRefetchableFragment } from 'react-relay';
-import type { organizationAnalyticsPaginationQuery } from './__generated__/organizationAnalyticsPaginationQuery.graphql';
-import type { organizationAnalyticsTab_query$key } from './__generated__/organizationAnalyticsTab_query.graphql';
+import Grid from '@mui/material/Grid2';
+import { OrganizationBookingInsightRoot } from 'components/organization/organizationBookingInsight';
+import { OrganizationMemberAttendancyInsightRoot } from 'components/organization/organizationMemberAttendancyInsight';
+import { memo } from 'react';
 
 type Props = {
-  rootDataRelay: organizationAnalyticsTab_query$key;
   organizationId: string;
 };
 
-const OrganizationAnalyticsTab = ({ rootDataRelay, organizationId }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment<organizationAnalyticsPaginationQuery, organizationAnalyticsTab_query$key>(
-    graphql`
-      fragment organizationAnalyticsTab_query on Query @refetchable(queryName: "organizationAnalyticsPaginationQuery") {
-        organizationAnalytics(organizationId: $organizationId, from: $organizationAnalyticsFrom, until: $organizationAnalyticsUntil) {
-          memberAttendancePercentage {
-            date
-            percentage
-          }
-          dailyBookingsTotals {
-            date
-            total
-          }
-        }
-      }
-    `,
-    rootDataRelay,
-  );
-
-  const [, startTransition] = useTransition();
-  const handleRefetch = useCallback(
-    (organizationAnalyticsFrom: Dayjs, organizationAnalyticsUntil: Dayjs) => {
-      startTransition(() => {
-        refetch(
-          {
-            organizationId,
-            organizationAnalyticsFrom: organizationAnalyticsFrom.toISOString(),
-            organizationAnalyticsUntil: organizationAnalyticsUntil.toISOString(),
-          },
-          {
-            fetchPolicy: 'store-and-network',
-            onComplete: () => {},
-          },
-        );
-      });
-    },
-    [refetch, organizationId],
-  );
-
-  if (!rootData.organizationAnalytics) {
-    return null;
-  }
-
-  const deskOccupancyPercentageChartSetting = {
-    yAxis: [
-      {
-        label: 'Members Attendance Percentage',
-        min: 0,
-        max: 100,
-        valueFormatter: (value: number) => `${value} %`,
-      },
-    ],
-    width: 500,
-    height: 300,
-    sx: {
-      [`.${axisClasses.left} .${axisClasses.label}`]: {
-        transform: 'translate(-12px, 0)',
-      },
-    },
-  };
-
-  const dailyBookingsTotalsChartSetting = {
-    yAxis: [
-      {
-        label: 'Total Bookings',
-      },
-    ],
-    width: 500,
-    height: 300,
-    sx: {
-      [`.${axisClasses.left} .${axisClasses.label}`]: {
-        transform: 'translate(-12px, 0)',
-      },
-    },
-  };
-
-  const deskOccupancyPercentageDataset =
-    rootData.organizationAnalytics.memberAttendancePercentage.length === 0
-      ? [{ date: 'No data available', percentage: 0 }]
-      : rootData.organizationAnalytics.memberAttendancePercentage.map(({ date, percentage }) => ({
-          date: toDayAndMonthDate(date),
-          percentage: toFixed(percentage, 2),
-        }));
-
-  const dailyBookingsTotalsDataset =
-    rootData.organizationAnalytics.dailyBookingsTotals.length === 0
-      ? [{ date: 'No data available', percentage: 0 }]
-      : rootData.organizationAnalytics.dailyBookingsTotals.map(({ date, total }) => ({
-          date: toDayAndMonthDate(date),
-          total,
-        }));
-
-  const handleDateRangeChange = (from: Dayjs, until: Dayjs) => {
-    handleRefetch(from, until);
-  };
-
-  return (
-    <>
-      <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
-      <BarChart
-        dataset={deskOccupancyPercentageDataset}
-        xAxis={[{ scaleType: 'band', dataKey: 'date' }]}
-        series={[{ dataKey: 'percentage' }]}
-        {...deskOccupancyPercentageChartSetting}
-      />
-      <BarChart
-        dataset={dailyBookingsTotalsDataset}
-        xAxis={[{ scaleType: 'band', dataKey: 'date' }]}
-        series={[{ dataKey: 'total' }]}
-        {...dailyBookingsTotalsChartSetting}
-      />
-    </>
-  );
-};
+const OrganizationAnalyticsTab = ({ organizationId }: Props) => (
+  <Grid container spacing={1}>
+    <Grid>
+      <OrganizationBookingInsightRoot organizationId={organizationId} organizationName="" hideOrganizationDetails />
+    </Grid>
+    <Grid>
+      <OrganizationMemberAttendancyInsightRoot organizationId={organizationId} organizationName="" hideOrganizationDetails />
+    </Grid>
+  </Grid>
+);
 
 export default memo(OrganizationAnalyticsTab);

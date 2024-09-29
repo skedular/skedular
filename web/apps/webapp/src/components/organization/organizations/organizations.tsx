@@ -126,9 +126,7 @@ const Organizations = ({ rootDataRelay }: Props) => {
   }, [loadNext, isLoadingNext, pageSize]);
 
   const connectionIds = useMemo(() => [rootData.organizations?.__id], [rootData.organizations]);
-
   const organizations = useMemo(() => rootData.organizations, [rootData.organizations]);
-
   const slicedEdges = organizations.edges.slice(
     page * pageSize,
     page * pageSize + pageSize > organizations.edges.length ? organizations.edges.length : page * pageSize + pageSize,

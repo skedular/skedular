@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7415310912da0105319583d578f42ccb>>
+ * @generated SignedSource<<98b4b752f45b25dd1c97ec2abf4df6a1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type locationPage_query$data = {
     readonly canViewAnalytics: boolean;
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"locationAboutTab_query" | "locationAnalyticsTab_query" | "locationBookingsTab_query" | "locationDesksTab_query" | "locationPeopleTab_query" | "locationPeopleTab_query_organizationMembers" | "locationZonesTab_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"locationAboutTab_query" | "locationBookingsTab_query" | "locationDesksTab_query" | "locationPeopleTab_query" | "locationPeopleTab_query_organizationMembers" | "locationZonesTab_query">;
   readonly " $fragmentType": "locationPage_query";
 };
 export type locationPage_query$key = {
@@ -94,17 +94,12 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "locationDesksTab_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "locationAnalyticsTab_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "f32ca16f2b84617c79618fbb1324d586";
+(node as any).hash = "38c7d10ed2f62c5690d2284886767aad";
 
 export default node;

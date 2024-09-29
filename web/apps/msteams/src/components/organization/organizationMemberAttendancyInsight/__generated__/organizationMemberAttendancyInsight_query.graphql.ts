@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d985c638ac27f7f05c57e14b008424be>>
+ * @generated SignedSource<<2ed7975f6ee2a954e684e6b3bbb9d219>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,45 +10,37 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationAnalyticsTab_query$data = {
+export type organizationMemberAttendancyInsight_query$data = {
+  readonly organization: {
+    readonly logoUrl: string | null | undefined;
+    readonly name: string;
+  } | null | undefined;
   readonly organizationAnalytics: {
-    readonly dailyBookingsTotals: ReadonlyArray<{
-      readonly date: any;
-      readonly total: number;
-    }>;
     readonly memberAttendancePercentage: ReadonlyArray<{
       readonly date: any;
       readonly percentage: number;
     }>;
   };
-  readonly " $fragmentType": "organizationAnalyticsTab_query";
+  readonly " $fragmentType": "organizationMemberAttendancyInsight_query";
 };
-export type organizationAnalyticsTab_query$key = {
-  readonly " $data"?: organizationAnalyticsTab_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationAnalyticsTab_query">;
+export type organizationMemberAttendancyInsight_query$key = {
+  readonly " $data"?: organizationMemberAttendancyInsight_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMemberAttendancyInsight_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "date",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "organizationAnalyticsFrom"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationAnalyticsUntil"
+      "name": "from"
     },
     {
       "kind": "RootArgument",
       "name": "organizationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "to"
     }
   ],
   "kind": "Fragment",
@@ -56,10 +48,10 @@ return {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./organizationAnalyticsPaginationQuery.graphql')
+      "operation": require('./organizationMemberAttendancyInsight_organizationAnalytics.graphql')
     }
   },
-  "name": "organizationAnalyticsTab_query",
+  "name": "organizationMemberAttendancyInsight_query",
   "selections": [
     {
       "alias": null,
@@ -67,7 +59,7 @@ return {
         {
           "kind": "Variable",
           "name": "from",
-          "variableName": "organizationAnalyticsFrom"
+          "variableName": "from"
         },
         {
           "kind": "Variable",
@@ -77,7 +69,7 @@ return {
         {
           "kind": "Variable",
           "name": "until",
-          "variableName": "organizationAnalyticsUntil"
+          "variableName": "to"
         }
       ],
       "concreteType": "OrganizationAnalytics",
@@ -93,7 +85,13 @@ return {
           "name": "memberAttendancePercentage",
           "plural": true,
           "selections": [
-            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "date",
+              "storageKey": null
+            },
             {
               "alias": null,
               "args": null,
@@ -103,24 +101,36 @@ return {
             }
           ],
           "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "id",
+          "variableName": "organizationId"
+        }
+      ],
+      "concreteType": "OrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "concreteType": "OrganizationDailyBookingsTotal",
-          "kind": "LinkedField",
-          "name": "dailyBookingsTotals",
-          "plural": true,
-          "selections": [
-            (v0/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "total",
-              "storageKey": null
-            }
-          ],
+          "kind": "ScalarField",
+          "name": "logoUrl",
           "storageKey": null
         }
       ],
@@ -130,8 +140,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "e3be4c7a5acfb28d20d245e6f248fa49";
+(node as any).hash = "c9995957b38909124e4f224564f9b0d9";
 
 export default node;

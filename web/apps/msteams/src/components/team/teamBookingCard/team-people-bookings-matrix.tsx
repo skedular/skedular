@@ -40,7 +40,6 @@ import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useState, useTransition } from 'react';
 import { useMutation, useRefetchableFragment } from 'react-relay';
-import { useNavigate } from 'react-router-dom';
 import type { teamPeopleBookingsMatrix_addBookingMutation } from './__generated__/teamPeopleBookingsMatrix_addBookingMutation.graphql';
 import type { teamPeopleBookingsMatrix_addCustomerDefaultTeamMutation } from './__generated__/teamPeopleBookingsMatrix_addCustomerDefaultTeamMutation.graphql';
 import type { teamPeopleBookingsMatrix_deleteBookingMutation } from './__generated__/teamPeopleBookingsMatrix_deleteBookingMutation.graphql';
@@ -287,7 +286,6 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
@@ -808,9 +806,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
               <Link href={`/organization/${rootData.team.organization.uniqueId}`}>
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                   <OrganizationIcon />
-                  <Typography variant="body1" noWrap={true}>
-                    {rootData.team.organization.name}
-                  </Typography>
+                  <Typography variant="body1">{rootData.team.organization.name}</Typography>
                 </Stack>
               </Link>
             )}
