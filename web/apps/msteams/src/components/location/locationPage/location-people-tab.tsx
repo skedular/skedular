@@ -435,11 +435,11 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
                   helperText="member1@example.com,member2@example.com"
                 />
                 <DialogActions>
-                  <Button color="primary" variant="contained" type="submit">
-                    Invite
-                  </Button>
                   <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
                     Cancel
+                  </Button>
+                  <Button color="primary" variant="contained" type="submit">
+                    Invite
                   </Button>
                 </DialogActions>
               </Stack>
