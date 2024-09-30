@@ -19,8 +19,10 @@ sends:
     version: 0.0.1
   - id: TeamDeleted
     version: 0.0.1
-  - id: NotificationUpserted
+  - id: InvitationToJoinTeamDeleted
     version: 0.0.1
+  - id: InvitationToJoinTeamUpserted
+    version: 0.0.1    
 repository:
   language: C#
   url: 

@@ -13,6 +13,8 @@ services:
       version: 0.0.1
     - id: PaymentBillingSubscriberService
       version: 0.0.1
+    - id: OrganizationPaymentSubscriberService
+      version: 0.0.1    
 badges:
     - content: Payment Domain
       backgroundColor: blue

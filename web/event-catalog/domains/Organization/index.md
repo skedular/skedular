@@ -19,6 +19,20 @@ services:
       version: 0.0.1
     - id: OrganizationInternalSubscriberService
       version: 0.0.1
+    - id: NotificationOrganizationSubscriberService
+      version: 0.0.1
+    - id: BillingOrganizationSubscriberService
+      version: 0.0.1
+    - id: BookingOrganizationSubscriberService
+      version: 0.0.1
+    - id: CustomerOrganizationSubscriberService
+      version: 0.0.1
+    - id: LocationOrganizationSubscriberService
+      version: 0.0.1
+    - id: PaymentOrganizationSubscriberService
+      version: 0.0.1
+    - id: TeamOrganizationSubscriberService
+      version: 0.0.1
 badges:
     - content: Organization Domain
       backgroundColor: blue

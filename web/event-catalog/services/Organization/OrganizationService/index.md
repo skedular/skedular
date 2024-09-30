@@ -41,8 +41,10 @@ sends:
     version: 0.0.1
   - id: OrganizationMemberStatusUpdated
     service: 0.0.1
-  - id: NotificationUpserted
+  - id: InvitationToJoinOrganizationUpserted
     version: 0.0.1    
+  - id: InvitationToJoinOrganizationDeleted
+    version: 0.0.1
 repository:
   language: C#
   url: 

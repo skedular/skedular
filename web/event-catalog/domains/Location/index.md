@@ -15,6 +15,15 @@ services:
       version: 0.0.1
     - id: LocationOrganizationSubscriberService
       version: 0.0.1
+    - id: BookingLocationSubscriberService
+      version: 0.0.1
+    - id: CustomerLocationSubscriberService
+      version: 0.0.1
+    - id: NotificationLocationSubscriberService
+      version: 0.0.1
+    - id: OrganizationLocationSubscriberService
+      version: 0.0.1
+    
 badges:
     - content: Location Domain
       backgroundColor: blue

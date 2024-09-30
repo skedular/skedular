@@ -43,6 +43,10 @@ sends:
     version: 0.0.1
   - id: LocationDeleted
     version: 0.0.1
+  - id: InvitationToJoinLocationDeleted
+    version: 0.0.1
+  - id: InvitationToJoinLocationUpserted
+    version: 0.0.1
 repository:
   language: C#
   url: 

@@ -13,6 +13,20 @@ services:
       version: 0.0.1
     - id: CustomerLocationSubscriberService
       version: 0.0.1
+    - id: TeamCustomerSubscriberService
+      version: 0.0.1
+    - id: PaymentCustomerSubscriberService
+      version: 0.0.1
+    - id: OrganizationCustomerSubscriberService
+      version : 0.0.1
+    - id: NotificationCustomerSubscriberService
+      version: 0.0.1
+    - id: LocationCustomerSubscriberService
+      version: 0.0.1
+    - id: BookingCustomerSubscriberService
+      version: 0.0.1
+    - id: BillingCustomerSubscriberService
+      version: 0.0.1
 badges:
     - content: Customer Domain
       backgroundColor: blue
