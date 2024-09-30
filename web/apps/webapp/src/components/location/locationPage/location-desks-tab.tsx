@@ -1,5 +1,5 @@
 import { BulkNewDeskDialog, DeskCard, NewDeskDialog } from '@/components/desk';
-import type { DeskOrderField, DeskOrderInput, desksPaginationQuery } from '@/queries/__generated__/desksPaginationQuery.graphql';
+import type { DeskOrderField, DeskOrderInput, desks_PaginationQuery } from '@/queries/__generated__/desks_PaginationQuery.graphql';
 import type { locationDesksTab_query$key } from '@/queries/__generated__/locationDesksTab_query.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
@@ -32,11 +32,11 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<desksPaginationQuery, locationDesksTab_query$key>(
+  } = usePaginationFragment<desks_PaginationQuery, locationDesksTab_query$key>(
     graphql`
       fragment locationDesksTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "desksPaginationQuery") {
+      @refetchable(queryName: "desks_PaginationQuery") {
         location(id: $locationId) {
           canModify
         }
@@ -272,7 +272,6 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
         />
         <Sorting
           options={[{ id: 'name', label: 'Name' }]}
-          // @ts-expect-error
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5db5816e7a9f29586ea309de7359c74a>>
+ * @generated SignedSource<<49020b0c60b4463ab222a13bad1a3ac2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,11 +15,11 @@ export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type OrganizationMemberOrderField = "familyName" | "givenName" | "membershipType" | "middleName" | "name" | "%future added value";
 export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
-  field?: OrganizationMemberOrderField | null | undefined;
+  field: OrganizationMemberOrderField;
 };
 export type BookingOrderInput = {
   direction: OrderDirection;
-  field?: BookingOrderField | null | undefined;
+  field: BookingOrderField;
 };
 export type smallMonthlyViewCalendarPaginationQuery$variables = {
   bookingDetailsSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;

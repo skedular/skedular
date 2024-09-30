@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<db3ba7fe80728ce3f2559a2f7f74646e>>
+ * @generated SignedSource<<01649a84eff857c2e7f519964c112427>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type NotificationOrderField = "eventRaisedAt" | "notificationType" | "%fu
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type NotificationOrderInput = {
   direction: OrderDirection;
-  field?: NotificationOrderField | null | undefined;
+  field: NotificationOrderField;
 };
 export type notifications_rootQuery$variables = {
   myNotificationsSortingValues: ReadonlyArray<NotificationOrderInput>;

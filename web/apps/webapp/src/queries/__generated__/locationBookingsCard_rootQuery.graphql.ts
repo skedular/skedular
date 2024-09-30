@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f6177d1d1e62ad80ca1b5c146f5c1fb>>
+ * @generated SignedSource<<eca48123f31f5b5f98276c910a6ee9fb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type LocationMemberOrderField = "familyName" | "givenName" | "membershipT
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type LocationMemberOrderInput = {
   direction: OrderDirection;
-  field?: LocationMemberOrderField | null | undefined;
+  field: LocationMemberOrderField;
 };
 export type locationBookingsCard_rootQuery$variables = {
   fetchBookingPermission: boolean;

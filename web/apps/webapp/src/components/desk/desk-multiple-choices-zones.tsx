@@ -1,4 +1,4 @@
-import type { deskMultipleChoicesZonesPaginationQuery } from '@/queries/__generated__/deskMultipleChoicesZonesPaginationQuery.graphql';
+import type { deskMultipleChoicesZones_PaginationQuery } from '@/queries/__generated__/deskMultipleChoicesZones_PaginationQuery.graphql';
 import type { deskMultipleChoicesZones_query$key } from '@/queries/__generated__/deskMultipleChoicesZones_query.graphql';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -19,11 +19,11 @@ interface ZoneDetails {
 }
 
 const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
-  const { data: rootData, refetch } = usePaginationFragment<deskMultipleChoicesZonesPaginationQuery, deskMultipleChoicesZones_query$key>(
+  const { data: rootData, refetch } = usePaginationFragment<deskMultipleChoicesZones_PaginationQuery, deskMultipleChoicesZones_query$key>(
     graphql`
       fragment deskMultipleChoicesZones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "deskMultipleChoicesZonesPaginationQuery") {
+      @refetchable(queryName: "deskMultipleChoicesZones_PaginationQuery") {
         paginatedLocationTags(
           first: $count
           after: $cursor

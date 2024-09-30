@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e5022935016af291f956db3fd1b7fb40>>
+ * @generated SignedSource<<a671504f738daff2379ade075638b581>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type OrganizationOrderField = "name" | "%future added value";
 export type OrganizationOrderInput = {
   direction: OrderDirection;
-  field?: OrganizationOrderField | null | undefined;
+  field: OrganizationOrderField;
 };
 export type pageOrganizations_rootQuery$variables = {
   organizationNameSearchText: string;

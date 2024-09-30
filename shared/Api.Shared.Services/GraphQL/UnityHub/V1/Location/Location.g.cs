@@ -305,7 +305,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Location;
             public OrderDirection Direction { get; set; }
 
             [HotChocolate.GraphQLName("field")]
-            public DeskOrderField? Field { get; set; }
+            public DeskOrderField Field { get; set; }
 
         }
         
@@ -605,7 +605,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Location;
             public OrderDirection Direction { get; set; }
 
             [HotChocolate.GraphQLName("field")]
-            public LocationMemberOrderField? Field { get; set; }
+            public LocationMemberOrderField Field { get; set; }
 
         }
         
@@ -637,7 +637,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Location;
             public OrderDirection Direction { get; set; }
 
             [HotChocolate.GraphQLName("field")]
-            public LocationOrderField? Field { get; set; }
+            public LocationOrderField Field { get; set; }
 
         }
         
@@ -735,7 +735,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Location;
             public OrderDirection Direction { get; set; }
 
             [HotChocolate.GraphQLName("field")]
-            public LocationTagOrderField? Field { get; set; }
+            public LocationTagOrderField Field { get; set; }
 
         }
         

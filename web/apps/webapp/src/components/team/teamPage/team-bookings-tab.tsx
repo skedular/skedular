@@ -1,6 +1,10 @@
 import { BookingCard } from '@/components/booking';
 import { NewBookingDialog } from '@/components/booking/addBooking';
-import type { BookingOrderField, BookingOrderInput, teamBookingsPaginationQuery } from '@/queries/__generated__/teamBookingsPaginationQuery.graphql';
+import type {
+  BookingOrderField,
+  BookingOrderInput,
+  teamBookings_PaginationQuery,
+} from '@/queries/__generated__/teamBookings_PaginationQuery.graphql';
 import type { teamBookingsTab_query$key } from '@/queries/__generated__/teamBookingsTab_query.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
@@ -31,11 +35,11 @@ const TeamBookingsTab = ({ rootDataRelay, organizationId, teamId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<teamBookingsPaginationQuery, teamBookingsTab_query$key>(
+  } = usePaginationFragment<teamBookings_PaginationQuery, teamBookingsTab_query$key>(
     graphql`
       fragment teamBookingsTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "teamBookingsPaginationQuery") {
+      @refetchable(queryName: "teamBookings_PaginationQuery") {
         bookings(
           first: $count
           after: $cursor
@@ -227,7 +231,6 @@ const TeamBookingsTab = ({ rootDataRelay, organizationId, teamId }: Props) => {
               { id: 'organizationName', label: 'Organization' },
               { id: 'locationName', label: 'Location' },
             ]}
-            // @ts-expect-error
             defaultOption={sortingOrder.field}
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}

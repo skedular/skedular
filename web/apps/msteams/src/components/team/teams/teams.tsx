@@ -16,7 +16,7 @@ import { TeamBookingsCard } from 'components/team/teamBookingCard';
 import debounce from 'lodash.debounce';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
-import type { TeamOrderField, TeamOrderInput, teamsPaginationQuery } from './__generated__/teamsPaginationQuery.graphql';
+import type { TeamOrderField, TeamOrderInput, teams_PaginationQuery } from './__generated__/teams_PaginationQuery.graphql';
 import type { teams_query$key } from './__generated__/teams_query.graphql';
 
 type Props = {
@@ -30,11 +30,11 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<teamsPaginationQuery, teams_query$key>(
+  } = usePaginationFragment<teams_PaginationQuery, teams_query$key>(
     graphql`
       fragment teams_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "teamsPaginationQuery") {
+      @refetchable(queryName: "teams_PaginationQuery") {
         teams(
           first: $count
           after: $cursor
@@ -183,7 +183,6 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
         />
         <Sorting
           options={[{ id: 'name', label: 'Name' }]}
-          // @ts-expect-error
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}

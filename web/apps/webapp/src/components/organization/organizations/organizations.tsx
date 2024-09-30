@@ -2,8 +2,8 @@ import { OrganizationBookingsCard } from '@/components/organization/organization
 import type {
   OrganizationOrderField,
   OrganizationOrderInput,
-  organizationsPaginationQuery,
-} from '@/queries/__generated__/organizationsPaginationQuery.graphql';
+  organizations_PaginationQuery,
+} from '@/queries/__generated__/organizations_PaginationQuery.graphql';
 import type { organizations_query$key } from '@/queries/__generated__/organizations_query.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
@@ -34,11 +34,11 @@ const Organizations = ({ rootDataRelay }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationsPaginationQuery, organizations_query$key>(
+  } = usePaginationFragment<organizations_PaginationQuery, organizations_query$key>(
     graphql`
       fragment organizations_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationsPaginationQuery") {
+      @refetchable(queryName: "organizations_PaginationQuery") {
         organizations(first: $count, after: $cursor, where: { nameContains: $organizationNameSearchText }, orderBy: $organizationsSortingValues)
           @connection(key: "organizations_organizations") {
           __id
@@ -177,7 +177,6 @@ const Organizations = ({ rootDataRelay }: Props) => {
         />
         <Sorting
           options={[{ id: 'name', label: 'Name' }]}
-          // @ts-expect-error
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}

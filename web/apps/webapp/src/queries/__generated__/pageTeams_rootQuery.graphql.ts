@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<942925588adb745d3b9a1c4505e56377>>
+ * @generated SignedSource<<19d634550d15b77afb6132fa3dcda460>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type TeamOrderField = "about" | "name" | "website" | "%future added value";
 export type TeamOrderInput = {
   direction: OrderDirection;
-  field?: TeamOrderField | null | undefined;
+  field: TeamOrderField;
 };
 export type pageTeams_rootQuery$variables = {
   teamNameSearchText: string;

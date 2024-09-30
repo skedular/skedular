@@ -197,8 +197,7 @@ const TeamAboutTab = ({ rootDataRelay, organizationId }: Props) => {
               timezone: team.timezone,
               organizationMemberIds: rootData.team.members
                 .filter((member) => member.organizationMember)
-                // @ts-expect-error
-                .map(({ organizationMember }) => organizationMember.uniqueId),
+                .map(({ organizationMember }) => organizationMember!.uniqueId),
             }}
             validate={validate}
             render={({ handleSubmit }) => (

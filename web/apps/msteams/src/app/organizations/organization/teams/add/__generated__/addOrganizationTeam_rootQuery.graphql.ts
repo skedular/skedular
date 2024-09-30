@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<818e20ff2d1a9f08c6dc9cb654ba70aa>>
+ * @generated SignedSource<<eab970d94866418f329f7cf3dce08eb8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type OrganizationMemberOrderField = "familyName" | "givenName" | "membershipType" | "middleName" | "name" | "%future added value";
 export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
-  field?: OrganizationMemberOrderField | null | undefined;
+  field: OrganizationMemberOrderField;
 };
 export type addOrganizationTeam_rootQuery$variables = {
   bookingPeopleNameSearchText: string;

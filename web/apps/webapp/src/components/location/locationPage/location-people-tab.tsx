@@ -2,8 +2,8 @@ import { CustomerCard } from '@/components/customer';
 import type {
   LocationMemberOrderField,
   LocationMemberOrderInput,
-  locationMembersPaginationQuery,
-} from '@/queries/__generated__/locationMembersPaginationQuery.graphql';
+  locationMembers_PaginationQuery,
+} from '@/queries/__generated__/locationMembers_PaginationQuery.graphql';
 import type { locationPeopleTab_inviteCustomersToJoinLocationMutation } from '@/queries/__generated__/locationPeopleTab_inviteCustomersToJoinLocationMutation.graphql';
 import type { locationPeopleTab_query$key } from '@/queries/__generated__/locationPeopleTab_query.graphql';
 import type { locationPeopleTab_query_organizationMembers$key } from '@/queries/__generated__/locationPeopleTab_query_organizationMembers.graphql';
@@ -69,11 +69,11 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
     loadNext: loadNextLocationMembers,
     isLoadingNext: isLoadingNextLocationMembers,
     refetch: refetchLocationMembers,
-  } = usePaginationFragment<locationMembersPaginationQuery, locationPeopleTab_query$key>(
+  } = usePaginationFragment<locationMembers_PaginationQuery, locationPeopleTab_query$key>(
     graphql`
       fragment locationPeopleTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationMembersPaginationQuery") {
+      @refetchable(queryName: "locationMembers_PaginationQuery") {
         location(id: $locationId) {
           id
           name
@@ -388,7 +388,6 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
             { id: 'membershipType', label: 'Membership type' },
             { id: 'createdAt', label: 'Join date' },
           ]}
-          // @ts-expect-error
           defaultOption={organizationId ? sortingCustomerOrder.field : sortingLocationMemberOrder.field}
           defaultSortingDirectionValue={
             organizationId ? (sortingCustomerOrder.direction as unknown as Direction) : (sortingLocationMemberOrder.direction as unknown as Direction)

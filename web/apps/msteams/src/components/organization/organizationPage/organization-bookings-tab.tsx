@@ -20,8 +20,8 @@ import { usePaginationFragment } from 'react-relay';
 import type {
   BookingOrderField,
   BookingOrderInput,
-  organizationBookingsPaginationQuery,
-} from './__generated__/organizationBookingsPaginationQuery.graphql';
+  organizationBookings_PaginationQuery,
+} from './__generated__/organizationBookings_PaginationQuery.graphql';
 import type { organizationBookingsTab_query$key } from './__generated__/organizationBookingsTab_query.graphql';
 
 type Props = {
@@ -35,11 +35,11 @@ const OrganizationBookingsTab = ({ rootDataRelay, organizationId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationBookingsPaginationQuery, organizationBookingsTab_query$key>(
+  } = usePaginationFragment<organizationBookings_PaginationQuery, organizationBookingsTab_query$key>(
     graphql`
       fragment organizationBookingsTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationBookingsPaginationQuery") {
+      @refetchable(queryName: "organizationBookings_PaginationQuery") {
         bookings(
           first: $count
           after: $cursor
@@ -233,7 +233,6 @@ const OrganizationBookingsTab = ({ rootDataRelay, organizationId }: Props) => {
               { id: 'locationName', label: 'Location' },
               { id: 'teamName', label: 'Team' },
             ]}
-            // @ts-expect-error
             defaultOption={sortingOrder.field}
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}

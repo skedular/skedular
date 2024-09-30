@@ -19,8 +19,8 @@ import { usePaginationFragment } from 'react-relay';
 import type {
   LocationOrderField,
   LocationOrderInput,
-  organizationLocationsPaginationQuery,
-} from './__generated__/organizationLocationsPaginationQuery.graphql';
+  organizationLocations_PaginationQuery,
+} from './__generated__/organizationLocations_PaginationQuery.graphql';
 import type { organizationLocationsTab_query$key } from './__generated__/organizationLocationsTab_query.graphql';
 
 type Props = {
@@ -33,11 +33,11 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationLocationsPaginationQuery, organizationLocationsTab_query$key>(
+  } = usePaginationFragment<organizationLocations_PaginationQuery, organizationLocationsTab_query$key>(
     graphql`
       fragment organizationLocationsTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationLocationsPaginationQuery") {
+      @refetchable(queryName: "organizationLocations_PaginationQuery") {
         locations(
           first: $count
           after: $cursor
@@ -195,7 +195,6 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
         />
         <Sorting
           options={[{ id: 'name', label: 'Name' }]}
-          // @ts-expect-error
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}

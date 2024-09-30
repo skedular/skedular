@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<34bd0135036bcc066c38237294249825>>
+ * @generated SignedSource<<10abb67e38a22ac1ab9b058476e4b74c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -69,7 +69,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./notificationsPaginationQuery.graphql')
+      "operation": require('./notifications_PaginationQuery.graphql')
     }
   },
   "name": "notifications_query",
@@ -189,6 +189,6 @@ return {
 };
 })();
 
-(node as any).hash = "3088f362f15f9ec98dec8581a6602456";
+(node as any).hash = "e7e56a8a95a21df607c7e3aae6c12d5a";
 
 export default node;

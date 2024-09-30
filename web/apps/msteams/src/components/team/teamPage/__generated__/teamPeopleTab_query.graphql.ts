@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f3d6b0e840cd24db317013c8b150c31>>
+ * @generated SignedSource<<357ac926a3c26ab59e6e1c5f37e21a7f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -130,7 +130,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./teamMembersPaginationQuery.graphql')
+      "operation": require('./teamMembers_PaginationQuery.graphql')
     }
   },
   "name": "teamPeopleTab_query",
@@ -346,6 +346,6 @@ return {
 };
 })();
 
-(node as any).hash = "7a9a73b0aea090de51bea18746f8ecd7";
+(node as any).hash = "8eab36a384ae165e7fd3c9c0d5e99b8b";
 
 export default node;

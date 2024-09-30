@@ -5,7 +5,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useEffect, useMemo, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
-import type { deskMultipleChoicesZonesPaginationQuery } from './__generated__/deskMultipleChoicesZonesPaginationQuery.graphql';
+import type { deskMultipleChoicesZones_PaginationQuery } from './__generated__/deskMultipleChoicesZones_PaginationQuery.graphql';
 import type { deskMultipleChoicesZones_query$key } from './__generated__/deskMultipleChoicesZones_query.graphql';
 
 type Props = {
@@ -20,11 +20,11 @@ interface ZoneDetails {
 }
 
 const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
-  const { data: rootData, refetch } = usePaginationFragment<deskMultipleChoicesZonesPaginationQuery, deskMultipleChoicesZones_query$key>(
+  const { data: rootData, refetch } = usePaginationFragment<deskMultipleChoicesZones_PaginationQuery, deskMultipleChoicesZones_query$key>(
     graphql`
       fragment deskMultipleChoicesZones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "deskMultipleChoicesZonesPaginationQuery") {
+      @refetchable(queryName: "deskMultipleChoicesZones_PaginationQuery") {
         paginatedLocationTags(
           first: $count
           after: $cursor

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fae0d7eb058f198e677bff9207829f7d>>
+ * @generated SignedSource<<63a3ce1406af58113a00e736e007bd5b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type OrganizationMemberOrderField = "familyName" | "givenName" | "membershipType" | "middleName" | "name" | "%future added value";
 export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
-  field?: OrganizationMemberOrderField | null | undefined;
+  field: OrganizationMemberOrderField;
 };
 export type organizationBookingsCard_rootQuery$variables = {
   from: any;

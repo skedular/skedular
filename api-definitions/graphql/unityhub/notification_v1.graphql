@@ -58,7 +58,7 @@ enum NotificationOrderField {
 
 input NotificationOrderInput {
     direction: OrderDirection!
-    field: NotificationOrderField
+    field: NotificationOrderField!
 }
 
 type NotificationConnection {

@@ -27,7 +27,7 @@ import { memo, useCallback, useEffect, useMemo, useState, useTransition } from '
 import { Form } from 'react-final-form';
 import { useMutation, usePaginationFragment } from 'react-relay';
 import { array, object, string } from 'yup';
-import type { TeamMemberOrderField, TeamMemberOrderInput, teamMembersPaginationQuery } from './__generated__/teamMembersPaginationQuery.graphql';
+import type { TeamMemberOrderField, TeamMemberOrderInput, teamMembers_PaginationQuery } from './__generated__/teamMembers_PaginationQuery.graphql';
 import type { teamPeopleTab_inviteCustomersToJoinTeamMutation } from './__generated__/teamPeopleTab_inviteCustomersToJoinTeamMutation.graphql';
 import type { teamPeopleTab_query$key } from './__generated__/teamPeopleTab_query.graphql';
 import type { teamPeopleTab_updateTeamMutation } from './__generated__/teamPeopleTab_updateTeamMutation.graphql';
@@ -69,11 +69,11 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<teamMembersPaginationQuery, teamPeopleTab_query$key>(
+  } = usePaginationFragment<teamMembers_PaginationQuery, teamPeopleTab_query$key>(
     graphql`
       fragment teamPeopleTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "teamMembersPaginationQuery") {
+      @refetchable(queryName: "teamMembers_PaginationQuery") {
         team(id: $teamId) {
           id
           name
@@ -410,7 +410,6 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
                 { id: 'middleName', label: 'Middle name' },
                 { id: 'familyName', label: 'Family Name' },
               ]}
-              // @ts-expect-error
               defaultOption={sortingOrder.field}
               defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
               onValueChange={handleSortingChanged}
@@ -439,8 +438,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
             initialValues={{
               organizationMemberIds: rootData.team.members
                 .filter((member) => member.organizationMember)
-                // @ts-expect-error
-                .map(({ organizationMember }) => organizationMember.uniqueId),
+                .map(({ organizationMember }) => organizationMember!.uniqueId),
             }}
             validate={validateTeam}
             render={({ handleSubmit }) => (

@@ -170,12 +170,12 @@ enum OrganizationMemberOrderField {
 
 input OrganizationOrderInput {
     direction: OrderDirection!
-    field: OrganizationOrderField
+    field: OrganizationOrderField!
 }
 
 input OrganizationMemberOrderInput {
     direction: OrderDirection!
-    field: OrganizationMemberOrderField
+    field: OrganizationMemberOrderField!
 }
 
 type OrganizationConnection {

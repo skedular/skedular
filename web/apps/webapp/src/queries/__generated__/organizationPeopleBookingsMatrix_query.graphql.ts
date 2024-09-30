@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7cd5637c131b11207062d7eb20698bb8>>
+ * @generated SignedSource<<ede776199f5bbd784c76f26e75887071>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -155,7 +155,7 @@ return {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./organizationPeopleBookingsMatrixOrganizationMembersPaginationQuery.graphql')
+      "operation": require('./organizationPeopleBookingsMatrixOrganizationMembers_PaginationQuery.graphql')
     }
   },
   "name": "organizationPeopleBookingsMatrix_query",
@@ -397,6 +397,6 @@ return {
 };
 })();
 
-(node as any).hash = "e29cc1b5d2e22d186c5108413a93d29e";
+(node as any).hash = "53756d927b9e69232027924e81e44278";
 
 export default node;

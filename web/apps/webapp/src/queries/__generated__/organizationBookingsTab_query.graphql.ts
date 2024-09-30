@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<068f1d35607650029c238556716f2c2b>>
+ * @generated SignedSource<<1ada3ce825a991d248038915bb56b15d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -117,7 +117,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationBookingsPaginationQuery.graphql')
+      "operation": require('./organizationBookings_PaginationQuery.graphql')
     }
   },
   "name": "organizationBookingsTab_query",
@@ -317,6 +317,6 @@ return {
 };
 })();
 
-(node as any).hash = "f6f583c59634c9018022e21c97439671";
+(node as any).hash = "edb3f1ae7d80804ec2e7ed97174060a0";
 
 export default node;

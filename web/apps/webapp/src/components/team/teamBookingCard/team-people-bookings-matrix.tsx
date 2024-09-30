@@ -8,7 +8,7 @@ import type {
   teamPeopleBookingsMatrix_query$key,
 } from '@/queries/__generated__/teamPeopleBookingsMatrix_query.graphql';
 import type { teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation } from '@/queries/__generated__/teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation.graphql';
-import type { TeamMemberOrderInput } from '@/queries/__generated__/teamPeopleBookingsMatrixTeamMembersPaginationQuery.graphql';
+import type { TeamMemberOrderInput } from '@/queries/__generated__/teamPeopleBookingsMatrixTeamMembers_PaginationQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -157,7 +157,7 @@ const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Find a per
 const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: Props) => {
   const [rootData, refetch] = useRefetchableFragment(
     graphql`
-      fragment teamPeopleBookingsMatrix_query on Query @refetchable(queryName: "teamPeopleBookingsMatrixTeamMembersPaginationQuery") {
+      fragment teamPeopleBookingsMatrix_query on Query @refetchable(queryName: "teamPeopleBookingsMatrixTeamMembers_PaginationQuery") {
         teamMembers(where: { teamId: $teamId, nameContains: $peopleNameSearchText }, orderBy: $peopleSortingValues) {
           id
           customer {

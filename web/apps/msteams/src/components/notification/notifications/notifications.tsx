@@ -9,8 +9,8 @@ import { usePaginationFragment } from 'react-relay';
 import type {
   NotificationOrderField,
   NotificationOrderInput,
-  notificationsPaginationQuery,
-} from './__generated__/notificationsPaginationQuery.graphql';
+  notifications_PaginationQuery,
+} from './__generated__/notifications_PaginationQuery.graphql';
 import type { notifications_query$key } from './__generated__/notifications_query.graphql';
 
 type Props = {
@@ -23,11 +23,11 @@ const Notifications = ({ rootDataRelay }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<notificationsPaginationQuery, notifications_query$key>(
+  } = usePaginationFragment<notifications_PaginationQuery, notifications_query$key>(
     graphql`
       fragment notifications_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "notificationsPaginationQuery") {
+      @refetchable(queryName: "notifications_PaginationQuery") {
         myNotifications(first: $count, after: $cursor, orderBy: $myNotificationsSortingValues) @connection(key: "notifications_myNotifications") {
           __id
           totalCount
@@ -125,7 +125,6 @@ const Notifications = ({ rootDataRelay }: Props) => {
         />
         <Sorting
           options={[{ id: 'eventRaisedAt', label: 'Date' }]}
-          // @ts-expect-error
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}

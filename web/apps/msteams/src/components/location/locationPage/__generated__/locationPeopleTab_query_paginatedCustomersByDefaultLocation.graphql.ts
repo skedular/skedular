@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e14e0af7e25230211e5b528c2ca37eab>>
+ * @generated SignedSource<<1f294b4df6535d044d56a9f5ac39e8bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type CustomerOrderField = "designation" | "familyName" | "givenName" | "l
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type CustomerOrderInput = {
   direction: OrderDirection;
-  field?: CustomerOrderField | null | undefined;
+  field: CustomerOrderField;
 };
 export type locationPeopleTab_query_paginatedCustomersByDefaultLocation$variables = {
   count?: number | null | undefined;

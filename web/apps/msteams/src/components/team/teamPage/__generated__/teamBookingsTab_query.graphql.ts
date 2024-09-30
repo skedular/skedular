@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5237d56c35169fa4cbf2fe7b4389567b>>
+ * @generated SignedSource<<b890dc51db242e5ea506c568527666ae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -121,7 +121,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./teamBookingsPaginationQuery.graphql')
+      "operation": require('./teamBookings_PaginationQuery.graphql')
     }
   },
   "name": "teamBookingsTab_query",
@@ -321,6 +321,6 @@ return {
 };
 })();
 
-(node as any).hash = "322a13068035ec2e564ad46ad85b09d5";
+(node as any).hash = "4c9736cf56b8ee0c9d82758a8f80339c";
 
 export default node;

@@ -17,7 +17,11 @@ import { NewBookingDialog } from 'components/booking/addBooking';
 import dayjs, { Dayjs } from 'dayjs';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
-import type { BookingOrderField, BookingOrderInput, locationBookingsPaginationQuery } from './__generated__/locationBookingsPaginationQuery.graphql';
+import type {
+  BookingOrderField,
+  BookingOrderInput,
+  locationBookings_PaginationQuery,
+} from './__generated__/locationBookings_PaginationQuery.graphql';
 import type { locationBookingsTab_query$key } from './__generated__/locationBookingsTab_query.graphql';
 
 type Props = {
@@ -32,11 +36,11 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<locationBookingsPaginationQuery, locationBookingsTab_query$key>(
+  } = usePaginationFragment<locationBookings_PaginationQuery, locationBookingsTab_query$key>(
     graphql`
       fragment locationBookingsTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationBookingsPaginationQuery") {
+      @refetchable(queryName: "locationBookings_PaginationQuery") {
         bookings(
           first: $count
           after: $cursor
@@ -227,7 +231,6 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
               { id: 'organizationName', label: 'Organization' },
               { id: 'teamName', label: 'Team' },
             ]}
-            // @ts-expect-error
             defaultOption={sortingOrder.field}
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}

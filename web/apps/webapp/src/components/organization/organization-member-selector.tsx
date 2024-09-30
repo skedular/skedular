@@ -1,4 +1,4 @@
-import type { organizationMemberSelector_organizationMembersPaginationQuery } from '@/queries/__generated__/organizationMemberSelector_organizationMembersPaginationQuery.graphql';
+import type { organizationMemberSelector_organizationMembers_PaginationQuery } from '@/queries/__generated__/organizationMemberSelector_organizationMembers_PaginationQuery.graphql';
 import type { organizationMemberSelector_query$key } from '@/queries/__generated__/organizationMemberSelector_query.graphql';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -38,11 +38,11 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationMemberSelector_organizationMembersPaginationQuery, organizationMemberSelector_query$key>(
+  } = usePaginationFragment<organizationMemberSelector_organizationMembers_PaginationQuery, organizationMemberSelector_query$key>(
     graphql`
       fragment organizationMemberSelector_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
-      @refetchable(queryName: "organizationMemberSelector_organizationMembersPaginationQuery") {
+      @refetchable(queryName: "organizationMemberSelector_organizationMembers_PaginationQuery") {
         organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(
           first: $count
           after: $cursor

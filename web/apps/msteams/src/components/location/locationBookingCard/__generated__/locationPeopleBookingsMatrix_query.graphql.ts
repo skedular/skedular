@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<160b7efbc6a4ece5b2ce69851da436cd>>
+ * @generated SignedSource<<aa732c292c2ff66eab3ec3f73fdfb83e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -190,7 +190,7 @@ return {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./locationPeopleBookingsMatrixLocationMembersPaginationQuery.graphql')
+      "operation": require('./locationPeopleBookingsMatrixLocationMembers_PaginationQuery.graphql')
     }
   },
   "name": "locationPeopleBookingsMatrix_query",
@@ -464,6 +464,6 @@ return {
 };
 })();
 
-(node as any).hash = "4dcb400f711522fe1237ba1d44e2c007";
+(node as any).hash = "6fb40b2c1199b38d7cea27dae0690406";
 
 export default node;

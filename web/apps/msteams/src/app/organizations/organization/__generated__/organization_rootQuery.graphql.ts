@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02afbefbd569a0f89182a76111387701>>
+ * @generated SignedSource<<5bc6e137010c9affc56868139edcea11>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,19 +17,19 @@ export type OrganizationMemberOrderField = "familyName" | "givenName" | "members
 export type TeamOrderField = "about" | "name" | "website" | "%future added value";
 export type BookingOrderInput = {
   direction: OrderDirection;
-  field?: BookingOrderField | null | undefined;
+  field: BookingOrderField;
 };
 export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
-  field?: OrganizationMemberOrderField | null | undefined;
+  field: OrganizationMemberOrderField;
 };
 export type LocationOrderInput = {
   direction: OrderDirection;
-  field?: LocationOrderField | null | undefined;
+  field: LocationOrderField;
 };
 export type TeamOrderInput = {
   direction: OrderDirection;
-  field?: TeamOrderField | null | undefined;
+  field: TeamOrderField;
 };
 export type organization_rootQuery$variables = {
   bookingDetailsSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;

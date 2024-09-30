@@ -16,7 +16,7 @@ import debounce from 'lodash.debounce';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { locationZonesTab_query$key } from './__generated__/locationZonesTab_query.graphql';
-import type { LocationTagOrderField, LocationTagOrderInput, zonesPaginationQuery } from './__generated__/zonesPaginationQuery.graphql';
+import type { LocationTagOrderField, LocationTagOrderInput, zones_PaginationQuery } from './__generated__/zones_PaginationQuery.graphql';
 
 type Props = {
   rootDataRelay: locationZonesTab_query$key;
@@ -29,11 +29,11 @@ const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<zonesPaginationQuery, locationZonesTab_query$key>(
+  } = usePaginationFragment<zones_PaginationQuery, locationZonesTab_query$key>(
     graphql`
       fragment locationZonesTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "zonesPaginationQuery") {
+      @refetchable(queryName: "zones_PaginationQuery") {
         location(id: $locationId) {
           canModify
         }
@@ -207,7 +207,6 @@ const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
         />
         <Sorting
           options={[{ id: 'name', label: 'Name' }]}
-          // @ts-expect-error
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}

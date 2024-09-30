@@ -1,5 +1,5 @@
 import { BookingCard } from '@/components/booking';
-import type { bookingFeedsPaginationQuery } from '@/queries/__generated__/bookingFeedsPaginationQuery.graphql';
+import type { bookingFeeds_PaginationQuery } from '@/queries/__generated__/bookingFeeds_PaginationQuery.graphql';
 import type { bookingFeeds_query$key } from '@/queries/__generated__/bookingFeeds_query.graphql';
 import Grid from '@mui/material/Grid2';
 import { memo, useCallback, useMemo } from 'react';
@@ -14,11 +14,11 @@ const BookingFeeds = ({ rootDataRelay }: Props) => {
     data: rootData,
     loadNext,
     isLoadingNext,
-  } = usePaginationFragment<bookingFeedsPaginationQuery, bookingFeeds_query$key>(
+  } = usePaginationFragment<bookingFeeds_PaginationQuery, bookingFeeds_query$key>(
     graphql`
       fragment bookingFeeds_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "bookingFeedsPaginationQuery") {
+      @refetchable(queryName: "bookingFeeds_PaginationQuery") {
         bookings(first: $count, after: $cursor, where: { includeMineOnly: true }, orderBy: $bookingSortingValues)
           @connection(key: "BookingFeeds_bookings") {
           __id

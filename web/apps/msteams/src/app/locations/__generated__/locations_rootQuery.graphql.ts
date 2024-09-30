@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fbcfdd520aa935982e4c3dc580724ca9>>
+ * @generated SignedSource<<daa3b9a9cc98871c54a1437a46cf6ea1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type LocationOrderField = "name" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type LocationOrderInput = {
   direction: OrderDirection;
-  field?: LocationOrderField | null | undefined;
+  field: LocationOrderField;
 };
 export type locations_rootQuery$variables = {
   locationNameSearchText: string;

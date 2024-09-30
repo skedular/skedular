@@ -8,7 +8,7 @@ import type {
   organizationPeopleBookingsMatrix_query$key,
 } from '@/queries/__generated__/organizationPeopleBookingsMatrix_query.graphql';
 import type { organizationPeopleBookingsMatrix_setCustomerDefaultOrganizationMutation } from '@/queries/__generated__/organizationPeopleBookingsMatrix_setCustomerDefaultOrganizationMutation.graphql';
-import type { OrganizationMemberOrderInput } from '@/queries/__generated__/organizationPeopleBookingsMatrixOrganizationMembersPaginationQuery.graphql';
+import type { OrganizationMemberOrderInput } from '@/queries/__generated__/organizationPeopleBookingsMatrixOrganizationMembers_PaginationQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -162,7 +162,7 @@ const OrganizationPeopleBookingsMatrix = ({
   const [rootData, refetch] = useRefetchableFragment(
     graphql`
       fragment organizationPeopleBookingsMatrix_query on Query
-      @refetchable(queryName: "organizationPeopleBookingsMatrixOrganizationMembersPaginationQuery") {
+      @refetchable(queryName: "organizationPeopleBookingsMatrixOrganizationMembers_PaginationQuery") {
         organizationMembers(where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }, orderBy: $peopleSortingValues) {
           id
           customer {

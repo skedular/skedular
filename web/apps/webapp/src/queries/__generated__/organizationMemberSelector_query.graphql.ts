@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ea2003ff48f7c19010a1cfddd9fa7447>>
+ * @generated SignedSource<<09722ebcc4dd71264fc4b78a967d51c0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -84,7 +84,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationMemberSelector_organizationMembersPaginationQuery.graphql')
+      "operation": require('./organizationMemberSelector_organizationMembers_PaginationQuery.graphql')
     }
   },
   "name": "organizationMemberSelector_query",
@@ -268,6 +268,6 @@ return {
 };
 })();
 
-(node as any).hash = "baff7b462305d8c4aa18b2c491cc4fb9";
+(node as any).hash = "e446cc22904392810f36e3325f722892";
 
 export default node;

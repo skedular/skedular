@@ -50,7 +50,7 @@ import type {
   locationPeopleBookingsMatrix_query$key,
 } from './__generated__/locationPeopleBookingsMatrix_query.graphql';
 import type { locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation } from './__generated__/locationPeopleBookingsMatrix_removeCustomerDefaultLocationMutation.graphql';
-import type { LocationMemberOrderInput } from './__generated__/locationPeopleBookingsMatrixLocationMembersPaginationQuery.graphql';
+import type { LocationMemberOrderInput } from './__generated__/locationPeopleBookingsMatrixLocationMembers_PaginationQuery.graphql';
 
 type Props = {
   rootDataRelay: locationPeopleBookingsMatrix_query$key;
@@ -164,7 +164,7 @@ const LocationPeopleBookingsMatrix = ({
 }: Props) => {
   const [rootData, refetch] = useRefetchableFragment(
     graphql`
-      fragment locationPeopleBookingsMatrix_query on Query @refetchable(queryName: "locationPeopleBookingsMatrixLocationMembersPaginationQuery") {
+      fragment locationPeopleBookingsMatrix_query on Query @refetchable(queryName: "locationPeopleBookingsMatrixLocationMembers_PaginationQuery") {
         locationMembers(where: { locationId: $locationId, nameContains: $peopleNameSearchText }, orderBy: $peopleSortingValues) {
           id
           customer {

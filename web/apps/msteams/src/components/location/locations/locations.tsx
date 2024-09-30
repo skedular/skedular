@@ -16,7 +16,7 @@ import { LocationBookingsCard } from 'components/location/locationBookingCard';
 import debounce from 'lodash.debounce';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
-import type { LocationOrderField, LocationOrderInput, locationsPaginationQuery } from './__generated__/locationsPaginationQuery.graphql';
+import type { LocationOrderField, LocationOrderInput, locations_PaginationQuery } from './__generated__/locations_PaginationQuery.graphql';
 import type { locations_query$key } from './__generated__/locations_query.graphql';
 
 type Props = {
@@ -30,11 +30,11 @@ const Locations = ({ rootDataRelay, organizationId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<locationsPaginationQuery, locations_query$key>(
+  } = usePaginationFragment<locations_PaginationQuery, locations_query$key>(
     graphql`
       fragment locations_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationsPaginationQuery") {
+      @refetchable(queryName: "locations_PaginationQuery") {
         locations(
           first: $count
           after: $cursor
@@ -181,7 +181,6 @@ const Locations = ({ rootDataRelay, organizationId }: Props) => {
         />
         <Sorting
           options={[{ id: 'name', label: 'Name' }]}
-          // @ts-expect-error
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}

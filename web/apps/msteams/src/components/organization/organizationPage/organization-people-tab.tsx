@@ -29,8 +29,8 @@ import { array, object, string } from 'yup';
 import type {
   OrganizationMemberOrderField,
   OrganizationMemberOrderInput,
-  organizationMembersPaginationQuery,
-} from './__generated__/organizationMembersPaginationQuery.graphql';
+  organizationMembers_PaginationQuery,
+} from './__generated__/organizationMembers_PaginationQuery.graphql';
 import type { organizationPeopleTab_inviteCustomersToJoinOrganizationMutation } from './__generated__/organizationPeopleTab_inviteCustomersToJoinOrganizationMutation.graphql';
 import type { organizationPeopleTab_query$key } from './__generated__/organizationPeopleTab_query.graphql';
 
@@ -61,11 +61,11 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationMembersPaginationQuery, organizationPeopleTab_query$key>(
+  } = usePaginationFragment<organizationMembers_PaginationQuery, organizationPeopleTab_query$key>(
     graphql`
       fragment organizationPeopleTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationMembersPaginationQuery") {
+      @refetchable(queryName: "organizationMembers_PaginationQuery") {
         organization(id: $organizationId) {
           id
           name
@@ -293,7 +293,6 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
               { id: 'membershipType', label: 'Membership type' },
               { id: 'createdAt', label: 'Join date' },
             ]}
-            // @ts-expect-error
             defaultOption={sortingOrder.field}
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}

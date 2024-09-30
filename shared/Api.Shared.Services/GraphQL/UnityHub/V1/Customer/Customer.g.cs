@@ -339,7 +339,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
             public OrderDirection Direction { get; set; }
 
             [HotChocolate.GraphQLName("field")]
-            public CustomerOrderField? Field { get; set; }
+            public CustomerOrderField Field { get; set; }
 
         }
         

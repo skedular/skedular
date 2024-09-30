@@ -549,7 +549,6 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
   const canDeleteBooking =
     rootData.me.id === bookingDetails.customer?.uniqueId ||
     (rootData.organizationBookingPermissions && rootData.organizationBookingPermissions.canDeleteBookingOnBehalf);
-  const isMyBooking = rootData.me.id === bookingDetails.customer?.uniqueId;
 
   return (
     <>

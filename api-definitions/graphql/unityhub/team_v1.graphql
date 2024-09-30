@@ -146,7 +146,7 @@ enum TeamOrderField {
 
 input TeamOrderInput {
     direction: OrderDirection!
-    field: TeamOrderField
+    field: TeamOrderField!
 }
 
 enum TeamMemberOrderField {
@@ -159,7 +159,7 @@ enum TeamMemberOrderField {
 
 input TeamMemberOrderInput {
     direction: OrderDirection!
-    field: TeamMemberOrderField
+    field: TeamMemberOrderField!
 }
 
 type TeamConnection {

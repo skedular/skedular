@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<383ba8bdb7a9f27e217fb43c836a3c31>>
+ * @generated SignedSource<<7208f0d3a778ea77b173b2fc340762e5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,27 +19,27 @@ export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type OrganizationMemberOrderField = "familyName" | "givenName" | "membershipType" | "middleName" | "name" | "%future added value";
 export type BookingOrderInput = {
   direction: OrderDirection;
-  field?: BookingOrderField | null | undefined;
+  field: BookingOrderField;
 };
 export type LocationMemberOrderInput = {
   direction: OrderDirection;
-  field?: LocationMemberOrderField | null | undefined;
+  field: LocationMemberOrderField;
 };
 export type CustomerOrderInput = {
   direction: OrderDirection;
-  field?: CustomerOrderField | null | undefined;
+  field: CustomerOrderField;
 };
 export type LocationTagOrderInput = {
   direction: OrderDirection;
-  field?: LocationTagOrderField | null | undefined;
+  field: LocationTagOrderField;
 };
 export type DeskOrderInput = {
   direction: OrderDirection;
-  field?: DeskOrderField | null | undefined;
+  field: DeskOrderField;
 };
 export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
-  field?: OrganizationMemberOrderField | null | undefined;
+  field: OrganizationMemberOrderField;
 };
 export type pageLocation_rootQuery$variables = {
   bookingDetailsSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;

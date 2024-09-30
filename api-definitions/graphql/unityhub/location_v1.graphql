@@ -188,7 +188,7 @@ enum LocationOrderField {
 
 input LocationOrderInput {
     direction: OrderDirection!
-    field: LocationOrderField
+    field: LocationOrderField!
 }
 
 enum LocationMemberOrderField {
@@ -201,7 +201,7 @@ enum LocationMemberOrderField {
 
 input LocationMemberOrderInput {
     direction: OrderDirection!
-    field: LocationMemberOrderField
+    field: LocationMemberOrderField!
 }
 
 enum DeskOrderField {
@@ -210,7 +210,7 @@ enum DeskOrderField {
 
 input DeskOrderInput {
     direction: OrderDirection!
-    field: DeskOrderField
+    field: DeskOrderField!
 }
 
 type LocationConnection {
@@ -376,7 +376,7 @@ enum LocationTagOrderField {
 
 input LocationTagOrderInput {
     direction: OrderDirection!
-    field: LocationTagOrderField
+    field: LocationTagOrderField!
 }
 
 input ChangeLocationMemberOwnershipTypeInput {

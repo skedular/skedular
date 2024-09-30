@@ -644,7 +644,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Team;
             public OrderDirection Direction { get; set; }
 
             [HotChocolate.GraphQLName("field")]
-            public TeamMemberOrderField? Field { get; set; }
+            public TeamMemberOrderField Field { get; set; }
 
         }
         
@@ -678,7 +678,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Team;
             public OrderDirection Direction { get; set; }
 
             [HotChocolate.GraphQLName("field")]
-            public TeamOrderField? Field { get; set; }
+            public TeamOrderField Field { get; set; }
 
         }
         

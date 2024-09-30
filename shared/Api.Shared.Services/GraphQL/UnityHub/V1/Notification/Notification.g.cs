@@ -169,7 +169,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Notification;
             public OrderDirection Direction { get; set; }
 
             [HotChocolate.GraphQLName("field")]
-            public NotificationOrderField? Field { get; set; }
+            public NotificationOrderField Field { get; set; }
 
         }
         

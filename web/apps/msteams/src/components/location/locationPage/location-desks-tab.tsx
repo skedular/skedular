@@ -19,7 +19,7 @@ import { Dayjs } from 'dayjs';
 import debounce from 'lodash.debounce';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
-import type { DeskOrderField, DeskOrderInput, desksPaginationQuery } from './__generated__/desksPaginationQuery.graphql';
+import type { DeskOrderField, DeskOrderInput, desks_PaginationQuery } from './__generated__/desks_PaginationQuery.graphql';
 import type { locationDesksTab_query$key } from './__generated__/locationDesksTab_query.graphql';
 
 type Props = {
@@ -33,11 +33,11 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<desksPaginationQuery, locationDesksTab_query$key>(
+  } = usePaginationFragment<desks_PaginationQuery, locationDesksTab_query$key>(
     graphql`
       fragment locationDesksTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "desksPaginationQuery") {
+      @refetchable(queryName: "desks_PaginationQuery") {
         location(id: $locationId) {
           canModify
         }
@@ -271,7 +271,6 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
         />
         <Sorting
           options={[{ id: 'name', label: 'Name' }]}
-          // @ts-expect-error
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}

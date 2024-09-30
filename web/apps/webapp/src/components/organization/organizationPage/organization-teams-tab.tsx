@@ -2,8 +2,8 @@ import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type {
   TeamOrderField,
   TeamOrderInput,
-  organizationTeamsPaginationQuery,
-} from '@/queries/__generated__/organizationTeamsPaginationQuery.graphql';
+  organizationTeams_PaginationQuery,
+} from '@/queries/__generated__/organizationTeams_PaginationQuery.graphql';
 import type { organizationTeamsTab_query$key } from '@/queries/__generated__/organizationTeamsTab_query.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
@@ -34,11 +34,11 @@ const OrganizationTeamsTab = ({ rootDataRelay }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationTeamsPaginationQuery, organizationTeamsTab_query$key>(
+  } = usePaginationFragment<organizationTeams_PaginationQuery, organizationTeamsTab_query$key>(
     graphql`
       fragment organizationTeamsTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationTeamsPaginationQuery") {
+      @refetchable(queryName: "organizationTeams_PaginationQuery") {
         teams(
           first: $count
           after: $cursor
@@ -193,7 +193,6 @@ const OrganizationTeamsTab = ({ rootDataRelay }: Props) => {
         />
         <Sorting
           options={[{ id: 'name', label: 'Name' }]}
-          // @ts-expect-error
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}

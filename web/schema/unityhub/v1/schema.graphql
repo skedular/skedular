@@ -881,7 +881,7 @@ input AddBookingInput {
 }
 input BookingOrderInput {
   direction: OrderDirection!
-  field: BookingOrderField
+  field: BookingOrderField!
 }
 input BookingWhereInput {
   fromGT: DateTime
@@ -954,7 +954,7 @@ input CompletePreferredZoneOnboardingInput {
 }
 input CustomerOrderInput {
   direction: OrderDirection!
-  field: CustomerOrderField
+  field: CustomerOrderField!
 }
 input CustomerWhereInput {
   locationId: String!
@@ -1055,7 +1055,7 @@ input DeleteLocationTagInput {
 }
 input DeskOrderInput {
   direction: OrderDirection!
-  field: DeskOrderField
+  field: DeskOrderField!
 }
 input DeskWhereInput {
   locationId: String!
@@ -1068,7 +1068,7 @@ input InviteCustomersToJoinLocationInput {
 }
 input LocationMemberOrderInput {
   direction: OrderDirection!
-  field: LocationMemberOrderField
+  field: LocationMemberOrderField!
 }
 input LocationMemberWhereInput {
   locationId: String!
@@ -1076,11 +1076,11 @@ input LocationMemberWhereInput {
 }
 input LocationOrderInput {
   direction: OrderDirection!
-  field: LocationOrderField
+  field: LocationOrderField!
 }
 input LocationTagOrderInput {
   direction: OrderDirection!
-  field: LocationTagOrderField
+  field: LocationTagOrderField!
 }
 input LocationTagWhereInput {
   locationId: String!
@@ -1120,7 +1120,7 @@ input UpdateLocationTagInput {
 }
 input NotificationOrderInput {
   direction: OrderDirection!
-  field: NotificationOrderField
+  field: NotificationOrderField!
 }
 input AcceptInvitationToJoinOrganizationInput {
   clientMutationId: String
@@ -1160,7 +1160,7 @@ input InviteCustomersToJoinOrganizationInput {
 }
 input OrganizationMemberOrderInput {
   direction: OrderDirection!
-  field: OrganizationMemberOrderField
+  field: OrganizationMemberOrderField!
 }
 input OrganizationMemberWhereInput {
   organizationId: String!
@@ -1168,7 +1168,7 @@ input OrganizationMemberWhereInput {
 }
 input OrganizationOrderInput {
   direction: OrderDirection!
-  field: OrganizationOrderField
+  field: OrganizationOrderField!
 }
 input OrganizationWhereInput {
   nameContains: String
@@ -1236,7 +1236,7 @@ input RejectInvitationToJoinTeamInput {
 }
 input TeamMemberOrderInput {
   direction: OrderDirection!
-  field: TeamMemberOrderField
+  field: TeamMemberOrderField!
 }
 input TeamMemberWhereInput {
   teamId: String!
@@ -1244,7 +1244,7 @@ input TeamMemberWhereInput {
 }
 input TeamOrderInput {
   direction: OrderDirection!
-  field: TeamOrderField
+  field: TeamOrderField!
 }
 input TeamWhereInput {
   organizationId: String

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6fbf35a205e96d581ccebb3596ad9542>>
+ * @generated SignedSource<<cb7cfb5ac36348620227dfaf319a909c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -89,7 +89,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./locationMembersPaginationQuery.graphql')
+      "operation": require('./locationMembers_PaginationQuery.graphql')
     }
   },
   "name": "locationPeopleTab_query",
@@ -249,6 +249,6 @@ return {
 };
 })();
 
-(node as any).hash = "6fc770e30ecd5ffb3cfae2d781dc59e7";
+(node as any).hash = "e6a44f8864b6140d50e7b43af29b4bde";
 
 export default node;

@@ -240,7 +240,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Booking;
             public OrderDirection Direction { get; set; }
 
             [HotChocolate.GraphQLName("field")]
-            public BookingOrderField? Field { get; set; }
+            public BookingOrderField Field { get; set; }
 
         }
         

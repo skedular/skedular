@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d099a481fb64c22d90e413af84804c05>>
+ * @generated SignedSource<<16952b2eda06fbef94b822513ebfbe0a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -77,7 +77,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./deskMultipleChoicesZonesPaginationQuery.graphql')
+      "operation": require('./deskMultipleChoicesZones_PaginationQuery.graphql')
     }
   },
   "name": "deskMultipleChoicesZones_query",
@@ -215,6 +215,6 @@ return {
 };
 })();
 
-(node as any).hash = "fd6b69307e9c259c6bbb83f856eec5db";
+(node as any).hash = "aba24b25f3dae96eb8151116fc41739e";
 
 export default node;

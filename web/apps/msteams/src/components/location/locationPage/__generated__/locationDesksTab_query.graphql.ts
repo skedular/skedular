@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bb03c5a159b9b3e9260441567ba9d43c>>
+ * @generated SignedSource<<79d916f9095fccbf74a59c74112d38e0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -125,7 +125,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./desksPaginationQuery.graphql')
+      "operation": require('./desks_PaginationQuery.graphql')
     }
   },
   "name": "locationDesksTab_query",
@@ -398,6 +398,6 @@ return {
 };
 })();
 
-(node as any).hash = "4b347294d52c305f1b80cc10515a1b1b";
+(node as any).hash = "5dfbe20f35d573b6bd4e8dce51618884";
 
 export default node;

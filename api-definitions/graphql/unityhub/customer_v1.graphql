@@ -290,7 +290,7 @@ enum CustomerOrderField {
 
 input CustomerOrderInput {
     direction: OrderDirection!
-    field: CustomerOrderField
+    field: CustomerOrderField!
 }
 
 type PageInfo {

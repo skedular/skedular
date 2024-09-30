@@ -2,8 +2,8 @@ import { OrganizationMemberCard } from '@/components/organization';
 import type {
   OrganizationMemberOrderField,
   OrganizationMemberOrderInput,
-  organizationMembersPaginationQuery,
-} from '@/queries/__generated__/organizationMembersPaginationQuery.graphql';
+  organizationMembers_PaginationQuery,
+} from '@/queries/__generated__/organizationMembers_PaginationQuery.graphql';
 import type { organizationPeopleTab_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/organizationPeopleTab_inviteCustomersToJoinOrganizationMutation.graphql';
 import type { organizationPeopleTab_query$key } from '@/queries/__generated__/organizationPeopleTab_query.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -60,11 +60,11 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationMembersPaginationQuery, organizationPeopleTab_query$key>(
+  } = usePaginationFragment<organizationMembers_PaginationQuery, organizationPeopleTab_query$key>(
     graphql`
       fragment organizationPeopleTab_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationMembersPaginationQuery") {
+      @refetchable(queryName: "organizationMembers_PaginationQuery") {
         organization(id: $organizationId) {
           id
           name
@@ -292,7 +292,6 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
               { id: 'membershipType', label: 'Membership type' },
               { id: 'createdAt', label: 'Join date' },
             ]}
-            // @ts-expect-error
             defaultOption={sortingOrder.field}
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}

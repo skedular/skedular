@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0c0bc34ebd97c951ab4b37a34d2444ef>>
+ * @generated SignedSource<<3869c49fdc56bb8de285eaf996b49af1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -93,7 +93,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./bookingFeedsPaginationQuery.graphql')
+      "operation": require('./bookingFeeds_PaginationQuery.graphql')
     }
   },
   "name": "bookingFeeds_query",
@@ -218,6 +218,6 @@ return {
 };
 })();
 
-(node as any).hash = "4f54f6d855a79a88abcb5f8b2c3d075b";
+(node as any).hash = "6f9bd16989b1ad60906e9100792e93f8";
 
 export default node;

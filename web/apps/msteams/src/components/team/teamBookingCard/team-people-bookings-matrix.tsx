@@ -46,7 +46,7 @@ import type { teamPeopleBookingsMatrix_deleteBookingMutation } from './__generat
 import type { teamPeopleBookingsMatrix_deleteTeamMutation } from './__generated__/teamPeopleBookingsMatrix_deleteTeamMutation.graphql';
 import type { teamPeopleBookingsMatrix_query$data, teamPeopleBookingsMatrix_query$key } from './__generated__/teamPeopleBookingsMatrix_query.graphql';
 import type { teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation } from './__generated__/teamPeopleBookingsMatrix_removeCustomerDefaultTeamMutation.graphql';
-import type { TeamMemberOrderInput } from './__generated__/teamPeopleBookingsMatrixTeamMembersPaginationQuery.graphql';
+import type { TeamMemberOrderInput } from './__generated__/teamPeopleBookingsMatrixTeamMembers_PaginationQuery.graphql';
 
 type Props = {
   rootDataRelay: teamPeopleBookingsMatrix_query$key;
@@ -153,7 +153,7 @@ const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Find a per
 const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: Props) => {
   const [rootData, refetch] = useRefetchableFragment(
     graphql`
-      fragment teamPeopleBookingsMatrix_query on Query @refetchable(queryName: "teamPeopleBookingsMatrixTeamMembersPaginationQuery") {
+      fragment teamPeopleBookingsMatrix_query on Query @refetchable(queryName: "teamPeopleBookingsMatrixTeamMembers_PaginationQuery") {
         teamMembers(where: { teamId: $teamId, nameContains: $peopleNameSearchText }, orderBy: $peopleSortingValues) {
           id
           customer {

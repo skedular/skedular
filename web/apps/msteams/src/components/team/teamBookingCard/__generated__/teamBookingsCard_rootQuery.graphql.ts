@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f211ff946f20785335ae13e016f7999>>
+ * @generated SignedSource<<189a4716739f29474912611546bca08d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type TeamMemberOrderField = "familyName" | "givenName" | "membershipType" | "middleName" | "name" | "%future added value";
 export type TeamMemberOrderInput = {
   direction: OrderDirection;
-  field?: TeamMemberOrderField | null | undefined;
+  field: TeamMemberOrderField;
 };
 export type teamBookingsCard_rootQuery$variables = {
   fetchBookingPermission: boolean;
