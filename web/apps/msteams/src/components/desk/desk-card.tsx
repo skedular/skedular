@@ -683,7 +683,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
 
             {customerDetails && (
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <CustomerAvatar name={customerDetails} photo={{ url: customerDetails.photoUrl }} />
+                <CustomerAvatar name={customerDetails} photo={{ url: customerDetails.photoUrl }} size="small" />
                 <Typography variant="body1">{getCustomerFullName(customerDetails)}</Typography>
               </Stack>
             )}
