@@ -29,53 +29,57 @@ const now = () => {
   return dayjs().utc();
 };
 
-const startOfDay = (date: Dayjs | string | null | undefined) => {
+const startOfDay = (date?: Dayjs | string | null | undefined) => {
   const finalDate = date ? dayjs(date) : dayjs().utc();
 
   return finalDate.utc().startOf('day');
 };
 
-const endOfDay = (date: Dayjs | string | null | undefined) => {
+const endOfDay = (date?: Dayjs | string | null | undefined) => {
   return startOfDay(date).add(1, 'day').add(-1, 'milliseconds');
 };
 
-const startOfWeek = (date: Dayjs | string | null | undefined) => {
+const startOfWeek = (date?: Dayjs | string | null | undefined) => {
   const finalDate = date ? dayjs(date) : dayjs().utc();
 
   return finalDate.utc().startOf('isoWeek');
 };
 
-const endOfWeek = (date: Dayjs | string | null | undefined) => {
+const endOfWeek = (date?: Dayjs | string | null | undefined) => {
   return startOfWeek(date).add(1, 'week');
 };
 
-const startOfMonth = (date: Dayjs | string | null | undefined) => {
+const startOfMonth = (date?: Dayjs | string | null | undefined) => {
   const finalDate = date ? dayjs(date) : dayjs().utc();
 
   return finalDate.utc().startOf('month');
 };
 
-const endOfMonth = (date: Dayjs | string | null | undefined) => {
+const endOfMonth = (date?: Dayjs | string | null | undefined) => {
   return startOfMonth(date).add(1, 'month');
 };
 
-const toShortDate = (date: Dayjs | string | null | undefined) => {
+const toShortDateWithDayAndMonthOnly = (date?: Dayjs | string | null | undefined) => {
+  return date ? dayjs(date).format('dddd, Do MMM') : '';
+};
+
+const toShortDate = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('dddd, Do MMM YYYY') : '';
 };
 
-const toShortDateTime = (date: Dayjs | string | null | undefined) => {
+const toShortDateTime = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('dddd, Do MMM YYYY, HH:mm') : '';
 };
 
-const toShortWeekDay = (date: Dayjs | string | null | undefined) => {
+const toShortWeekDay = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('ddd') : '';
 };
 
-const toShortDateTimeInUtc = (date: Dayjs | string | null | undefined) => {
+const toShortDateTimeInUtc = (date?: Dayjs | string | null | undefined) => {
   return date ? toShortDateTime(dayjs(date).utc()) : '';
 };
 
-const toDayAndMonthDate = (date: Dayjs | string | null | undefined) => {
+const toDayAndMonthDate = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('Do MMM') : '';
 };
 
@@ -202,5 +206,6 @@ export {
   toShortDate,
   toShortDateTime,
   toShortDateTimeInUtc,
+  toShortDateWithDayAndMonthOnly,
   toShortWeekDay,
 };

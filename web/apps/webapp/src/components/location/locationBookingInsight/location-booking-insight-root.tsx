@@ -54,7 +54,7 @@ const LocationBookingInsightRootWithRelay = ({ organizationId, locationId, locat
   const [queryReference, loadQuery] = useQueryLoader<locationBookingInsightRoot_rootQuery>(RootQuery);
 
   useEffect(() => {
-    const to = startOfDay(null);
+    const to = startOfDay();
     const from = to.subtract(30, 'days');
 
     loadQuery(

@@ -106,7 +106,7 @@ const NewBookingDialog = ({
   const schema = !!rootData.organizationBookingPermissions?.canAddBookingOnBehalf ? bookingSchema : bookingWithoutMemberSchema;
   const validate = makeValidate(schema);
   const requiredFields = makeRequired(schema);
-  const [from, setFrom] = useState<Dayjs | Date>(startOfDay(null));
+  const [from, setFrom] = useState<Dayjs | Date>(startOfDay());
   const to = useMemo(() => {
     if (from instanceof Date) {
       return endOfDay(dayjs(from));

@@ -87,7 +87,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
 
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(startOfDay(null));
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(startOfDay());
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {

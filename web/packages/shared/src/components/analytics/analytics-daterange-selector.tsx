@@ -16,7 +16,7 @@ type Props = {
 };
 
 const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultCustomUntil, onDateRangeChange }: Props) => {
-  const [until, setUntil] = useState(defaultPeriod === 'custom' && defaultCustomFrom && defaultCustomUntil ? defaultCustomUntil : startOfDay(null));
+  const [until, setUntil] = useState(defaultPeriod === 'custom' && defaultCustomFrom && defaultCustomUntil ? defaultCustomUntil : startOfDay());
   const [from, setFrom] = useState(
     defaultPeriod === 'custom' && (!defaultCustomFrom || !defaultCustomUntil)
       ? until.subtract(1, 'months')
@@ -30,7 +30,7 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
   );
   const [period, setPeriod] = useState(defaultPeriod === 'custom' && (defaultCustomFrom || !defaultCustomUntil) ? 'month' : defaultPeriod);
   const handlePeriodChange = (event: React.MouseEvent<HTMLElement>, newPeriod: Period) => {
-    const start = startOfDay(null);
+    const start = startOfDay();
     let until = start;
     let from = until.subtract(1, 'months');
 

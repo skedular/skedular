@@ -78,7 +78,7 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
-  const [date, setDate] = useState(startOfMonth(null));
+  const [date, setDate] = useState(startOfMonth());
 
   useEffect(() => {
     // TODO: 20230711 - Morteza: This will refetch in addition to the root query. The first refetch on initial render time must be prevented

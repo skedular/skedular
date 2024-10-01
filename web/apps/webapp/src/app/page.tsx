@@ -61,7 +61,7 @@ const MemoHome = memo(Home);
 
 const HomeWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageHome_rootQuery>(RootQuery);
-  const [date, setDate] = useState(startOfMonth(null));
+  const [date, setDate] = useState(startOfMonth());
 
   useEffect(() => {
     loadQuery(
@@ -84,7 +84,7 @@ const HomeWithRelay = () => {
             field: 'from',
           },
         ],
-        dateToGetAvailableDesks: startOfDay(null).toISOString(),
+        dateToGetAvailableDesks: startOfDay().toISOString(),
       },
       {
         fetchPolicy: 'store-and-network',
@@ -93,7 +93,7 @@ const HomeWithRelay = () => {
   }, [loadQuery, date]);
 
   const handleReloadRequire = () => {
-    setDate(startOfMonth(null));
+    setDate(startOfMonth());
   };
 
   if (!queryReference) {

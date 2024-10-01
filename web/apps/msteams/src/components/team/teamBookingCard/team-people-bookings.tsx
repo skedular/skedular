@@ -296,7 +296,7 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
     field: 'name',
   });
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
-  const [startDate, setStartDate] = useState<Dayjs>(startOfWeek(null));
+  const [startDate, setStartDate] = useState<Dayjs>(startOfWeek());
   const [peopleNameSearchText] = useState<string>('');
 
   const handleRefetch = useCallback(
@@ -575,7 +575,7 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
   };
 
   const handleDateRangeTypeChange = (event: React.MouseEvent<HTMLElement>, value: DateRangeType) => {
-    let start = startOfWeek(null);
+    let start = startOfWeek();
     if (value === DateRangeType.NextWeek) {
       start = start.add(1, 'week');
     }

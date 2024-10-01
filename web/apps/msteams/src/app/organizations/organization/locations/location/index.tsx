@@ -97,9 +97,9 @@ const LocationPageWithRelay = () => {
   }
 
   useEffect(() => {
-    const from = startOfDay(null).toISOString();
-    const to = endOfDay(null).toISOString();
-    const until = startOfDay(null).add(1, 'month').toISOString();
+    const from = startOfDay().toISOString();
+    const to = endOfDay().toISOString();
+    const until = startOfDay().add(1, 'month').toISOString();
 
     loadQuery(
       {

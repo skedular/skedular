@@ -72,7 +72,7 @@ const OrganizationBookingsWithRelay = ({
   const [queryReference, loadQuery] = useQueryLoader<organizationBookingsCard_rootQuery>(RootQuery);
 
   useEffect(() => {
-    const startDate = startOfWeek(null);
+    const startDate = startOfWeek();
     const endDate = endOfWeek(startDate);
 
     loadQuery(

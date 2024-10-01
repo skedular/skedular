@@ -47,7 +47,7 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, orga
   const [queryReference, loadQuery] = useQueryLoader<organizationMemberAttendancyInsightRoot_rootQuery>(RootQuery);
 
   useEffect(() => {
-    const to = startOfDay(null);
+    const to = startOfDay();
     const from = to.subtract(30, 'days');
 
     loadQuery(

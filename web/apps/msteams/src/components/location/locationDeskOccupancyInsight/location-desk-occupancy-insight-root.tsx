@@ -54,7 +54,7 @@ const LocationDeskOccupancyInsightRootWithRelay = ({ organizationId, locationId,
   const [queryReference, loadQuery] = useQueryLoader<locationDeskOccupancyInsightRoot_rootQuery>(RootQuery);
 
   useEffect(() => {
-    const to = startOfDay(null);
+    const to = startOfDay();
     const from = to.subtract(30, 'days');
 
     loadQuery(

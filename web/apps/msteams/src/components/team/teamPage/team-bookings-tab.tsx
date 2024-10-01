@@ -76,8 +76,8 @@ const TeamBookingsTab = ({ rootDataRelay, organizationId, teamId }: Props) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
   const [pageContextOpen, setPageContextOpen] = useState(false);
-  const [selectedFromDate, setSelectedFromDate] = useState<Dayjs | null>(startOfDay(null));
-  const [selectedUntilDate, setSelectedUntilDate] = useState<Dayjs | null>(startOfDay(null).add(1, 'month'));
+  const [selectedFromDate, setSelectedFromDate] = useState<Dayjs | null>(startOfDay());
+  const [selectedUntilDate, setSelectedUntilDate] = useState<Dayjs | null>(startOfDay().add(1, 'month'));
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {

@@ -76,8 +76,8 @@ const TeamPageWithRelay = () => {
   }
 
   useEffect(() => {
-    const from = startOfDay(null).toISOString();
-    const until = startOfDay(null).add(1, 'month').toISOString();
+    const from = startOfDay().toISOString();
+    const until = startOfDay().add(1, 'month').toISOString();
 
     loadQuery(
       {
