@@ -159,9 +159,7 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
                     middleName: invitedBy?.middleName,
                     familyName: invitedBy?.familyName,
                   }}
-                  photo={{
-                    url: invitedBy?.photoUrl,
-                  }}
+                  photo={{ url: invitedBy?.photoUrl }}
                 />
               </Stack>
             }

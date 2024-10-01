@@ -122,17 +122,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
 
   const avatar = (
     <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-      <CustomerAvatar
-        name={{
-          name: locationMemberDetails.customer?.name,
-          givenName: locationMemberDetails.customer?.givenName,
-          middleName: locationMemberDetails.customer?.middleName,
-          familyName: locationMemberDetails.customer?.familyName,
-        }}
-        photo={{
-          url: locationMemberDetails.customer?.photoUrl,
-        }}
-      />
+      <CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />
       <Typography variant="body1">{getCustomerFullName(locationMemberDetails.customer)}</Typography>
     </Stack>
   );

@@ -129,18 +129,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
         return (
           <li {...props}>
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <CustomerAvatar
-                name={{
-                  name: castedOption.name,
-                  givenName: castedOption.givenName,
-                  middleName: castedOption.middleName,
-                  familyName: castedOption.familyName,
-                }}
-                photo={{
-                  url: castedOption.photoUrl,
-                }}
-                size="small"
-              />
+              <CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />
               <Typography variant="body1">{getCustomerFullName(castedOption)}</Typography>
             </Stack>
           </li>

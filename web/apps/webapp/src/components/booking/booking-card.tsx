@@ -557,17 +557,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           <CardHeader
             title={
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <CustomerAvatar
-                  name={{
-                    name: bookingDetails.customer?.name,
-                    givenName: bookingDetails.customer?.givenName,
-                    middleName: bookingDetails.customer?.middleName,
-                    familyName: bookingDetails.customer?.familyName,
-                  }}
-                  photo={{
-                    url: bookingDetails.customer?.photoUrl,
-                  }}
-                />
+                <CustomerAvatar name={bookingDetails.customer} photo={{ url: bookingDetails.customer?.photoUrl }} />
                 <Typography variant="h6" component="div">
                   {shortDateFormatFrom}
                 </Typography>

@@ -32,17 +32,7 @@ const CustomerCard = ({ customerDetailsRelay }: Props) => {
       <CardHeader
         title={
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <CustomerAvatar
-              name={{
-                name: customerDetails.name,
-                givenName: customerDetails.givenName,
-                middleName: customerDetails.middleName,
-                familyName: customerDetails.familyName,
-              }}
-              photo={{
-                url: customerDetails.photoUrl,
-              }}
-            />
+            <CustomerAvatar name={customerDetails} photo={{ url: customerDetails.photoUrl }} />
             <Typography variant="body1">{getCustomerFullName(customerDetails)}</Typography>
           </Stack>
         }

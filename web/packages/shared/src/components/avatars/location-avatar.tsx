@@ -13,8 +13,8 @@ type PhotoProps = {
 
 type Props = {
   size?: 'small' | 'medium' | 'large';
-  name: NameProps;
-  photo: PhotoProps;
+  name?: NameProps;
+  photo?: PhotoProps;
   sx?: SxProps | null;
   showFullName?: boolean;
 };
@@ -50,7 +50,7 @@ const LocationAvatar = ({ name, photo, size, sx, showFullName }: Props) => {
   }
 
   return (
-    <Tooltip title={name.name}>
+    <Tooltip title={name?.name}>
       <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
         {avatarLetters}
       </Avatar>

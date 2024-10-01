@@ -397,19 +397,7 @@ const TeamPeopleBookingsMatrix = ({ rootDataRelay, organizationId, teamId, teamN
       headerName: '',
       renderCell: (params) => (
         <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-          <CustomerAvatar
-            name={{
-              name: params.value.name,
-              givenName: params.value.givenName,
-              middleName: params.value.middleName,
-              familyName: params.value.familyName,
-            }}
-            photo={{
-              url: params.value.photoUrl,
-            }}
-            size="small"
-            showFullName={true}
-          />
+          <CustomerAvatar name={params.value} photo={{ url: params.value.photoUrl }} size="small" showFullName={true} />
         </Box>
       ),
       getApplyQuickFilterFn: getApplyQuickFilterNameSearch,

@@ -10,8 +10,8 @@ type PhotoDetails = {
 
 type Props = {
   size?: 'small' | 'medium' | 'large';
-  name: NameDetails;
-  photo: PhotoDetails;
+  name?: NameDetails;
+  photo?: PhotoDetails;
   sx?: SxProps | null;
   showFullName?: boolean;
 };

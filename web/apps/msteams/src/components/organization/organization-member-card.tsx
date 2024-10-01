@@ -123,18 +123,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
 
   const avatar = (
     <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-      <CustomerAvatar
-        name={{
-          name: organizationMemberDetails.customer?.name,
-          givenName: organizationMemberDetails.customer?.givenName,
-          middleName: organizationMemberDetails.customer?.middleName,
-          familyName: organizationMemberDetails.customer?.familyName,
-        }}
-        photo={{
-          url: organizationMemberDetails.customer?.photoUrl,
-        }}
-        showFullName
-      />
+      <CustomerAvatar name={organizationMemberDetails.customer} photo={{ url: organizationMemberDetails.customer?.photoUrl }} showFullName />
       <Typography variant="body1">{getCustomerFullName(organizationMemberDetails.customer)}</Typography>
     </Stack>
   );

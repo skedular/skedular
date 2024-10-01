@@ -168,17 +168,7 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
         <CardHeader
           title={
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <CustomerAvatar
-                name={{
-                  name: customer.name,
-                  givenName: customer.givenName,
-                  middleName: customer.middleName,
-                  familyName: customer.familyName,
-                }}
-                photo={{
-                  url: customer.photoUrl,
-                }}
-              />
+              <CustomerAvatar name={customer} photo={{ url: customer.photoUrl }} />
               <Typography variant="body1">{getCustomerFullName(customer)}</Typography>
             </Stack>
           }
