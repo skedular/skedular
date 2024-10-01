@@ -156,7 +156,7 @@ const BookingDetailsSelector = ({
 
   const [, startTransition] = useTransition();
   const [, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize] = useState(20);
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');
   const [organizationId, setOrganizationId] = useState(defaultOrganizationId);
   const [locationId, setLocationId] = useState(defaultLocationId);
@@ -190,7 +190,7 @@ const BookingDetailsSelector = ({
   }, [rootData.availableLocationDesks]);
 
   const handleRefetch = useCallback(
-    (pageSize: number, bookingPeopleNameSearchText: string, organizationId: string | null, locationId: string | null, deskIds: string[]) => {
+    (bookingPeopleNameSearchText: string, organizationId: string | null, locationId: string | null, deskIds: string[]) => {
       startTransition(() => {
         refetch(
           {
@@ -210,13 +210,13 @@ const BookingDetailsSelector = ({
         );
       });
     },
-    [refetch, bookingFrom],
+    [refetch, pageSize, bookingFrom],
   );
 
   // Workaround to ensure we have all the entire form refreshed once any dependent values change
   useEffect(() => {
-    handleRefetch(pageSize, bookingPeopleNameSearchText, organizationId, locationId, defaultDeskIds);
-  }, [handleRefetch, pageSize, bookingPeopleNameSearchText, organizationId, locationId, bookingFrom, bookingTo, defaultDeskIds]);
+    handleRefetch(bookingPeopleNameSearchText, organizationId, locationId, defaultDeskIds);
+  }, [handleRefetch, bookingPeopleNameSearchText, organizationId, locationId, bookingFrom, bookingTo, defaultDeskIds]);
 
   const filterOrganization = createFilterOptions<OrganizationDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
@@ -227,20 +227,20 @@ const BookingDetailsSelector = ({
     setOrganizationId(id);
 
     setLocationId(id);
-    handleRefetch(pageSize, bookingPeopleNameSearchText, id, locationId, defaultDeskIds);
+    handleRefetch(bookingPeopleNameSearchText, id, locationId, defaultDeskIds);
   };
 
   const handleLocationChange = (option: LocationDetails | null) => {
     const id = option?.id ?? null;
 
     setLocationId(id);
-    handleRefetch(pageSize, bookingPeopleNameSearchText, organizationId, id, defaultDeskIds);
+    handleRefetch(bookingPeopleNameSearchText, organizationId, id, defaultDeskIds);
   };
 
   const handleSearchTextChange = (str: string) => {
     setBookingPeopleNameSearchText(str);
 
-    handleRefetch(pageSize, str, organizationId, locationId, defaultDeskIds);
+    handleRefetch(str, organizationId, locationId, defaultDeskIds);
   };
 
   const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
