@@ -130,17 +130,19 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
                         // We only acknowledge message if the goes through all previous stages of the pipeline
                         // and ends up in the last stage either in error or success state.
                         .Select(AcknowledgeMessage)
-                        .Subscribe();
-                }
-                catch (Exception ex)
-                {
-                    if (ex is not OperationCanceledException)
-                    {
-                        _logger.LogCritical(ex, "Exception occurred while running ExecuteAsync method");
-                        Environment.ExitCode = KafkaExitCodes.UncaughtException;
-                    }
+                        .Catch<ConsumeResult<byte[], byte[]>, Exception>(ex =>
+                        {
+                            if (ex is not OperationCanceledException)
+                            {
+                                _logger.LogCritical(ex, "Exception occurred while running ExecuteAsync method");
+                                Environment.ExitCode = KafkaExitCodes.UncaughtException;
+                            }
 
-                    _hostApplicationLifetime.StopApplication();
+                            _hostApplicationLifetime.StopApplication();
+
+                            return Observable.Throw<ConsumeResult<byte[], byte[]>>(ex);
+                        })
+                        .Subscribe();
                 }
                 finally
                 {
