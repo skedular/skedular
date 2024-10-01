@@ -347,7 +347,7 @@ public class BookingService(
             searchCriteria.LocationIds.Count == 0 &&
             searchCriteria.TeamIds.Count == 0)
         {
-            organizationIds ??= await GetCustomerLocationIdsAsync(customer, cancellationToken);
+            organizationIds ??= await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
             locationIds ??= await GetCustomerLocationIdsAsync(customer, cancellationToken);
             teamIds ??= await GetCustomerTeamIdsAsync(customer, cancellationToken);
 
