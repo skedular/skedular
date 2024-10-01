@@ -12,7 +12,7 @@ import { endOfWeek, startOfWeek } from '@repo/shared/libs/utils';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import LocationPeopleBookingsMatrix from './location-people-bookings-matrix';
+import LocationPeopleBookings from './location-people-bookings';
 
 type Props = {
   queryReference: PreloadedQuery<locationBookingsCard_rootQuery, Record<string, unknown>>;
@@ -33,7 +33,7 @@ const RootQuery = graphql`
     $from: DateTime!
     $to: DateTime!
   ) {
-    ...locationPeopleBookingsMatrix_query
+    ...locationPeopleBookings_query
   }
 `;
 
@@ -48,7 +48,7 @@ const LocationBookingsCard = ({
   const rootData = usePreloadedQuery<locationBookingsCard_rootQuery>(RootQuery, queryReference);
 
   return (
-    <LocationPeopleBookingsMatrix
+    <LocationPeopleBookings
       rootDataRelay={rootData}
       organizationId={organizationId}
       locationId={locationId}

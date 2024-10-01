@@ -4,7 +4,6 @@ import { OrganizationOnboarding } from '@/components/organization/organizationOn
 import { RootShell } from '@/components/rootShell';
 import { SmallMonthlyViewCalendar } from '@/components/smallMonthlyViewCalendar';
 import type { pageHome_rootQuery } from '@/queries/__generated__/pageHome_rootQuery.graphql';
-import Stack from '@mui/material/Stack';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -52,10 +51,8 @@ const Home = ({ queryReference, onReloadRequire }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.bookingCustomerRecordSynced, rootData?.organizationCustomerRecordSynced]}
     >
-      <Stack direction="column" spacing={1}>
-        <OrganizationOnboarding rootDataRelay={rootData} />
-        <SmallMonthlyViewCalendar rootDataRelay={rootData} />
-      </Stack>
+      <OrganizationOnboarding rootDataRelay={rootData} />
+      <SmallMonthlyViewCalendar rootDataRelay={rootData} />
     </RootShell>
   );
 };
