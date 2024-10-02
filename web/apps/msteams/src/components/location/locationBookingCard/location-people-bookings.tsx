@@ -198,8 +198,9 @@ const LocationPeopleBookings = ({
             name
           }
         }
-        organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {
+        locationBookingPermissions(locationId: $locationId) {
           canAddBookingOnBehalf
+          canDeleteBookingOnBehalf
         }
         allBookings(where: { locationIds: [$locationId], fromGTE: $from, toLT: $to }) {
           id
@@ -488,8 +489,17 @@ const LocationPeopleBookings = ({
 
   const handleCellClick = (params: GridCellParams, event: MuiEvent, details: GridCallbackDetails) => {
     const { customer, booking } = params.value as BookingDetails;
-    if (!rootData.organizationBookingPermissions?.canAddBookingOnBehalf && rootData.me?.id !== customer.uniqueId) {
+    if (!booking && !rootData.locationBookingPermissions?.canAddBookingOnBehalf && rootData.me?.id !== customer.uniqueId) {
       enqueueSnackbar(`You are not authorized to make a booking on behalf of someone else`, {
+        variant: 'error',
+        anchorOrigin,
+      });
+
+      return;
+    }
+
+    if (booking && !rootData.locationBookingPermissions?.canDeleteBookingOnBehalf && rootData.me?.id !== customer.uniqueId) {
+      enqueueSnackbar(`You are not authorized to remove this booking on behalf of someone else`, {
         variant: 'error',
         anchorOrigin,
       });

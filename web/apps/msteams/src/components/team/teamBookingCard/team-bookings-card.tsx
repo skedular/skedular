@@ -28,8 +28,6 @@ const RootQuery = graphql`
   query teamBookingsCard_rootQuery(
     $peopleNameSearchText: String!
     $peopleSortingValues: [TeamMemberOrderInput!]!
-    $fetchBookingPermission: Boolean!
-    $organizationId: String!
     $teamId: String!
     $from: DateTime!
     $to: DateTime!
@@ -79,8 +77,6 @@ const TeamBookingsWithRelay = ({ organizationId, teamId, teamName, teamsConnecti
           },
         ],
         peopleNameSearchText: '',
-        organizationId: organizationId ?? '',
-        fetchBookingPermission: !!organizationId,
         teamId: teamId,
         from: startDate.toISOString(),
         to: endDate.toISOString(),

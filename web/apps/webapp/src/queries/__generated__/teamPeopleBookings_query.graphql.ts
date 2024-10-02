@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ee7bc529d197d0784e541c76571fd1f7>>
+ * @generated SignedSource<<921dd0f603bc0f78587bb5280f49e018>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,9 +40,6 @@ export type teamPeopleBookings_query$data = {
     }>;
     readonly id: string;
   } | null | undefined;
-  readonly organizationBookingPermissions?: {
-    readonly canAddBookingOnBehalf: boolean;
-  };
   readonly team: {
     readonly canDelete: boolean;
     readonly canModify: boolean;
@@ -53,6 +50,10 @@ export type teamPeopleBookings_query$data = {
       readonly uniqueId: string;
     } | null | undefined;
   } | null | undefined;
+  readonly teamBookingPermissions: {
+    readonly canAddBookingOnBehalf: boolean;
+    readonly canDeleteBookingOnBehalf: boolean;
+  };
   readonly teamMembers: ReadonlyArray<{
     readonly customer: {
       readonly familyName: string | null | undefined;
@@ -73,29 +74,34 @@ export type teamPeopleBookings_query$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = {
+  "kind": "Variable",
+  "name": "teamId",
+  "variableName": "teamId"
+},
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
-  (v1/*: any*/),
+v4 = [
   (v2/*: any*/),
+  (v3/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -129,15 +135,7 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "fetchBookingPermission"
-    },
-    {
-      "kind": "RootArgument",
       "name": "from"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationId"
     },
     {
       "kind": "RootArgument",
@@ -181,11 +179,7 @@ return {
               "name": "nameContains",
               "variableName": "peopleNameSearchText"
             },
-            {
-              "kind": "Variable",
-              "name": "teamId",
-              "variableName": "teamId"
-            }
+            (v0/*: any*/)
           ],
           "kind": "ObjectValue",
           "name": "where"
@@ -196,7 +190,7 @@ return {
       "name": "teamMembers",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -204,7 +198,7 @@ return {
           "kind": "LinkedField",
           "name": "customer",
           "plural": false,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         }
       ],
@@ -218,7 +212,7 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -227,7 +221,7 @@ return {
           "name": "defaultTeams",
           "plural": true,
           "selections": [
-            (v1/*: any*/)
+            (v2/*: any*/)
           ],
           "storageKey": null
         }
@@ -248,7 +242,7 @@ return {
       "name": "team",
       "plural": false,
       "selections": [
-        (v2/*: any*/),
+        (v3/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -278,8 +272,8 @@ return {
           "name": "organization",
           "plural": false,
           "selections": [
-            (v1/*: any*/),
-            (v2/*: any*/)
+            (v2/*: any*/),
+            (v3/*: any*/)
           ],
           "storageKey": null
         }
@@ -287,35 +281,31 @@ return {
       "storageKey": null
     },
     {
-      "condition": "fetchBookingPermission",
-      "kind": "Condition",
-      "passingValue": true,
+      "alias": null,
+      "args": [
+        (v0/*: any*/)
+      ],
+      "concreteType": "TeamBookingPermissions",
+      "kind": "LinkedField",
+      "name": "teamBookingPermissions",
+      "plural": false,
       "selections": [
         {
           "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "organizationId",
-              "variableName": "organizationId"
-            }
-          ],
-          "concreteType": "OrganizationBookingPermissions",
-          "kind": "LinkedField",
-          "name": "organizationBookingPermissions",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "canAddBookingOnBehalf",
-              "storageKey": null
-            }
-          ],
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canAddBookingOnBehalf",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canDeleteBookingOnBehalf",
           "storageKey": null
         }
-      ]
+      ],
+      "storageKey": null
     },
     {
       "alias": null,
@@ -353,7 +343,7 @@ return {
       "name": "allBookings",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -368,7 +358,7 @@ return {
           "kind": "LinkedField",
           "name": "customer",
           "plural": false,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -379,7 +369,7 @@ return {
           "name": "location",
           "plural": false,
           "selections": [
-            (v2/*: any*/)
+            (v3/*: any*/)
           ],
           "storageKey": null
         },
@@ -391,7 +381,7 @@ return {
           "name": "desks",
           "plural": true,
           "selections": [
-            (v2/*: any*/),
+            (v3/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -400,8 +390,8 @@ return {
               "name": "locationTags",
               "plural": true,
               "selections": [
-                (v1/*: any*/),
                 (v2/*: any*/),
+                (v3/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -424,6 +414,6 @@ return {
 };
 })();
 
-(node as any).hash = "de7b59e704e4e714cd01ac3cbbe28877";
+(node as any).hash = "0943b3f1356c39a03c81e442f9af1708";
 
 export default node;

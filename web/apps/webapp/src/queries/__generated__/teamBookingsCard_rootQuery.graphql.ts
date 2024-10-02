@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f78f2fc265f0393093d642e93960a85b>>
+ * @generated SignedSource<<19861b9958c498ef9e79cdb73b0b5dc9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,9 +17,7 @@ export type TeamMemberOrderInput = {
   field: TeamMemberOrderField;
 };
 export type teamBookingsCard_rootQuery$variables = {
-  fetchBookingPermission: boolean;
   from: any;
-  organizationId: string;
   peopleNameSearchText: string;
   peopleSortingValues: ReadonlyArray<TeamMemberOrderInput>;
   teamId: string;
@@ -37,62 +35,57 @@ const node: ConcreteRequest = (function(){
 var v0 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "fetchBookingPermission"
+  "name": "from"
 },
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "from"
+  "name": "peopleNameSearchText"
 },
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "peopleSortingValues"
 },
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "peopleNameSearchText"
+  "name": "teamId"
 },
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "peopleSortingValues"
-},
-v5 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "teamId"
-},
-v6 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
   "name": "to"
 },
-v7 = {
+v5 = {
+  "kind": "Variable",
+  "name": "teamId",
+  "variableName": "teamId"
+},
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v10 = [
+v9 = [
+  (v7/*: any*/),
   (v8/*: any*/),
-  (v9/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -129,9 +122,7 @@ return {
       (v1/*: any*/),
       (v2/*: any*/),
       (v3/*: any*/),
-      (v4/*: any*/),
-      (v5/*: any*/),
-      (v6/*: any*/)
+      (v4/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -149,13 +140,11 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v3/*: any*/),
-      (v4/*: any*/),
-      (v0/*: any*/),
-      (v2/*: any*/),
-      (v5/*: any*/),
       (v1/*: any*/),
-      (v6/*: any*/)
+      (v2/*: any*/),
+      (v3/*: any*/),
+      (v0/*: any*/),
+      (v4/*: any*/)
     ],
     "kind": "Operation",
     "name": "teamBookingsCard_rootQuery",
@@ -175,11 +164,7 @@ return {
                 "name": "nameContains",
                 "variableName": "peopleNameSearchText"
               },
-              {
-                "kind": "Variable",
-                "name": "teamId",
-                "variableName": "teamId"
-              }
+              (v5/*: any*/)
             ],
             "kind": "ObjectValue",
             "name": "where"
@@ -190,7 +175,7 @@ return {
         "name": "teamMembers",
         "plural": true,
         "selections": [
-          (v7/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -198,7 +183,7 @@ return {
             "kind": "LinkedField",
             "name": "customer",
             "plural": false,
-            "selections": (v10/*: any*/),
+            "selections": (v9/*: any*/),
             "storageKey": null
           }
         ],
@@ -212,7 +197,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -221,7 +206,7 @@ return {
             "name": "defaultTeams",
             "plural": true,
             "selections": [
-              (v8/*: any*/)
+              (v7/*: any*/)
             ],
             "storageKey": null
           }
@@ -242,7 +227,7 @@ return {
         "name": "team",
         "plural": false,
         "selections": [
-          (v9/*: any*/),
+          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -272,45 +257,41 @@ return {
             "name": "organization",
             "plural": false,
             "selections": [
-              (v8/*: any*/),
-              (v9/*: any*/)
+              (v7/*: any*/),
+              (v8/*: any*/)
             ],
             "storageKey": null
           },
-          (v7/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       },
       {
-        "condition": "fetchBookingPermission",
-        "kind": "Condition",
-        "passingValue": true,
+        "alias": null,
+        "args": [
+          (v5/*: any*/)
+        ],
+        "concreteType": "TeamBookingPermissions",
+        "kind": "LinkedField",
+        "name": "teamBookingPermissions",
+        "plural": false,
         "selections": [
           {
             "alias": null,
-            "args": [
-              {
-                "kind": "Variable",
-                "name": "organizationId",
-                "variableName": "organizationId"
-              }
-            ],
-            "concreteType": "OrganizationBookingPermissions",
-            "kind": "LinkedField",
-            "name": "organizationBookingPermissions",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "canAddBookingOnBehalf",
-                "storageKey": null
-              }
-            ],
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canAddBookingOnBehalf",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canDeleteBookingOnBehalf",
             "storageKey": null
           }
-        ]
+        ],
+        "storageKey": null
       },
       {
         "alias": null,
@@ -348,7 +329,7 @@ return {
         "name": "allBookings",
         "plural": true,
         "selections": [
-          (v7/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -363,7 +344,7 @@ return {
             "kind": "LinkedField",
             "name": "customer",
             "plural": false,
-            "selections": (v10/*: any*/),
+            "selections": (v9/*: any*/),
             "storageKey": null
           },
           {
@@ -374,7 +355,7 @@ return {
             "name": "location",
             "plural": false,
             "selections": [
-              (v9/*: any*/)
+              (v8/*: any*/)
             ],
             "storageKey": null
           },
@@ -386,7 +367,7 @@ return {
             "name": "desks",
             "plural": true,
             "selections": [
-              (v9/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -395,8 +376,8 @@ return {
                 "name": "locationTags",
                 "plural": true,
                 "selections": [
+                  (v7/*: any*/),
                   (v8/*: any*/),
-                  (v9/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -416,16 +397,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e680d8a5c6e1052e6492745d47d91dec",
+    "cacheID": "307855dc00a10c68674625283dbe650c",
     "id": null,
     "metadata": {},
     "name": "teamBookingsCard_rootQuery",
     "operationKind": "query",
-    "text": "query teamBookingsCard_rootQuery(\n  $peopleNameSearchText: String!\n  $peopleSortingValues: [TeamMemberOrderInput!]!\n  $fetchBookingPermission: Boolean!\n  $organizationId: String!\n  $teamId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...teamPeopleBookings_query\n}\n\nfragment teamPeopleBookings_query on Query {\n  teamMembers(where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n  team(id: $teamId) {\n    name\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $fetchBookingPermission) {\n    canAddBookingOnBehalf\n  }\n  allBookings(where: {teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query teamBookingsCard_rootQuery(\n  $peopleNameSearchText: String!\n  $peopleSortingValues: [TeamMemberOrderInput!]!\n  $teamId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...teamPeopleBookings_query\n}\n\nfragment teamPeopleBookings_query on Query {\n  teamMembers(where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n  team(id: $teamId) {\n    name\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  teamBookingPermissions(teamId: $teamId) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  allBookings(where: {teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "694660638a11b8e27dbe01c82c9595ff";
+(node as any).hash = "20d93b68d0dbc44d131f14669d853018";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<572f9f72d428e579b32363ab0c87082e>>
+ * @generated SignedSource<<b07af8f616146a500cdf190e4acb8b0f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -266,6 +266,13 @@ return {
             "kind": "ScalarField",
             "name": "canAddBookingOnBehalf",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canDeleteBookingOnBehalf",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -374,16 +381,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "38c7f4a75a94d14a361f0aff8b0cb2c0",
+    "cacheID": "638d4a5cb11fc2ed0cf713b2a5fffe3d",
     "id": null,
     "metadata": {},
     "name": "organizationPeopleBookingsOrganizationMembers_PaginationQuery",
     "operationKind": "query",
-    "text": "query organizationPeopleBookingsOrganizationMembers_PaginationQuery(\n  $from: DateTime\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [OrganizationMemberOrderInput!]\n  $to: DateTime\n) {\n  ...organizationPeopleBookings_query\n}\n\nfragment organizationPeopleBookings_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canAddBookingOnBehalf\n  }\n  allBookings(where: {organizationIds: [$organizationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query organizationPeopleBookingsOrganizationMembers_PaginationQuery(\n  $from: DateTime\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [OrganizationMemberOrderInput!]\n  $to: DateTime\n) {\n  ...organizationPeopleBookings_query\n}\n\nfragment organizationPeopleBookings_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  allBookings(where: {organizationIds: [$organizationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8552ace694ce48998ac008027494c7fd";
+(node as any).hash = "a1b9bb0ee4a311721d8ded493263ae58";
 
 export default node;

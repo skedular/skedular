@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d430d93b6006be7f414cc6802afdd81a>>
+ * @generated SignedSource<<48b3d2c24a1c4e778c83fcd1f88b2bd4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -49,6 +49,7 @@ export type organizationPeopleBookings_query$data = {
   } | null | undefined;
   readonly organizationBookingPermissions: {
     readonly canAddBookingOnBehalf: boolean;
+    readonly canDeleteBookingOnBehalf: boolean;
   };
   readonly organizationMembers: ReadonlyArray<{
     readonly customer: {
@@ -286,6 +287,13 @@ return {
           "kind": "ScalarField",
           "name": "canAddBookingOnBehalf",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canDeleteBookingOnBehalf",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -397,6 +405,6 @@ return {
 };
 })();
 
-(node as any).hash = "8552ace694ce48998ac008027494c7fd";
+(node as any).hash = "a1b9bb0ee4a311721d8ded493263ae58";
 
 export default node;
