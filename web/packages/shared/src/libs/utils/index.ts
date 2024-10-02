@@ -60,7 +60,7 @@ const endOfMonth = (date?: Dayjs | string | null | undefined) => {
 };
 
 const toShortDateWithDayAndMonthOnly = (date?: Dayjs | string | null | undefined) => {
-  return date ? dayjs(date).format('dddd, Do MMM') : '';
+  return date ? dayjs(date).format('Do MMM') : '';
 };
 
 const toShortDate = (date?: Dayjs | string | null | undefined) => {
