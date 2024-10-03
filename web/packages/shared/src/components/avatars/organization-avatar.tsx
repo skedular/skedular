@@ -17,9 +17,11 @@ type Props = {
   photo?: PhotoProps;
   sx?: SxProps | null;
   showFullName?: boolean;
+  tip?: string;
+  onClick?: () => void;
 };
 
-const OrganizationAvatar = ({ name, photo, size, sx, showFullName }: Props) => {
+const OrganizationAvatar = ({ name, photo, size, sx, showFullName, tip, onClick }: Props) => {
   let avatarLetters = '';
 
   if (name) {
@@ -43,15 +45,15 @@ const OrganizationAvatar = ({ name, photo, size, sx, showFullName }: Props) => {
 
   if (!showFullName) {
     return (
-      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
+      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx} onClick={onClick}>
         {avatarLetters}
       </Avatar>
     );
   }
 
   return (
-    <Tooltip title={name?.name}>
-      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
+    <Tooltip title={tip ?? name?.name}>
+      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx} onClick={onClick}>
         {avatarLetters}
       </Avatar>
     </Tooltip>

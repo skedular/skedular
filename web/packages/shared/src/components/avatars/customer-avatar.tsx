@@ -14,9 +14,11 @@ type Props = {
   photo?: PhotoDetails;
   sx?: SxProps | null;
   showFullName?: boolean;
+  tip?: string;
+  onClick?: () => void;
 };
 
-const CustomerAvatar = ({ name, photo, size, sx, showFullName }: Props) => {
+const CustomerAvatar = ({ name, photo, size, sx, showFullName, tip, onClick }: Props) => {
   const avatarLetters = getCustomerAvatarLetters(name);
 
   let finalSx = { ...sx };
@@ -30,15 +32,15 @@ const CustomerAvatar = ({ name, photo, size, sx, showFullName }: Props) => {
 
   if (!showFullName) {
     return (
-      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
+      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx} onClick={onClick}>
         {avatarLetters}
       </Avatar>
     );
   }
 
   return (
-    <Tooltip title={getCustomerFullName(name)}>
-      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx}>
+    <Tooltip title={tip ?? getCustomerFullName(name)}>
+      <Avatar src={photo?.url ?? undefined} alt={avatarLetters} sx={finalSx} onClick={onClick}>
         {avatarLetters}
       </Avatar>
     </Tooltip>

@@ -12,11 +12,12 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar, LocationAvatar, TeamAvatar } from '@repo/shared/components/avatars';
+import { getBookingSummaryMessage } from '@repo/shared/components/booking';
 import { DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
-import { endOfDay, startOfDay, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
+import { endOfDay, getCustomerFullName, startOfDay, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -217,6 +218,10 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
                     photo={{ url: booking.customer?.photoUrl }}
                     showFullName
                     size="small"
+                    tip={`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`}
+                    onClick={() => {
+                      alert(getBookingSummaryMessage(booking, false));
+                    }}
                   />
                 ))}
               </AvatarGroup>
@@ -249,6 +254,10 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
                     photo={{ url: booking.customer?.photoUrl }}
                     showFullName
                     size="small"
+                    tip={`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`}
+                    onClick={() => {
+                      alert(getBookingSummaryMessage(booking, false));
+                    }}
                   />
                 ))}
               </AvatarGroup>
@@ -272,11 +281,9 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     <Card sx={{ maxWidth: 500, height: '100%' }}>
       <CardHeader
         title={
-          <>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="body1">{`Today ${toShortDateWithDayAndMonthOnly(startOfDay())}`}</Typography>
-            </Stack>
-          </>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+            <Typography variant="body1">{`Today ${toShortDateWithDayAndMonthOnly(startOfDay())}`}</Typography>
+          </Stack>
         }
         subheader={<MyBookingsComponents key={1} bookings={myBookings} />}
       />

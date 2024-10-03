@@ -13,20 +13,20 @@ export type TeamDetails = {
 export type LocationTagDetails = {
   uniqueId: string;
   name: string;
-  tagType?: string;
+  tagType?: string | undefined | null;
 };
 
 export type DeskDetails = {
   name: string;
-  locationTags: LocationTagDetails[];
+  locationTags: readonly LocationTagDetails[];
 };
 
 export type BookingDetails = {
   from: Dayjs | string;
   to: Dayjs | string;
-  location?: LocationDetails;
-  team?: TeamDetails;
-  desks: DeskDetails[];
+  location?: LocationDetails | undefined | null;
+  team?: TeamDetails | undefined | null;
+  desks: readonly DeskDetails[];
 };
 
 export const getBookingSummaryMessage = (booking: BookingDetails, includeTime: boolean) => {
