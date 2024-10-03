@@ -7,6 +7,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid2';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -198,19 +199,31 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     const location = rootData.myLocations.find(({ id }) => id === locationId);
 
     return (
-      <Stack direction="column">
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <LocationAvatar name={{ name: location?.name }} photo={{ url: null }} />
-          <Typography variant="h6">{location?.name}</Typography>
-        </Stack>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <AvatarGroup max={10}>
-            {bookings.map((booking) => (
-              <CustomerAvatar key={booking.customer?.uniqueId} name={booking.customer} photo={{ url: booking.customer?.photoUrl }} showFullName />
-            ))}
-          </AvatarGroup>
-        </Stack>
-      </Stack>
+      <Grid container spacing={1}>
+        <Grid>
+          <LocationAvatar name={{ name: location?.name }} photo={{ url: null }} size="small" />
+        </Grid>
+        <Grid>
+          <Stack direction="column">
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Typography variant="h6">{location?.name}</Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <AvatarGroup max={10}>
+                {bookings.map((booking) => (
+                  <CustomerAvatar
+                    key={booking.customer?.uniqueId}
+                    name={booking.customer}
+                    photo={{ url: booking.customer?.photoUrl }}
+                    showFullName
+                    size="small"
+                  />
+                ))}
+              </AvatarGroup>
+            </Stack>
+          </Stack>
+        </Grid>
+      </Grid>
     );
   };
 
@@ -218,19 +231,31 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     const team = rootData.myTeams.find(({ id }) => id === teamId);
 
     return (
-      <Stack direction="column">
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <TeamAvatar name={{ name: team?.name }} photo={{ url: null }} />
-          <Typography variant="h6">{team?.name}</Typography>
-        </Stack>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <AvatarGroup max={10}>
-            {bookings.map((booking) => (
-              <CustomerAvatar key={booking.customer?.uniqueId} name={booking.customer} photo={{ url: booking.customer?.photoUrl }} showFullName />
-            ))}
-          </AvatarGroup>
-        </Stack>
-      </Stack>
+      <Grid container spacing={1}>
+        <Grid>
+          <TeamAvatar name={{ name: team?.name }} photo={{ url: null }} size="small" />
+        </Grid>
+        <Grid>
+          <Stack direction="column">
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Typography variant="h6">{team?.name}</Typography>
+            </Stack>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <AvatarGroup max={10}>
+                {bookings.map((booking) => (
+                  <CustomerAvatar
+                    key={booking.customer?.uniqueId}
+                    name={booking.customer}
+                    photo={{ url: booking.customer?.photoUrl }}
+                    showFullName
+                    size="small"
+                  />
+                ))}
+              </AvatarGroup>
+            </Stack>
+          </Stack>
+        </Grid>
+      </Grid>
     );
   };
 
