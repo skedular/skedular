@@ -1,4 +1,3 @@
-import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@/components/zone';
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
 import type { bookingCard_addBookingMutation } from '@/queries/__generated__/bookingCard_addBookingMutation.graphql';
 import type { bookingCard_addCustomerDefaultDeskMutation } from '@/queries/__generated__/bookingCard_addCustomerDefaultDeskMutation.graphql';
@@ -29,6 +28,7 @@ import {
   PreferredIcon,
   TeamIcon,
 } from '@repo/shared/components/icons';
+import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, getCustomerFullName, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';

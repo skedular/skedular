@@ -4,10 +4,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import { TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { TAG_TYPE_LOCATION_ZONE } from 'components/zone';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
@@ -16,7 +16,6 @@ import { Form } from 'react-final-form';
 import { useMutation } from 'react-relay';
 import { object, string } from 'yup';
 import type { newZoneDialog_addZoneMutation } from './__generated__/newZoneDialog_addZoneMutation.graphql';
-import ZoneName from './zone-name';
 
 type Props = {
   connectionIds: string[];

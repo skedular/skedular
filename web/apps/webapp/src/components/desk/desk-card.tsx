@@ -1,4 +1,3 @@
-import { ZonesLine } from '@/components/zone';
 import type { deskCard_DeskDetails$key } from '@/queries/__generated__/deskCard_DeskDetails.graphql';
 import type { deskCard_addCustomerDefaultDeskMutation } from '@/queries/__generated__/deskCard_addCustomerDefaultDeskMutation.graphql';
 import type { deskCard_deleteLocationMutation } from '@/queries/__generated__/deskCard_deleteLocationMutation.graphql';
@@ -34,6 +33,7 @@ import {
   NotPreferredIcon,
   PreferredIcon,
 } from '@repo/shared/components/icons';
+import { ZonesLine } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';

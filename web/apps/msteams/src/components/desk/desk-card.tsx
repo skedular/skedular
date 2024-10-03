@@ -26,10 +26,10 @@ import {
   NotPreferredIcon,
   PreferredIcon,
 } from '@repo/shared/components/icons';
+import { ZonesLine } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { ZonesLine } from 'components/zone';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';

@@ -1,4 +1,3 @@
-import { TAG_TYPE_LOCATION_ZONE } from '@/components/zone';
 import type { organizationPeopleBookings_addBookingMutation } from '@/queries/__generated__/organizationPeopleBookings_addBookingMutation.graphql';
 import type { organizationPeopleBookings_clearCustomerDefaultOrganizationMutation } from '@/queries/__generated__/organizationPeopleBookings_clearCustomerDefaultOrganizationMutation.graphql';
 import type { organizationPeopleBookings_deleteBookingMutation } from '@/queries/__generated__/organizationPeopleBookings_deleteBookingMutation.graphql';
@@ -32,6 +31,7 @@ import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
 import { BookingIcon as BookingIconComponent } from '@repo/shared/components/booking';
 import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
+import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';

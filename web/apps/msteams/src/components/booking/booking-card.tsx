@@ -21,10 +21,10 @@ import {
   PreferredIcon,
   TeamIcon,
 } from '@repo/shared/components/icons';
+import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, getCustomerFullName, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from 'components/zone';
 import dayjs, { Dayjs } from 'dayjs';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';

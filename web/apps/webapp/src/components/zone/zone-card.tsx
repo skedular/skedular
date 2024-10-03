@@ -1,4 +1,3 @@
-import { TAG_TYPE_LOCATION_ZONE } from '@/components/zone';
 import type { zoneCard_LocationTagDetails$key } from '@/queries/__generated__/zoneCard_LocationTagDetails.graphql';
 import type { zoneCard_Query$key } from '@/queries/__generated__/zoneCard_Query.graphql';
 import type { zoneCard_addCustomerDefaultLocationTagMutation } from '@/queries/__generated__/zoneCard_addCustomerDefaultLocationTagMutation.graphql';
@@ -19,6 +18,7 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { DangerIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
@@ -28,7 +28,6 @@ import { memo, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { object, string } from 'yup';
-import ZoneName from './zone-name';
 
 type Props = {
   rootDataRelay: zoneCard_Query$key;

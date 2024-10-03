@@ -12,10 +12,10 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { DangerIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors, now } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { TAG_TYPE_LOCATION_ZONE } from 'components/zone';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
@@ -29,7 +29,6 @@ import type { zoneCard_addCustomerDefaultLocationTagMutation } from './__generat
 import type { zoneCard_deleteLocationMutation } from './__generated__/zoneCard_deleteLocationMutation.graphql';
 import type { zoneCard_removeCustomerDefaultLocationTagMutation } from './__generated__/zoneCard_removeCustomerDefaultLocationTagMutation.graphql';
 import type { zoneCard_updateZoneMutation } from './__generated__/zoneCard_updateZoneMutation.graphql';
-import ZoneName from './zone-name';
 
 type Props = {
   rootDataRelay: zoneCard_Query$key;

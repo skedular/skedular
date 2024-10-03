@@ -1,4 +1,3 @@
-import { TAG_TYPE_LOCATION_ZONE } from '@/components/zone';
 import type { newZoneDialog_addZoneMutation } from '@/queries/__generated__/newZoneDialog_addZoneMutation.graphql';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -6,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import { TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
@@ -15,7 +15,6 @@ import { memo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation } from 'react-relay';
 import { object, string } from 'yup';
-import ZoneName from './zone-name';
 
 type Props = {
   connectionIds: string[];
