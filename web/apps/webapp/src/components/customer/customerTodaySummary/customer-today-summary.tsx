@@ -117,7 +117,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     const location = rootData.myLocations.find(({ id }) => id === locationId);
 
     return (
-      <Stack direction="column">
+      <Stack direction="column" sx={{ paddingTop: 1, paddingBottom: 1 }}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <LocationAvatar name={{ name: location?.name }} photo={{ url: null }} />
           <Typography variant="h6">{location?.name}</Typography>
@@ -137,7 +137,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     const team = rootData.myTeams.find(({ id }) => id === teamId);
 
     return (
-      <Stack direction="column">
+      <Stack direction="column" sx={{ paddingTop: 1, paddingBottom: 1 }}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TeamAvatar name={{ name: team?.name }} photo={{ url: null }} />
           <Typography variant="h6">{team?.name}</Typography>
@@ -153,6 +153,17 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     );
   };
 
+  const summerizedRows: JSX.Element[] = [
+    ...Object.entries(groupedOtherBookingsByLocation).map(([locationId, bookings]) => (
+      <BookingsByLocationsComponents key={locationId} locationId={locationId} bookings={bookings} />
+    )),
+    ...Object.entries(groupedOtherBookingsByTeam).map(([teamId, bookings]) => (
+      <BookingsByTeamsComponents key={teamId} teamId={teamId} bookings={bookings} />
+    )),
+  ];
+
+  const allSummerizedRowsExceptLast = summerizedRows.length === 0 ? [] : summerizedRows.slice(0, summerizedRows.length - 1);
+
   return (
     <Card sx={{ maxWidth: 500, height: '100%' }}>
       <CardHeader
@@ -163,18 +174,17 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
         }
       />
       <CardContent>
-        {Object.entries(groupedOtherBookingsByLocation).map(([locationId, bookings]) => (
+        {summerizedRows.length !== 0 && (
           <>
-            <BookingsByLocationsComponents key={locationId} locationId={locationId} bookings={bookings} />
-            <Divider />
+            {allSummerizedRowsExceptLast.map((row) => (
+              <>
+                {row}
+                <Divider />
+              </>
+            ))}
+            {summerizedRows[summerizedRows.length - 1]}
           </>
-        ))}
-        {Object.entries(groupedOtherBookingsByTeam).map(([teamId, bookings]) => (
-          <>
-            <BookingsByTeamsComponents key={teamId} teamId={teamId} bookings={bookings} />
-            <Divider />
-          </>
-        ))}
+        )}
       </CardContent>
     </Card>
   );
