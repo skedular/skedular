@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0c78e2b671e85fae731f3d070f1c5a64>>
+ * @generated SignedSource<<4a035d42f10a9ead96ce32e55a4826cc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,6 +30,7 @@ export type customerTodaySummary_rootQuery$data = {
         readonly uniqueId: string;
       }>;
       readonly name: string;
+      readonly uniqueId: string;
     }>;
     readonly from: any;
     readonly id: string;
@@ -229,6 +230,7 @@ v6 = [
         "name": "desks",
         "plural": true,
         "selections": [
+          (v2/*: any*/),
           (v3/*: any*/),
           {
             "alias": null,
@@ -321,16 +323,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "beb15ec2ba88b98e2e16509b5f97213c",
+    "cacheID": "d1dbdad40155261a7f36a0c6093cc93d",
     "id": null,
     "metadata": {},
     "name": "customerTodaySummary_rootQuery",
     "operationKind": "query",
-    "text": "query customerTodaySummary_rootQuery(\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  allBookings(where: {fromGTE: $from, toLTE: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n  myLocations {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query customerTodaySummary_rootQuery(\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  allBookings(where: {fromGTE: $from, toLTE: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n  myLocations {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "20905cdbf4bc6a03357548d9bfbbd756";
+(node as any).hash = "e794f3ae8a1a66dbd1ca9d9b92bd8fb2";
 
 export default node;

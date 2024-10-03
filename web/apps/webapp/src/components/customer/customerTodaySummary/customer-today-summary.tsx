@@ -1,4 +1,7 @@
-import type { customerTodaySummary_rootQuery } from '@/queries/__generated__/customerTodaySummary_rootQuery.graphql';
+import type {
+  customerTodaySummary_rootQuery,
+  customerTodaySummary_rootQuery$data,
+} from '@/queries/__generated__/customerTodaySummary_rootQuery.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -8,9 +11,10 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar, LocationAvatar, TeamAvatar } from '@repo/shared/components/avatars';
-import { getBookingSummaryMessage } from '@repo/shared/components/booking';
+import { DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { endOfDay, startOfDay, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { memo, useEffect, useMemo, useState } from 'react';
@@ -48,6 +52,7 @@ const RootQuery = graphql`
         name
       }
       desks {
+        uniqueId
         name
         locationTags {
           uniqueId
@@ -126,19 +131,65 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     [otherBookings],
   );
 
-  const MyBookingsComponents = (
-    <Stack direction="column" sx={{ paddingTop: 1, paddingBottom: 1 }}>
+  const MyBookingComponent = ({ booking }: { booking: customerTodaySummary_rootQuery$data['allBookings'][number] }) => (
+    <Stack key={booking.id} direction="column">
+      {booking.location && (
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <LocationIcon />
+          <Typography variant="body1" component="div">
+            {booking.location.name}
+          </Typography>
+        </Stack>
+      )}
+
+      {booking.team && (
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <TeamIcon />
+          <Typography variant="body1" component="div">
+            {booking.team.name}
+          </Typography>
+        </Stack>
+      )}
+
+      {booking.desks?.map(({ uniqueId, name, locationTags }) => {
+        const zones = locationTags.filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
+
+        return (
+          <Stack key={uniqueId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <DeskIcon />
+            <Typography variant="body1" component="div">
+              {name}
+            </Typography>
+
+            <ZonesLine
+              zones={zones.map(({ uniqueId, name }) => ({
+                id: uniqueId,
+                name,
+              }))}
+            />
+          </Stack>
+        );
+      })}
+    </Stack>
+  );
+
+  const MyBookingsComponents = ({ bookings }: { bookings: customerTodaySummary_rootQuery$data['allBookings'] }) => (
+    <Stack direction="column">
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         <Typography variant="h6">You</Typography>
       </Stack>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        {myBookings.map((booking) => {
-          return (
-            <Stack key={booking.id} direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              {getBookingSummaryMessage(booking, true)}
-            </Stack>
-          );
-        })}
+      <Stack direction="column">
+        {bookings.length !== 0 && (
+          <>
+            {bookings.slice(0, bookings.length - 1).map((booking) => (
+              <>
+                <MyBookingComponent booking={booking} />
+                <Divider />
+              </>
+            ))}
+            {<MyBookingComponent booking={bookings[bookings.length - 1]!} />}
+          </>
+        )}
       </Stack>
     </Stack>
   );
@@ -147,7 +198,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     const location = rootData.myLocations.find(({ id }) => id === locationId);
 
     return (
-      <Stack direction="column" sx={{ paddingTop: 1, paddingBottom: 1 }}>
+      <Stack direction="column">
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <LocationAvatar name={{ name: location?.name }} photo={{ url: null }} />
           <Typography variant="h6">{location?.name}</Typography>
@@ -167,7 +218,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     const team = rootData.myTeams.find(({ id }) => id === teamId);
 
     return (
-      <Stack direction="column" sx={{ paddingTop: 1, paddingBottom: 1 }}>
+      <Stack direction="column">
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TeamAvatar name={{ name: team?.name }} photo={{ url: null }} />
           <Typography variant="h6">{team?.name}</Typography>
@@ -184,7 +235,6 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
   };
 
   const summerizedRows: JSX.Element[] = [
-    MyBookingsComponents,
     ...Object.entries(groupedOtherBookingsByLocation).map(([locationId, bookings]) => (
       <BookingsByLocationsComponents key={locationId} locationId={locationId} bookings={bookings} />
     )),
@@ -193,21 +243,22 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     )),
   ];
 
-  const allSummerizedRowsExceptLast = summerizedRows.length === 0 ? [] : summerizedRows.slice(0, summerizedRows.length - 1);
-
   return (
     <Card sx={{ maxWidth: 500, height: '100%' }}>
       <CardHeader
         title={
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="body1">{`Today ${toShortDateWithDayAndMonthOnly(startOfDay())}`}</Typography>
-          </Stack>
+          <>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Typography variant="body1">{`Today ${toShortDateWithDayAndMonthOnly(startOfDay())}`}</Typography>
+            </Stack>
+          </>
         }
+        subheader={<MyBookingsComponents key={1} bookings={myBookings} />}
       />
       <CardContent>
         {summerizedRows.length !== 0 && (
           <>
-            {allSummerizedRowsExceptLast.map((row) => (
+            {summerizedRows.slice(0, summerizedRows.length - 1).map((row) => (
               <>
                 {row}
                 <Divider />
