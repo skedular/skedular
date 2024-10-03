@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1fc833c0757afde549e143249f9d0637>>
+ * @generated SignedSource<<2b448e2c6a9ffff74f586c294d590ec2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,15 @@ export type customerTodaySummary_rootQuery$data = {
       readonly photoUrl: string | null | undefined;
       readonly uniqueId: string;
     };
+    readonly desks: ReadonlyArray<{
+      readonly locationTags: ReadonlyArray<{
+        readonly name: string;
+        readonly tagType: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
+      readonly name: string;
+    }>;
+    readonly from: any;
     readonly id: string;
     readonly location: {
       readonly uniqueId: string;
@@ -30,6 +39,7 @@ export type customerTodaySummary_rootQuery$data = {
     readonly team: {
       readonly uniqueId: string;
     } | null | undefined;
+    readonly to: any;
   }>;
   readonly me: {
     readonly id: string;
@@ -133,6 +143,20 @@ v5 = [
       {
         "alias": null,
         "args": null,
+        "kind": "ScalarField",
+        "name": "from",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "to",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
         "concreteType": "BookingCustomerDetails",
         "kind": "LinkedField",
         "name": "customer",
@@ -189,6 +213,38 @@ v5 = [
         "name": "team",
         "plural": false,
         "selections": (v4/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "BookingDeskDetails",
+        "kind": "LinkedField",
+        "name": "desks",
+        "plural": true,
+        "selections": [
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "BookingLocationTagDetails",
+            "kind": "LinkedField",
+            "name": "locationTags",
+            "plural": true,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "tagType",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -259,16 +315,16 @@ return {
     "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "2acecc9686df599012bc3d6b9c95ec5e",
+    "cacheID": "416ecfdc9bfcce32b74375d855a54867",
     "id": null,
     "metadata": {},
     "name": "customerTodaySummary_rootQuery",
     "operationKind": "query",
-    "text": "query customerTodaySummary_rootQuery(\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  allBookings(where: {fromGTE: $from, toLTE: $to}) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n    }\n    team {\n      uniqueId\n    }\n  }\n  myLocations {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query customerTodaySummary_rootQuery(\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  allBookings(where: {fromGTE: $from, toLTE: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n    }\n    team {\n      uniqueId\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n  myLocations {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7a2084e952890eb1ee9fc0f1f1f4a2c2";
+(node as any).hash = "077b23d05e333e1104bd22fe97e2681d";
 
 export default node;

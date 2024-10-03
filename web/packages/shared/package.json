@@ -11,6 +11,9 @@
     "./components/avatars": {
       "default": "./dist/components/avatars/index.js"
     },
+    "./components/booking": {
+      "default": "./dist/components/booking/index.js"
+    },
     "./components/document": {
       "default": "./dist/components/document/index.js"
     },
@@ -37,6 +40,9 @@
     },
     "./components/sorting": {
       "default": "./dist/components/sorting/index.js"
+    },
+    "./components/zone": {
+      "default": "./dist/components/zone/index.js"
     },
     "./libs/analytics": {
       "default": "./dist/libs/analytics/index.js"

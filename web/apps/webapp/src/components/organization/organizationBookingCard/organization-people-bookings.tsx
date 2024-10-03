@@ -30,17 +30,8 @@ import Typography from '@mui/material/Typography';
 import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
-import {
-  BookingIcon,
-  DangerIcon,
-  DeleteIcon,
-  EllipseMenuIcon,
-  NotPreferredIcon,
-  PreferredIcon,
-  SettingsIcon,
-  WorkingFromHomeIcon,
-  WorkingFromOfficeIcon,
-} from '@repo/shared/components/icons';
+import { BookingIcon as BookingIconComponent } from '@repo/shared/components/booking';
+import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
@@ -125,30 +116,6 @@ type RowType = {
 };
 
 const dayIndex: { [key: string]: number } = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
-
-const getBookingIcon = ({ booking }: BookingDetails) => {
-  let tip = '';
-
-  if (booking) {
-    tip = `Working`;
-    if (booking.location) {
-      tip += ` from the "${booking.location!.name}"`;
-    }
-
-    if (booking.desks.length > 0) {
-      tip += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
-
-      const zones = booking.desks.flatMap(({ locationTags }) => locationTags).filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
-      if (zones.length > 0) {
-        const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
-
-        tip += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
-      }
-    }
-  }
-
-  return booking ? <WorkingFromOfficeIcon tip={tip} /> : <WorkingFromHomeIcon />;
-};
 
 const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Find a person..." />;
 
@@ -412,7 +379,7 @@ const OrganizationPeopleBookings = ({
       headerName: 'Mon',
       width: 50,
       editable: false,
-      renderCell: (params) => getBookingIcon(params.value),
+      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
       align: 'center',
       display: 'flex',
     },
@@ -421,7 +388,7 @@ const OrganizationPeopleBookings = ({
       headerName: 'Tue',
       width: 50,
       editable: false,
-      renderCell: (params) => getBookingIcon(params.value),
+      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
       align: 'center',
       display: 'flex',
     },
@@ -430,7 +397,7 @@ const OrganizationPeopleBookings = ({
       headerName: 'Wed',
       width: 50,
       editable: false,
-      renderCell: (params) => getBookingIcon(params.value),
+      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
       align: 'center',
       display: 'flex',
     },
@@ -439,7 +406,7 @@ const OrganizationPeopleBookings = ({
       headerName: 'Thu',
       width: 50,
       editable: false,
-      renderCell: (params) => getBookingIcon(params.value),
+      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
       align: 'center',
       display: 'flex',
     },
@@ -448,7 +415,7 @@ const OrganizationPeopleBookings = ({
       headerName: 'Fri',
       width: 50,
       editable: false,
-      renderCell: (params) => getBookingIcon(params.value),
+      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
       align: 'center',
       display: 'flex',
     },
@@ -457,7 +424,7 @@ const OrganizationPeopleBookings = ({
       headerName: 'Sat',
       width: 50,
       editable: false,
-      renderCell: (params) => getBookingIcon(params.value),
+      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
       align: 'center',
       display: 'flex',
     },
@@ -466,7 +433,7 @@ const OrganizationPeopleBookings = ({
       headerName: 'Sun',
       width: 50,
       editable: false,
-      renderCell: (params) => getBookingIcon(params.value),
+      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
       align: 'center',
       display: 'flex',
     },

@@ -28,6 +28,8 @@ const RootQuery = graphql`
     }
     allBookings(where: { fromGTE: $from, toLTE: $to }) {
       id
+      from
+      to
       customer {
         uniqueId
         name
@@ -41,6 +43,14 @@ const RootQuery = graphql`
       }
       team {
         uniqueId
+      }
+      desks {
+        name
+        locationTags {
+          uniqueId
+          name
+          tagType
+        }
       }
     }
     myLocations {
@@ -113,6 +123,19 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     [otherBookings],
   );
 
+  const MyBookingsComponents = (
+    <Stack direction="column" sx={{ paddingTop: 1, paddingBottom: 1 }}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <Typography variant="h6">You</Typography>
+      </Stack>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        {myBookings.map((booking) => {
+          return <Stack key={booking.id} direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}></Stack>;
+        })}
+      </Stack>
+    </Stack>
+  );
+
   const BookingsByLocationsComponents = ({ locationId, bookings }: { locationId: string; bookings: typeof otherBookings }) => {
     const location = rootData.myLocations.find(({ id }) => id === locationId);
 
@@ -154,6 +177,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
   };
 
   const summerizedRows: JSX.Element[] = [
+    MyBookingsComponents,
     ...Object.entries(groupedOtherBookingsByLocation).map(([locationId, bookings]) => (
       <BookingsByLocationsComponents key={locationId} locationId={locationId} bookings={bookings} />
     )),
