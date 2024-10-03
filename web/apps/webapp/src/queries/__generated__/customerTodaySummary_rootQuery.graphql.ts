@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2b448e2c6a9ffff74f586c294d590ec2>>
+ * @generated SignedSource<<0c78e2b671e85fae731f3d070f1c5a64>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,9 +34,11 @@ export type customerTodaySummary_rootQuery$data = {
     readonly from: any;
     readonly id: string;
     readonly location: {
+      readonly name: string;
       readonly uniqueId: string;
     } | null | undefined;
     readonly team: {
+      readonly name: string;
       readonly uniqueId: string;
     } | null | undefined;
     readonly to: any;
@@ -99,9 +101,13 @@ v3 = {
   "storageKey": null
 },
 v4 = [
-  (v2/*: any*/)
+  (v2/*: any*/),
+  (v3/*: any*/)
 ],
 v5 = [
+  (v2/*: any*/)
+],
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -267,7 +273,7 @@ v5 = [
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": (v5/*: any*/),
         "storageKey": null
       }
     ],
@@ -290,7 +296,7 @@ v5 = [
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": (v5/*: any*/),
         "storageKey": null
       }
     ],
@@ -303,7 +309,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "customerTodaySummary_rootQuery",
-    "selections": (v5/*: any*/),
+    "selections": (v6/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -312,19 +318,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "customerTodaySummary_rootQuery",
-    "selections": (v5/*: any*/)
+    "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "416ecfdc9bfcce32b74375d855a54867",
+    "cacheID": "beb15ec2ba88b98e2e16509b5f97213c",
     "id": null,
     "metadata": {},
     "name": "customerTodaySummary_rootQuery",
     "operationKind": "query",
-    "text": "query customerTodaySummary_rootQuery(\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  allBookings(where: {fromGTE: $from, toLTE: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n    }\n    team {\n      uniqueId\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n  myLocations {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query customerTodaySummary_rootQuery(\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  allBookings(where: {fromGTE: $from, toLTE: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n  myLocations {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "077b23d05e333e1104bd22fe97e2681d";
+(node as any).hash = "20905cdbf4bc6a03357548d9bfbbd756";
 
 export default node;

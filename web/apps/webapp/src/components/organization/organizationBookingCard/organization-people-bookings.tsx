@@ -160,6 +160,7 @@ const OrganizationPeopleBookings = ({
         allBookings(where: { organizationIds: [$organizationId], fromGTE: $from, toLT: $to }) {
           id
           from
+          to
           customer {
             uniqueId
             name
@@ -169,6 +170,9 @@ const OrganizationPeopleBookings = ({
             photoUrl
           }
           location {
+            name
+          }
+          team {
             name
           }
           desks {

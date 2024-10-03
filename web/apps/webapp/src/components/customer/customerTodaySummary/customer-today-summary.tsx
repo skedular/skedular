@@ -8,6 +8,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar, LocationAvatar, TeamAvatar } from '@repo/shared/components/avatars';
+import { getBookingSummaryMessage } from '@repo/shared/components/booking';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { endOfDay, startOfDay, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
@@ -40,9 +41,11 @@ const RootQuery = graphql`
       }
       location {
         uniqueId
+        name
       }
       team {
         uniqueId
+        name
       }
       desks {
         name
@@ -130,7 +133,11 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
       </Stack>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         {myBookings.map((booking) => {
-          return <Stack key={booking.id} direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}></Stack>;
+          return (
+            <Stack key={booking.id} direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              {getBookingSummaryMessage(booking, true)}
+            </Stack>
+          );
         })}
       </Stack>
     </Stack>

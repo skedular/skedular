@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<48b3d2c24a1c4e778c83fcd1f88b2bd4>>
+ * @generated SignedSource<<e3037ca6e8082b82fd477193fcf4e257>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,6 +33,10 @@ export type organizationPeopleBookings_query$data = {
     readonly location: {
       readonly name: string;
     } | null | undefined;
+    readonly team: {
+      readonly name: string;
+    } | null | undefined;
+    readonly to: any;
   }>;
   readonly me: {
     readonly defaultOrganization: {
@@ -127,6 +131,9 @@ v4 = [
     "name": "photoUrl",
     "storageKey": null
   }
+],
+v5 = [
+  (v3/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -345,6 +352,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "to",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "BookingCustomerDetails",
           "kind": "LinkedField",
           "name": "customer",
@@ -359,9 +373,17 @@ return {
           "kind": "LinkedField",
           "name": "location",
           "plural": false,
-          "selections": [
-            (v3/*: any*/)
-          ],
+          "selections": (v5/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingTeamDetails",
+          "kind": "LinkedField",
+          "name": "team",
+          "plural": false,
+          "selections": (v5/*: any*/),
           "storageKey": null
         },
         {
@@ -405,6 +427,6 @@ return {
 };
 })();
 
-(node as any).hash = "a1b9bb0ee4a311721d8ded493263ae58";
+(node as any).hash = "fb1518022fa43fb22b2d6cf5ce1c15a4";
 
 export default node;

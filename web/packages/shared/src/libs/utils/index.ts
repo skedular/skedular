@@ -83,6 +83,10 @@ const toDayAndMonthDate = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('Do MMM') : '';
 };
 
+const toHourAndMinute = (date?: Dayjs | string | null | undefined) => {
+  return date ? dayjs(date).utc().format('h:mma') : '';
+};
+
 const getPublicSiteUrl = () => {
   return isServer ? process.env.NEXT_PUBLIC_SITE_URL : window.location.origin;
 };
@@ -203,6 +207,7 @@ export {
   startOfWeek,
   toDayAndMonthDate,
   toFixed,
+  toHourAndMinute,
   toShortDate,
   toShortDateTime,
   toShortDateTimeInUtc,

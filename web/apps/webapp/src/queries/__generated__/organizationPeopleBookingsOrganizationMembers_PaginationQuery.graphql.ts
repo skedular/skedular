@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b07af8f616146a500cdf190e4acb8b0f>>
+ * @generated SignedSource<<d281b4cf0bf5e4002deb237ffd813b5b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -116,6 +116,9 @@ v5 = [
     "name": "photoUrl",
     "storageKey": null
   }
+],
+v6 = [
+  (v4/*: any*/)
 ];
 return {
   "fragment": {
@@ -324,6 +327,13 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "to",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "BookingCustomerDetails",
             "kind": "LinkedField",
             "name": "customer",
@@ -338,9 +348,17 @@ return {
             "kind": "LinkedField",
             "name": "location",
             "plural": false,
-            "selections": [
-              (v4/*: any*/)
-            ],
+            "selections": (v6/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "BookingTeamDetails",
+            "kind": "LinkedField",
+            "name": "team",
+            "plural": false,
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           {
@@ -381,16 +399,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "638d4a5cb11fc2ed0cf713b2a5fffe3d",
+    "cacheID": "98f56693f68fea0abf6ffd50aaec2248",
     "id": null,
     "metadata": {},
     "name": "organizationPeopleBookingsOrganizationMembers_PaginationQuery",
     "operationKind": "query",
-    "text": "query organizationPeopleBookingsOrganizationMembers_PaginationQuery(\n  $from: DateTime\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [OrganizationMemberOrderInput!]\n  $to: DateTime\n) {\n  ...organizationPeopleBookings_query\n}\n\nfragment organizationPeopleBookings_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  allBookings(where: {organizationIds: [$organizationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query organizationPeopleBookingsOrganizationMembers_PaginationQuery(\n  $from: DateTime\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [OrganizationMemberOrderInput!]\n  $to: DateTime\n) {\n  ...organizationPeopleBookings_query\n}\n\nfragment organizationPeopleBookings_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  allBookings(where: {organizationIds: [$organizationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a1b9bb0ee4a311721d8ded493263ae58";
+(node as any).hash = "fb1518022fa43fb22b2d6cf5ce1c15a4";
 
 export default node;

@@ -163,6 +163,7 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
         allBookings(where: { teamIds: [$teamId], fromGTE: $from, toLT: $to }) {
           id
           from
+          to
           customer {
             uniqueId
             name
@@ -172,6 +173,9 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
             photoUrl
           }
           location {
+            name
+          }
+          team {
             name
           }
           desks {
