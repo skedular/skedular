@@ -1,14 +1,13 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
-import { LocationAvatar } from '@repo/shared/components/avatars';
 import { toDayAndMonthDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { LocationLink } from 'components/location';
 import { Dayjs } from 'dayjs';
 import { memo, useCallback, useTransition } from 'react';
 import { useRefetchableFragment } from 'react-relay';
@@ -89,18 +88,7 @@ const LocationBookingInsight = ({ rootDataRelay, organizationId, locationId, hid
             <Typography variant="h5" color="primary">
               Booking Insights
             </Typography>
-            {!hideLocationDetails && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <LocationAvatar name={{ name: rootData.location?.name }} photo={{ url: null }} size="small" />
-                <Link
-                  href={
-                    organizationId ? `/organization/${organizationId}/location/${locationId}?tab=analytics` : `/location/${locationId}?tab=analytics`
-                  }
-                >
-                  <Typography variant="h6">{rootData.location?.name}</Typography>
-                </Link>
-              </Stack>
-            )}
+            {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={rootData.location?.name} analayticsLink />}
           </>
         }
         subheader={

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d7cdba5bca94fa940e45169793436896>>
+ * @generated SignedSource<<dcd170b5ec72b6d8e33da2095366b785>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type locations_query$data = {
         readonly id: string;
         readonly name: string;
         readonly organization: {
+          readonly name: string;
           readonly uniqueId: string;
         } | null | undefined;
       };
@@ -34,7 +35,14 @@ export type locations_query$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "locations"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -145,13 +153,7 @@ return {
                   "name": "id",
                   "storageKey": null
                 },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -166,7 +168,8 @@ return {
                       "kind": "ScalarField",
                       "name": "uniqueId",
                       "storageKey": null
-                    }
+                    },
+                    (v1/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -236,6 +239,6 @@ return {
 };
 })();
 
-(node as any).hash = "0f5bd64e50572e27524646c4f0a4aed3";
+(node as any).hash = "963fab1f357568bbf19e1b19d17b3e83";
 
 export default node;

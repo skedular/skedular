@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<daa3b9a9cc98871c54a1437a46cf6ea1>>
+ * @generated SignedSource<<dc94fb89d6a6c3ba79835634a9233efe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -87,7 +87,14 @@ v5 = [
     "kind": "ObjectValue",
     "name": "where"
   }
-];
+],
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -230,13 +237,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v4/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
+                  (v6/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -251,7 +252,8 @@ return {
                         "kind": "ScalarField",
                         "name": "uniqueId",
                         "storageKey": null
-                      }
+                      },
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -330,12 +332,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "be96f6501c7437cf047a9d857ace99ea",
+    "cacheID": "c6c075932aa94b356d743872f365e167",
     "id": null,
     "metadata": {},
     "name": "locations_rootQuery",
     "operationKind": "query",
-    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String!\n) {\n  locationCustomerRecordSynced\n  ...rootShell_query\n  ...locations_query\n}\n\nfragment locations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
+    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String!\n) {\n  locationCustomerRecordSynced\n  ...rootShell_query\n  ...locations_query\n}\n\nfragment locations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();

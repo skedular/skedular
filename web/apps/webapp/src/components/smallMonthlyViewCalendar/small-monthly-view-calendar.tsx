@@ -152,14 +152,12 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
         <StaticDatePicker
           slots={{
             toolbar: EmptyCalendarToolbar,
-            // @ts-expect-error
             day: SmallMonthlyViewCalendarDay({
               rootData: rootData,
               connectionIds,
               organizationId: selectedOrganization ? selectedOrganization.id : null,
             }),
           }}
-          // @ts-expect-error
           slotProps={SimpleCalendarSlotProps}
           onMonthChange={handleMonthChange}
           sx={{ marginBottom: 1 }}

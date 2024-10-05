@@ -3,12 +3,12 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { LocationAvatar } from '@repo/shared/components/avatars';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { endOfWeek, startOfWeek } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { LocationLink } from 'components/location';
+import { OrganizationLink } from 'components/organization';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -62,13 +62,21 @@ const MemoLocationBookingsCard = memo(LocationBookingsCard);
 
 type RelayProps = {
   organizationId?: string;
+  organizationName?: string;
   locationId: string;
   locationName: string;
   locationsConnectionIds: string[];
   hideRemoveLocationOption?: boolean;
 };
 
-const LocationBookingsWithRelay = ({ organizationId, locationId, locationName, locationsConnectionIds, hideRemoveLocationOption }: RelayProps) => {
+const LocationBookingsWithRelay = ({
+  organizationId,
+  organizationName,
+  locationId,
+  locationName,
+  locationsConnectionIds,
+  hideRemoveLocationOption,
+}: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationBookingsCard_rootQuery>(RootQuery);
 
   useEffect(() => {
@@ -99,9 +107,9 @@ const LocationBookingsWithRelay = ({ organizationId, locationId, locationName, l
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <LocationAvatar name={{ name: locationName }} photo={{ url: null }} size="small" />
-              <Typography variant="h6">{locationName}</Typography>
+            <Stack direction="column">
+              <LocationLink organizationId={organizationId} id={locationId} name={locationName} />
+              {organizationId && <OrganizationLink id={organizationId} name={organizationName} />}
             </Stack>
           }
         />

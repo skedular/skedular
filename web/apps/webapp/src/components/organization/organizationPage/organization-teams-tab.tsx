@@ -1,3 +1,4 @@
+import { getTeamAddLink } from '@/components/team';
 import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type {
   TeamOrderField,
@@ -53,6 +54,7 @@ const OrganizationTeamsTab = ({ rootDataRelay }: Props) => {
               name
               organization {
                 uniqueId
+                name
               }
             }
           }
@@ -164,7 +166,7 @@ const OrganizationTeamsTab = ({ rootDataRelay }: Props) => {
     <Stack direction="column" spacing={1}>
       {rootData.organization.canModify && (
         <Stack direction="row" sx={{ width: 'auto' }}>
-          <Link component={NextLink} href={`/organization/${rootData.organization.id}/team/add`}>
+          <Link component={NextLink} href={getTeamAddLink(rootData.organization.id)}>
             <Button variant="contained" startIcon={<AddIcon />}>
               Add Team
             </Button>
@@ -203,6 +205,7 @@ const OrganizationTeamsTab = ({ rootDataRelay }: Props) => {
           <Grid key={edge.node.id}>
             <TeamBookingsCard
               organizationId={edge.node.organization?.uniqueId}
+              organizationName={edge.node.organization?.name}
               teamId={edge.node.id}
               teamName={edge.node.name}
               teamsConnectionIds={connectionIds}

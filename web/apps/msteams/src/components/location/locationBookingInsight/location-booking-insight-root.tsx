@@ -1,14 +1,13 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Link from '@mui/material/Link';
 import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { LocationLink } from 'components/location';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -78,19 +77,7 @@ const LocationBookingInsightRootWithRelay = ({ organizationId, locationId, locat
               <Typography variant="h5" color="primary">
                 Booking Insights
               </Typography>
-              {!hideLocationDetails && (
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                  <Link
-                    href={
-                      organizationId
-                        ? `/organization/${organizationId}/location/${locationId}?tab=analytics`
-                        : `/location/${locationId}?tab=analytics`
-                    }
-                  >
-                    {locationName && <Typography variant="h6">{locationName}</Typography>}
-                  </Link>
-                </Stack>
-              )}
+              {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={locationName} analayticsLink />}
             </>
           }
         />

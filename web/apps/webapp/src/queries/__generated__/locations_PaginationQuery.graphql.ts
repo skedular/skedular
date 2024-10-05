@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9eea81d9fadceacaa0b18196f971c316>>
+ * @generated SignedSource<<238077c5d3bd304446f6ded227840c64>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -80,7 +80,14 @@ v1 = [
     "kind": "ObjectValue",
     "name": "where"
   }
-];
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -152,13 +159,7 @@ return {
                     "name": "id",
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -173,7 +174,8 @@ return {
                         "kind": "ScalarField",
                         "name": "uniqueId",
                         "storageKey": null
-                      }
+                      },
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -252,16 +254,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ee915dad790adf301d020a586c8a210b",
+    "cacheID": "36478585cc2e3a0285e29acbe6540e68",
     "id": null,
     "metadata": {},
     "name": "locations_PaginationQuery",
     "operationKind": "query",
-    "text": "query locations_PaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $locationNameSearchText: String\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...locations_query_1G22uz\n}\n\nfragment locations_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query locations_PaginationQuery(\n  $count: Int = 50\n  $cursor: String\n  $locationNameSearchText: String\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  ...locations_query_1G22uz\n}\n\nfragment locations_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e5eac782e1645b35243eced138ddb2c1";
+(node as any).hash = "cd9582ad0a7a8accae0b44179003a311";
 
 export default node;

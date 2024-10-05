@@ -1,17 +1,15 @@
+import { OrganizationLink } from '@/components/organization';
 import type { organizationMemberAttendancyInsight_query$key } from '@/queries/__generated__/organizationMemberAttendancyInsight_query.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { axisClasses } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
-import { OrganizationAvatar } from '@repo/shared/components/avatars';
 import { toDayAndMonthDate, toFixed } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import NextLink from 'next/link';
 import { memo, useCallback, useTransition } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
 
@@ -99,14 +97,7 @@ const OrganizationMemberAttendancyInsight = ({ rootDataRelay, organizationId, hi
             <Typography variant="h5" color="primary">
               Member Attendancy Insights
             </Typography>
-            {!hideOrganizationDetails && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} size="small" />
-                <Link component={NextLink} href={`/organization/${organizationId}?tab=analytics`}>
-                  <Typography variant="h6">{rootData.organization?.name}</Typography>
-                </Link>
-              </Stack>
-            )}
+            {!hideOrganizationDetails && <OrganizationLink id={organizationId} name={rootData.organization?.name} analayticsLink />}
           </>
         }
         subheader={

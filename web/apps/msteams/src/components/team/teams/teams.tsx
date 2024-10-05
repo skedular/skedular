@@ -12,6 +12,7 @@ import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { getTeamAddLink } from 'components/team';
 import { TeamBookingsCard } from 'components/team/teamBookingCard';
 import debounce from 'lodash.debounce';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
@@ -49,6 +50,7 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
               name
               organization {
                 uniqueId
+                name
               }
             }
           }
@@ -156,7 +158,7 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Link href="/team/add">
+      <Link href={getTeamAddLink()}>
         <Button variant="contained" startIcon={<AddIcon />}>
           Add Team
         </Button>
@@ -194,6 +196,7 @@ const Teams = ({ rootDataRelay, organizationId }: Props) => {
           <Grid key={edge.node.id}>
             <TeamBookingsCard
               organizationId={edge.node.organization?.uniqueId}
+              organizationName={edge.node.organization?.name}
               teamId={edge.node.id}
               teamName={edge.node.name}
               teamsConnectionIds={connectionIds}

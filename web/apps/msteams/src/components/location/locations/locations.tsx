@@ -12,6 +12,7 @@ import { AddIcon } from '@repo/shared/components/icons';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { getLocationAddLink } from 'components/location';
 import { LocationBookingsCard } from 'components/location/locationBookingCard';
 import debounce from 'lodash.debounce';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
@@ -49,6 +50,7 @@ const Locations = ({ rootDataRelay, organizationId }: Props) => {
               name
               organization {
                 uniqueId
+                name
               }
             }
           }
@@ -154,7 +156,7 @@ const Locations = ({ rootDataRelay, organizationId }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Link href="/location/add">
+      <Link href={getLocationAddLink()}>
         <Button variant="contained" startIcon={<AddIcon />}>
           Add Location
         </Button>
@@ -192,6 +194,7 @@ const Locations = ({ rootDataRelay, organizationId }: Props) => {
           <Grid key={edge.node.id}>
             <LocationBookingsCard
               organizationId={edge.node.organization?.uniqueId}
+              organizationName={edge.node.organization?.name}
               locationId={edge.node.id}
               locationName={edge.node.name}
               locationsConnectionIds={connectionIds}

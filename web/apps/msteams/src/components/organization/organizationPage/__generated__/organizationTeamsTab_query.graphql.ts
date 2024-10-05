@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<387c5fc9b1b094864b3e5ec8b28a1764>>
+ * @generated SignedSource<<9f82d843ce88fd0fb961cab788dbc8ef>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type organizationTeamsTab_query$data = {
         readonly id: string;
         readonly name: string;
         readonly organization: {
+          readonly name: string;
           readonly uniqueId: string;
         } | null | undefined;
       };
@@ -44,6 +45,13 @@ v1 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
   "storageKey": null
 };
 return {
@@ -150,13 +158,7 @@ return {
               "plural": false,
               "selections": [
                 (v1/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
-                },
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -171,7 +173,8 @@ return {
                       "kind": "ScalarField",
                       "name": "uniqueId",
                       "storageKey": null
-                    }
+                    },
+                    (v2/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -266,6 +269,6 @@ return {
 };
 })();
 
-(node as any).hash = "d7f3123f60d138d32bfcfc0939470548";
+(node as any).hash = "eb4836f8371deae62c816b0da0644cdf";
 
 export default node;

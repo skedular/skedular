@@ -19,6 +19,7 @@ type Props = {
   showFullName?: boolean;
   tip?: string;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  href?: string;
 };
 
 const TeamAvatar = ({ name, photo, size, sx, showFullName, tip, onClick }: Props) => {

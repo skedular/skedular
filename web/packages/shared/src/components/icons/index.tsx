@@ -2,18 +2,19 @@ import Business from '@mui/icons-material/Business';
 import CorporateFare from '@mui/icons-material/CorporateFare';
 import DateRange from '@mui/icons-material/DateRange';
 import Desk from '@mui/icons-material/Desk';
-import Groups from '@mui/icons-material/Groups';
-import HomeIcon from '@mui/icons-material/Home';
-import HomeWork from '@mui/icons-material/HomeWork';
+import Diversity3 from '@mui/icons-material/Diversity3';
+import Home from '@mui/icons-material/Home';
 import Info from '@mui/icons-material/Info';
 import Link from '@mui/icons-material/Link';
 import LocalOffer from '@mui/icons-material/LocalOffer';
 import Notes from '@mui/icons-material/Notes';
 import NotificationsActive from '@mui/icons-material/NotificationsActive';
 import People from '@mui/icons-material/People';
+import Place from '@mui/icons-material/Place';
 import Refresh from '@mui/icons-material/Refresh';
 import Settings from '@mui/icons-material/Settings';
 import WbIridescent from '@mui/icons-material/WbIridescent';
+
 import TooltipIcon from './tooltip-icon';
 
 export { default as AddIcon, default as NewIcon } from '@mui/icons-material/Add';
@@ -72,19 +73,19 @@ export const OrganizationIcon = ({ fontSize, excludeTooltip, tip, color }: Props
 
 export const LocationIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
   excludeTooltip ? (
-    <HomeWork fontSize={fontSize} color={color} />
+    <Place fontSize={fontSize} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Location'}>
-      <HomeWork fontSize={fontSize} color={color} />
+      <Place fontSize={fontSize} color={color} />
     </TooltipIcon>
   );
 
 export const TeamIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
   excludeTooltip ? (
-    <Groups fontSize={fontSize} color={color} />
+    <Diversity3 fontSize={fontSize} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Team'}>
-      <Groups fontSize={fontSize} color={color} />
+      <Diversity3 fontSize={fontSize} color={color} />
     </TooltipIcon>
   );
 
@@ -198,9 +199,9 @@ export const WorkingFromOfficeIcon = ({ fontSize, excludeTooltip, tip, color }: 
 
 export const WorkingFromHomeIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
   excludeTooltip ? (
-    <HomeIcon fontSize={fontSize} />
+    <Home fontSize={fontSize} />
   ) : (
     <TooltipIcon tip={tip ?? 'Working from home'}>
-      <HomeIcon fontSize={fontSize} color={color ?? 'action'} />
+      <Home fontSize={fontSize} color={color ?? 'action'} />
     </TooltipIcon>
   );

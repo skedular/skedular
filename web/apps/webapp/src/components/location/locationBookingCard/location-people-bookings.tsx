@@ -1,3 +1,5 @@
+import { LocationLink, getLocationBookingsLink, getLocationSettingsLink } from '@/components/location';
+import { OrganizationLink } from '@/components/organization';
 import type { locationPeopleBookings_addBookingMutation } from '@/queries/__generated__/locationPeopleBookings_addBookingMutation.graphql';
 import type { locationPeopleBookings_addCustomerDefaultLocationMutation } from '@/queries/__generated__/locationPeopleBookings_addCustomerDefaultLocationMutation.graphql';
 import type { locationPeopleBookings_deleteBookingMutation } from '@/queries/__generated__/locationPeopleBookings_deleteBookingMutation.graphql';
@@ -28,7 +30,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { CustomerAvatar, LocationAvatar } from '@repo/shared/components/avatars';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BookingIcon as BookingIconComponent } from '@repo/shared/components/booking';
 import {
   BookingIcon,
@@ -37,7 +39,6 @@ import {
   DeskIcon,
   EllipseMenuIcon,
   NotPreferredIcon,
-  OrganizationIcon,
   PreferredIcon,
   SettingsIcon,
 } from '@repo/shared/components/icons';
@@ -46,7 +47,6 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
-import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useState, useTransition } from 'react';
@@ -773,9 +773,11 @@ const LocationPeopleBookings = ({
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <LocationAvatar name={{ name: rootData.location?.name }} photo={{ url: null }} size="small" />
-              <Typography variant="h6">{rootData.location?.name}</Typography>
+            <Stack direction="column">
+              <LocationLink organizationId={organizationId} id={locationId} name={locationName} />
+              {rootData.location.organization && (
+                <OrganizationLink id={rootData.location.organization.uniqueId} name={rootData.location.organization.name} />
+              )}
             </Stack>
           }
           subheader={
@@ -785,20 +787,12 @@ const LocationPeopleBookings = ({
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
               <Stack direction="row">
-                <Link
-                  component={NextLink}
-                  href={
-                    organizationId ? `/organization/${organizationId}/location/${locationId}?tab=bookings` : `/location/${locationId}?tab=bookings`
-                  }
-                >
+                <Link href={getLocationBookingsLink(locationId, organizationId)}>
                   <BookingIcon />
                 </Link>
 
                 {rootData.location.canModify && (
-                  <Link
-                    component={NextLink}
-                    href={organizationId ? `/organization/${organizationId}/location/${locationId}?tab=about` : `/location/${locationId}?tab=about`}
-                  >
+                  <Link href={getLocationSettingsLink(locationId, organizationId)}>
                     <SettingsIcon color="secondary" />
                   </Link>
                 )}
@@ -817,14 +811,6 @@ const LocationPeopleBookings = ({
         />
         <CardContent>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            {rootData.location.organization && (
-              <Link component={NextLink} href={`/organization/${rootData.location.organization.uniqueId}`}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                  <OrganizationIcon />
-                  <Typography variant="body1">{rootData.location.organization.name}</Typography>
-                </Stack>
-              </Link>
-            )}
             <DeskIcon />
             <Typography variant="body1">
               {rootData.location.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${rootData.location.deskCapacity}`}

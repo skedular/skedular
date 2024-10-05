@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<13951356da2d0875db3cf37b6042e4c1>>
+ * @generated SignedSource<<b80b9ed72760a19d9ffe544d18c16a19>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type teams_query$data = {
         readonly id: string;
         readonly name: string;
         readonly organization: {
+          readonly name: string;
           readonly uniqueId: string;
         } | null | undefined;
       };
@@ -34,7 +35,14 @@ export type teams_query$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "teams"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -145,13 +153,7 @@ return {
                   "name": "id",
                   "storageKey": null
                 },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -166,7 +168,8 @@ return {
                       "kind": "ScalarField",
                       "name": "uniqueId",
                       "storageKey": null
-                    }
+                    },
+                    (v1/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -236,6 +239,6 @@ return {
 };
 })();
 
-(node as any).hash = "d7452c666cee111f03e8e3a27563be44";
+(node as any).hash = "9000f99285746900a8e85008bdc29476";
 
 export default node;

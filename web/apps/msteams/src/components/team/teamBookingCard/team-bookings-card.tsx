@@ -3,12 +3,12 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { TeamAvatar } from '@repo/shared/components/avatars';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { endOfWeek, startOfWeek } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { OrganizationLink } from 'components/organization';
+import { TeamLink } from 'components/team';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -55,13 +55,14 @@ const MemoTeamBookingsCard = memo(TeamBookingsCard);
 
 type RelayProps = {
   organizationId?: string;
+  organizationName?: string;
   teamId: string;
   teamName: string;
   teamsConnectionIds: string[];
   hideRemoveTeamOption?: boolean;
 };
 
-const TeamBookingsWithRelay = ({ organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: RelayProps) => {
+const TeamBookingsWithRelay = ({ organizationId, organizationName, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<teamBookingsCard_rootQuery>(RootQuery);
 
   useEffect(() => {
@@ -92,9 +93,9 @@ const TeamBookingsWithRelay = ({ organizationId, teamId, teamName, teamsConnecti
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <TeamAvatar name={{ name: teamName }} photo={{ url: null }} size="small" />
-              <Typography variant="h6">{teamName}</Typography>
+            <Stack direction="column">
+              <TeamLink organizationId={organizationId} id={teamId} name={teamName} />
+              {organizationId && <OrganizationLink id={organizationId} name={organizationName} />}
             </Stack>
           }
         />

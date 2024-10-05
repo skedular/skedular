@@ -1,9 +1,8 @@
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import Typography from '@mui/material/Typography';
-import { TeamAvatar } from '@repo/shared/components/avatars';
 import graphql from 'babel-plugin-relay/macro';
+import { TeamLink } from 'components/team';
 import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
 import { useSearchParams } from 'react-router-dom';
@@ -24,6 +23,9 @@ const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
       fragment teamPage_query on Query {
         team(id: $teamId) {
           name
+          organization {
+            uniqueId
+          }
         }
         ...teamBookingsTab_query
         ...teamAboutTab_query
@@ -72,10 +74,7 @@ const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        <TeamAvatar name={{ name: rootData.team?.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
-        <Typography variant="h6">{rootData.team?.name}</Typography>
-      </Stack>
+      <TeamLink organizationId={rootData.team.organization?.uniqueId} id={teamId} name={rootData.team?.name} excludeLink />
 
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />

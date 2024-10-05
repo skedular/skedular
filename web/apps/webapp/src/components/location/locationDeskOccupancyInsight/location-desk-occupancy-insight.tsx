@@ -1,17 +1,15 @@
+import { LocationLink } from '@/components/location';
 import type { locationDeskOccupancyInsight_query$key } from '@/queries/__generated__/locationDeskOccupancyInsight_query.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { axisClasses } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
-import { LocationAvatar } from '@repo/shared/components/avatars';
 import { toDayAndMonthDate, toFixed } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import NextLink from 'next/link';
 import { memo, useCallback, useTransition } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
 
@@ -96,19 +94,7 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, organizationId, locationI
             <Typography variant="h5" color="primary">
               DeskOccupancy Insights
             </Typography>
-            {!hideLocationDetails && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <LocationAvatar name={{ name: rootData.location?.name }} photo={{ url: null }} size="small" />
-                <Link
-                  component={NextLink}
-                  href={
-                    organizationId ? `/organization/${organizationId}/location/${locationId}?tab=analytics` : `/location/${locationId}?tab=analytics`
-                  }
-                >
-                  <Typography variant="h6">{rootData.location?.name}</Typography>
-                </Link>
-              </Stack>
-            )}
+            {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={rootData.location?.name} analayticsLink />}
           </>
         }
         subheader={

@@ -1,0 +1,55 @@
+import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { TeamIcon } from '@repo/shared/components/icons';
+import { memo } from 'react';
+
+type Props = {
+  organizationId?: string;
+  id: string;
+  name?: string;
+  excludeLink?: boolean;
+  bookingsLink?: boolean;
+  settingsLink?: boolean;
+  peopleLink?: boolean;
+};
+
+export const getTeamBaseLink = (id: string, organizationId?: string) =>
+  organizationId ? `/organization/${organizationId}/team/${id}` : `/team/${id}`;
+export const getTeamAddLink = (organizationId?: string) => (organizationId ? `/organization/${organizationId}/team/add` : `/team/add`);
+export const getTeamBookingsLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=bookings`;
+export const getTeamSettingsLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=about`;
+export const getTeamPeopleLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=people`;
+
+const TeamLink = ({ organizationId, id, name, excludeLink, bookingsLink, settingsLink, peopleLink }: Props) => {
+  let href = '';
+  if (bookingsLink) {
+    href = getTeamBookingsLink(id, organizationId);
+  } else if (settingsLink) {
+    href = getTeamSettingsLink(id, organizationId);
+  } else if (peopleLink) {
+    href = getTeamPeopleLink(id, organizationId);
+  } else {
+    href = getTeamBaseLink(id, organizationId);
+  }
+
+  return (
+    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+      <TeamIcon fontSize="small" color="primary" />
+      {excludeLink && (
+        <Typography variant="h6" color="primary">
+          {name}
+        </Typography>
+      )}
+      {!excludeLink && (
+        <Link href={href}>
+          <Typography variant="h6" color="primary">
+            {name}
+          </Typography>
+        </Link>
+      )}
+    </Stack>
+  );
+};
+
+export default memo(TeamLink);

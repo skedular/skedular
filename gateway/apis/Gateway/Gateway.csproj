@@ -10,14 +10,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.Stitching" Version="13.9.13"/>
+        <PackageReference Include="HotChocolate.Stitching" Version="13.9.14"/>
         <PackageReference Include="Yarp.ReverseProxy" Version="2.2.0"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Content Include="../../../.dockerignore">
-            <Link>.dockerignore</Link>
-        </Content>
     </ItemGroup>
 
     <ItemGroup>

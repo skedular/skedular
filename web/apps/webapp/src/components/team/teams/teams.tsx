@@ -1,3 +1,4 @@
+import { getTeamAddLink } from '@/components/team';
 import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type { TeamOrderField, TeamOrderInput, teams_PaginationQuery } from '@/queries/__generated__/teams_PaginationQuery.graphql';
 import type { teams_query$key } from '@/queries/__generated__/teams_query.graphql';
@@ -45,6 +46,7 @@ const Teams = ({ rootDataRelay }: Props) => {
               name
               organization {
                 uniqueId
+                name
               }
             }
           }
@@ -149,7 +151,7 @@ const Teams = ({ rootDataRelay }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Link component={NextLink} href="/team/add">
+      <Link component={NextLink} href={getTeamAddLink()}>
         <Button variant="contained" startIcon={<AddIcon />}>
           Add Team
         </Button>
@@ -187,6 +189,7 @@ const Teams = ({ rootDataRelay }: Props) => {
           <Grid key={edge.node.id}>
             <TeamBookingsCard
               organizationId={edge.node.organization?.uniqueId}
+              organizationName={edge.node.organization?.name}
               teamId={edge.node.id}
               teamName={edge.node.name}
               teamsConnectionIds={connectionIds}

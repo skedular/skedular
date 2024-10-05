@@ -2,10 +2,13 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
 import { memo } from 'react';
+import type { UrlObject } from 'url';
+
+type Url = string | UrlObject;
 
 interface NavigationItemProps {
   label: string;
-  path: string;
+  path: Url;
 }
 
 const NavigationItem = ({ label, path }: NavigationItemProps) => {

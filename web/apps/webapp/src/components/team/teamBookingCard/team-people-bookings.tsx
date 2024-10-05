@@ -1,3 +1,5 @@
+import { OrganizationLink } from '@/components/organization';
+import { TeamLink, getTeamBookingsLink, getTeamSettingsLink } from '@/components/team';
 import type { teamPeopleBookings_addBookingMutation } from '@/queries/__generated__/teamPeopleBookings_addBookingMutation.graphql';
 import type { teamPeopleBookings_addCustomerDefaultTeamMutation } from '@/queries/__generated__/teamPeopleBookings_addCustomerDefaultTeamMutation.graphql';
 import type { teamPeopleBookings_deleteBookingMutation } from '@/queries/__generated__/teamPeopleBookings_deleteBookingMutation.graphql';
@@ -25,24 +27,14 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { CustomerAvatar, TeamAvatar } from '@repo/shared/components/avatars';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BookingIcon as BookingIconComponent } from '@repo/shared/components/booking';
-import {
-  BookingIcon,
-  DangerIcon,
-  DeleteIcon,
-  EllipseMenuIcon,
-  NotPreferredIcon,
-  OrganizationIcon,
-  PreferredIcon,
-  SettingsIcon,
-} from '@repo/shared/components/icons';
+import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
-import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useState, useTransition } from 'react';
@@ -751,9 +743,9 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <TeamAvatar name={{ name: rootData.team?.name }} photo={{ url: null }} size="small" />
-              <Typography variant="h6">{rootData.team?.name}</Typography>
+            <Stack direction="column">
+              <TeamLink organizationId={organizationId} id={teamId} name={teamName} />
+              {rootData.team.organization && <OrganizationLink id={rootData.team.organization.uniqueId} name={rootData.team.organization.name} />}
             </Stack>
           }
           subheader={
@@ -763,18 +755,12 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
               <Stack direction="row">
-                <Link
-                  component={NextLink}
-                  href={organizationId ? `/organization/${organizationId}/team/${teamId}?tab=bookings` : `/team/${teamId}?tab=bookings`}
-                >
+                <Link href={getTeamBookingsLink(teamId, organizationId)}>
                   <BookingIcon />
                 </Link>
 
                 {rootData.team.canModify && (
-                  <Link
-                    component={NextLink}
-                    href={organizationId ? `/organization/${organizationId}/team/${teamId}?tab=about` : `/team/${teamId}?tab=about`}
-                  >
+                  <Link href={getTeamSettingsLink(teamId, organizationId)}>
                     <SettingsIcon color="secondary" />
                   </Link>
                 )}
@@ -792,17 +778,6 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
           }
         />
         <CardContent>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            {rootData.team.organization && (
-              <Link component={NextLink} href={`/organization/${rootData.team.organization.uniqueId}`}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                  <OrganizationIcon />
-                  <Typography variant="body1">{rootData.team.organization.name}</Typography>
-                </Stack>
-              </Link>
-            )}
-          </Stack>
-
           <DataGrid
             rows={rows}
             columns={columns}

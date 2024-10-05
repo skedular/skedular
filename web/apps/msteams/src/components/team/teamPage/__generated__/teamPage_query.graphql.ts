@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85a7304981ad563ddfbe296e3b5a36fb>>
+ * @generated SignedSource<<6edd7e359e1f95eab12502af55ce1957>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,9 @@ import { FragmentRefs } from "relay-runtime";
 export type teamPage_query$data = {
   readonly team: {
     readonly name: string;
+    readonly organization: {
+      readonly uniqueId: string;
+    } | null | undefined;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"teamAboutTab_query" | "teamBookingsTab_query" | "teamPeopleTab_query">;
   readonly " $fragmentType": "teamPage_query";
@@ -53,6 +56,24 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "name",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "TeamOrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "uniqueId",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -77,6 +98,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "d8f429749c31d6afeacba7c106fa73d5";
+(node as any).hash = "9ee71b5c2be781abf695bde754ae13d4";
 
 export default node;

@@ -72,7 +72,6 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
 
   const { enqueueSnackbar } = useSnackbar();
 
-  // @ts-expect-error
   const renderDay = (props: PickersDayProps<Dayjs>): JSX.Element => {
     if (!rootData.monthlyBookings.__id) {
       return <></>;
@@ -87,7 +86,6 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
       });
 
     const pickersDay = (
-      // @ts-expect-error
       <PickersDay
         {...props}
         selected={false}

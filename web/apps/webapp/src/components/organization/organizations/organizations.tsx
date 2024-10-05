@@ -1,3 +1,4 @@
+import { getOrganizationAddLink } from '@/components/organization';
 import { OrganizationBookingsCard } from '@/components/organization/organizationBookingCard';
 import type {
   OrganizationOrderField,
@@ -20,7 +21,6 @@ import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import NextLink from 'next/link';
-
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
@@ -150,7 +150,7 @@ const Organizations = ({ rootDataRelay }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Link component={NextLink} href="/organization/add">
+      <Link component={NextLink} href={getOrganizationAddLink()}>
         <Button variant="contained" startIcon={<AddIcon />}>
           Add Organization
         </Button>

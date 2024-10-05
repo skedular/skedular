@@ -1,3 +1,5 @@
+import { getLocationBaseLink } from '@/components/location';
+import { getTeamBaseLink } from '@/components/team';
 import type {
   customerTodaySummary_rootQuery,
   customerTodaySummary_rootQuery$data,
@@ -8,12 +10,13 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
+import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { CustomerAvatar, LocationAvatar, TeamAvatar } from '@repo/shared/components/avatars';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getBookingSummaryMessage } from '@repo/shared/components/booking';
 import { DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -21,6 +24,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { endOfDay, getCustomerFullName, startOfDay, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
+import NextLink from 'next/link';
 import { Fragment, memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -183,7 +187,8 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
   const getMyBookingsComponents = (bookings: customerTodaySummary_rootQuery$data['allBookings']) => (
     <Stack direction="column">
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        <Typography variant="h6">You</Typography>
+        {bookings.length !== 0 && <Typography variant="h6">You</Typography>}
+        {bookings.length === 0 && <Typography variant="h6">You have no booking</Typography>}
       </Stack>
       <Stack direction="column">
         {bookings.length !== 0 && (
@@ -207,12 +212,14 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     return (
       <Grid container spacing={1}>
         <Grid>
-          <LocationAvatar name={{ name: location?.name }} photo={{ url: null }} size="small" />
+          <LocationIcon fontSize="small" color="primary" />
         </Grid>
         <Grid>
           <Stack direction="column">
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="h6">{location?.name}</Typography>
+              <Link component={NextLink} href={getLocationBaseLink(locationId, location?.organization?.uniqueId)}>
+                <Typography variant="h6">{location?.name}</Typography>
+              </Link>
             </Stack>
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <AvatarGroup max={10}>
@@ -251,12 +258,14 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     return (
       <Grid container spacing={1}>
         <Grid>
-          <TeamAvatar name={{ name: team?.name }} photo={{ url: null }} size="small" />
+          <TeamIcon fontSize="small" color="primary" />
         </Grid>
         <Grid>
           <Stack direction="column">
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="h6">{team?.name}</Typography>
+              <Link component={NextLink} href={getTeamBaseLink(teamId, team?.organization?.uniqueId)}>
+                <Typography variant="h6">{team?.name}</Typography>
+              </Link>
             </Stack>
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <AvatarGroup max={10}>
@@ -319,7 +328,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
           )}
         </CardContent>
       </Card>
-      <Popper open={Boolean(bookingPopperAnchorEl)} anchorEl={bookingPopperAnchorEl}>
+      <Popper open={Boolean(bookingPopperAnchorEl)} anchorEl={bookingPopperAnchorEl} placement="right-start">
         <Paper sx={{ border: 1, p: 1 }}>
           <Typography variant="body1">{bookingPopperMessage}</Typography>
         </Paper>

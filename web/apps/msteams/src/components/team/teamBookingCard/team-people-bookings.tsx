@@ -18,7 +18,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { CustomerAvatar, TeamAvatar } from '@repo/shared/components/avatars';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BookingIcon as BookingIconComponent } from '@repo/shared/components/booking';
 import {
   BookingIcon,
@@ -34,6 +34,8 @@ import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { OrganizationLink } from 'components/organization';
+import { TeamLink, getTeamBookingsLink, getTeamSettingsLink } from 'components/team';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
@@ -749,9 +751,9 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <TeamAvatar name={{ name: rootData.team?.name }} photo={{ url: null }} size="small" />
-              <Typography variant="h6">{rootData.team?.name}</Typography>
+            <Stack direction="column">
+              <TeamLink organizationId={organizationId} id={teamId} name={teamName} />
+              {rootData.team.organization && <OrganizationLink id={rootData.team.organization.uniqueId} name={rootData.team.organization.name} />}
             </Stack>
           }
           subheader={
@@ -761,12 +763,12 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
               <Stack direction="row">
-                <Link href={organizationId ? `/organization/${organizationId}/team/${teamId}?tab=bookings` : `/team/${teamId}?tab=bookings`}>
+                <Link href={getTeamBookingsLink(teamId, organizationId)}>
                   <BookingIcon />
                 </Link>
 
                 {rootData.team.canModify && (
-                  <Link href={organizationId ? `/organization/${organizationId}/team/${teamId}?tab=about` : `/team/${teamId}?tab=about`}>
+                  <Link href={getTeamSettingsLink(teamId, organizationId)}>
                     <SettingsIcon color="secondary" />
                   </Link>
                 )}

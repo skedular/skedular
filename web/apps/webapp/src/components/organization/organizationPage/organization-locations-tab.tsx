@@ -1,3 +1,4 @@
+import { getLocationAddLink } from '@/components/location';
 import { LocationBookingsCard } from '@/components/location/locationBookingCard';
 import type {
   LocationOrderField,
@@ -52,6 +53,7 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
               name
               organization {
                 uniqueId
+                name
               }
             }
           }
@@ -166,7 +168,7 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
     <Stack direction="column" spacing={1}>
       {rootData.organization.canModify && (
         <Stack direction="row" sx={{ width: 'auto' }}>
-          <Link component={NextLink} href={`/organization/${rootData.organization.id}/location/add`}>
+          <Link component={NextLink} href={getLocationAddLink(rootData.organization.id)}>
             <Button variant="contained" startIcon={<AddIcon />}>
               Add Location
             </Button>
@@ -205,6 +207,7 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
           <Grid key={edge.node.id}>
             <LocationBookingsCard
               organizationId={edge.node.organization?.uniqueId}
+              organizationName={edge.node.organization?.name}
               locationId={edge.node.id}
               locationName={edge.node.name}
               locationsConnectionIds={connectionIds}

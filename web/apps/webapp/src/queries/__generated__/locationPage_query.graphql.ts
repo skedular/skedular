@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<98b4b752f45b25dd1c97ec2abf4df6a1>>
+ * @generated SignedSource<<78fc7a8c3ac90f2011479d6a37bf9109>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,9 @@ export type locationPage_query$data = {
   readonly location: {
     readonly canViewAnalytics: boolean;
     readonly name: string;
+    readonly organization: {
+      readonly uniqueId: string;
+    } | null | undefined;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"locationAboutTab_query" | "locationBookingsTab_query" | "locationDesksTab_query" | "locationPeopleTab_query" | "locationPeopleTab_query_organizationMembers" | "locationZonesTab_query">;
   readonly " $fragmentType": "locationPage_query";
@@ -61,6 +64,24 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "canViewAnalytics",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LocationOrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "uniqueId",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -100,6 +121,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "38c7d10ed2f62c5690d2284886767aad";
+(node as any).hash = "05119516fe2f8ca2e3e10cfc3bdadd01";
 
 export default node;

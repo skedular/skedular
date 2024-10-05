@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25dae53fb88820f6853665d1f01836e1>>
+ * @generated SignedSource<<310ee9aba8eb3b1be119f621d0d4a8c3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type organizationLocationsTab_query$data = {
         readonly id: string;
         readonly name: string;
         readonly organization: {
+          readonly name: string;
           readonly uniqueId: string;
         } | null | undefined;
       };
@@ -44,6 +45,13 @@ v1 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
   "storageKey": null
 };
 return {
@@ -150,13 +158,7 @@ return {
               "plural": false,
               "selections": [
                 (v1/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
-                },
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -171,7 +173,8 @@ return {
                       "kind": "ScalarField",
                       "name": "uniqueId",
                       "storageKey": null
-                    }
+                    },
+                    (v2/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -266,6 +269,6 @@ return {
 };
 })();
 
-(node as any).hash = "388c019f7adeefac42c8ef04a102deaa";
+(node as any).hash = "2cf4cb777e8471929d8da1c6ca0597f5";
 
 export default node;

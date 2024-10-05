@@ -1,3 +1,4 @@
+import { OrganizationLink } from '@/components/organization';
 import type { organizationPeopleBookings_addBookingMutation } from '@/queries/__generated__/organizationPeopleBookings_addBookingMutation.graphql';
 import type { organizationPeopleBookings_clearCustomerDefaultOrganizationMutation } from '@/queries/__generated__/organizationPeopleBookings_clearCustomerDefaultOrganizationMutation.graphql';
 import type { organizationPeopleBookings_deleteBookingMutation } from '@/queries/__generated__/organizationPeopleBookings_deleteBookingMutation.graphql';
@@ -28,7 +29,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BookingIcon as BookingIconComponent } from '@repo/shared/components/booking';
 import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
@@ -738,12 +739,7 @@ const OrganizationPeopleBookings = ({
     <>
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
-          title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} size="small" />
-              <Typography variant="h6">{rootData.organization?.name}</Typography>
-            </Stack>
-          }
+          title={<OrganizationLink id={organizationId} name={rootData.organization?.name} />}
           subheader={
             <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">

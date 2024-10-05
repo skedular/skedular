@@ -1,14 +1,13 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Link from '@mui/material/Link';
 import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { OrganizationLink } from 'components/organization';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -71,13 +70,7 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, orga
               <Typography variant="h5" color="primary">
                 Member Attendancy Insights
               </Typography>
-              {!hideOrganizationDetails && (
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                  <Link href={`/organization/${organizationId}?tab=analytics`}>
-                    {organizationName && <Typography variant="h6">{organizationName}</Typography>}
-                  </Link>
-                </Stack>
-              )}
+              {!hideOrganizationDetails && <OrganizationLink id={organizationId} name={organizationName} analayticsLink />}
             </>
           }
         />

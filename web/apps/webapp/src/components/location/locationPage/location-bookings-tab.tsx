@@ -206,7 +206,6 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
           <AccordionDetails>
             <DateRangePicker
               localeText={{ start: 'From', end: 'To' }}
-              // @ts-expect-error
               defaultValue={[selectedFromDate, selectedUntilDate]}
               onChange={(dateRangeValue) => handleSelectedDateChange(dateRangeValue[0], dateRangeValue[1])}
             />

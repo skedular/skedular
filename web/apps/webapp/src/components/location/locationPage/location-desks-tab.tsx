@@ -248,9 +248,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
             slots={{
               toolbar: EmptyCalendarToolbar,
             }}
-            // @ts-expect-error
             slotProps={SimpleCalendarSlotProps}
-            // @ts-expect-error
             defaultValue={selectedDate}
             onChange={handleSelectedDateChange}
           />

@@ -1,9 +1,8 @@
+import { LocationLink } from '@/components/location';
 import type { locationPage_query$key } from '@/queries/__generated__/locationPage_query.graphql';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import Typography from '@mui/material/Typography';
-import { LocationAvatar } from '@repo/shared/components/avatars';
 import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useState } from 'react';
@@ -28,6 +27,9 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
         location(id: $locationId) {
           name
           canViewAnalytics
+          organization {
+            uniqueId
+          }
         }
         ...locationBookingsTab_query
         ...locationAboutTab_query
@@ -92,10 +94,7 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        <LocationAvatar name={{ name: rootData.location?.name }} photo={{ url: null }} sx={{ marginBottom: 1 }} />
-        <Typography variant="h6">{rootData.location?.name}</Typography>
-      </Stack>
+      <LocationLink organizationId={rootData.location.organization?.uniqueId} id={locationId} name={rootData.location?.name} excludeLink />
 
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />

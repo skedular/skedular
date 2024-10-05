@@ -1,3 +1,4 @@
+import { getLocationAddLink } from '@/components/location';
 import { LocationBookingsCard } from '@/components/location/locationBookingCard';
 import type { LocationOrderField, LocationOrderInput, locations_PaginationQuery } from '@/queries/__generated__/locations_PaginationQuery.graphql';
 import type { locations_query$key } from '@/queries/__generated__/locations_query.graphql';
@@ -44,6 +45,7 @@ const Locations = ({ rootDataRelay }: Props) => {
               name
               organization {
                 uniqueId
+                name
               }
             }
           }
@@ -148,7 +150,7 @@ const Locations = ({ rootDataRelay }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Link component={NextLink} href="/location/add">
+      <Link component={NextLink} href={getLocationAddLink()}>
         <Button variant="contained" startIcon={<AddIcon />}>
           Add Location
         </Button>
@@ -186,6 +188,7 @@ const Locations = ({ rootDataRelay }: Props) => {
           <Grid key={edge.node.id}>
             <LocationBookingsCard
               organizationId={edge.node.organization?.uniqueId}
+              organizationName={edge.node.organization?.name}
               locationId={edge.node.id}
               locationName={edge.node.name}
               locationsConnectionIds={connectionIds}
