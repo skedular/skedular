@@ -15,7 +15,7 @@ type Props = {
   sx?: SxProps | null;
   showFullName?: boolean;
   tip?: string;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 };
 
 const CustomerAvatar = ({ name, photo, size, sx, showFullName, tip, onClick }: Props) => {

@@ -3,11 +3,13 @@ import type {
   customerTodaySummary_rootQuery$data,
 } from '@/queries/__generated__/customerTodaySummary_rootQuery.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
+import Popper from '@mui/material/Popper';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -19,7 +21,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { endOfDay, getCustomerFullName, startOfDay, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { Fragment, memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -82,6 +84,7 @@ const RootQuery = graphql`
 
 const CustomerTodaySummary = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<customerTodaySummary_rootQuery>(RootQuery, queryReference);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const myBookings = useMemo(
     () => rootData.allBookings.filter(({ customer: { uniqueId } }) => uniqueId === rootData.me?.id),
     [rootData.allBookings, rootData.me?.id],
@@ -133,7 +136,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     [otherBookings],
   );
 
-  const MyBookingComponent = ({ booking }: { booking: customerTodaySummary_rootQuery$data['allBookings'][number] }) => (
+  const getMyBookingComponent = (booking: customerTodaySummary_rootQuery$data['allBookings'][number]) => (
     <Stack key={booking.id} direction="column">
       {booking.location && (
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
@@ -175,7 +178,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     </Stack>
   );
 
-  const MyBookingsComponents = ({ bookings }: { bookings: customerTodaySummary_rootQuery$data['allBookings'] }) => (
+  const getMyBookingsComponents = (bookings: customerTodaySummary_rootQuery$data['allBookings']) => (
     <Stack direction="column">
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         <Typography variant="h6">You</Typography>
@@ -183,20 +186,20 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
       <Stack direction="column">
         {bookings.length !== 0 && (
           <>
-            {bookings.slice(0, bookings.length - 1).map((booking) => (
-              <>
-                <MyBookingComponent booking={booking} />
+            {bookings.slice(0, bookings.length - 1).map((booking, index) => (
+              <Fragment key={index}>
+                {getMyBookingComponent(booking)}
                 <Divider />
-              </>
+              </Fragment>
             ))}
-            {<MyBookingComponent booking={bookings[bookings.length - 1]!} />}
+            {getMyBookingComponent(bookings[bookings.length - 1]!)}
           </>
         )}
       </Stack>
     </Stack>
   );
 
-  const BookingsByLocationsComponents = ({ locationId, bookings }: { locationId: string; bookings: typeof otherBookings }) => {
+  const getBookingsByLocationsComponents = (locationId: string, bookings: typeof otherBookings) => {
     const location = rootData.myLocations.find(({ id }) => id === locationId);
 
     return (
@@ -219,8 +222,8 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
                     showFullName
                     size="small"
                     tip={`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`}
-                    onClick={() => {
-                      alert(getBookingSummaryMessage(booking, false));
+                    onClick={(event: React.MouseEvent<HTMLElement>) => {
+                      setAnchorEl(anchorEl ? null : event.currentTarget);
                     }}
                   />
                 ))}
@@ -232,7 +235,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     );
   };
 
-  const BookingsByTeamsComponents = ({ teamId, bookings }: { teamId: string; bookings: typeof otherBookings }) => {
+  const getBookingsByTeamsComponents = (teamId: string, bookings: typeof otherBookings) => {
     const team = rootData.myTeams.find(({ id }) => id === teamId);
 
     return (
@@ -255,8 +258,8 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
                     showFullName
                     size="small"
                     tip={`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`}
-                    onClick={() => {
-                      alert(getBookingSummaryMessage(booking, false));
+                    onClick={(event: React.MouseEvent<HTMLElement>) => {
+                      setAnchorEl(anchorEl ? null : event.currentTarget);
                     }}
                   />
                 ))}
@@ -269,38 +272,41 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
   };
 
   const summerizedRows: JSX.Element[] = [
-    ...Object.entries(groupedOtherBookingsByLocation).map(([locationId, bookings]) => (
-      <BookingsByLocationsComponents key={locationId} locationId={locationId} bookings={bookings} />
-    )),
-    ...Object.entries(groupedOtherBookingsByTeam).map(([teamId, bookings]) => (
-      <BookingsByTeamsComponents key={teamId} teamId={teamId} bookings={bookings} />
-    )),
+    ...Object.entries(groupedOtherBookingsByLocation).map(([locationId, bookings]) => getBookingsByLocationsComponents(locationId, bookings)),
+    ...Object.entries(groupedOtherBookingsByTeam).map(([teamId, bookings]) => getBookingsByTeamsComponents(teamId, bookings)),
   ];
 
+  const open = Boolean(anchorEl);
+
   return (
-    <Card sx={{ maxWidth: 500, height: '100%' }}>
-      <CardHeader
-        title={
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="body1">{`Today ${toShortDateWithDayAndMonthOnly(startOfDay())}`}</Typography>
-          </Stack>
-        }
-        subheader={<MyBookingsComponents key={1} bookings={myBookings} />}
-      />
-      <CardContent>
-        {summerizedRows.length !== 0 && (
-          <>
-            {summerizedRows.slice(0, summerizedRows.length - 1).map((row) => (
-              <>
-                {row}
-                <Divider />
-              </>
-            ))}
-            {summerizedRows[summerizedRows.length - 1]}
-          </>
-        )}
-      </CardContent>
-    </Card>
+    <>
+      <Card sx={{ maxWidth: 500, height: '100%' }}>
+        <CardHeader
+          title={
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Typography variant="body1">{`Today ${toShortDateWithDayAndMonthOnly(startOfDay())}`}</Typography>
+            </Stack>
+          }
+          subheader={getMyBookingsComponents(myBookings)}
+        />
+        <CardContent>
+          {summerizedRows.length !== 0 && (
+            <>
+              {summerizedRows.slice(0, summerizedRows.length - 1).map((row, index) => (
+                <Fragment key={index}>
+                  {row}
+                  <Divider />
+                </Fragment>
+              ))}
+              {summerizedRows[summerizedRows.length - 1]}
+            </>
+          )}
+        </CardContent>
+      </Card>
+      <Popper open={open} anchorEl={anchorEl}>
+        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>The content of the Popper.</Box>
+      </Popper>
+    </>
   );
 };
 
