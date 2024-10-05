@@ -3,12 +3,12 @@ import type {
   customerTodaySummary_rootQuery$data,
 } from '@/queries/__generated__/customerTodaySummary_rootQuery.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
+import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
@@ -84,7 +84,9 @@ const RootQuery = graphql`
 
 const CustomerTodaySummary = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<customerTodaySummary_rootQuery>(RootQuery, queryReference);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [bookingPopperAnchorEl, setBookingPopperAnchorEl] = useState<null | HTMLElement>(null);
+  const [bookingPopperLatestUniqueId, setBookingPopperLatestUniqueId] = useState<string>('');
+  const [bookingPopperMessage, setBookingPopperMessage] = useState<string>('');
   const myBookings = useMemo(
     () => rootData.allBookings.filter(({ customer: { uniqueId } }) => uniqueId === rootData.me?.id),
     [rootData.allBookings, rootData.me?.id],
@@ -219,11 +221,19 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
                     key={booking.customer?.uniqueId}
                     name={booking.customer}
                     photo={{ url: booking.customer?.photoUrl }}
-                    showFullName
                     size="small"
-                    tip={`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`}
                     onClick={(event: React.MouseEvent<HTMLElement>) => {
-                      setAnchorEl(anchorEl ? null : event.currentTarget);
+                      setBookingPopperMessage(`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`);
+
+                      const uiqueId = `${locationId}-${booking.id}`;
+
+                      if (bookingPopperLatestUniqueId !== uiqueId) {
+                        setBookingPopperAnchorEl(event.currentTarget);
+                      } else {
+                        setBookingPopperAnchorEl(bookingPopperAnchorEl ? null : event.currentTarget);
+                      }
+
+                      setBookingPopperLatestUniqueId(uiqueId);
                     }}
                   />
                 ))}
@@ -255,11 +265,19 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
                     key={booking.customer?.uniqueId}
                     name={booking.customer}
                     photo={{ url: booking.customer?.photoUrl }}
-                    showFullName
                     size="small"
-                    tip={`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`}
                     onClick={(event: React.MouseEvent<HTMLElement>) => {
-                      setAnchorEl(anchorEl ? null : event.currentTarget);
+                      setBookingPopperMessage(`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`);
+
+                      const uiqueId = `${teamId}-${booking.id}`;
+
+                      if (bookingPopperLatestUniqueId !== uiqueId) {
+                        setBookingPopperAnchorEl(event.currentTarget);
+                      } else {
+                        setBookingPopperAnchorEl(bookingPopperAnchorEl ? null : event.currentTarget);
+                      }
+
+                      setBookingPopperLatestUniqueId(uiqueId);
                     }}
                   />
                 ))}
@@ -275,8 +293,6 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     ...Object.entries(groupedOtherBookingsByLocation).map(([locationId, bookings]) => getBookingsByLocationsComponents(locationId, bookings)),
     ...Object.entries(groupedOtherBookingsByTeam).map(([teamId, bookings]) => getBookingsByTeamsComponents(teamId, bookings)),
   ];
-
-  const open = Boolean(anchorEl);
 
   return (
     <>
@@ -303,8 +319,10 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
           )}
         </CardContent>
       </Card>
-      <Popper open={open} anchorEl={anchorEl}>
-        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>The content of the Popper.</Box>
+      <Popper open={Boolean(bookingPopperAnchorEl)} anchorEl={bookingPopperAnchorEl}>
+        <Paper sx={{ border: 1, p: 1 }}>
+          <Typography variant="body1">{bookingPopperMessage}</Typography>
+        </Paper>
       </Popper>
     </>
   );
