@@ -1,9 +1,9 @@
 import type { zoneCard_LocationTagDetails$key } from '@/queries/__generated__/zoneCard_LocationTagDetails.graphql';
 import type { zoneCard_Query$key } from '@/queries/__generated__/zoneCard_Query.graphql';
 import type { zoneCard_addCustomerDefaultLocationTagMutation } from '@/queries/__generated__/zoneCard_addCustomerDefaultLocationTagMutation.graphql';
-import type { zoneCard_deleteLocationMutation } from '@/queries/__generated__/zoneCard_deleteLocationMutation.graphql';
+import type { zoneCard_deleteLocationTagMutation } from '@/queries/__generated__/zoneCard_deleteLocationTagMutation.graphql';
 import type { zoneCard_removeCustomerDefaultLocationTagMutation } from '@/queries/__generated__/zoneCard_removeCustomerDefaultLocationTagMutation.graphql';
-import type { zoneCard_updateZoneMutation } from '@/queries/__generated__/zoneCard_updateZoneMutation.graphql';
+import type { zoneCard_updateLocationTagMutation } from '@/queries/__generated__/zoneCard_updateLocationTagMutation.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -20,7 +20,7 @@ import Typography from '@mui/material/Typography';
 import { DangerIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { joinErrors, now } from '@repo/shared/libs/utils';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
@@ -71,8 +71,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     locationTagDetailsRelay,
   );
 
-  const [commitUpdateZone] = useMutation<zoneCard_updateZoneMutation>(graphql`
-    mutation zoneCard_updateZoneMutation($input: UpdateLocationTagInput!) {
+  const [commitUpdateLocationTag] = useMutation<zoneCard_updateLocationTagMutation>(graphql`
+    mutation zoneCard_updateLocationTagMutation($input: UpdateLocationTagInput!) {
       updateLocationTag(input: $input) {
         locationTag {
           id
@@ -82,8 +82,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     }
   `);
 
-  const [commitDeleteZone] = useMutation<zoneCard_deleteLocationMutation>(graphql`
-    mutation zoneCard_deleteLocationMutation($connectionIds: [ID!]!, $input: DeleteLocationTagInput!) {
+  const [commitDeleteLocationTag] = useMutation<zoneCard_deleteLocationTagMutation>(graphql`
+    mutation zoneCard_deleteLocationTagMutation($connectionIds: [ID!]!, $input: DeleteLocationTagInput!) {
       deleteLocationTag(input: $input) {
         locationTag {
           id @deleteEdge(connections: $connectionIds)
@@ -139,7 +139,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
   const handleConfirmRemovingZoneClick = () => {
     setZoneRemoveConfirmationDialogOpen(false);
 
-    commitDeleteZone({
+    commitDeleteLocationTag({
       variables: {
         connectionIds: connectionIds,
         input: {
@@ -165,7 +165,6 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
         deleteLocationTag: {
           locationTag: {
             id: locationTagDetails.id,
-            deletedAt: now().toISOString(),
           },
         },
       },
@@ -183,7 +182,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
   const handleSaveClick = ({ name }: LocationTagDetails) => {
     setEditing(false);
 
-    commitUpdateZone({
+    commitUpdateLocationTag({
       variables: {
         input: {
           clientMutationId: nanoid(),
