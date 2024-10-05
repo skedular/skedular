@@ -26,13 +26,14 @@ const convertCalendarDayToStartOfDay = (date: Dayjs) => {
 };
 
 const now = () => {
-  return dayjs().utc();
+  const date = new Date();
+  return dayjs().utc().set('year', date.getUTCFullYear()).set('month', date.getMonth()).set('date', date.getDate());
 };
 
 const startOfDay = (date?: Dayjs | string | null | undefined) => {
-  const finalDate = date ? dayjs(date) : dayjs().utc();
+  const finalDate = date ? dayjs(date) : now();
 
-  return finalDate.utc().startOf('day');
+  return finalDate.startOf('day');
 };
 
 const endOfDay = (date?: Dayjs | string | null | undefined) => {
@@ -40,9 +41,9 @@ const endOfDay = (date?: Dayjs | string | null | undefined) => {
 };
 
 const startOfWeek = (date?: Dayjs | string | null | undefined) => {
-  const finalDate = date ? dayjs(date) : dayjs().utc();
+  const finalDate = date ? dayjs(date) : now();
 
-  return finalDate.utc().startOf('isoWeek');
+  return finalDate.startOf('isoWeek');
 };
 
 const endOfWeek = (date?: Dayjs | string | null | undefined) => {
@@ -50,9 +51,9 @@ const endOfWeek = (date?: Dayjs | string | null | undefined) => {
 };
 
 const startOfMonth = (date?: Dayjs | string | null | undefined) => {
-  const finalDate = date ? dayjs(date) : dayjs().utc();
+  const finalDate = date ? dayjs(date) : now();
 
-  return finalDate.utc().startOf('month');
+  return finalDate.startOf('month');
 };
 
 const endOfMonth = (date?: Dayjs | string | null | undefined) => {
@@ -201,7 +202,6 @@ export {
   getCustomerShortName,
   getPublicSiteUrl,
   joinErrors,
-  now,
   startOfDay,
   startOfMonth,
   startOfWeek,
