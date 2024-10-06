@@ -1,9 +1,14 @@
+import { OrganizationBookingsCard } from '@/components/organization/organizationBookingCard';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { OrganizationIcon } from '@repo/shared/components/icons';
+import { OrganizationIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
 import NextLink from 'next/link';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
 type Props = {
   id: string;
@@ -17,6 +22,7 @@ type Props = {
   offeringLink?: boolean;
   billingLink?: boolean;
   analayticsLink?: boolean;
+  enableViewDetails?: boolean;
 };
 
 export const getOrganizationBaseLink = (id: string) => `/organization/${id}`;
@@ -42,7 +48,10 @@ const OrganizationLink = ({
   offeringLink,
   billingLink,
   analayticsLink,
+  enableViewDetails,
 }: Props) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   let href = '';
   if (bookingsLink) {
     href = getOrganizationBookingsLink(id);
@@ -64,22 +73,47 @@ const OrganizationLink = ({
     href = getOrganizationBaseLink(id);
   }
 
+  const handleViewDetailsClick = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleViewDetailsCloseClick = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
-    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-      <OrganizationIcon fontSize="small" color="primary" />
-      {excludeLink && (
-        <Typography variant="h6" color="primary">
-          {name}
-        </Typography>
-      )}
-      {!excludeLink && (
-        <Link component={NextLink} href={href}>
+    <>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <OrganizationIcon fontSize="small" color="primary" />
+        {excludeLink && (
           <Typography variant="h6" color="primary">
             {name}
           </Typography>
-        </Link>
-      )}
-    </Stack>
+        )}
+        {!excludeLink && (
+          <Link component={NextLink} href={href}>
+            <Typography variant="h6" color="primary">
+              {name}
+            </Typography>
+          </Link>
+        )}
+        {enableViewDetails && (
+          <Button size="small" color="warning" onClick={handleViewDetailsClick}>
+            <ViewDetailsIcon color="primary" />
+          </Button>
+        )}
+      </Stack>
+      <Dialog open={isDialogOpen}>
+        <DialogContent>
+          <OrganizationBookingsCard organizationId={id} organizationName={name} organizationsConnectionIds={[]} />
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" variant="contained" onClick={handleViewDetailsCloseClick}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
