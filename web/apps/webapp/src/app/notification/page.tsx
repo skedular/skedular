@@ -12,7 +12,7 @@ import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'reac
 
 type Props = {
   queryReference: PreloadedQuery<pageNotifications_rootQuery, Record<string, unknown>>;
-  onReloadRequire: () => void;
+  onReloadRequired: () => void;
 };
 
 const RootQuery = graphql`
@@ -23,7 +23,7 @@ const RootQuery = graphql`
   }
 `;
 
-const NotificationsPage = ({ queryReference, onReloadRequire }: Props) => {
+const NotificationsPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageNotifications_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(
     () => rootData?.notificationCustomerRecordSynced,
@@ -33,7 +33,7 @@ const NotificationsPage = ({ queryReference, onReloadRequire }: Props) => {
   return (
     <RootShell
       rootDataRelay={rootData}
-      onReloadRequire={onReloadRequire}
+      onReloadRequired={onReloadRequired}
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.notificationCustomerRecordSynced]}
     >
@@ -64,7 +64,7 @@ const NotificationsPageWithRelay = () => {
     );
   }, [loadQuery, triggerReload]);
 
-  const handleReloadRequire = () => {
+  const handleReloadRequired = () => {
     setTriggerReload(triggerReload + 1);
   };
 
@@ -74,7 +74,7 @@ const NotificationsPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoNotificationsPage queryReference={queryReference} onReloadRequire={handleReloadRequire} />
+      <MemoNotificationsPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

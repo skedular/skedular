@@ -14,7 +14,7 @@ import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'reac
 
 type Props = {
   queryReference: PreloadedQuery<pageHome_rootQuery, Record<string, unknown>>;
-  onReloadRequire: () => void;
+  onReloadRequired: () => void;
 };
 
 const RootQuery = graphql`
@@ -37,7 +37,7 @@ const RootQuery = graphql`
   }
 `;
 
-const Home = ({ queryReference, onReloadRequire }: Props) => {
+const Home = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageHome_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(
     () => rootData?.bookingCustomerRecordSynced && rootData?.organizationCustomerRecordSynced,
@@ -47,7 +47,7 @@ const Home = ({ queryReference, onReloadRequire }: Props) => {
   return (
     <RootShell
       rootDataRelay={rootData}
-      onReloadRequire={onReloadRequire}
+      onReloadRequired={onReloadRequired}
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.bookingCustomerRecordSynced, rootData?.organizationCustomerRecordSynced]}
     >
@@ -92,7 +92,7 @@ const HomeWithRelay = () => {
     );
   }, [loadQuery, date]);
 
-  const handleReloadRequire = () => {
+  const handleReloadRequired = () => {
     setDate(startOfMonth());
   };
 
@@ -102,7 +102,7 @@ const HomeWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoHome queryReference={queryReference} onReloadRequire={handleReloadRequire} />
+      <MemoHome queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

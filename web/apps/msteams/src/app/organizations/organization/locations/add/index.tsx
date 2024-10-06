@@ -12,7 +12,7 @@ import type { addOrganizationLocation_rootQuery } from './__generated__/addOrgan
 
 type Props = {
   queryReference: PreloadedQuery<addOrganizationLocation_rootQuery, Record<string, unknown>>;
-  onReloadRequire: () => void;
+  onReloadRequired: () => void;
   organizationId: string;
 };
 
@@ -23,14 +23,14 @@ const RootQuery = graphql`
   }
 `;
 
-const AddLocationPage = ({ queryReference, onReloadRequire, organizationId }: Props) => {
+const AddLocationPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<addOrganizationLocation_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.locationCustomerRecordSynced, [rootData?.locationCustomerRecordSynced]);
 
   return (
     <RootShell
       rootDataRelay={rootData}
-      onReloadRequire={onReloadRequire}
+      onReloadRequired={onReloadRequired}
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.locationCustomerRecordSynced]}
     >
@@ -67,7 +67,7 @@ const AddLocationPageWithRelay = () => {
     );
   }, [loadQuery, triggerReload]);
 
-  const handleReloadRequire = () => {
+  const handleReloadRequired = () => {
     setTriggerReload(triggerReload + 1);
   };
 
@@ -77,7 +77,7 @@ const AddLocationPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAddLocationPage queryReference={queryReference} onReloadRequire={handleReloadRequire} organizationId={finalOrganizationId} />
+      <MemoAddLocationPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
     </ErrorBoundary>
   );
 };

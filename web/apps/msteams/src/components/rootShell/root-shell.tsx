@@ -14,7 +14,7 @@ type Props = {
   rootDataRelay: rootShell_query$key;
   title?: string | null;
   children: React.ReactNode;
-  onReloadRequire: () => void;
+  onReloadRequired: () => void;
   areAdditionalCustomerRecordsSync: () => boolean;
   additionalCustomerRecords: any[];
   rightSideContent?: React.JSX.Element;
@@ -25,7 +25,7 @@ const maxRetryAttemptsToReload = 20;
 const RootShell = ({
   rootDataRelay,
   children,
-  onReloadRequire,
+  onReloadRequired,
   areAdditionalCustomerRecordsSync,
   additionalCustomerRecords,
   rightSideContent,
@@ -56,14 +56,14 @@ const RootShell = ({
     }
 
     const intervalId = setInterval(() => {
-      onReloadRequire();
+      onReloadRequired();
       setReloadCount(reloadCount + 1);
     }, 3000);
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [rootDataRelay, rootData.me, reloadCount, onReloadRequire, areAdditionalCustomerRecordsSync, ...additionalCustomerRecords]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [rootDataRelay, rootData.me, reloadCount, onReloadRequired, areAdditionalCustomerRecordsSync, ...additionalCustomerRecords]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!rootDataRelay) {
     return null;

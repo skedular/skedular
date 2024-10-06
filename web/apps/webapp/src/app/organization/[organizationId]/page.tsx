@@ -14,7 +14,7 @@ import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'reac
 
 type Props = {
   queryReference: PreloadedQuery<pageOrganization_rootQuery, Record<string, unknown>>;
-  onReloadRequire: () => void;
+  onReloadRequired: () => void;
   organizationId: string;
 };
 
@@ -42,7 +42,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationPage = ({ queryReference, onReloadRequire, organizationId }: Props) => {
+const OrganizationPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganization_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(
     () => rootData?.organizationCustomerRecordSynced,
@@ -52,7 +52,7 @@ const OrganizationPage = ({ queryReference, onReloadRequire, organizationId }: P
   return (
     <RootShell
       rootDataRelay={rootData}
-      onReloadRequire={onReloadRequire}
+      onReloadRequired={onReloadRequired}
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.organizationCustomerRecordSynced]}
     >
@@ -133,7 +133,7 @@ const OrganizationPageWithRelay = () => {
     );
   }, [loadQuery, triggerReload, finalOrganizationId]);
 
-  const handleReloadRequire = () => {
+  const handleReloadRequired = () => {
     setTriggerReload(triggerReload + 1);
   };
 
@@ -143,7 +143,7 @@ const OrganizationPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationPage queryReference={queryReference} onReloadRequire={handleReloadRequire} organizationId={finalOrganizationId} />
+      <MemoOrganizationPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
     </ErrorBoundary>
   );
 };

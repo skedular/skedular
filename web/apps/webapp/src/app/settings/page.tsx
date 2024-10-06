@@ -12,7 +12,7 @@ import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'reac
 
 type Props = {
   queryReference: PreloadedQuery<pageSettings_rootQuery, Record<string, unknown>>;
-  onReloadRequire: () => void;
+  onReloadRequired: () => void;
 };
 
 const RootQuery = graphql`
@@ -22,14 +22,14 @@ const RootQuery = graphql`
   }
 `;
 
-const Settings = ({ queryReference, onReloadRequire }: Props) => {
+const Settings = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageSettings_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(() => true, []);
 
   return (
     <RootShell
       rootDataRelay={rootData}
-      onReloadRequire={onReloadRequire}
+      onReloadRequired={onReloadRequired}
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[]}
     >
@@ -52,7 +52,7 @@ const SettingsWithRelay = () => {
     );
   }, [loadQuery]);
 
-  const handleReloadRequire = () => {};
+  const handleReloadRequired = () => {};
 
   if (!queryReference) {
     return <Loading />;
@@ -60,7 +60,7 @@ const SettingsWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoSettings queryReference={queryReference} onReloadRequire={handleReloadRequire} />
+      <MemoSettings queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };
