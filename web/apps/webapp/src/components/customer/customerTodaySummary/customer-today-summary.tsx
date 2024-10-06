@@ -25,7 +25,7 @@ import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone'
 import { endOfDay, getCustomerFullName, startOfDay, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import NextLink from 'next/link';
-import { Fragment, memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -194,10 +194,10 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
         {bookings.length !== 0 && (
           <>
             {bookings.slice(0, bookings.length - 1).map((booking, index) => (
-              <Fragment key={index}>
+              <Stack key={index} direction="column" spacing={1}>
                 {getMyBookingComponent(booking)}
                 <Divider />
-              </Fragment>
+              </Stack>
             ))}
             {getMyBookingComponent(bookings[bookings.length - 1]!)}
           </>
@@ -318,10 +318,10 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
           {summerizedRows.length !== 0 && (
             <>
               {summerizedRows.slice(0, summerizedRows.length - 1).map((row, index) => (
-                <Fragment key={index}>
+                <Stack key={index} direction="column" spacing={1}>
                   {row}
                   <Divider />
-                </Fragment>
+                </Stack>
               ))}
               {summerizedRows[summerizedRows.length - 1]}
             </>
