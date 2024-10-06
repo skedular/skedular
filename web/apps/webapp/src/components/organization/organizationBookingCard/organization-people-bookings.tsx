@@ -802,7 +802,7 @@ const OrganizationPeopleBookings = ({
         ))}
       </Menu>
 
-      <Dialog fullWidth={true} open={organizationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingOrganizationClick}>
+      <Dialog open={organizationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingOrganizationClick}>
         <DialogTitle>Remove organization</DialogTitle>
         <DialogContent>
           <DialogContentText>

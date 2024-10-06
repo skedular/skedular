@@ -184,7 +184,7 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
         )}
       </Card>
 
-      <Dialog fullWidth={true} open={teamMemberRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamMemberClick}>
+      <Dialog open={teamMemberRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamMemberClick}>
         <DialogTitle>Remove desk</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove "${getCustomerFullName(customer)}"?`}</DialogContentText>

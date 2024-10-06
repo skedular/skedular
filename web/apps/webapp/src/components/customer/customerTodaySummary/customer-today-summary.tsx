@@ -1,4 +1,4 @@
-import { getLocationBaseLink } from '@/components/location';
+import { LocationLink } from '@/components/location';
 import { TeamLink } from '@/components/team';
 import type {
   customerTodaySummary_rootQuery,
@@ -9,8 +9,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid2';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Skeleton from '@mui/material/Skeleton';
@@ -24,7 +22,6 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { endOfDay, getCustomerFullName, startOfDay, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import NextLink from 'next/link';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -213,45 +210,34 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     const location = rootData.myLocations.find(({ id }) => id === locationId);
 
     return (
-      <Grid container spacing={1}>
-        <Grid>
-          <LocationIcon fontSize="small" color="primary" />
-        </Grid>
-        <Grid>
-          <Stack direction="column">
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Link component={NextLink} href={getLocationBaseLink(locationId, location?.organization?.uniqueId)}>
-                <Typography variant="h6">{location?.name}</Typography>
-              </Link>
-            </Stack>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <AvatarGroup max={10}>
-                {bookings.map((booking) => (
-                  <CustomerAvatar
-                    key={booking.customer?.uniqueId}
-                    name={booking.customer}
-                    photo={{ url: booking.customer?.photoUrl }}
-                    size="small"
-                    onClick={(event: React.MouseEvent<HTMLElement>) => {
-                      setBookingPopperMessage(`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`);
+      <Stack direction="column" spacing={1}>
+        <LocationLink organizationId={location?.organization?.uniqueId} id={locationId} name={location?.name} enableViewDetails />
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <AvatarGroup max={10}>
+            {bookings.map((booking) => (
+              <CustomerAvatar
+                key={booking.customer?.uniqueId}
+                name={booking.customer}
+                photo={{ url: booking.customer?.photoUrl }}
+                size="small"
+                onClick={(event: React.MouseEvent<HTMLElement>) => {
+                  setBookingPopperMessage(`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`);
 
-                      const uiqueId = `${locationId}-${booking.id}`;
+                  const uiqueId = `${locationId}-${booking.id}`;
 
-                      if (bookingPopperLatestUniqueId !== uiqueId) {
-                        setBookingPopperAnchorEl(event.currentTarget);
-                      } else {
-                        setBookingPopperAnchorEl(bookingPopperAnchorEl ? null : event.currentTarget);
-                      }
+                  if (bookingPopperLatestUniqueId !== uiqueId) {
+                    setBookingPopperAnchorEl(event.currentTarget);
+                  } else {
+                    setBookingPopperAnchorEl(bookingPopperAnchorEl ? null : event.currentTarget);
+                  }
 
-                      setBookingPopperLatestUniqueId(uiqueId);
-                    }}
-                  />
-                ))}
-              </AvatarGroup>
-            </Stack>
-          </Stack>
-        </Grid>
-      </Grid>
+                  setBookingPopperLatestUniqueId(uiqueId);
+                }}
+              />
+            ))}
+          </AvatarGroup>
+        </Stack>
+      </Stack>
     );
   };
 

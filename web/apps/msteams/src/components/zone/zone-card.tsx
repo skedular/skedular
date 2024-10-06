@@ -381,7 +381,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
         </Paper>
       )}
 
-      <Dialog fullWidth={true} open={zoneRemoveConfirmationDialogOpen} onClose={handleCancelRemovingZoneClick}>
+      <Dialog open={zoneRemoveConfirmationDialogOpen} onClose={handleCancelRemovingZoneClick}>
         <DialogTitle>Remove zone</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove the zone "${locationTagDetails.name}"?`}</DialogContentText>

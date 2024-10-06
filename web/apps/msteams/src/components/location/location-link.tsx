@@ -1,11 +1,17 @@
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { LocationIcon } from '@repo/shared/components/icons';
-import { memo } from 'react';
+import { LocationIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
+import { LocationBookingsCard } from 'components/location/locationBookingCard';
+import { memo, useState } from 'react';
 
 type Props = {
   organizationId?: string;
+  organizationName?: string;
   id: string;
   name?: string;
   excludeLink?: boolean;
@@ -15,6 +21,7 @@ type Props = {
   zonesLink?: boolean;
   desksLink?: boolean;
   analayticsLink?: boolean;
+  enableViewDetails?: boolean;
 };
 
 export const getLocationBaseLink = (id: string, organizationId?: string) =>
@@ -29,6 +36,7 @@ export const getLocationAnalyticsLink = (id: string, organizationId?: string) =>
 
 const LocationLink = ({
   organizationId,
+  organizationName,
   id,
   name,
   excludeLink,
@@ -38,7 +46,10 @@ const LocationLink = ({
   zonesLink,
   desksLink,
   analayticsLink,
+  enableViewDetails,
 }: Props) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   let href = '';
   if (bookingsLink) {
     href = getLocationBookingsLink(id, organizationId);
@@ -56,22 +67,53 @@ const LocationLink = ({
     href = getLocationBaseLink(id, organizationId);
   }
 
+  const handleViewDetailsClick = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleViewDetailsCloseClick = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
-    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-      <LocationIcon fontSize="small" color="primary" />
-      {excludeLink && (
-        <Typography variant="h6" color="primary">
-          {name}
-        </Typography>
-      )}
-      {!excludeLink && (
-        <Link href={href}>
+    <>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <LocationIcon fontSize="small" color="primary" />
+        {excludeLink && (
           <Typography variant="h6" color="primary">
             {name}
           </Typography>
-        </Link>
-      )}
-    </Stack>
+        )}
+        {!excludeLink && (
+          <Link href={href}>
+            <Typography variant="h6" color="primary">
+              {name}
+            </Typography>
+          </Link>
+        )}
+        {enableViewDetails && (
+          <Button size="small" color="warning" onClick={handleViewDetailsClick}>
+            <ViewDetailsIcon color="primary" />
+          </Button>
+        )}
+      </Stack>
+      <Dialog open={isDialogOpen}>
+        <DialogContent>
+          <LocationBookingsCard
+            organizationId={organizationId}
+            organizationName={organizationName}
+            locationId={id}
+            locationName={name}
+            locationsConnectionIds={[]}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" variant="contained" onClick={handleViewDetailsCloseClick}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

@@ -93,7 +93,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
   };
 
   return (
-    <Dialog fullWidth={true} open={isDialogOpen}>
+    <Dialog open={isDialogOpen}>
       <DialogTitle>Send us feedback</DialogTitle>
       <DialogContent>
         <Form

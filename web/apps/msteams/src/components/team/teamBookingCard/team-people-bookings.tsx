@@ -829,7 +829,7 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
         ))}
       </Menu>
 
-      <Dialog fullWidth={true} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
+      <Dialog open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
         <DialogTitle>Remove team</DialogTitle>
         <DialogContent>
           <DialogContentText>

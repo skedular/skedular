@@ -115,7 +115,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
   };
 
   return (
-    <Dialog fullWidth={true} open={isDialogOpen}>
+    <Dialog open={isDialogOpen}>
       <DialogTitle>Add Desk</DialogTitle>
       <DialogContent>
         <Form

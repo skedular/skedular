@@ -307,7 +307,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
         </Grid>
       </Stack>
 
-      <Dialog fullWidth={true} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
+      <Dialog open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
         <DialogTitle>Invite people to join your organization</DialogTitle>
         <DialogContent>
           <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>

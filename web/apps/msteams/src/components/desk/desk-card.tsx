@@ -760,7 +760,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
         ))}
       </Menu>
 
-      <Dialog fullWidth={true} open={deskRemoveConfirmationDialogOpen} onClose={handleCancelRemovingDeskClick}>
+      <Dialog open={deskRemoveConfirmationDialogOpen} onClose={handleCancelRemovingDeskClick}>
         <DialogTitle>Remove desk</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove desk "${deskDetails.name}"?`}</DialogContentText>
@@ -775,7 +775,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           </DialogActions>
         </DialogContent>
       </Dialog>
-      <Dialog fullWidth={true} open={deskDeactivateConfirmationDialogOpen} onClose={handleCancelDeactivateDeskClick}>
+      <Dialog open={deskDeactivateConfirmationDialogOpen} onClose={handleCancelDeactivateDeskClick}>
         <DialogTitle>Deactivate desk</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to deactivate desk "${deskDetails.name}"?`}</DialogContentText>
@@ -790,7 +790,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           </DialogActions>
         </DialogContent>
       </Dialog>
-      <Dialog fullWidth={true} open={deskActivateConfirmationDialogOpen} onClose={handleCancelActivateDeskClick}>
+      <Dialog open={deskActivateConfirmationDialogOpen} onClose={handleCancelActivateDeskClick}>
         <DialogTitle>Activate desk</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to activate desk "${deskDetails.name}"?`}</DialogContentText>
@@ -805,7 +805,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           </DialogActions>
         </DialogContent>
       </Dialog>
-      <Dialog fullWidth={true} open={setDeskApprovalRequirementConfirmationDialogOpen} onClose={handleCancelSetDeskApprovalRequirementClick}>
+      <Dialog open={setDeskApprovalRequirementConfirmationDialogOpen} onClose={handleCancelSetDeskApprovalRequirementClick}>
         <DialogTitle>Set Desk Approval Requirement</DialogTitle>
         <DialogContent>
           <DialogContentText color="info">{`Are you sure you want to enable approval for desk "${deskDetails.name}"?`}</DialogContentText>
@@ -821,11 +821,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
         </DialogContent>
       </Dialog>
 
-      <Dialog
-        fullWidth={true}
-        open={removeDeskApprovalRequirementConfirmationDialogOpen}
-        onClose={handleCancelRemoveDeskApprovalRequirementDeskClick}
-      >
+      <Dialog open={removeDeskApprovalRequirementConfirmationDialogOpen} onClose={handleCancelRemoveDeskApprovalRequirementDeskClick}>
         <DialogTitle>Remove Approval Requirement for Desk</DialogTitle>
         <DialogContent>
           <DialogContentText color="info">{`Are you sure you want to remove approval for desk "${deskDetails.name}"?`}</DialogContentText>

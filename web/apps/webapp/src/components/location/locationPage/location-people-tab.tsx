@@ -412,7 +412,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
           ))}
       </Grid>
 
-      <Dialog fullWidth={true} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
+      <Dialog open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
         <DialogTitle>Invite people to join your location</DialogTitle>
         <DialogContent>
           <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>

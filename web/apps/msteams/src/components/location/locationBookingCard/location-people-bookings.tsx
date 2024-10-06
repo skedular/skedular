@@ -845,7 +845,7 @@ const LocationPeopleBookings = ({
         ))}
       </Menu>
 
-      <Dialog fullWidth={true} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
+      <Dialog open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
         <DialogTitle>Remove location</DialogTitle>
         <DialogContent>
           <DialogContentText>

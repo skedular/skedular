@@ -114,7 +114,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
   };
 
   return (
-    <Dialog fullWidth={true} open={isDialogOpen}>
+    <Dialog open={isDialogOpen}>
       <DialogTitle>Add Desk</DialogTitle>
       <DialogContent>
         <Form

@@ -179,7 +179,7 @@ const NewBookingDialog = ({
   }
 
   return (
-    <Dialog fullWidth={true} open={isDialogOpen}>
+    <Dialog open={isDialogOpen}>
       <DialogTitle>Add Booking</DialogTitle>
       <DialogContent>
         <Form
