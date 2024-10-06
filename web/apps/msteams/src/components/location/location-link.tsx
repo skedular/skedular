@@ -22,6 +22,7 @@ type Props = {
   desksLink?: boolean;
   analayticsLink?: boolean;
   enableViewDetails?: boolean;
+  onReloadRequired?: () => void;
 };
 
 export const getLocationBaseLink = (id: string, organizationId?: string) =>
@@ -47,6 +48,7 @@ const LocationLink = ({
   desksLink,
   analayticsLink,
   enableViewDetails,
+  onReloadRequired,
 }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -73,6 +75,10 @@ const LocationLink = ({
 
   const handleViewDetailsCloseClick = () => {
     setIsDialogOpen(false);
+
+    if (onReloadRequired) {
+      onReloadRequired();
+    }
   };
 
   return (

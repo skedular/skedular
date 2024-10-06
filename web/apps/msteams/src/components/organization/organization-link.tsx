@@ -22,6 +22,7 @@ type Props = {
   billingLink?: boolean;
   analayticsLink?: boolean;
   enableViewDetails?: boolean;
+  onReloadRequired?: () => void;
 };
 
 export const getOrganizationBaseLink = (id: string) => `/organization/${id}`;
@@ -48,6 +49,7 @@ const OrganizationLink = ({
   billingLink,
   analayticsLink,
   enableViewDetails,
+  onReloadRequired,
 }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -78,6 +80,10 @@ const OrganizationLink = ({
 
   const handleViewDetailsCloseClick = () => {
     setIsDialogOpen(false);
+
+    if (onReloadRequired) {
+      onReloadRequired();
+    }
   };
 
   return (

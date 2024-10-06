@@ -19,6 +19,7 @@ type Props = {
   settingsLink?: boolean;
   peopleLink?: boolean;
   enableViewDetails?: boolean;
+  onReloadRequired?: () => void;
 };
 
 export const getTeamBaseLink = (id: string, organizationId?: string) =>
@@ -28,7 +29,18 @@ export const getTeamBookingsLink = (id: string, organizationId?: string) => `${g
 export const getTeamSettingsLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=about`;
 export const getTeamPeopleLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=people`;
 
-const TeamLink = ({ organizationId, organizationName, id, name, excludeLink, bookingsLink, settingsLink, peopleLink, enableViewDetails }: Props) => {
+const TeamLink = ({
+  organizationId,
+  organizationName,
+  id,
+  name,
+  excludeLink,
+  bookingsLink,
+  settingsLink,
+  peopleLink,
+  enableViewDetails,
+  onReloadRequired,
+}: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   let href = '';
@@ -48,6 +60,10 @@ const TeamLink = ({ organizationId, organizationName, id, name, excludeLink, boo
 
   const handleViewDetailsCloseClick = () => {
     setIsDialogOpen(false);
+
+    if (onReloadRequired) {
+      onReloadRequired();
+    }
   };
 
   return (
