@@ -1,9 +1,9 @@
 import { LocationLink } from '@/components/location';
 import { TeamLink } from '@/components/team';
 import type {
-  customerTodaySummary_rootQuery,
-  customerTodaySummary_rootQuery$data,
-} from '@/queries/__generated__/customerTodaySummary_rootQuery.graphql';
+  customerTomorrowSummary_rootQuery,
+  customerTomorrowSummary_rootQuery$data,
+} from '@/queries/__generated__/customerTomorrowSummary_rootQuery.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -27,13 +27,13 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
-  queryReference: PreloadedQuery<customerTodaySummary_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<customerTomorrowSummary_rootQuery, Record<string, unknown>>;
   date: Dayjs;
   onReloadRequired: () => void;
 };
 
 const RootQuery = graphql`
-  query customerTodaySummary_rootQuery($from: DateTime!, $to: DateTime!) {
+  query customerTomorrowSummary_rootQuery($from: DateTime!, $to: DateTime!) {
     me {
       id
     }
@@ -86,8 +86,8 @@ const RootQuery = graphql`
   }
 `;
 
-const CustomerTodaySummary = ({ queryReference,date, onReloadRequired }: Props) => {
-  const rootData = usePreloadedQuery<customerTodaySummary_rootQuery>(RootQuery, queryReference);
+const CustomerTomorrowSummary = ({ queryReference, date, onReloadRequired }: Props) => {
+  const rootData = usePreloadedQuery<customerTomorrowSummary_rootQuery>(RootQuery, queryReference);
   const [bookingPopperAnchorEl, setBookingPopperAnchorEl] = useState<null | HTMLElement>(null);
   const [bookingPopperLatestUniqueId, setBookingPopperLatestUniqueId] = useState<string>('');
   const [bookingPopperMessage, setBookingPopperMessage] = useState<string>('');
@@ -143,7 +143,7 @@ const CustomerTodaySummary = ({ queryReference,date, onReloadRequired }: Props) 
     [otherBookings],
   );
 
-  const getMyBookingComponent = (booking: customerTodaySummary_rootQuery$data['allBookings'][number]) => (
+  const getMyBookingComponent = (booking: customerTomorrowSummary_rootQuery$data['allBookings'][number]) => (
     <Stack key={booking.id} direction="column">
       {booking.location && (
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
@@ -185,7 +185,7 @@ const CustomerTodaySummary = ({ queryReference,date, onReloadRequired }: Props) 
     </Stack>
   );
 
-  const getMyBookingsComponents = (bookings: customerTodaySummary_rootQuery$data['allBookings']) => (
+  const getMyBookingsComponents = (bookings: customerTomorrowSummary_rootQuery$data['allBookings']) => (
     <Stack direction="column">
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         {bookings.length !== 0 && <Typography variant="h6">You</Typography>}
@@ -294,7 +294,7 @@ const CustomerTodaySummary = ({ queryReference,date, onReloadRequired }: Props) 
         <CardHeader
           title={
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="body1">{`Today ${toShortDateWithDayAndMonthOnly(date)}`}</Typography>
+              <Typography variant="body1">{`Tomorrow ${toShortDateWithDayAndMonthOnly(date)}`}</Typography>
             </Stack>
           }
           subheader={getMyBookingsComponents(myBookings)}
@@ -322,31 +322,31 @@ const CustomerTodaySummary = ({ queryReference,date, onReloadRequired }: Props) 
   );
 };
 
-const MemoCustomerTodaySummary = memo(CustomerTodaySummary);
+const MemoCustomerTomorrowSummary = memo(CustomerTomorrowSummary);
 
 type RelayProps = {};
 
-const CustomerTodaySummaryWithRelay = ({}: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<customerTodaySummary_rootQuery>(RootQuery);
-  const [today] = useState(startOfDay());
+const CustomerTomorrowSummaryWithRelay = ({}: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<customerTomorrowSummary_rootQuery>(RootQuery);
+  const [tomorrow] = useState(startOfDay().add(1, 'day'));
 
   useEffect(() => {
     loadQuery(
       {
-        from: today.toISOString(),
-        to: endOfDay(today).toISOString(),
+        from: tomorrow.toISOString(),
+        to: endOfDay(tomorrow).toISOString(),
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, today]);
+  }, [loadQuery, tomorrow]);
 
   const handleReloadRequired = () => {
     loadQuery(
       {
-        from: today.toISOString(),
-        to: endOfDay(today).toISOString(),
+        from: tomorrow.toISOString(),
+        to: endOfDay(tomorrow).toISOString(),
       },
       {
         fetchPolicy: 'store-and-network',
@@ -366,9 +366,9 @@ const CustomerTodaySummaryWithRelay = ({}: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoCustomerTodaySummary queryReference={queryReference} date={today} onReloadRequired={handleReloadRequired} />
+      <MemoCustomerTomorrowSummary queryReference={queryReference} date={tomorrow} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };
 
-export default memo(CustomerTodaySummaryWithRelay);
+export default memo(CustomerTomorrowSummaryWithRelay);
