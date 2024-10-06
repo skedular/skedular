@@ -1,18 +1,25 @@
+import { TeamBookingsCard } from '@/components/team/teamBookingCard';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { TeamIcon } from '@repo/shared/components/icons';
+import { TeamIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
 import NextLink from 'next/link';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
 type Props = {
   organizationId?: string;
+  organizationName?: string;
   id: string;
   name?: string;
   excludeLink?: boolean;
   bookingsLink?: boolean;
   settingsLink?: boolean;
   peopleLink?: boolean;
+  enableViewDetails?: boolean;
 };
 
 export const getTeamBaseLink = (id: string, organizationId?: string) =>
@@ -22,7 +29,9 @@ export const getTeamBookingsLink = (id: string, organizationId?: string) => `${g
 export const getTeamSettingsLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=about`;
 export const getTeamPeopleLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=people`;
 
-const TeamLink = ({ organizationId, id, name, excludeLink, bookingsLink, settingsLink, peopleLink }: Props) => {
+const TeamLink = ({ organizationId, organizationName, id, name, excludeLink, bookingsLink, settingsLink, peopleLink, enableViewDetails }: Props) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   let href = '';
   if (bookingsLink) {
     href = getTeamBookingsLink(id, organizationId);
@@ -34,22 +43,47 @@ const TeamLink = ({ organizationId, id, name, excludeLink, bookingsLink, setting
     href = getTeamBaseLink(id, organizationId);
   }
 
+  const handleViewDetailsClick = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleViewDetailsCloseClick = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
-    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-      <TeamIcon fontSize="small" color="primary" />
-      {excludeLink && (
-        <Typography variant="h6" color="primary">
-          {name}
-        </Typography>
-      )}
-      {!excludeLink && (
-        <Link component={NextLink} href={href}>
+    <>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <TeamIcon fontSize="small" color="primary" />
+        {excludeLink && (
           <Typography variant="h6" color="primary">
             {name}
           </Typography>
-        </Link>
-      )}
-    </Stack>
+        )}
+        {!excludeLink && (
+          <Link component={NextLink} href={href}>
+            <Typography variant="h6" color="primary">
+              {name}
+            </Typography>
+          </Link>
+        )}
+        {enableViewDetails && (
+          <Button size="small" color="warning" onClick={handleViewDetailsClick}>
+            <ViewDetailsIcon color="primary" />
+          </Button>
+        )}
+      </Stack>
+      <Dialog open={isDialogOpen}>
+        <DialogContent>
+          <TeamBookingsCard organizationId={organizationId} organizationName={organizationName} teamId={id} teamName={name} teamsConnectionIds={[]} />
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" variant="contained" onClick={handleViewDetailsCloseClick}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

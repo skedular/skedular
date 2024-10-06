@@ -56,7 +56,7 @@ type Props = {
   rootDataRelay: locationPeopleBookings_query$key;
   organizationId?: string;
   locationId: string;
-  locationName: string;
+  locationName?: string;
   locationsConnectionIds: string[];
   hideRemoveLocationOption?: boolean;
 };

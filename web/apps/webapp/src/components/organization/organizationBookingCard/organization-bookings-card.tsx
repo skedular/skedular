@@ -15,7 +15,7 @@ import OrganizationPeopleBookings from './organization-people-bookings';
 type Props = {
   queryReference: PreloadedQuery<organizationBookingsCard_rootQuery, Record<string, unknown>>;
   organizationId: string;
-  organizationName: string;
+  organizationName?: string;
   organizationsConnectionIds: string[];
   hideRemoveOrganizationOption?: boolean;
 };
@@ -56,7 +56,7 @@ const MemoOrganizationBookingsCard = memo(OrganizationBookingsCard);
 
 type RelayProps = {
   organizationId: string;
-  organizationName: string;
+  organizationName?: string;
   organizationsConnectionIds: string[];
   hideRemoveOrganizationOption?: boolean;
 };

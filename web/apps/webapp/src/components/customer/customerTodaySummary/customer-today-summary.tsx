@@ -1,5 +1,5 @@
 import { getLocationBaseLink } from '@/components/location';
-import { getTeamBaseLink } from '@/components/team';
+import { TeamLink } from '@/components/team';
 import type {
   customerTodaySummary_rootQuery,
   customerTodaySummary_rootQuery$data,
@@ -74,6 +74,7 @@ const RootQuery = graphql`
       name
       organization {
         uniqueId
+        name
       }
     }
     myTeams {
@@ -81,6 +82,7 @@ const RootQuery = graphql`
       name
       organization {
         uniqueId
+        name
       }
     }
   }
@@ -91,6 +93,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
   const [bookingPopperAnchorEl, setBookingPopperAnchorEl] = useState<null | HTMLElement>(null);
   const [bookingPopperLatestUniqueId, setBookingPopperLatestUniqueId] = useState<string>('');
   const [bookingPopperMessage, setBookingPopperMessage] = useState<string>('');
+
   const myBookings = useMemo(
     () => rootData.allBookings.filter(({ customer: { uniqueId } }) => uniqueId === rootData.me?.id),
     [rootData.allBookings, rootData.me?.id],
@@ -256,45 +259,34 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
     const team = rootData.myTeams.find(({ id }) => id === teamId);
 
     return (
-      <Grid container spacing={1}>
-        <Grid>
-          <TeamIcon fontSize="small" color="primary" />
-        </Grid>
-        <Grid>
-          <Stack direction="column">
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Link component={NextLink} href={getTeamBaseLink(teamId, team?.organization?.uniqueId)}>
-                <Typography variant="h6">{team?.name}</Typography>
-              </Link>
-            </Stack>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <AvatarGroup max={10}>
-                {bookings.map((booking) => (
-                  <CustomerAvatar
-                    key={booking.customer?.uniqueId}
-                    name={booking.customer}
-                    photo={{ url: booking.customer?.photoUrl }}
-                    size="small"
-                    onClick={(event: React.MouseEvent<HTMLElement>) => {
-                      setBookingPopperMessage(`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`);
+      <Stack direction="column" spacing={1}>
+        <TeamLink organizationId={team?.organization?.uniqueId} id={teamId} name={team?.name} enableViewDetails />
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <AvatarGroup max={10}>
+            {bookings.map((booking) => (
+              <CustomerAvatar
+                key={booking.customer?.uniqueId}
+                name={booking.customer}
+                photo={{ url: booking.customer?.photoUrl }}
+                size="small"
+                onClick={(event: React.MouseEvent<HTMLElement>) => {
+                  setBookingPopperMessage(`${getCustomerFullName(booking.customer)} - ${getBookingSummaryMessage(booking, false)}`);
 
-                      const uiqueId = `${teamId}-${booking.id}`;
+                  const uiqueId = `${teamId}-${booking.id}`;
 
-                      if (bookingPopperLatestUniqueId !== uiqueId) {
-                        setBookingPopperAnchorEl(event.currentTarget);
-                      } else {
-                        setBookingPopperAnchorEl(bookingPopperAnchorEl ? null : event.currentTarget);
-                      }
+                  if (bookingPopperLatestUniqueId !== uiqueId) {
+                    setBookingPopperAnchorEl(event.currentTarget);
+                  } else {
+                    setBookingPopperAnchorEl(bookingPopperAnchorEl ? null : event.currentTarget);
+                  }
 
-                      setBookingPopperLatestUniqueId(uiqueId);
-                    }}
-                  />
-                ))}
-              </AvatarGroup>
-            </Stack>
-          </Stack>
-        </Grid>
-      </Grid>
+                  setBookingPopperLatestUniqueId(uiqueId);
+                }}
+              />
+            ))}
+          </AvatarGroup>
+        </Stack>
+      </Stack>
     );
   };
 

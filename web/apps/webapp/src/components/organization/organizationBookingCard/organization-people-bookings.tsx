@@ -46,7 +46,7 @@ import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
 type Props = {
   rootDataRelay: organizationPeopleBookings_query$key;
   organizationId: string;
-  organizationName: string;
+  organizationName?: string;
   organizationsConnectionIds: string[];
   hideRemoveOrganizationOption?: boolean;
 };

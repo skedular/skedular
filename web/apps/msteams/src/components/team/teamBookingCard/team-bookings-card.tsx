@@ -19,7 +19,7 @@ type Props = {
   queryReference: PreloadedQuery<teamBookingsCard_rootQuery, Record<string, unknown>>;
   organizationId?: string;
   teamId: string;
-  teamName: string;
+  teamName?: string;
   teamsConnectionIds: string[];
   hideRemoveTeamOption?: boolean;
 };
@@ -57,7 +57,7 @@ type RelayProps = {
   organizationId?: string;
   organizationName?: string;
   teamId: string;
-  teamName: string;
+  teamName?: string;
   teamsConnectionIds: string[];
   hideRemoveTeamOption?: boolean;
 };

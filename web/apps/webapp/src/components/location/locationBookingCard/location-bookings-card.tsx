@@ -18,7 +18,7 @@ type Props = {
   queryReference: PreloadedQuery<locationBookingsCard_rootQuery, Record<string, unknown>>;
   organizationId?: string;
   locationId: string;
-  locationName: string;
+  locationName?: string;
   locationsConnectionIds: string[];
   hideRemoveLocationOption?: boolean;
 };
@@ -63,7 +63,7 @@ type RelayProps = {
   organizationId?: string;
   organizationName?: string;
   locationId: string;
-  locationName: string;
+  locationName?: string;
   locationsConnectionIds: string[];
   hideRemoveLocationOption?: boolean;
 };

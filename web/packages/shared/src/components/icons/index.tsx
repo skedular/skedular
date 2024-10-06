@@ -3,6 +3,7 @@ import CorporateFare from '@mui/icons-material/CorporateFare';
 import DateRange from '@mui/icons-material/DateRange';
 import Desk from '@mui/icons-material/Desk';
 import Diversity3 from '@mui/icons-material/Diversity3';
+import Fullscreen from '@mui/icons-material/Fullscreen';
 import Home from '@mui/icons-material/Home';
 import Info from '@mui/icons-material/Info';
 import Link from '@mui/icons-material/Link';
@@ -203,5 +204,14 @@ export const WorkingFromHomeIcon = ({ fontSize, excludeTooltip, tip, color }: Pr
   ) : (
     <TooltipIcon tip={tip ?? 'Working from home'}>
       <Home fontSize={fontSize} color={color ?? 'action'} />
+    </TooltipIcon>
+  );
+
+export const ViewDetailsIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+  excludeTooltip ? (
+    <Fullscreen fontSize={fontSize} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'View details'}>
+      <Fullscreen fontSize={fontSize} color={color} />
     </TooltipIcon>
   );

@@ -44,7 +44,7 @@ type Props = {
   rootDataRelay: teamPeopleBookings_query$key;
   organizationId?: string;
   teamId: string;
-  teamName: string;
+  teamName?: string;
   teamsConnectionIds: string[];
   hideRemoveTeamOption?: boolean;
 };
