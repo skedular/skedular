@@ -7,6 +7,7 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { LocationIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import NextLink from 'next/link';
 import { memo, useState } from 'react';
 
@@ -104,7 +105,7 @@ const LocationLink = ({
           </Button>
         )}
       </Stack>
-      <Dialog open={isDialogOpen}>
+      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
         <DialogContent>
           <LocationBookingsCard
             organizationId={organizationId}

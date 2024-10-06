@@ -7,6 +7,7 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { TeamIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import NextLink from 'next/link';
 import { memo, useState } from 'react';
 
@@ -89,7 +90,7 @@ const TeamLink = ({
           </Button>
         )}
       </Stack>
-      <Dialog open={isDialogOpen}>
+      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
         <DialogContent>
           <TeamBookingsCard organizationId={organizationId} organizationName={organizationName} teamId={id} teamName={name} teamsConnectionIds={[]} />
         </DialogContent>

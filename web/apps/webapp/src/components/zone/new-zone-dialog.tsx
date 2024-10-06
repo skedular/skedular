@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import { TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
@@ -93,7 +94,7 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
   };
 
   return (
-    <Dialog open={isDialogOpen}>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
       <DialogTitle>Add Zone</DialogTitle>
       <DialogContent>
         <Form

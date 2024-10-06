@@ -42,6 +42,7 @@ import {
   PreferredIcon,
   SettingsIcon,
 } from '@repo/shared/components/icons';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
@@ -849,7 +850,7 @@ const LocationPeopleBookings = ({
         ))}
       </Menu>
 
-      <Dialog open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
+      <Dialog TransitionComponent={DialogTransition} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
         <DialogTitle>Remove location</DialogTitle>
         <DialogContent>
           <DialogContentText>

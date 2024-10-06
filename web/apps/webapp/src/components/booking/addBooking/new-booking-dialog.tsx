@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
@@ -179,7 +180,7 @@ const NewBookingDialog = ({
   }
 
   return (
-    <Dialog open={isDialogOpen}>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
       <DialogTitle>Make a booking</DialogTitle>
       <DialogContent>
         <Form

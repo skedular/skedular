@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { DangerIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import { TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
@@ -381,7 +382,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
         </Paper>
       )}
 
-      <Dialog open={zoneRemoveConfirmationDialogOpen} onClose={handleCancelRemovingZoneClick}>
+      <Dialog TransitionComponent={DialogTransition} open={zoneRemoveConfirmationDialogOpen} onClose={handleCancelRemovingZoneClick}>
         <DialogTitle>Remove zone</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove the zone "${locationTagDetails.name}"?`}</DialogContentText>

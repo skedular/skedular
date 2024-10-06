@@ -21,6 +21,7 @@ import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BookingIcon as BookingIconComponent } from '@repo/shared/components/booking';
 import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
@@ -803,7 +804,7 @@ const OrganizationPeopleBookings = ({
         ))}
       </Menu>
 
-      <Dialog open={organizationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingOrganizationClick}>
+      <Dialog TransitionComponent={DialogTransition} open={organizationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingOrganizationClick}>
         <DialogTitle>Remove organization</DialogTitle>
         <DialogContent>
           <DialogContentText>

@@ -7,6 +7,7 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { OrganizationIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import NextLink from 'next/link';
 import { memo, useState } from 'react';
 
@@ -109,7 +110,7 @@ const OrganizationLink = ({
           </Button>
         )}
       </Stack>
-      <Dialog open={isDialogOpen}>
+      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
         <DialogContent>
           <OrganizationBookingsCard organizationId={id} organizationName={name} organizationsConnectionIds={[]} />
         </DialogContent>
