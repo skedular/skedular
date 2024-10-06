@@ -30,7 +30,7 @@ import {
 } from '@repo/shared/components/icons';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { endOfDay, getCustomerFullName, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
+import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -389,10 +389,9 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       return;
     }
 
-    const finalDate = date as unknown as Dayjs;
-    const start = startOfDay(finalDate);
+    const start = date as unknown as Dayjs;
     const from = start.toISOString();
-    const to = endOfDay(finalDate).toISOString();
+    const to = endOfDay(start).toISOString();
     const shortDateTimeFormatFrom = toShortDate(start);
 
     commitUpdateBooking({

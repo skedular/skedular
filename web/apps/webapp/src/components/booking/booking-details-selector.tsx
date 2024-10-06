@@ -6,6 +6,7 @@ import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
+import { Dayjs } from 'dayjs';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
@@ -33,8 +34,8 @@ type Props = {
   deskRequired?: boolean;
   hideDesksControl: boolean;
 
-  bookingFrom: any;
-  bookingTo: any;
+  bookingFrom: Dayjs | Date;
+  bookingTo: Dayjs | Date;
 };
 
 interface OrganizationDetails {

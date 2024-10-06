@@ -36,8 +36,8 @@ const startOfDay = (date?: Dayjs | string | null | undefined) => {
   return finalDate.startOf('day');
 };
 
-const endOfDay = (date?: Dayjs | string | null | undefined) => {
-  return startOfDay(date).add(1, 'day').add(-1, 'milliseconds');
+const endOfDay = (date: Dayjs | string) => {
+  return dayjs(date).add(1, 'day').add(-1, 'milliseconds');
 };
 
 const startOfWeek = (date?: Dayjs | string | null | undefined) => {
