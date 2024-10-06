@@ -192,7 +192,7 @@ const TeamBookingsTab = ({ rootDataRelay, organizationId, teamId }: Props) => {
       <Stack direction="column" spacing={1}>
         <Stack direction="row" sx={{ width: 'auto' }}>
           <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddBookingClick}>
-            Add Booking
+            Make a booking
           </Button>
         </Stack>
 

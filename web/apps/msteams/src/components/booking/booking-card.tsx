@@ -297,14 +297,14 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to add booking '${shortDateFormatFrom}'. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to make a booking '${shortDateFormatFrom}'. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
         }
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to add booking '${shortDateFormatFrom}'. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to make a booking '${shortDateFormatFrom}'. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });

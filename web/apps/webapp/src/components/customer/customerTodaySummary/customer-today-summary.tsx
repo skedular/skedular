@@ -5,6 +5,7 @@ import type {
   customerTodaySummary_rootQuery$data,
 } from '@/queries/__generated__/customerTodaySummary_rootQuery.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -16,7 +17,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getBookingSummaryMessage } from '@repo/shared/components/booking';
-import { DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
+import { DeskIcon, LocationIcon, NewIcon, TeamIcon } from '@repo/shared/components/icons';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
@@ -86,7 +87,7 @@ const RootQuery = graphql`
   }
 `;
 
-const CustomerTodaySummary = ({ queryReference,date, onReloadRequired }: Props) => {
+const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<customerTodaySummary_rootQuery>(RootQuery, queryReference);
   const [bookingPopperAnchorEl, setBookingPopperAnchorEl] = useState<null | HTMLElement>(null);
   const [bookingPopperLatestUniqueId, setBookingPopperLatestUniqueId] = useState<string>('');
@@ -188,10 +189,15 @@ const CustomerTodaySummary = ({ queryReference,date, onReloadRequired }: Props) 
   const getMyBookingsComponents = (bookings: customerTodaySummary_rootQuery$data['allBookings']) => (
     <Stack direction="column">
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        {bookings.length !== 0 && <Typography variant="h6">You</Typography>}
         {bookings.length === 0 && <Typography variant="h6">You have no booking</Typography>}
+        {bookings.length !== 0 && <Typography variant="h6">You</Typography>}
       </Stack>
       <Stack direction="column">
+        {bookings.length === 0 && (
+          <Button variant="contained" startIcon={<NewIcon />} size="small" sx={{ alignSelf: 'flex-start' }}>
+            Make a booking
+          </Button>
+        )}
         {bookings.length !== 0 && (
           <>
             {bookings.slice(0, bookings.length - 1).map((booking, index) => (

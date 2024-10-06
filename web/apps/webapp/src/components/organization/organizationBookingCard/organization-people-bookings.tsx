@@ -520,7 +520,7 @@ const OrganizationPeopleBookings = ({
         },
         onCompleted: (response, errors) => {
           if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to add booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
+            enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
               variant: 'error',
               anchorOrigin,
             });
@@ -550,7 +550,7 @@ const OrganizationPeopleBookings = ({
           enqueueSnackbar(message, { variant: 'success', anchorOrigin });
         },
         onError: (error) => {
-          enqueueSnackbar(`Failed to add booking '${fromToPrint}'. Error: ${error.message}`, {
+          enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {
             variant: 'error',
             anchorOrigin,
           });

@@ -69,7 +69,7 @@ public class BookingComponents(
             new Button
             {
                 ActionId = BookingActionTypes.AddBooking,
-                Text = "Add Booking".ToPlainTextWithIcon(Icons.New),
+                Text = "Make a booking".ToPlainTextWithIcon(Icons.New),
                 Value = context
             }
         ];

@@ -144,7 +144,7 @@ const NewBookingDialog = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to add booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -153,7 +153,7 @@ const NewBookingDialog = ({
         }
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to add booking '${fromToPrint}'. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
@@ -180,7 +180,7 @@ const NewBookingDialog = ({
 
   return (
     <Dialog open={isDialogOpen}>
-      <DialogTitle>Add Booking</DialogTitle>
+      <DialogTitle>Make a booking</DialogTitle>
       <DialogContent>
         <Form
           onSubmit={handleAddClick}
