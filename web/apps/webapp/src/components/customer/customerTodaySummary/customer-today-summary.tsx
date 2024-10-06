@@ -29,6 +29,7 @@ import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'reac
 type Props = {
   queryReference: PreloadedQuery<customerTodaySummary_rootQuery, Record<string, unknown>>;
   today: Dayjs;
+  onReloadRequired: () => void;
 };
 
 const RootQuery = graphql`
@@ -85,7 +86,7 @@ const RootQuery = graphql`
   }
 `;
 
-const CustomerTodaySummary = ({ queryReference }: Props) => {
+const CustomerTodaySummary = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<customerTodaySummary_rootQuery>(RootQuery, queryReference);
   const [bookingPopperAnchorEl, setBookingPopperAnchorEl] = useState<null | HTMLElement>(null);
   const [bookingPopperLatestUniqueId, setBookingPopperLatestUniqueId] = useState<string>('');
@@ -211,7 +212,13 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
 
     return (
       <Stack direction="column" spacing={1}>
-        <LocationLink organizationId={location?.organization?.uniqueId} id={locationId} name={location?.name} enableViewDetails />
+        <LocationLink
+          organizationId={location?.organization?.uniqueId}
+          id={locationId}
+          name={location?.name}
+          enableViewDetails
+          onReloadRequired={onReloadRequired}
+        />
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <AvatarGroup max={10}>
             {bookings.map((booking) => (
@@ -246,7 +253,7 @@ const CustomerTodaySummary = ({ queryReference }: Props) => {
 
     return (
       <Stack direction="column" spacing={1}>
-        <TeamLink organizationId={team?.organization?.uniqueId} id={teamId} name={team?.name} enableViewDetails />
+        <TeamLink organizationId={team?.organization?.uniqueId} id={teamId} name={team?.name} enableViewDetails onReloadRequired={onReloadRequired} />
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <AvatarGroup max={10}>
             {bookings.map((booking) => (
@@ -335,6 +342,18 @@ const CustomerTodaySummaryWithRelay = ({}: RelayProps) => {
     );
   }, [loadQuery, today]);
 
+  const handleReloadRequired = () => {
+    loadQuery(
+      {
+        from: today.toISOString(),
+        to: endOfDay(today).toISOString(),
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  };
+
   if (!queryReference) {
     return (
       <Card sx={{ maxWidth: 500, height: '100%' }}>
@@ -347,7 +366,7 @@ const CustomerTodaySummaryWithRelay = ({}: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoCustomerTodaySummary queryReference={queryReference} today={today} />
+      <MemoCustomerTodaySummary queryReference={queryReference} today={today} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };
