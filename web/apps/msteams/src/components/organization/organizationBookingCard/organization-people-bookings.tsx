@@ -29,8 +29,6 @@ import graphql from 'babel-plugin-relay/macro';
 import { OrganizationLink } from 'components/organization';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
-import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useState, useTransition } from 'react';
 import { useMutation, useRefetchableFragment } from 'react-relay';
@@ -267,7 +265,6 @@ const OrganizationPeopleBookings = ({
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const router = useRouter();
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
@@ -749,12 +746,12 @@ const OrganizationPeopleBookings = ({
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
               <Stack direction="row">
-                <Link component={NextLink} href={`/organization/${organizationId}?tab=bookings`}>
+                <Link href={`/organization/${organizationId}?tab=bookings`}>
                   <BookingIcon />
                 </Link>
 
                 {rootData.organization.canModify && (
-                  <Link component={NextLink} href={`/organization/${organizationId}?tab=about`}>
+                  <Link href={`/organization/${organizationId}?tab=about`}>
                     <SettingsIcon color="secondary" />
                   </Link>
                 )}
