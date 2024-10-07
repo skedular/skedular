@@ -64,6 +64,10 @@ const OrganizationMemberAttendancyInsight = ({ rootDataRelay, organizationId, hi
     handleRefetch(from, until);
   };
 
+  if (!rootData.organizationAnalytics) {
+    return <> </>;
+  }
+
   const dataset =
     rootData.organizationAnalytics.memberAttendancePercentage.length === 0
       ? [{ date: 'No data available', percentage: 0 }]

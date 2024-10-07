@@ -96,29 +96,31 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
     });
   }, [refetch, date]);
 
-  const connectionIds = useMemo(() => [rootData.monthlyBookings.__id], [rootData.monthlyBookings]);
+  const connectionIds = useMemo(() => (rootData.monthlyBookings ? [rootData.monthlyBookings.__id] : []), [rootData.monthlyBookings]);
 
-  const nodes = useMemo(
-    () =>
-      rootData.monthlyBookings.edges
-        .map((edge) => edge.node)
-        .sort((node1, node2) => {
-          if (dayjs(node1.from).isBefore(dayjs(node2.from))) {
-            return -1;
-          }
+  const nodes = useMemo(() => {
+    if (!rootData.monthlyBookings) {
+      return [];
+    }
 
-          if (dayjs(node1.from).isAfter(dayjs(node2.from))) {
-            return 1;
-          }
+    return rootData.monthlyBookings.edges
+      .map((edge) => edge.node)
+      .sort((node1, node2) => {
+        if (dayjs(node1.from).isBefore(dayjs(node2.from))) {
+          return -1;
+        }
 
-          return 0;
-        }),
-    [rootData.monthlyBookings.edges],
-  );
+        if (dayjs(node1.from).isAfter(dayjs(node2.from))) {
+          return 1;
+        }
+
+        return 0;
+      });
+  }, [rootData.monthlyBookings]);
 
   const [pageContextOpen, setPageContextOpen] = useState(false);
   const organizations = useMemo<OrganizationDetails[]>(
-    () => rootData.myOrganizations.map((organization) => organization),
+    () => (rootData.myOrganizations ? rootData.myOrganizations.map((organization) => organization) : []),
     [rootData.myOrganizations],
   );
 

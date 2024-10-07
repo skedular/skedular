@@ -73,7 +73,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
   const { enqueueSnackbar } = useSnackbar();
 
   const renderDay = (props: PickersDayProps<Dayjs>): JSX.Element => {
-    if (!rootData.monthlyBookings.__id) {
+    if (!rootData.monthlyBookings || !rootData.monthlyBookings.__id) {
       return <></>;
     }
 

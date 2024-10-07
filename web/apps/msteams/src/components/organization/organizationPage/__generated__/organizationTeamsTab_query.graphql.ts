@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9f82d843ce88fd0fb961cab788dbc8ef>>
+ * @generated SignedSource<<be8ad3c3fc004bc0f6d7281b2a275bb2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,7 +28,7 @@ export type organizationTeamsTab_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  };
+  } | null | undefined;
   readonly " $fragmentType": "organizationTeamsTab_query";
 };
 export type organizationTeamsTab_query$key = {

@@ -93,7 +93,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           id
           name
         }
-        organizationBookingPermissions(organizationId: $organizationId) {
+        organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {
           canUpdateBookingOnBehalf
           canDeleteBookingOnBehalf
         }
@@ -697,7 +697,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                     organizationMemberName="member"
                     organizationMemberRequired={requiredFields.member}
                     hideOrganizationMemberControl={true}
-                    defaultLocationId={ bookingDetails.location?.uniqueId}
+                    defaultLocationId={bookingDetails.location?.uniqueId}
                     locationName="location"
                     locationRequired={requiredFields.location}
                     hideLocationControl={hideLocationControl}

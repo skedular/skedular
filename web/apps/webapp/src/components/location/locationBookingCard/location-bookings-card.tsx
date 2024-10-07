@@ -28,6 +28,7 @@ const RootQuery = graphql`
     $peopleNameSearchText: String!
     $peopleSortingValues: [LocationMemberOrderInput!]!
     $locationId: String!
+    $locationExists: Boolean!
     $from: DateTime!
     $to: DateTime!
   ) {
@@ -91,7 +92,8 @@ const LocationBookingsWithRelay = ({
           },
         ],
         peopleNameSearchText: '',
-        locationId: locationId,
+        locationId,
+        locationExists: !!locationId,
         from: startDate.toISOString(),
         to: endDate.toISOString(),
       },

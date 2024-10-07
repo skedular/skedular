@@ -38,8 +38,8 @@ type Query {
         last: Int
         where: LocationWhereInput!
         orderBy: [LocationOrderInput!]
-    ): LocationConnection!
-    myLocations(organizationId: String): [LocationDetails!]!
+    ): LocationConnection
+    myLocations(organizationId: String): [LocationDetails!]
     paginatedLocationMembers(
         after: String
         first: Int
@@ -47,11 +47,11 @@ type Query {
         last: Int
         where: LocationMemberWhereInput!
         orderBy: [LocationMemberOrderInput!]
-    ): LocationMemberConnection!
+    ): LocationMemberConnection
     locationMembers(
         where: LocationMemberWhereInput!
         orderBy: [LocationMemberOrderInput!]
-    ): [LocationMemberDetails!]!
+    ): [LocationMemberDetails!]
     paginatedLocationTags(
         after: String
         first: Int
@@ -59,7 +59,7 @@ type Query {
         last: Int
         where: LocationTagWhereInput!
         orderBy: [LocationTagOrderInput!]
-    ): LocationTagConnection!
+    ): LocationTagConnection
     paginatedLocationDesks(
         after: String
         first: Int
@@ -67,12 +67,12 @@ type Query {
         last: Int
         where: DeskWhereInput!
         orderBy: [DeskOrderInput!]
-    ): DeskConnection!
+    ): DeskConnection
     locationAnalytics(
         locationId: String!
         from: DateTime!
         until: DateTime!
-    ): LocationAnalytics!
+    ): LocationAnalytics
 }
 
 input LocationWhereInput {

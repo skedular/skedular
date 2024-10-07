@@ -94,7 +94,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           id
           name
         }
-        organizationBookingPermissions(organizationId: $organizationId) {
+        organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {
           canUpdateBookingOnBehalf
           canDeleteBookingOnBehalf
         }
@@ -633,12 +633,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                     </Tooltip>
                   )}
 
-                  <ZonesLine
-                    zones={zones.map(({ uniqueId, name }) => ({
-                      id: uniqueId,
-                      name,
-                    }))}
-                  />
+                  <ZonesLine zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
                 </Stack>
               );
             })}

@@ -318,19 +318,19 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Team;
             
 
                 
-                public abstract Task<TeamConnection> TeamsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] TeamWhereInput where, [HotChocolate.GraphQLName("orderBy")] TeamOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<TeamConnection?> TeamsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] TeamWhereInput where, [HotChocolate.GraphQLName("orderBy")] TeamOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<TeamDetails[]> MyTeamsAsync([HotChocolate.GraphQLName("organizationId")] string? organizationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<TeamDetails[]?> MyTeamsAsync([HotChocolate.GraphQLName("organizationId")] string? organizationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<TeamMemberConnection> PaginatedTeamMembersAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] TeamMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] TeamMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<TeamMemberConnection?> PaginatedTeamMembersAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] TeamMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] TeamMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<TeamMemberDetails[]> TeamMembersAsync([HotChocolate.GraphQLName("where")] TeamMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] TeamMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<TeamMemberDetails[]?> TeamMembersAsync([HotChocolate.GraphQLName("where")] TeamMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] TeamMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
         }
         
 

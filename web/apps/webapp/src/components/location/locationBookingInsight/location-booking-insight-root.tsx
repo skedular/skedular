@@ -21,7 +21,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query locationBookingInsightRoot_rootQuery($locationId: String!, $from: DateTime!, $to: DateTime!) {
+  query locationBookingInsightRoot_rootQuery($locationId: String!, $locationExists: Boolean!, $from: DateTime!, $to: DateTime!) {
     ...locationBookingInsight_query
   }
 `;
@@ -58,6 +58,7 @@ const LocationBookingInsightRootWithRelay = ({ organizationId, locationId, locat
     loadQuery(
       {
         locationId,
+        locationExists: !!locationId,
         from: from.toISOString(),
         to: to.toISOString(),
       },

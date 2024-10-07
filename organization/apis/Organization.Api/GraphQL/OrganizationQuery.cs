@@ -78,7 +78,7 @@ public class OrganizationQuery(IMapper mapper) : Query
         return mapper.MapTo(organization);
     }
 
-    public override async Task<OrganizationConnection> OrganizationsAsync(
+    public override async Task<OrganizationConnection?> OrganizationsAsync(
         string? after,
         int? first,
         string? before,
@@ -92,7 +92,7 @@ public class OrganizationQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new OrganizationConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
@@ -132,7 +132,7 @@ public class OrganizationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<OrganizationDetails[]> MyOrganizationsAsync(
+    public override async Task<OrganizationDetails[]?> MyOrganizationsAsync(
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
@@ -141,7 +141,7 @@ public class OrganizationQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return [];
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
@@ -149,7 +149,7 @@ public class OrganizationQuery(IMapper mapper) : Query
         return mapper.MapTo(organizations).ToArray();
     }
 
-    public override async Task<OrganizationMemberConnection> PaginatedOrganizationMembersAsync(
+    public override async Task<OrganizationMemberConnection?> PaginatedOrganizationMembersAsync(
         string? after,
         int? first,
         string? before, int? last,
@@ -158,16 +158,13 @@ public class OrganizationQuery(IMapper mapper) : Query
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(where.OrganizationId))
-        {
-            return new OrganizationMemberConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(where.OrganizationId);
 
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new OrganizationMemberConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<IOrganizationMemberService>();
@@ -220,18 +217,25 @@ public class OrganizationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<OrganizationMemberDetails[]> OrganizationMembersAsync(
+    public override async Task<OrganizationMemberDetails[]?> OrganizationMembersAsync(
         OrganizationMemberWhereInput where,
         OrganizationMemberOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
-        var result = await PaginatedOrganizationMembersAsync(null, null, null, null, where, [], serviceProvider,
+        var result = await PaginatedOrganizationMembersAsync(
+            null,
+            null,
+            null,
+            null,
+            where,
+            [],
+            serviceProvider,
             cancellationToken);
-        return result.Edges.Select(item => item.Node).ToArray();
+        return result?.Edges.Select(item => item.Node).ToArray();
     }
 
-    public override async Task<OrganizationAnalytics> OrganizationAnalyticsAsync(
+    public override async Task<OrganizationAnalytics?> OrganizationAnalyticsAsync(
         string organizationId,
         DateTimeOffset from,
         DateTimeOffset until,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5ac6a5e1486ffe189097a4345b1937b8>>
+ * @generated SignedSource<<09147c9c30f57f99eaf2ee9c3cbe7d96>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,13 +14,13 @@ export type organizationPaymentMethods_query$data = {
   readonly organization: {
     readonly id: string;
   } | null | undefined;
-  readonly organizationPaymentMethodsDetails: ReadonlyArray<{
+  readonly organizationPaymentMethodsDetails?: ReadonlyArray<{
     readonly cardBrand: string | null | undefined;
     readonly cardExpiryMonth: number | null | undefined;
     readonly cardExpiryYear: number | null | undefined;
     readonly cardLastFourDigit: string | null | undefined;
     readonly id: string;
-  }>;
+  }> | null | undefined;
   readonly " $fragmentType": "organizationPaymentMethods_query";
 };
 export type organizationPaymentMethods_query$key = {
@@ -38,6 +38,10 @@ var v0 = {
 };
 return {
   "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "organizationExists"
+    },
     {
       "kind": "RootArgument",
       "name": "organizationId"
@@ -66,50 +70,57 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "organizationId",
-          "variableName": "organizationId"
-        }
-      ],
-      "concreteType": "OrganizationPaymentMethod",
-      "kind": "LinkedField",
-      "name": "organizationPaymentMethodsDetails",
-      "plural": true,
+      "condition": "organizationExists",
+      "kind": "Condition",
+      "passingValue": true,
       "selections": [
-        (v0/*: any*/),
         {
           "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "cardBrand",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "cardExpiryMonth",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "cardExpiryYear",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "cardLastFourDigit",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "organizationId",
+              "variableName": "organizationId"
+            }
+          ],
+          "concreteType": "OrganizationPaymentMethod",
+          "kind": "LinkedField",
+          "name": "organizationPaymentMethodsDetails",
+          "plural": true,
+          "selections": [
+            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cardBrand",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cardExpiryMonth",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cardExpiryYear",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cardLastFourDigit",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
-      ],
-      "storageKey": null
+      ]
     }
   ],
   "type": "Query",
@@ -117,6 +128,6 @@ return {
 };
 })();
 
-(node as any).hash = "07ee450d9b1de5f937e01d2d6d832387";
+(node as any).hash = "07bab7bc45565ad7d8a5af24c5b9c721";
 
 export default node;

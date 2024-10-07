@@ -493,27 +493,27 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Booking;
             
 
                 
-                public abstract Task<BookingConnection> BookingsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] BookingWhereInput where, [HotChocolate.GraphQLName("orderBy")] BookingOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<BookingConnection?> BookingsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] BookingWhereInput where, [HotChocolate.GraphQLName("orderBy")] BookingOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<BookingDetails[]> AllBookingsAsync([HotChocolate.GraphQLName("where")] BookingWhereInput where, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<BookingDetails[]?> AllBookingsAsync([HotChocolate.GraphQLName("where")] BookingWhereInput where, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<BookingDeskDetails[]> AvailableLocationDesksAsync([HotChocolate.GraphQLName("locationId")] string locationId, [HotChocolate.GraphQLName("date")] DateTimeOffset date, [HotChocolate.GraphQLName("deskIdsToInclude")] string[] deskIdsToInclude, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<BookingDeskDetails[]?> AvailableLocationDesksAsync([HotChocolate.GraphQLName("locationId")] string locationId, [HotChocolate.GraphQLName("date")] DateTimeOffset date, [HotChocolate.GraphQLName("deskIdsToInclude")] string[] deskIdsToInclude, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<OrganizationBookingPermissions> OrganizationBookingPermissionsAsync([HotChocolate.GraphQLName("organizationId")] string organizationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<OrganizationBookingPermissions?> OrganizationBookingPermissionsAsync([HotChocolate.GraphQLName("organizationId")] string organizationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<LocationBookingPermissions> LocationBookingPermissionsAsync([HotChocolate.GraphQLName("locationId")] string locationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<LocationBookingPermissions?> LocationBookingPermissionsAsync([HotChocolate.GraphQLName("locationId")] string locationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<TeamBookingPermissions> TeamBookingPermissionsAsync([HotChocolate.GraphQLName("teamId")] string teamId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<TeamBookingPermissions?> TeamBookingPermissionsAsync([HotChocolate.GraphQLName("teamId")] string teamId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
         }
         
 

@@ -46,7 +46,7 @@ import type { locationPeopleBookings_addBookingMutation } from './__generated__/
 import type { locationPeopleBookings_addCustomerDefaultLocationMutation } from './__generated__/locationPeopleBookings_addCustomerDefaultLocationMutation.graphql';
 import type { locationPeopleBookings_deleteBookingMutation } from './__generated__/locationPeopleBookings_deleteBookingMutation.graphql';
 import type { locationPeopleBookings_deleteLocationMutation } from './__generated__/locationPeopleBookings_deleteLocationMutation.graphql';
-import type { locationPeopleBookings_query$data, locationPeopleBookings_query$key } from './__generated__/locationPeopleBookings_query.graphql';
+import type { locationPeopleBookings_query$key } from './__generated__/locationPeopleBookings_query.graphql';
 import type { locationPeopleBookings_removeCustomerDefaultLocationMutation } from './__generated__/locationPeopleBookings_removeCustomerDefaultLocationMutation.graphql';
 import type { LocationMemberOrderInput } from './__generated__/locationPeopleBookingsLocationMembers_PaginationQuery.graphql';
 
@@ -99,29 +99,58 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
 };
 
 type CustomerDetails = {
-  uniqueId: string;
-  name: string | null | undefined;
-  givenName: string | null | undefined;
-  middleName: string | null | undefined;
-  familyName: string | null | undefined;
-  photoUrl: string | null | undefined;
+  readonly uniqueId: string;
+  readonly givenName?: string | null | undefined;
+  readonly middleName?: string | null | undefined;
+  readonly familyName?: string | null | undefined;
+  readonly name?: string | null | undefined;
+  readonly photoUrl?: string | null | undefined;
+};
+
+type LocationDetails = {
+  readonly name?: string | null | undefined;
+};
+
+type LocationTagDetails = {
+  readonly uniqueId: string;
+  readonly name?: string | null | undefined;
+  readonly tagType?: string | null | undefined;
+};
+
+type DeskDetails = {
+  readonly name?: string | null | undefined;
+  readonly locationTags: ReadonlyArray<LocationTagDetails>;
+};
+
+type TeamDetails = {
+  readonly name?: string | null | undefined;
 };
 
 type BookingDetails = {
+  readonly id: string;
+  readonly customer: CustomerDetails;
+  readonly location?: LocationDetails | null | undefined;
+  readonly team?: TeamDetails | null | undefined;
+  readonly desks: ReadonlyArray<DeskDetails>;
+  readonly from: any;
+  readonly to: any;
+};
+
+type BookingAndCustomerDetails = {
   customer: CustomerDetails;
-  booking: locationPeopleBookings_query$data['allBookings'][number] | undefined;
+  booking: BookingDetails | null | undefined;
 };
 
 type RowType = {
   id: string;
   person: CustomerDetails;
-  mon: BookingDetails;
-  tue: BookingDetails;
-  wed: BookingDetails;
-  thu: BookingDetails;
-  fri: BookingDetails;
-  sat: BookingDetails;
-  sun: BookingDetails;
+  mon: BookingAndCustomerDetails;
+  tue: BookingAndCustomerDetails;
+  wed: BookingAndCustomerDetails;
+  thu: BookingAndCustomerDetails;
+  fri: BookingAndCustomerDetails;
+  sat: BookingAndCustomerDetails;
+  sun: BookingAndCustomerDetails;
 };
 
 const dayIndex: { [key: string]: number } = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
@@ -139,7 +168,8 @@ const LocationPeopleBookings = ({
   const [rootData, refetch] = useRefetchableFragment(
     graphql`
       fragment locationPeopleBookings_query on Query @refetchable(queryName: "locationPeopleBookingsLocationMembers_PaginationQuery") {
-        locationMembers(where: { locationId: $locationId, nameContains: $peopleNameSearchText }, orderBy: $peopleSortingValues) {
+        locationMembers(where: { locationId: $locationId, nameContains: $peopleNameSearchText }, orderBy: $peopleSortingValues)
+          @include(if: $locationExists) {
           id
           customer {
             uniqueId
@@ -150,7 +180,7 @@ const LocationPeopleBookings = ({
             photoUrl
           }
         }
-        customersByDefaultLocation(where: { locationId: $locationId, nameContains: $peopleNameSearchText }) {
+        customersByDefaultLocation(where: { locationId: $locationId, nameContains: $peopleNameSearchText }) @include(if: $locationExists) {
           id
           name
           givenName
@@ -175,7 +205,7 @@ const LocationPeopleBookings = ({
             name
           }
         }
-        locationBookingPermissions(locationId: $locationId) {
+        locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {
           canAddBookingOnBehalf
           canDeleteBookingOnBehalf
         }
@@ -310,6 +340,7 @@ const LocationPeopleBookings = ({
             organizationId: organizationId ?? '',
             fetchBookingPermission: !!organizationId,
             locationId,
+            locationExists: !!locationId,
             from: startDate.toISOString(),
             to: endDate.toISOString(),
           },
@@ -322,6 +353,10 @@ const LocationPeopleBookings = ({
     [refetch, sortingLocationMemberOrder, peopleNameSearchText, organizationId, locationId],
   );
 
+  if (!rootData.me || !rootData.location || !rootData.locationMembers || !rootData.customersByDefaultLocation) {
+    return <></>;
+  }
+
   const allMembers = rootData.location?.organization
     ? rootData.customersByDefaultLocation.map((customer) => ({ ...customer, uniqueId: customer.id }))
     : rootData.locationMembers.map((member) => member.customer);
@@ -332,54 +367,60 @@ const LocationPeopleBookings = ({
     finalMembersList = [meAsMember, ...otherMembers];
   }
 
-  const rows: RowType[] = finalMembersList.map((customer) => {
-    const customerId = customer.uniqueId;
+  const rows: RowType[] = finalMembersList
+    .map((customer) => {
+      if (!rootData.allBookings) {
+        return null;
+      }
 
-    return {
-      id: customerId,
-      person: customer,
-      mon: {
-        customer,
-        booking: rootData.allBookings.find((booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString()),
-      },
-      tue: {
-        customer,
-        booking: rootData.allBookings.find(
-          (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(1, 'day').toISOString(),
-        ),
-      },
-      wed: {
-        customer,
-        booking: rootData.allBookings.find(
-          (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(2, 'day').toISOString(),
-        ),
-      },
-      thu: {
-        customer,
-        booking: rootData.allBookings.find(
-          (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(3, 'day').toISOString(),
-        ),
-      },
-      fri: {
-        customer,
-        booking: rootData.allBookings.find(
-          (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(4, 'day').toISOString(),
-        ),
-      },
-      sat: {
-        customer,
-        booking: rootData.allBookings.find(
-          (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(5, 'day').toISOString(),
-        ),
-      },
-      sun: {
-        customer,
-        booking: rootData.allBookings.find(
-          (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(6, 'day').toISOString(),
-        ),
-      },
-    };
-  });
+      const customerId = customer.uniqueId;
+
+      return {
+        id: customerId,
+        person: customer,
+        mon: {
+          customer,
+          booking: rootData.allBookings.find((booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString()),
+        },
+        tue: {
+          customer,
+          booking: rootData.allBookings.find(
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(1, 'day').toISOString(),
+          ),
+        },
+        wed: {
+          customer,
+          booking: rootData.allBookings.find(
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(2, 'day').toISOString(),
+          ),
+        },
+        thu: {
+          customer,
+          booking: rootData.allBookings.find(
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(3, 'day').toISOString(),
+          ),
+        },
+        fri: {
+          customer,
+          booking: rootData.allBookings.find(
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(4, 'day').toISOString(),
+          ),
+        },
+        sat: {
+          customer,
+          booking: rootData.allBookings.find(
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(5, 'day').toISOString(),
+          ),
+        },
+        sun: {
+          customer,
+          booking: rootData.allBookings.find(
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(6, 'day').toISOString(),
+          ),
+        },
+      };
+    })
+    .filter((row) => !!row);
 
   const getApplyQuickFilterNameSearch: GetApplyQuickFilterFn<any, unknown> = (value) => {
     return (cellValue) => {
@@ -469,7 +510,7 @@ const LocationPeopleBookings = ({
   ];
 
   const handleCellClick = (params: GridCellParams, event: MuiEvent, details: GridCallbackDetails) => {
-    const { customer, booking } = params.value as BookingDetails;
+    const { customer, booking } = params.value as BookingAndCustomerDetails;
     if (!booking && !rootData.locationBookingPermissions?.canAddBookingOnBehalf && rootData.me?.id !== customer.uniqueId) {
       enqueueSnackbar(`You are not authorized to make a booking on behalf of someone else`, {
         variant: 'error',
@@ -595,10 +636,6 @@ const LocationPeopleBookings = ({
 
     handleRefetch(start);
   };
-
-  if (!rootData.me || !rootData.location) {
-    return <></>;
-  }
 
   const rowCount = rootData.location.organization ? rootData.customersByDefaultLocation.length : rootData.locationMembers.length;
 

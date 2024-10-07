@@ -1051,31 +1051,31 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Location;
             
 
                 
-                public abstract Task<LocationConnection> LocationsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] LocationWhereInput where, [HotChocolate.GraphQLName("orderBy")] LocationOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<LocationConnection?> LocationsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] LocationWhereInput where, [HotChocolate.GraphQLName("orderBy")] LocationOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<LocationDetails[]> MyLocationsAsync([HotChocolate.GraphQLName("organizationId")] string? organizationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<LocationDetails[]?> MyLocationsAsync([HotChocolate.GraphQLName("organizationId")] string? organizationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<LocationMemberConnection> PaginatedLocationMembersAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] LocationMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] LocationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<LocationMemberConnection?> PaginatedLocationMembersAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] LocationMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] LocationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<LocationMemberDetails[]> LocationMembersAsync([HotChocolate.GraphQLName("where")] LocationMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] LocationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<LocationMemberDetails[]?> LocationMembersAsync([HotChocolate.GraphQLName("where")] LocationMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] LocationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<LocationTagConnection> PaginatedLocationTagsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] LocationTagWhereInput where, [HotChocolate.GraphQLName("orderBy")] LocationTagOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<LocationTagConnection?> PaginatedLocationTagsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] LocationTagWhereInput where, [HotChocolate.GraphQLName("orderBy")] LocationTagOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<DeskConnection> PaginatedLocationDesksAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] DeskWhereInput where, [HotChocolate.GraphQLName("orderBy")] DeskOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<DeskConnection?> PaginatedLocationDesksAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] DeskWhereInput where, [HotChocolate.GraphQLName("orderBy")] DeskOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<LocationAnalytics> LocationAnalyticsAsync([HotChocolate.GraphQLName("locationId")] string locationId, [HotChocolate.GraphQLName("from")] DateTimeOffset from, [HotChocolate.GraphQLName("until")] DateTimeOffset until, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<LocationAnalytics?> LocationAnalyticsAsync([HotChocolate.GraphQLName("locationId")] string locationId, [HotChocolate.GraphQLName("from")] DateTimeOffset from, [HotChocolate.GraphQLName("until")] DateTimeOffset until, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
         }
         
 

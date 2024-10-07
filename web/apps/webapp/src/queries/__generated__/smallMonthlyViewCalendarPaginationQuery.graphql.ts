@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3b75e1c53efc981cd2eade82bf94e180>>
+ * @generated SignedSource<<4abbf42c773949c1f8bbb1a01cfee42e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,6 +32,7 @@ export type smallMonthlyViewCalendarPaginationQuery$variables = {
   locationId: string;
   monthlyCalendarDateFrom?: any | null | undefined;
   monthlyCalendarDateTo?: any | null | undefined;
+  organizationExists: boolean;
   organizationId: string;
   smallMonthlyViewCalendarBookingsSortingValues?: ReadonlyArray<BookingOrderInput> | null | undefined;
 };
@@ -94,6 +95,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "monthlyCalendarDateTo"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationExists"
   },
   {
     "defaultValue": null,
@@ -531,29 +537,107 @@ return {
         "storageKey": null
       },
       {
-        "alias": null,
-        "args": (v19/*: any*/),
-        "concreteType": "OrganizationBookingPermissions",
-        "kind": "LinkedField",
-        "name": "organizationBookingPermissions",
-        "plural": false,
+        "condition": "organizationExists",
+        "kind": "Condition",
+        "passingValue": true,
         "selections": [
           {
             "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "canUpdateBookingOnBehalf",
+            "args": (v19/*: any*/),
+            "concreteType": "OrganizationBookingPermissions",
+            "kind": "LinkedField",
+            "name": "organizationBookingPermissions",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "canUpdateBookingOnBehalf",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "canDeleteBookingOnBehalf",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "canDeleteBookingOnBehalf",
+            "alias": "bookingDetailsSelectorQueryPaginatedOrganizationMembers",
+            "args": (v20/*: any*/),
+            "concreteType": "OrganizationMemberConnection",
+            "kind": "LinkedField",
+            "name": "paginatedOrganizationMembers",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "totalCount",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationMemberEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "OrganizationMemberDetails",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "OrganizationCustomerDetails",
+                        "kind": "LinkedField",
+                        "name": "customer",
+                        "plural": false,
+                        "selections": [
+                          (v4/*: any*/),
+                          (v5/*: any*/),
+                          (v6/*: any*/),
+                          (v7/*: any*/),
+                          (v8/*: any*/),
+                          (v3/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      (v11/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v12/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v13/*: any*/),
+              (v14/*: any*/)
+            ],
             "storageKey": null
+          },
+          {
+            "alias": "bookingDetailsSelectorQueryPaginatedOrganizationMembers",
+            "args": (v20/*: any*/),
+            "filters": (v15/*: any*/),
+            "handle": "connection",
+            "key": "bookingDetailsSelectorQuery_bookingDetailsSelectorQueryPaginatedOrganizationMembers",
+            "kind": "LinkedHandle",
+            "name": "paginatedOrganizationMembers"
           }
-        ],
-        "storageKey": null
+        ]
       },
       {
         "condition": "locationExists",
@@ -587,87 +671,16 @@ return {
             "storageKey": null
           }
         ]
-      },
-      {
-        "alias": "bookingDetailsSelectorQueryPaginatedOrganizationMembers",
-        "args": (v20/*: any*/),
-        "concreteType": "OrganizationMemberConnection",
-        "kind": "LinkedField",
-        "name": "paginatedOrganizationMembers",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "totalCount",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationMemberEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "OrganizationMemberDetails",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "OrganizationCustomerDetails",
-                    "kind": "LinkedField",
-                    "name": "customer",
-                    "plural": false,
-                    "selections": [
-                      (v4/*: any*/),
-                      (v5/*: any*/),
-                      (v6/*: any*/),
-                      (v7/*: any*/),
-                      (v8/*: any*/),
-                      (v3/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  (v11/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v12/*: any*/)
-            ],
-            "storageKey": null
-          },
-          (v13/*: any*/),
-          (v14/*: any*/)
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": "bookingDetailsSelectorQueryPaginatedOrganizationMembers",
-        "args": (v20/*: any*/),
-        "filters": (v15/*: any*/),
-        "handle": "connection",
-        "key": "bookingDetailsSelectorQuery_bookingDetailsSelectorQueryPaginatedOrganizationMembers",
-        "kind": "LinkedHandle",
-        "name": "paginatedOrganizationMembers"
       }
     ]
   },
   "params": {
-    "cacheID": "80f5468754b813d92beeb857e40501e5",
+    "cacheID": "2c132a20fe5fffafbdaf12e6e9ffed7d",
     "id": null,
     "metadata": {},
     "name": "smallMonthlyViewCalendarPaginationQuery",
     "operationKind": "query",
-    "text": "query smallMonthlyViewCalendarPaginationQuery(\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n  $count: Int = 1000\n  $cursor: String\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $locationExists: Boolean!\n  $locationId: String!\n  $monthlyCalendarDateFrom: DateTime\n  $monthlyCalendarDateTo: DateTime\n  $organizationId: String!\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  ...smallMonthlyViewCalendar_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    preferredDesks {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canUpdateBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  ...bookingDetailsSelector_query\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) @include(if: $locationExists) {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n  bookingDetailsSelectorQueryPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_query_1G22uz on Query {\n  monthlyBookings: bookings(first: $count, after: $cursor, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          photoUrl\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  ...bookingCard_query\n}\n"
+    "text": "query smallMonthlyViewCalendarPaginationQuery(\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n  $count: Int = 1000\n  $cursor: String\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $locationExists: Boolean!\n  $locationId: String!\n  $monthlyCalendarDateFrom: DateTime\n  $monthlyCalendarDateTo: DateTime\n  $organizationExists: Boolean!\n  $organizationId: String!\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  ...smallMonthlyViewCalendar_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    preferredDesks {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canUpdateBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  ...bookingDetailsSelector_query\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) @include(if: $locationExists) {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n  bookingDetailsSelectorQueryPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_query_1G22uz on Query {\n  monthlyBookings: bookings(first: $count, after: $cursor, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          photoUrl\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  ...bookingCard_query\n}\n"
   }
 };
 })();

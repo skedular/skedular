@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9197240dbcafdc41932a6d2b525a3dab>>
+ * @generated SignedSource<<916692087f9dc9d0e28f491d34e73dd0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -67,6 +67,10 @@ const node: ReaderFragment = {
     {
       "kind": "RootArgument",
       "name": "locationNameSearchText"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationExists"
     },
     {
       "kind": "RootArgument",

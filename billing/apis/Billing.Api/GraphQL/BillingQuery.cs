@@ -33,7 +33,7 @@ public class BillingQuery(IMapper mapper) : Query
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override Task<OrganizationCurrentOfferingChargesDetails[]> OrganizationCurrentOfferingChargesAsync(
+    public override Task<OrganizationCurrentOfferingChargesDetails[]?> OrganizationCurrentOfferingChargesAsync(
         string organizationId, IServiceProvider serviceProvider,
         CancellationToken cancellationToken) =>
         throw new NotImplementedException();

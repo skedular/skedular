@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b80b9ed72760a19d9ffe544d18c16a19>>
+ * @generated SignedSource<<b4d732afd8b1aa8036f7878abf478cb5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,7 @@ export type teams_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  };
+  } | null | undefined;
   readonly " $fragmentType": "teams_query";
 };
 export type teams_query$key = {

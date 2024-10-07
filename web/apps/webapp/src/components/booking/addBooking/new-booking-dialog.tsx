@@ -76,7 +76,7 @@ const NewBookingDialog = ({
         me {
           id
         }
-        organizationBookingPermissions(organizationId: $organizationId) {
+        organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {
           canAddBookingOnBehalf
         }
         ...bookingDetailsSelector_query

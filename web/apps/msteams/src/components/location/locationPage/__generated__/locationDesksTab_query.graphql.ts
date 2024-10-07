@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<79d916f9095fccbf74a59c74112d38e0>>
+ * @generated SignedSource<<2584622cf52275a7fff71954a31fdb0a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,11 +24,11 @@ export type locationDesksTab_query$data = {
       readonly uniqueId: string;
     }>;
     readonly id: string;
-  }>;
+  }> | null | undefined;
   readonly location: {
     readonly canModify: boolean;
   } | null | undefined;
-  readonly paginatedLocationDesks: {
+  readonly paginatedLocationDesks?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -37,7 +37,7 @@ export type locationDesksTab_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  };
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"bulkNewDeskDialog_query" | "deskCard_query" | "deskMultipleChoicesZones_query" | "newDeskDialog_query">;
   readonly " $fragmentType": "locationDesksTab_query";
 };
@@ -91,6 +91,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "fromToGetBookings"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "locationExists"
     },
     {
       "kind": "RootArgument",
@@ -155,69 +159,84 @@ return {
       "storageKey": null
     },
     {
-      "alias": "paginatedLocationDesks",
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "deskSortingValues"
-        },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "locationId",
-              "variableName": "locationId"
-            },
-            {
-              "kind": "Variable",
-              "name": "nameContains",
-              "variableName": "deskNameSearchText"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
-        }
-      ],
-      "concreteType": "DeskConnection",
-      "kind": "LinkedField",
-      "name": "__locationDesksTab_paginatedLocationDesks_connection",
-      "plural": false,
+      "condition": "locationExists",
+      "kind": "Condition",
+      "passingValue": true,
       "selections": [
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "DeskEdge",
+          "alias": "paginatedLocationDesks",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "orderBy",
+              "variableName": "deskSortingValues"
+            },
+            {
+              "fields": [
+                {
+                  "kind": "Variable",
+                  "name": "locationId",
+                  "variableName": "locationId"
+                },
+                {
+                  "kind": "Variable",
+                  "name": "nameContains",
+                  "variableName": "deskNameSearchText"
+                }
+              ],
+              "kind": "ObjectValue",
+              "name": "where"
+            }
+          ],
+          "concreteType": "DeskConnection",
           "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "name": "__locationDesksTab_paginatedLocationDesks_connection",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "DeskDetails",
+              "kind": "ScalarField",
+              "name": "totalCount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "DeskEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
-                (v1/*: any*/),
                 {
+                  "alias": null,
                   "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "deskCard_DeskDetails"
+                  "concreteType": "DeskDetails",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    (v1/*: any*/),
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "deskCard_DeskDetails"
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__typename",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "cursor",
                   "storageKey": null
                 }
               ],
@@ -226,52 +245,44 @@ return {
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
+              "concreteType": "PageInfo",
+              "kind": "LinkedField",
+              "name": "pageInfo",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "endCursor",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasNextPage",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
+              "kind": "ClientExtension",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__id",
+                  "storageKey": null
+                }
+              ]
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
-      ],
-      "storageKey": null
+      ]
     },
     {
       "args": null,
@@ -398,6 +409,6 @@ return {
 };
 })();
 
-(node as any).hash = "5dfbe20f35d573b6bd4e8dce51618884";
+(node as any).hash = "b1be78d6a8bf7b7f2aa14cbce637face";
 
 export default node;

@@ -125,11 +125,14 @@ const Locations = ({ rootDataRelay }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => [rootData.locations?.__id], [rootData.locations]);
-  const locations = useMemo(() => rootData.locations, [rootData.locations]);
-  const slicedEdges = locations.edges?.slice(
+  const connectionIds = useMemo(() => (rootData.locations ? [rootData.locations.__id] : []), [rootData.locations]);
+  if (!rootData.locations) {
+    return <></>;
+  }
+
+  const slicedEdges = rootData.locations.edges?.slice(
     page * pageSize,
-    page * pageSize + pageSize > locations.edges.length ? locations.edges.length : page * pageSize + pageSize,
+    page * pageSize + pageSize > rootData.locations.edges.length ? rootData.locations.edges.length : page * pageSize + pageSize,
   );
 
   const handleSortingChanged = (direction: Direction, value: string) => {
@@ -169,7 +172,7 @@ const Locations = ({ rootDataRelay }: Props) => {
 
       <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
         <TablePagination
-          count={locations?.totalCount ? locations.totalCount : 0}
+          count={rootData.locations.totalCount ? rootData.locations.totalCount : 0}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={pageSize}

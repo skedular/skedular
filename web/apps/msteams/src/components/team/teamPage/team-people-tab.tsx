@@ -37,6 +37,7 @@ import TeamMemberCard from './team-member-card';
 type Props = {
   rootDataRelay: teamPeopleTab_query$key;
   organizationId: string | null;
+  teamId: string;
 };
 
 interface TeamDetails {
@@ -64,7 +65,7 @@ const membersToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
+const TeamPeopleTab = ({ rootDataRelay, organizationId, teamId }: Props) => {
   const {
     data: rootData,
     loadNext,
@@ -97,7 +98,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
           after: $cursor
           where: { teamId: $teamId, nameContains: $peopleNameSearchText }
           orderBy: $teamPeopleSortingValues
-        ) @connection(key: "teamPeopleTab_paginatedTeamMembers") {
+        ) @connection(key: "teamPeopleTab_paginatedTeamMembers") @include(if: $teamExists) {
           __id
           totalCount
           edges {
@@ -186,6 +187,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
             count: pageSize,
             teamPeopleSortingValues: [order],
             peopleNameSearchText,
+            teamExists: !!teamId,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -196,7 +198,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
         );
       });
     },
-    [refetch],
+    [refetch, teamId],
   );
 
   const loadNextPage = useCallback(() => {
@@ -318,7 +320,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
     setInvitePeopleDialogOpen(false);
   };
 
-  if (!rootData.team) {
+  if (!rootData.team || !rootData.paginatedTeamMembers) {
     return <></>;
   }
 

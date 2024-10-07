@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3b25d4a28f849a5a26f34a046cbe24fd>>
+ * @generated SignedSource<<5c447f7962a78c12f79e610d89c5864e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type organizationPeopleTab_query$data = {
     readonly id: string;
     readonly name: string;
   } | null | undefined;
-  readonly paginatedOrganizationMembers: {
+  readonly paginatedOrganizationMembers?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -25,7 +25,7 @@ export type organizationPeopleTab_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  };
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"organizationSingleChoiceMembershipType_query">;
   readonly " $fragmentType": "organizationPeopleTab_query";
 };
@@ -56,6 +56,10 @@ return {
       "defaultValue": null,
       "kind": "LocalArgument",
       "name": "cursor"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationExists"
     },
     {
       "kind": "RootArgument",
@@ -133,69 +137,84 @@ return {
       "name": "organizationSingleChoiceMembershipType_query"
     },
     {
-      "alias": "paginatedOrganizationMembers",
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "organizationPeopleSortingValues"
-        },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "nameContains",
-              "variableName": "peopleNameSearchText"
-            },
-            {
-              "kind": "Variable",
-              "name": "organizationId",
-              "variableName": "organizationId"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
-        }
-      ],
-      "concreteType": "OrganizationMemberConnection",
-      "kind": "LinkedField",
-      "name": "__organizationPeopleTab_paginatedOrganizationMembers_connection",
-      "plural": false,
+      "condition": "organizationExists",
+      "kind": "Condition",
+      "passingValue": true,
       "selections": [
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationMemberEdge",
+          "alias": "paginatedOrganizationMembers",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "orderBy",
+              "variableName": "organizationPeopleSortingValues"
+            },
+            {
+              "fields": [
+                {
+                  "kind": "Variable",
+                  "name": "nameContains",
+                  "variableName": "peopleNameSearchText"
+                },
+                {
+                  "kind": "Variable",
+                  "name": "organizationId",
+                  "variableName": "organizationId"
+                }
+              ],
+              "kind": "ObjectValue",
+              "name": "where"
+            }
+          ],
+          "concreteType": "OrganizationMemberConnection",
           "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "name": "__organizationPeopleTab_paginatedOrganizationMembers_connection",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "OrganizationMemberDetails",
+              "kind": "ScalarField",
+              "name": "totalCount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationMemberEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
-                (v1/*: any*/),
                 {
+                  "alias": null,
                   "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "organizationMemberCard_OrganizationMemberDetails"
+                  "concreteType": "OrganizationMemberDetails",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    (v1/*: any*/),
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "organizationMemberCard_OrganizationMemberDetails"
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__typename",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "cursor",
                   "storageKey": null
                 }
               ],
@@ -204,52 +223,44 @@ return {
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
+              "concreteType": "PageInfo",
+              "kind": "LinkedField",
+              "name": "pageInfo",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "endCursor",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasNextPage",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
+              "kind": "ClientExtension",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__id",
+                  "storageKey": null
+                }
+              ]
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
-      ],
-      "storageKey": null
+      ]
     }
   ],
   "type": "Query",
@@ -257,6 +268,6 @@ return {
 };
 })();
 
-(node as any).hash = "af7e79f07d6d7c70f47fb619f665081e";
+(node as any).hash = "28fd7b026460049ccfe75dd48e7ee430";
 
 export default node;

@@ -40,10 +40,9 @@ const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
         locationZonesTabPaginatedTags: paginatedLocationTags(
           first: $count
           after: $cursor
-
           where: { locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText }
           orderBy: $zoneSortingValues
-        ) @connection(key: "locationZonesTab_locationZonesTabPaginatedTags") {
+        ) @connection(key: "locationZonesTab_locationZonesTabPaginatedTags") @include(if: $locationExists) {
           __id
           totalCount
           edges {
@@ -91,6 +90,7 @@ const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
             count: pageSize,
             zoneSortingValues: [order],
             zoneNameSearchText,
+            locationExists: !!locationId,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -101,7 +101,7 @@ const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
         );
       });
     },
-    [refetch],
+    [refetch, locationId],
   );
 
   const loadNextPage = useCallback(() => {
@@ -136,7 +136,7 @@ const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
   );
   const [isAddZoneDialogOpen, setIsAddZoneDialogOpen] = useState(false);
 
-  if (!rootData.location) {
+  if (!rootData.location || !rootData.locationZonesTabPaginatedTags) {
     return <></>;
   }
 

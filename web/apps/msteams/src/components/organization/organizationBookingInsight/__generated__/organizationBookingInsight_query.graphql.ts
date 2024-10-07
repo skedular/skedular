@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b8a41e23145e79c464b76ff2f9d6f105>>
+ * @generated SignedSource<<9b1bb287839ee9b93004b73c2c9b688f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type organizationBookingInsight_query$data = {
       readonly date: any;
       readonly total: number;
     }>;
-  };
+  } | null | undefined;
   readonly " $fragmentType": "organizationBookingInsight_query";
 };
 export type organizationBookingInsight_query$key = {

@@ -806,23 +806,23 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
             
 
                 
-                public abstract Task<OrganizationConnection> OrganizationsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] OrganizationWhereInput where, [HotChocolate.GraphQLName("orderBy")] OrganizationOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<OrganizationConnection?> OrganizationsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] OrganizationWhereInput where, [HotChocolate.GraphQLName("orderBy")] OrganizationOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<OrganizationDetails[]> MyOrganizationsAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<OrganizationDetails[]?> MyOrganizationsAsync([HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<OrganizationMemberConnection> PaginatedOrganizationMembersAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] OrganizationMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] OrganizationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<OrganizationMemberConnection?> PaginatedOrganizationMembersAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("where")] OrganizationMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] OrganizationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<OrganizationMemberDetails[]> OrganizationMembersAsync([HotChocolate.GraphQLName("where")] OrganizationMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] OrganizationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<OrganizationMemberDetails[]?> OrganizationMembersAsync([HotChocolate.GraphQLName("where")] OrganizationMemberWhereInput where, [HotChocolate.GraphQLName("orderBy")] OrganizationMemberOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 
-                public abstract Task<OrganizationAnalytics> OrganizationAnalyticsAsync([HotChocolate.GraphQLName("organizationId")] string organizationId, [HotChocolate.GraphQLName("from")] DateTimeOffset from, [HotChocolate.GraphQLName("until")] DateTimeOffset until, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<OrganizationAnalytics?> OrganizationAnalyticsAsync([HotChocolate.GraphQLName("organizationId")] string organizationId, [HotChocolate.GraphQLName("from")] DateTimeOffset from, [HotChocolate.GraphQLName("until")] DateTimeOffset until, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 

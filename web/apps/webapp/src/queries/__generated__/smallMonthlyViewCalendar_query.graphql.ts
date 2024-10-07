@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4197c5c2ecf407d876d3641ef2be8089>>
+ * @generated SignedSource<<2a5de12539822836a3b34f73b8eee5d0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,11 +36,11 @@ export type smallMonthlyViewCalendar_query$data = {
         readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
       };
     }>;
-  };
+  } | null | undefined;
   readonly myOrganizations: ReadonlyArray<{
     readonly id: string;
     readonly name: string;
-  }>;
+  }> | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"bookingCard_query">;
   readonly " $fragmentType": "smallMonthlyViewCalendar_query";
 };
@@ -117,6 +117,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "monthlyCalendarDateTo"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationExists"
     },
     {
       "kind": "RootArgument",

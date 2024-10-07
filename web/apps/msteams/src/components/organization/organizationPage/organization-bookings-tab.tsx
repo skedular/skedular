@@ -133,8 +133,12 @@ const OrganizationBookingsTab = ({ rootDataRelay, organizationId }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => [rootData.bookings.__id], [rootData.bookings]);
+  const connectionIds = useMemo(() => (rootData.bookings ? [rootData.bookings.__id] : []), [rootData.bookings]);
   const bookings = useMemo(() => {
+    if (!rootData.bookings) {
+      return [];
+    }
+
     const bookingEdges = rootData.bookings.edges;
     const slicedEdges = bookingEdges.slice(
       page * pageSize,
@@ -142,7 +146,7 @@ const OrganizationBookingsTab = ({ rootDataRelay, organizationId }: Props) => {
     );
 
     return slicedEdges.map(({ node }) => node);
-  }, [page, pageSize, rootData.bookings.edges]);
+  }, [page, pageSize, rootData.bookings]);
 
   const handleAddBookingClick = () => {
     setIsAddBookingDialogOpen(true);
@@ -189,6 +193,10 @@ const OrganizationBookingsTab = ({ rootDataRelay, organizationId }: Props) => {
       setPageContextOpen(false);
     }
   };
+
+  if (!rootData.bookings) {
+    return <></>;
+  }
 
   return (
     <>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<252834c912237a5cfa0599997432291c>>
+ * @generated SignedSource<<0239df2afd61c20147a90672d8dad0e4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,12 +14,12 @@ export type locationDeskOccupancyInsight_query$data = {
   readonly location: {
     readonly name: string;
   } | null | undefined;
-  readonly locationAnalytics: {
+  readonly locationAnalytics?: {
     readonly desksOccupancyPercentage: ReadonlyArray<{
       readonly date: any;
       readonly percentage: number;
     }>;
-  };
+  } | null | undefined;
   readonly " $fragmentType": "locationDeskOccupancyInsight_query";
 };
 export type locationDeskOccupancyInsight_query$key = {
@@ -32,6 +32,10 @@ const node: ReaderFragment = {
     {
       "kind": "RootArgument",
       "name": "from"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "locationExists"
     },
     {
       "kind": "RootArgument",
@@ -53,56 +57,63 @@ const node: ReaderFragment = {
   "name": "locationDeskOccupancyInsight_query",
   "selections": [
     {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "from",
-          "variableName": "from"
-        },
-        {
-          "kind": "Variable",
-          "name": "locationId",
-          "variableName": "locationId"
-        },
-        {
-          "kind": "Variable",
-          "name": "until",
-          "variableName": "to"
-        }
-      ],
-      "concreteType": "LocationAnalytics",
-      "kind": "LinkedField",
-      "name": "locationAnalytics",
-      "plural": false,
+      "condition": "locationExists",
+      "kind": "Condition",
+      "passingValue": true,
       "selections": [
         {
           "alias": null,
-          "args": null,
-          "concreteType": "LocationDesksOccupancyPercentage",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "from",
+              "variableName": "from"
+            },
+            {
+              "kind": "Variable",
+              "name": "locationId",
+              "variableName": "locationId"
+            },
+            {
+              "kind": "Variable",
+              "name": "until",
+              "variableName": "to"
+            }
+          ],
+          "concreteType": "LocationAnalytics",
           "kind": "LinkedField",
-          "name": "desksOccupancyPercentage",
-          "plural": true,
+          "name": "locationAnalytics",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "date",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "percentage",
+              "concreteType": "LocationDesksOccupancyPercentage",
+              "kind": "LinkedField",
+              "name": "desksOccupancyPercentage",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "date",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "percentage",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
           "storageKey": null
         }
-      ],
-      "storageKey": null
+      ]
     },
     {
       "alias": null,
@@ -133,6 +144,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "76cc9d1819026aa182d92feb9d172a77";
+(node as any).hash = "a1cd322cb01675138ab490b2a246ec9b";
 
 export default node;

@@ -40,7 +40,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
         organization(id: $organizationId) {
           id
         }
-        organizationPaymentMethodsDetails(organizationId: $organizationId) {
+        organizationPaymentMethodsDetails(organizationId: $organizationId) @include(if: $organizationExists) {
           id
           cardBrand
           cardExpiryMonth
@@ -165,6 +165,10 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
 
     setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET);
   };
+
+  if (!rootData.organizationPaymentMethodsDetails) {
+    return <></>;
+  }
 
   const paymentMethodExist = rootData.organizationPaymentMethodsDetails.length > 0;
 

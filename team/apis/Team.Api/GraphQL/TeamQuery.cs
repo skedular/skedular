@@ -60,7 +60,7 @@ public class TeamQuery(IMapper mapper) : Query
         return mapper.MapTo(team);
     }
 
-    public override async Task<TeamConnection> TeamsAsync(
+    public override async Task<TeamConnection?> TeamsAsync(
         string? after,
         int? first,
         string? before,
@@ -74,7 +74,7 @@ public class TeamQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new TeamConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<ITeamService>();
@@ -114,7 +114,7 @@ public class TeamQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<TeamDetails[]> MyTeamsAsync(
+    public override async Task<TeamDetails[]?> MyTeamsAsync(
         string? organizationId,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -123,7 +123,7 @@ public class TeamQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return [];
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<ITeamService>();
@@ -131,7 +131,7 @@ public class TeamQuery(IMapper mapper) : Query
         return mapper.MapTo(teams).ToArray();
     }
 
-    public override async Task<TeamMemberConnection> PaginatedTeamMembersAsync(
+    public override async Task<TeamMemberConnection?> PaginatedTeamMembersAsync(
         string? after,
         int? first,
         string? before,
@@ -141,16 +141,13 @@ public class TeamQuery(IMapper mapper) : Query
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(where.TeamId))
-        {
-            return new TeamMemberConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(where.TeamId);
 
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new TeamMemberConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<ITeamMemberService>();
@@ -194,14 +191,21 @@ public class TeamQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<TeamMemberDetails[]> TeamMembersAsync(
+    public override async Task<TeamMemberDetails[]?> TeamMembersAsync(
         TeamMemberWhereInput where,
         TeamMemberOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
-        var result = await PaginatedTeamMembersAsync(null, null, null, null, where, [], serviceProvider,
+        var result = await PaginatedTeamMembersAsync(
+            null,
+            null,
+            null,
+            null,
+            where,
+            [],
+            serviceProvider,
             cancellationToken);
-        return result.Edges.Select(item => item.Node).ToArray();
+        return result?.Edges.Select(item => item.Node).ToArray();
     }
 }

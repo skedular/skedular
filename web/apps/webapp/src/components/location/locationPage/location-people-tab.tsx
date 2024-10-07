@@ -45,6 +45,7 @@ type Props = {
   rootDataLocationMembersRelay: locationPeopleTab_query$key;
   rootDataOrganizationMembersRelay: locationPeopleTab_query_organizationMembers$key;
   organizationId: string;
+  locationId: string;
 };
 
 interface MembersToJoin {
@@ -64,7 +65,7 @@ const membersToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationMembersRelay, organizationId }: Props) => {
+const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationMembersRelay, organizationId, locationId }: Props) => {
   const {
     data: rootDataLocation,
     loadNext: loadNextLocationMembers,
@@ -84,7 +85,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
           after: $cursor
           where: { locationId: $locationId, nameContains: $peopleNameSearchText }
           orderBy: $locationPeopleSortingValues
-        ) @connection(key: "locationPeopleTab_paginatedLocationMembers") {
+        ) @connection(key: "locationPeopleTab_paginatedLocationMembers") @include(if: $locationExists) {
           __id
           totalCount
           edges {
@@ -104,7 +105,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
     data: rootDataPaginatedCustomersByDefaultLocation,
     loadNext: loadNextpaginatedCustomersByDefaultLocation,
     isLoadingNext: isLoadingNextpaginatedCustomersByDefaultLocation,
-    refetch: refetchpaginatedCustomersByDefaultLocation,
+    refetch: refetchPaginatedCustomersByDefaultLocation,
   } = usePaginationFragment<locationPeopleTab_query_paginatedCustomersByDefaultLocation, locationPeopleTab_query_organizationMembers$key>(
     graphql`
       fragment locationPeopleTab_query_organizationMembers on Query
@@ -115,7 +116,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
           after: $cursor
           where: { locationId: $locationId, nameContains: $peopleNameSearchText }
           orderBy: $locationOrganizationPeopleSortingValues
-        ) @connection(key: "locationPeopleTab_paginatedCustomersByDefaultLocation") {
+        ) @connection(key: "locationPeopleTab_paginatedCustomersByDefaultLocation") @include(if: $locationExists) {
           __id
           totalCount
           edges {
@@ -170,11 +171,12 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
     (pageSize: number, locationMemberOrder: LocationMemberOrderInput, customerOrder: CustomerOrderInput, peopleNameSearchText: string) => {
       startTransition(() => {
         if (organizationId) {
-          refetchpaginatedCustomersByDefaultLocation(
+          refetchPaginatedCustomersByDefaultLocation(
             {
               count: pageSize,
               locationOrganizationPeopleSortingValues: [customerOrder],
               peopleNameSearchText,
+              locationExists: !!locationId,
             },
             {
               fetchPolicy: 'store-and-network',
@@ -189,6 +191,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
               count: pageSize,
               locationPeopleSortingValues: [locationMemberOrder],
               peopleNameSearchText,
+              locationExists: !!locationId,
             },
             {
               fetchPolicy: 'store-and-network',
@@ -200,7 +203,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
         }
       });
     },
-    [organizationId, refetchLocationMembers, refetchpaginatedCustomersByDefaultLocation],
+    [refetchLocationMembers, refetchPaginatedCustomersByDefaultLocation, organizationId, locationId],
   );
 
   const loadNextPage = useCallback(() => {
@@ -250,13 +253,21 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
 
   const connectionIds = useMemo(() => {
     if (organizationId) {
+      if (!rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation) {
+        return [];
+      }
+
       return [rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.__id];
     } else {
       return rootDataLocation.paginatedLocationMembers ? [rootDataLocation.paginatedLocationMembers.__id] : [];
     }
   }, [organizationId, rootDataLocation.paginatedLocationMembers, rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation]);
 
-  if (!rootDataLocation.location) {
+  if (
+    !rootDataLocation.location ||
+    !rootDataLocation.paginatedLocationMembers ||
+    !rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation
+  ) {
     return <></>;
   }
 

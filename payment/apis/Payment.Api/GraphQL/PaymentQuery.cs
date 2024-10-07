@@ -33,7 +33,7 @@ public class PaymentQuery(IMapper mapper) : Query
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override async Task<OrganizationPaymentMethod[]> OrganizationPaymentMethodsDetailsAsync(
+    public override async Task<OrganizationPaymentMethod[]?> OrganizationPaymentMethodsDetailsAsync(
         string organizationId,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -42,7 +42,7 @@ public class PaymentQuery(IMapper mapper) : Query
         var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await service.DoesCustomerExistAsync(cancellationToken))
         {
-            return [];
+            return null;
         }
 
         var organizationService = scope.ServiceProvider.GetRequiredService<IOrganizationService>();

@@ -37,18 +37,18 @@ type Query {
         last: Int
         where: BookingWhereInput!
         orderBy: [BookingOrderInput!]
-    ): BookingConnection!
-    allBookings(where: BookingWhereInput!): [BookingDetails!]!
+    ): BookingConnection
+    allBookings(where: BookingWhereInput!): [BookingDetails!]
     availableLocationDesks(
         locationId: String!
         date: DateTime!
         deskIdsToInclude: [String!]!
-    ): [BookingDeskDetails!]!
+    ): [BookingDeskDetails!]
     organizationBookingPermissions(
         organizationId: String!
-    ): OrganizationBookingPermissions!
-    locationBookingPermissions(locationId: String!): LocationBookingPermissions!
-    teamBookingPermissions(teamId: String!): TeamBookingPermissions!
+    ): OrganizationBookingPermissions
+    locationBookingPermissions(locationId: String!): LocationBookingPermissions
+    teamBookingPermissions(teamId: String!): TeamBookingPermissions
 }
 
 type OrganizationBookingPermissions {

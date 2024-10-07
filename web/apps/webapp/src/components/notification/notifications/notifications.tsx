@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useState, useTransition } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -94,10 +94,13 @@ const Notifications = ({ rootDataRelay }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const myNotifications = useMemo(() => rootData.myNotifications, [rootData.myNotifications]);
-  const slicedEdges = myNotifications.edges?.slice(
+  if (!rootData.myNotifications) {
+    return <></>;
+  }
+
+  const slicedEdges = rootData.myNotifications.edges?.slice(
     page * pageSize,
-    page * pageSize + pageSize > myNotifications.edges.length ? myNotifications.edges.length : page * pageSize + pageSize,
+    page * pageSize + pageSize > rootData.myNotifications.edges.length ? rootData.myNotifications.edges.length : page * pageSize + pageSize,
   );
 
   const handleSortingChanged = (direction: Direction, value: string) => {
@@ -116,7 +119,7 @@ const Notifications = ({ rootDataRelay }: Props) => {
     <Stack direction="column" spacing={1}>
       <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
         <TablePagination
-          count={myNotifications?.totalCount ? myNotifications.totalCount : 0}
+          count={rootData.myNotifications.totalCount ? rootData.myNotifications.totalCount : 0}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={pageSize}

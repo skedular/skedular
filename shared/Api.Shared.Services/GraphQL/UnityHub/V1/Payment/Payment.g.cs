@@ -142,7 +142,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Payment;
             
 
                 
-                public abstract Task<OrganizationPaymentMethod[]> OrganizationPaymentMethodsDetailsAsync([HotChocolate.GraphQLName("organizationId")] string organizationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<OrganizationPaymentMethod[]?> OrganizationPaymentMethodsDetailsAsync([HotChocolate.GraphQLName("organizationId")] string organizationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
         }
         
 

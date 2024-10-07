@@ -21,6 +21,7 @@ type Props = {
 const RootQuery = graphql`
   query pageOrganization_rootQuery(
     $organizationId: String!
+    $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
@@ -88,6 +89,7 @@ const OrganizationPageWithRelay = () => {
     loadQuery(
       {
         organizationId: finalOrganizationId,
+        organizationExists: !!finalOrganizationId,
         locationId: '',
         locationExists: false,
         deskIdsToIncludeToGetAvailableDesks: [],

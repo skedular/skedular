@@ -126,11 +126,14 @@ const Teams = ({ rootDataRelay }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => [rootData.teams?.__id], [rootData.teams]);
-  const teams = useMemo(() => rootData.teams, [rootData.teams]);
-  const slicedEdges = teams.edges?.slice(
+  const connectionIds = useMemo(() => (rootData.teams ? [rootData.teams.__id] : []), [rootData.teams]);
+  if (!rootData.teams) {
+    return <></>;
+  }
+
+  const slicedEdges = rootData.teams.edges?.slice(
     page * pageSize,
-    page * pageSize + pageSize > teams.edges.length ? teams.edges.length : page * pageSize + pageSize,
+    page * pageSize + pageSize > rootData.teams.edges.length ? rootData.teams.edges.length : page * pageSize + pageSize,
   );
 
   const handleSortingChanged = (direction: Direction, value: string) => {
@@ -170,7 +173,7 @@ const Teams = ({ rootDataRelay }: Props) => {
 
       <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
         <TablePagination
-          count={teams?.totalCount ? teams.totalCount : 0}
+          count={rootData.teams.totalCount ? rootData.teams.totalCount : 0}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={pageSize}

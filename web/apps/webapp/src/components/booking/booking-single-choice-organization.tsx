@@ -32,7 +32,7 @@ const BookingSingleChoiceOrganization = ({ rootDataRelay, name, required, readOn
   );
 
   const organizations = useMemo<OrganizationDetails[]>(
-    () => rootData.myOrganizations.map((organization) => organization),
+    () => (rootData.myOrganizations ? rootData.myOrganizations.map((organization) => organization) : []),
     [rootData.myOrganizations],
   );
 

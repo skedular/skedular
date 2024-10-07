@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bacc9ad5820e8f98b943f6a2b2b5df93>>
+ * @generated SignedSource<<3ab7f6b1c3600e4dbe7394c2fe4934f1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,7 @@ export type deskMultipleChoicesZones_PaginationQuery$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   deskMultipleChoicesZonesSortingValues?: ReadonlyArray<LocationTagOrderInput> | null | undefined;
+  locationExists: boolean;
   locationId: string;
   zoneTagType?: string | null | undefined;
 };
@@ -47,6 +48,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "deskMultipleChoicesZonesSortingValues"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "locationExists"
   },
   {
     "defaultValue": null,
@@ -126,55 +132,70 @@ return {
     "name": "deskMultipleChoicesZones_PaginationQuery",
     "selections": [
       {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "LocationTagConnection",
-        "kind": "LinkedField",
-        "name": "paginatedLocationTags",
-        "plural": false,
+        "condition": "locationExists",
+        "kind": "Condition",
+        "passingValue": true,
         "selections": [
           {
             "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "totalCount",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "LocationTagEdge",
+            "args": (v1/*: any*/),
+            "concreteType": "LocationTagConnection",
             "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
+            "name": "paginatedLocationTags",
+            "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "LocationTagDetails",
+                "kind": "ScalarField",
+                "name": "totalCount",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "LocationTagEdge",
                 "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
+                "name": "edges",
+                "plural": true,
                 "selections": [
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "id",
+                    "concreteType": "LocationTagDetails",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "id",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "name",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
+                    ],
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
+                    "name": "cursor",
                     "storageKey": null
                   }
                 ],
@@ -183,78 +204,70 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
+              },
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
               }
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
-            "kind": "LinkedField",
-            "name": "pageInfo",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
-                "storageKey": null
-              }
+            "args": (v1/*: any*/),
+            "filters": [
+              "where",
+              "orderBy"
             ],
-            "storageKey": null
-          },
-          {
-            "kind": "ClientExtension",
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__id",
-                "storageKey": null
-              }
-            ]
+            "handle": "connection",
+            "key": "locationZonesTab_paginatedLocationTags",
+            "kind": "LinkedHandle",
+            "name": "paginatedLocationTags"
           }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "filters": [
-          "where",
-          "orderBy"
-        ],
-        "handle": "connection",
-        "key": "locationZonesTab_paginatedLocationTags",
-        "kind": "LinkedHandle",
-        "name": "paginatedLocationTags"
+        ]
       }
     ]
   },
   "params": {
-    "cacheID": "e0622e9aa5d3acda1c4ea16bda3ed55f",
+    "cacheID": "64cdcbd7bf80a78904da80066d7519c8",
     "id": null,
     "metadata": {},
     "name": "deskMultipleChoicesZones_PaginationQuery",
     "operationKind": "query",
-    "text": "query deskMultipleChoicesZones_PaginationQuery(\n  $count: Int = null\n  $cursor: String\n  $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]\n  $locationId: String!\n  $zoneTagType: String\n) {\n  ...deskMultipleChoicesZones_query_1G22uz\n}\n\nfragment deskMultipleChoicesZones_query_1G22uz on Query {\n  paginatedLocationTags(first: $count, after: $cursor, where: {locationId: $locationId, tagType: $zoneTagType}, orderBy: $deskMultipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query deskMultipleChoicesZones_PaginationQuery(\n  $count: Int = null\n  $cursor: String\n  $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]\n  $locationExists: Boolean!\n  $locationId: String!\n  $zoneTagType: String\n) {\n  ...deskMultipleChoicesZones_query_1G22uz\n}\n\nfragment deskMultipleChoicesZones_query_1G22uz on Query {\n  paginatedLocationTags(first: $count, after: $cursor, where: {locationId: $locationId, tagType: $zoneTagType}, orderBy: $deskMultipleChoicesZonesSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "aba24b25f3dae96eb8151116fc41739e";
+(node as any).hash = "99d1210db4b30d9fb227603c81f62163";
 
 export default node;

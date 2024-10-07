@@ -29,6 +29,7 @@ const RootQuery = graphql`
     $peopleNameSearchText: String!
     $peopleSortingValues: [TeamMemberOrderInput!]!
     $teamId: String!
+    $teamExists: Boolean!
     $from: DateTime!
     $to: DateTime!
   ) {
@@ -78,7 +79,8 @@ const TeamBookingsWithRelay = ({ organizationId, organizationName, teamId, teamN
           },
         ],
         peopleNameSearchText: '',
-        teamId: teamId,
+        teamId,
+        teamExists: !!teamId,
         from: startDate.toISOString(),
         to: endDate.toISOString(),
       },

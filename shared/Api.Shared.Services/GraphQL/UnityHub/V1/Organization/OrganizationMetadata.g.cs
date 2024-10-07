@@ -40,8 +40,8 @@ type Query {
         last: Int
         where: OrganizationWhereInput!
         orderBy: [OrganizationOrderInput!]
-    ): OrganizationConnection!
-    myOrganizations: [OrganizationDetails!]!
+    ): OrganizationConnection
+    myOrganizations: [OrganizationDetails!]
     paginatedOrganizationMembers(
         after: String
         first: Int
@@ -49,16 +49,16 @@ type Query {
         last: Int
         where: OrganizationMemberWhereInput!
         orderBy: [OrganizationMemberOrderInput!]
-    ): OrganizationMemberConnection!
+    ): OrganizationMemberConnection
     organizationMembers(
         where: OrganizationMemberWhereInput!
         orderBy: [OrganizationMemberOrderInput!]
-    ): [OrganizationMemberDetails!]!
+    ): [OrganizationMemberDetails!]
     organizationAnalytics(
         organizationId: String!
         from: DateTime!
         until: DateTime!
-    ): OrganizationAnalytics!
+    ): OrganizationAnalytics
     isAzureTenantInstalled: Boolean!
     azureTenantAdminConsentUrl: String!
     azureTenantOrganization: OrganizationDetails

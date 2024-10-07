@@ -37,7 +37,6 @@ const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get('tab');
-
   let initialTabIndex = 0;
 
   if (tab === 'bookings') {
@@ -85,7 +84,7 @@ const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
       <>
         {tabIndex === 0 && <TeamBookingsTab rootDataRelay={rootData} organizationId={organizationId} teamId={teamId} />}
         {tabIndex === 1 && <TeamAboutTab rootDataRelay={rootData} organizationId={organizationId} />}
-        {tabIndex === 2 && <TeamPeopleTab rootDataRelay={rootData} organizationId={organizationId} />}
+        {tabIndex === 2 && <TeamPeopleTab rootDataRelay={rootData} organizationId={organizationId} teamId={teamId} />}
       </>
     </Stack>
   );

@@ -34,7 +34,7 @@ type Query {
         before: String
         last: Int
         orderBy: [NotificationOrderInput!]
-    ): NotificationConnection!
+    ): NotificationConnection
 }
 
 type PageInfo {

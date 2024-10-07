@@ -50,7 +50,7 @@ public class BookingQuery(IMapper mapper) : Query
         return mapper.MapTo(booking);
     }
 
-    public override async Task<BookingConnection> BookingsAsync(
+    public override async Task<BookingConnection?> BookingsAsync(
         string? after,
         int? first,
         string? before,
@@ -64,7 +64,7 @@ public class BookingQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new BookingConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<IBookingService>();
@@ -127,16 +127,16 @@ public class BookingQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<BookingDetails[]> AllBookingsAsync(
+    public override async Task<BookingDetails[]?> AllBookingsAsync(
         BookingWhereInput where,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         var result = await BookingsAsync(null, null, null, null, where, [], serviceProvider, cancellationToken);
-        return result.Edges.Select(item => item.Node).ToArray();
+        return result?.Edges.Select(item => item.Node).ToArray();
     }
 
-    public override async Task<BookingDeskDetails[]> AvailableLocationDesksAsync(
+    public override async Task<BookingDeskDetails[]?> AvailableLocationDesksAsync(
         string locationId,
         DateTimeOffset date,
         string[] deskIdsToInclude,
@@ -146,7 +146,7 @@ public class BookingQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return [];
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<IDeskService>();
@@ -154,24 +154,18 @@ public class BookingQuery(IMapper mapper) : Query
         return mapper.MapTo(desks).ToArray();
     }
 
-    public override async Task<OrganizationBookingPermissions> OrganizationBookingPermissionsAsync(
+    public override async Task<OrganizationBookingPermissions?> OrganizationBookingPermissionsAsync(
         string organizationId,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
+
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new OrganizationBookingPermissions
-            {
-                CanAddBooking = false,
-                CanUpdateBooking = false,
-                CanDeleteBooking = false,
-                CanAddBookingOnBehalf = false,
-                CanUpdateBookingOnBehalf = false,
-                CanDeleteBookingOnBehalf = false
-            };
+            return null;
         }
 
         var organizationAuthorizationService =
@@ -189,7 +183,7 @@ public class BookingQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<LocationBookingPermissions> LocationBookingPermissionsAsync(
+    public override async Task<LocationBookingPermissions?> LocationBookingPermissionsAsync(
         string locationId,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -198,15 +192,7 @@ public class BookingQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new LocationBookingPermissions
-            {
-                CanAddBooking = false,
-                CanUpdateBooking = false,
-                CanDeleteBooking = false,
-                CanAddBookingOnBehalf = false,
-                CanUpdateBookingOnBehalf = false,
-                CanDeleteBookingOnBehalf = false
-            };
+            return null;
         }
 
         var locationAuthorizationService =
@@ -224,7 +210,7 @@ public class BookingQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<TeamBookingPermissions> TeamBookingPermissionsAsync(
+    public override async Task<TeamBookingPermissions?> TeamBookingPermissionsAsync(
         string teamId,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -233,15 +219,7 @@ public class BookingQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new TeamBookingPermissions
-            {
-                CanAddBooking = false,
-                CanUpdateBooking = false,
-                CanDeleteBooking = false,
-                CanAddBookingOnBehalf = false,
-                CanUpdateBookingOnBehalf = false,
-                CanDeleteBookingOnBehalf = false
-            };
+            return null;
         }
 
         var teamAuthorizationService =

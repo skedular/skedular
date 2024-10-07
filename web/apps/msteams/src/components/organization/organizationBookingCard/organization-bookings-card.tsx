@@ -26,6 +26,7 @@ const RootQuery = graphql`
     $peopleNameSearchText: String!
     $peopleSortingValues: [OrganizationMemberOrderInput!]!
     $organizationId: String!
+    $organizationExists: Boolean!
     $from: DateTime!
     $to: DateTime!
   ) {
@@ -84,6 +85,7 @@ const OrganizationBookingsWithRelay = ({
         ],
         peopleNameSearchText: '',
         organizationId,
+        organizationExists: !!organizationId,
         from: startDate.toISOString(),
         to: endDate.toISOString(),
       },

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0bc6040fde65841e52e1d3da1cb20345>>
+ * @generated SignedSource<<63b83251ec2c2efb2003692c40f2a893>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -43,7 +43,7 @@ export type customerTomorrowSummary_rootQuery$data = {
       readonly uniqueId: string;
     } | null | undefined;
     readonly to: any;
-  }>;
+  }> | null | undefined;
   readonly me: {
     readonly id: string;
   } | null | undefined;
@@ -54,7 +54,7 @@ export type customerTomorrowSummary_rootQuery$data = {
       readonly name: string;
       readonly uniqueId: string;
     } | null | undefined;
-  }>;
+  }> | null | undefined;
   readonly myTeams: ReadonlyArray<{
     readonly id: string;
     readonly name: string;
@@ -62,7 +62,7 @@ export type customerTomorrowSummary_rootQuery$data = {
       readonly name: string;
       readonly uniqueId: string;
     } | null | undefined;
-  }>;
+  }> | null | undefined;
 };
 export type customerTomorrowSummary_rootQuery = {
   response: customerTomorrowSummary_rootQuery$data;

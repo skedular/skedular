@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d281b4cf0bf5e4002deb237ffd813b5b>>
+ * @generated SignedSource<<2734cb0973c89943a09805838f0ab452>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type OrganizationMemberOrderInput = {
 };
 export type organizationPeopleBookingsOrganizationMembers_PaginationQuery$variables = {
   from?: any | null | undefined;
+  organizationExists: boolean;
   organizationId: string;
   peopleNameSearchText?: string | null | undefined;
   peopleSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
@@ -37,6 +38,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "from"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationExists"
   },
   {
     "defaultValue": null,
@@ -143,44 +149,78 @@ return {
     "name": "organizationPeopleBookingsOrganizationMembers_PaginationQuery",
     "selections": [
       {
-        "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "orderBy",
-            "variableName": "peopleSortingValues"
-          },
-          {
-            "fields": [
-              {
-                "kind": "Variable",
-                "name": "nameContains",
-                "variableName": "peopleNameSearchText"
-              },
-              (v1/*: any*/)
-            ],
-            "kind": "ObjectValue",
-            "name": "where"
-          }
-        ],
-        "concreteType": "OrganizationMemberDetails",
-        "kind": "LinkedField",
-        "name": "organizationMembers",
-        "plural": true,
+        "condition": "organizationExists",
+        "kind": "Condition",
+        "passingValue": true,
         "selections": [
-          (v2/*: any*/),
           {
             "alias": null,
-            "args": null,
-            "concreteType": "OrganizationCustomerDetails",
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "orderBy",
+                "variableName": "peopleSortingValues"
+              },
+              {
+                "fields": [
+                  {
+                    "kind": "Variable",
+                    "name": "nameContains",
+                    "variableName": "peopleNameSearchText"
+                  },
+                  (v1/*: any*/)
+                ],
+                "kind": "ObjectValue",
+                "name": "where"
+              }
+            ],
+            "concreteType": "OrganizationMemberDetails",
             "kind": "LinkedField",
-            "name": "customer",
+            "name": "organizationMembers",
+            "plural": true,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationCustomerDetails",
+                "kind": "LinkedField",
+                "name": "customer",
+                "plural": false,
+                "selections": (v5/*: any*/),
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": [
+              (v1/*: any*/)
+            ],
+            "concreteType": "OrganizationBookingPermissions",
+            "kind": "LinkedField",
+            "name": "organizationBookingPermissions",
             "plural": false,
-            "selections": (v5/*: any*/),
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "canAddBookingOnBehalf",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "canDeleteBookingOnBehalf",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
-        ],
-        "storageKey": null
+        ]
       },
       {
         "alias": null,
@@ -250,33 +290,6 @@ return {
             "storageKey": null
           },
           (v2/*: any*/)
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": [
-          (v1/*: any*/)
-        ],
-        "concreteType": "OrganizationBookingPermissions",
-        "kind": "LinkedField",
-        "name": "organizationBookingPermissions",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "canAddBookingOnBehalf",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "canDeleteBookingOnBehalf",
-            "storageKey": null
-          }
         ],
         "storageKey": null
       },
@@ -399,16 +412,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "98f56693f68fea0abf6ffd50aaec2248",
+    "cacheID": "f17b27040d8ef2a83a2bc9f8c9241519",
     "id": null,
     "metadata": {},
     "name": "organizationPeopleBookingsOrganizationMembers_PaginationQuery",
     "operationKind": "query",
-    "text": "query organizationPeopleBookingsOrganizationMembers_PaginationQuery(\n  $from: DateTime\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [OrganizationMemberOrderInput!]\n  $to: DateTime\n) {\n  ...organizationPeopleBookings_query\n}\n\nfragment organizationPeopleBookings_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  allBookings(where: {organizationIds: [$organizationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query organizationPeopleBookingsOrganizationMembers_PaginationQuery(\n  $from: DateTime\n  $organizationExists: Boolean!\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $peopleSortingValues: [OrganizationMemberOrderInput!]\n  $to: DateTime\n) {\n  ...organizationPeopleBookings_query\n}\n\nfragment organizationPeopleBookings_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) @include(if: $organizationExists) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  allBookings(where: {organizationIds: [$organizationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fb1518022fa43fb22b2d6cf5ce1c15a4";
+(node as any).hash = "ed188be8e6996e8620a670bc8a41e226";
 
 export default node;

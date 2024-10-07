@@ -10,6 +10,7 @@ import type { deskMultipleChoicesZones_query$key } from './__generated__/deskMul
 
 type Props = {
   rootDataRelay: deskMultipleChoicesZones_query$key;
+  locationId: string;
   name: string;
   required?: boolean;
 };
@@ -19,7 +20,7 @@ interface ZoneDetails {
   name: string;
 }
 
-const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
+const DeskMultipleChoicesZones = ({ rootDataRelay, locationId, name, required }: Props) => {
   const { data: rootData, refetch } = usePaginationFragment<deskMultipleChoicesZones_PaginationQuery, deskMultipleChoicesZones_query$key>(
     graphql`
       fragment deskMultipleChoicesZones_query on Query
@@ -28,10 +29,9 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
         paginatedLocationTags(
           first: $count
           after: $cursor
-
           where: { locationId: $locationId, tagType: $zoneTagType }
           orderBy: $deskMultipleChoicesZonesSortingValues
-        ) @connection(key: "locationZonesTab_paginatedLocationTags") {
+        ) @connection(key: "locationZonesTab_paginatedLocationTags") @include(if: $locationExists) {
           __id
           totalCount
           edges {
@@ -59,14 +59,16 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
   const handleRefetch = useCallback(() => {
     startTransition(() => {
       refetch(
-        {},
+        {
+          locationExists: !!locationId,
+        },
         {
           fetchPolicy: 'store-and-network',
           onComplete: () => {},
         },
       );
     });
-  }, [refetch]);
+  }, [refetch, locationId]);
 
   // Workaround to ensure we have all the zones if new zones added using zone dialog
   useEffect(() => {

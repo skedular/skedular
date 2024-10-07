@@ -35,14 +35,14 @@ public class LocationAnalyticsService(
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization =
+        var location =
             await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
-        if (organization is null)
+        if (location is null)
         {
             throw new LocationNotFound();
         }
 
-        if (!locationAuthorizationService.CanViewAnalytics(organization, customer))
+        if (!locationAuthorizationService.CanViewAnalytics(location, customer))
         {
             return ([], []);
         }

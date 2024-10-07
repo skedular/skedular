@@ -46,7 +46,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
           after: $cursor
           where: { locationId: $locationId, nameContains: $deskNameSearchText }
           orderBy: $deskSortingValues
-        ) @connection(key: "locationDesksTab_paginatedLocationDesks") {
+        ) @connection(key: "locationDesksTab_paginatedLocationDesks") @include(if: $locationExists) {
           __id
           totalCount
           edges {
@@ -127,6 +127,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
             count: pageSize,
             deskSortingValues: [order],
             locationId,
+            locationExists: !!locationId,
             fromToGetBookings,
             toToGetBookings,
             deskNameSearchText,
@@ -167,7 +168,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
   const [isBulkAddDeskDialogOpen, setIsBulkAddDeskDialogOpen] = useState(false);
   const [pageContextOpen, setPageContextOpen] = useState(false);
 
-  if (!rootData.location) {
+  if (!rootData.location || !rootData.paginatedLocationDesks) {
     return <></>;
   }
 
@@ -279,7 +280,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
 
       <Grid container spacing={1}>
         {slicedEdges.map((edge) => {
-          const foundBooking = rootData.allBookings.find((booking) => booking.desks.find(({ uniqueId }) => uniqueId === edge.node.id));
+          const foundBooking = rootData.allBookings?.find((booking) => booking.desks.find(({ uniqueId }) => uniqueId === edge.node.id));
 
           return (
             <Grid key={edge.node.id}>
@@ -289,6 +290,7 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
                 deskDetailsRelay={edge.node}
                 connectionIds={connectionIds}
                 customerDetails={foundBooking ? foundBooking.customer : null}
+                locationId={locationId}
               />
             </Grid>
           );

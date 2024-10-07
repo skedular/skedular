@@ -36,11 +36,11 @@ type Query {
         last: Int
         where: CustomerWhereInput!
         orderBy: [CustomerOrderInput!]
-    ): CustomerConnection!
+    ): CustomerConnection
     customersByDefaultLocation(
         where: CustomerWhereInput!
         orderBy: [CustomerOrderInput!]
-    ): [CustomerDetails!]!
+    ): [CustomerDetails!]
 }
 
 input CustomerWhereInput {

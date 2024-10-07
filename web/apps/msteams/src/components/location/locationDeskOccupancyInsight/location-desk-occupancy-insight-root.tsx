@@ -22,7 +22,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query locationDeskOccupancyInsightRoot_rootQuery($locationId: String!, $from: DateTime!, $to: DateTime!) {
+  query locationDeskOccupancyInsightRoot_rootQuery($locationId: String!, $locationExists: Boolean!, $from: DateTime!, $to: DateTime!) {
     ...locationDeskOccupancyInsight_query
   }
 `;
@@ -59,6 +59,7 @@ const LocationDeskOccupancyInsightRootWithRelay = ({ organizationId, locationId,
     loadQuery(
       {
         locationId,
+        locationExists: !!locationId,
         from: from.toISOString(),
         to: to.toISOString(),
       },

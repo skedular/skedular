@@ -117,7 +117,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Billing;
             
 
                 
-                public abstract Task<OrganizationCurrentOfferingChargesDetails[]> OrganizationCurrentOfferingChargesAsync([HotChocolate.GraphQLName("organizationId")] string organizationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<OrganizationCurrentOfferingChargesDetails[]?> OrganizationCurrentOfferingChargesAsync([HotChocolate.GraphQLName("organizationId")] string organizationId, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
                 

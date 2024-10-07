@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cb7cfb5ac36348620227dfaf319a909c>>
+ * @generated SignedSource<<ba206a7ed48544c4094a9a2a8c711fec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type locationPeopleTab_query$data = {
     readonly id: string;
     readonly name: string;
   } | null | undefined;
-  readonly paginatedLocationMembers: {
+  readonly paginatedLocationMembers?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -24,7 +24,7 @@ export type locationPeopleTab_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  };
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"locationSingleChoiceMembershipType_query">;
   readonly " $fragmentType": "locationPeopleTab_query";
 };
@@ -55,6 +55,10 @@ return {
       "defaultValue": null,
       "kind": "LocalArgument",
       "name": "cursor"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "locationExists"
     },
     {
       "kind": "RootArgument",
@@ -120,69 +124,84 @@ return {
       "storageKey": null
     },
     {
-      "alias": "paginatedLocationMembers",
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "locationPeopleSortingValues"
-        },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "locationId",
-              "variableName": "locationId"
-            },
-            {
-              "kind": "Variable",
-              "name": "nameContains",
-              "variableName": "peopleNameSearchText"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
-        }
-      ],
-      "concreteType": "LocationMemberConnection",
-      "kind": "LinkedField",
-      "name": "__locationPeopleTab_paginatedLocationMembers_connection",
-      "plural": false,
+      "condition": "locationExists",
+      "kind": "Condition",
+      "passingValue": true,
       "selections": [
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "LocationMemberEdge",
+          "alias": "paginatedLocationMembers",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "orderBy",
+              "variableName": "locationPeopleSortingValues"
+            },
+            {
+              "fields": [
+                {
+                  "kind": "Variable",
+                  "name": "locationId",
+                  "variableName": "locationId"
+                },
+                {
+                  "kind": "Variable",
+                  "name": "nameContains",
+                  "variableName": "peopleNameSearchText"
+                }
+              ],
+              "kind": "ObjectValue",
+              "name": "where"
+            }
+          ],
+          "concreteType": "LocationMemberConnection",
           "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "name": "__locationPeopleTab_paginatedLocationMembers_connection",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "LocationMemberDetails",
+              "kind": "ScalarField",
+              "name": "totalCount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "LocationMemberEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
-                (v1/*: any*/),
                 {
+                  "alias": null,
                   "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "locationMemberCard_LocationMemberDetails"
+                  "concreteType": "LocationMemberDetails",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    (v1/*: any*/),
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "locationMemberCard_LocationMemberDetails"
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__typename",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "cursor",
                   "storageKey": null
                 }
               ],
@@ -191,52 +210,44 @@ return {
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
+              "concreteType": "PageInfo",
+              "kind": "LinkedField",
+              "name": "pageInfo",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "endCursor",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasNextPage",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
+              "kind": "ClientExtension",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__id",
+                  "storageKey": null
+                }
+              ]
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
-      ],
-      "storageKey": null
+      ]
     },
     {
       "args": null,
@@ -249,6 +260,6 @@ return {
 };
 })();
 
-(node as any).hash = "e6a44f8864b6140d50e7b43af29b4bde";
+(node as any).hash = "ea63c2fae847810553f1ccce67629dea";
 
 export default node;

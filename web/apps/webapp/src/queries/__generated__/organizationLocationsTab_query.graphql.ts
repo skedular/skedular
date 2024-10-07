@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<310ee9aba8eb3b1be119f621d0d4a8c3>>
+ * @generated SignedSource<<bdfe0bb06b960e2e9ef7c4d03ac944ef>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,7 @@ export type organizationLocationsTab_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  };
+  } | null | undefined;
   readonly organization: {
     readonly canModify: boolean;
     readonly id: string;

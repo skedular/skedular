@@ -24,7 +24,7 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, organizationId, locationI
   const [rootData, refetch] = useRefetchableFragment(
     graphql`
       fragment locationDeskOccupancyInsight_query on Query @refetchable(queryName: "locationDeskOccupancyInsight_organizationAnalytics") {
-        locationAnalytics(locationId: $locationId, from: $from, until: $to) {
+        locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {
           desksOccupancyPercentage {
             date
             percentage
@@ -46,6 +46,7 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, organizationId, locationI
         refetch(
           {
             locationId,
+            locationExists: !!locationId,
             from: from.toISOString(),
             to: to.toISOString(),
           },
@@ -61,6 +62,10 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, organizationId, locationI
   const handleDateRangeChange = (from: Dayjs, until: Dayjs) => {
     handleRefetch(from, until);
   };
+
+  if (!rootData.locationAnalytics) {
+    return <></>;
+  }
 
   const dataset =
     rootData.locationAnalytics.desksOccupancyPercentage.length === 0

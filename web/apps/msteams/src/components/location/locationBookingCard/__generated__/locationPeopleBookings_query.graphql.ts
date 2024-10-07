@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a90975d7bbcb8f3b3ce56c04f3a2b41>>
+ * @generated SignedSource<<b96e8253f6c5bd5ca0e9722a5419ea94>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,15 +37,15 @@ export type locationPeopleBookings_query$data = {
       readonly name: string;
     } | null | undefined;
     readonly to: any;
-  }>;
-  readonly customersByDefaultLocation: ReadonlyArray<{
+  }> | null | undefined;
+  readonly customersByDefaultLocation?: ReadonlyArray<{
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
     readonly id: string;
     readonly middleName: string | null | undefined;
     readonly name: string | null | undefined;
     readonly photoUrl: string | null | undefined;
-  }>;
+  }> | null | undefined;
   readonly location: {
     readonly canDelete: boolean;
     readonly canModify: boolean;
@@ -57,11 +57,11 @@ export type locationPeopleBookings_query$data = {
       readonly uniqueId: string;
     } | null | undefined;
   } | null | undefined;
-  readonly locationBookingPermissions: {
+  readonly locationBookingPermissions?: {
     readonly canAddBookingOnBehalf: boolean;
     readonly canDeleteBookingOnBehalf: boolean;
-  };
-  readonly locationMembers: ReadonlyArray<{
+  } | null | undefined;
+  readonly locationMembers?: ReadonlyArray<{
     readonly customer: {
       readonly familyName: string | null | undefined;
       readonly givenName: string | null | undefined;
@@ -71,7 +71,7 @@ export type locationPeopleBookings_query$data = {
       readonly uniqueId: string;
     };
     readonly id: string;
-  }>;
+  }> | null | undefined;
   readonly me: {
     readonly defaultLocations: ReadonlyArray<{
       readonly uniqueId: string;
@@ -171,6 +171,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "locationExists"
+    },
+    {
+      "kind": "RootArgument",
       "name": "locationId"
     },
     {
@@ -197,52 +201,86 @@ return {
   "name": "locationPeopleBookings_query",
   "selections": [
     {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "peopleSortingValues"
-        },
-        (v1/*: any*/)
-      ],
-      "concreteType": "LocationMemberDetails",
-      "kind": "LinkedField",
-      "name": "locationMembers",
-      "plural": true,
+      "condition": "locationExists",
+      "kind": "Condition",
+      "passingValue": true,
       "selections": [
-        (v2/*: any*/),
         {
           "alias": null,
-          "args": null,
-          "concreteType": "LocationCustomerDetails",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "orderBy",
+              "variableName": "peopleSortingValues"
+            },
+            (v1/*: any*/)
+          ],
+          "concreteType": "LocationMemberDetails",
           "kind": "LinkedField",
-          "name": "customer",
+          "name": "locationMembers",
+          "plural": true,
+          "selections": [
+            (v2/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "LocationCustomerDetails",
+              "kind": "LinkedField",
+              "name": "customer",
+              "plural": false,
+              "selections": (v9/*: any*/),
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": [
+            (v1/*: any*/)
+          ],
+          "concreteType": "CustomerDetails",
+          "kind": "LinkedField",
+          "name": "customersByDefaultLocation",
+          "plural": true,
+          "selections": [
+            (v2/*: any*/),
+            (v4/*: any*/),
+            (v5/*: any*/),
+            (v6/*: any*/),
+            (v7/*: any*/),
+            (v8/*: any*/)
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": [
+            (v0/*: any*/)
+          ],
+          "concreteType": "LocationBookingPermissions",
+          "kind": "LinkedField",
+          "name": "locationBookingPermissions",
           "plural": false,
-          "selections": (v9/*: any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "canAddBookingOnBehalf",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "canDeleteBookingOnBehalf",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": [
-        (v1/*: any*/)
-      ],
-      "concreteType": "CustomerDetails",
-      "kind": "LinkedField",
-      "name": "customersByDefaultLocation",
-      "plural": true,
-      "selections": [
-        (v2/*: any*/),
-        (v4/*: any*/),
-        (v5/*: any*/),
-        (v6/*: any*/),
-        (v7/*: any*/),
-        (v8/*: any*/)
-      ],
-      "storageKey": null
+      ]
     },
     {
       "alias": null,
@@ -322,33 +360,6 @@ return {
             (v3/*: any*/),
             (v4/*: any*/)
           ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": [
-        (v0/*: any*/)
-      ],
-      "concreteType": "LocationBookingPermissions",
-      "kind": "LinkedField",
-      "name": "locationBookingPermissions",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canAddBookingOnBehalf",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canDeleteBookingOnBehalf",
           "storageKey": null
         }
       ],
@@ -476,6 +487,6 @@ return {
 };
 })();
 
-(node as any).hash = "96f78756a253349430065d9d41d8670a";
+(node as any).hash = "e726128cfca703c653334647ef255da7";
 
 export default node;

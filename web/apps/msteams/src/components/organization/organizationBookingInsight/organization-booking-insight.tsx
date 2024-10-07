@@ -62,6 +62,10 @@ const OrganizationBookingInsight = ({ rootDataRelay, organizationId, hideOrganiz
     handleRefetch(from, until);
   };
 
+  if (!rootData.organizationAnalytics) {
+    return <></>;
+  }
+
   const dataset =
     rootData.organizationAnalytics.dailyBookingsTotals.length === 0
       ? [{ date: 'No data available', percentage: 0 }]

@@ -53,6 +53,7 @@ type Props = {
   deskMultipleChoicesZonesData: deskMultipleChoicesZones_query$key;
   connectionIds: string[];
   customerDetails: CustomerDetails | null;
+  locationId: string;
 };
 
 interface CustomerDetails {
@@ -105,7 +106,7 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
   },
 };
 
-const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesData, connectionIds, customerDetails }: Props) => {
+const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesData, connectionIds, customerDetails, locationId }: Props) => {
   const rootData = useFragment<deskCard_query$key>(
     graphql`
       fragment deskCard_query on Query {
@@ -735,6 +736,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
                 <DeskName name="name" required={requiredFields.name} />
                 <DeskMultipleChoicesZones
                   rootDataRelay={deskMultipleChoicesZonesData}
+                  locationId={locationId}
                   name="locationTagIds"
                   required={requiredFields.locationTagIds}
                 />

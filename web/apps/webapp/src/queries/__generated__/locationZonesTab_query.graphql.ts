@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b3fc992f35ad258c058ed16072f0dcb8>>
+ * @generated SignedSource<<c2f4cca8badeb7014561b38b0b42a797>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type locationZonesTab_query$data = {
   readonly location: {
     readonly canModify: boolean;
   } | null | undefined;
-  readonly locationZonesTabPaginatedTags: {
+  readonly locationZonesTabPaginatedTags?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -23,7 +23,7 @@ export type locationZonesTab_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  };
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"zoneCard_Query">;
   readonly " $fragmentType": "locationZonesTab_query";
 };
@@ -47,6 +47,10 @@ return {
       "defaultValue": null,
       "kind": "LocalArgument",
       "name": "cursor"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "locationExists"
     },
     {
       "kind": "RootArgument",
@@ -115,80 +119,95 @@ return {
       "storageKey": null
     },
     {
-      "alias": "locationZonesTabPaginatedTags",
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "zoneSortingValues"
-        },
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "locationId",
-              "variableName": "locationId"
-            },
-            {
-              "kind": "Variable",
-              "name": "nameContains",
-              "variableName": "zoneNameSearchText"
-            },
-            {
-              "kind": "Variable",
-              "name": "tagType",
-              "variableName": "zoneTagType"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
-        }
-      ],
-      "concreteType": "LocationTagConnection",
-      "kind": "LinkedField",
-      "name": "__locationZonesTab_locationZonesTabPaginatedTags_connection",
-      "plural": false,
+      "condition": "locationExists",
+      "kind": "Condition",
+      "passingValue": true,
       "selections": [
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "LocationTagEdge",
+          "alias": "locationZonesTabPaginatedTags",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "orderBy",
+              "variableName": "zoneSortingValues"
+            },
+            {
+              "fields": [
+                {
+                  "kind": "Variable",
+                  "name": "locationId",
+                  "variableName": "locationId"
+                },
+                {
+                  "kind": "Variable",
+                  "name": "nameContains",
+                  "variableName": "zoneNameSearchText"
+                },
+                {
+                  "kind": "Variable",
+                  "name": "tagType",
+                  "variableName": "zoneTagType"
+                }
+              ],
+              "kind": "ObjectValue",
+              "name": "where"
+            }
+          ],
+          "concreteType": "LocationTagConnection",
           "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "name": "__locationZonesTab_locationZonesTabPaginatedTags_connection",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "LocationTagDetails",
+              "kind": "ScalarField",
+              "name": "totalCount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "LocationTagEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
+                  "concreteType": "LocationTagDetails",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "id",
+                      "storageKey": null
+                    },
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "zoneCard_LocationTagDetails"
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__typename",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "zoneCard_LocationTagDetails"
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "cursor",
                   "storageKey": null
                 }
               ],
@@ -197,52 +216,44 @@ return {
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
+              "concreteType": "PageInfo",
+              "kind": "LinkedField",
+              "name": "pageInfo",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "endCursor",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasNextPage",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
+              "kind": "ClientExtension",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__id",
+                  "storageKey": null
+                }
+              ]
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
-      ],
-      "storageKey": null
+      ]
     },
     {
       "args": null,
@@ -255,6 +266,6 @@ return {
 };
 })();
 
-(node as any).hash = "7c72a72206b5edb4920828b17a56b359";
+(node as any).hash = "c46717f85ec598cfd15e8f9d7860acda";
 
 export default node;

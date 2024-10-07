@@ -55,6 +55,7 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
   const router = useRouter();
   const addPaymentMethodStatus = searchParams.get('add-payment-method-status');
   const { enqueueSnackbar } = useSnackbar();
+  let initialTabIndex = 0;
 
   useEffect(() => {
     if (addPaymentMethodStatus === 'failed') {
@@ -65,8 +66,6 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
     } else if (addPaymentMethodStatus === 'added') {
     }
   }, [addPaymentMethodStatus, enqueueSnackbar]);
-
-  let initialTabIndex = 0;
 
   if (tab === 'bookings') {
     initialTabIndex = 0;
@@ -147,7 +146,7 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
       <>
         {tabIndex === 0 && <OrganizationBookingsTab rootDataRelay={rootData} organizationId={organizationId} />}
         {tabIndex === 1 && <OrganizationAboutTab rootDataRelay={rootData} />}
-        {tabIndex === 2 && <OrganizationPeopleTab rootDataRelay={rootData} />}
+        {tabIndex === 2 && <OrganizationPeopleTab rootDataRelay={rootData} organizationId={organizationId} />}
         {tabIndex === 3 && <OrganizationLocationsTab rootDataRelay={rootData} />}
         {tabIndex === 4 && <OrganizationTeamsTab rootDataRelay={rootData} />}
         {tabIndex === 5 && rootData.organization.canModify && <OrganizationOfferingTab rootDataRelay={rootData} onRefetchRequired={handleRefetch} />}

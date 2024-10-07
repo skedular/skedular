@@ -38,8 +38,8 @@ type Query {
         last: Int
         where: TeamWhereInput!
         orderBy: [TeamOrderInput!]
-    ): TeamConnection!
-    myTeams(organizationId: String): [TeamDetails!]!
+    ): TeamConnection
+    myTeams(organizationId: String): [TeamDetails!]
     paginatedTeamMembers(
         after: String
         first: Int
@@ -47,11 +47,11 @@ type Query {
         last: Int
         where: TeamMemberWhereInput!
         orderBy: [TeamMemberOrderInput!]
-    ): TeamMemberConnection!
+    ): TeamMemberConnection
     teamMembers(
         where: TeamMemberWhereInput!
         orderBy: [TeamMemberOrderInput!]
-    ): [TeamMemberDetails!]!
+    ): [TeamMemberDetails!]
 }
 
 input TeamWhereInput {

@@ -2,7 +2,7 @@ import { BookingCard } from '@/components/booking';
 import type { bookingFeeds_PaginationQuery } from '@/queries/__generated__/bookingFeeds_PaginationQuery.graphql';
 import type { bookingFeeds_query$key } from '@/queries/__generated__/bookingFeeds_query.graphql';
 import Grid from '@mui/material/Grid2';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -10,11 +10,7 @@ type Props = {
 };
 
 const BookingFeeds = ({ rootDataRelay }: Props) => {
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-  } = usePaginationFragment<bookingFeeds_PaginationQuery, bookingFeeds_query$key>(
+  const { data: rootData } = usePaginationFragment<bookingFeeds_PaginationQuery, bookingFeeds_query$key>(
     graphql`
       fragment bookingFeeds_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
@@ -35,17 +31,12 @@ const BookingFeeds = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
-  const loadMore = useCallback(() => {
-    if (isLoadingNext) {
-      return;
-    }
-
-    loadNext(10);
-  }, [loadNext, isLoadingNext]);
-
-  const connectionIds = useMemo(() => [rootData.bookings?.__id], [rootData.bookings]);
-
+  const connectionIds = useMemo(() => (rootData.bookings ? [rootData.bookings.__id] : []), [rootData.bookings]);
   const bookings = useMemo(() => rootData.bookings, [rootData.bookings]);
+
+  if (!bookings) {
+    return <></>;
+  }
 
   return (
     <Grid container spacing={1}>

@@ -241,7 +241,7 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Notification;
             
 
                 
-                public abstract Task<NotificationConnection> MyNotificationsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("orderBy")] NotificationOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+                public abstract Task<NotificationConnection?> MyNotificationsAsync([HotChocolate.GraphQLName("after")] string? after, [HotChocolate.GraphQLName("first")] int? first, [HotChocolate.GraphQLName("before")] string? before, [HotChocolate.GraphQLName("last")] int? last, [HotChocolate.GraphQLName("orderBy")] NotificationOrderInput[]? orderBy, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
         }
         
 

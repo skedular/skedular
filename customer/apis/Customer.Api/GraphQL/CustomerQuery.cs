@@ -39,7 +39,7 @@ public class CustomerQuery(IMapper mapper) : Query
         return mapper.MapTo(customer);
     }
 
-    public override async Task<CustomerConnection> PaginatedCustomersByDefaultLocationAsync(
+    public override async Task<CustomerConnection?> PaginatedCustomersByDefaultLocationAsync(
         string? after,
         int? first,
         string? before,
@@ -49,6 +49,8 @@ public class CustomerQuery(IMapper mapper) : Query
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
+        
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         var (paginatedInfo, edges, totalCount) =
@@ -101,14 +103,21 @@ public class CustomerQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<CustomerDetails[]> CustomersByDefaultLocationAsync(
+    public override async Task<CustomerDetails[]?> CustomersByDefaultLocationAsync(
         CustomerWhereInput where,
         CustomerOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
-        var result = await PaginatedCustomersByDefaultLocationAsync(null, null, null, null, where, [], serviceProvider,
+        var result = await PaginatedCustomersByDefaultLocationAsync(
+            null,
+            null,
+            null,
+            null,
+            where,
+            [],
+            serviceProvider,
             cancellationToken);
-        return result.Edges.Select(item => item.Node).ToArray();
+        return result?.Edges.Select(item => item.Node).ToArray();
     }
 }

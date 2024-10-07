@@ -1,10 +1,7 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { LocationLink } from '@/components/location';
 import { TeamLink } from '@/components/team';
-import type {
-  customerTodaySummary_rootQuery,
-  customerTodaySummary_rootQuery$data,
-} from '@/queries/__generated__/customerTodaySummary_rootQuery.graphql';
+import type { customerTodaySummary_rootQuery } from '@/queries/__generated__/customerTodaySummary_rootQuery.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -87,6 +84,45 @@ const RootQuery = graphql`
   }
 `;
 
+type CustomerDetails = {
+  readonly uniqueId: string;
+  readonly givenName?: string | null | undefined;
+  readonly middleName?: string | null | undefined;
+  readonly familyName?: string | null | undefined;
+  readonly name?: string | null | undefined;
+  readonly photoUrl?: string | null | undefined;
+};
+
+type LocationDetails = {
+  readonly uniqueId: string;
+  readonly name?: string | null | undefined;
+};
+
+type LocationTagDetails = {
+  readonly uniqueId: string;
+  readonly name?: string | null | undefined;
+  readonly tagType?: string | null | undefined;
+};
+
+type DeskDetails = {
+  readonly uniqueId: string;
+  readonly name?: string | null | undefined;
+  readonly locationTags: ReadonlyArray<LocationTagDetails>;
+};
+
+type TeamDetails = {
+  readonly uniqueId: string;
+  readonly name?: string | null | undefined;
+};
+
+type BookingDetails = {
+  readonly id: string;
+  readonly customer: CustomerDetails;
+  readonly location?: LocationDetails | null | undefined;
+  readonly team?: TeamDetails | null | undefined;
+  readonly desks: ReadonlyArray<DeskDetails>;
+};
+
 const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<customerTodaySummary_rootQuery>(RootQuery, queryReference);
   const [bookingPopperAnchorEl, setBookingPopperAnchorEl] = useState<null | HTMLElement>(null);
@@ -94,11 +130,11 @@ const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props)
   const [bookingPopperMessage, setBookingPopperMessage] = useState<string>('');
 
   const myBookings = useMemo(
-    () => rootData.allBookings.filter(({ customer: { uniqueId } }) => uniqueId === rootData.me?.id),
+    () => (rootData.allBookings ? rootData.allBookings.filter(({ customer: { uniqueId } }) => uniqueId === rootData.me?.id) : []),
     [rootData.allBookings, rootData.me?.id],
   );
   const otherBookings = useMemo(
-    () => rootData.allBookings.filter(({ id }) => myBookings.every(({ id: myBookingId }) => myBookingId !== id)),
+    () => (rootData.allBookings ? rootData.allBookings.filter(({ id }) => myBookings.every(({ id: myBookingId }) => myBookingId !== id)) : []),
     [myBookings, rootData.allBookings],
   );
   const groupedOtherBookingsByLocation = useMemo(
@@ -144,7 +180,7 @@ const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props)
     [otherBookings],
   );
 
-  const getMyBookingComponent = (booking: customerTodaySummary_rootQuery$data['allBookings'][number]) => (
+  const getMyBookingComponent = (booking: BookingDetails) => (
     <Stack key={booking.id} direction="column">
       {booking.location && (
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
@@ -173,20 +209,14 @@ const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props)
             <Typography variant="body1" component="div">
               {name}
             </Typography>
-
-            <ZonesLine
-              zones={zones.map(({ uniqueId, name }) => ({
-                id: uniqueId,
-                name,
-              }))}
-            />
+            <ZonesLine zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
           </Stack>
         );
       })}
     </Stack>
   );
 
-  const getMyBookingsComponents = (bookings: customerTodaySummary_rootQuery$data['allBookings']) => (
+  const getMyBookingsComponents = (bookings: BookingDetails[]) => (
     <Stack direction="column">
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         {bookings.length === 0 && <Typography variant="h6">You have no booking</Typography>}
@@ -194,11 +224,7 @@ const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props)
       </Stack>
       <Stack direction="column">
         {bookings.length === 0 && (
-          <NewBookingButton
-            hideLocationControl={false}
-            hideOrganizationControl={false}
-            onReloadRequired={onReloadRequired}
-          />
+          <NewBookingButton hideLocationControl={false} hideOrganizationControl={false} onReloadRequired={onReloadRequired} />
         )}
         {bookings.length !== 0 && (
           <>
@@ -216,14 +242,17 @@ const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props)
   );
 
   const getBookingsByLocationsComponents = (locationId: string, bookings: typeof otherBookings) => {
-    const location = rootData.myLocations.find(({ id }) => id === locationId);
+    const location = rootData.myLocations?.find(({ id }) => id === locationId);
+    if (!location) {
+      return <></>;
+    }
 
     return (
       <Stack direction="column" spacing={1}>
         <LocationLink
-          organizationId={location?.organization?.uniqueId}
+          organizationId={location.organization?.uniqueId}
           id={locationId}
-          name={location?.name}
+          name={location.name}
           enableViewDetails
           onReloadRequired={onReloadRequired}
         />
@@ -257,11 +286,14 @@ const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props)
   };
 
   const getBookingsByTeamsComponents = (teamId: string, bookings: typeof otherBookings) => {
-    const team = rootData.myTeams.find(({ id }) => id === teamId);
+    const team = rootData.myTeams?.find(({ id }) => id === teamId);
+    if (!team) {
+      return <></>;
+    }
 
     return (
       <Stack direction="column" spacing={1}>
-        <TeamLink organizationId={team?.organization?.uniqueId} id={teamId} name={team?.name} enableViewDetails onReloadRequired={onReloadRequired} />
+        <TeamLink organizationId={team.organization?.uniqueId} id={teamId} name={team.name} enableViewDetails onReloadRequired={onReloadRequired} />
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <AvatarGroup max={10}>
             {bookings.map((booking) => (

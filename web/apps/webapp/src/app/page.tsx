@@ -20,6 +20,7 @@ type Props = {
 const RootQuery = graphql`
   query pageHome_rootQuery(
     $organizationId: String!
+    $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
     $monthlyCalendarDateFrom: DateTime!
@@ -71,6 +72,7 @@ const HomeWithRelay = () => {
         monthlyCalendarDateTo: endOfMonth(date).toISOString(),
         deskIdsToIncludeToGetAvailableDesks: [],
         organizationId: '',
+        organizationExists: false,
         locationId: '',
         locationExists: false,
         bookingPeopleNameSearchText: '',

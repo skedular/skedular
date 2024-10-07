@@ -27,7 +27,7 @@ type Query {
     billingCustomerRecordSynced: Boolean!
     organizationCurrentOfferingCharges(
         organizationId: String!
-    ): [OrganizationCurrentOfferingChargesDetails!]!
+    ): [OrganizationCurrentOfferingChargesDetails!]
     organizationBillingInfo(organizationId: String!): OrganizationBillingInfo
 }
 

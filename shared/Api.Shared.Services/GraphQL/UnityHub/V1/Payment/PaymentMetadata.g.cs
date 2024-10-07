@@ -29,7 +29,7 @@ type Query {
     paymentCustomerRecordSynced: Boolean!
     organizationPaymentMethodsDetails(
         organizationId: String!
-    ): [OrganizationPaymentMethod!]!
+    ): [OrganizationPaymentMethod!]
 }
 
 type Mutation {

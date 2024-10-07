@@ -122,8 +122,8 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => [rootData.locations?.__id], [rootData.locations]);
-  const locationEdges = rootData.locations.edges;
+  const connectionIds = useMemo(() => (rootData.locations ? [rootData.locations.__id] : []), [rootData.locations]);
+  const locationEdges = rootData.locations ? rootData.locations.edges : [];
   const slicedEdges = locationEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > locationEdges.length ? locationEdges.length : page * pageSize + pageSize,

@@ -123,8 +123,8 @@ const OrganizationTeamsTab = ({ rootDataRelay }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => [rootData.teams?.__id], [rootData.teams]);
-  const teamEdges = rootData.teams.edges;
+  const connectionIds = useMemo(() => (rootData.teams ? [rootData.teams.__id] : []), [rootData.teams]);
+  const teamEdges = rootData.teams ? rootData.teams.edges : [];
   const slicedEdges = teamEdges.slice(page * pageSize, page * pageSize + pageSize > teamEdges.length ? teamEdges.length : page * pageSize + pageSize);
 
   const handleSortingChanged = (direction: Direction, value: string) => {

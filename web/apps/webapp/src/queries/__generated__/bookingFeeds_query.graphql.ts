@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f58ce74f02c54e3221789da594561df9>>
+ * @generated SignedSource<<8e1fa0d71afc81a4141417d40dc737e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type bookingFeeds_query$data = {
         readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
       };
     }>;
-  };
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"bookingCard_query">;
   readonly " $fragmentType": "bookingFeeds_query";
 };
@@ -71,6 +71,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "locationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationExists"
     },
     {
       "kind": "RootArgument",

@@ -36,6 +36,7 @@ import { array, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: organizationPeopleTab_query$key;
+  organizationId: string;
 };
 
 interface MembersToJoin {
@@ -55,7 +56,7 @@ const membersToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
+const OrganizationPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
   const {
     data: rootData,
     loadNext,
@@ -77,7 +78,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }
           orderBy: $organizationPeopleSortingValues
-        ) @connection(key: "organizationPeopleTab_paginatedOrganizationMembers") {
+        ) @connection(key: "organizationPeopleTab_paginatedOrganizationMembers") @include(if: $organizationExists) {
           __id
           totalCount
           edges {
@@ -182,6 +183,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
         refetch(
           {
             count: pageSize,
+            organizationExists: !!organizationId,
             organizationPeopleSortingValues: [order],
             peopleNameSearchText,
           },
@@ -194,7 +196,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
         );
       });
     },
-    [refetch],
+    [refetch, organizationId],
   );
 
   const loadNextPage = useCallback(() => {
@@ -244,7 +246,7 @@ const OrganizationPeopleTab = ({ rootDataRelay }: Props) => {
     );
   };
 
-  if (!rootData.organization) {
+  if (!rootData.organization || !rootData.paginatedOrganizationMembers) {
     return <></>;
   }
 

@@ -61,7 +61,7 @@ public class LocationQuery(IMapper mapper) : Query
         return mapper.MapTo(location);
     }
 
-    public override async Task<LocationConnection> LocationsAsync(
+    public override async Task<LocationConnection?> LocationsAsync(
         string? after,
         int? first,
         string? before,
@@ -75,7 +75,7 @@ public class LocationQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new LocationConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<ILocationService>();
@@ -116,7 +116,7 @@ public class LocationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<LocationDetails[]> MyLocationsAsync(
+    public override async Task<LocationDetails[]?> MyLocationsAsync(
         string? organizationId,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
@@ -125,7 +125,7 @@ public class LocationQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return [];
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<ILocationService>();
@@ -133,7 +133,7 @@ public class LocationQuery(IMapper mapper) : Query
         return mapper.MapTo(locations).ToArray();
     }
 
-    public override async Task<LocationMemberConnection> PaginatedLocationMembersAsync(
+    public override async Task<LocationMemberConnection?> PaginatedLocationMembersAsync(
         string? after,
         int? first,
         string? before,
@@ -143,16 +143,13 @@ public class LocationQuery(IMapper mapper) : Query
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(where.LocationId))
-        {
-            return new LocationMemberConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
 
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new LocationMemberConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<ILocationMemberService>();
@@ -196,18 +193,25 @@ public class LocationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<LocationMemberDetails[]> LocationMembersAsync(
+    public override async Task<LocationMemberDetails[]?> LocationMembersAsync(
         LocationMemberWhereInput where,
         LocationMemberOrderInput[]? orderBy,
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
-        var result = await PaginatedLocationMembersAsync(null, null, null, null, where, [], serviceProvider,
+        var result = await PaginatedLocationMembersAsync(
+            null,
+            null,
+            null,
+            null,
+            where,
+            [],
+            serviceProvider,
             cancellationToken);
-        return result.Edges.Select(item => item.Node).ToArray();
+        return result?.Edges.Select(item => item.Node).ToArray();
     }
 
-    public override async Task<LocationTagConnection> PaginatedLocationTagsAsync(
+    public override async Task<LocationTagConnection?> PaginatedLocationTagsAsync(
         string? after,
         int? first,
         string? before,
@@ -221,7 +225,7 @@ public class LocationQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new LocationTagConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<ITagService>();
@@ -260,7 +264,7 @@ public class LocationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<DeskConnection> PaginatedLocationDesksAsync(
+    public override async Task<DeskConnection?> PaginatedLocationDesksAsync(
         string? after,
         int? first,
         string? before,
@@ -274,7 +278,7 @@ public class LocationQuery(IMapper mapper) : Query
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return new DeskConnection { PageInfo = new PageInfo(), Edges = [], TotalCount = 0 };
+            return null;
         }
 
         var service = scope.ServiceProvider.GetRequiredService<IDeskService>();
@@ -313,7 +317,7 @@ public class LocationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<LocationAnalytics> LocationAnalyticsAsync(
+    public override async Task<LocationAnalytics?> LocationAnalyticsAsync(
         string locationId,
         DateTimeOffset from,
         DateTimeOffset until,

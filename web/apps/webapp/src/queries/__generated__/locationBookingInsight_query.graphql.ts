@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2ff092769b1b81f7bccaf189575f525c>>
+ * @generated SignedSource<<6f6d6028ca2e30ed6a0452ff44f2ed6f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,12 +14,12 @@ export type locationBookingInsight_query$data = {
   readonly location: {
     readonly name: string;
   } | null | undefined;
-  readonly locationAnalytics: {
+  readonly locationAnalytics?: {
     readonly dailyBookingsTotals: ReadonlyArray<{
       readonly date: any;
       readonly total: number;
     }>;
-  };
+  } | null | undefined;
   readonly " $fragmentType": "locationBookingInsight_query";
 };
 export type locationBookingInsight_query$key = {
@@ -32,6 +32,10 @@ const node: ReaderFragment = {
     {
       "kind": "RootArgument",
       "name": "from"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "locationExists"
     },
     {
       "kind": "RootArgument",
@@ -53,56 +57,63 @@ const node: ReaderFragment = {
   "name": "locationBookingInsight_query",
   "selections": [
     {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "from",
-          "variableName": "from"
-        },
-        {
-          "kind": "Variable",
-          "name": "locationId",
-          "variableName": "locationId"
-        },
-        {
-          "kind": "Variable",
-          "name": "until",
-          "variableName": "to"
-        }
-      ],
-      "concreteType": "LocationAnalytics",
-      "kind": "LinkedField",
-      "name": "locationAnalytics",
-      "plural": false,
+      "condition": "locationExists",
+      "kind": "Condition",
+      "passingValue": true,
       "selections": [
         {
           "alias": null,
-          "args": null,
-          "concreteType": "LocationDailyBookingsTotal",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "from",
+              "variableName": "from"
+            },
+            {
+              "kind": "Variable",
+              "name": "locationId",
+              "variableName": "locationId"
+            },
+            {
+              "kind": "Variable",
+              "name": "until",
+              "variableName": "to"
+            }
+          ],
+          "concreteType": "LocationAnalytics",
           "kind": "LinkedField",
-          "name": "dailyBookingsTotals",
-          "plural": true,
+          "name": "locationAnalytics",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "date",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "total",
+              "concreteType": "LocationDailyBookingsTotal",
+              "kind": "LinkedField",
+              "name": "dailyBookingsTotals",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "date",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "total",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
           "storageKey": null
         }
-      ],
-      "storageKey": null
+      ]
     },
     {
       "alias": null,
@@ -133,6 +144,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f059b673b9277b12969f8cabc249a475";
+(node as any).hash = "948373ee0a2f820b1cfacdeef37cfcda";
 
 export default node;

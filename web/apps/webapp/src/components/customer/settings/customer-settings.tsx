@@ -35,7 +35,6 @@ const CustomerSettings = ({ rootDataRelay }: Props) => {
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
   const router = useRouter();
-
   let initialTabIndex = 0;
 
   if (tab === 'personal') {

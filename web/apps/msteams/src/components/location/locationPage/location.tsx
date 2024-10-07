@@ -44,7 +44,6 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get('tab');
-
   let initialTabIndex = 0;
 
   if (tab === 'bookings') {
@@ -108,7 +107,12 @@ const Location = ({ rootDataRelay, locationId, organizationId }: Props) => {
         {tabIndex === 0 && <LocationBookingsTab rootDataRelay={rootData} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 1 && <LocationAboutTab rootDataRelay={rootData} organizationId={organizationId} />}
         {tabIndex === 2 && (
-          <LocationPeopleTab rootDataLocationMembersRelay={rootData} rootDataOrganizationMembersRelay={rootData} organizationId={organizationId} />
+          <LocationPeopleTab
+            rootDataLocationMembersRelay={rootData}
+            rootDataOrganizationMembersRelay={rootData}
+            organizationId={organizationId}
+            locationId={locationId}
+          />
         )}
         {tabIndex === 3 && <LocationZonesTab rootDataRelay={rootData} locationId={locationId} />}
         {tabIndex === 4 && <LocationDesksTab rootDataRelay={rootData} locationId={locationId} />}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6e8ff9dc3a83ed08b6cdf554d89c85e8>>
+ * @generated SignedSource<<f2138973dfb4f5c375eea7c732dbff4d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type bookingSingleChoiceOrganization_query$data = {
   readonly myOrganizations: ReadonlyArray<{
     readonly id: string;
     readonly name: string;
-  }>;
+  }> | null | undefined;
   readonly " $fragmentType": "bookingSingleChoiceOrganization_query";
 };
 export type bookingSingleChoiceOrganization_query$key = {

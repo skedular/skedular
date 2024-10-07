@@ -129,7 +129,7 @@ const BookingDetailsSelector = ({
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText }
           orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues
-        ) @connection(key: "bookingDetailsSelectorQuery_bookingDetailsSelectorQueryPaginatedOrganizationMembers") {
+        ) @connection(key: "bookingDetailsSelectorQuery_bookingDetailsSelectorQueryPaginatedOrganizationMembers") @include(if: $organizationExists) {
           __id
           totalCount
           edges {
@@ -157,7 +157,10 @@ const BookingDetailsSelector = ({
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');
   const [organizationId, setOrganizationId] = useState(defaultOrganizationId);
   const [locationId, setLocationId] = useState(defaultLocationId);
-  const organizations = useMemo<LocationDetails[]>(() => rootData.myOrganizations.map((organization) => organization), [rootData.myOrganizations]);
+  const organizations = useMemo<LocationDetails[]>(
+    () => (rootData.myOrganizations ? rootData.myOrganizations.map((organization) => organization) : []),
+    [rootData.myOrganizations],
+  );
 
   const customers = useMemo<OrganizationMemberDetails[]>(() => {
     if (!rootData.bookingDetailsSelectorQueryPaginatedOrganizationMembers) {
@@ -167,7 +170,10 @@ const BookingDetailsSelector = ({
     return rootData.bookingDetailsSelectorQueryPaginatedOrganizationMembers.edges.map(({ node }) => node);
   }, [rootData.bookingDetailsSelectorQueryPaginatedOrganizationMembers]);
 
-  const locations = useMemo<LocationDetails[]>(() => rootData.myLocations.map((location) => location), [rootData.myLocations]);
+  const locations = useMemo<LocationDetails[]>(
+    () => (rootData.myLocations ? rootData.myLocations.map((location) => location) : []),
+    [rootData.myLocations],
+  );
 
   const desks = useMemo<DeskDetails[]>(() => {
     if (!rootData.availableLocationDesks) {
@@ -187,13 +193,14 @@ const BookingDetailsSelector = ({
   }, [rootData.availableLocationDesks]);
 
   const handleRefetch = useCallback(
-    (bookingPeopleNameSearchText: string,deskIds: string[], organizationId?: string, locationId?: string) => {
+    (bookingPeopleNameSearchText: string, deskIds: string[], organizationId?: string, locationId?: string) => {
       startTransition(() => {
         refetch(
           {
             count: pageSize,
             bookingPeopleNameSearchText,
             organizationId: organizationId ?? '',
+            organizationExists: !!organizationId,
             locationId: locationId ?? '',
             locationExists: !!locationId,
             deskIdsToIncludeToGetAvailableDesks: deskIds,
@@ -213,7 +220,7 @@ const BookingDetailsSelector = ({
 
   // Workaround to ensure we have all the entire form refreshed once any dependent values change
   useEffect(() => {
-    handleRefetch(bookingPeopleNameSearchText,defaultDeskIds, organizationId, locationId);
+    handleRefetch(bookingPeopleNameSearchText, defaultDeskIds, organizationId, locationId);
   }, [handleRefetch, bookingPeopleNameSearchText, organizationId, locationId, bookingFrom, bookingTo, defaultDeskIds]);
 
   const filterOrganization = createFilterOptions<OrganizationDetails>();
@@ -227,7 +234,7 @@ const BookingDetailsSelector = ({
   };
 
   const handleLocationChange = (option: LocationDetails | null) => {
-    const id = option?.id ;
+    const id = option?.id;
     setLocationId(id);
     handleRefetch(bookingPeopleNameSearchText, defaultDeskIds, organizationId, id);
   };

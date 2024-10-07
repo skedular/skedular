@@ -24,7 +24,7 @@ const LocationBookingInsight = ({ rootDataRelay, organizationId, locationId, hid
   const [rootData, refetch] = useRefetchableFragment(
     graphql`
       fragment locationBookingInsight_query on Query @refetchable(queryName: "locationBookingInsight_organizationAnalytics") {
-        locationAnalytics(locationId: $locationId, from: $from, until: $to) {
+        locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {
           dailyBookingsTotals {
             date
             total
@@ -46,6 +46,7 @@ const LocationBookingInsight = ({ rootDataRelay, organizationId, locationId, hid
         refetch(
           {
             locationId,
+            locationExists: !!locationId,
             from: from.toISOString(),
             to: to.toISOString(),
           },
@@ -61,6 +62,10 @@ const LocationBookingInsight = ({ rootDataRelay, organizationId, locationId, hid
   const handleDateRangeChange = (from: Dayjs, until: Dayjs) => {
     handleRefetch(from, until);
   };
+
+  if (!rootData.locationAnalytics) {
+    return <></>;
+  }
 
   const dataset =
     rootData.locationAnalytics.dailyBookingsTotals.length === 0

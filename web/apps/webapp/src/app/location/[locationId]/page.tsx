@@ -22,6 +22,7 @@ type Props = {
 const RootQuery = graphql`
   query pageLocation_rootQuery(
     $organizationId: String!
+    $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
     $zoneTagType: String!
@@ -98,6 +99,7 @@ const LocationPageWithRelay = () => {
         fromToGetBookings: from,
         toToGetBookings: to,
         organizationId: '',
+        organizationExists: false,
         peopleNameSearchText: '',
         zoneNameSearchText: '',
         deskNameSearchText: '',

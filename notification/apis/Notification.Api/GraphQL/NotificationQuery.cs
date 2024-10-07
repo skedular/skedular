@@ -38,7 +38,7 @@ public class NotificationQuery(IMapper mapper) : Query
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override async Task<NotificationConnection> MyNotificationsAsync(
+    public override async Task<NotificationConnection?> MyNotificationsAsync(
         string? after,
         int? first,
         string? before,
@@ -48,6 +48,12 @@ public class NotificationQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
+        var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        if (!await customerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return null;
+        }
+
         var service = scope.ServiceProvider.GetRequiredService<INotificationService>();
         var (paginatedInfo, edges, totalCount) =
             await service.GetMyPaginatedNotificationsAsync(

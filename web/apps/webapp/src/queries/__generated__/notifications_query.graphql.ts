@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<10abb67e38a22ac1ab9b058476e4b74c>>
+ * @generated SignedSource<<ec9d7d804b7df642d83ddaf348116dad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type notifications_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  };
+  } | null | undefined;
   readonly " $fragmentType": "notifications_query";
 };
 export type notifications_query$key = {

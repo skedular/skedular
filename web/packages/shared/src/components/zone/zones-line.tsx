@@ -9,11 +9,11 @@ import { CollapseIcon, MoreItemsIcon, ZoneIcon } from '../icons';
 
 export type Zone = {
   id: string;
-  name: string;
+  name?: string | null | undefined;
 };
 
 type Props = {
-  zones: ReadonlyArray<Zone>;
+  zones: readonly Zone[];
   zoneTotalDisplayLimit?: number;
 };
 

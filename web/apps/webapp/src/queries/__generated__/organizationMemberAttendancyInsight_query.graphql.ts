@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2ed7975f6ee2a954e684e6b3bbb9d219>>
+ * @generated SignedSource<<3a961235e024a6750cfff8f05cb7e472>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type organizationMemberAttendancyInsight_query$data = {
       readonly date: any;
       readonly percentage: number;
     }>;
-  };
+  } | null | undefined;
   readonly " $fragmentType": "organizationMemberAttendancyInsight_query";
 };
 export type organizationMemberAttendancyInsight_query$key = {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5712576424e5322c3f04dd7375c2747>>
+ * @generated SignedSource<<035b9a076f29af43cd3dd2511bcfd826>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,7 +25,7 @@ export type locationBookingsTab_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  };
+  } | null | undefined;
   readonly me: {
     readonly id: string;
   } | null | undefined;
@@ -95,6 +95,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "locationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationExists"
     },
     {
       "kind": "RootArgument",
