@@ -272,8 +272,6 @@ const OrganizationBookingsTab = ({ rootDataRelay, organizationId }: Props) => {
         onAddClicked={handleAddBookingDialogAddClick}
         onCancelClicked={handleAddBookingDialogCancelClick}
         organizationId={organizationId}
-        locationId={null}
-        defaultTeamId={null}
         hideOrganizationControl={true}
         hideLocationControl={false}
       />

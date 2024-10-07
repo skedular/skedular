@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<59130ee93ea129ea539e8c2de01d647d>>
+ * @generated SignedSource<<9197240dbcafdc41932a6d2b525a3dab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -55,6 +55,10 @@ const node: ReaderFragment = {
     {
       "kind": "RootArgument",
       "name": "deskIdsToIncludeToGetAvailableDesks"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "locationExists"
     },
     {
       "kind": "RootArgument",

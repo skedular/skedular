@@ -685,19 +685,19 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
               setFrom(values.date);
 
               return (
-                <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
+                <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
                   <BookingDate name="date" required={requiredFields.date} />
                   <BookingNotes name="notes" required={requiredFields.notes} />
                   <BookingDetailsSelector
                     rootDataRelay={rootData}
-                    defaultOrganizationId={bookingDetails.organization ? bookingDetails.organization.uniqueId : null}
+                    defaultOrganizationId={bookingDetails.organization?.uniqueId}
                     organizationName="organization"
                     organizationRequired={requiredFields.organization}
                     hideOrganizationControl={hideOrganizationControl}
                     organizationMemberName="member"
                     organizationMemberRequired={requiredFields.member}
                     hideOrganizationMemberControl={true}
-                    defaultLocationId={bookingDetails.location ? bookingDetails.location.uniqueId : null}
+                    defaultLocationId={ bookingDetails.location?.uniqueId}
                     locationName="location"
                     locationRequired={requiredFields.location}
                     hideLocationControl={hideLocationControl}

@@ -26,11 +26,11 @@ type Props = {
   isDialogOpen: boolean;
   onAddClicked: () => void;
   onCancelClicked: () => void;
-  organizationId: string | null;
-  locationId: string | null;
-  defaultTeamId: string | null;
-  hideOrganizationControl: boolean;
-  hideLocationControl: boolean;
+  organizationId?: string;
+  locationId?: string;
+  defaultTeamId?: string;
+  hideOrganizationControl?: boolean;
+  hideLocationControl?: boolean;
 };
 
 interface BookingDetails {
@@ -199,7 +199,7 @@ const NewBookingDialog = ({
             setFrom(values.date);
 
             return (
-              <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
+              <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
                 <BookingDate name="date" required={requiredFields.date} />
                 <BookingNotes name="notes" required={requiredFields.notes} />
                 <BookingDetailsSelector

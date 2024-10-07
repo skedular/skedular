@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<678a52a31b2b3e565710ce9f81ff1dc5>>
+ * @generated SignedSource<<a782d57927b18100c05ac2213e3911d3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingDetailsSelector_query$data = {
-  readonly availableLocationDesks: ReadonlyArray<{
+  readonly availableLocationDesks?: ReadonlyArray<{
     readonly locationTags: ReadonlyArray<{
       readonly name: string;
       readonly tagType: string | null | undefined;
@@ -116,6 +116,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "locationExists"
+    },
+    {
+      "kind": "RootArgument",
       "name": "locationId"
     },
     {
@@ -171,37 +175,32 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "date",
-          "variableName": "dateToGetAvailableDesks"
-        },
-        {
-          "kind": "Variable",
-          "name": "deskIdsToInclude",
-          "variableName": "deskIdsToIncludeToGetAvailableDesks"
-        },
-        {
-          "kind": "Variable",
-          "name": "locationId",
-          "variableName": "locationId"
-        }
-      ],
-      "concreteType": "BookingDeskDetails",
-      "kind": "LinkedField",
-      "name": "availableLocationDesks",
-      "plural": true,
+      "condition": "locationExists",
+      "kind": "Condition",
+      "passingValue": true,
       "selections": [
-        (v5/*: any*/),
-        (v2/*: any*/),
         {
           "alias": null,
-          "args": null,
-          "concreteType": "BookingLocationTagDetails",
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "date",
+              "variableName": "dateToGetAvailableDesks"
+            },
+            {
+              "kind": "Variable",
+              "name": "deskIdsToInclude",
+              "variableName": "deskIdsToIncludeToGetAvailableDesks"
+            },
+            {
+              "kind": "Variable",
+              "name": "locationId",
+              "variableName": "locationId"
+            }
+          ],
+          "concreteType": "BookingDeskDetails",
           "kind": "LinkedField",
-          "name": "locationTags",
+          "name": "availableLocationDesks",
           "plural": true,
           "selections": [
             (v5/*: any*/),
@@ -209,15 +208,27 @@ return {
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "tagType",
+              "concreteType": "BookingLocationTagDetails",
+              "kind": "LinkedField",
+              "name": "locationTags",
+              "plural": true,
+              "selections": [
+                (v5/*: any*/),
+                (v2/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "tagType",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
           "storageKey": null
         }
-      ],
-      "storageKey": null
+      ]
     },
     {
       "alias": "bookingDetailsSelectorQueryPaginatedOrganizationMembers",
@@ -376,6 +387,6 @@ return {
 };
 })();
 
-(node as any).hash = "b803572cc2b8c1116a0e7f9503c933ea";
+(node as any).hash = "93ef816b509d3220b301bdfea6e2f25e";
 
 export default node;

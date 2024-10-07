@@ -128,7 +128,7 @@ const AddOrganization = ({ rootDataRelay }: Props) => {
         }}
         validate={validate}
         render={({ handleSubmit }) => (
-          <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
+          <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
             <TextField label="Name" name="name" required={requiredFields.name} />
             <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
             <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />

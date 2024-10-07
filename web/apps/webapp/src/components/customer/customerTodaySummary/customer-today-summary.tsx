@@ -1,3 +1,4 @@
+import { NewBookingButton } from '@/components/booking/addBooking';
 import { LocationLink } from '@/components/location';
 import { TeamLink } from '@/components/team';
 import type {
@@ -5,7 +6,6 @@ import type {
   customerTodaySummary_rootQuery$data,
 } from '@/queries/__generated__/customerTodaySummary_rootQuery.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -17,7 +17,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getBookingSummaryMessage } from '@repo/shared/components/booking';
-import { DeskIcon, LocationIcon, NewIcon, TeamIcon } from '@repo/shared/components/icons';
+import { DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
@@ -194,9 +194,11 @@ const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props)
       </Stack>
       <Stack direction="column">
         {bookings.length === 0 && (
-          <Button variant="contained" startIcon={<NewIcon />} size="small" sx={{ alignSelf: 'flex-start' }}>
-            Make a booking
-          </Button>
+          <NewBookingButton
+            hideLocationControl={false}
+            hideOrganizationControl={false}
+            onReloadRequired={onReloadRequired}
+          />
         )}
         {bookings.length !== 0 && (
           <>

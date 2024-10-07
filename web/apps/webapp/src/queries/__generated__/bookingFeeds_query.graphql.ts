@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3869c49fdc56bb8de285eaf996b49af1>>
+ * @generated SignedSource<<f58ce74f02c54e3221789da594561df9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,6 +63,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "deskIdsToIncludeToGetAvailableDesks"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "locationExists"
     },
     {
       "kind": "RootArgument",

@@ -236,7 +236,7 @@ const OrganizationBillingInfo = ({ rootDataRelay }: Props) => {
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
+              <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
                 <TextField label="Email" name="email" required={requiredFields.email} helperText="Email to send invoice to" />
                 <TextField label="Address line 1" name="addressLine1" required={requiredFields.addressLine1} />
                 <TextField label="Address line 2" name="addressLine2" required={requiredFields.addressLine2} />

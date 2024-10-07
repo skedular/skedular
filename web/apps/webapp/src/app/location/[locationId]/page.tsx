@@ -23,6 +23,7 @@ const RootQuery = graphql`
   query pageLocation_rootQuery(
     $organizationId: String!
     $locationId: String!
+    $locationExists: Boolean!
     $zoneTagType: String!
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
@@ -91,6 +92,7 @@ const LocationPageWithRelay = () => {
     loadQuery(
       {
         locationId: finalLocationId,
+        locationExists: !!finalLocationId,
         zoneTagType: TAG_TYPE_LOCATION_ZONE,
         deskIdsToIncludeToGetAvailableDesks: [],
         fromToGetBookings: from,

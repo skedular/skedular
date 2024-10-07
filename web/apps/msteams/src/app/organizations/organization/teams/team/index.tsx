@@ -22,6 +22,7 @@ const RootQuery = graphql`
   query teamOrganization_rootQuery(
     $organizationId: String!
     $locationId: String!
+    $locationExists: Boolean!
     $teamId: String!
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
@@ -96,6 +97,7 @@ const TeamPageWithRelay = () => {
       {
         teamId: finalTeamId,
         locationId: '',
+        locationExists: false,
         deskIdsToIncludeToGetAvailableDesks: [],
         organizationId: finalOrganizationId,
         bookingPeopleNameSearchText: '',

@@ -15,19 +15,19 @@ import { graphql, usePaginationFragment } from 'react-relay';
 type Props = {
   rootDataRelay: bookingDetailsSelector_query$key;
 
-  defaultOrganizationId: string | null;
+  defaultOrganizationId?: string;
   organizationName: string;
   organizationRequired?: boolean;
-  hideOrganizationControl: boolean;
+  hideOrganizationControl?: boolean;
 
   organizationMemberName: string;
   organizationMemberRequired?: boolean;
-  hideOrganizationMemberControl: boolean;
+  hideOrganizationMemberControl?: boolean;
 
-  defaultLocationId: string | null;
+  defaultLocationId?: string;
   locationName: string;
   locationRequired?: boolean;
-  hideLocationControl: boolean;
+  hideLocationControl?: boolean;
 
   defaultDeskIds: string[];
   deskName: string;
@@ -98,12 +98,7 @@ const BookingDetailsSelector = ({
   bookingFrom,
   bookingTo,
 }: Props) => {
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<bookingDetailsSelectorQuery, bookingDetailsSelector_query$key>(
+  const { data: rootData, refetch } = usePaginationFragment<bookingDetailsSelectorQuery, bookingDetailsSelector_query$key>(
     graphql`
       fragment bookingDetailsSelector_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
@@ -118,7 +113,8 @@ const BookingDetailsSelector = ({
           name
         }
 
-        availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) {
+        availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks)
+          @include(if: $locationExists) {
           uniqueId
           name
           locationTags {
@@ -191,7 +187,7 @@ const BookingDetailsSelector = ({
   }, [rootData.availableLocationDesks]);
 
   const handleRefetch = useCallback(
-    (bookingPeopleNameSearchText: string, organizationId: string | null, locationId: string | null, deskIds: string[]) => {
+    (bookingPeopleNameSearchText: string,deskIds: string[], organizationId?: string, locationId?: string) => {
       startTransition(() => {
         refetch(
           {
@@ -199,6 +195,7 @@ const BookingDetailsSelector = ({
             bookingPeopleNameSearchText,
             organizationId: organizationId ?? '',
             locationId: locationId ?? '',
+            locationExists: !!locationId,
             deskIdsToIncludeToGetAvailableDesks: deskIds,
             dateToGetAvailableDesks: bookingFrom,
           },
@@ -216,7 +213,7 @@ const BookingDetailsSelector = ({
 
   // Workaround to ensure we have all the entire form refreshed once any dependent values change
   useEffect(() => {
-    handleRefetch(bookingPeopleNameSearchText, organizationId, locationId, defaultDeskIds);
+    handleRefetch(bookingPeopleNameSearchText,defaultDeskIds, organizationId, locationId);
   }, [handleRefetch, bookingPeopleNameSearchText, organizationId, locationId, bookingFrom, bookingTo, defaultDeskIds]);
 
   const filterOrganization = createFilterOptions<OrganizationDetails>();
@@ -224,24 +221,21 @@ const BookingDetailsSelector = ({
   const filterDesk = createFilterOptions<DeskDetails>();
 
   const handleOrganizationChange = (option: OrganizationDetails | null) => {
-    const id = option?.id ?? null;
+    const id = option?.id;
     setOrganizationId(id);
-
-    setLocationId(id);
-    handleRefetch(bookingPeopleNameSearchText, id, locationId, defaultDeskIds);
+    handleRefetch(bookingPeopleNameSearchText, defaultDeskIds, id, locationId);
   };
 
   const handleLocationChange = (option: LocationDetails | null) => {
-    const id = option?.id ?? null;
-
+    const id = option?.id ;
     setLocationId(id);
-    handleRefetch(bookingPeopleNameSearchText, organizationId, id, defaultDeskIds);
+    handleRefetch(bookingPeopleNameSearchText, defaultDeskIds, organizationId, id);
   };
 
   const handleSearchTextChange = (str: string) => {
     setBookingPeopleNameSearchText(str);
 
-    handleRefetch(str, organizationId, locationId, defaultDeskIds);
+    handleRefetch(str, defaultDeskIds, organizationId, locationId);
   };
 
   const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);

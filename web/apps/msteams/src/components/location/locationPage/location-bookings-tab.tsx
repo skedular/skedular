@@ -275,7 +275,6 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
         onCancelClicked={handleAddBookingDialogCancelClick}
         organizationId={organizationId}
         locationId={locationId}
-        defaultTeamId={null}
         hideOrganizationControl={true}
         hideLocationControl={true}
       />

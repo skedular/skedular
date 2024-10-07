@@ -21,6 +21,7 @@ const RootQuery = graphql`
   query pageHome_rootQuery(
     $organizationId: String!
     $locationId: String!
+    $locationExists: Boolean!
     $monthlyCalendarDateFrom: DateTime!
     $monthlyCalendarDateTo: DateTime!
     $dateToGetAvailableDesks: DateTime!
@@ -71,6 +72,7 @@ const HomeWithRelay = () => {
         deskIdsToIncludeToGetAvailableDesks: [],
         organizationId: '',
         locationId: '',
+        locationExists: false,
         bookingPeopleNameSearchText: '',
         bookingDetailsSelectorOrganizationMembersSortingValues: [
           {

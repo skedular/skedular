@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eb4c366c6e795994f44a649bfac571d2>>
+ * @generated SignedSource<<0faab835e7456628543f18237e1ab2d7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,6 +29,7 @@ export type bookingFeeds_PaginationQuery$variables = {
   cursor?: string | null | undefined;
   dateToGetAvailableDesks: any;
   deskIdsToIncludeToGetAvailableDesks: ReadonlyArray<string>;
+  locationExists: boolean;
   locationId: string;
   organizationId: string;
 };
@@ -76,6 +77,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "deskIdsToIncludeToGetAvailableDesks"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "locationExists"
   },
   {
     "defaultValue": null,
@@ -514,30 +520,37 @@ return {
         "storageKey": null
       },
       {
-        "alias": null,
-        "args": [
+        "condition": "locationExists",
+        "kind": "Condition",
+        "passingValue": true,
+        "selections": [
           {
-            "kind": "Variable",
-            "name": "date",
-            "variableName": "dateToGetAvailableDesks"
-          },
-          {
-            "kind": "Variable",
-            "name": "deskIdsToInclude",
-            "variableName": "deskIdsToIncludeToGetAvailableDesks"
-          },
-          {
-            "kind": "Variable",
-            "name": "locationId",
-            "variableName": "locationId"
+            "alias": null,
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "date",
+                "variableName": "dateToGetAvailableDesks"
+              },
+              {
+                "kind": "Variable",
+                "name": "deskIdsToInclude",
+                "variableName": "deskIdsToIncludeToGetAvailableDesks"
+              },
+              {
+                "kind": "Variable",
+                "name": "locationId",
+                "variableName": "locationId"
+              }
+            ],
+            "concreteType": "BookingDeskDetails",
+            "kind": "LinkedField",
+            "name": "availableLocationDesks",
+            "plural": true,
+            "selections": (v11/*: any*/),
+            "storageKey": null
           }
-        ],
-        "concreteType": "BookingDeskDetails",
-        "kind": "LinkedField",
-        "name": "availableLocationDesks",
-        "plural": true,
-        "selections": (v11/*: any*/),
-        "storageKey": null
+        ]
       },
       {
         "alias": "bookingDetailsSelectorQueryPaginatedOrganizationMembers",
@@ -606,12 +619,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "931ca2a2b782b06dc1ff6fcb5dd0cf1d",
+    "cacheID": "b9a343b4896e97968539dbb3fa2f2b38",
     "id": null,
     "metadata": {},
     "name": "bookingFeeds_PaginationQuery",
     "operationKind": "query",
-    "text": "query bookingFeeds_PaginationQuery(\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n  $bookingSortingValues: [BookingOrderInput!]\n  $count: Int = 50\n  $cursor: String\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $locationId: String!\n  $organizationId: String!\n) {\n  ...bookingFeeds_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    preferredDesks {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canUpdateBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  ...bookingDetailsSelector_query\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n  bookingDetailsSelectorQueryPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingFeeds_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {includeMineOnly: true}, orderBy: $bookingSortingValues) {\n    edges {\n      node {\n        id\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...bookingCard_query\n}\n"
+    "text": "query bookingFeeds_PaginationQuery(\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n  $bookingSortingValues: [BookingOrderInput!]\n  $count: Int = 50\n  $cursor: String\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $locationExists: Boolean!\n  $locationId: String!\n  $organizationId: String!\n) {\n  ...bookingFeeds_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    preferredDesks {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canUpdateBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  ...bookingDetailsSelector_query\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) @include(if: $locationExists) {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n  bookingDetailsSelectorQueryPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingFeeds_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {includeMineOnly: true}, orderBy: $bookingSortingValues) {\n    edges {\n      node {\n        id\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...bookingCard_query\n}\n"
   }
 };
 })();

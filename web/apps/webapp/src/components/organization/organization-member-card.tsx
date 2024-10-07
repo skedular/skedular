@@ -158,7 +158,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={1} component="form" noValidate onSubmit={handleSubmit}>
+              <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
                 {avatar}
 
                 <OrganizationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />

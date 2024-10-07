@@ -1,3 +1,4 @@
+import { NewBookingButton } from '@/components/booking/addBooking';
 import { LocationLink } from '@/components/location';
 import { TeamLink } from '@/components/team';
 import type {
@@ -188,10 +189,17 @@ const CustomerTomorrowSummary = ({ queryReference, date, onReloadRequired }: Pro
   const getMyBookingsComponents = (bookings: customerTomorrowSummary_rootQuery$data['allBookings']) => (
     <Stack direction="column">
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        {bookings.length !== 0 && <Typography variant="h6">You</Typography>}
         {bookings.length === 0 && <Typography variant="h6">You have no booking</Typography>}
+        {bookings.length !== 0 && <Typography variant="h6">You</Typography>}
       </Stack>
       <Stack direction="column">
+        {bookings.length === 0 && (
+          <NewBookingButton
+            hideLocationControl={false}
+            hideOrganizationControl={false}
+            onReloadRequired={onReloadRequired}
+          />
+        )}
         {bookings.length !== 0 && (
           <>
             {bookings.slice(0, bookings.length - 1).map((booking, index) => (
