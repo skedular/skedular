@@ -7,15 +7,15 @@ import { RootShell } from 'components/rootShell';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { notifications_rootQuery } from './__generated__/notifications_rootQuery.graphql';
+import type { pageNotifications_rootQuery } from './__generated__/pageNotifications_rootQuery.graphql';
 
 type Props = {
-  queryReference: PreloadedQuery<notifications_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<pageNotifications_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
 };
 
 const RootQuery = graphql`
-  query notifications_rootQuery($myNotificationsSortingValues: [NotificationOrderInput!]!) {
+  query pageNotifications_rootQuery($myNotificationsSortingValues: [NotificationOrderInput!]!) {
     notificationCustomerRecordSynced
     ...rootShell_query
     ...notifications_query
@@ -23,7 +23,7 @@ const RootQuery = graphql`
 `;
 
 const NotificationsPage = ({ queryReference, onReloadRequired }: Props) => {
-  const rootData = usePreloadedQuery<notifications_rootQuery>(RootQuery, queryReference);
+  const rootData = usePreloadedQuery<pageNotifications_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(
     () => rootData?.notificationCustomerRecordSynced,
     [rootData?.notificationCustomerRecordSynced],
@@ -44,7 +44,7 @@ const NotificationsPage = ({ queryReference, onReloadRequired }: Props) => {
 const MemoNotificationsPage = memo(NotificationsPage);
 
 const NotificationsPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<notifications_rootQuery>(RootQuery);
+  const [queryReference, loadQuery] = useQueryLoader<pageNotifications_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {

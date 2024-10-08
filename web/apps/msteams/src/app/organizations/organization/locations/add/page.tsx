@@ -8,23 +8,23 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useParams } from 'react-router-dom';
-import type { addOrganizationLocation_rootQuery } from './__generated__/addOrganizationLocation_rootQuery.graphql';
+import type { pageAddOrganizationLocation_rootQuery } from './__generated__/pageAddOrganizationLocation_rootQuery.graphql';
 
 type Props = {
-  queryReference: PreloadedQuery<addOrganizationLocation_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<pageAddOrganizationLocation_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
 };
 
 const RootQuery = graphql`
-  query addOrganizationLocation_rootQuery {
+  query pageAddOrganizationLocation_rootQuery {
     locationCustomerRecordSynced
     ...rootShell_query
   }
 `;
 
 const AddLocationPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
-  const rootData = usePreloadedQuery<addOrganizationLocation_rootQuery>(RootQuery, queryReference);
+  const rootData = usePreloadedQuery<pageAddOrganizationLocation_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.locationCustomerRecordSynced, [rootData?.locationCustomerRecordSynced]);
 
   return (
@@ -42,7 +42,7 @@ const AddLocationPage = ({ queryReference, onReloadRequired, organizationId }: P
 const MemoAddLocationPage = memo(AddLocationPage);
 
 const AddLocationPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<addOrganizationLocation_rootQuery>(RootQuery);
+  const [queryReference, loadQuery] = useQueryLoader<pageAddOrganizationLocation_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId } = useParams();
   let finalOrganizationId = '';

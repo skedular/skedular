@@ -6,10 +6,10 @@ import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useNavigate } from 'react-router-dom';
-import type { app_rootQuery } from './__generated__/app_rootQuery.graphql';
+import type { pageHome_rootQuery } from './__generated__/pageHome_rootQuery.graphql';
 
 const RootQuery = graphql`
-  query app_rootQuery {
+  query pageHome_rootQuery {
     isAzureTenantInstalled
     azureTenantOrganization {
       id
@@ -18,11 +18,11 @@ const RootQuery = graphql`
 `;
 
 type Props = {
-  queryReference: PreloadedQuery<app_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<pageHome_rootQuery, Record<string, unknown>>;
 };
 
 const Home = ({ queryReference }: Props) => {
-  const rootData = usePreloadedQuery<app_rootQuery>(RootQuery, queryReference);
+  const rootData = usePreloadedQuery<pageHome_rootQuery>(RootQuery, queryReference);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Home = ({ queryReference }: Props) => {
 const MemoHome = memo(Home);
 
 const HomeWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<app_rootQuery>(RootQuery);
+  const [queryReference, loadQuery] = useQueryLoader<pageHome_rootQuery>(RootQuery);
 
   useEffect(() => {
     loadQuery(

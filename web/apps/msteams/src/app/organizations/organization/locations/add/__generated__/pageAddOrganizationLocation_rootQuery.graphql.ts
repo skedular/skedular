@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9c1bba8eba7a879913afaada6293bc0e>>
+ * @generated SignedSource<<55d5f760d1147e92cf18733fa5b0fe95>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,14 +10,14 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type pageOrganization_rootQuery$variables = Record<PropertyKey, never>;
-export type pageOrganization_rootQuery$data = {
-  readonly organizationCustomerRecordSynced: boolean;
+export type pageAddOrganizationLocation_rootQuery$variables = Record<PropertyKey, never>;
+export type pageAddOrganizationLocation_rootQuery$data = {
+  readonly locationCustomerRecordSynced: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"rootShell_query">;
 };
-export type pageOrganization_rootQuery = {
-  response: pageOrganization_rootQuery$data;
-  variables: pageOrganization_rootQuery$variables;
+export type pageAddOrganizationLocation_rootQuery = {
+  response: pageAddOrganizationLocation_rootQuery$data;
+  variables: pageAddOrganizationLocation_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -25,7 +25,7 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "organizationCustomerRecordSynced",
+  "name": "locationCustomerRecordSynced",
   "storageKey": null
 },
 v1 = {
@@ -40,7 +40,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "pageOrganization_rootQuery",
+    "name": "pageAddOrganizationLocation_rootQuery",
     "selections": [
       (v0/*: any*/),
       {
@@ -56,7 +56,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "pageOrganization_rootQuery",
+    "name": "pageAddOrganizationLocation_rootQuery",
     "selections": [
       (v0/*: any*/),
       {
@@ -83,14 +83,7 @@ return {
                 "name": "email",
                 "storageKey": null
               },
-              (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "verified",
-                "storageKey": null
-              }
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
@@ -121,37 +114,37 @@ return {
             "kind": "ScalarField",
             "name": "familyName",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "photoUrl",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
           }
         ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "isAzureTenantInstalled",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "azureTenantAdminConsentUrl",
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "1e58e21666543d33869b11e183c098f6",
+    "cacheID": "ff8933f14d79fced2fb427006ad3c5a9",
     "id": null,
     "metadata": {},
-    "name": "pageOrganization_rootQuery",
+    "name": "pageAddOrganizationLocation_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganization_rootQuery {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query pageAddOrganizationLocation_rootQuery {\n  locationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "33577d9ea77bd0fab2ce51533eac321d";
+(node as any).hash = "b243d9af99026d2270e4536a9e63248c";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc94fb89d6a6c3ba79835634a9233efe>>
+ * @generated SignedSource<<1eb799cb357c6d4fa35059136b4503b7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,18 +16,18 @@ export type LocationOrderInput = {
   direction: OrderDirection;
   field: LocationOrderField;
 };
-export type locations_rootQuery$variables = {
+export type pageLocations_rootQuery$variables = {
   locationNameSearchText: string;
   locationsSortingValues: ReadonlyArray<LocationOrderInput>;
   organizationId: string;
 };
-export type locations_rootQuery$data = {
+export type pageLocations_rootQuery$data = {
   readonly locationCustomerRecordSynced: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"locations_query" | "rootShell_query">;
 };
-export type locations_rootQuery = {
-  response: locations_rootQuery$data;
-  variables: locations_rootQuery$variables;
+export type pageLocations_rootQuery = {
+  response: pageLocations_rootQuery$data;
+  variables: pageLocations_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -104,7 +104,7 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "locations_rootQuery",
+    "name": "pageLocations_rootQuery",
     "selections": [
       (v3/*: any*/),
       {
@@ -129,7 +129,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "locations_rootQuery",
+    "name": "pageLocations_rootQuery",
     "selections": [
       (v3/*: any*/),
       {
@@ -332,16 +332,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c6c075932aa94b356d743872f365e167",
+    "cacheID": "95360cc52989e5b60f1cb003590e2f19",
     "id": null,
     "metadata": {},
-    "name": "locations_rootQuery",
+    "name": "pageLocations_rootQuery",
     "operationKind": "query",
-    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String!\n) {\n  locationCustomerRecordSynced\n  ...rootShell_query\n  ...locations_query\n}\n\nfragment locations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
+    "text": "query pageLocations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String!\n) {\n  locationCustomerRecordSynced\n  ...rootShell_query\n  ...locations_query\n}\n\nfragment locations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2991da96caa78cf4e848cf116293dafb";
+(node as any).hash = "1becee8511acc9962a98dd50d2d2cc58";
 
 export default node;

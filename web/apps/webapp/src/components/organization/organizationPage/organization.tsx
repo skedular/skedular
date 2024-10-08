@@ -1,16 +1,19 @@
-import type { organizationPageQuery } from '@/queries/__generated__/organizationPageQuery.graphql';
-import type { organizationPage_query$key } from '@/queries/__generated__/organizationPage_query.graphql';
+import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import { OrganizationAvatar } from '@repo/shared/components/avatars';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
+import { getCurrentCompleteUrl, startOfDay } from '@repo/shared/libs/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo, useEffect, useState, useTransition } from 'react';
-import { graphql, useRefetchableFragment } from 'react-relay';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import OrganizationAboutTab from './organization-about-tab';
 import OrganizationAnalyticsTab from './organization-analytics-tab';
 import OrganizationBillingTab from './organization-billing-tab';
@@ -21,35 +24,51 @@ import OrganizationPeopleTab from './organization-people-tab';
 import OrganizationTeamsTab from './organization-teams-tab';
 
 type Props = {
-  rootDataRelay: organizationPage_query$key;
+  queryReference: PreloadedQuery<organization_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   organizationId: string;
 };
 
-const Organization = ({ rootDataRelay, organizationId }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment<organizationPageQuery, organizationPage_query$key>(
-    graphql`
-      fragment organizationPage_query on Query @refetchable(queryName: "organizationPageQuery") {
-        organization(id: $organizationId) {
-          id
-          name
-          logoUrl
-          canModify
-          canViewAnalytics
-        }
-        ...organizationAboutTab_query
-        ...organizationBookingsTab_query
-        ...organizationMultipleChoicesIndustries_query
-        ...organizationPeopleTab_query
-        ...organizationLocationsTab_query
-        ...organizationTeamsTab_query
-        ...organizationBillingTab_query
-        ...organizationOfferingTab_query
-      }
-    `,
-    rootDataRelay,
-  );
+const RootQuery = graphql`
+  query organization_rootQuery(
+    $organizationId: String!
+    $organizationExists: Boolean!
+    $locationId: String!
+    $locationExists: Boolean!
+    $dateToGetAvailableDesks: DateTime!
+    $deskIdsToIncludeToGetAvailableDesks: [String!]!
+    $peopleNameSearchText: String!
+    $bookingPeopleNameSearchText: String!
+    $bookingSortingValues: [BookingOrderInput!]!
+    $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]
+    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $organizationLocationsSortingValues: [LocationOrderInput!]!
+    $organizationTeamsSortingValues: [TeamOrderInput!]!
+    $bookingsSearchCriteriaFrom: DateTime!
+    $bookingsSearchCriteriaUntil: DateTime!
+    $locationNameSearchText: String!
+    $teamNameSearchText: String!
+  ) {
+    organization(id: $organizationId) {
+      id
+      name
+      logoUrl
+      canModify
+      canViewAnalytics
+    }
+    ...organizationAboutTab_query
+    ...organizationBookingsTab_query
+    ...organizationMultipleChoicesIndustries_query
+    ...organizationPeopleTab_query
+    ...organizationLocationsTab_query
+    ...organizationTeamsTab_query
+    ...organizationBillingTab_query
+    ...organizationOfferingTab_query
+  }
+`;
 
-  const [, startTransition] = useTransition();
+const Organization = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+  const rootData = usePreloadedQuery<organization_rootQuery>(RootQuery, queryReference);
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
   const router = useRouter();
@@ -115,12 +134,6 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
     }
   };
 
-  const handleRefetch = () => {
-    startTransition(() => {
-      refetch({ organizationId: rootData.organization?.id }, { fetchPolicy: 'store-and-network' });
-    });
-  };
-
   if (!rootData.organization) {
     return null;
   }
@@ -149,12 +162,99 @@ const Organization = ({ rootDataRelay, organizationId }: Props) => {
         {tabIndex === 2 && <OrganizationPeopleTab rootDataRelay={rootData} organizationId={organizationId} />}
         {tabIndex === 3 && <OrganizationLocationsTab rootDataRelay={rootData} />}
         {tabIndex === 4 && <OrganizationTeamsTab rootDataRelay={rootData} />}
-        {tabIndex === 5 && rootData.organization.canModify && <OrganizationOfferingTab rootDataRelay={rootData} onRefetchRequired={handleRefetch} />}
-        {tabIndex === 6 && rootData.organization.canModify && <OrganizationBillingTab rootDataRelay={rootData} onRefetchRequired={handleRefetch} />}
+        {tabIndex === 5 && rootData.organization.canModify && (
+          <OrganizationOfferingTab rootDataRelay={rootData} onRefetchRequired={onReloadRequired} />
+        )}
+        {tabIndex === 6 && rootData.organization.canModify && (
+          <OrganizationBillingTab rootDataRelay={rootData} onRefetchRequired={onReloadRequired} />
+        )}
         {tabIndex === 7 && rootData.organization.canViewAnalytics && <OrganizationAnalyticsTab organizationId={organizationId} />}
       </>
     </Stack>
   );
 };
 
-export default memo(Organization);
+const MemoOrganization = memo(Organization);
+
+type RelayProps = {
+  organizationId: string;
+};
+
+const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<organization_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    const from = startOfDay().toISOString();
+    const until = startOfDay().add(1, 'month').toISOString();
+
+    loadQuery(
+      {
+        organizationId,
+        organizationExists: !!organizationId,
+        locationId: '',
+        locationExists: false,
+        deskIdsToIncludeToGetAvailableDesks: [],
+        peopleNameSearchText: '',
+        bookingPeopleNameSearchText: '',
+        bookingSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'from',
+          },
+        ],
+        organizationPeopleSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        bookingDetailsSelectorOrganizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        organizationLocationsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        organizationTeamsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        bookingsSearchCriteriaFrom: from,
+        bookingsSearchCriteriaUntil: until,
+        locationNameSearchText: '',
+        teamNameSearchText: '',
+        dateToGetAvailableDesks: from,
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, organizationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoOrganization queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(OrganizationWithRelay);

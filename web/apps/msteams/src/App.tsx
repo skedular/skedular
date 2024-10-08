@@ -4,17 +4,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import Root from 'app';
-import Install from 'app/install';
-import Locations from 'app/locations';
-import Notifications from 'app/notifications';
-import Organization from 'app/organizations/organization';
-import AddOrganizationLocation from 'app/organizations/organization/locations/add';
-import OrganizationLocation from 'app/organizations/organization/locations/location';
-import AddOrganizationTeam from 'app/organizations/organization/teams/add';
-import OrganizationTeam from 'app/organizations/organization/teams/team';
-import Settings from 'app/settings';
-import Teams from 'app/teams';
+import { Home } from 'app';
+import { Install } from 'app/install';
+import { Locations } from 'app/locations';
+import { Notifications } from 'app/notifications';
+import { Organization } from 'app/organizations/organization';
+import { AddOrganizationLocation } from 'app/organizations/organization/locations/add';
+import { OrganizationLocation } from 'app/organizations/organization/locations/location';
+import { AddOrganizationTeam } from 'app/organizations/organization/teams/add';
+import { OrganizationTeam } from 'app/organizations/organization/teams/team';
+import { Settings } from 'app/settings';
+import { Teams } from 'app/teams';
 import { DatePickerLocalizationProvider, LogRocketProvider, RelayProvider, SnackbarProvider, TeamsFxContext, ThemeProvider } from 'libs/providers';
 import { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -23,7 +23,7 @@ import './App.css';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Root />,
+    element: <Home />,
   },
   {
     path: '/install',

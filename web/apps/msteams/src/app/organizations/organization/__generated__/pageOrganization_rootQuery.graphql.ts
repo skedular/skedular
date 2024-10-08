@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<64b54236cd602eaabee98c745468aeec>>
+ * @generated SignedSource<<35d36d18c800cecd75797fe63eba914c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,17 +10,25 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type settings_rootQuery$variables = Record<PropertyKey, never>;
-export type settings_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"customerSettingsPage_query" | "rootShell_query">;
+export type pageOrganization_rootQuery$variables = Record<PropertyKey, never>;
+export type pageOrganization_rootQuery$data = {
+  readonly organizationCustomerRecordSynced: boolean;
+  readonly " $fragmentSpreads": FragmentRefs<"rootShell_query">;
 };
-export type settings_rootQuery = {
-  response: settings_rootQuery$data;
-  variables: settings_rootQuery$variables;
+export type pageOrganization_rootQuery = {
+  response: pageOrganization_rootQuery$data;
+  variables: pageOrganization_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
 var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "organizationCustomerRecordSynced",
+  "storageKey": null
+},
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -32,17 +40,13 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "settings_rootQuery",
+    "name": "pageOrganization_rootQuery",
     "selections": [
+      (v0/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
         "name": "rootShell_query"
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "customerSettingsPage_query"
       }
     ],
     "type": "Query",
@@ -52,8 +56,9 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "settings_rootQuery",
+    "name": "pageOrganization_rootQuery",
     "selections": [
+      (v0/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -62,7 +67,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -78,7 +83,7 @@ return {
                 "name": "email",
                 "storageKey": null
               },
-              (v0/*: any*/)
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
@@ -109,34 +114,6 @@ return {
             "kind": "ScalarField",
             "name": "familyName",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "photoUrl",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "timezone",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "designation",
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -158,16 +135,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1f6aafb295b473622173b13a25e65e67",
+    "cacheID": "906919aef7aa188d272ff36935434945",
     "id": null,
     "metadata": {},
-    "name": "settings_rootQuery",
+    "name": "pageOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query settings_rootQuery {\n  ...rootShell_query\n  ...customerSettingsPage_query\n}\n\nfragment customerSettingsPage_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  ...customerSettingsPersonalTab_query\n}\n\nfragment customerSettingsPersonalTab_query on Query {\n  me {\n    id\n    timezone\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
+    "text": "query pageOrganization_rootQuery {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "db78a6a1777441d648af5723c06e25fd";
+(node as any).hash = "33577d9ea77bd0fab2ce51533eac321d";
 
 export default node;

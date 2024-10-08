@@ -19,28 +19,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageOrganization_rootQuery(
-    $organizationId: String!
-    $organizationExists: Boolean!
-    $locationId: String!
-    $locationExists: Boolean!
-    $dateToGetAvailableDesks: DateTime!
-    $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $peopleNameSearchText: String!
-    $bookingPeopleNameSearchText: String!
-    $bookingSortingValues: [BookingOrderInput!]!
-    $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]
-    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $organizationLocationsSortingValues: [LocationOrderInput!]!
-    $organizationTeamsSortingValues: [TeamOrderInput!]!
-    $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaUntil: DateTime!
-    $locationNameSearchText: String!
-    $teamNameSearchText: String!
-  ) {
+  query pageOrganization_rootQuery {
     organizationCustomerRecordSynced
     ...rootShell_query
-    ...organizationPage_query
   }
 `;
 
@@ -58,7 +39,7 @@ const OrganizationPage = ({ queryReference, onReloadRequired, organizationId }: 
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.organizationCustomerRecordSynced]}
     >
-      <Organization rootDataRelay={rootData} organizationId={organizationId} />
+      <Organization organizationId={organizationId} />
     </RootShell>
   );
 };
@@ -87,50 +68,7 @@ const OrganizationPageWithRelay = () => {
     const until = startOfDay().add(1, 'month').toISOString();
 
     loadQuery(
-      {
-        organizationId: finalOrganizationId,
-        organizationExists: !!finalOrganizationId,
-        locationId: '',
-        locationExists: false,
-        deskIdsToIncludeToGetAvailableDesks: [],
-        peopleNameSearchText: '',
-        bookingPeopleNameSearchText: '',
-        bookingSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'from',
-          },
-        ],
-        organizationPeopleSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        bookingDetailsSelectorOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        organizationLocationsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        organizationTeamsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaUntil: until,
-        locationNameSearchText: '',
-        teamNameSearchText: '',
-        dateToGetAvailableDesks: from,
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },

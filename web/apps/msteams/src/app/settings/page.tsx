@@ -7,22 +7,22 @@ import { RootShell } from 'components/rootShell';
 import { memo, useCallback, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { settings_rootQuery } from './__generated__/settings_rootQuery.graphql';
+import type { pageSettings_rootQuery } from './__generated__/pageSettings_rootQuery.graphql';
 
 type Props = {
-  queryReference: PreloadedQuery<settings_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<pageSettings_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
 };
 
 const RootQuery = graphql`
-  query settings_rootQuery {
+  query pageSettings_rootQuery {
     ...rootShell_query
     ...customerSettingsPage_query
   }
 `;
 
 const Settings = ({ queryReference, onReloadRequired }: Props) => {
-  const rootData = usePreloadedQuery<settings_rootQuery>(RootQuery, queryReference);
+  const rootData = usePreloadedQuery<pageSettings_rootQuery>(RootQuery, queryReference);
   const areAdditionalCustomerRecordsSync = useCallback(() => true, []);
 
   return (
@@ -40,7 +40,7 @@ const Settings = ({ queryReference, onReloadRequired }: Props) => {
 const MemoSettings = memo(Settings);
 
 const SettingsWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<settings_rootQuery>(RootQuery);
+  const [queryReference, loadQuery] = useQueryLoader<pageSettings_rootQuery>(RootQuery);
 
   useEffect(() => {
     loadQuery(

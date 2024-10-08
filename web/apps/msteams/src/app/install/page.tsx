@@ -8,20 +8,20 @@ import graphql from 'babel-plugin-relay/macro';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { install_rootQuery } from './__generated__/install_rootQuery.graphql';
+import type { pageInstall_rootQuery } from './__generated__/pageInstall_rootQuery.graphql';
 
 const RootQuery = graphql`
-  query install_rootQuery {
+  query pageInstall_rootQuery {
     azureTenantAdminConsentUrl
   }
 `;
 
 type Props = {
-  queryReference: PreloadedQuery<install_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<pageInstall_rootQuery, Record<string, unknown>>;
 };
 
 const Install = ({ queryReference }: Props) => {
-  const rootData = usePreloadedQuery<install_rootQuery>(RootQuery, queryReference);
+  const rootData = usePreloadedQuery<pageInstall_rootQuery>(RootQuery, queryReference);
 
   const handleInstallClicked = () => {
     window.open(rootData.azureTenantAdminConsentUrl);
@@ -42,7 +42,7 @@ const Install = ({ queryReference }: Props) => {
 const MemoInstall = memo(Install);
 
 const InstallWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<install_rootQuery>(RootQuery);
+  const [queryReference, loadQuery] = useQueryLoader<pageInstall_rootQuery>(RootQuery);
 
   useEffect(() => {
     loadQuery(

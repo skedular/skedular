@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d7ae019cc7f5adeda2a20f0eadf2203>>
+ * @generated SignedSource<<1c09a43f6f10e2699c4e93600334fc6f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,18 +16,18 @@ export type TeamOrderInput = {
   direction: OrderDirection;
   field: TeamOrderField;
 };
-export type teams_rootQuery$variables = {
+export type pageTeams_rootQuery$variables = {
   organizationId: string;
   teamNameSearchText: string;
   teamsSortingValues: ReadonlyArray<TeamOrderInput>;
 };
-export type teams_rootQuery$data = {
+export type pageTeams_rootQuery$data = {
   readonly teamCustomerRecordSynced: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"rootShell_query" | "teams_query">;
 };
-export type teams_rootQuery = {
-  response: teams_rootQuery$data;
-  variables: teams_rootQuery$variables;
+export type pageTeams_rootQuery = {
+  response: pageTeams_rootQuery$data;
+  variables: pageTeams_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -104,7 +104,7 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "teams_rootQuery",
+    "name": "pageTeams_rootQuery",
     "selections": [
       (v3/*: any*/),
       {
@@ -129,7 +129,7 @@ return {
       (v1/*: any*/)
     ],
     "kind": "Operation",
-    "name": "teams_rootQuery",
+    "name": "pageTeams_rootQuery",
     "selections": [
       (v3/*: any*/),
       {
@@ -332,16 +332,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4db0cfe58a3362cf6643289c0c2383a2",
+    "cacheID": "20e3906861e2cf79729f9d98bb486d91",
     "id": null,
     "metadata": {},
-    "name": "teams_rootQuery",
+    "name": "pageTeams_rootQuery",
     "operationKind": "query",
-    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $teamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String!\n) {\n  teamCustomerRecordSynced\n  ...rootShell_query\n  ...teams_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n\nfragment teams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query pageTeams_rootQuery(\n  $organizationId: String!\n  $teamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String!\n) {\n  teamCustomerRecordSynced\n  ...rootShell_query\n  ...teams_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n\nfragment teams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8f82e26bd88f3ac04d62b1d6008f0918";
+(node as any).hash = "4549faa455424123539f5f8619e2c38b";
 
 export default node;

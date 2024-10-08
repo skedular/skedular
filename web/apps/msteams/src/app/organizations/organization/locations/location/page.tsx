@@ -1,70 +1,77 @@
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { startOfDay } from '@repo/shared/libs/utils';
+import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { endOfDay, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { Location } from 'components/location/locationPage';
 import { RootShell } from 'components/rootShell';
-import { Team } from 'components/team/teamPage';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useParams } from 'react-router-dom';
-import type { teamOrganization_rootQuery } from './__generated__/teamOrganization_rootQuery.graphql';
+import type { pageLocationOrganization_rootQuery } from './__generated__/pageLocationOrganization_rootQuery.graphql';
 
 type Props = {
-  queryReference: PreloadedQuery<teamOrganization_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<pageLocationOrganization_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  teamId: string;
+  locationId: string;
   organizationId: string;
 };
 
 const RootQuery = graphql`
-  query teamOrganization_rootQuery(
+  query pageLocationOrganization_rootQuery(
     $organizationId: String!
     $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
-    $teamId: String!
-    $teamExists: Boolean!
+    $zoneTagType: String!
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
+    $fromToGetBookings: DateTime
+    $toToGetBookings: DateTime
+    $peopleNameSearchText: String!
+    $zoneNameSearchText: String!
+    $deskNameSearchText: String!
     $bookingPeopleNameSearchText: String!
     $bookingSortingValues: [BookingOrderInput!]!
-    $teamPeopleSortingValues: [TeamMemberOrderInput!]
+    $locationPeopleSortingValues: [LocationMemberOrderInput!]
+    $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]
+    $zoneSortingValues: [LocationTagOrderInput!]!
+    $deskSortingValues: [DeskOrderInput!]!
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaUntil: DateTime!
-    $peopleNameSearchText: String!
   ) {
-    teamCustomerRecordSynced
+    locationCustomerRecordSynced
     ...rootShell_query
-    ...teamPage_query
+    ...locationPage_query
   }
 `;
 
-const TeamPage = ({ queryReference, onReloadRequired, teamId, organizationId }: Props) => {
-  const rootData = usePreloadedQuery<teamOrganization_rootQuery>(RootQuery, queryReference);
-  const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.teamCustomerRecordSynced, [rootData?.teamCustomerRecordSynced]);
+const LocationPage = ({ queryReference, onReloadRequired, locationId, organizationId }: Props) => {
+  const rootData = usePreloadedQuery<pageLocationOrganization_rootQuery>(RootQuery, queryReference);
+  const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.locationCustomerRecordSynced, [rootData?.locationCustomerRecordSynced]);
 
   return (
     <RootShell
       rootDataRelay={rootData}
       onReloadRequired={onReloadRequired}
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
-      additionalCustomerRecords={[rootData?.teamCustomerRecordSynced]}
+      additionalCustomerRecords={[rootData?.locationCustomerRecordSynced]}
     >
-      <Team rootDataRelay={rootData} teamId={teamId} organizationId={organizationId} />
+      <Location rootDataRelay={rootData} locationId={locationId} organizationId={organizationId} />
     </RootShell>
   );
 };
 
-const MemoTeamPage = memo(TeamPage);
+const MemoLocationPage = memo(LocationPage);
 
-const TeamPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<teamOrganization_rootQuery>(RootQuery);
+const LocationPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<pageLocationOrganization_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
-  const { organizationId, teamId } = useParams();
+  const { organizationId, locationId } = useParams();
   let finalOrganizationId = '';
   if (typeof organizationId === 'string') {
     finalOrganizationId = organizationId;
@@ -78,32 +85,37 @@ const TeamPageWithRelay = () => {
     throw new Error('organizationId is required');
   }
 
-  let finalTeamId = '';
-  if (typeof teamId === 'string') {
-    finalTeamId = teamId;
-  } else if (Array.isArray(teamId)) {
-    if (typeof teamId[0] === 'undefined') {
-      throw new Error('teamId is required');
+  let finalLocationId = '';
+  if (typeof locationId === 'string') {
+    finalLocationId = locationId;
+  } else if (Array.isArray(locationId)) {
+    if (typeof locationId[0] === 'undefined') {
+      throw new Error('locationId is required');
     }
 
-    finalTeamId = teamId[0];
+    finalLocationId = locationId[0];
   } else {
-    throw new Error('teamId is required');
+    throw new Error('locationId is required');
   }
 
   useEffect(() => {
     const from = startOfDay().toISOString();
+    const to = endOfDay(from).toISOString();
     const until = startOfDay().add(1, 'month').toISOString();
 
     loadQuery(
       {
-        teamId: finalTeamId,
-        teamExists: !!finalTeamId,
-        locationId: '',
-        locationExists: false,
-        deskIdsToIncludeToGetAvailableDesks: [],
         organizationId: finalOrganizationId,
         organizationExists: !!finalOrganizationId,
+        locationId: finalLocationId,
+        locationExists: !!finalLocationId,
+        zoneTagType: TAG_TYPE_LOCATION_ZONE,
+        deskIdsToIncludeToGetAvailableDesks: [],
+        fromToGetBookings: from,
+        toToGetBookings: to,
+        peopleNameSearchText: '',
+        zoneNameSearchText: '',
+        deskNameSearchText: '',
         bookingPeopleNameSearchText: '',
         bookingSortingValues: [
           {
@@ -111,7 +123,25 @@ const TeamPageWithRelay = () => {
             field: 'from',
           },
         ],
-        teamPeopleSortingValues: [
+        locationPeopleSortingValues: [
+          {
+            direction: 'Descending',
+            field: 'name',
+          },
+        ],
+        locationOrganizationPeopleSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        zoneSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        deskSortingValues: [
           {
             direction: 'Ascending',
             field: 'name',
@@ -123,7 +153,7 @@ const TeamPageWithRelay = () => {
             field: 'name',
           },
         ],
-        organizationMemberSelectorOrganizationMembersSortingValues: [
+        deskMultipleChoicesZonesSortingValues: [
           {
             direction: 'Ascending',
             field: 'name',
@@ -131,14 +161,13 @@ const TeamPageWithRelay = () => {
         ],
         bookingsSearchCriteriaFrom: from,
         bookingsSearchCriteriaUntil: until,
-        peopleNameSearchText: '',
         dateToGetAvailableDesks: from,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, finalOrganizationId, finalTeamId]);
+  }, [loadQuery, triggerReload, finalOrganizationId, finalLocationId]);
 
   const handleReloadRequired = () => {
     setTriggerReload(triggerReload + 1);
@@ -150,14 +179,14 @@ const TeamPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeamPage
+      <MemoLocationPage
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        teamId={finalTeamId}
+        locationId={finalLocationId}
         organizationId={finalOrganizationId}
       />
     </ErrorBoundary>
   );
 };
 
-export default memo(TeamPageWithRelay);
+export default memo(LocationPageWithRelay);

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5b1d6de7088442c5691638a913eab603>>
+ * @generated SignedSource<<d6e658bffeea8c22247daa959be893ca>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,16 +9,16 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type app_rootQuery$variables = Record<PropertyKey, never>;
-export type app_rootQuery$data = {
+export type pageHome_rootQuery$variables = Record<PropertyKey, never>;
+export type pageHome_rootQuery$data = {
   readonly azureTenantOrganization: {
     readonly id: string;
   } | null | undefined;
   readonly isAzureTenantInstalled: boolean;
 };
-export type app_rootQuery = {
-  response: app_rootQuery$data;
-  variables: app_rootQuery$variables;
+export type pageHome_rootQuery = {
+  response: pageHome_rootQuery$data;
+  variables: pageHome_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -54,7 +54,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "app_rootQuery",
+    "name": "pageHome_rootQuery",
     "selections": (v0/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -63,20 +63,20 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "app_rootQuery",
+    "name": "pageHome_rootQuery",
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "57ab42688324914175105321b450bed2",
+    "cacheID": "0be5a8c9e1becf33b501a138deae8576",
     "id": null,
     "metadata": {},
-    "name": "app_rootQuery",
+    "name": "pageHome_rootQuery",
     "operationKind": "query",
-    "text": "query app_rootQuery {\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n}\n"
+    "text": "query pageHome_rootQuery {\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "543a01ea8c48af013cfa0fa4362113e0";
+(node as any).hash = "a0ea47c765cbbc77f24ff4d7856bc864";
 
 export default node;

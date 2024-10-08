@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bcc550e0535711510e66aa56e9e38f78>>
+ * @generated SignedSource<<a0bc846c57dd2cbd9256d8081029c1e9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,13 +9,13 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type install_rootQuery$variables = Record<PropertyKey, never>;
-export type install_rootQuery$data = {
+export type pageInstall_rootQuery$variables = Record<PropertyKey, never>;
+export type pageInstall_rootQuery$data = {
   readonly azureTenantAdminConsentUrl: string;
 };
-export type install_rootQuery = {
-  response: install_rootQuery$data;
-  variables: install_rootQuery$variables;
+export type pageInstall_rootQuery = {
+  response: pageInstall_rootQuery$data;
+  variables: pageInstall_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -33,7 +33,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "install_rootQuery",
+    "name": "pageInstall_rootQuery",
     "selections": (v0/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -42,20 +42,20 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "install_rootQuery",
+    "name": "pageInstall_rootQuery",
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "7d5d3104bcd9302dd1ec34a7a7e8d87c",
+    "cacheID": "4e055d8d5b79bf124bbf88ed428add62",
     "id": null,
     "metadata": {},
-    "name": "install_rootQuery",
+    "name": "pageInstall_rootQuery",
     "operationKind": "query",
-    "text": "query install_rootQuery {\n  azureTenantAdminConsentUrl\n}\n"
+    "text": "query pageInstall_rootQuery {\n  azureTenantAdminConsentUrl\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5219bfdd59bbe2b80d806b9a308c0eb3";
+(node as any).hash = "5e7bd8dc700ddc97ad2781f6d7b38c9d";
 
 export default node;
