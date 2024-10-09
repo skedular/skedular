@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d484c3c009e8ee280634655b8fc6de22>>
+ * @generated SignedSource<<8f4abe2ae29473a5461647d387a70549>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type pageSettings_rootQuery$variables = Record<PropertyKey, never>;
 export type pageSettings_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"customerSettingsPage_query" | "rootShell_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"rootShell_query">;
 };
 export type pageSettings_rootQuery = {
   response: pageSettings_rootQuery$data;
@@ -38,11 +38,6 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "rootShell_query"
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "customerSettingsPage_query"
       }
     ],
     "type": "Query",
@@ -109,34 +104,6 @@ return {
             "kind": "ScalarField",
             "name": "familyName",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "photoUrl",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "timezone",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "designation",
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -158,16 +125,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4a8be4e5dc971dc672437bb122fa0147",
+    "cacheID": "0ef3407ed16fe2a680c18ecf786642ee",
     "id": null,
     "metadata": {},
     "name": "pageSettings_rootQuery",
     "operationKind": "query",
-    "text": "query pageSettings_rootQuery {\n  ...rootShell_query\n  ...customerSettingsPage_query\n}\n\nfragment customerSettingsPage_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  ...customerSettingsPersonalTab_query\n}\n\nfragment customerSettingsPersonalTab_query on Query {\n  me {\n    id\n    timezone\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
+    "text": "query pageSettings_rootQuery {\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a498765e7a8b3484dee51606787dc37b";
+(node as any).hash = "86570681f0d843bbad735700b2f6c096";
 
 export default node;

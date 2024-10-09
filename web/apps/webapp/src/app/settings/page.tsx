@@ -6,7 +6,7 @@ import type { pageSettings_rootQuery } from '@/queries/__generated__/pageSetting
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { memo, useCallback, useEffect } from 'react';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -18,7 +18,6 @@ type Props = {
 const RootQuery = graphql`
   query pageSettings_rootQuery {
     ...rootShell_query
-    ...customerSettingsPage_query
   }
 `;
 
@@ -33,7 +32,7 @@ const Settings = ({ queryReference, onReloadRequired }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[]}
     >
-      <CustomerSettings rootDataRelay={rootData} />
+      <CustomerSettings />
     </RootShell>
   );
 };
@@ -42,6 +41,8 @@ const MemoSettings = memo(Settings);
 
 const SettingsWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageSettings_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     loadQuery(
@@ -50,9 +51,13 @@ const SettingsWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery]);
+  }, [loadQuery, triggerReload]);
 
-  const handleReloadRequired = () => {};
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
 
   if (!queryReference) {
     return <Loading />;
