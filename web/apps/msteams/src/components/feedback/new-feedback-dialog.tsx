@@ -26,9 +26,9 @@ type Props = {
   onCancelClicked: () => void;
 };
 
-interface FeedbackDetails {
+type FeedbackDetails = {
   feedback: string;
-}
+};
 
 const zoneSchema = object({
   feedback: string().required('Feedback is required'),

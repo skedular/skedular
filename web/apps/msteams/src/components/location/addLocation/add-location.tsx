@@ -19,11 +19,11 @@ type Props = {
   organizationId: string;
 };
 
-interface LocationDetails {
+type LocationDetails = {
   name: string;
   about: string | null;
   timezone: string | null;
-}
+};
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three charcters long.').required('Location name is required'),

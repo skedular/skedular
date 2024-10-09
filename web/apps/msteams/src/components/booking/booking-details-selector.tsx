@@ -39,40 +39,40 @@ type Props = {
   bookingTo: Dayjs | Date;
 };
 
-interface OrganizationDetails {
+type OrganizationDetails = {
   id: string;
   name: string;
-}
+};
 
-interface CustomerDetails {
+type CustomerDetails = {
   uniqueId: string;
   name: string | null | undefined;
   givenName: string | null | undefined;
   middleName: string | null | undefined;
   familyName: string | null | undefined;
   photoUrl: string | null | undefined;
-}
+};
 
-interface OrganizationMemberDetails {
+type OrganizationMemberDetails = {
   id: string;
   customer: CustomerDetails;
-}
+};
 
-interface LocationDetails {
+type LocationDetails = {
   id: string;
   name: string;
-}
+};
 
-interface ZoneDetails {
+type ZoneDetails = {
   id: string;
   name: string;
-}
+};
 
-interface DeskDetails {
+type DeskDetails = {
   uniqueId: string;
   name: string;
   zones: ZoneDetails[];
-}
+};
 
 const BookingDetailsSelector = ({
   rootDataRelay,

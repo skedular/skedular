@@ -11,11 +11,11 @@ type Props = {
   required?: boolean;
 };
 
-interface SubCategoryDetails {
+type SubCategoryDetails = {
   mainCategoryName: string;
   id: string;
   name: string;
-}
+};
 
 const OrganizationMultipleChoicesIndustries = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment(

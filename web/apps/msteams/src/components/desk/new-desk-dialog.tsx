@@ -29,10 +29,10 @@ type Props = {
   locationId: string;
 };
 
-interface DeskDetails {
+type DeskDetails = {
   name: string;
   locationTagIds: string[];
-}
+};
 
 const deskSchema = object({
   name: string().required('Desk name is required'),

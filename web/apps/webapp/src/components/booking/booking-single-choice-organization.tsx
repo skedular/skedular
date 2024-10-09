@@ -13,10 +13,10 @@ type Props = {
   readOnly?: boolean;
 };
 
-interface OrganizationDetails {
+type OrganizationDetails = {
   id: string;
   name: string;
-}
+};
 
 const BookingSingleChoiceOrganization = ({ rootDataRelay, name, required, readOnly }: Props) => {
   const rootData = useFragment(

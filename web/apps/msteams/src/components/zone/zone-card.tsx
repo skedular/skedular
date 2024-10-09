@@ -37,9 +37,9 @@ type Props = {
   connectionIds: string[];
 };
 
-interface LocationTagDetails {
+type LocationTagDetails = {
   name: string;
-}
+};
 
 const zoneSchema = object({
   name: string().required('Zone name is required'),

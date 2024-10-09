@@ -21,12 +21,12 @@ type Props = {
   organizationId: string | null;
 };
 
-interface TeamDetails {
+type TeamDetails = {
   name: string;
   about: string | null;
   timezone: string | null;
   organizationMemberIds: string[];
-}
+};
 
 const teamSchema = object({
   name: string().min(3, 'Team name must be at least three charcters long.').required('Team name is required'),

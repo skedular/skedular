@@ -21,7 +21,7 @@ type Props = {
   rootDataRelay: organizationBillingInfo_query$key;
 };
 
-interface OrganizationBillingInfoDetails {
+type OrganizationBillingInfoDetails = {
   email: string;
   addressLine1: string | null;
   addressLine2: string | null;
@@ -30,7 +30,7 @@ interface OrganizationBillingInfoDetails {
   province: string | null;
   zipcode: string | null;
   country: string | null;
-}
+};
 
 const organizationBillingInfoSchema = object({
   email: string().email(({ value }) => `${value} is not a valid email`),

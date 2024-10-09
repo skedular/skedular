@@ -32,9 +32,9 @@ type Props = {
   connectionIds: string[];
 };
 
-interface OrganizationMemberDetails {
+type OrganizationMemberDetails = {
   membershipType: string;
-}
+};
 
 const organizationMemberSchema = object({
   membershipType: string().required(),

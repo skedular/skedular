@@ -15,10 +15,10 @@ type Props = {
   required?: boolean;
 };
 
-interface ZoneDetails {
+type ZoneDetails = {
   id: string;
   name: string;
-}
+};
 
 const DeskMultipleChoicesZones = ({ rootDataRelay, locationId, name, required }: Props) => {
   const { data: rootData, refetch } = usePaginationFragment<deskMultipleChoicesZones_PaginationQuery, deskMultipleChoicesZones_query$key>(

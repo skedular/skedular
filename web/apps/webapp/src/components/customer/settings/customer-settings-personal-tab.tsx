@@ -20,7 +20,7 @@ type Props = {
   rootDataRelay: customerSettingsPersonalTab_query$key;
 };
 
-interface SettingsDetails {
+type SettingsDetails = {
   designation: string | null;
   title: string | null;
   name: string | null;
@@ -28,7 +28,7 @@ interface SettingsDetails {
   middleName: string | null;
   familyName: string | null;
   timezone: string;
-}
+};
 
 const settingsSchema = object({
   designation: string().nullable(),

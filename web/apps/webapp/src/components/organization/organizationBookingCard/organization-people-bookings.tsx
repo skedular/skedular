@@ -59,12 +59,12 @@ enum MoreActionsMenuOptionType {
   RemoveOrganization,
 }
 
-interface MoreActionsMenuItemType {
+type MoreActionsMenuItemType = {
   id: MoreActionsMenuOptionType;
   label: String;
   icon: JSX.Element;
   color: 'inherit' | 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
-}
+};
 
 const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
   [MoreActionsMenuOptionType.MarkAsDefaultOrganization]: {

@@ -25,10 +25,10 @@ type Props = {
   rootDataRelay: smallMonthlyViewCalendar_query$key;
 };
 
-interface OrganizationDetails {
+type OrganizationDetails = {
   id: string;
   name: string;
-}
+};
 
 const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
   const { data: rootData, refetch } = usePaginationFragment<smallMonthlyViewCalendarPaginationQuery, smallMonthlyViewCalendar_query$key>(

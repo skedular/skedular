@@ -19,19 +19,19 @@ type Props = {
   useMemberId: boolean;
 };
 
-interface CustomerDetails {
+type CustomerDetails = {
   uniqueId: string;
   name: string | null | undefined;
   givenName: string | null | undefined;
   middleName: string | null | undefined;
   familyName: string | null | undefined;
   photoUrl: string | null | undefined;
-}
+};
 
-interface OrganizationMemberDetails {
+type OrganizationMemberDetails = {
   id: string;
   customer: CustomerDetails;
-}
+};
 
 const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, multiple, useMemberId }: Props) => {
   const { data: rootData, refetch } = usePaginationFragment<

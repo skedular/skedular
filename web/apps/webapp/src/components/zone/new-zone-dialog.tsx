@@ -25,9 +25,9 @@ type Props = {
   locationId: string;
 };
 
-interface ZoneDetails {
+type ZoneDetails = {
   name: string;
-}
+};
 
 const zoneSchema = object({
   name: string().required('Zone name is required'),

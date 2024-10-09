@@ -53,14 +53,14 @@ type Props = {
   canJoinBooking: boolean;
 };
 
-interface BookingDetails {
+type BookingDetails = {
   date: Date;
   member: string;
   notes: string;
   organization: string | undefined;
   location: string | undefined;
   desks: string[];
-}
+};
 
 const bookingSchema = object({
   date: date().required(),

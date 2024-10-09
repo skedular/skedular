@@ -20,13 +20,13 @@ type Props = {
   rootDataRelay: addOrganization_query$key;
 };
 
-interface OrganizationDetails {
+type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
   agreedToTermsOfUse: boolean;
   industrySubCategoryIds: string[];
-}
+};
 
 const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three charcters long.').required('Organization name is required'),

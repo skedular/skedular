@@ -56,19 +56,19 @@ type Props = {
   locationId: string;
 };
 
-interface CustomerDetails {
+type CustomerDetails = {
   familyName: string | null | undefined;
   givenName: string | null | undefined;
   middleName: string | null | undefined;
   name: string | null | undefined;
   photoUrl: string | null | undefined;
   uniqueId: string;
-}
+};
 
-interface DeskDetails {
+type DeskDetails = {
   name: string;
   locationTagIds: string[];
-}
+};
 
 const deskSchema = object({
   name: string().required('Desk name is required'),
@@ -82,10 +82,10 @@ enum MoreActionsMenuOptionType {
   RemoveDeskApprovalRequirement,
 }
 
-interface MoreActionsMenuItemType {
+type MoreActionsMenuItemType = {
   id: MoreActionsMenuOptionType;
   label: String;
-}
+};
 
 const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
   [MoreActionsMenuOptionType.ActivateDesk]: {

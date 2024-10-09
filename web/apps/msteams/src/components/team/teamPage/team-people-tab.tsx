@@ -40,13 +40,13 @@ type Props = {
   teamId: string;
 };
 
-interface TeamDetails {
+type TeamDetails = {
   organizationMemberIds: string[];
-}
+};
 
-interface MembersToJoin {
+type MembersToJoin = {
   emails: (string | undefined)[];
-}
+};
 
 const teamSchema = object({
   organizationMemberIds: array().nullable(),

@@ -25,12 +25,12 @@ type Props = {
   rootDataRelay: organizationAboutTab_query$key;
 };
 
-interface OrganizationDetails {
+type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
   industrySubCategoryIds: string[];
-}
+};
 
 const maxChipTextWidthToDisplay = 200;
 

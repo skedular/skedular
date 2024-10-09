@@ -32,9 +32,9 @@ type Props = {
   connectionIds: string[];
 };
 
-interface LocationMemberDetails {
+type LocationMemberDetails = {
   membershipType: string;
-}
+};
 
 const locationMemberSchema = object({
   membershipType: string().required(),

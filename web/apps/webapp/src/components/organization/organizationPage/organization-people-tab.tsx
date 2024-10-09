@@ -39,9 +39,9 @@ type Props = {
   organizationId: string;
 };
 
-interface MembersToJoin {
+type MembersToJoin = {
   emails: (string | undefined)[];
-}
+};
 
 const membersToInviteSchema = object({
   emails: array()

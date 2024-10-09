@@ -28,11 +28,11 @@ type Props = {
   locationId: string;
 };
 
-interface DeskDetails {
+type DeskDetails = {
   namePrefix: string;
   count: number;
   locationTagIds: string[];
-}
+};
 
 const deskSchema = object({
   namePrefix: string(),

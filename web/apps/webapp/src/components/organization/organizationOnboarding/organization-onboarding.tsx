@@ -27,13 +27,13 @@ type Props = {
   onReloadRequired: () => void;
 };
 
-interface OrganizationDetails {
+type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
   industrySubCategoryIds: string[] | null;
   agreedToTermsOfUse: boolean;
-}
+};
 
 const RootQuery = graphql`
   query organizationOnboarding_rootQuery {
