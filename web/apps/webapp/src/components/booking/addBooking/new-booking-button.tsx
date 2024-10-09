@@ -29,7 +29,7 @@ const RootQuery = graphql`
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $bookingPeopleNameSearchText: String!
+    $bookingPeopleNameSearchText: String
   ) {
     ...newBookingDialog_query
   }
@@ -115,7 +115,6 @@ const NewBookingButtonWithRelay = ({
         locationId: locationId ?? '',
         locationExists: !!locationId,
         deskIdsToIncludeToGetAvailableDesks: [],
-        bookingPeopleNameSearchText: '',
         bookingDetailsSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',

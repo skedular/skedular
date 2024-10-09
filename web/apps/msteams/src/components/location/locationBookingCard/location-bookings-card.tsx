@@ -26,7 +26,7 @@ type Props = {
 
 const RootQuery = graphql`
   query locationBookingsCard_rootQuery(
-    $peopleNameSearchText: String!
+    $peopleNameSearchText: String
     $peopleSortingValues: [LocationMemberOrderInput!]!
     $locationId: String!
     $locationExists: Boolean!
@@ -92,7 +92,6 @@ const LocationBookingsWithRelay = ({
             field: 'name',
           },
         ],
-        peopleNameSearchText: '',
         locationId,
         locationExists: !!locationId,
         from: startDate.toISOString(),

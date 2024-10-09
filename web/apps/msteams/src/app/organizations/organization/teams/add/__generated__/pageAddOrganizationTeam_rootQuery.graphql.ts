@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0b39981c1310c68c2411d7c31680f332>>
+ * @generated SignedSource<<7c4bfe6638324988cf00b0381fd7d9a2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type OrganizationMemberOrderInput = {
   field: OrganizationMemberOrderField;
 };
 export type pageAddOrganizationTeam_rootQuery$variables = {
-  bookingPeopleNameSearchText: string;
+  bookingPeopleNameSearchText?: string | null | undefined;
   organizationId: string;
   organizationMemberSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
 };
@@ -343,16 +343,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3bff5cdb9ce87b7a79df1db1702c2beb",
+    "cacheID": "941974ad9020a2d4dc02f48b4aa9e874",
     "id": null,
     "metadata": {},
     "name": "pageAddOrganizationTeam_rootQuery",
     "operationKind": "query",
-    "text": "query pageAddOrganizationTeam_rootQuery(\n  $organizationId: String!\n  $bookingPeopleNameSearchText: String!\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  teamCustomerRecordSynced\n  ...rootShell_query\n  ...addTeam_query\n}\n\nfragment addTeam_query on Query {\n  me {\n    id\n  }\n  ...organizationMemberSelector_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
+    "text": "query pageAddOrganizationTeam_rootQuery(\n  $organizationId: String!\n  $bookingPeopleNameSearchText: String\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  teamCustomerRecordSynced\n  ...rootShell_query\n  ...addTeam_query\n}\n\nfragment addTeam_query on Query {\n  me {\n    id\n  }\n  ...organizationMemberSelector_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "31c67f024fd1a14f38810ce625bee16f";
+(node as any).hash = "9894800bc8ca600cbf6d99f865bd57e3";
 
 export default node;

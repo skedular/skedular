@@ -38,8 +38,8 @@ const RootQuery = graphql`
     $locationExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $peopleNameSearchText: String!
-    $bookingPeopleNameSearchText: String!
+    $peopleNameSearchText: String
+    $bookingPeopleNameSearchText: String
     $bookingSortingValues: [BookingOrderInput!]!
     $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
@@ -47,8 +47,8 @@ const RootQuery = graphql`
     $organizationTeamsSortingValues: [TeamOrderInput!]!
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaUntil: DateTime!
-    $locationNameSearchText: String!
-    $teamNameSearchText: String!
+    $locationNameSearchText: String
+    $teamNameSearchText: String
   ) {
     organization(id: $organizationId) {
       id
@@ -196,8 +196,6 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
         locationId: '',
         locationExists: false,
         deskIdsToIncludeToGetAvailableDesks: [],
-        peopleNameSearchText: '',
-        bookingPeopleNameSearchText: '',
         bookingSortingValues: [
           {
             direction: 'Ascending',
@@ -230,8 +228,6 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
         ],
         bookingsSearchCriteriaFrom: from,
         bookingsSearchCriteriaUntil: until,
-        locationNameSearchText: '',
-        teamNameSearchText: '',
         dateToGetAvailableDesks: from,
       },
       {

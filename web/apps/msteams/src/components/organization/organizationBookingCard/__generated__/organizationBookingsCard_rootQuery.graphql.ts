@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<08430a7e487e2f751aafc181d2304945>>
+ * @generated SignedSource<<05ec46d4418dab60b1cd8f006d816952>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type organizationBookingsCard_rootQuery$variables = {
   from: any;
   organizationExists: boolean;
   organizationId: string;
-  peopleNameSearchText: string;
+  peopleNameSearchText?: string | null | undefined;
   peopleSortingValues: ReadonlyArray<OrganizationMemberOrderInput>;
   to: any;
 };
@@ -424,16 +424,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "87a8e183d95d42ea05994e011a641f7c",
+    "cacheID": "bcd81737cdc5836f17adbbd8d4e8bdf2",
     "id": null,
     "metadata": {},
     "name": "organizationBookingsCard_rootQuery",
     "operationKind": "query",
-    "text": "query organizationBookingsCard_rootQuery(\n  $peopleNameSearchText: String!\n  $peopleSortingValues: [OrganizationMemberOrderInput!]!\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationPeopleBookings_query\n}\n\nfragment organizationPeopleBookings_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) @include(if: $organizationExists) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  allBookings(where: {organizationIds: [$organizationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query organizationBookingsCard_rootQuery(\n  $peopleNameSearchText: String\n  $peopleSortingValues: [OrganizationMemberOrderInput!]!\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationPeopleBookings_query\n}\n\nfragment organizationPeopleBookings_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) @include(if: $organizationExists) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  allBookings(where: {organizationIds: [$organizationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6397d61707e22037ba04036d2ac8d3bd";
+(node as any).hash = "e6d655501e098077d775aecde7577399";
 
 export default node;

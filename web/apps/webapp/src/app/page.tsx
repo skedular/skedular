@@ -27,7 +27,7 @@ const RootQuery = graphql`
     $monthlyCalendarDateTo: DateTime!
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $bookingPeopleNameSearchText: String!
+    $bookingPeopleNameSearchText: String
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]
   ) {
@@ -75,7 +75,6 @@ const HomeWithRelay = () => {
         organizationExists: false,
         locationId: '',
         locationExists: false,
-        bookingPeopleNameSearchText: '',
         bookingDetailsSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',

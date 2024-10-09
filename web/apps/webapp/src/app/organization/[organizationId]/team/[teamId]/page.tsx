@@ -29,14 +29,14 @@ const RootQuery = graphql`
     $teamExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $bookingPeopleNameSearchText: String!
+    $bookingPeopleNameSearchText: String
     $bookingSortingValues: [BookingOrderInput!]!
     $teamPeopleSortingValues: [TeamMemberOrderInput!]
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaUntil: DateTime!
-    $peopleNameSearchText: String!
+    $peopleNameSearchText: String
   ) {
     teamCustomerRecordSynced
     ...rootShell_query
@@ -105,7 +105,6 @@ const TeamPageWithRelay = () => {
         deskIdsToIncludeToGetAvailableDesks: [],
         organizationId: finalOrganizationId,
         organizationExists: !!finalOrganizationId,
-        bookingPeopleNameSearchText: '',
         bookingSortingValues: [
           {
             direction: 'Ascending',
@@ -132,7 +131,6 @@ const TeamPageWithRelay = () => {
         ],
         bookingsSearchCriteriaFrom: from,
         bookingsSearchCriteriaUntil: until,
-        peopleNameSearchText: '',
         dateToGetAvailableDesks: from,
       },
       {

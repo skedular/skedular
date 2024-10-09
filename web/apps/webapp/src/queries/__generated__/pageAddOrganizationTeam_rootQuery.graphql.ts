@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<77fdf0fdf9d6d8eb76a585ea64e2e745>>
+ * @generated SignedSource<<075818b2a2cec6baebe0fd773146a1f2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type OrganizationMemberOrderInput = {
   field: OrganizationMemberOrderField;
 };
 export type pageAddOrganizationTeam_rootQuery$variables = {
-  bookingPeopleNameSearchText: string;
+  bookingPeopleNameSearchText?: string | null | undefined;
   organizationId: string;
   organizationMemberSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
 };
@@ -340,16 +340,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2ac933ebe318fb9d6e0bc57f73b64d7c",
+    "cacheID": "b48e9aae40a5daf88746005b53c48805",
     "id": null,
     "metadata": {},
     "name": "pageAddOrganizationTeam_rootQuery",
     "operationKind": "query",
-    "text": "query pageAddOrganizationTeam_rootQuery(\n  $organizationId: String!\n  $bookingPeopleNameSearchText: String!\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  teamCustomerRecordSynced\n  ...rootShell_query\n  ...addTeam_query\n}\n\nfragment addTeam_query on Query {\n  me {\n    id\n  }\n  ...organizationMemberSelector_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query pageAddOrganizationTeam_rootQuery(\n  $organizationId: String!\n  $bookingPeopleNameSearchText: String\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  teamCustomerRecordSynced\n  ...rootShell_query\n  ...addTeam_query\n}\n\nfragment addTeam_query on Query {\n  me {\n    id\n  }\n  ...organizationMemberSelector_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "31c67f024fd1a14f38810ce625bee16f";
+(node as any).hash = "9894800bc8ca600cbf6d99f865bd57e3";
 
 export default node;

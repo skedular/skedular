@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5bb5a80e596bce24226e0d63f4d7d602>>
+ * @generated SignedSource<<a42901a4adebcafb4e430ef5dc7cb382>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type TeamMemberOrderInput = {
 };
 export type teamBookingsCard_rootQuery$variables = {
   from: any;
-  peopleNameSearchText: string;
+  peopleNameSearchText?: string | null | undefined;
   peopleSortingValues: ReadonlyArray<TeamMemberOrderInput>;
   teamExists: boolean;
   teamId: string;
@@ -430,16 +430,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d951983b05c7f3d76e71a4855c735373",
+    "cacheID": "3db34ccfd3b648011c8628fc4dde2e65",
     "id": null,
     "metadata": {},
     "name": "teamBookingsCard_rootQuery",
     "operationKind": "query",
-    "text": "query teamBookingsCard_rootQuery(\n  $peopleNameSearchText: String!\n  $peopleSortingValues: [TeamMemberOrderInput!]!\n  $teamId: String!\n  $teamExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...teamPeopleBookings_query\n}\n\nfragment teamPeopleBookings_query on Query {\n  teamMembers(where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) @include(if: $teamExists) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  teamBookingPermissions(teamId: $teamId) @include(if: $teamExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n  team(id: $teamId) {\n    name\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  allBookings(where: {teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query teamBookingsCard_rootQuery(\n  $peopleNameSearchText: String\n  $peopleSortingValues: [TeamMemberOrderInput!]!\n  $teamId: String!\n  $teamExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...teamPeopleBookings_query\n}\n\nfragment teamPeopleBookings_query on Query {\n  teamMembers(where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) @include(if: $teamExists) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  teamBookingPermissions(teamId: $teamId) @include(if: $teamExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n  team(id: $teamId) {\n    name\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  allBookings(where: {teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6b0089f0ba0c974c78307b3450cf95b2";
+(node as any).hash = "92a543d7600bb7a78924dea207bd46e4";
 
 export default node;

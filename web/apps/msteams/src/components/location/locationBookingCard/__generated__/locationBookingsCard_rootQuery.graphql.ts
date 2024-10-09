@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e813121e127f8f4a7191426636372e54>>
+ * @generated SignedSource<<e240660e919b828f683b874f2a6815b7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type locationBookingsCard_rootQuery$variables = {
   from: any;
   locationExists: boolean;
   locationId: string;
-  peopleNameSearchText: string;
+  peopleNameSearchText?: string | null | undefined;
   peopleSortingValues: ReadonlyArray<LocationMemberOrderInput>;
   to: any;
 };
@@ -461,16 +461,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "907a84971d689ca8bc7ae0baa959462b",
+    "cacheID": "5a3e064d086b42409a47b1b1b867644d",
     "id": null,
     "metadata": {},
     "name": "locationBookingsCard_rootQuery",
     "operationKind": "query",
-    "text": "query locationBookingsCard_rootQuery(\n  $peopleNameSearchText: String!\n  $peopleSortingValues: [LocationMemberOrderInput!]!\n  $locationId: String!\n  $locationExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...locationPeopleBookings_query\n}\n\nfragment locationPeopleBookings_query on Query {\n  locationMembers(where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) @include(if: $locationExists) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  customersByDefaultLocation(where: {locationId: $locationId, nameContains: $peopleNameSearchText}) @include(if: $locationExists) {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    name\n    deskCapacity\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  allBookings(where: {locationIds: [$locationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query locationBookingsCard_rootQuery(\n  $peopleNameSearchText: String\n  $peopleSortingValues: [LocationMemberOrderInput!]!\n  $locationId: String!\n  $locationExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...locationPeopleBookings_query\n}\n\nfragment locationPeopleBookings_query on Query {\n  locationMembers(where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $peopleSortingValues) @include(if: $locationExists) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  customersByDefaultLocation(where: {locationId: $locationId, nameContains: $peopleNameSearchText}) @include(if: $locationExists) {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    name\n    deskCapacity\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  allBookings(where: {locationIds: [$locationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7b52bfd8e11cf5ebe3151c37b3c210cd";
+(node as any).hash = "c2f39aff8f6c8b33bc834d8253721876";
 
 export default node;

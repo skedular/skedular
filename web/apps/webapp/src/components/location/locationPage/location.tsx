@@ -37,10 +37,10 @@ const RootQuery = graphql`
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
     $fromToGetBookings: DateTime
     $toToGetBookings: DateTime
-    $peopleNameSearchText: String!
-    $zoneNameSearchText: String!
-    $deskNameSearchText: String!
-    $bookingPeopleNameSearchText: String!
+    $peopleNameSearchText: String
+    $zoneNameSearchText: String
+    $deskNameSearchText: String
+    $bookingPeopleNameSearchText: String
     $bookingSortingValues: [BookingOrderInput!]!
     $locationPeopleSortingValues: [LocationMemberOrderInput!]
     $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]
@@ -177,10 +177,6 @@ const LocationWithRelay = ({ organizationId, locationId }: RelayProps) => {
         toToGetBookings: to,
         organizationId,
         organizationExists: !!organizationId,
-        peopleNameSearchText: '',
-        zoneNameSearchText: '',
-        deskNameSearchText: '',
-        bookingPeopleNameSearchText: '',
         bookingSortingValues: [
           {
             direction: 'Ascending',

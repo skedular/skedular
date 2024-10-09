@@ -20,7 +20,7 @@ type Props = {
 const RootQuery = graphql`
   query pageAddOrganizationTeam_rootQuery(
     $organizationId: String!
-    $bookingPeopleNameSearchText: String!
+    $bookingPeopleNameSearchText: String
     $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
     teamCustomerRecordSynced
@@ -68,7 +68,6 @@ const AddTeamPageWithRelay = () => {
     loadQuery(
       {
         organizationId: finalOrganizationId,
-        bookingPeopleNameSearchText: '',
         organizationMemberSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',
