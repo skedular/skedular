@@ -20,7 +20,7 @@ import type { teamAboutTab_updateTeamMutation } from './__generated__/teamAboutT
 
 type Props = {
   rootDataRelay: teamAboutTab_query$key;
-  organizationId: string | null;
+  organizationId?: string;
 };
 
 type TeamDetails = {
@@ -208,6 +208,7 @@ const TeamAboutTab = ({ rootDataRelay, organizationId }: Props) => {
 
                 {rootData.team?.organization && (
                   <OrganizationMemberSelector
+                    organizationId={organizationId}
                     rootDataRelay={rootData}
                     name="organizationMemberIds"
                     required={requiredFields.organizationMemberIds}

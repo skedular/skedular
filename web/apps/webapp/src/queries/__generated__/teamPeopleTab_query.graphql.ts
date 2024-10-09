@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<41c4475e43e80d1241ba8a40648f8a59>>
+ * @generated SignedSource<<f2c564ea8a949514303ee87537249029>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -88,6 +88,10 @@ return {
       "defaultValue": null,
       "kind": "LocalArgument",
       "name": "cursor"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationExists"
     },
     {
       "kind": "RootArgument",

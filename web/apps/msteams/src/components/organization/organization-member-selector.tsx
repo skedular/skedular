@@ -12,6 +12,7 @@ import type { organizationMemberSelector_query$key } from './__generated__/organ
 
 type Props = {
   rootDataRelay: organizationMemberSelector_query$key;
+  organizationId?: string;
   name: string;
   required?: boolean;
   readOnly?: boolean;
@@ -33,7 +34,7 @@ type OrganizationMemberDetails = {
   customer: CustomerDetails;
 };
 
-const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, multiple, useMemberId }: Props) => {
+const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, required, readOnly, multiple, useMemberId }: Props) => {
   const { data: rootData, refetch } = usePaginationFragment<
     organizationMemberSelector_organizationMembers_PaginationQuery,
     organizationMemberSelector_query$key
@@ -47,7 +48,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText }
           orderBy: $organizationMemberSelectorOrganizationMembersSortingValues
-        ) @connection(key: "organizationMemberSelector_organizationMemberSelectorPaginatedOrganizationMembers") {
+        ) @connection(key: "organizationMemberSelector_organizationMemberSelectorPaginatedOrganizationMembers") @include(if: $organizationExists) {
           __id
           totalCount
           edges {
@@ -89,6 +90,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
           {
             count: pageSize,
             bookingPeopleNameSearchText,
+            organizationExists: !!organizationId,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -99,7 +101,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
         );
       });
     },
-    [refetch],
+    [refetch, organizationId],
   );
 
   if (!rootData.organizationMemberSelectorPaginatedOrganizationMembers) {

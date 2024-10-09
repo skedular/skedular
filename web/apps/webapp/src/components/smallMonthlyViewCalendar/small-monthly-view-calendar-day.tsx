@@ -14,7 +14,7 @@ import { graphql, useMutation } from 'react-relay';
 type Props = {
   rootData: smallMonthlyViewCalendar_query$data;
   connectionIds: string[];
-  organizationId: string | null;
+  organizationId?: string;
 };
 
 const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }: Props) => {

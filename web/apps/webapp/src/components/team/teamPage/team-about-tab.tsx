@@ -19,7 +19,7 @@ import { array, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: teamAboutTab_query$key;
-  organizationId: string | null;
+  organizationId?: string;
 };
 
 type TeamDetails = {
@@ -208,6 +208,7 @@ const TeamAboutTab = ({ rootDataRelay, organizationId }: Props) => {
                 {rootData.team?.organization && (
                   <OrganizationMemberSelector
                     rootDataRelay={rootData}
+                    organizationId={organizationId}
                     name="organizationMemberIds"
                     required={requiredFields.organizationMemberIds}
                     multiple={true}

@@ -25,7 +25,7 @@ import { graphql, useFragment, useMutation } from 'react-relay';
 type Props = {
   rootDataRelay: teamMemberCard_query$key;
   teamMemberDetailsRelay: teamMemberCard_TeamMemberDetails$key;
-  organizationId: string | null;
+  organizationId?: string;
   onRefetchNeeded: () => void;
 };
 

@@ -18,7 +18,7 @@ import { object, string } from 'yup';
 
 type Props = {
   rootDataRelay: locationAboutTab_query$key;
-  organizationId: string | null;
+  organizationId?: string;
 };
 
 type LocationDetails = {

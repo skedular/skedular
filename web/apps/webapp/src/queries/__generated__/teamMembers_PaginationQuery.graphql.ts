@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8bee94349727b96dcc9f687a6d3d1377>>
+ * @generated SignedSource<<e411f2f1c71f24f2b39ac9c00ef9f5eb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,6 +25,7 @@ export type teamMembers_PaginationQuery$variables = {
   bookingPeopleNameSearchText?: string | null | undefined;
   count?: number | null | undefined;
   cursor?: string | null | undefined;
+  organizationExists: boolean;
   organizationId: string;
   organizationMemberSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   peopleNameSearchText?: string | null | undefined;
@@ -56,6 +57,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationExists"
   },
   {
     "defaultValue": null,
@@ -458,79 +464,86 @@ return {
         ]
       },
       {
-        "alias": "organizationMemberSelectorPaginatedOrganizationMembers",
-        "args": (v17/*: any*/),
-        "concreteType": "OrganizationMemberConnection",
-        "kind": "LinkedField",
-        "name": "paginatedOrganizationMembers",
-        "plural": false,
+        "condition": "organizationExists",
+        "kind": "Condition",
+        "passingValue": true,
         "selections": [
-          (v6/*: any*/),
           {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationMemberEdge",
+            "alias": "organizationMemberSelectorPaginatedOrganizationMembers",
+            "args": (v17/*: any*/),
+            "concreteType": "OrganizationMemberConnection",
             "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
+            "name": "paginatedOrganizationMembers",
+            "plural": false,
             "selections": [
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "OrganizationMemberDetails",
+                "concreteType": "OrganizationMemberEdge",
                 "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
+                "name": "edges",
+                "plural": true,
                 "selections": [
-                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "OrganizationCustomerDetails",
+                    "concreteType": "OrganizationMemberDetails",
                     "kind": "LinkedField",
-                    "name": "customer",
+                    "name": "node",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
-                      (v2/*: any*/),
-                      (v7/*: any*/),
-                      (v8/*: any*/),
-                      (v9/*: any*/),
-                      (v10/*: any*/)
+                      (v1/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "OrganizationCustomerDetails",
+                        "kind": "LinkedField",
+                        "name": "customer",
+                        "plural": false,
+                        "selections": [
+                          (v3/*: any*/),
+                          (v2/*: any*/),
+                          (v7/*: any*/),
+                          (v8/*: any*/),
+                          (v9/*: any*/),
+                          (v10/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      (v12/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v12/*: any*/)
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v13/*: any*/)
+              (v14/*: any*/),
+              (v15/*: any*/)
             ],
             "storageKey": null
           },
-          (v14/*: any*/),
-          (v15/*: any*/)
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": "organizationMemberSelectorPaginatedOrganizationMembers",
-        "args": (v17/*: any*/),
-        "filters": (v16/*: any*/),
-        "handle": "connection",
-        "key": "organizationMemberSelector_organizationMemberSelectorPaginatedOrganizationMembers",
-        "kind": "LinkedHandle",
-        "name": "paginatedOrganizationMembers"
+          {
+            "alias": "organizationMemberSelectorPaginatedOrganizationMembers",
+            "args": (v17/*: any*/),
+            "filters": (v16/*: any*/),
+            "handle": "connection",
+            "key": "organizationMemberSelector_organizationMemberSelectorPaginatedOrganizationMembers",
+            "kind": "LinkedHandle",
+            "name": "paginatedOrganizationMembers"
+          }
+        ]
       }
     ]
   },
   "params": {
-    "cacheID": "bcbf37c32e0362ef10266e7c9421b249",
+    "cacheID": "c9ae6ae8d8b20cb8f8bd08323081d274",
     "id": null,
     "metadata": {},
     "name": "teamMembers_PaginationQuery",
     "operationKind": "query",
-    "text": "query teamMembers_PaginationQuery(\n  $bookingPeopleNameSearchText: String\n  $count: Int = 50\n  $cursor: String\n  $organizationId: String!\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n  $teamExists: Boolean!\n  $teamId: String!\n  $teamPeopleSortingValues: [TeamMemberOrderInput!]\n) {\n  ...teamPeopleTab_query_1G22uz\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamMemberCard_TeamMemberDetails on TeamMemberDetails {\n  id\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationMember {\n    customer {\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n}\n\nfragment teamMemberCard_query on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    canModify\n    members {\n      id\n      customer {\n        uniqueId\n      }\n      organizationMember {\n        uniqueId\n      }\n    }\n  }\n}\n\nfragment teamPeopleTab_query_1G22uz on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    organization {\n      name\n    }\n    canModify\n    members {\n      customer {\n        uniqueId\n      }\n      organizationMember {\n        uniqueId\n      }\n      id\n    }\n  }\n  paginatedTeamMembers(first: $count, after: $cursor, where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $teamPeopleSortingValues) @include(if: $teamExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...teamMemberCard_TeamMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...teamMemberCard_query\n  ...organizationMemberSelector_query\n}\n"
+    "text": "query teamMembers_PaginationQuery(\n  $bookingPeopleNameSearchText: String\n  $count: Int = 50\n  $cursor: String\n  $organizationExists: Boolean!\n  $organizationId: String!\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n  $teamExists: Boolean!\n  $teamId: String!\n  $teamPeopleSortingValues: [TeamMemberOrderInput!]\n) {\n  ...teamPeopleTab_query_1G22uz\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamMemberCard_TeamMemberDetails on TeamMemberDetails {\n  id\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationMember {\n    customer {\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n}\n\nfragment teamMemberCard_query on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    canModify\n    members {\n      id\n      customer {\n        uniqueId\n      }\n      organizationMember {\n        uniqueId\n      }\n    }\n  }\n}\n\nfragment teamPeopleTab_query_1G22uz on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    organization {\n      name\n    }\n    canModify\n    members {\n      customer {\n        uniqueId\n      }\n      organizationMember {\n        uniqueId\n      }\n      id\n    }\n  }\n  paginatedTeamMembers(first: $count, after: $cursor, where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $teamPeopleSortingValues) @include(if: $teamExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...teamMemberCard_TeamMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...teamMemberCard_query\n  ...organizationMemberSelector_query\n}\n"
   }
 };
 })();

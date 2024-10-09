@@ -29,6 +29,7 @@ type Props = {
 const RootQuery = graphql`
   query addTeam_rootQuery(
     $organizationId: String!
+    $organizationExists: Boolean!
     $bookingPeopleNameSearchText: String
     $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
@@ -150,6 +151,7 @@ const AddTeam = ({ queryReference, organizationId }: Props) => {
             {organizationId && (
               <OrganizationMemberSelector
                 rootDataRelay={rootData}
+                organizationId={organizationId}
                 name="organizationMemberIds"
                 required={requiredFields.organizationMemberIds}
                 multiple={true}
@@ -187,6 +189,7 @@ const AddTeamWithRelay = ({ organizationId }: RelayProps) => {
     loadQuery(
       {
         organizationId: '',
+        organizationExists: false,
         organizationMemberSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',

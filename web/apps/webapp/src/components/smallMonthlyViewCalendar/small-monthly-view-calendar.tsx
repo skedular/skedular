@@ -182,7 +182,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
             day: SmallMonthlyViewCalendarDay({
               rootData: rootData,
               connectionIds,
-              organizationId: selectedOrganization ? selectedOrganization.id : null,
+              organizationId: selectedOrganization ? selectedOrganization.id : undefined,
             }),
           }}
           slotProps={SimpleCalendarSlotProps}

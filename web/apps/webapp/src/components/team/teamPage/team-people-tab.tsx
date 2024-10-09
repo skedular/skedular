@@ -39,7 +39,7 @@ import TeamMemberCard from './team-member-card';
 
 type Props = {
   rootDataRelay: teamPeopleTab_query$key;
-  organizationId: string | null;
+  organizationId?: string;
   teamId: string;
 };
 
@@ -452,6 +452,7 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId, teamId }: Props) => {
                 {rootData.team?.organization && (
                   <OrganizationMemberSelector
                     rootDataRelay={rootData}
+                    organizationId={organizationId}
                     name="organizationMemberIds"
                     required={requiredTeamFields.organizationMemberIds}
                     multiple={true}
