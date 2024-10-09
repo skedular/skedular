@@ -7,7 +7,7 @@ import type { pageHome_rootQuery } from '@/queries/__generated__/pageHome_rootQu
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { endOfMonth, startOfDay, startOfMonth } from '@repo/shared/libs/utils';
+import { startOfMonth } from '@repo/shared/libs/utils';
 import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -18,23 +18,10 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageHome_rootQuery(
-    $organizationId: String!
-    $organizationExists: Boolean!
-    $locationId: String!
-    $locationExists: Boolean!
-    $monthlyCalendarDateFrom: DateTime!
-    $monthlyCalendarDateTo: DateTime!
-    $dateToGetAvailableDesks: DateTime!
-    $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $bookingPeopleNameSearchText: String
-    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]
-  ) {
+  query pageHome_rootQuery {
     bookingCustomerRecordSynced
     organizationCustomerRecordSynced
     ...rootShell_query
-    ...smallMonthlyViewCalendar_query
   }
 `;
 
@@ -53,7 +40,7 @@ const Home = ({ queryReference, onReloadRequired }: Props) => {
       additionalCustomerRecords={[rootData?.bookingCustomerRecordSynced, rootData?.organizationCustomerRecordSynced]}
     >
       <OrganizationOnboarding />
-      <SmallMonthlyViewCalendar rootDataRelay={rootData} />
+      <SmallMonthlyViewCalendar />
     </RootShell>
   );
 };
@@ -69,28 +56,7 @@ const HomeWithRelay = () => {
     const date = startOfMonth();
 
     loadQuery(
-      {
-        monthlyCalendarDateFrom: startOfMonth(date).toISOString(),
-        monthlyCalendarDateTo: endOfMonth(date).toISOString(),
-        deskIdsToIncludeToGetAvailableDesks: [],
-        organizationId: '',
-        organizationExists: false,
-        locationId: '',
-        locationExists: false,
-        bookingDetailsSelectorOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        smallMonthlyViewCalendarBookingsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'from',
-          },
-        ],
-        dateToGetAvailableDesks: startOfDay().toISOString(),
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },

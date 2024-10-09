@@ -1,6 +1,7 @@
 import { BookingCard } from '@/components/booking';
 import type { smallMonthlyViewCalendarPaginationQuery } from '@/queries/__generated__/smallMonthlyViewCalendarPaginationQuery.graphql';
 import type { smallMonthlyViewCalendar_query$key } from '@/queries/__generated__/smallMonthlyViewCalendar_query.graphql';
+import type { smallMonthlyViewCalendar_rootQuery } from '@/queries/__generated__/smallMonthlyViewCalendar_rootQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -15,22 +16,46 @@ import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '@repo/shared/components/generics';
 import { OrganizationIcon } from '@repo/shared/components/icons';
-import { endOfMonth, startOfMonth } from '@repo/shared/libs/utils';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
+import { endOfMonth, startOfDay, startOfMonth } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
-import { startTransition, useEffect, useMemo, useState } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { memo, startTransition, useEffect, useMemo, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import SmallMonthlyViewCalendarDay from './small-monthly-view-calendar-day';
 
 type Props = {
-  rootDataRelay: smallMonthlyViewCalendar_query$key;
+  queryReference: PreloadedQuery<smallMonthlyViewCalendar_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
 };
+
+const RootQuery = graphql`
+  query smallMonthlyViewCalendar_rootQuery(
+    $organizationId: String!
+    $organizationExists: Boolean!
+    $locationId: String!
+    $locationExists: Boolean!
+    $monthlyCalendarDateFrom: DateTime!
+    $monthlyCalendarDateTo: DateTime!
+    $dateToGetAvailableDesks: DateTime!
+    $deskIdsToIncludeToGetAvailableDesks: [String!]!
+    $bookingPeopleNameSearchText: String
+    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]
+  ) {
+    ...smallMonthlyViewCalendar_query
+  }
+`;
 
 type OrganizationDetails = {
   id: string;
   name: string;
 };
 
-const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
+const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
+  const rootDataRelay = usePreloadedQuery<smallMonthlyViewCalendar_rootQuery>(RootQuery, queryReference);
   const { data: rootData, refetch } = usePaginationFragment<smallMonthlyViewCalendarPaginationQuery, smallMonthlyViewCalendar_query$key>(
     graphql`
       fragment smallMonthlyViewCalendar_query on Query
@@ -225,4 +250,60 @@ const SmallMonthlyViewCalendar = ({ rootDataRelay }: Props) => {
   );
 };
 
-export default SmallMonthlyViewCalendar;
+const MemoSmallMonthlyViewCalendar = memo(SmallMonthlyViewCalendar);
+
+const SmallMonthlyViewCalendarWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<smallMonthlyViewCalendar_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    const date = startOfMonth();
+
+    loadQuery(
+      {
+        monthlyCalendarDateFrom: startOfMonth(date).toISOString(),
+        monthlyCalendarDateTo: endOfMonth(date).toISOString(),
+        deskIdsToIncludeToGetAvailableDesks: [],
+        organizationId: '',
+        organizationExists: false,
+        locationId: '',
+        locationExists: false,
+        bookingDetailsSelectorOrganizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        smallMonthlyViewCalendarBookingsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'from',
+          },
+        ],
+        dateToGetAvailableDesks: startOfDay().toISOString(),
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoSmallMonthlyViewCalendar queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(SmallMonthlyViewCalendarWithRelay);
