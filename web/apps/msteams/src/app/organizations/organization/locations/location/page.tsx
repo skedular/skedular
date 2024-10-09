@@ -1,29 +1,9 @@
-import { Loading } from '@repo/shared/components/loading';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
-import graphql from 'babel-plugin-relay/macro';
 import { Location } from 'components/location/locationPage';
 import { RootShell } from 'components/rootShell';
-import { memo, useCallback, useEffect, useState, useTransition } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { memo } from 'react';
 import { useParams } from 'react-router-dom';
-import type { pageLocationOrganization_rootQuery } from './__generated__/pageLocationOrganization_rootQuery.graphql';
 
-type Props = {
-  queryReference: PreloadedQuery<pageLocationOrganization_rootQuery, Record<string, unknown>>;
-  onReloadRequired: () => void;
-};
-
-const RootQuery = graphql`
-  query pageLocationOrganization_rootQuery {
-    locationCustomerRecordSynced
-    ...rootShell_query
-  }
-`;
-
-const LocationPage = ({ queryReference, onReloadRequired }: Props) => {
-  const rootData = usePreloadedQuery<pageLocationOrganization_rootQuery>(RootQuery, queryReference);
+const LocationPage = () => {
   const { organizationId, locationId } = useParams();
   let finalOrganizationId = '';
 
@@ -52,51 +32,12 @@ const LocationPage = ({ queryReference, onReloadRequired }: Props) => {
   } else {
     throw new Error('locationId is required');
   }
-  const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.locationCustomerRecordSynced, [rootData?.locationCustomerRecordSynced]);
 
   return (
-    <RootShell
-      rootDataRelay={rootData}
-      onReloadRequired={onReloadRequired}
-      areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
-      additionalCustomerRecords={[rootData?.locationCustomerRecordSynced]}
-    >
+    <RootShell>
       <Location organizationId={finalOrganizationId} locationId={finalLocationId} />
     </RootShell>
   );
 };
 
-const MemoLocationPage = memo(LocationPage);
-
-const LocationPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageLocationOrganization_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
-  const [, startTransition] = useTransition();
-
-  useEffect(() => {
-    loadQuery(
-      {},
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReload]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReload(triggerReload + 1);
-    });
-  };
-
-  if (!queryReference) {
-    return <Loading />;
-  }
-
-  return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
-    </ErrorBoundary>
-  );
-};
-
-export default memo(LocationPageWithRelay);
+export default memo(LocationPage);

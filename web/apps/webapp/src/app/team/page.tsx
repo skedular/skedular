@@ -2,73 +2,12 @@
 
 import { RootShell } from '@/components/rootShell';
 import { Teams } from '@/components/team/teams';
-import type { pageTeams_rootQuery } from '@/queries/__generated__/pageTeams_rootQuery.graphql';
-import { Loading } from '@repo/shared/components/loading';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
-import { memo, useCallback, useEffect, useState, useTransition } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { memo } from 'react';
 
-type Props = {
-  queryReference: PreloadedQuery<pageTeams_rootQuery, Record<string, unknown>>;
-  onReloadRequired: () => void;
-};
+const TeamsPage = () => (
+  <RootShell>
+    <Teams />
+  </RootShell>
+);
 
-const RootQuery = graphql`
-  query pageTeams_rootQuery {
-    teamCustomerRecordSynced
-    ...rootShell_query
-  }
-`;
-
-const TeamsPage = ({ queryReference, onReloadRequired }: Props) => {
-  const rootData = usePreloadedQuery<pageTeams_rootQuery>(RootQuery, queryReference);
-  const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.teamCustomerRecordSynced, [rootData?.teamCustomerRecordSynced]);
-
-  return (
-    <RootShell
-      rootDataRelay={rootData}
-      onReloadRequired={onReloadRequired}
-      areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
-      additionalCustomerRecords={[rootData?.teamCustomerRecordSynced]}
-    >
-      <Teams />
-    </RootShell>
-  );
-};
-
-const MemoTeamsPage = memo(TeamsPage);
-
-const TeamsPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageTeams_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
-  const [, startTransition] = useTransition();
-
-  useEffect(() => {
-    loadQuery(
-      {},
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReload]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReload(triggerReload + 1);
-    });
-  };
-
-  if (!queryReference) {
-    return <Loading />;
-  }
-
-  return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeamsPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
-    </ErrorBoundary>
-  );
-};
-
-export default memo(TeamsPageWithRelay);
+export default memo(TeamsPage);

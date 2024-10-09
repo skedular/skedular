@@ -2,30 +2,10 @@
 
 import { Organization } from '@/components/organization/organizationPage';
 import { RootShell } from '@/components/rootShell';
-import type { pageOrganization_rootQuery } from '@/queries/__generated__/pageOrganization_rootQuery.graphql';
-import { Loading } from '@repo/shared/components/loading';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
-import { startOfDay } from '@repo/shared/libs/utils';
 import { useParams } from 'next/navigation';
-import { memo, useCallback, useEffect, useState, useTransition } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { memo } from 'react';
 
-type Props = {
-  queryReference: PreloadedQuery<pageOrganization_rootQuery, Record<string, unknown>>;
-  onReloadRequired: () => void;
-};
-
-const RootQuery = graphql`
-  query pageOrganization_rootQuery {
-    organizationCustomerRecordSynced
-    ...rootShell_query
-  }
-`;
-
-const OrganizationPage = ({ queryReference, onReloadRequired }: Props) => {
-  const rootData = usePreloadedQuery<pageOrganization_rootQuery>(RootQuery, queryReference);
+const OrganizationPage = () => {
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -41,57 +21,11 @@ const OrganizationPage = ({ queryReference, onReloadRequired }: Props) => {
     throw new Error('organizationId is required');
   }
 
-  const areAdditionalCustomerRecordsSync = useCallback(
-    () => rootData?.organizationCustomerRecordSynced,
-    [rootData?.organizationCustomerRecordSynced],
-  );
-
   return (
-    <RootShell
-      rootDataRelay={rootData}
-      onReloadRequired={onReloadRequired}
-      areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
-      additionalCustomerRecords={[rootData?.organizationCustomerRecordSynced]}
-    >
+    <RootShell>
       <Organization organizationId={finalOrganizationId} />
     </RootShell>
   );
 };
 
-const MemoOrganizationPage = memo(OrganizationPage);
-
-const OrganizationPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageOrganization_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
-  const [, startTransition] = useTransition();
-
-  useEffect(() => {
-    const from = startOfDay().toISOString();
-    const until = startOfDay().add(1, 'month').toISOString();
-
-    loadQuery(
-      {},
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReload]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReload(triggerReload + 1);
-    });
-  };
-
-  if (!queryReference) {
-    return <Loading />;
-  }
-
-  return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
-    </ErrorBoundary>
-  );
-};
-
-export default memo(OrganizationPageWithRelay);
+export default memo(OrganizationPage);

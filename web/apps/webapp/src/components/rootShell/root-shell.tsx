@@ -1,53 +1,77 @@
 import { MainRootLayout } from '@/components/layouts';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
-import type { rootShell_query$key } from '@/queries/__generated__/rootShell_query.graphql';
+import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { LogoutIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { signOut } from 'next-auth/react';
-import { memo, useEffect, useState } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
-  rootDataRelay: rootShell_query$key;
-  title?: string | null;
-  children: React.ReactNode;
+  queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  areAdditionalCustomerRecordsSync: () => boolean;
-  additionalCustomerRecords: any[];
+  children: React.ReactNode;
+  title?: string | null;
   rightSideContent?: React.JSX.Element;
 };
 
+const RootQuery = graphql`
+  query rootShell_rootQuery {
+    me {
+      id
+    }
+    billingCustomerRecordSynced
+    bookingCustomerRecordSynced
+    locationCustomerRecordSynced
+    msTeamsCustomerRecordSynced
+    notificationCustomerRecordSynced
+    organizationCustomerRecordSynced
+    paymentCustomerRecordSynced
+    slackCustomerRecordSynced
+    teamCustomerRecordSynced
+    ...observability_query
+    ...mainRootLayout_query
+  }
+`;
+
 const maxRetryAttemptsToReload = 20;
 
-const RootShell = ({
-  rootDataRelay,
-  children,
-  onReloadRequired,
-  areAdditionalCustomerRecordsSync,
-  additionalCustomerRecords,
-  rightSideContent,
-}: Props) => {
-  const rootData = useFragment(
-    graphql`
-      fragment rootShell_query on Query {
-        me {
-          id
-        }
-        ...observability_query
-        ...mainRootLayout_query
-      }
-    `,
-    rootDataRelay,
+const RootShell = ({ queryReference, children, onReloadRequired, rightSideContent }: Props) => {
+  const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
+  const [reloadCount, setReloadCount] = useState(0);
+  const areCustomerRecordsSync = useCallback(
+    () =>
+      rootData?.billingCustomerRecordSynced &&
+      rootData?.bookingCustomerRecordSynced &&
+      rootData?.locationCustomerRecordSynced &&
+      rootData?.msTeamsCustomerRecordSynced &&
+      rootData?.notificationCustomerRecordSynced &&
+      rootData?.organizationCustomerRecordSynced &&
+      rootData?.paymentCustomerRecordSynced &&
+      rootData?.slackCustomerRecordSynced &&
+      rootData?.teamCustomerRecordSynced,
+    [
+      rootData?.billingCustomerRecordSynced,
+      rootData?.bookingCustomerRecordSynced,
+      rootData?.locationCustomerRecordSynced,
+      rootData?.msTeamsCustomerRecordSynced,
+      rootData?.notificationCustomerRecordSynced,
+      rootData?.organizationCustomerRecordSynced,
+      rootData?.paymentCustomerRecordSynced,
+      rootData?.slackCustomerRecordSynced,
+      rootData?.teamCustomerRecordSynced,
+    ],
   );
 
-  const [reloadCount, setReloadCount] = useState(0);
-
   useEffect(() => {
-    if (reloadCount === maxRetryAttemptsToReload || (rootData.me && areAdditionalCustomerRecordsSync())) {
+    if (reloadCount === maxRetryAttemptsToReload || (rootData.me && areCustomerRecordsSync())) {
       return;
     }
 
@@ -59,11 +83,7 @@ const RootShell = ({
     return () => {
       clearInterval(intervalId);
     };
-  }, [rootDataRelay, rootData.me, reloadCount, onReloadRequired, areAdditionalCustomerRecordsSync, ...additionalCustomerRecords]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  if (!rootDataRelay) {
-    return null;
-  }
+  }, [rootData.me, reloadCount, onReloadRequired, areCustomerRecordsSync]);
 
   const handleSignOutClick = () => {
     signOut();
@@ -82,7 +102,7 @@ const RootShell = ({
     );
   }
 
-  if (!rootData.me || !areAdditionalCustomerRecordsSync()) {
+  if (!rootData.me || !areCustomerRecordsSync()) {
     return <Loading message="Kindly hold on as we proceed to activate your account..." />;
   }
 
@@ -106,4 +126,45 @@ const RootShell = ({
   );
 };
 
-export default memo(RootShell);
+const MemoRootShell = memo(RootShell);
+
+type RelayProps = {
+  children: React.ReactNode;
+  title?: string | null;
+  rightSideContent?: React.JSX.Element;
+};
+
+const RootShellWithRelay = ({ title, children, rightSideContent }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {},
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} title={title} rightSideContent={rightSideContent}>
+        {children}
+      </MemoRootShell>
+    </ErrorBoundary>
+  );
+};
+
+export default memo(RootShellWithRelay);
