@@ -15,7 +15,7 @@ import { graphql, useMutation } from 'react-relay';
 import { object, string } from 'yup';
 
 type Props = {
-  organizationId: string | null;
+  organizationId?: string;
 };
 
 type LocationDetails = {

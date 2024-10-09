@@ -61,8 +61,7 @@ const AddTeamPageWithRelay = () => {
 
   useEffect(() => {
     loadQuery(
-      {
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },
@@ -81,7 +80,7 @@ const AddTeamPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAddTeamPage queryReference={queryReference} onReloadRequired={handleReloadRequired}  />
+      <MemoAddTeamPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

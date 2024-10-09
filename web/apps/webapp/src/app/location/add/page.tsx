@@ -33,7 +33,7 @@ const AddLocationPage = ({ queryReference, onReloadRequired }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.locationCustomerRecordSynced]}
     >
-      <AddLocation organizationId={null} />
+      <AddLocation />
     </RootShell>
   );
 };
