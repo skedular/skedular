@@ -46,7 +46,9 @@ const LocationsPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageLocations_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId } = useParams();
+
   let finalOrganizationId = '';
+
   if (typeof organizationId === 'string') {
     finalOrganizationId = organizationId;
   } else if (Array.isArray(organizationId)) {

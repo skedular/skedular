@@ -52,6 +52,7 @@ const AddTeamPageWithRelay = () => {
   const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
+
   if (typeof organizationId === 'string') {
     finalOrganizationId = organizationId;
   } else if (Array.isArray(organizationId)) {

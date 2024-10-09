@@ -1,46 +1,45 @@
 import { TeamLink } from '@/components/team';
-import type { teamPage_query$key } from '@/queries/__generated__/teamPage_query.graphql';
+import type { team_rootQuery } from '@/queries/__generated__/team_rootQuery.graphql';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
+import { getCurrentCompleteUrl, startOfDay } from '@repo/shared/libs/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useState } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { memo, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import TeamAboutTab from './team-about-tab';
 import TeamBookingsTab from './team-bookings-tab';
 import TeamPeopleTab from './team-people-tab';
 
 type Props = {
-  rootDataRelay: teamPage_query$key;
-  teamId: string;
+  queryReference: PreloadedQuery<team_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   organizationId: string;
+  teamId: string;
 };
 
 const RootQuery = graphql`
-  query location_rootQuery(
+  query team_rootQuery(
     $organizationId: String!
     $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
-    $zoneTagType: String!
+    $teamId: String!
+    $teamExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $fromToGetBookings: DateTime
-    $toToGetBookings: DateTime
-    $peopleNameSearchText: String
-    $zoneNameSearchText: String
-    $deskNameSearchText: String
     $bookingPeopleNameSearchText: String
     $bookingSortingValues: [BookingOrderInput!]!
-    $locationPeopleSortingValues: [LocationMemberOrderInput!]
-    $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]
-    $zoneSortingValues: [LocationTagOrderInput!]!
-    $deskSortingValues: [DeskOrderInput!]!
+    $teamPeopleSortingValues: [TeamMemberOrderInput!]
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
+    $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaUntil: DateTime!
+    $peopleNameSearchText: String
   ) {
     team(id: $teamId) {
       name
@@ -54,24 +53,8 @@ const RootQuery = graphql`
   }
 `;
 
-const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
-  const rootData = useFragment<teamPage_query$key>(
-    graphql`
-      fragment teamPage_query on Query {
-        team(id: $teamId) {
-          name
-          organization {
-            uniqueId
-          }
-        }
-        ...teamBookingsTab_query
-        ...teamAboutTab_query
-        ...teamPeopleTab_query
-      }
-    `,
-    rootDataRelay,
-  );
-
+const Team = ({ queryReference, teamId, organizationId }: Props) => {
+  const rootData = usePreloadedQuery<team_rootQuery>(RootQuery, queryReference);
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
   const router = useRouter();
@@ -128,4 +111,80 @@ const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
   );
 };
 
-export default memo(Team);
+const MemoTeam = memo(Team);
+
+type RelayProps = {
+  organizationId: string;
+  teamId: string;
+};
+
+const TeamWithRelay = ({ organizationId, teamId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<team_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    const from = startOfDay().toISOString();
+    const until = startOfDay().add(1, 'month').toISOString();
+
+    loadQuery(
+      {
+        teamId,
+        teamExists: !!teamId,
+        locationId: '',
+        locationExists: false,
+        deskIdsToIncludeToGetAvailableDesks: [],
+        organizationId,
+        organizationExists: false,
+        bookingSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'from',
+          },
+        ],
+        teamPeopleSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        bookingDetailsSelectorOrganizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        organizationMemberSelectorOrganizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        bookingsSearchCriteriaFrom: from,
+        bookingsSearchCriteriaUntil: until,
+        dateToGetAvailableDesks: from,
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, organizationId, teamId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoTeam queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} teamId={teamId} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(TeamWithRelay);

@@ -22,6 +22,7 @@ const FabNavigationMenu = () => {
   const navigate = useNavigate();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
+
   if (typeof organizationId === 'string') {
     finalOrganizationId = organizationId;
   } else if (Array.isArray(organizationId)) {

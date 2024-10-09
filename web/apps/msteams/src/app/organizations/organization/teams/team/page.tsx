@@ -1,7 +1,6 @@
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { RootShell } from 'components/rootShell';
 import { Team } from 'components/team/teamPage';
@@ -19,27 +18,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageTeamOrganization_rootQuery(
-    $organizationId: String!
-    $organizationExists: Boolean!
-    $locationId: String!
-    $locationExists: Boolean!
-    $teamId: String!
-    $teamExists: Boolean!
-    $dateToGetAvailableDesks: DateTime!
-    $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $bookingPeopleNameSearchText: String
-    $bookingSortingValues: [BookingOrderInput!]!
-    $teamPeopleSortingValues: [TeamMemberOrderInput!]
-    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaUntil: DateTime!
-    $peopleNameSearchText: String
-  ) {
+  query pageTeamOrganization_rootQuery {
     teamCustomerRecordSynced
     ...rootShell_query
-    ...teamPage_query
   }
 `;
 
@@ -54,7 +35,7 @@ const TeamPage = ({ queryReference, onReloadRequired, teamId, organizationId }: 
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.teamCustomerRecordSynced]}
     >
-      <Team rootDataRelay={rootData} teamId={teamId} organizationId={organizationId} />
+      <Team teamId={teamId} organizationId={organizationId} />
     </RootShell>
   );
 };
@@ -66,6 +47,7 @@ const TeamPageWithRelay = () => {
   const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId, teamId } = useParams();
   let finalOrganizationId = '';
+
   if (typeof organizationId === 'string') {
     finalOrganizationId = organizationId;
   } else if (Array.isArray(organizationId)) {
@@ -79,6 +61,7 @@ const TeamPageWithRelay = () => {
   }
 
   let finalTeamId = '';
+
   if (typeof teamId === 'string') {
     finalTeamId = teamId;
   } else if (Array.isArray(teamId)) {
@@ -92,51 +75,13 @@ const TeamPageWithRelay = () => {
   }
 
   useEffect(() => {
-    const from = startOfDay().toISOString();
-    const until = startOfDay().add(1, 'month').toISOString();
-
     loadQuery(
-      {
-        teamId: finalTeamId,
-        teamExists: !!finalTeamId,
-        locationId: '',
-        locationExists: false,
-        deskIdsToIncludeToGetAvailableDesks: [],
-        organizationId: finalOrganizationId,
-        organizationExists: !!finalOrganizationId,
-        bookingSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'from',
-          },
-        ],
-        teamPeopleSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        bookingDetailsSelectorOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        organizationMemberSelectorOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaUntil: until,
-        dateToGetAvailableDesks: from,
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, finalOrganizationId, finalTeamId]);
+  }, [loadQuery, triggerReload]);
 
   const handleReloadRequired = () => {
     setTriggerReload(triggerReload + 1);

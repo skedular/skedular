@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom';
 const LeftSideNavigationMenu = () => {
   const { organizationId } = useParams();
   let finalOrganizationId = '';
+
   if (typeof organizationId === 'string') {
     finalOrganizationId = organizationId;
   } else if (Array.isArray(organizationId)) {
