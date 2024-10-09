@@ -15,7 +15,6 @@ import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'reac
 type Props = {
   queryReference: PreloadedQuery<pageOrganization_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
 };
 
 const RootQuery = graphql`
@@ -25,30 +24,8 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const OrganizationPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageOrganization_rootQuery>(RootQuery, queryReference);
-  const areAdditionalCustomerRecordsSync = useCallback(
-    () => rootData?.organizationCustomerRecordSynced,
-    [rootData?.organizationCustomerRecordSynced],
-  );
-
-  return (
-    <RootShell
-      rootDataRelay={rootData}
-      onReloadRequired={onReloadRequired}
-      areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
-      additionalCustomerRecords={[rootData?.organizationCustomerRecordSynced]}
-    >
-      <Organization organizationId={organizationId} />
-    </RootShell>
-  );
-};
-
-const MemoOrganizationPage = memo(OrganizationPage);
-
-const OrganizationPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageOrganization_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -64,6 +41,29 @@ const OrganizationPageWithRelay = () => {
     throw new Error('organizationId is required');
   }
 
+  const areAdditionalCustomerRecordsSync = useCallback(
+    () => rootData?.organizationCustomerRecordSynced,
+    [rootData?.organizationCustomerRecordSynced],
+  );
+
+  return (
+    <RootShell
+      rootDataRelay={rootData}
+      onReloadRequired={onReloadRequired}
+      areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
+      additionalCustomerRecords={[rootData?.organizationCustomerRecordSynced]}
+    >
+      <Organization organizationId={finalOrganizationId} />
+    </RootShell>
+  );
+};
+
+const MemoOrganizationPage = memo(OrganizationPage);
+
+const OrganizationPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<pageOrganization_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+
   useEffect(() => {
     const from = startOfDay().toISOString();
     const until = startOfDay().add(1, 'month').toISOString();
@@ -74,7 +74,7 @@ const OrganizationPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, finalOrganizationId]);
+  }, [loadQuery, triggerReload]);
 
   const handleReloadRequired = () => {
     setTriggerReload(triggerReload + 1);
@@ -86,7 +86,7 @@ const OrganizationPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoOrganizationPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

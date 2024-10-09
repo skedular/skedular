@@ -63,9 +63,11 @@ const MemoHome = memo(Home);
 
 const HomeWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageHome_rootQuery>(RootQuery);
-  const [date, setDate] = useState(startOfMonth());
+  const [triggerReload, setTriggerReload] = useState(0);
 
   useEffect(() => {
+    const date = startOfMonth();
+
     loadQuery(
       {
         monthlyCalendarDateFrom: startOfMonth(date).toISOString(),
@@ -93,10 +95,10 @@ const HomeWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, date]);
+  }, [loadQuery, triggerReload]);
 
   const handleReloadRequired = () => {
-    setDate(startOfMonth());
+    setTriggerReload(triggerReload + 1);
   };
 
   if (!queryReference) {
