@@ -6,8 +6,6 @@ import type { pageOrganizationLocation_rootQuery } from '@/queries/__generated__
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
-import { endOfDay, startOfDay } from '@repo/shared/libs/utils';
 import { useParams } from 'next/navigation';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -21,33 +19,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageOrganizationLocation_rootQuery(
-    $organizationId: String!
-    $organizationExists: Boolean!
-    $locationId: String!
-    $locationExists: Boolean!
-    $zoneTagType: String!
-    $dateToGetAvailableDesks: DateTime!
-    $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $fromToGetBookings: DateTime
-    $toToGetBookings: DateTime
-    $peopleNameSearchText: String!
-    $zoneNameSearchText: String!
-    $deskNameSearchText: String!
-    $bookingPeopleNameSearchText: String!
-    $bookingSortingValues: [BookingOrderInput!]!
-    $locationPeopleSortingValues: [LocationMemberOrderInput!]
-    $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]
-    $zoneSortingValues: [LocationTagOrderInput!]!
-    $deskSortingValues: [DeskOrderInput!]!
-    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
-    $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaUntil: DateTime!
-  ) {
+  query pageOrganizationLocation_rootQuery {
     locationCustomerRecordSynced
     ...rootShell_query
-    ...locationPage_query
   }
 `;
 
@@ -62,7 +36,7 @@ const LocationPage = ({ queryReference, onReloadRequired, locationId, organizati
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.locationCustomerRecordSynced]}
     >
-      <Location rootDataRelay={rootData} locationId={locationId} organizationId={organizationId} />
+      <Location organizationId={organizationId} locationId={locationId} />
     </RootShell>
   );
 };
@@ -73,7 +47,9 @@ const LocationPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationLocation_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
   const { organizationId, locationId } = useParams();
+
   let finalOrganizationId = '';
+
   if (typeof organizationId === 'string') {
     finalOrganizationId = organizationId;
   } else if (Array.isArray(organizationId)) {
@@ -87,6 +63,7 @@ const LocationPageWithRelay = () => {
   }
 
   let finalLocationId = '';
+
   if (typeof locationId === 'string') {
     finalLocationId = locationId;
   } else if (Array.isArray(locationId)) {
@@ -100,75 +77,13 @@ const LocationPageWithRelay = () => {
   }
 
   useEffect(() => {
-    const from = startOfDay().toISOString();
-    const to = endOfDay(from).toISOString();
-    const until = startOfDay().add(1, 'month').toISOString();
-
     loadQuery(
-      {
-        locationId: finalLocationId,
-        locationExists: !!finalLocationId,
-        zoneTagType: TAG_TYPE_LOCATION_ZONE,
-        deskIdsToIncludeToGetAvailableDesks: [],
-        fromToGetBookings: from,
-        toToGetBookings: to,
-        organizationId: finalOrganizationId,
-        organizationExists: !!finalOrganizationId,
-        peopleNameSearchText: '',
-        zoneNameSearchText: '',
-        deskNameSearchText: '',
-        bookingPeopleNameSearchText: '',
-        bookingSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'from',
-          },
-        ],
-        locationPeopleSortingValues: [
-          {
-            direction: 'Descending',
-            field: 'name',
-          },
-        ],
-        locationOrganizationPeopleSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        zoneSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        deskSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        bookingDetailsSelectorOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        deskMultipleChoicesZonesSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaUntil: until,
-        dateToGetAvailableDesks: from,
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, finalOrganizationId, finalLocationId]);
+  }, [loadQuery, triggerReload]);
 
   const handleReloadRequired = () => {
     setTriggerReload(triggerReload + 1);

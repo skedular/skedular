@@ -1,8 +1,6 @@
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
-import { endOfDay, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { Location } from 'components/location/locationPage';
 import { RootShell } from 'components/rootShell';
@@ -20,33 +18,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageLocationOrganization_rootQuery(
-    $organizationId: String!
-    $organizationExists: Boolean!
-    $locationId: String!
-    $locationExists: Boolean!
-    $zoneTagType: String!
-    $dateToGetAvailableDesks: DateTime!
-    $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $fromToGetBookings: DateTime
-    $toToGetBookings: DateTime
-    $peopleNameSearchText: String!
-    $zoneNameSearchText: String!
-    $deskNameSearchText: String!
-    $bookingPeopleNameSearchText: String!
-    $bookingSortingValues: [BookingOrderInput!]!
-    $locationPeopleSortingValues: [LocationMemberOrderInput!]
-    $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]
-    $zoneSortingValues: [LocationTagOrderInput!]!
-    $deskSortingValues: [DeskOrderInput!]!
-    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
-    $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaUntil: DateTime!
-  ) {
+  query pageLocationOrganization_rootQuery {
     locationCustomerRecordSynced
     ...rootShell_query
-    ...locationPage_query
   }
 `;
 
@@ -61,7 +35,7 @@ const LocationPage = ({ queryReference, onReloadRequired, locationId, organizati
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.locationCustomerRecordSynced]}
     >
-      <Location rootDataRelay={rootData} locationId={locationId} organizationId={organizationId} />
+      <Location locationId={locationId} organizationId={organizationId} />
     </RootShell>
   );
 };
@@ -99,75 +73,13 @@ const LocationPageWithRelay = () => {
   }
 
   useEffect(() => {
-    const from = startOfDay().toISOString();
-    const to = endOfDay(from).toISOString();
-    const until = startOfDay().add(1, 'month').toISOString();
-
     loadQuery(
-      {
-        organizationId: finalOrganizationId,
-        organizationExists: !!finalOrganizationId,
-        locationId: finalLocationId,
-        locationExists: !!finalLocationId,
-        zoneTagType: TAG_TYPE_LOCATION_ZONE,
-        deskIdsToIncludeToGetAvailableDesks: [],
-        fromToGetBookings: from,
-        toToGetBookings: to,
-        peopleNameSearchText: '',
-        zoneNameSearchText: '',
-        deskNameSearchText: '',
-        bookingPeopleNameSearchText: '',
-        bookingSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'from',
-          },
-        ],
-        locationPeopleSortingValues: [
-          {
-            direction: 'Descending',
-            field: 'name',
-          },
-        ],
-        locationOrganizationPeopleSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        zoneSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        deskSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        bookingDetailsSelectorOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        deskMultipleChoicesZonesSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaUntil: until,
-        dateToGetAvailableDesks: from,
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, finalOrganizationId, finalLocationId]);
+  }, [loadQuery, triggerReload]);
 
   const handleReloadRequired = () => {
     setTriggerReload(triggerReload + 1);
