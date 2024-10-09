@@ -17,6 +17,43 @@ type Props = {
   organizationId: string;
 };
 
+const RootQuery = graphql`
+  query location_rootQuery(
+    $organizationId: String!
+    $organizationExists: Boolean!
+    $locationId: String!
+    $locationExists: Boolean!
+    $zoneTagType: String!
+    $dateToGetAvailableDesks: DateTime!
+    $deskIdsToIncludeToGetAvailableDesks: [String!]!
+    $fromToGetBookings: DateTime
+    $toToGetBookings: DateTime
+    $peopleNameSearchText: String
+    $zoneNameSearchText: String
+    $deskNameSearchText: String
+    $bookingPeopleNameSearchText: String
+    $bookingSortingValues: [BookingOrderInput!]!
+    $locationPeopleSortingValues: [LocationMemberOrderInput!]
+    $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]
+    $zoneSortingValues: [LocationTagOrderInput!]!
+    $deskSortingValues: [DeskOrderInput!]!
+    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
+    $bookingsSearchCriteriaFrom: DateTime!
+    $bookingsSearchCriteriaUntil: DateTime!
+  ) {
+    team(id: $teamId) {
+      name
+      organization {
+        uniqueId
+      }
+    }
+    ...teamBookingsTab_query
+    ...teamAboutTab_query
+    ...teamPeopleTab_query
+  }
+`;
+
 const Team = ({ rootDataRelay, teamId, organizationId }: Props) => {
   const rootData = useFragment<teamPage_query$key>(
     graphql`
