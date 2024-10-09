@@ -2,6 +2,9 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -9,18 +12,33 @@ import { OrganizationMemberSelector } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { useFragment, useMutation } from 'react-relay';
+import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useNavigate } from 'react-router-dom';
 import { array, object, string } from 'yup';
 import type { addTeam_addTeamMutation } from './__generated__/addTeam_addTeamMutation.graphql';
-import type { addTeam_query$key } from './__generated__/addTeam_query.graphql';
+import type { addTeam_rootQuery } from './__generated__/addTeam_rootQuery.graphql';
 
 type Props = {
-  rootDataRelay: addTeam_query$key;
+  queryReference: PreloadedQuery<addTeam_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   organizationId: string;
 };
+
+const RootQuery = graphql`
+  query addTeam_rootQuery(
+    $organizationId: String!
+    $bookingPeopleNameSearchText: String
+    $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
+  ) {
+    me {
+      id
+    }
+    ...organizationMemberSelector_query
+  }
+`;
 
 type TeamDetails = {
   name: string;
@@ -36,19 +54,8 @@ const teamSchema = object({
   organizationMemberIds: array().nullable(),
 });
 
-const AddTeam = ({ rootDataRelay, organizationId }: Props) => {
-  const rootData = useFragment(
-    graphql`
-      fragment addTeam_query on Query {
-        me {
-          id
-        }
-        ...organizationMemberSelector_query
-      }
-    `,
-    rootDataRelay,
-  );
-
+const AddTeam = ({ queryReference, organizationId }: Props) => {
+  const rootData = usePreloadedQuery<addTeam_rootQuery>(RootQuery, queryReference);
   const [commitAddTeam] = useMutation<addTeam_addTeamMutation>(graphql`
     mutation addTeam_addTeamMutation($input: AddTeamInput!) @raw_response_type {
       addTeam(input: $input) {
@@ -166,4 +173,49 @@ const AddTeam = ({ rootDataRelay, organizationId }: Props) => {
   );
 };
 
-export default memo(AddTeam);
+const MemoAddTeam = memo(AddTeam);
+
+type RelayProps = {
+  organizationId: string;
+};
+
+const AddTeamWithRelay = ({ organizationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<addTeam_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        organizationId: '',
+        organizationMemberSelectorOrganizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoAddTeam queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(AddTeamWithRelay);

@@ -16,14 +16,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageAddTeam_rootQuery(
-    $organizationId: String!
-    $bookingPeopleNameSearchText: String
-    $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-  ) {
+  query pageAddTeam_rootQuery {
     teamCustomerRecordSynced
     ...rootShell_query
-    ...addTeam_query
   }
 `;
 
@@ -38,7 +33,7 @@ const AddTeamPage = ({ queryReference, onReloadRequired }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.teamCustomerRecordSynced]}
     >
-      <AddTeam rootDataRelay={rootData} organizationId={null} />
+      <AddTeam />
     </RootShell>
   );
 };
@@ -52,15 +47,7 @@ const AddTeamPageWithRelay = () => {
 
   useEffect(() => {
     loadQuery(
-      {
-        organizationId: '',
-        organizationMemberSelectorOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },
