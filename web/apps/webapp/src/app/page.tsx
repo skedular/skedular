@@ -34,7 +34,6 @@ const RootQuery = graphql`
     bookingCustomerRecordSynced
     organizationCustomerRecordSynced
     ...rootShell_query
-    ...organizationOnboarding_query
     ...smallMonthlyViewCalendar_query
   }
 `;
@@ -53,7 +52,7 @@ const Home = ({ queryReference, onReloadRequired }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.bookingCustomerRecordSynced, rootData?.organizationCustomerRecordSynced]}
     >
-      <OrganizationOnboarding rootDataRelay={rootData} />
+      <OrganizationOnboarding />
       <SmallMonthlyViewCalendar rootDataRelay={rootData} />
     </RootShell>
   );
