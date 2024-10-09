@@ -39,7 +39,6 @@ const RootQuery = graphql`
         uniqueId
       }
     }
-    ...teamAboutTab_query
     ...teamPeopleTab_query
   }
 `;
@@ -94,7 +93,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
 
       <>
         {tabIndex === 0 && <TeamBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
-        {tabIndex === 1 && <TeamAboutTab rootDataRelay={rootData} organizationId={organizationId} />}
+        {tabIndex === 1 && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
         {tabIndex === 2 && <TeamPeopleTab rootDataRelay={rootData} organizationId={organizationId} teamId={teamId} />}
       </>
     </Stack>
