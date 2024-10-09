@@ -1,8 +1,8 @@
 'use client';
 
+import { PublicMainRootLayout } from '@/components/layouts';
 import type { Line } from '@repo/shared/components/document';
 import { Document, LineType } from '@repo/shared/components/document';
-import { PublicMainRootLayout } from '@/components/layouts';
 import { memo } from 'react';
 
 const lines: Line[] = [

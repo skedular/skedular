@@ -1,6 +1,6 @@
-import { encodeBase64, getPublicSiteUrl } from '../../libs/utils';
-import { v4 as uuidv4 } from 'uuid';
 import { memo } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { encodeBase64, getPublicSiteUrl } from '../../libs/utils';
 
 const parameterizedUrl =
   'https://slack.com/oauth/v2/authorize?scope=app_mentions:read,channels:join,channels:manage,channels:read,chat:write,team:read,users:read,users:read.email,users.profile:read&user_scope=users.profile:read,users.profile:write&state=$SLACK_STATE$&redirect_uri=$SLACK_REDIRECT_URL$&client_id=$SLACK_CLIENT_ID$';

@@ -1,23 +1,36 @@
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import graphql from 'babel-plugin-relay/macro';
 import { NotificationCard } from 'components/notification';
-import { memo, useCallback, useState, useTransition } from 'react';
-import { usePaginationFragment } from 'react-relay';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type {
   NotificationOrderField,
   NotificationOrderInput,
   notifications_PaginationQuery,
 } from './__generated__/notifications_PaginationQuery.graphql';
 import type { notifications_query$key } from './__generated__/notifications_query.graphql';
+import type { notifications_rootQuery } from './__generated__/notifications_rootQuery.graphql';
 
 type Props = {
-  rootDataRelay: notifications_query$key;
+  queryReference: PreloadedQuery<notifications_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
 };
 
-const Notifications = ({ rootDataRelay }: Props) => {
+const RootQuery = graphql`
+  query notifications_rootQuery($myNotificationsSortingValues: [NotificationOrderInput!]!) {
+    ...notifications_query
+  }
+`;
+
+const Notifications = ({ queryReference }: Props) => {
+  const rootDataRelay = usePreloadedQuery<notifications_rootQuery>(RootQuery, queryReference);
   const {
     data: rootData,
     loadNext,
@@ -145,4 +158,44 @@ const Notifications = ({ rootDataRelay }: Props) => {
   );
 };
 
-export default memo(Notifications);
+const MemoNotifications = memo(Notifications);
+
+const NotificationsWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<notifications_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        myNotificationsSortingValues: [
+          {
+            direction: 'Descending',
+            field: 'eventRaisedAt',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoNotifications queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(NotificationsWithRelay);

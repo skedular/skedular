@@ -8,7 +8,7 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { endOfMonth, startOfDay, startOfMonth } from '@repo/shared/libs/utils';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -64,6 +64,7 @@ const MemoHome = memo(Home);
 const HomeWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageHome_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     const date = startOfMonth();
@@ -98,7 +99,9 @@ const HomeWithRelay = () => {
   }, [loadQuery, triggerReload]);
 
   const handleReloadRequired = () => {
-    setTriggerReload(triggerReload + 1);
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
   };
 
   if (!queryReference) {

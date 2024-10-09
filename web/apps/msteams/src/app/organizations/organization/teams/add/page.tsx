@@ -4,7 +4,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
 import { RootShell } from 'components/rootShell';
 import { AddTeam } from 'components/team/addTeam';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useParams } from 'react-router-dom';
@@ -49,8 +49,8 @@ const MemoAddTeamPage = memo(AddTeamPage);
 const AddTeamPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageAddOrganizationTeam_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
   const { organizationId } = useParams();
-
   let finalOrganizationId = '';
 
   if (typeof organizationId === 'string') {
@@ -83,7 +83,9 @@ const AddTeamPageWithRelay = () => {
   }, [loadQuery, triggerReload, finalOrganizationId]);
 
   const handleReloadRequired = () => {
-    setTriggerReload(triggerReload + 1);
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
   };
 
   if (!queryReference) {

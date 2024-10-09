@@ -4,7 +4,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
 import { AddLocation } from 'components/location/addLocation';
 import { RootShell } from 'components/rootShell';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useParams } from 'react-router-dom';
@@ -44,6 +44,7 @@ const MemoAddLocationPage = memo(AddLocationPage);
 const AddLocationPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageAddOrganizationLocation_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -69,7 +70,9 @@ const AddLocationPageWithRelay = () => {
   }, [loadQuery, triggerReload]);
 
   const handleReloadRequired = () => {
-    setTriggerReload(triggerReload + 1);
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
   };
 
   if (!queryReference) {

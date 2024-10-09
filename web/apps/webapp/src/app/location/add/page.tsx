@@ -6,7 +6,7 @@ import type { pageAddLocation_rootQuery } from '@/queries/__generated__/pageAddL
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -43,6 +43,7 @@ const MemoAddLocationPage = memo(AddLocationPage);
 const AddLocationPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageAddLocation_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     loadQuery(
@@ -54,7 +55,9 @@ const AddLocationPageWithRelay = () => {
   }, [loadQuery, triggerReload]);
 
   const handleReloadRequired = () => {
-    setTriggerReload(triggerReload + 1);
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
   };
 
   if (!queryReference) {
