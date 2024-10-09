@@ -37,7 +37,6 @@ const RootQuery = graphql`
     teamCustomerRecordSynced
     isAzureTenantInstalled
     azureTenantAdminConsentUrl
-    ...observability_query
   }
 `;
 
@@ -116,7 +115,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, rightSideConten
 
   return (
     <>
-      <Observability rootDataRelay={rootData} />
+      <Observability />
       <MainRootLayout leftSideContent={<LeftSideNavigationMenu />} rightSideContent={rightSideContent}>
         <Box
           sx={{

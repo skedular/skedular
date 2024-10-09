@@ -36,7 +36,6 @@ const RootQuery = graphql`
     paymentCustomerRecordSynced
     slackCustomerRecordSynced
     teamCustomerRecordSynced
-    ...observability_query
     ...mainRootLayout_query
   }
 `;
@@ -108,7 +107,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, rightSideConten
 
   return (
     <>
-      <Observability rootDataRelay={rootData} />
+      <Observability />
       <MainRootLayout rootDataRelay={rootData} leftSideContent={<LeftSideNavigationMenu />} rightSideContent={rightSideContent}>
         <Box
           sx={{
