@@ -9,23 +9,36 @@ import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getLocationAddLink } from 'components/location';
 import { LocationBookingsCard } from 'components/location/locationBookingCard';
 import debounce from 'lodash.debounce';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
-import { usePaginationFragment } from 'react-relay';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { LocationOrderField, LocationOrderInput, locations_PaginationQuery } from './__generated__/locations_PaginationQuery.graphql';
 import type { locations_query$key } from './__generated__/locations_query.graphql';
+import type { locations_rootQuery } from './__generated__/locations_rootQuery.graphql';
 
 type Props = {
-  rootDataRelay: locations_query$key;
+  queryReference: PreloadedQuery<locations_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   organizationId: string;
 };
 
-const Locations = ({ rootDataRelay, organizationId }: Props) => {
+const RootQuery = graphql`
+  query locations_rootQuery($organizationId: String!, $locationsSortingValues: [LocationOrderInput!]!, $locationNameSearchText: String) {
+    ...locations_query
+  }
+`;
+
+const Locations = ({ queryReference, organizationId }: Props) => {
+  const rootDataRelay = usePreloadedQuery<locations_rootQuery>(RootQuery, queryReference);
   const {
     data: rootData,
     loadNext,
@@ -209,4 +222,49 @@ const Locations = ({ rootDataRelay, organizationId }: Props) => {
   );
 };
 
-export default memo(Locations);
+const MemoLocations = memo(Locations);
+
+type RelayProps = {
+  organizationId: string;
+};
+
+const LocationsWithRelay = ({ organizationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<locations_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        organizationId,
+        locationsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, organizationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoLocations queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(LocationsWithRelay);

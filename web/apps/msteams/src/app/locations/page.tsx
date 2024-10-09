@@ -13,41 +13,18 @@ import type { pageLocations_rootQuery } from './__generated__/pageLocations_root
 type Props = {
   queryReference: PreloadedQuery<pageLocations_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
 };
 
 const RootQuery = graphql`
-  query pageLocations_rootQuery($organizationId: String!, $locationsSortingValues: [LocationOrderInput!]!, $locationNameSearchText: String!) {
+  query pageLocations_rootQuery {
     locationCustomerRecordSynced
     ...rootShell_query
-    ...locations_query
   }
 `;
 
-const LocationsPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const LocationsPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageLocations_rootQuery>(RootQuery, queryReference);
-  const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.locationCustomerRecordSynced, [rootData?.locationCustomerRecordSynced]);
-
-  return (
-    <RootShell
-      rootDataRelay={rootData}
-      onReloadRequired={onReloadRequired}
-      areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
-      additionalCustomerRecords={[rootData?.locationCustomerRecordSynced]}
-    >
-      <Locations rootDataRelay={rootData} organizationId={organizationId} />
-    </RootShell>
-  );
-};
-
-const MemoLocationsPage = memo(LocationsPage);
-
-const LocationsPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageLocations_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
-  const [, startTransition] = useTransition();
   const { organizationId } = useParams();
-
   let finalOrganizationId = '';
 
   if (typeof organizationId === 'string') {
@@ -61,24 +38,35 @@ const LocationsPageWithRelay = () => {
   } else {
     throw new Error('organizationId is required');
   }
+  const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.locationCustomerRecordSynced, [rootData?.locationCustomerRecordSynced]);
+
+  return (
+    <RootShell
+      rootDataRelay={rootData}
+      onReloadRequired={onReloadRequired}
+      areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
+      additionalCustomerRecords={[rootData?.locationCustomerRecordSynced]}
+    >
+      <Locations organizationId={finalOrganizationId} />
+    </RootShell>
+  );
+};
+
+const MemoLocationsPage = memo(LocationsPage);
+
+const LocationsPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<pageLocations_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     loadQuery(
-      {
-        organizationId: finalOrganizationId,
-        locationsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        locationNameSearchText: '',
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, finalOrganizationId]);
+  }, [loadQuery, triggerReload]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -92,7 +80,7 @@ const LocationsPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationsPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoLocationsPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

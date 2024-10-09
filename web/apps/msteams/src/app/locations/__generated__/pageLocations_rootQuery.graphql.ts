@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1eb799cb357c6d4fa35059136b4503b7>>
+ * @generated SignedSource<<e7b8d7eaf3d06081ad81387cc719ed27>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,20 +10,10 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LocationOrderField = "name" | "%future added value";
-export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type LocationOrderInput = {
-  direction: OrderDirection;
-  field: LocationOrderField;
-};
-export type pageLocations_rootQuery$variables = {
-  locationNameSearchText: string;
-  locationsSortingValues: ReadonlyArray<LocationOrderInput>;
-  organizationId: string;
-};
+export type pageLocations_rootQuery$variables = Record<PropertyKey, never>;
 export type pageLocations_rootQuery$data = {
   readonly locationCustomerRecordSynced: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"locations_query" | "rootShell_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"rootShell_query">;
 };
 export type pageLocations_rootQuery = {
   response: pageLocations_rootQuery$data;
@@ -32,90 +22,31 @@ export type pageLocations_rootQuery = {
 
 const node: ConcreteRequest = (function(){
 var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "locationNameSearchText"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "locationsSortingValues"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationId"
-},
-v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "locationCustomerRecordSynced",
   "storageKey": null
 },
-v4 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-},
-v5 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 50
-  },
-  {
-    "kind": "Variable",
-    "name": "orderBy",
-    "variableName": "locationsSortingValues"
-  },
-  {
-    "fields": [
-      {
-        "kind": "Variable",
-        "name": "nameContains",
-        "variableName": "locationNameSearchText"
-      },
-      {
-        "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
-      }
-    ],
-    "kind": "ObjectValue",
-    "name": "where"
-  }
-],
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
 };
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "pageLocations_rootQuery",
     "selections": [
-      (v3/*: any*/),
+      (v0/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
         "name": "rootShell_query"
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "locations_query"
       }
     ],
     "type": "Query",
@@ -123,15 +54,11 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v2/*: any*/),
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": [],
     "kind": "Operation",
     "name": "pageLocations_rootQuery",
     "selections": [
-      (v3/*: any*/),
+      (v0/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -140,7 +67,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -156,7 +83,7 @@ return {
                 "name": "email",
                 "storageKey": null
               },
-              (v4/*: any*/)
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
@@ -204,144 +131,20 @@ return {
         "kind": "ScalarField",
         "name": "azureTenantAdminConsentUrl",
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v5/*: any*/),
-        "concreteType": "LocationConnection",
-        "kind": "LinkedField",
-        "name": "locations",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "totalCount",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "LocationEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "LocationDetails",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/),
-                  (v6/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "LocationOrganizationDetails",
-                    "kind": "LinkedField",
-                    "name": "organization",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "uniqueId",
-                        "storageKey": null
-                      },
-                      (v6/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
-            "kind": "LinkedField",
-            "name": "pageInfo",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "kind": "ClientExtension",
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__id",
-                "storageKey": null
-              }
-            ]
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v5/*: any*/),
-        "filters": [
-          "where",
-          "orderBy"
-        ],
-        "handle": "connection",
-        "key": "locations_locations",
-        "kind": "LinkedHandle",
-        "name": "locations"
       }
     ]
   },
   "params": {
-    "cacheID": "95360cc52989e5b60f1cb003590e2f19",
+    "cacheID": "547364ced2396711e96090fd7494c4b2",
     "id": null,
     "metadata": {},
     "name": "pageLocations_rootQuery",
     "operationKind": "query",
-    "text": "query pageLocations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String!\n) {\n  locationCustomerRecordSynced\n  ...rootShell_query\n  ...locations_query\n}\n\nfragment locations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
+    "text": "query pageLocations_rootQuery {\n  locationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...observability_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1becee8511acc9962a98dd50d2d2cc58";
+(node as any).hash = "c29a2d889bda6ccd72f888a34a5178ea";
 
 export default node;

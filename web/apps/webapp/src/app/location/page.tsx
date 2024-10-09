@@ -16,10 +16,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageLocations_rootQuery($locationsSortingValues: [LocationOrderInput!]!, $locationNameSearchText: String!) {
+  query pageLocations_rootQuery {
     locationCustomerRecordSynced
     ...rootShell_query
-    ...locations_query
   }
 `;
 
@@ -34,7 +33,7 @@ const LocationsPage = ({ queryReference, onReloadRequired }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.locationCustomerRecordSynced]}
     >
-      <Locations rootDataRelay={rootData} />
+      <Locations />
     </RootShell>
   );
 };
@@ -48,15 +47,7 @@ const LocationsPageWithRelay = () => {
 
   useEffect(() => {
     loadQuery(
-      {
-        locationsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        locationNameSearchText: '',
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },
