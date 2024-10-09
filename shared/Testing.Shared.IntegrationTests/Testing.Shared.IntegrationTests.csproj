@@ -8,12 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="PactNet" Version="4.5.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.8"/>
-        <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.8"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1"/>
-        <PackageReference Include="Xunit.DependencyInjection" Version="9.4.0"/>
-        <PackageReference Include="Xunit.DependencyInjection.Logging" Version="9.0.0"/>
+        <PackageReference Include="PactNet" Version="4.5.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.10" />
+        <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.10" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+        <PackageReference Include="Xunit.DependencyInjection" Version="9.4.0" />
+        <PackageReference Include="Xunit.DependencyInjection.Logging" Version="9.0.0" />
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.11.20">
             <PrivateAssets>all</PrivateAssets>
@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Testing.Shared\Testing.Shared.csproj"/>
+        <ProjectReference Include="..\Testing.Shared\Testing.Shared.csproj" />
     </ItemGroup>
 
 </Project>

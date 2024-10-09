@@ -3,13 +3,13 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { GoogleAnalytics, GoogleTagManager } from '@repo/shared/libs/analytics';
 import {
-    DatePickerLocalizationProvider,
-    GoogleAnalyticsProvider,
-    NextAuthProvider,
-    PaletteModeContext,
-    PaletteModeProvider,
-    SnackbarProvider,
-    ThemeProvider,
+  DatePickerLocalizationProvider,
+  GoogleAnalyticsProvider,
+  NextAuthProvider,
+  PaletteModeContext,
+  PaletteModeProvider,
+  SnackbarProvider,
+  ThemeProvider,
 } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
