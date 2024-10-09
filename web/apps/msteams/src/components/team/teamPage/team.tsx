@@ -4,7 +4,6 @@ import Tabs from '@mui/material/Tabs';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { TeamLink } from 'components/team';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -19,7 +18,7 @@ import TeamPeopleTab from './team-people-tab';
 type Props = {
   queryReference: PreloadedQuery<team_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
+  organizationId?: string;
   teamId: string;
 };
 
@@ -27,19 +26,11 @@ const RootQuery = graphql`
   query team_rootQuery(
     $organizationId: String!
     $organizationExists: Boolean!
-    $locationId: String!
-    $locationExists: Boolean!
     $teamId: String!
     $teamExists: Boolean!
-    $dateToGetAvailableDesks: DateTime!
-    $deskIdsToIncludeToGetAvailableDesks: [String!]!
     $bookingPeopleNameSearchText: String
-    $bookingSortingValues: [BookingOrderInput!]!
     $teamPeopleSortingValues: [TeamMemberOrderInput!]
-    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaUntil: DateTime!
     $peopleNameSearchText: String
   ) {
     team(id: $teamId) {
@@ -48,13 +39,12 @@ const RootQuery = graphql`
         uniqueId
       }
     }
-    ...teamBookingsTab_query
     ...teamAboutTab_query
     ...teamPeopleTab_query
   }
 `;
 
-const Team = ({ queryReference, teamId, organizationId }: Props) => {
+const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Props) => {
   const rootData = usePreloadedQuery<team_rootQuery>(RootQuery, queryReference);
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get('tab');
@@ -103,7 +93,7 @@ const Team = ({ queryReference, teamId, organizationId }: Props) => {
       </Tabs>
 
       <>
-        {tabIndex === 0 && <TeamBookingsTab rootDataRelay={rootData} organizationId={organizationId} teamId={teamId} />}
+        {tabIndex === 0 && <TeamBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
         {tabIndex === 1 && <TeamAboutTab rootDataRelay={rootData} organizationId={organizationId} />}
         {tabIndex === 2 && <TeamPeopleTab rootDataRelay={rootData} organizationId={organizationId} teamId={teamId} />}
       </>
@@ -114,7 +104,7 @@ const Team = ({ queryReference, teamId, organizationId }: Props) => {
 const MemoTeam = memo(Team);
 
 type RelayProps = {
-  organizationId: string;
+  organizationId?: string;
   teamId: string;
 };
 
@@ -124,31 +114,13 @@ const TeamWithRelay = ({ organizationId, teamId }: RelayProps) => {
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    const from = startOfDay().toISOString();
-    const until = startOfDay().add(1, 'month').toISOString();
-
     loadQuery(
       {
         teamId,
         teamExists: !!teamId,
-        locationId: '',
-        locationExists: false,
-        deskIdsToIncludeToGetAvailableDesks: [],
-        organizationId,
+        organizationId: organizationId ?? '',
         organizationExists: false,
-        bookingSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'from',
-          },
-        ],
         teamPeopleSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        bookingDetailsSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',
             field: 'name',
@@ -160,9 +132,6 @@ const TeamWithRelay = ({ organizationId, teamId }: RelayProps) => {
             field: 'name',
           },
         ],
-        bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaUntil: until,
-        dateToGetAvailableDesks: from,
       },
       {
         fetchPolicy: 'store-and-network',
