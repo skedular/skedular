@@ -50,7 +50,7 @@ public class CustomerQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
-        
+
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         var (paginatedInfo, edges, totalCount) =

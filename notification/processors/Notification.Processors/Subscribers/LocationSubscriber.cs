@@ -1,5 +1,4 @@
 ﻿using Api.Shared.Clients.Events.UnityHub.Location.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Location.V1.Value;
 using Confluent.Kafka;
 using Enterprise.Shared.Kafka.Consume;
 using Notification.Shared.Repositories;

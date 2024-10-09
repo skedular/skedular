@@ -61,7 +61,9 @@ public class TeamOutboxPublisher(
                     Metadata = Event.NewMetadata(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
-                        joinInvitation.IsNotDeleted() ? Type.InvitationToJoinTeamUpserted : Type.InvitationToJoinTeamDeleted,
+                        joinInvitation.IsNotDeleted()
+                            ? Type.InvitationToJoinTeamUpserted
+                            : Type.InvitationToJoinTeamDeleted,
                         context.PropertyBag.CorrelationId),
                     Data = new Data { InvitationToJoinTeamAfterState = mapper.MapTo(joinInvitation, null) }
                 },

@@ -86,9 +86,7 @@ public class AddBookingButtonHandler(
             Label = "Notes".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = NotesKey,
-                Placeholder = "e.g. I will be there from 9am",
-                Multiline = true
+                ActionId = NotesKey, Placeholder = "e.g. I will be there from 9am", Multiline = true
             },
             Optional = true
         };
