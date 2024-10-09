@@ -13,39 +13,17 @@ import type { pageTeams_rootQuery } from './__generated__/pageTeams_rootQuery.gr
 type Props = {
   queryReference: PreloadedQuery<pageTeams_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
 };
 
 const RootQuery = graphql`
-  query pageTeams_rootQuery($organizationId: String!, $teamsSortingValues: [TeamOrderInput!]!, $teamNameSearchText: String!) {
+  query pageTeams_rootQuery {
     teamCustomerRecordSynced
     ...rootShell_query
-    ...teams_query
   }
 `;
 
-const TeamsPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const TeamsPage = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageTeams_rootQuery>(RootQuery, queryReference);
-  const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.teamCustomerRecordSynced, [rootData?.teamCustomerRecordSynced]);
-
-  return (
-    <RootShell
-      rootDataRelay={rootData}
-      onReloadRequired={onReloadRequired}
-      areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
-      additionalCustomerRecords={[rootData?.teamCustomerRecordSynced]}
-    >
-      <Teams rootDataRelay={rootData} organizationId={organizationId} />
-    </RootShell>
-  );
-};
-
-const MemoTeamsPage = memo(TeamsPage);
-
-const TeamsPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageTeams_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
-  const [, startTransition] = useTransition();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -60,24 +38,35 @@ const TeamsPageWithRelay = () => {
   } else {
     throw new Error('organizationId is required');
   }
+  const areAdditionalCustomerRecordsSync = useCallback(() => rootData?.teamCustomerRecordSynced, [rootData?.teamCustomerRecordSynced]);
+
+  return (
+    <RootShell
+      rootDataRelay={rootData}
+      onReloadRequired={onReloadRequired}
+      areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
+      additionalCustomerRecords={[rootData?.teamCustomerRecordSynced]}
+    >
+      <Teams organizationId={finalOrganizationId} />
+    </RootShell>
+  );
+};
+
+const MemoTeamsPage = memo(TeamsPage);
+
+const TeamsPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<pageTeams_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     loadQuery(
-      {
-        organizationId: finalOrganizationId,
-        teamsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        teamNameSearchText: '',
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, finalOrganizationId]);
+  }, [loadQuery, triggerReload]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -91,7 +80,7 @@ const TeamsPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeamsPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoTeamsPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

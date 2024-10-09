@@ -16,10 +16,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageTeams_rootQuery($teamsSortingValues: [TeamOrderInput!]!, $teamNameSearchText: String!) {
+  query pageTeams_rootQuery {
     teamCustomerRecordSynced
     ...rootShell_query
-    ...teams_query
   }
 `;
 
@@ -34,7 +33,7 @@ const TeamsPage = ({ queryReference, onReloadRequired }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.teamCustomerRecordSynced]}
     >
-      <Teams rootDataRelay={rootData} />
+      <Teams />
     </RootShell>
   );
 };
@@ -48,15 +47,7 @@ const TeamsPageWithRelay = () => {
 
   useEffect(() => {
     loadQuery(
-      {
-        teamsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        teamNameSearchText: '',
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },
