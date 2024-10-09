@@ -19,7 +19,6 @@ const RootQuery = graphql`
   query pageAddOrganization_rootQuery {
     organizationCustomerRecordSynced
     ...rootShell_query
-    ...addOrganization_query
   }
 `;
 
@@ -37,7 +36,7 @@ const AddOrganizationPage = ({ queryReference, onReloadRequired }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.organizationCustomerRecordSynced]}
     >
-      <AddOrganization rootDataRelay={rootData} />
+      <AddOrganization />
     </RootShell>
   );
 };

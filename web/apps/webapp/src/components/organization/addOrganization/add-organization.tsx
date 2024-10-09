@@ -1,23 +1,38 @@
 import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from '@/components/organization';
 import type { addOrganization_addOrganizationMutation } from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
-import type { addOrganization_query$key } from '@/queries/__generated__/addOrganization_query.graphql';
+import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
-import { TextField, makeRequired, makeValidate } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
-import { memo } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { graphql, useFragment, useMutation } from 'react-relay';
+import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { array, boolean, object, string } from 'yup';
 
 type Props = {
-  rootDataRelay: addOrganization_query$key;
+  queryReference: PreloadedQuery<addOrganization_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
 };
+
+const RootQuery = graphql`
+  query addOrganization_rootQuery {
+    activeOrganizationTermsOfUse {
+      id
+    }
+    ...organizationMultipleChoicesIndustries_query
+    ...organizationTermsOfUse_query
+  }
+`;
 
 type OrganizationDetails = {
   name: string;
@@ -35,20 +50,8 @@ const organizationSchema = object({
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
-const AddOrganization = ({ rootDataRelay }: Props) => {
-  const rootData = useFragment(
-    graphql`
-      fragment addOrganization_query on Query {
-        activeOrganizationTermsOfUse {
-          id
-        }
-        ...organizationMultipleChoicesIndustries_query
-        ...organizationTermsOfUse_query
-      }
-    `,
-    rootDataRelay,
-  );
-
+const AddOrganization = ({ queryReference }: Props) => {
+  const rootData = usePreloadedQuery<addOrganization_rootQuery>(RootQuery, queryReference);
   const [commitAddOrganization] = useMutation<addOrganization_addOrganizationMutation>(graphql`
     mutation addOrganization_addOrganizationMutation($input: AddOrganizationInput!) @raw_response_type {
       addOrganization(input: $input) {
@@ -153,4 +156,37 @@ const AddOrganization = ({ rootDataRelay }: Props) => {
   );
 };
 
-export default memo(AddOrganization);
+const MemoAddOrganization = memo(AddOrganization);
+
+const AddOrganizationWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<addOrganization_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {},
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoAddOrganization queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(AddOrganizationWithRelay);

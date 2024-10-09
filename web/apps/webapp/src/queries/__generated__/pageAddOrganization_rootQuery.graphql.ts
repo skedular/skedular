@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a663865a1cba670d26a1f08a28f49e58>>
+ * @generated SignedSource<<5bf490dced15bb73b3932348f15fa0b6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type pageAddOrganization_rootQuery$variables = Record<PropertyKey, never>;
 export type pageAddOrganization_rootQuery$data = {
   readonly organizationCustomerRecordSynced: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"addOrganization_query" | "rootShell_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"rootShell_query">;
 };
 export type pageAddOrganization_rootQuery = {
   response: pageAddOrganization_rootQuery$data;
@@ -34,13 +34,6 @@ v1 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -54,11 +47,6 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "rootShell_query"
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "addOrganization_query"
       }
     ],
     "type": "Query",
@@ -141,50 +129,11 @@ return {
             "name": "photoUrl",
             "storageKey": null
           },
-          (v2/*: any*/)
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "OrganizationTermsOfUse",
-        "kind": "LinkedField",
-        "name": "activeOrganizationTermsOfUse",
-        "plural": false,
-        "selections": [
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "terms",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "OrganizationIndustryMainCategoryReferenceDetails",
-        "kind": "LinkedField",
-        "name": "organizationIndustryMainCategoriesReferences",
-        "plural": true,
-        "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationIndustrySubCategoryReferenceDetails",
-            "kind": "LinkedField",
-            "name": "subCategories",
-            "plural": true,
-            "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/)
-            ],
+            "name": "name",
             "storageKey": null
           }
         ],
@@ -193,16 +142,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "860bf505c24d2bc2dd00d57fafe9d7c5",
+    "cacheID": "7b58d513506b31ea48805b47df31aeac",
     "id": null,
     "metadata": {},
     "name": "pageAddOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query pageAddOrganization_rootQuery {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n  ...addOrganization_query\n}\n\nfragment addOrganization_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
+    "text": "query pageAddOrganization_rootQuery {\n  organizationCustomerRecordSynced\n  ...rootShell_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment rootShell_query on Query {\n  me {\n    id\n  }\n  ...observability_query\n  ...mainRootLayout_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b18640d9b5775484d4052b3c322f517f";
+(node as any).hash = "67382161915140d92a12a689cedba7f8";
 
 export default node;
