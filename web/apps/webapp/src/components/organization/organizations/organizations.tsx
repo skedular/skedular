@@ -6,6 +6,7 @@ import type {
   organizations_PaginationQuery,
 } from '@/queries/__generated__/organizations_PaginationQuery.graphql';
 import type { organizations_query$key } from '@/queries/__generated__/organizations_query.graphql';
+import type { organizations_rootQuery } from '@/queries/__generated__/organizations_rootQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -17,18 +18,30 @@ import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import NextLink from 'next/link';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { graphql, PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
-  rootDataRelay: organizations_query$key;
+  queryReference: PreloadedQuery<organizations_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
 };
 
-const Organizations = ({ rootDataRelay }: Props) => {
+const RootQuery = graphql`
+  query organizations_rootQuery($organizationsSortingValues: [OrganizationOrderInput!]!, $organizationNameSearchText: String) {
+    ...organizations_query
+  }
+`;
+
+const Organizations = ({ queryReference }: Props) => {
+  const rootDataRelay = usePreloadedQuery<organizations_rootQuery>(RootQuery, queryReference);
   const {
     data: rootData,
     loadNext,
@@ -197,4 +210,44 @@ const Organizations = ({ rootDataRelay }: Props) => {
   );
 };
 
-export default memo(Organizations);
+const MemoOrganizations = memo(Organizations);
+
+const OrganizationsWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<organizations_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        organizationsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoOrganizations queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(OrganizationsWithRelay);

@@ -16,10 +16,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageOrganizations_rootQuery($organizationsSortingValues: [OrganizationOrderInput!]!, $organizationNameSearchText: String!) {
+  query pageOrganizations_rootQuery {
     organizationCustomerRecordSynced
     ...rootShell_query
-    ...organizations_query
   }
 `;
 
@@ -37,7 +36,7 @@ const OrganizationsPage = ({ queryReference, onReloadRequired }: Props) => {
       areAdditionalCustomerRecordsSync={areAdditionalCustomerRecordsSync}
       additionalCustomerRecords={[rootData?.organizationCustomerRecordSynced]}
     >
-      <Organizations rootDataRelay={rootData} />
+      <Organizations />
     </RootShell>
   );
 };
@@ -51,15 +50,7 @@ const OrganizationsPageWithRelay = () => {
 
   useEffect(() => {
     loadQuery(
-      {
-        organizationsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        organizationNameSearchText: '',
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },
