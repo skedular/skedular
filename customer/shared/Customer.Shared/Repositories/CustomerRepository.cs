@@ -157,59 +157,59 @@ internal static class CustomerExtensions
                 CustomerOrderField.Designation => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.Designation == null ||
-                        item.Designation.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
+                        item.Designation.CompareTo(paginationInputParam.After.FromCursor()) > 0)
                     : query.Where(item =>
                         item.Designation == null ||
-                        item.Designation.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
+                        item.Designation.CompareTo(paginationInputParam.After.FromCursor()) < 0),
                 CustomerOrderField.Title => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.Title == null ||
-                        item.Title.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
+                        item.Title.CompareTo(paginationInputParam.After.FromCursor()) > 0)
                     : query.Where(item =>
                         item.Title == null ||
-                        item.Title.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
+                        item.Title.CompareTo(paginationInputParam.After.FromCursor()) < 0),
                 CustomerOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.Name == null ||
-                        item.Name.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
+                        item.Name.CompareTo(paginationInputParam.After.FromCursor()) > 0)
                     : query.Where(item =>
                         item.Name == null ||
-                        item.Name.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
+                        item.Name.CompareTo(paginationInputParam.After.FromCursor()) < 0),
                 CustomerOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.GivenName == null ||
-                        item.GivenName.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
+                        item.GivenName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
                     : query.Where(item =>
                         item.GivenName == null ||
-                        item.GivenName.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
+                        item.GivenName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
                 CustomerOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.MiddleName == null ||
-                        item.MiddleName.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
+                        item.MiddleName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
                     : query.Where(item =>
                         item.MiddleName == null ||
-                        item.MiddleName.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
+                        item.MiddleName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
                 CustomerOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.FamilyName == null ||
-                        item.FamilyName.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
+                        item.FamilyName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
                     : query.Where(item =>
                         item.FamilyName == null ||
-                        item.FamilyName.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
+                        item.FamilyName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
                 CustomerOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.Timezone == null ||
-                        item.Timezone.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
+                        item.Timezone.CompareTo(paginationInputParam.After.FromCursor()) > 0)
                     : query.Where(item =>
                         item.Timezone == null ||
-                        item.Timezone.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
+                        item.Timezone.CompareTo(paginationInputParam.After.FromCursor()) < 0),
                 CustomerOrderField.Locale => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.Locale == null ||
-                        item.Locale.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
+                        item.Locale.CompareTo(paginationInputParam.After.FromCursor()) > 0)
                     : query.Where(item =>
                         item.Locale == null ||
-                        item.Locale.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
+                        item.Locale.CompareTo(paginationInputParam.After.FromCursor()) < 0),
                 null => query.Where(item =>
                     item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0),
                 _ => query.Where(item =>
@@ -223,59 +223,59 @@ internal static class CustomerExtensions
                 CustomerOrderField.Designation => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.Designation == null ||
-                        item.Designation.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
+                        item.Designation.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
                     : query.Where(item =>
                         item.Designation == null ||
-                        item.Designation.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
+                        item.Designation.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
                 CustomerOrderField.Title => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.Title == null ||
-                        item.Title.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
+                        item.Title.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
                     : query.Where(item =>
                         item.Title == null ||
-                        item.Title.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
+                        item.Title.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
                 CustomerOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.Name == null ||
-                        item.Name.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
+                        item.Name.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
                     : query.Where(item =>
                         item.Name == null ||
-                        item.Name.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
+                        item.Name.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
                 CustomerOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.GivenName == null ||
-                        item.GivenName.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
+                        item.GivenName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
                     : query.Where(item =>
                         item.GivenName == null ||
-                        item.GivenName.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
+                        item.GivenName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
                 CustomerOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.MiddleName == null ||
-                        item.MiddleName.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
+                        item.MiddleName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
                     : query.Where(item =>
                         item.MiddleName == null ||
-                        item.MiddleName.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
+                        item.MiddleName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
                 CustomerOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.FamilyName == null ||
-                        item.FamilyName.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
+                        item.FamilyName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
                     : query.Where(item =>
                         item.FamilyName == null ||
-                        item.FamilyName.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
+                        item.FamilyName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
                 CustomerOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.Timezone == null ||
-                        item.Timezone.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
+                        item.Timezone.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
                     : query.Where(item =>
                         item.Timezone == null ||
-                        item.Timezone.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
+                        item.Timezone.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
                 CustomerOrderField.Locale => orderByField.Direction == OrderDirection.Ascending
                     ? query.Where(item =>
                         item.Locale == null ||
-                        item.Locale.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
+                        item.Locale.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
                     : query.Where(item =>
                         item.Locale == null ||
-                        item.Locale.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
+                        item.Locale.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
                 null => query.Where(item =>
                     item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0),
                 _ => query.Where(item =>
