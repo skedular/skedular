@@ -14,6 +14,9 @@ import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import MUITextField from '@mui/material/TextField';
 import { AddIcon, EditIcon } from '@repo/shared/components/icons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -25,20 +28,38 @@ import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { useMutation, usePaginationFragment } from 'react-relay';
+import { PreloadedQuery, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { array, object, string } from 'yup';
 import type { TeamMemberOrderField, TeamMemberOrderInput, teamMembers_PaginationQuery } from './__generated__/teamMembers_PaginationQuery.graphql';
 import type { teamPeopleTab_inviteCustomersToJoinTeamMutation } from './__generated__/teamPeopleTab_inviteCustomersToJoinTeamMutation.graphql';
 import type { teamPeopleTab_query$key } from './__generated__/teamPeopleTab_query.graphql';
+import type { teamPeopleTab_rootQuery } from './__generated__/teamPeopleTab_rootQuery.graphql';
 import type { teamPeopleTab_updateTeamMutation } from './__generated__/teamPeopleTab_updateTeamMutation.graphql';
 import TeamMemberCard from './team-member-card';
 
 type Props = {
-  rootDataRelay: teamPeopleTab_query$key;
+  queryReference: PreloadedQuery<teamPeopleTab_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   organizationId: string;
   teamId: string;
 };
+
+const RootQuery = graphql`
+  query teamPeopleTab_rootQuery(
+    $organizationId: String!
+    $organizationExists: Boolean!
+    $teamId: String!
+    $teamExists: Boolean!
+    $bookingPeopleNameSearchText: String
+    $teamPeopleSortingValues: [TeamMemberOrderInput!]
+    $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $peopleNameSearchText: String
+  ) {
+    ...teamPeopleTab_query
+  }
+`;
 
 type TeamDetails = {
   organizationMemberIds: string[];
@@ -65,7 +86,8 @@ const membersToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const TeamPeopleTab = ({ rootDataRelay, organizationId, teamId }: Props) => {
+const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
+  const rootDataRelay = usePreloadedQuery<teamPeopleTab_rootQuery>(RootQuery, queryReference);
   const {
     data: rootData,
     loadNext,
@@ -507,4 +529,62 @@ const TeamPeopleTab = ({ rootDataRelay, organizationId, teamId }: Props) => {
   );
 };
 
-export default memo(TeamPeopleTab);
+const MemoTeamPeopleTab = memo(TeamPeopleTab);
+
+type RelayProps = {
+  onReloadRequired: () => void;
+  organizationId: string;
+  teamId: string;
+};
+
+const TeamPeopleTabWithRelay = ({ onReloadRequired, organizationId, teamId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<teamPeopleTab_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        teamId,
+        teamExists: !!teamId,
+        organizationId: organizationId ?? '',
+        organizationExists: false,
+        teamPeopleSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        organizationMemberSelectorOrganizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, organizationId, teamId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoTeamPeopleTab queryReference={queryReference} onReloadRequired={handleReloadRequired} teamId={teamId} organizationId={organizationId} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(TeamPeopleTabWithRelay);

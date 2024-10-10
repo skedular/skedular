@@ -23,23 +23,13 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query team_rootQuery(
-    $organizationId: String!
-    $organizationExists: Boolean!
-    $teamId: String!
-    $teamExists: Boolean!
-    $bookingPeopleNameSearchText: String
-    $teamPeopleSortingValues: [TeamMemberOrderInput!]
-    $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $peopleNameSearchText: String
-  ) {
+  query team_rootQuery($teamId: String!) {
     team(id: $teamId) {
       name
       organization {
         uniqueId
       }
     }
-    ...teamPeopleTab_query
   }
 `;
 
@@ -94,7 +84,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
       <>
         {tabIndex === 0 && <TeamBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
         {tabIndex === 1 && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
-        {tabIndex === 2 && <TeamPeopleTab rootDataRelay={rootData} organizationId={organizationId} teamId={teamId} />}
+        {tabIndex === 2 && <TeamPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
       </>
     </Stack>
   );
@@ -116,27 +106,12 @@ const TeamWithRelay = ({ organizationId, teamId }: RelayProps) => {
     loadQuery(
       {
         teamId,
-        teamExists: !!teamId,
-        organizationId,
-        organizationExists: !!organizationId,
-        teamPeopleSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        organizationMemberSelectorOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, organizationId, teamId]);
+  }, [loadQuery, triggerReload, teamId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
