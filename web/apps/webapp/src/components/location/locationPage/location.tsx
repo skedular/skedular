@@ -28,28 +28,19 @@ type Props = {
 
 const RootQuery = graphql`
   query location_rootQuery(
-    $organizationId: String!
-    $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
     $zoneTagType: String!
-    $dateToGetAvailableDesks: DateTime!
-    $deskIdsToIncludeToGetAvailableDesks: [String!]!
     $fromToGetBookings: DateTime
     $toToGetBookings: DateTime
     $peopleNameSearchText: String
     $zoneNameSearchText: String
     $deskNameSearchText: String
-    $bookingPeopleNameSearchText: String
-    $bookingSortingValues: [BookingOrderInput!]!
     $locationPeopleSortingValues: [LocationMemberOrderInput!]
     $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]
     $zoneSortingValues: [LocationTagOrderInput!]!
     $deskSortingValues: [DeskOrderInput!]!
-    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
-    $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaUntil: DateTime!
   ) {
     location(id: $locationId) {
       name
@@ -58,7 +49,6 @@ const RootQuery = graphql`
         uniqueId
       }
     }
-    ...locationBookingsTab_query
     ...locationPeopleTab_query
     ...locationPeopleTab_query_organizationMembers
     ...locationZonesTab_query
@@ -131,7 +121,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
       </Tabs>
 
       <>
-        {tabIndex === 0 && <LocationBookingsTab rootDataRelay={rootData} organizationId={organizationId} locationId={locationId} />}
+        {tabIndex === 0 && <LocationBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 2 && (
           <LocationPeopleTab
@@ -164,24 +154,14 @@ const LocationWithRelay = ({ organizationId, locationId }: RelayProps) => {
   useEffect(() => {
     const from = startOfDay().toISOString();
     const to = endOfDay(from).toISOString();
-    const until = startOfDay().add(1, 'month').toISOString();
 
     loadQuery(
       {
         locationId,
         locationExists: !!locationId,
         zoneTagType: TAG_TYPE_LOCATION_ZONE,
-        deskIdsToIncludeToGetAvailableDesks: [],
         fromToGetBookings: from,
         toToGetBookings: to,
-        organizationId,
-        organizationExists: !!organizationId,
-        bookingSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'from',
-          },
-        ],
         locationPeopleSortingValues: [
           {
             direction: 'Descending',
@@ -206,21 +186,12 @@ const LocationWithRelay = ({ organizationId, locationId }: RelayProps) => {
             field: 'name',
           },
         ],
-        bookingDetailsSelectorOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
         deskMultipleChoicesZonesSortingValues: [
           {
             direction: 'Ascending',
             field: 'name',
           },
         ],
-        bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaUntil: until,
-        dateToGetAvailableDesks: from,
       },
       {
         fetchPolicy: 'store-and-network',

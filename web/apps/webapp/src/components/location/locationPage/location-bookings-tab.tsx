@@ -6,6 +6,7 @@ import type {
   locationBookings_PaginationQuery,
 } from '@/queries/__generated__/locationBookings_PaginationQuery.graphql';
 import type { locationBookingsTab_query$key } from '@/queries/__generated__/locationBookingsTab_query.graphql';
+import type { locationBookingsTab_rootQuery } from '@/queries/__generated__/locationBookingsTab_rootQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -17,19 +18,44 @@ import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { AddIcon } from '@repo/shared/components/icons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
-  rootDataRelay: locationBookingsTab_query$key;
-  organizationId: string;
+  queryReference: PreloadedQuery<locationBookingsTab_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
+  organizationId?: string;
   locationId: string;
 };
 
-const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Props) => {
+const RootQuery = graphql`
+  query locationBookingsTab_rootQuery(
+    $organizationId: String!
+    $organizationExists: Boolean!
+    $locationId: String!
+    $locationExists: Boolean!
+    $dateToGetAvailableDesks: DateTime!
+    $deskIdsToIncludeToGetAvailableDesks: [String!]!
+    $bookingPeopleNameSearchText: String
+    $bookingSortingValues: [BookingOrderInput!]!
+    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $bookingsSearchCriteriaFrom: DateTime!
+    $bookingsSearchCriteriaUntil: DateTime!
+  ) {
+    ...locationBookingsTab_query
+  }
+`;
+
+const LocationBookingsTab = ({ queryReference, organizationId, locationId }: Props) => {
+  const rootDataRelay = usePreloadedQuery<locationBookingsTab_rootQuery>(RootQuery, queryReference);
+
   const {
     data: rootData,
     loadNext,
@@ -284,4 +310,74 @@ const LocationBookingsTab = ({ rootDataRelay, organizationId, locationId }: Prop
   );
 };
 
-export default memo(LocationBookingsTab);
+const MemoLocationBookingsTab = memo(LocationBookingsTab);
+
+type RelayProps = {
+  onReloadRequired: () => void;
+  organizationId?: string;
+  locationId: string;
+};
+
+const LocationBookingsTabWithRelay = ({ onReloadRequired, organizationId, locationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<locationBookingsTab_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    const from = startOfDay().toISOString();
+    const to = startOfDay().add(1, 'month').toISOString();
+
+    loadQuery(
+      {
+        locationId,
+        locationExists: !!locationId,
+        deskIdsToIncludeToGetAvailableDesks: [],
+        organizationId: organizationId ?? '',
+        organizationExists: !!organizationId,
+        bookingSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'from',
+          },
+        ],
+        bookingDetailsSelectorOrganizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        bookingsSearchCriteriaFrom: from,
+        bookingsSearchCriteriaUntil: to,
+        dateToGetAvailableDesks: from,
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, organizationId, locationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoLocationBookingsTab
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
+        locationId={locationId}
+      />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(LocationBookingsTabWithRelay);
