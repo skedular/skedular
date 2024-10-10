@@ -19,7 +19,7 @@ import type { locationAboutTab_updateLocationMutation } from './__generated__/lo
 
 type Props = {
   rootDataRelay: locationAboutTab_query$key;
-  organizationId?: string;
+  organizationId: string;
 };
 
 type LocationDetails = {

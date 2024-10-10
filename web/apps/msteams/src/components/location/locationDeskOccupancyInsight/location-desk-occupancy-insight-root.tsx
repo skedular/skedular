@@ -16,7 +16,7 @@ import LocationDeskOccupancyInsight from './location-desk-occupancy-insight';
 
 type Props = {
   queryReference: PreloadedQuery<locationDeskOccupancyInsightRoot_rootQuery, Record<string, unknown>>;
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
   hideLocationDetails?: boolean;
 };
@@ -43,7 +43,7 @@ const LocationDeskOccupancyInsightRoot = ({ queryReference, organizationId, loca
 const MemoLocationDeskOccupancyInsightRoot = memo(LocationDeskOccupancyInsightRoot);
 
 type RelayProps = {
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
   locationName: string;
   hideLocationDetails?: boolean;

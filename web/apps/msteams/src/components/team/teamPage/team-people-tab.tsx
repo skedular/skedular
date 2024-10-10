@@ -36,7 +36,7 @@ import TeamMemberCard from './team-member-card';
 
 type Props = {
   rootDataRelay: teamPeopleTab_query$key;
-  organizationId?: string;
+  organizationId: string;
   teamId: string;
 };
 

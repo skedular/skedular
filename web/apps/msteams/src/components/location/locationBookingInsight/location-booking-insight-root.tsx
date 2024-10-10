@@ -16,7 +16,7 @@ import LocationBookingInsight from './location-booking-insight';
 
 type Props = {
   queryReference: PreloadedQuery<locationBookingInsightRoot_rootQuery, Record<string, unknown>>;
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
   hideLocationDetails?: boolean;
 };
@@ -43,7 +43,7 @@ const LocationBookingInsightRoot = ({ queryReference, organizationId, locationId
 const MemoLocationBookingInsightRoot = memo(LocationBookingInsightRoot);
 
 type RelayProps = {
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
   locationName: string;
   hideLocationDetails?: boolean;

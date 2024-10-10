@@ -52,7 +52,7 @@ import type { LocationMemberOrderInput } from './__generated__/locationPeopleBoo
 
 type Props = {
   rootDataRelay: locationPeopleBookings_query$key;
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
   locationName?: string;
   locationsConnectionIds: string[];

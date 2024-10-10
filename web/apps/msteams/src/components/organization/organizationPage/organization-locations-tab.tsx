@@ -203,17 +203,23 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
         />
       </Stack>
       <Grid container spacing={1}>
-        {slicedEdges.map((edge) => (
-          <Grid key={edge.node.id}>
-            <LocationBookingsCard
-              organizationId={edge.node.organization?.uniqueId}
-              organizationName={edge.node.organization?.name}
-              locationId={edge.node.id}
-              locationName={edge.node.name}
-              locationsConnectionIds={connectionIds}
-            />
-          </Grid>
-        ))}
+        {slicedEdges.map((edge) => {
+          if (!edge.node.organization) {
+            return <></>;
+          }
+
+          return (
+            <Grid key={edge.node.id}>
+              <LocationBookingsCard
+                organizationId={edge.node.organization?.uniqueId}
+                organizationName={edge.node.organization?.name}
+                locationId={edge.node.id}
+                locationName={edge.node.name}
+                locationsConnectionIds={connectionIds}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
     </Stack>
   );

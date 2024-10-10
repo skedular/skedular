@@ -17,7 +17,7 @@ import TeamPeopleBookings from './team-people-bookings';
 
 type Props = {
   queryReference: PreloadedQuery<teamBookingsCard_rootQuery, Record<string, unknown>>;
-  organizationId?: string;
+  organizationId: string;
   teamId: string;
   teamName?: string;
   teamsConnectionIds: string[];
@@ -55,7 +55,7 @@ const TeamBookingsCard = ({ queryReference, organizationId, teamId, teamName, te
 const MemoTeamBookingsCard = memo(TeamBookingsCard);
 
 type RelayProps = {
-  organizationId?: string;
+  organizationId: string;
   organizationName?: string;
   teamId: string;
   teamName?: string;

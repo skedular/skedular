@@ -52,7 +52,7 @@ import type { TeamMemberOrderInput } from './__generated__/teamPeopleBookingsTea
 
 type Props = {
   rootDataRelay: teamPeopleBookings_query$key;
-  organizationId?: string;
+  organizationId: string;
   teamId: string;
   teamName?: string;
   teamsConnectionIds: string[];

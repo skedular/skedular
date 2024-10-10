@@ -26,7 +26,7 @@ import type { teamMemberCard_updateTeamMutation } from './__generated__/teamMemb
 type Props = {
   rootDataRelay: teamMemberCard_query$key;
   teamMemberDetailsRelay: teamMemberCard_TeamMemberDetails$key;
-  organizationId?: string;
+  organizationId: string;
   onRefetchNeeded: () => void;
 };
 

@@ -25,7 +25,7 @@ import type { teamAboutTab_updateTeamMutation } from './__generated__/teamAboutT
 type Props = {
   queryReference: PreloadedQuery<teamAboutTab_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
 };
 
 const RootQuery = graphql`
@@ -247,7 +247,7 @@ const MemoTeamAboutTab = memo(TeamAboutTab);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
   teamId: string;
 };
 

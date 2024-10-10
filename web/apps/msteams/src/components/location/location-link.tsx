@@ -11,7 +11,7 @@ import { LocationBookingsCard } from 'components/location/locationBookingCard';
 import { memo, useState } from 'react';
 
 type Props = {
-  organizationId?: string;
+  organizationId: string;
   organizationName?: string;
   id: string;
   name?: string;
@@ -26,15 +26,14 @@ type Props = {
   onReloadRequired?: () => void;
 };
 
-export const getLocationBaseLink = (id: string, organizationId?: string) =>
-  organizationId ? `/organization/${organizationId}/location/${id}` : `/location/${id}`;
-export const getLocationAddLink = (organizationId?: string) => (organizationId ? `/organization/${organizationId}/location/add` : `/location/add`);
-export const getLocationBookingsLink = (id: string, organizationId?: string) => `${getLocationBaseLink(id, organizationId)}?tab=bookings`;
-export const getLocationSettingsLink = (id: string, organizationId?: string) => `${getLocationBaseLink(id, organizationId)}?tab=about`;
-export const getLocationPeopleLink = (id: string, organizationId?: string) => `${getLocationBaseLink(id, organizationId)}?tab=people`;
-export const getLocationZonesLink = (id: string, organizationId?: string) => `${getLocationBaseLink(id, organizationId)}?tab=zones`;
-export const getLocationDesksLink = (id: string, organizationId?: string) => `${getLocationBaseLink(id, organizationId)}?tab=desks`;
-export const getLocationAnalyticsLink = (id: string, organizationId?: string) => `${getLocationBaseLink(id, organizationId)}?tab=analytics`;
+export const getLocationBaseLink = (id: string, organizationId: string) => `/organization/${organizationId}/location/${id}`;
+export const getLocationAddLink = (organizationId: string) => `/organization/${organizationId}/location/add`;
+export const getLocationBookingsLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=bookings`;
+export const getLocationSettingsLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=about`;
+export const getLocationPeopleLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=people`;
+export const getLocationZonesLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=zones`;
+export const getLocationDesksLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=desks`;
+export const getLocationAnalyticsLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=analytics`;
 
 const LocationLink = ({
   organizationId,

@@ -172,7 +172,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Link href={getTeamAddLink()}>
+      <Link href={getTeamAddLink(organizationId)}>
         <Button variant="contained" startIcon={<AddIcon />}>
           Add Team
         </Button>
@@ -206,17 +206,23 @@ const Teams = ({ queryReference, organizationId }: Props) => {
       </Stack>
 
       <Grid container spacing={1}>
-        {slicedEdges.map((edge) => (
-          <Grid key={edge.node.id}>
-            <TeamBookingsCard
-              organizationId={edge.node.organization?.uniqueId}
-              organizationName={edge.node.organization?.name}
-              teamId={edge.node.id}
-              teamName={edge.node.name}
-              teamsConnectionIds={connectionIds}
-            />
-          </Grid>
-        ))}
+        {slicedEdges.map((edge) => {
+          if (!edge.node.organization) {
+            return <></>;
+          }
+
+          return (
+            <Grid key={edge.node.id}>
+              <TeamBookingsCard
+                organizationId={edge.node.organization?.uniqueId}
+                organizationName={edge.node.organization?.name}
+                teamId={edge.node.id}
+                teamName={edge.node.name}
+                teamsConnectionIds={connectionIds}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
     </Stack>
   );

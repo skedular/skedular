@@ -120,7 +120,7 @@ const Location = ({ queryReference, locationId, organizationId }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <LocationLink organizationId={rootData.location.organization?.uniqueId} id={locationId} name={rootData.location?.name} excludeLink />
+      <LocationLink organizationId={organizationId} id={locationId} name={rootData.location?.name} excludeLink />
 
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />

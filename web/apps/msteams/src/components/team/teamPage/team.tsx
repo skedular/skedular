@@ -18,7 +18,7 @@ import TeamPeopleTab from './team-people-tab';
 type Props = {
   queryReference: PreloadedQuery<team_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
   teamId: string;
 };
 
@@ -83,7 +83,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
 
   return (
     <Stack direction="column" spacing={1}>
-      <TeamLink organizationId={rootData.team.organization?.uniqueId} id={teamId} name={rootData.team?.name} excludeLink />
+      <TeamLink organizationId={organizationId} id={teamId} name={rootData.team?.name} excludeLink />
 
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />
@@ -103,7 +103,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
 const MemoTeam = memo(Team);
 
 type RelayProps = {
-  organizationId?: string;
+  organizationId: string;
   teamId: string;
 };
 
@@ -117,8 +117,8 @@ const TeamWithRelay = ({ organizationId, teamId }: RelayProps) => {
       {
         teamId,
         teamExists: !!teamId,
-        organizationId: organizationId ?? '',
-        organizationExists: false,
+        organizationId,
+        organizationExists: !!organizationId,
         teamPeopleSortingValues: [
           {
             direction: 'Ascending',

@@ -15,7 +15,7 @@ import type { locationBookingInsight_query$key } from './__generated__/locationB
 
 type Props = {
   rootDataRelay: locationBookingInsight_query$key;
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
   hideLocationDetails?: boolean;
 };

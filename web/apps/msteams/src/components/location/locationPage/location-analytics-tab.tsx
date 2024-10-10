@@ -4,7 +4,7 @@ import { LocationDeskOccupancyInsightRoot } from 'components/location/locationDe
 import { memo } from 'react';
 
 type Props = {
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
 };
 

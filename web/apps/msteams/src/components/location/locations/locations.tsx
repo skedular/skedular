@@ -172,7 +172,7 @@ const Locations = ({ queryReference, organizationId }: Props) => {
 
   return (
     <Stack direction="column" spacing={1}>
-      <Link href={getLocationAddLink()}>
+      <Link href={getLocationAddLink(organizationId)}>
         <Button variant="contained" startIcon={<AddIcon />}>
           Add Location
         </Button>
@@ -206,17 +206,23 @@ const Locations = ({ queryReference, organizationId }: Props) => {
       </Stack>
 
       <Grid container spacing={1}>
-        {slicedEdges.map((edge) => (
-          <Grid key={edge.node.id}>
-            <LocationBookingsCard
-              organizationId={edge.node.organization?.uniqueId}
-              organizationName={edge.node.organization?.name}
-              locationId={edge.node.id}
-              locationName={edge.node.name}
-              locationsConnectionIds={connectionIds}
-            />
-          </Grid>
-        ))}
+        {slicedEdges.map((edge) => {
+          if (!edge.node.organization) {
+            return <></>;
+          }
+
+          return (
+            <Grid key={edge.node.id}>
+              <LocationBookingsCard
+                organizationId={edge.node.organization?.uniqueId}
+                organizationName={edge.node.organization?.name}
+                locationId={edge.node.id}
+                locationName={edge.node.name}
+                locationsConnectionIds={connectionIds}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
     </Stack>
   );

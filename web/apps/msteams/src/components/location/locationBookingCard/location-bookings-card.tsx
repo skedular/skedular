@@ -17,7 +17,7 @@ import LocationPeopleBookings from './location-people-bookings';
 
 type Props = {
   queryReference: PreloadedQuery<locationBookingsCard_rootQuery, Record<string, unknown>>;
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
   locationName?: string;
   locationsConnectionIds: string[];
@@ -62,7 +62,7 @@ const LocationBookingsCard = ({
 const MemoLocationBookingsCard = memo(LocationBookingsCard);
 
 type RelayProps = {
-  organizationId?: string;
+  organizationId: string;
   organizationName?: string;
   locationId: string;
   locationName?: string;

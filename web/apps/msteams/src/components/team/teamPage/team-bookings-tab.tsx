@@ -28,7 +28,7 @@ import type { teamBookingsTab_rootQuery } from './__generated__/teamBookingsTab_
 type Props = {
   queryReference: PreloadedQuery<teamBookingsTab_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
   teamId: string;
 };
 
@@ -311,7 +311,7 @@ const MemoTeamBookingsTab = memo(TeamBookingsTab);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
   teamId: string;
 };
 

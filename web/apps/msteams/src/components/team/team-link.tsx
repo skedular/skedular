@@ -11,7 +11,7 @@ import { TeamBookingsCard } from 'components/team/teamBookingCard';
 import { memo, useState } from 'react';
 
 type Props = {
-  organizationId?: string;
+  organizationId: string;
   organizationName?: string;
   id: string;
   name?: string;
@@ -23,12 +23,11 @@ type Props = {
   onReloadRequired?: () => void;
 };
 
-export const getTeamBaseLink = (id: string, organizationId?: string) =>
-  organizationId ? `/organization/${organizationId}/team/${id}` : `/team/${id}`;
-export const getTeamAddLink = (organizationId?: string) => (organizationId ? `/organization/${organizationId}/team/add` : `/team/add`);
-export const getTeamBookingsLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=bookings`;
-export const getTeamSettingsLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=about`;
-export const getTeamPeopleLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=people`;
+export const getTeamBaseLink = (id: string, organizationId: string) => `/organization/${organizationId}/team/${id}`;
+export const getTeamAddLink = (organizationId: string) => `/organization/${organizationId}/team/add`;
+export const getTeamBookingsLink = (id: string, organizationId: string) => `${getTeamBaseLink(id, organizationId)}?tab=bookings`;
+export const getTeamSettingsLink = (id: string, organizationId: string) => `${getTeamBaseLink(id, organizationId)}?tab=about`;
+export const getTeamPeopleLink = (id: string, organizationId: string) => `${getTeamBaseLink(id, organizationId)}?tab=people`;
 
 const TeamLink = ({
   organizationId,

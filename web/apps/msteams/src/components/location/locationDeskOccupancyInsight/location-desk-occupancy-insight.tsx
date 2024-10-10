@@ -16,7 +16,7 @@ import type { locationDeskOccupancyInsight_query$key } from './__generated__/loc
 
 type Props = {
   rootDataRelay: locationDeskOccupancyInsight_query$key;
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
   hideLocationDetails?: boolean;
 };

@@ -26,7 +26,7 @@ type Props = {
   isDialogOpen: boolean;
   onAddClicked: () => void;
   onCancelClicked: () => void;
-  organizationId?: string;
+  organizationId: string;
   locationId?: string;
   defaultTeamId?: string;
   hideOrganizationControl?: boolean;
