@@ -4,23 +4,43 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { EditIcon } from '@repo/shared/components/icons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { useFragment, useMutation } from 'react-relay';
+import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { object, string } from 'yup';
-import type { locationAboutTab_query$key } from './__generated__/locationAboutTab_query.graphql';
+import type { locationAboutTab_rootQuery } from './__generated__/locationAboutTab_rootQuery.graphql';
 import type { locationAboutTab_updateLocationMutation } from './__generated__/locationAboutTab_updateLocationMutation.graphql';
 
 type Props = {
-  rootDataRelay: locationAboutTab_query$key;
+  queryReference: PreloadedQuery<locationAboutTab_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   organizationId: string;
 };
+
+const RootQuery = graphql`
+  query locationAboutTab_rootQuery($locationId: String!) {
+    location(id: $locationId) {
+      id
+      name
+      about
+      timezone
+      organization {
+        name
+      }
+      canModify
+    }
+  }
+`;
 
 type LocationDetails = {
   name: string;
@@ -34,25 +54,8 @@ const locationSchema = object({
   timezone: string().required('Timezone is required'),
 });
 
-const LocationAboutTab = ({ rootDataRelay, organizationId }: Props) => {
-  const rootData = useFragment<locationAboutTab_query$key>(
-    graphql`
-      fragment locationAboutTab_query on Query {
-        location(id: $locationId) {
-          id
-          name
-          about
-          timezone
-          organization {
-            name
-          }
-          canModify
-        }
-      }
-    `,
-    rootDataRelay,
-  );
-
+const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
+  const rootData = usePreloadedQuery<locationAboutTab_rootQuery>(RootQuery, queryReference);
   const [commitUpdateLocation] = useMutation<locationAboutTab_updateLocationMutation>(graphql`
     mutation locationAboutTab_updateLocationMutation($input: UpdateLocationInput!) @raw_response_type {
       updateLocation(input: $input) {
@@ -193,4 +196,47 @@ const LocationAboutTab = ({ rootDataRelay, organizationId }: Props) => {
   );
 };
 
-export default memo(LocationAboutTab);
+const MemoLocationAboutTab = memo(LocationAboutTab);
+
+type RelayProps = {
+  onReloadRequired: () => void;
+  organizationId: string;
+  locationId: string;
+};
+
+const LocationAboutTabWithRelay = ({ onReloadRequired, organizationId, locationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<locationAboutTab_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        locationId,
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, locationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoLocationAboutTab queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(LocationAboutTabWithRelay);

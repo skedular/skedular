@@ -59,7 +59,6 @@ const RootQuery = graphql`
       }
     }
     ...locationBookingsTab_query
-    ...locationAboutTab_query
     ...locationPeopleTab_query
     ...locationPeopleTab_query_organizationMembers
     ...locationZonesTab_query
@@ -133,7 +132,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
 
       <>
         {tabIndex === 0 && <LocationBookingsTab rootDataRelay={rootData} organizationId={organizationId} locationId={locationId} />}
-        {tabIndex === 1 && <LocationAboutTab rootDataRelay={rootData} organizationId={organizationId} />}
+        {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 2 && (
           <LocationPeopleTab
             rootDataLocationMembersRelay={rootData}

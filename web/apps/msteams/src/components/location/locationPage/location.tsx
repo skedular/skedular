@@ -60,7 +60,6 @@ const RootQuery = graphql`
       }
     }
     ...locationBookingsTab_query
-    ...locationAboutTab_query
     ...locationPeopleTab_query
     ...locationPeopleTab_query_organizationMembers
     ...locationZonesTab_query
@@ -68,7 +67,7 @@ const RootQuery = graphql`
   }
 `;
 
-const Location = ({ queryReference, locationId, organizationId }: Props) => {
+const Location = ({ queryReference, onReloadRequired, locationId, organizationId }: Props) => {
   const rootData = usePreloadedQuery<location_rootQuery>(RootQuery, queryReference);
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get('tab');
@@ -133,7 +132,7 @@ const Location = ({ queryReference, locationId, organizationId }: Props) => {
 
       <>
         {tabIndex === 0 && <LocationBookingsTab rootDataRelay={rootData} organizationId={organizationId} locationId={locationId} />}
-        {tabIndex === 1 && <LocationAboutTab rootDataRelay={rootData} organizationId={organizationId} />}
+        {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 2 && (
           <LocationPeopleTab
             rootDataLocationMembersRelay={rootData}
