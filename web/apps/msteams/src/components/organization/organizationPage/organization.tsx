@@ -57,7 +57,6 @@ const RootQuery = graphql`
       canModify
       canViewAnalytics
     }
-    ...organizationAboutTab_query
     ...organizationBookingsTab_query
     ...organizationMultipleChoicesIndustries_query
     ...organizationPeopleTab_query
@@ -158,7 +157,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
 
       <>
         {tabIndex === 0 && <OrganizationBookingsTab rootDataRelay={rootData} organizationId={organizationId} />}
-        {tabIndex === 1 && <OrganizationAboutTab rootDataRelay={rootData} />}
+        {tabIndex === 1 && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 2 && <OrganizationPeopleTab rootDataRelay={rootData} organizationId={organizationId} />}
         {tabIndex === 3 && <OrganizationLocationsTab rootDataRelay={rootData} />}
         {tabIndex === 4 && <OrganizationTeamsTab rootDataRelay={rootData} />}
