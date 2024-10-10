@@ -46,7 +46,7 @@ const RootQuery = graphql`
     $organizationLocationsSortingValues: [LocationOrderInput!]!
     $organizationTeamsSortingValues: [TeamOrderInput!]!
     $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaUntil: DateTime!
+    $bookingsSearchCriteriaTo: DateTime!
     $locationNameSearchText: String
     $teamNameSearchText: String
   ) {
@@ -156,7 +156,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
       </Tabs>
 
       <>
-        {tabIndex === 0 && <OrganizationBookingsTab rootDataRelay={rootData} organizationId={organizationId} />}
+        {tabIndex === 0 && <OrganizationBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 1 && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 2 && <OrganizationPeopleTab rootDataRelay={rootData} organizationId={organizationId} />}
         {tabIndex === 3 && <OrganizationLocationsTab rootDataRelay={rootData} />}
@@ -186,7 +186,7 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
 
   useEffect(() => {
     const from = startOfDay().toISOString();
-    const until = startOfDay().add(1, 'month').toISOString();
+    const to = startOfDay().add(1, 'month').toISOString();
 
     loadQuery(
       {
@@ -226,7 +226,7 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
           },
         ],
         bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaUntil: until,
+        bookingsSearchCriteriaTo: to,
         dateToGetAvailableDesks: from,
       },
       {

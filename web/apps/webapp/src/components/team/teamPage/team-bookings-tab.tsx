@@ -48,7 +48,7 @@ const RootQuery = graphql`
     $bookingSortingValues: [BookingOrderInput!]!
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaUntil: DateTime!
+    $bookingsSearchCriteriaTo: DateTime!
   ) {
     ...teamBookingsTab_query
   }
@@ -69,7 +69,7 @@ const TeamBookingsTab = ({ queryReference, organizationId, teamId }: Props) => {
         bookings(
           first: $count
           after: $cursor
-          where: { teamIds: [$teamId], fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaUntil, includeMineOnly: false }
+          where: { teamIds: [$teamId], fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, includeMineOnly: false }
           orderBy: $bookingSortingValues
         ) @connection(key: "teamBookingsTab_bookings") {
           __id
@@ -132,7 +132,7 @@ const TeamBookingsTab = ({ queryReference, organizationId, teamId }: Props) => {
             count: pageSize,
             bookingSortingValues: [order],
             bookingsSearchCriteriaFrom: from && from.isValid() ? from.toISOString() : null,
-            bookingsSearchCriteriaUntil: until && until.isValid() ? until.toISOString() : null,
+            bookingsSearchCriteriaTo: until && until.isValid() ? until.toISOString() : null,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -325,7 +325,7 @@ const TeamBookingsTabWithRelay = ({ onReloadRequired, organizationId, teamId }: 
 
   useEffect(() => {
     const from = startOfDay().toISOString();
-    const until = startOfDay().add(1, 'month').toISOString();
+    const to = startOfDay().add(1, 'month').toISOString();
 
     loadQuery(
       {
@@ -348,7 +348,7 @@ const TeamBookingsTabWithRelay = ({ onReloadRequired, organizationId, teamId }: 
           },
         ],
         bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaUntil: until,
+        bookingsSearchCriteriaTo: to,
         dateToGetAvailableDesks: from,
       },
       {

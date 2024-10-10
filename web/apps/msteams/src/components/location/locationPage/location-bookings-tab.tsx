@@ -48,7 +48,7 @@ const RootQuery = graphql`
     $bookingSortingValues: [BookingOrderInput!]!
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaUntil: DateTime!
+    $bookingsSearchCriteriaTo: DateTime!
   ) {
     ...locationBookingsTab_query
   }
@@ -69,7 +69,7 @@ const LocationBookingsTab = ({ queryReference, organizationId, locationId }: Pro
         bookings(
           first: $count
           after: $cursor
-          where: { locationIds: [$locationId], fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaUntil, includeMineOnly: false }
+          where: { locationIds: [$locationId], fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, includeMineOnly: false }
           orderBy: $bookingSortingValues
         ) @connection(key: "locationBookingsTab_bookings") {
           __id
@@ -132,7 +132,7 @@ const LocationBookingsTab = ({ queryReference, organizationId, locationId }: Pro
             count: pageSize,
             bookingSortingValues: [order],
             bookingsSearchCriteriaFrom: from && from.isValid() ? from.toISOString() : null,
-            bookingsSearchCriteriaUntil: until && until.isValid() ? until.toISOString() : null,
+            bookingsSearchCriteriaTo: until && until.isValid() ? until.toISOString() : null,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -347,7 +347,7 @@ const LocationBookingsTabWithRelay = ({ onReloadRequired, organizationId, locati
           },
         ],
         bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaUntil: to,
+        bookingsSearchCriteriaTo: to,
         dateToGetAvailableDesks: from,
       },
       {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7379963e54c88e2fbdfcc0f16512cac0>>
+ * @generated SignedSource<<525f41c7d519632a9305aea72cfcc178>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,7 +68,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "bookingsSearchCriteriaUntil"
+      "name": "bookingsSearchCriteriaTo"
     },
     {
       "defaultValue": 50,
@@ -148,7 +148,7 @@ return {
             {
               "kind": "Variable",
               "name": "fromLTE",
-              "variableName": "bookingsSearchCriteriaUntil"
+              "variableName": "bookingsSearchCriteriaTo"
             },
             {
               "kind": "Literal",
@@ -325,6 +325,6 @@ return {
 };
 })();
 
-(node as any).hash = "edb3f1ae7d80804ec2e7ed97174060a0";
+(node as any).hash = "c5d110735117c1d9f9e1638abfbba66b";
 
 export default node;

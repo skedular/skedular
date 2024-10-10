@@ -8,7 +8,7 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { getCurrentCompleteUrl, startOfDay } from '@repo/shared/libs/utils';
+import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -33,19 +33,10 @@ const RootQuery = graphql`
   query organization_rootQuery(
     $organizationId: String!
     $organizationExists: Boolean!
-    $locationId: String!
-    $locationExists: Boolean!
-    $dateToGetAvailableDesks: DateTime!
-    $deskIdsToIncludeToGetAvailableDesks: [String!]!
     $peopleNameSearchText: String
-    $bookingPeopleNameSearchText: String
-    $bookingSortingValues: [BookingOrderInput!]!
     $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]
-    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $organizationLocationsSortingValues: [LocationOrderInput!]!
     $organizationTeamsSortingValues: [TeamOrderInput!]!
-    $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaUntil: DateTime!
     $locationNameSearchText: String
     $teamNameSearchText: String
   ) {
@@ -56,7 +47,6 @@ const RootQuery = graphql`
       canModify
       canViewAnalytics
     }
-    ...organizationBookingsTab_query
     ...organizationMultipleChoicesIndustries_query
     ...organizationPeopleTab_query
     ...organizationLocationsTab_query
@@ -156,7 +146,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
       </Tabs>
 
       <>
-        {tabIndex === 0 && <OrganizationBookingsTab rootDataRelay={rootData} organizationId={organizationId} />}
+        {tabIndex === 0 && <OrganizationBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 1 && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 2 && <OrganizationPeopleTab rootDataRelay={rootData} organizationId={organizationId} />}
         {tabIndex === 3 && <OrganizationLocationsTab rootDataRelay={rootData} />}
@@ -185,29 +175,11 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    const from = startOfDay().toISOString();
-    const until = startOfDay().add(1, 'month').toISOString();
-
     loadQuery(
       {
         organizationId,
         organizationExists: !!organizationId,
-        locationId: '',
-        locationExists: false,
-        deskIdsToIncludeToGetAvailableDesks: [],
-        bookingSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'from',
-          },
-        ],
         organizationPeopleSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        bookingDetailsSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',
             field: 'name',
@@ -225,9 +197,6 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
             field: 'name',
           },
         ],
-        bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaUntil: until,
-        dateToGetAvailableDesks: from,
       },
       {
         fetchPolicy: 'store-and-network',
