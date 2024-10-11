@@ -1,6 +1,4 @@
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 using PactNet;
 
 namespace Testing.Shared.IntegrationTests.Pact;
@@ -11,38 +9,19 @@ public interface IPactAccessor : IAsyncDisposable
     int PactPort { get; }
 }
 
-public class PactAccessor : IPactAccessor
+public class PactAccessor(PactSettings pactSettings) : IPactAccessor
 {
-    private readonly PactSettings _pactSettings;
+    public int PactPort { get; } = pactSettings.Port;
 
-    public PactAccessor(PactSettings pactSettings)
-    {
-        _pactSettings = pactSettings;
-
-        var config = new PactConfig
-        {
-            DefaultJsonSettings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                NullValueHandling = NullValueHandling.Ignore,
-                Converters = new List<JsonConverter> { new StringEnumConverter() }
-            },
-            PactDir = _pactSettings.TempPactDirectory
-        };
-
-        PactPort = _pactSettings.Port;
-        PactBuilder = PactNet.Pact
-            .V3(_pactSettings.ConsumerName, _pactSettings.ProviderName, config)
-            .WithHttpInteractions(_pactSettings.Port);
-    }
-
-    public IPactBuilderV3 PactBuilder { get; }
-    public int PactPort { get; }
+    public IPactBuilderV3 PactBuilder { get; } = PactNet.Pact
+        .V3(pactSettings.ConsumerName, pactSettings.ProviderName,
+            new PactConfig { PactDir = pactSettings.TempPactDirectory })
+        .WithHttpInteractions(pactSettings.Port);
 
     public async ValueTask DisposeAsync()
     {
-        var tempPactFilePath = Path.Join(_pactSettings.TempPactDirectory,
-            $"{_pactSettings.ConsumerName}-{_pactSettings.ProviderName}.json");
+        var tempPactFilePath = Path.Join(pactSettings.TempPactDirectory,
+            $"{pactSettings.ConsumerName}-{pactSettings.ProviderName}.json");
 
         if (!File.Exists(tempPactFilePath))
         {
@@ -68,15 +47,15 @@ public class PactAccessor : IPactAccessor
             }
         }
 
-        if (!Directory.Exists(_pactSettings.PactDirectory))
+        if (!Directory.Exists(pactSettings.PactDirectory))
         {
-            Directory.CreateDirectory(_pactSettings.PactDirectory);
+            Directory.CreateDirectory(pactSettings.PactDirectory);
         }
 
         foreach (var interaction in interactions)
         {
             var filename = interaction.Key.Replace(" ", "_");
-            var filePath = Path.Join(_pactSettings.PactDirectory, $"{filename}.json");
+            var filePath = Path.Join(pactSettings.PactDirectory, $"{filename}.json");
 
             var clonedContent =
                 JsonConvert.DeserializeObject<dynamic>(
