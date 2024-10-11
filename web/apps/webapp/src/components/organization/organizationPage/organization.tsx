@@ -38,7 +38,6 @@ const RootQuery = graphql`
       canModify
       canViewAnalytics
     }
-    ...organizationOfferingTab_query
   }
 `;
 
@@ -138,7 +137,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
         {tabIndex === 3 && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 4 && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 5 && rootData.organization.canModify && (
-          <OrganizationOfferingTab rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
+          <OrganizationOfferingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
         )}
         {tabIndex === 6 && rootData.organization.canModify && (
           <OrganizationBillingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
