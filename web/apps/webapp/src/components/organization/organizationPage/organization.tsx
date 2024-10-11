@@ -30,7 +30,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query organization_rootQuery($organizationId: String!, $organizationExists: Boolean!) {
+  query organization_rootQuery($organizationId: String!) {
     organization(id: $organizationId) {
       id
       name
@@ -38,7 +38,6 @@ const RootQuery = graphql`
       canModify
       canViewAnalytics
     }
-    ...organizationBillingTab_query
     ...organizationOfferingTab_query
   }
 `;
@@ -141,7 +140,9 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
         {tabIndex === 5 && rootData.organization.canModify && (
           <OrganizationOfferingTab rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
         )}
-        {tabIndex === 6 && rootData.organization.canModify && <OrganizationBillingTab rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
+        {tabIndex === 6 && rootData.organization.canModify && (
+          <OrganizationBillingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
+        )}
         {tabIndex === 7 && rootData.organization.canViewAnalytics && (
           <OrganizationAnalyticsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
         )}
@@ -165,7 +166,6 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
     loadQuery(
       {
         organizationId,
-        organizationExists: !!organizationId,
       },
       {
         fetchPolicy: 'store-and-network',

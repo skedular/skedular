@@ -20,6 +20,7 @@ import type { organizationBillingInfo_setOrganizationBillingInfoMutation } from 
 
 type Props = {
   rootDataRelay: organizationBillingInfo_query$key;
+  onReloadRequired: () => void;
 };
 
 type OrganizationBillingInfoDetails = {
@@ -44,7 +45,7 @@ const organizationBillingInfoSchema = object({
   country: string().nullable(),
 });
 
-const OrganizationBillingInfo = ({ rootDataRelay }: Props) => {
+const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => {
   const [rootData, refetch] = useRefetchableFragment<organizationBillingInfoQuery, organizationBillingInfo_query$key>(
     graphql`
       fragment organizationBillingInfo_query on Query @refetchable(queryName: "organizationBillingInfoQuery") {

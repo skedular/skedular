@@ -40,7 +40,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
         organization(id: $organizationId) {
           id
         }
-        organizationPaymentMethodsDetails(organizationId: $organizationId) @include(if: $organizationExists) {
+        organizationPaymentMethodsDetails(organizationId: $organizationId) {
           id
           cardBrand
           cardExpiryMonth
