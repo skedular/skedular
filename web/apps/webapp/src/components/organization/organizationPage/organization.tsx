@@ -30,12 +30,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query organization_rootQuery(
-    $organizationId: String!
-    $organizationExists: Boolean!
-    $organizationTeamsSortingValues: [TeamOrderInput!]!
-    $teamNameSearchText: String
-  ) {
+  query organization_rootQuery($organizationId: String!, $organizationExists: Boolean!) {
     organization(id: $organizationId) {
       id
       name
@@ -43,7 +38,6 @@ const RootQuery = graphql`
       canModify
       canViewAnalytics
     }
-    ...organizationTeamsTab_query
     ...organizationBillingTab_query
     ...organizationOfferingTab_query
   }
@@ -143,7 +137,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
         {tabIndex === 1 && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 2 && <OrganizationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 3 && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-        {tabIndex === 4 && <OrganizationTeamsTab rootDataRelay={rootData} />}
+        {tabIndex === 4 && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 5 && rootData.organization.canModify && (
           <OrganizationOfferingTab rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
         )}
@@ -172,12 +166,6 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
       {
         organizationId,
         organizationExists: !!organizationId,
-        organizationTeamsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
       },
       {
         fetchPolicy: 'store-and-network',
