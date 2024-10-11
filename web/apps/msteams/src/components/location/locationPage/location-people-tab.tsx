@@ -13,19 +13,23 @@ import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import MUITextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
+import { joinErrors, keyboardDebounceTimeout, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { CustomerCard } from 'components/customer';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { useMutation, usePaginationFragment } from 'react-relay';
+import { PreloadedQuery, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { array, object, string } from 'yup';
 import type {
   LocationMemberOrderField,
@@ -40,14 +44,28 @@ import type {
   CustomerOrderInput,
   locationPeopleTab_query_paginatedCustomersByDefaultLocation,
 } from './__generated__/locationPeopleTab_query_paginatedCustomersByDefaultLocation.graphql';
+import type { locationPeopleTab_rootQuery } from './__generated__/locationPeopleTab_rootQuery.graphql';
 import LocationMemberCard from './location-member-card';
 
 type Props = {
-  rootDataLocationMembersRelay: locationPeopleTab_query$key;
-  rootDataOrganizationMembersRelay: locationPeopleTab_query_organizationMembers$key;
-  organizationId: string;
+  queryReference: PreloadedQuery<locationPeopleTab_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
+  organizationId?: string;
   locationId: string;
 };
+
+const RootQuery = graphql`
+  query locationPeopleTab_rootQuery(
+    $locationId: String!
+    $locationExists: Boolean!
+    $peopleNameSearchText: String
+    $locationPeopleSortingValues: [LocationMemberOrderInput!]
+    $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]
+  ) {
+    ...locationPeopleTab_query
+    ...locationPeopleTab_query_organizationMembers
+  }
+`;
 
 type MembersToJoin = {
   emails: (string | undefined)[];
@@ -66,7 +84,8 @@ const membersToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationMembersRelay, organizationId, locationId }: Props) => {
+const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
+  const rootDataRelay = usePreloadedQuery<locationPeopleTab_rootQuery>(RootQuery, queryReference);
   const {
     data: rootDataLocation,
     loadNext: loadNextLocationMembers,
@@ -99,7 +118,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
         ...locationSingleChoiceMembershipType_query
       }
     `,
-    rootDataLocationMembersRelay,
+    rootDataRelay,
   );
 
   const {
@@ -129,7 +148,7 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
         }
       }
     `,
-    rootDataOrganizationMembersRelay,
+    rootDataRelay,
   );
 
   const [, startTransition] = useTransition();
@@ -462,4 +481,67 @@ const LocationPeopleTab = ({ rootDataLocationMembersRelay, rootDataOrganizationM
   );
 };
 
-export default memo(LocationPeopleTab);
+const MemoLocationPeopleTab = memo(LocationPeopleTab);
+
+type RelayProps = {
+  onReloadRequired: () => void;
+  organizationId?: string;
+  locationId: string;
+};
+
+const LocationPeopleTabWithRelay = ({ onReloadRequired, organizationId, locationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<locationPeopleTab_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    const from = startOfDay().toISOString();
+
+    loadQuery(
+      {
+        locationId,
+        locationExists: !!locationId,
+        locationPeopleSortingValues: [
+          {
+            direction: 'Descending',
+            field: 'name',
+          },
+        ],
+        locationOrganizationPeopleSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, organizationId, locationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoLocationPeopleTab
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
+        locationId={locationId}
+      />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(LocationPeopleTabWithRelay);

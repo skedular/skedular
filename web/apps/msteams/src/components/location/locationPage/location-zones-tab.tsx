@@ -8,22 +8,42 @@ import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
+import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { endOfDay, keyboardDebounceTimeout, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewZoneDialog, ZoneCard } from 'components/zone';
 import debounce from 'lodash.debounce';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
-import { usePaginationFragment } from 'react-relay';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { locationZonesTab_query$key } from './__generated__/locationZonesTab_query.graphql';
+import type { locationZonesTab_rootQuery } from './__generated__/locationZonesTab_rootQuery.graphql';
 import type { LocationTagOrderField, LocationTagOrderInput, zones_PaginationQuery } from './__generated__/zones_PaginationQuery.graphql';
 
 type Props = {
-  rootDataRelay: locationZonesTab_query$key;
+  queryReference: PreloadedQuery<locationZonesTab_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   locationId: string;
 };
 
-const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
+const RootQuery = graphql`
+  query locationZonesTab_rootQuery(
+    $locationId: String!
+    $locationExists: Boolean!
+    $zoneTagType: String!
+    $zoneNameSearchText: String
+    $zoneSortingValues: [LocationTagOrderInput!]!
+  ) {
+    ...locationZonesTab_query
+  }
+`;
+
+const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Props) => {
+  const rootDataRelay = usePreloadedQuery<locationZonesTab_rootQuery>(RootQuery, queryReference);
   const {
     data: rootData,
     loadNext,
@@ -232,4 +252,57 @@ const LocationZonesTab = ({ rootDataRelay, locationId }: Props) => {
   );
 };
 
-export default memo(LocationZonesTab);
+const MemoLocationZonesTab = memo(LocationZonesTab);
+
+type RelayProps = {
+  onReloadRequired: () => void;
+  locationId: string;
+};
+
+const LocationZonesTabWithRelay = ({ onReloadRequired, locationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<locationZonesTab_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    const from = startOfDay().toISOString();
+    const to = endOfDay(from).toISOString();
+
+    loadQuery(
+      {
+        locationId,
+        locationExists: !!locationId,
+        zoneTagType: TAG_TYPE_LOCATION_ZONE,
+        zoneSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, locationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoLocationZonesTab queryReference={queryReference} onReloadRequired={handleReloadRequired} locationId={locationId} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(LocationZonesTabWithRelay);

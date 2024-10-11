@@ -34,12 +34,7 @@ const RootQuery = graphql`
     $zoneTagType: String!
     $fromToGetBookings: DateTime
     $toToGetBookings: DateTime
-    $peopleNameSearchText: String
-    $zoneNameSearchText: String
     $deskNameSearchText: String
-    $locationPeopleSortingValues: [LocationMemberOrderInput!]
-    $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]
-    $zoneSortingValues: [LocationTagOrderInput!]!
     $deskSortingValues: [DeskOrderInput!]!
     $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
   ) {
@@ -50,9 +45,6 @@ const RootQuery = graphql`
         uniqueId
       }
     }
-    ...locationPeopleTab_query
-    ...locationPeopleTab_query_organizationMembers
-    ...locationZonesTab_query
     ...locationDesksTab_query
   }
 `;
@@ -123,15 +115,8 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
       <>
         {tabIndex === 0 && <LocationBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
-        {tabIndex === 2 && (
-          <LocationPeopleTab
-            rootDataLocationMembersRelay={rootData}
-            rootDataOrganizationMembersRelay={rootData}
-            organizationId={organizationId}
-            locationId={locationId}
-          />
-        )}
-        {tabIndex === 3 && <LocationZonesTab rootDataRelay={rootData} locationId={locationId} />}
+        {tabIndex === 2 && <LocationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+        {tabIndex === 3 && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
         {tabIndex === 4 && <LocationDesksTab rootDataRelay={rootData} locationId={locationId} />}
         {tabIndex === 5 && rootData.location.canViewAnalytics && <LocationAnalyticsTab organizationId={organizationId} locationId={locationId} />}
       </>
@@ -162,24 +147,6 @@ const LocationWithRelay = ({ organizationId, locationId }: RelayProps) => {
         zoneTagType: TAG_TYPE_LOCATION_ZONE,
         fromToGetBookings: from,
         toToGetBookings: to,
-        locationPeopleSortingValues: [
-          {
-            direction: 'Descending',
-            field: 'name',
-          },
-        ],
-        locationOrganizationPeopleSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        zoneSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
         deskSortingValues: [
           {
             direction: 'Ascending',
