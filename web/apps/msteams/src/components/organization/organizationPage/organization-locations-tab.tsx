@@ -9,26 +9,43 @@ import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getLocationAddLink } from 'components/location';
 import { LocationBookingsCard } from 'components/location/locationBookingCard';
 import debounce from 'lodash.debounce';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
-import { usePaginationFragment } from 'react-relay';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type {
   LocationOrderField,
   LocationOrderInput,
   organizationLocations_PaginationQuery,
 } from './__generated__/organizationLocations_PaginationQuery.graphql';
 import type { organizationLocationsTab_query$key } from './__generated__/organizationLocationsTab_query.graphql';
+import type { organizationLocationsTab_rootQuery } from './__generated__/organizationLocationsTab_rootQuery.graphql';
 
 type Props = {
-  rootDataRelay: organizationLocationsTab_query$key;
+  queryReference: PreloadedQuery<organizationLocationsTab_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
 };
 
-const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
+const RootQuery = graphql`
+  query organizationLocationsTab_rootQuery(
+    $organizationId: String!
+    $organizationLocationsSortingValues: [LocationOrderInput!]!
+    $locationNameSearchText: String
+  ) {
+    ...organizationLocationsTab_query
+  }
+`;
+
+const OrganizationLocationsTab = ({ queryReference }: Props) => {
+  const rootDataRelay = usePreloadedQuery<organizationLocationsTab_rootQuery>(RootQuery, queryReference);
   const {
     data: rootData,
     loadNext,
@@ -225,4 +242,52 @@ const OrganizationLocationsTab = ({ rootDataRelay }: Props) => {
   );
 };
 
-export default memo(OrganizationLocationsTab);
+const MemoOrganizationLocationsTab = memo(OrganizationLocationsTab);
+
+type RelayProps = {
+  onReloadRequired: () => void;
+  organizationId: string;
+};
+
+const OrganizationLocationsTabWithRelay = ({ onReloadRequired, organizationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<organizationLocationsTab_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        organizationId,
+        organizationLocationsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, organizationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoOrganizationLocationsTab queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(OrganizationLocationsTabWithRelay);
