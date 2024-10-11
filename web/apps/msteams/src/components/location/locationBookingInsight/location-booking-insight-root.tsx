@@ -8,7 +8,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { LocationLink } from 'components/location';
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { locationBookingInsightRoot_rootQuery } from './__generated__/locationBookingInsightRoot_rootQuery.graphql';
@@ -16,6 +16,7 @@ import LocationBookingInsight from './location-booking-insight';
 
 type Props = {
   queryReference: PreloadedQuery<locationBookingInsightRoot_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   organizationId: string;
   locationId: string;
   hideLocationDetails?: boolean;
@@ -27,7 +28,7 @@ const RootQuery = graphql`
   }
 `;
 
-const LocationBookingInsightRoot = ({ queryReference, organizationId, locationId, hideLocationDetails }: Props) => {
+const LocationBookingInsightRoot = ({ queryReference, onReloadRequired, organizationId, locationId, hideLocationDetails }: Props) => {
   const rootData = usePreloadedQuery<locationBookingInsightRoot_rootQuery>(RootQuery, queryReference);
 
   return (
@@ -43,14 +44,17 @@ const LocationBookingInsightRoot = ({ queryReference, organizationId, locationId
 const MemoLocationBookingInsightRoot = memo(LocationBookingInsightRoot);
 
 type RelayProps = {
+  onReloadRequired: () => void;
   organizationId: string;
   locationId: string;
-  locationName: string;
+  locationName?: string;
   hideLocationDetails?: boolean;
 };
 
-const LocationBookingInsightRootWithRelay = ({ organizationId, locationId, locationName, hideLocationDetails }: RelayProps) => {
+const LocationBookingInsightRootWithRelay = ({ onReloadRequired, organizationId, locationId, locationName, hideLocationDetails }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationBookingInsightRoot_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     const to = startOfDay();
@@ -67,7 +71,15 @@ const LocationBookingInsightRootWithRelay = ({ organizationId, locationId, locat
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, locationId]);
+  }, [loadQuery, triggerReload, locationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
 
   if (!queryReference) {
     return (
@@ -93,6 +105,7 @@ const LocationBookingInsightRootWithRelay = ({ organizationId, locationId, locat
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
       <MemoLocationBookingInsightRoot
         queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
         organizationId={organizationId}
         locationId={locationId}
         hideLocationDetails={hideLocationDetails}

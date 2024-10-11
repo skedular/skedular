@@ -6,6 +6,7 @@ import type {
 } from '@/queries/__generated__/organizationMembers_PaginationQuery.graphql';
 import type { organizationPeopleTab_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/organizationPeopleTab_inviteCustomersToJoinOrganizationMutation.graphql';
 import type { organizationPeopleTab_query$key } from '@/queries/__generated__/organizationPeopleTab_query.graphql';
+import type { organizationPeopleTab_rootQuery } from '@/queries/__generated__/organizationPeopleTab_rootQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -21,6 +22,9 @@ import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import MUITextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -29,15 +33,28 @@ import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { graphql, useMutation, usePaginationFragment } from 'react-relay';
+import { PreloadedQuery, graphql, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { array, object, string } from 'yup';
 
 type Props = {
-  rootDataRelay: organizationPeopleTab_query$key;
+  queryReference: PreloadedQuery<organizationPeopleTab_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   organizationId: string;
 };
+
+const RootQuery = graphql`
+  query organizationPeopleTab_rootQuery(
+    $organizationId: String!
+    $organizationExists: Boolean!
+    $peopleNameSearchText: String
+    $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]
+  ) {
+    ...organizationPeopleTab_query
+  }
+`;
 
 type MembersToJoin = {
   emails: (string | undefined)[];
@@ -56,7 +73,8 @@ const membersToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const OrganizationPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
+const OrganizationPeopleTab = ({ queryReference, organizationId }: Props) => {
+  const rootDataRelay = usePreloadedQuery<organizationPeopleTab_rootQuery>(RootQuery, queryReference);
   const {
     data: rootData,
     loadNext,
@@ -348,4 +366,53 @@ const OrganizationPeopleTab = ({ rootDataRelay, organizationId }: Props) => {
   );
 };
 
-export default memo(OrganizationPeopleTab);
+const MemoOrganizationPeopleTab = memo(OrganizationPeopleTab);
+
+type RelayProps = {
+  onReloadRequired: () => void;
+  organizationId: string;
+};
+
+const OrganizationPeopleTabWithRelay = ({ onReloadRequired, organizationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<organizationPeopleTab_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        organizationId,
+        organizationExists: !!organizationId,
+        organizationPeopleSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, organizationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoOrganizationPeopleTab queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(OrganizationPeopleTabWithRelay);

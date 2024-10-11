@@ -8,7 +8,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationLink } from 'components/organization';
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { organizationMemberAttendancyInsightRoot_rootQuery } from './__generated__/organizationMemberAttendancyInsightRoot_rootQuery.graphql';
@@ -16,6 +16,7 @@ import OrganizationMemberAttendancyInsight from './organization-member-attendanc
 
 type Props = {
   queryReference: PreloadedQuery<organizationMemberAttendancyInsightRoot_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   organizationId: string;
   hideOrganizationDetails?: boolean;
 };
@@ -37,13 +38,21 @@ const OrganizationMemberAttendancyInsightRoot = ({ queryReference, organizationI
 const MemoOrganizationMemberAttendancysCard = memo(OrganizationMemberAttendancyInsightRoot);
 
 type RelayProps = {
+  onReloadRequired: () => void;
   organizationId: string;
-  organizationName: string;
+  organizationName?: string;
   hideOrganizationDetails?: boolean;
 };
 
-const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, organizationName, hideOrganizationDetails }: RelayProps) => {
+const OrganizationMemberAttendancyInsightRootWithRelay = ({
+  onReloadRequired,
+  organizationId,
+  organizationName,
+  hideOrganizationDetails,
+}: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationMemberAttendancyInsightRoot_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     const to = startOfDay();
@@ -59,7 +68,15 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, orga
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, organizationId]);
+  }, [loadQuery, triggerReload, organizationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
 
   if (!queryReference) {
     return (
@@ -85,6 +102,7 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, orga
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
       <MemoOrganizationMemberAttendancysCard
         queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
         organizationId={organizationId}
         hideOrganizationDetails={hideOrganizationDetails}
       />

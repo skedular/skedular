@@ -13,7 +13,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
-import { endOfDay, keyboardDebounceTimeout, startOfDay } from '@repo/shared/libs/utils';
+import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewZoneDialog, ZoneCard } from 'components/zone';
 import debounce from 'lodash.debounce';
@@ -265,9 +265,6 @@ const LocationZonesTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    const from = startOfDay().toISOString();
-    const to = endOfDay(from).toISOString();
-
     loadQuery(
       {
         locationId,

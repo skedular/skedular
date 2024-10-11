@@ -17,7 +17,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
-import { endOfDay, keyboardDebounceTimeout, startOfDay } from '@repo/shared/libs/utils';
+import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -264,9 +264,6 @@ const LocationZonesTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    const from = startOfDay().toISOString();
-    const to = endOfDay(from).toISOString();
-
     loadQuery(
       {
         locationId,

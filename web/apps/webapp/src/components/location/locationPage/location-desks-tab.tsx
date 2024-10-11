@@ -1,6 +1,7 @@
 import { BulkNewDeskDialog, DeskCard, NewDeskDialog } from '@/components/desk';
 import type { DeskOrderField, DeskOrderInput, desks_PaginationQuery } from '@/queries/__generated__/desks_PaginationQuery.graphql';
 import type { locationDesksTab_query$key } from '@/queries/__generated__/locationDesksTab_query.graphql';
+import type { locationDesksTab_rootQuery } from '@/queries/__generated__/locationDesksTab_rootQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -14,19 +15,41 @@ import Typography from '@mui/material/Typography';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '@repo/shared/components/generics';
 import { AddIcon } from '@repo/shared/components/icons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
+import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { endOfDay, keyboardDebounceTimeout, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import debounce from 'lodash.debounce';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
-  rootDataRelay: locationDesksTab_query$key;
+  queryReference: PreloadedQuery<locationDesksTab_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   locationId: string;
 };
 
-const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
+const RootQuery = graphql`
+  query locationDesksTab_rootQuery(
+    $locationId: String!
+    $locationExists: Boolean!
+    $zoneTagType: String!
+    $fromToGetBookings: DateTime
+    $toToGetBookings: DateTime
+    $deskNameSearchText: String
+    $deskSortingValues: [DeskOrderInput!]!
+    $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
+  ) {
+    ...locationDesksTab_query
+  }
+`;
+
+const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Props) => {
+  const rootDataRelay = usePreloadedQuery<locationDesksTab_rootQuery>(RootQuery, queryReference);
   const {
     data: rootData,
     loadNext,
@@ -317,4 +340,65 @@ const LocationDesksTab = ({ rootDataRelay, locationId }: Props) => {
   );
 };
 
-export default memo(LocationDesksTab);
+const MemoLocationDesksTab = memo(LocationDesksTab);
+
+type RelayProps = {
+  onReloadRequired: () => void;
+  locationId: string;
+};
+
+const LocationDesksTabWithRelay = ({ onReloadRequired, locationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<locationDesksTab_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    const from = startOfDay().toISOString();
+    const to = endOfDay(from).toISOString();
+
+    loadQuery(
+      {
+        locationId,
+        locationExists: !!locationId,
+        zoneTagType: TAG_TYPE_LOCATION_ZONE,
+        fromToGetBookings: from,
+        toToGetBookings: to,
+        deskSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+        deskMultipleChoicesZonesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload, locationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoLocationDesksTab queryReference={queryReference} onReloadRequired={handleReloadRequired} locationId={locationId} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(LocationDesksTabWithRelay);

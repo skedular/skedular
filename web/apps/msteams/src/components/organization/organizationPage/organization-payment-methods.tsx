@@ -23,7 +23,7 @@ import OrganizationPaymentMethodSetupForm from './organization-payment-method-se
 
 type Props = {
   rootDataRelay: organizationPaymentMethods_query$key;
-  onRefetchRequired: () => void;
+  onReloadRequired: () => void;
 };
 
 enum AddOrganizationPaymentMethodState {
@@ -34,7 +34,7 @@ enum AddOrganizationPaymentMethodState {
   PAYMENT_METHOD_SUBMITTED,
 }
 
-const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props) => {
+const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) => {
   const rootData = useFragment<organizationPaymentMethods_query$key>(
     graphql`
       fragment organizationPaymentMethods_query on Query {
@@ -152,7 +152,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
           setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
         }
 
-        onRefetchRequired();
+        onReloadRequired();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to remove payment method. Error: ${error.message}`, {
@@ -160,7 +160,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onRefetchRequired }: Props)
           anchorOrigin,
         });
 
-        onRefetchRequired();
+        onReloadRequired();
       },
     });
 

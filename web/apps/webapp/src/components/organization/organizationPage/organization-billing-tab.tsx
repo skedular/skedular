@@ -7,10 +7,10 @@ import OrganizationPaymentMethods from './organization-payment-methods';
 
 type Props = {
   rootDataRelay: organizationBillingTab_query$key;
-  onRefetchRequired: () => void;
+  onReloadRequired: () => void;
 };
 
-const OrganizationBillingTab = ({ rootDataRelay, onRefetchRequired }: Props) => {
+const OrganizationBillingTab = ({ rootDataRelay, onReloadRequired }: Props) => {
   const rootData = useFragment<organizationBillingTab_query$key>(
     graphql`
       fragment organizationBillingTab_query on Query {
@@ -24,7 +24,7 @@ const OrganizationBillingTab = ({ rootDataRelay, onRefetchRequired }: Props) => 
   return (
     <Stack direction="column" spacing={1}>
       <OrganizationBillingInfo rootDataRelay={rootData} />
-      <OrganizationPaymentMethods rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
+      <OrganizationPaymentMethods rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
     </Stack>
   );
 };

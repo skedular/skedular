@@ -18,10 +18,10 @@ import { graphql, useFragment, useMutation } from 'react-relay';
 
 type Props = {
   rootDataRelay: organizationOffering_query$key;
-  onRefetchRequired: () => void;
+  onReloadRequired: () => void;
 };
 
-const OrganizationOffering = ({ rootDataRelay, onRefetchRequired }: Props) => {
+const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
   const rootData = useFragment<organizationOffering_query$key>(
     graphql`
       fragment organizationOffering_query on Query {
@@ -74,9 +74,9 @@ const OrganizationOffering = ({ rootDataRelay, onRefetchRequired }: Props) => {
             anchorOrigin,
           });
 
-          onRefetchRequired();
+          onReloadRequired();
         } else {
-          onRefetchRequired();
+          onReloadRequired();
         }
       },
       onError: (error) => {
@@ -85,7 +85,7 @@ const OrganizationOffering = ({ rootDataRelay, onRefetchRequired }: Props) => {
           anchorOrigin,
         });
 
-        onRefetchRequired();
+        onReloadRequired();
       },
     });
   };

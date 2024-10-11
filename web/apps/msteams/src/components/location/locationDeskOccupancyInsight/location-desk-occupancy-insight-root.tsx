@@ -8,7 +8,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { LocationLink } from 'components/location';
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { locationDeskOccupancyInsightRoot_rootQuery } from './__generated__/locationDeskOccupancyInsightRoot_rootQuery.graphql';
@@ -16,6 +16,7 @@ import LocationDeskOccupancyInsight from './location-desk-occupancy-insight';
 
 type Props = {
   queryReference: PreloadedQuery<locationDeskOccupancyInsightRoot_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
   organizationId: string;
   locationId: string;
   hideLocationDetails?: boolean;
@@ -27,7 +28,7 @@ const RootQuery = graphql`
   }
 `;
 
-const LocationDeskOccupancyInsightRoot = ({ queryReference, organizationId, locationId, hideLocationDetails }: Props) => {
+const LocationDeskOccupancyInsightRoot = ({ queryReference, onReloadRequired, organizationId, locationId, hideLocationDetails }: Props) => {
   const rootData = usePreloadedQuery<locationDeskOccupancyInsightRoot_rootQuery>(RootQuery, queryReference);
 
   return (
@@ -43,14 +44,23 @@ const LocationDeskOccupancyInsightRoot = ({ queryReference, organizationId, loca
 const MemoLocationDeskOccupancyInsightRoot = memo(LocationDeskOccupancyInsightRoot);
 
 type RelayProps = {
+  onReloadRequired: () => void;
   organizationId: string;
   locationId: string;
-  locationName: string;
+  locationName?: string;
   hideLocationDetails?: boolean;
 };
 
-const LocationDeskOccupancyInsightRootWithRelay = ({ organizationId, locationId, locationName, hideLocationDetails }: RelayProps) => {
+const LocationDeskOccupancyInsightRootWithRelay = ({
+  organizationId,
+  onReloadRequired,
+  locationId,
+  locationName,
+  hideLocationDetails,
+}: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationDeskOccupancyInsightRoot_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     const to = startOfDay();
@@ -67,7 +77,15 @@ const LocationDeskOccupancyInsightRootWithRelay = ({ organizationId, locationId,
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, locationId]);
+  }, [loadQuery, triggerReload, locationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+
+      onReloadRequired();
+    });
+  };
 
   if (!queryReference) {
     return (
@@ -76,7 +94,7 @@ const LocationDeskOccupancyInsightRootWithRelay = ({ organizationId, locationId,
           title={
             <>
               <Typography variant="h5" color="primary">
-                Desk Occupancy Insights
+                DeskOccupancy Insights
               </Typography>
               {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={locationName} analayticsLink />}
             </>
@@ -93,6 +111,7 @@ const LocationDeskOccupancyInsightRootWithRelay = ({ organizationId, locationId,
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
       <MemoLocationDeskOccupancyInsightRoot
         queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
         organizationId={organizationId}
         locationId={locationId}
         hideLocationDetails={hideLocationDetails}

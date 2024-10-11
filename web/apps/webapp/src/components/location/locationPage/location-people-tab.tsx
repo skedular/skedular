@@ -34,7 +34,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { joinErrors, keyboardDebounceTimeout, startOfDay } from '@repo/shared/libs/utils';
+import { joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -494,8 +494,6 @@ const LocationPeopleTabWithRelay = ({ onReloadRequired, organizationId, location
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    const from = startOfDay().toISOString();
-
     loadQuery(
       {
         locationId,

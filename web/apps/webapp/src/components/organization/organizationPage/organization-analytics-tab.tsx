@@ -4,16 +4,28 @@ import Grid from '@mui/material/Grid2';
 import { memo } from 'react';
 
 type Props = {
+  onReloadRequired: () => void;
   organizationId: string;
+  organizationName?: string;
 };
 
-const OrganizationAnalyticsTab = ({ organizationId }: Props) => (
+const OrganizationAnalyticsTab = ({ onReloadRequired, organizationId, organizationName }: Props) => (
   <Grid container spacing={1}>
     <Grid>
-      <OrganizationBookingInsightRoot organizationId={organizationId} organizationName="" hideOrganizationDetails />
+      <OrganizationBookingInsightRoot
+        onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
+        organizationName={organizationName}
+        hideOrganizationDetails
+      />
     </Grid>
     <Grid>
-      <OrganizationMemberAttendancyInsightRoot organizationId={organizationId} organizationName="" hideOrganizationDetails />
+      <OrganizationMemberAttendancyInsightRoot
+        onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
+        organizationName={organizationName}
+        hideOrganizationDetails
+      />
     </Grid>
   </Grid>
 );

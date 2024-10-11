@@ -19,10 +19,10 @@ import type { organizationAvailableOfferings_updateOrganizationOfferingMutation 
 
 type Props = {
   rootDataRelay: organizationAvailableOfferings_query$key;
-  onRefetchRequired: () => void;
+  onReloadRequired: () => void;
 };
 
-const OrganizationAvailableOfferings = ({ rootDataRelay, onRefetchRequired }: Props) => {
+const OrganizationAvailableOfferings = ({ rootDataRelay, onReloadRequired }: Props) => {
   const rootData = useFragment<organizationAvailableOfferings_query$key>(
     graphql`
       fragment organizationAvailableOfferings_query on Query {
@@ -77,9 +77,9 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onRefetchRequired }: Pr
             anchorOrigin,
           });
 
-          onRefetchRequired();
+          onReloadRequired();
         } else {
-          onRefetchRequired();
+          onReloadRequired();
         }
       },
       onError: (error) => {
@@ -88,7 +88,7 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onRefetchRequired }: Pr
           anchorOrigin,
         });
 
-        onRefetchRequired();
+        onReloadRequired();
       },
     });
   };

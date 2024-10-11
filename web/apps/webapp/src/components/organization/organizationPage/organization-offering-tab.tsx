@@ -7,10 +7,10 @@ import OrganizationOffering from './organization-offering';
 
 type Props = {
   rootDataRelay: organizationOfferingTab_query$key;
-  onRefetchRequired: () => void;
+  onReloadRequired: () => void;
 };
 
-const OrganizationOfferingTab = ({ rootDataRelay, onRefetchRequired }: Props) => {
+const OrganizationOfferingTab = ({ rootDataRelay, onReloadRequired }: Props) => {
   const rootData = useFragment<organizationOfferingTab_query$key>(
     graphql`
       fragment organizationOfferingTab_query on Query {
@@ -29,9 +29,9 @@ const OrganizationOfferingTab = ({ rootDataRelay, onRefetchRequired }: Props) =>
 
   return (
     <Stack direction="column" spacing={1}>
-      <OrganizationOffering rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
+      <OrganizationOffering rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       {rootData.organization?.availableOfferings && rootData.organization?.availableOfferings.length > 0 && (
-        <OrganizationAvailableOfferings rootDataRelay={rootData} onRefetchRequired={onRefetchRequired} />
+        <OrganizationAvailableOfferings rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       )}
     </Stack>
   );

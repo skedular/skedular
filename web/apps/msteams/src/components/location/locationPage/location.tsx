@@ -4,8 +4,6 @@ import Tabs from '@mui/material/Tabs';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
-import { endOfDay, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { LocationLink } from 'components/location';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -28,16 +26,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query location_rootQuery(
-    $locationId: String!
-    $locationExists: Boolean!
-    $zoneTagType: String!
-    $fromToGetBookings: DateTime
-    $toToGetBookings: DateTime
-    $deskNameSearchText: String
-    $deskSortingValues: [DeskOrderInput!]!
-    $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
-  ) {
+  query location_rootQuery($locationId: String!) {
     location(id: $locationId) {
       name
       canViewAnalytics
@@ -45,7 +34,6 @@ const RootQuery = graphql`
         uniqueId
       }
     }
-    ...locationDesksTab_query
   }
 `;
 
@@ -117,8 +105,15 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
         {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 2 && <LocationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 3 && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
-        {tabIndex === 4 && <LocationDesksTab rootDataRelay={rootData} locationId={locationId} />}
-        {tabIndex === 5 && rootData.location.canViewAnalytics && <LocationAnalyticsTab organizationId={organizationId} locationId={locationId} />}
+        {tabIndex === 4 && <LocationDesksTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+        {tabIndex === 5 && rootData.location.canViewAnalytics && (
+          <LocationAnalyticsTab
+            onReloadRequired={onReloadRequired}
+            organizationId={organizationId}
+            locationId={locationId}
+            locationName={rootData.location.name}
+          />
+        )}
       </>
     </Stack>
   );
@@ -137,34 +132,15 @@ const LocationWithRelay = ({ organizationId, locationId }: RelayProps) => {
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    const from = startOfDay().toISOString();
-    const to = endOfDay(from).toISOString();
-
     loadQuery(
       {
         locationId,
-        locationExists: !!locationId,
-        zoneTagType: TAG_TYPE_LOCATION_ZONE,
-        fromToGetBookings: from,
-        toToGetBookings: to,
-        deskSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
-        deskMultipleChoicesZonesSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'name',
-          },
-        ],
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, organizationId, locationId]);
+  }, [loadQuery, triggerReload, locationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
