@@ -109,7 +109,6 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
   const [date, setDate] = useState(startOfMonth());
 
   useEffect(() => {
-    // TODO: 20230711 - Morteza: This will refetch in addition to the root query. The first refetch on initial render time must be prevented
     startTransition(() => {
       refetch(
         {
@@ -118,7 +117,6 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
         },
         {
           fetchPolicy: 'store-and-network',
-          onComplete: () => {},
         },
       );
     });

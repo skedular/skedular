@@ -1,6 +1,8 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { LocationLink } from '@/components/location';
 import { TeamLink } from '@/components/team';
+import type { customerTodaySummary_query$key } from '@/queries/__generated__/customerTodaySummary_query.graphql';
+import type { customerTodaySummary_RefetchableFragment } from '@/queries/__generated__/customerTodaySummary_RefetchableFragment.graphql';
 import type { customerTodaySummary_rootQuery } from '@/queries/__generated__/customerTodaySummary_rootQuery.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
@@ -18,11 +20,12 @@ import { DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons'
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
+import { GlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, startOfDay, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, startTransition, useContext, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   queryReference: PreloadedQuery<customerTodaySummary_rootQuery, Record<string, unknown>>;
@@ -34,36 +37,6 @@ const RootQuery = graphql`
   query customerTodaySummary_rootQuery($from: DateTime!, $to: DateTime!) {
     me {
       id
-    }
-    allBookings(where: { fromGTE: $from, toLTE: $to }) {
-      id
-      from
-      to
-      customer {
-        uniqueId
-        name
-        givenName
-        middleName
-        familyName
-        photoUrl
-      }
-      location {
-        uniqueId
-        name
-      }
-      team {
-        uniqueId
-        name
-      }
-      desks {
-        uniqueId
-        name
-        locationTags {
-          uniqueId
-          name
-          tagType
-        }
-      }
     }
     myLocations {
       id
@@ -81,6 +54,7 @@ const RootQuery = graphql`
         name
       }
     }
+    ...customerTodaySummary_query
   }
 `;
 
@@ -124,14 +98,63 @@ type BookingDetails = {
 };
 
 const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props) => {
-  const rootData = usePreloadedQuery<customerTodaySummary_rootQuery>(RootQuery, queryReference);
+  const rootDataRelay = usePreloadedQuery<customerTodaySummary_rootQuery>(RootQuery, queryReference);
+  const [rootData, refetch] = useRefetchableFragment<customerTodaySummary_RefetchableFragment, customerTodaySummary_query$key>(
+    graphql`
+      fragment customerTodaySummary_query on Query @refetchable(queryName: "customerTodaySummary_RefetchableFragment") {
+        allBookings(where: { fromGTE: $from, toLTE: $to }) {
+          id
+          from
+          to
+          customer {
+            uniqueId
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
+          }
+          location {
+            uniqueId
+            name
+          }
+          team {
+            uniqueId
+            name
+          }
+          desks {
+            uniqueId
+            name
+            locationTags {
+              uniqueId
+              name
+              tagType
+            }
+          }
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const globalReloadId = useContext(GlobalReloadIdContext);
+  useEffect(() => {
+    startTransition(() => {
+      refetch(
+        {},
+        {
+          fetchPolicy: 'store-and-network',
+        },
+      );
+    });
+  }, [refetch, globalReloadId, date]);
+
   const [bookingPopperAnchorEl, setBookingPopperAnchorEl] = useState<null | HTMLElement>(null);
   const [bookingPopperLatestUniqueId, setBookingPopperLatestUniqueId] = useState<string>('');
   const [bookingPopperMessage, setBookingPopperMessage] = useState<string>('');
-
   const myBookings = useMemo(
-    () => (rootData.allBookings ? rootData.allBookings.filter(({ customer: { uniqueId } }) => uniqueId === rootData.me?.id) : []),
-    [rootData.allBookings, rootData.me?.id],
+    () => (rootData.allBookings ? rootData.allBookings.filter(({ customer: { uniqueId } }) => uniqueId === rootDataRelay.me?.id) : []),
+    [rootData.allBookings, rootDataRelay.me?.id],
   );
   const otherBookings = useMemo(
     () => (rootData.allBookings ? rootData.allBookings.filter(({ id }) => myBookings.every(({ id: myBookingId }) => myBookingId !== id)) : []),
@@ -242,7 +265,7 @@ const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props)
   );
 
   const getBookingsByLocationsComponents = (locationId: string, bookings: typeof otherBookings) => {
-    const location = rootData.myLocations?.find(({ id }) => id === locationId);
+    const location = rootDataRelay.myLocations?.find(({ id }) => id === locationId);
     if (!location) {
       return <></>;
     }
@@ -286,7 +309,7 @@ const CustomerTodaySummary = ({ queryReference, date, onReloadRequired }: Props)
   };
 
   const getBookingsByTeamsComponents = (teamId: string, bookings: typeof otherBookings) => {
-    const team = rootData.myTeams?.find(({ id }) => id === teamId);
+    const team = rootDataRelay.myTeams?.find(({ id }) => id === teamId);
     if (!team) {
       return <></>;
     }

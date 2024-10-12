@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4dee19a817683d13ddb7bc795206cc3d>>
+ * @generated SignedSource<<4ea616f05555d332d632079bb5118f56>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,35 +10,16 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type customerTodaySummary_rootQuery$variables = {
-  from: any;
-  to: any;
+export type customerTodaySummary_RefetchableFragment$variables = {
+  from?: any | null | undefined;
+  to?: any | null | undefined;
 };
-export type customerTodaySummary_rootQuery$data = {
-  readonly me: {
-    readonly id: string;
-  } | null | undefined;
-  readonly myLocations: ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-    readonly organization: {
-      readonly name: string;
-      readonly uniqueId: string;
-    } | null | undefined;
-  }> | null | undefined;
-  readonly myTeams: ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-    readonly organization: {
-      readonly name: string;
-      readonly uniqueId: string;
-    } | null | undefined;
-  }> | null | undefined;
+export type customerTodaySummary_RefetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"customerTodaySummary_query">;
 };
-export type customerTodaySummary_rootQuery = {
-  response: customerTodaySummary_rootQuery$data;
-  variables: customerTodaySummary_rootQuery$variables;
+export type customerTodaySummary_RefetchableFragment = {
+  response: customerTodaySummary_RefetchableFragment$data;
+  variables: customerTodaySummary_RefetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -58,95 +39,27 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "uniqueId",
   "storageKey": null
 },
 v2 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "CustomerDetails",
-  "kind": "LinkedField",
-  "name": "me",
-  "plural": false,
-  "selections": [
-    (v1/*: any*/)
-  ],
-  "storageKey": null
-},
-v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-},
-v5 = [
-  (v4/*: any*/),
-  (v3/*: any*/)
-],
-v6 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "LocationDetails",
-  "kind": "LinkedField",
-  "name": "myLocations",
-  "plural": true,
-  "selections": [
-    (v1/*: any*/),
-    (v3/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "LocationOrganizationDetails",
-      "kind": "LinkedField",
-      "name": "organization",
-      "plural": false,
-      "selections": (v5/*: any*/),
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "TeamDetails",
-  "kind": "LinkedField",
-  "name": "myTeams",
-  "plural": true,
-  "selections": [
-    (v1/*: any*/),
-    (v3/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "TeamOrganizationDetails",
-      "kind": "LinkedField",
-      "name": "organization",
-      "plural": false,
-      "selections": (v5/*: any*/),
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
+v3 = [
+  (v1/*: any*/),
+  (v2/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "customerTodaySummary_rootQuery",
+    "name": "customerTodaySummary_RefetchableFragment",
     "selections": [
-      (v2/*: any*/),
-      (v6/*: any*/),
-      (v7/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -160,11 +73,8 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "customerTodaySummary_rootQuery",
+    "name": "customerTodaySummary_RefetchableFragment",
     "selections": [
-      (v2/*: any*/),
-      (v6/*: any*/),
-      (v7/*: any*/),
       {
         "alias": null,
         "args": [
@@ -190,7 +100,13 @@ return {
         "name": "allBookings",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -213,8 +129,8 @@ return {
             "name": "customer",
             "plural": false,
             "selections": [
-              (v4/*: any*/),
-              (v3/*: any*/),
+              (v1/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -253,7 +169,7 @@ return {
             "kind": "LinkedField",
             "name": "location",
             "plural": false,
-            "selections": (v5/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -263,7 +179,7 @@ return {
             "kind": "LinkedField",
             "name": "team",
             "plural": false,
-            "selections": (v5/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -274,8 +190,8 @@ return {
             "name": "desks",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
-              (v3/*: any*/),
+              (v1/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -284,8 +200,8 @@ return {
                 "name": "locationTags",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
-                  (v3/*: any*/),
+                  (v1/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -305,16 +221,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "25668e81b77e972421750bd017fafac8",
+    "cacheID": "a1ac01f785bc57402ae27c0ca6a96bd9",
     "id": null,
     "metadata": {},
-    "name": "customerTodaySummary_rootQuery",
+    "name": "customerTodaySummary_RefetchableFragment",
     "operationKind": "query",
-    "text": "query customerTodaySummary_rootQuery(\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  myLocations {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  ...customerTodaySummary_query\n}\n\nfragment customerTodaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query customerTodaySummary_RefetchableFragment(\n  $from: DateTime\n  $to: DateTime\n) {\n  ...customerTodaySummary_query\n}\n\nfragment customerTodaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ad55bbede6c43de4117a3f6d0450390c";
+(node as any).hash = "7fa453cb7a8acf0235fb63702da31d2a";
 
 export default node;

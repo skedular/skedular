@@ -64,7 +64,6 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, locationId, name, required }:
         },
         {
           fetchPolicy: 'store-and-network',
-          onComplete: () => {},
         },
       );
     });
