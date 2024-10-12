@@ -182,7 +182,7 @@ type RelayProps = {
 
 const AddTeamWithRelay = ({ organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addTeam_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -201,11 +201,11 @@ const AddTeamWithRelay = ({ organizationId }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload]);
+  }, [loadQuery, triggerReloadId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
     });
   };
 

@@ -19,9 +19,11 @@ import { OrganizationIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { GlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfMonth, startOfDay, startOfMonth } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
-import { memo, startTransition, useEffect, useMemo, useState, useTransition } from 'react';
+import { nanoid } from 'nanoid';
+import { memo, startTransition, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import SmallMonthlyViewCalendarDay from './small-monthly-view-calendar-day';
@@ -103,6 +105,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
     rootDataRelay,
   );
 
+  const globalReloadId = useContext(GlobalReloadIdContext);
   const [date, setDate] = useState(startOfMonth());
 
   useEffect(() => {
@@ -119,7 +122,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
         },
       );
     });
-  }, [refetch, date]);
+  }, [refetch, globalReloadId, date]);
 
   const connectionIds = useMemo(() => (rootData.monthlyBookings ? [rootData.monthlyBookings.__id] : []), [rootData.monthlyBookings]);
 
@@ -254,7 +257,7 @@ const MemoSmallMonthlyViewCalendar = memo(SmallMonthlyViewCalendar);
 
 const SmallMonthlyViewCalendarWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<smallMonthlyViewCalendar_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -287,11 +290,11 @@ const SmallMonthlyViewCalendarWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload]);
+  }, [loadQuery, triggerReloadId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
     });
   };
 

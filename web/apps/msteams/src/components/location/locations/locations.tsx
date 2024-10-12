@@ -18,6 +18,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { getLocationAddLink } from 'components/location';
 import { LocationBookingsCard } from 'components/location/locationBookingCard';
 import debounce from 'lodash.debounce';
+import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -236,7 +237,7 @@ type RelayProps = {
 
 const LocationsWithRelay = ({ organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locations_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -254,11 +255,11 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, organizationId]);
+  }, [loadQuery, triggerReloadId, organizationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
     });
   };
 

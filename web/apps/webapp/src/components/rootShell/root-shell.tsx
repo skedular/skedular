@@ -9,6 +9,7 @@ import { LogoutIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { nanoid } from 'nanoid';
 import { signOut } from 'next-auth/react';
 import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -135,7 +136,7 @@ type RelayProps = {
 
 const RootShellWithRelay = ({ title, children, rightSideContent }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -145,11 +146,11 @@ const RootShellWithRelay = ({ title, children, rightSideContent }: RelayProps) =
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload]);
+  }, [loadQuery, triggerReloadId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
     });
   };
 

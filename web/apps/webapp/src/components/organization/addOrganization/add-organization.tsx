@@ -160,7 +160,7 @@ const MemoAddOrganization = memo(AddOrganization);
 
 const AddOrganizationWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<addOrganization_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -170,11 +170,11 @@ const AddOrganizationWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload]);
+  }, [loadQuery, triggerReloadId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
     });
   };
 

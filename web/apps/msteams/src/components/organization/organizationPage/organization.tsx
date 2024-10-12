@@ -8,6 +8,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import graphql from 'babel-plugin-relay/macro';
+import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -157,7 +158,7 @@ type RelayProps = {
 
 const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organization_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -169,11 +170,11 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, organizationId]);
+  }, [loadQuery, triggerReloadId, organizationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
     });
   };
 

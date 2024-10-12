@@ -8,6 +8,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { MainRootLayout } from 'components/layouts';
 import { FabNavigationMenu, LeftSideNavigationMenu } from 'components/navigationMenu';
 import { Observability } from 'components/observability';
+import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -144,7 +145,7 @@ type RelayProps = {
 
 const RootShellWithRelay = ({ title, children, rightSideContent }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -154,11 +155,11 @@ const RootShellWithRelay = ({ title, children, rightSideContent }: RelayProps) =
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload]);
+  }, [loadQuery, triggerReloadId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
     });
   };
 

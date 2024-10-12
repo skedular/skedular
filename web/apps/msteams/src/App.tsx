@@ -17,9 +17,9 @@ import { Settings } from 'app/settings';
 import { Teams } from 'app/teams';
 import {
   DatePickerLocalizationProvider,
+  GlobalReloadIdProvider,
   LogRocketProvider,
   RelayProvider,
-  SelectedGlobalReloadIdProvider,
   SnackbarProvider,
   TeamsFxContext,
   ThemeProvider,
@@ -123,7 +123,7 @@ const App = () => {
   return (
     <>
       <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
-        <SelectedGlobalReloadIdProvider>
+        <GlobalReloadIdProvider>
           <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
             <CssBaseline />
             <SnackbarProvider>
@@ -136,7 +136,7 @@ const App = () => {
               </DatePickerLocalizationProvider>
             </SnackbarProvider>
           </ThemeProvider>
-        </SelectedGlobalReloadIdProvider>
+        </GlobalReloadIdProvider>
       </TeamsFxContext.Provider>
       <Analytics />
       <SpeedInsights />

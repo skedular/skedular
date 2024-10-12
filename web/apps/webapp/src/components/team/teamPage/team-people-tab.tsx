@@ -542,7 +542,7 @@ type RelayProps = {
 
 const TeamPeopleTabWithRelay = ({ onReloadRequired, organizationId, teamId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<teamPeopleTab_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -569,11 +569,11 @@ const TeamPeopleTabWithRelay = ({ onReloadRequired, organizationId, teamId }: Re
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, organizationId, teamId]);
+  }, [loadQuery, triggerReloadId, organizationId, teamId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
 
       onReloadRequired();
     });

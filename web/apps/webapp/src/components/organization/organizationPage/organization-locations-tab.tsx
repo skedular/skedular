@@ -24,6 +24,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
+import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -245,7 +246,7 @@ type RelayProps = {
 
 const OrganizationLocationsTabWithRelay = ({ onReloadRequired, organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationLocationsTab_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -263,11 +264,11 @@ const OrganizationLocationsTabWithRelay = ({ onReloadRequired, organizationId }:
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, organizationId]);
+  }, [loadQuery, triggerReloadId, organizationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
 
       onReloadRequired();
     });

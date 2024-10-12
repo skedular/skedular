@@ -3,12 +3,14 @@ import type { smallMonthlyViewCalendarDay_deleteBookingMutation } from '@/querie
 import type { smallMonthlyViewCalendar_query$data } from '@/queries/__generated__/smallMonthlyViewCalendar_query.graphql';
 import Badge from '@mui/material/Badge';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { convertCalendarDayToStartOfDay, endOfDay, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
+import { useContext } from 'react';
 import { graphql, useMutation } from 'react-relay';
 
 type Props = {
@@ -18,6 +20,7 @@ type Props = {
 };
 
 const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }: Props) => {
+  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [commitAddBooking] = useMutation<smallMonthlyViewCalendarDay_addBookingMutation>(graphql`
     mutation smallMonthlyViewCalendarDay_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
       addBooking(input: $input) {
@@ -71,7 +74,6 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-
   const renderDay = (props: PickersDayProps<Dayjs>): JSX.Element => {
     if (!rootData.monthlyBookings || !rootData.monthlyBookings.__id) {
       return <></>;
@@ -112,6 +114,8 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
                     anchorOrigin,
                   });
                 }
+
+                UpdateGlobalReloadId();
               },
               onError: (error) => {
                 enqueueSnackbar(`Failed to delete booking '${fromToPrint}'. Error: ${error.message}`, {
@@ -145,6 +149,8 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
                     anchorOrigin,
                   });
                 }
+
+                UpdateGlobalReloadId();
               },
               onError: (error) => {
                 enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {

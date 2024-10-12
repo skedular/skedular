@@ -17,6 +17,7 @@ import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewZoneDialog, ZoneCard } from 'components/zone';
 import debounce from 'lodash.debounce';
+import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -261,7 +262,7 @@ type RelayProps = {
 
 const LocationZonesTabWithRelay = ({ onReloadRequired, locationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationZonesTab_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -281,11 +282,11 @@ const LocationZonesTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, locationId]);
+  }, [loadQuery, triggerReloadId, locationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
 
       onReloadRequired();
     });

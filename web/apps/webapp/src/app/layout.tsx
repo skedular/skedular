@@ -6,13 +6,13 @@ import { GoogleAnalytics, GoogleTagManager } from '@repo/shared/libs/analytics';
 import { MuiXLicense } from '@repo/shared/libs/mui';
 import {
   DatePickerLocalizationProvider,
+  GlobalReloadIdProvider,
   GoogleAnalyticsProvider,
   LogRocketProvider,
   NextAuthProvider,
   PaletteModeContext,
   PaletteModeProvider,
   RelayProvider,
-  SelectedGlobalReloadIdProvider,
   SelectedOrganizationProvider,
   SnackbarProvider,
   ThemeProvider,
@@ -34,7 +34,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const paletteMode = useContext(PaletteModeContext);
 
   return (
-    <SelectedGlobalReloadIdProvider>
+    <GlobalReloadIdProvider>
       <AppRouterCacheProvider>
         <ThemeProvider mode={paletteMode}>
           <CssBaseline />
@@ -59,7 +59,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           </SelectedOrganizationProvider>
         </ThemeProvider>
       </AppRouterCacheProvider>
-    </SelectedGlobalReloadIdProvider>
+    </GlobalReloadIdProvider>
   );
 };
 

@@ -18,6 +18,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { BookingCard } from 'components/booking';
 import { NewBookingDialog } from 'components/booking/addBooking';
 import dayjs, { Dayjs } from 'dayjs';
+import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -320,7 +321,7 @@ type RelayProps = {
 
 const LocationBookingsTabWithRelay = ({ onReloadRequired, organizationId, locationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationBookingsTab_rootQuery>(RootQuery);
-  const [triggerReload, setTriggerReload] = useState(0);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
@@ -354,11 +355,11 @@ const LocationBookingsTabWithRelay = ({ onReloadRequired, organizationId, locati
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, organizationId, locationId]);
+  }, [loadQuery, triggerReloadId, organizationId, locationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReload(triggerReload + 1);
+      setTriggerReloadId(nanoid());
 
       onReloadRequired();
     });
