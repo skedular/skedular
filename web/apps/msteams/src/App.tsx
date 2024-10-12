@@ -15,7 +15,15 @@ import { AddOrganizationTeam } from 'app/organizations/organization/teams/add';
 import { OrganizationTeam } from 'app/organizations/organization/teams/team';
 import { Settings } from 'app/settings';
 import { Teams } from 'app/teams';
-import { DatePickerLocalizationProvider, LogRocketProvider, RelayProvider, SnackbarProvider, TeamsFxContext, ThemeProvider } from 'libs/providers';
+import {
+  DatePickerLocalizationProvider,
+  LogRocketProvider,
+  RelayProvider,
+  SelectedGlobalReloadIdProvider,
+  SnackbarProvider,
+  TeamsFxContext,
+  ThemeProvider,
+} from 'libs/providers';
 import { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './App.css';
@@ -115,18 +123,20 @@ const App = () => {
   return (
     <>
       <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
-        <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
-          <CssBaseline />
-          <SnackbarProvider>
-            <DatePickerLocalizationProvider>
-              <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>
-                <RelayProvider token={token}>
-                  <RouterProvider router={router} />
-                </RelayProvider>
-              </LogRocketProvider>
-            </DatePickerLocalizationProvider>
-          </SnackbarProvider>
-        </ThemeProvider>
+        <SelectedGlobalReloadIdProvider>
+          <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
+            <CssBaseline />
+            <SnackbarProvider>
+              <DatePickerLocalizationProvider>
+                <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>
+                  <RelayProvider token={token}>
+                    <RouterProvider router={router} />
+                  </RelayProvider>
+                </LogRocketProvider>
+              </DatePickerLocalizationProvider>
+            </SnackbarProvider>
+          </ThemeProvider>
+        </SelectedGlobalReloadIdProvider>
       </TeamsFxContext.Provider>
       <Analytics />
       <SpeedInsights />
