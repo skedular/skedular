@@ -28,9 +28,10 @@ import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toSh
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationLink } from 'components/organization';
 import { Dayjs } from 'dayjs';
+import { UpdateGlobalReloadIdContext } from 'libs/providers';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useState, useTransition } from 'react';
 import { useMutation, useRefetchableFragment } from 'react-relay';
 import type { organizationPeopleBookings_addBookingMutation } from './__generated__/organizationPeopleBookings_addBookingMutation.graphql';
 import type { organizationPeopleBookings_clearCustomerDefaultOrganizationMutation } from './__generated__/organizationPeopleBookings_clearCustomerDefaultOrganizationMutation.graphql';
@@ -291,6 +292,7 @@ const OrganizationPeopleBookings = ({
     }
   `);
 
+  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
@@ -536,6 +538,7 @@ const OrganizationPeopleBookings = ({
 
           handleRefetch(startDate);
           enqueueSnackbar(message, { variant: 'success', anchorOrigin });
+          UpdateGlobalReloadId();
         },
         onError: (error) => {
           enqueueSnackbar(`Failed to delete booking '${fromToPrint}'. Error: ${error.message}`, {
@@ -589,6 +592,7 @@ const OrganizationPeopleBookings = ({
 
           handleRefetch(startDate);
           enqueueSnackbar(message, { variant: 'success', anchorOrigin });
+          UpdateGlobalReloadId();
         },
         onError: (error) => {
           enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {

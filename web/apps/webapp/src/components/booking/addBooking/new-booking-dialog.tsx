@@ -8,13 +8,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import { DialogTransition } from '@repo/shared/components/transitions';
+import { UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useMemo, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { array, date, object, string } from 'yup';
@@ -101,8 +102,8 @@ const NewBookingDialog = ({
     }
   `);
 
+  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
-
   const schema = !!rootData.organizationBookingPermissions?.canAddBookingOnBehalf ? bookingSchema : bookingWithoutMemberSchema;
   const validate = makeValidate(schema);
   const requiredFields = makeRequired(schema);
@@ -154,6 +155,7 @@ const NewBookingDialog = ({
         }
 
         onAddClicked();
+        UpdateGlobalReloadId();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {

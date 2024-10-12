@@ -32,12 +32,13 @@ import { BookingIcon as BookingIconComponent } from '@repo/shared/components/boo
 import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useState, useTransition } from 'react';
 import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
 
 type Props = {
@@ -288,6 +289,7 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
     }
   `);
 
+  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
@@ -535,6 +537,7 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
 
           handleRefetch(startDate);
           enqueueSnackbar(message, { variant: 'success', anchorOrigin });
+          UpdateGlobalReloadId();
         },
         onError: (error) => {
           enqueueSnackbar(`Failed to delete booking '${fromToPrint}'. Error: ${error.message}`, {
@@ -589,6 +592,7 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
 
           handleRefetch(startDate);
           enqueueSnackbar(message, { variant: 'success', anchorOrigin });
+          UpdateGlobalReloadId();
         },
         onError: (error) => {
           enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {
