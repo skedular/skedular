@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b96e8253f6c5bd5ca0e9722a5419ea94>>
+ * @generated SignedSource<<be75d02506ed3414c4c1ad2775c8d488>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,34 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationPeopleBookings_query$data = {
-  readonly allBookings: ReadonlyArray<{
-    readonly customer: {
-      readonly familyName: string | null | undefined;
-      readonly givenName: string | null | undefined;
-      readonly middleName: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly photoUrl: string | null | undefined;
-      readonly uniqueId: string;
-    };
-    readonly desks: ReadonlyArray<{
-      readonly locationTags: ReadonlyArray<{
-        readonly name: string;
-        readonly tagType: string | null | undefined;
-        readonly uniqueId: string;
-      }>;
-      readonly name: string;
-    }>;
-    readonly from: any;
-    readonly id: string;
-    readonly location: {
-      readonly name: string;
-    } | null | undefined;
-    readonly team: {
-      readonly name: string;
-    } | null | undefined;
-    readonly to: any;
-  }> | null | undefined;
-  readonly customersByDefaultLocation?: ReadonlyArray<{
+  readonly customersByDefaultLocation: ReadonlyArray<{
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
     readonly id: string;
@@ -57,11 +30,11 @@ export type locationPeopleBookings_query$data = {
       readonly uniqueId: string;
     } | null | undefined;
   } | null | undefined;
-  readonly locationBookingPermissions?: {
+  readonly locationBookingPermissions: {
     readonly canAddBookingOnBehalf: boolean;
     readonly canDeleteBookingOnBehalf: boolean;
   } | null | undefined;
-  readonly locationMembers?: ReadonlyArray<{
+  readonly locationMembers: ReadonlyArray<{
     readonly customer: {
       readonly familyName: string | null | undefined;
       readonly givenName: string | null | undefined;
@@ -86,20 +59,15 @@ export type locationPeopleBookings_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = {
-  "kind": "Variable",
-  "name": "locationId",
-  "variableName": "locationId"
-},
+var v0 = [
+  {
+    "kind": "Variable",
+    "name": "locationId",
+    "variableName": "locationId"
+  }
+],
 v1 = {
-  "fields": [
-    (v0/*: any*/),
-    {
-      "kind": "Variable",
-      "name": "nameContains",
-      "variableName": "peopleNameSearchText"
-    }
-  ],
+  "fields": (v0/*: any*/),
   "kind": "ObjectValue",
   "name": "where"
 },
@@ -151,100 +119,47 @@ v8 = {
   "kind": "ScalarField",
   "name": "photoUrl",
   "storageKey": null
-},
-v9 = [
-  (v3/*: any*/),
-  (v4/*: any*/),
-  (v5/*: any*/),
-  (v6/*: any*/),
-  (v7/*: any*/),
-  (v8/*: any*/)
-],
-v10 = [
-  (v4/*: any*/)
-];
+};
 return {
   "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "from"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "locationExists"
-    },
     {
       "kind": "RootArgument",
       "name": "locationId"
     },
     {
       "kind": "RootArgument",
-      "name": "peopleNameSearchText"
-    },
-    {
-      "kind": "RootArgument",
       "name": "peopleSortingValues"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "to"
     }
   ],
   "kind": "Fragment",
-  "metadata": {
-    "refetch": {
-      "connection": null,
-      "fragmentPathInResult": [],
-      "operation": require('./locationPeopleBookingsLocationMembers_PaginationQuery.graphql')
-    }
-  },
+  "metadata": null,
   "name": "locationPeopleBookings_query",
   "selections": [
     {
-      "condition": "locationExists",
-      "kind": "Condition",
-      "passingValue": true,
-      "selections": [
+      "alias": null,
+      "args": [
         {
-          "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "orderBy",
-              "variableName": "peopleSortingValues"
-            },
-            (v1/*: any*/)
-          ],
-          "concreteType": "LocationMemberDetails",
-          "kind": "LinkedField",
-          "name": "locationMembers",
-          "plural": true,
-          "selections": [
-            (v2/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "LocationCustomerDetails",
-              "kind": "LinkedField",
-              "name": "customer",
-              "plural": false,
-              "selections": (v9/*: any*/),
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
+          "kind": "Variable",
+          "name": "orderBy",
+          "variableName": "peopleSortingValues"
         },
+        (v1/*: any*/)
+      ],
+      "concreteType": "LocationMemberDetails",
+      "kind": "LinkedField",
+      "name": "locationMembers",
+      "plural": true,
+      "selections": [
+        (v2/*: any*/),
         {
           "alias": null,
-          "args": [
-            (v1/*: any*/)
-          ],
-          "concreteType": "CustomerDetails",
+          "args": null,
+          "concreteType": "LocationCustomerDetails",
           "kind": "LinkedField",
-          "name": "customersByDefaultLocation",
-          "plural": true,
+          "name": "customer",
+          "plural": false,
           "selections": [
-            (v2/*: any*/),
+            (v3/*: any*/),
             (v4/*: any*/),
             (v5/*: any*/),
             (v6/*: any*/),
@@ -252,35 +167,28 @@ return {
             (v8/*: any*/)
           ],
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": [
-            (v0/*: any*/)
-          ],
-          "concreteType": "LocationBookingPermissions",
-          "kind": "LinkedField",
-          "name": "locationBookingPermissions",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "canAddBookingOnBehalf",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "canDeleteBookingOnBehalf",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
         }
-      ]
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": [
+        (v1/*: any*/)
+      ],
+      "concreteType": "CustomerDetails",
+      "kind": "LinkedField",
+      "name": "customersByDefaultLocation",
+      "plural": true,
+      "selections": [
+        (v2/*: any*/),
+        (v4/*: any*/),
+        (v5/*: any*/),
+        (v6/*: any*/),
+        (v7/*: any*/),
+        (v8/*: any*/)
+      ],
+      "storageKey": null
     },
     {
       "alias": null,
@@ -367,115 +275,24 @@ return {
     },
     {
       "alias": null,
-      "args": [
-        {
-          "fields": [
-            {
-              "kind": "Variable",
-              "name": "fromGTE",
-              "variableName": "from"
-            },
-            {
-              "items": [
-                {
-                  "kind": "Variable",
-                  "name": "locationIds.0",
-                  "variableName": "locationId"
-                }
-              ],
-              "kind": "ListValue",
-              "name": "locationIds"
-            },
-            {
-              "kind": "Variable",
-              "name": "toLT",
-              "variableName": "to"
-            }
-          ],
-          "kind": "ObjectValue",
-          "name": "where"
-        }
-      ],
-      "concreteType": "BookingDetails",
+      "args": (v0/*: any*/),
+      "concreteType": "LocationBookingPermissions",
       "kind": "LinkedField",
-      "name": "allBookings",
-      "plural": true,
+      "name": "locationBookingPermissions",
+      "plural": false,
       "selections": [
-        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "from",
+          "name": "canAddBookingOnBehalf",
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "to",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingCustomerDetails",
-          "kind": "LinkedField",
-          "name": "customer",
-          "plural": false,
-          "selections": (v9/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingLocationDetails",
-          "kind": "LinkedField",
-          "name": "location",
-          "plural": false,
-          "selections": (v10/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingTeamDetails",
-          "kind": "LinkedField",
-          "name": "team",
-          "plural": false,
-          "selections": (v10/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingDeskDetails",
-          "kind": "LinkedField",
-          "name": "desks",
-          "plural": true,
-          "selections": [
-            (v4/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "BookingLocationTagDetails",
-              "kind": "LinkedField",
-              "name": "locationTags",
-              "plural": true,
-              "selections": [
-                (v3/*: any*/),
-                (v4/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "tagType",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            }
-          ],
+          "name": "canDeleteBookingOnBehalf",
           "storageKey": null
         }
       ],
@@ -487,6 +304,6 @@ return {
 };
 })();
 
-(node as any).hash = "e726128cfca703c653334647ef255da7";
+(node as any).hash = "4551eacedaecb3d6e3ca740577f3af6d";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<00d7e2191ac7f3dbc953be829b935fbe>>
+ * @generated SignedSource<<42f425db08cbea0f35e61971305a109e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -88,7 +88,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./locations_PaginationQuery.graphql')
+      "operation": require('./locations_refetchableFragment.graphql')
     }
   },
   "name": "locations_query",
@@ -239,6 +239,6 @@ return {
 };
 })();
 
-(node as any).hash = "963fab1f357568bbf19e1b19d17b3e83";
+(node as any).hash = "0ed02916bfb2778f813f0d431cc89edf";
 
 export default node;

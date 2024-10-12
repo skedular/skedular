@@ -11,12 +11,12 @@ import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import type { notifications_query$key } from './__generated__/notifications_query.graphql';
 import type {
   NotificationOrderField,
   NotificationOrderInput,
-  notifications_PaginationQuery,
-} from './__generated__/notifications_PaginationQuery.graphql';
-import type { notifications_query$key } from './__generated__/notifications_query.graphql';
+  notifications_refetchableFragment,
+} from './__generated__/notifications_refetchableFragment.graphql';
 import type { notifications_rootQuery } from './__generated__/notifications_rootQuery.graphql';
 
 type Props = {
@@ -37,11 +37,11 @@ const Notifications = ({ queryReference }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<notifications_PaginationQuery, notifications_query$key>(
+  } = usePaginationFragment<notifications_refetchableFragment, notifications_query$key>(
     graphql`
       fragment notifications_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "notifications_PaginationQuery") {
+      @refetchable(queryName: "notifications_refetchableFragment") {
         myNotifications(first: $count, after: $cursor, orderBy: $myNotificationsSortingValues) @connection(key: "notifications_myNotifications") {
           __id
           totalCount

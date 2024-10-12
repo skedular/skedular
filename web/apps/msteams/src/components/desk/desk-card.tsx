@@ -753,7 +753,6 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
                 <DeskName name="name" required={requiredFields.name} />
                 <DeskMultipleChoicesZones
                   rootDataRelay={deskMultipleChoicesZonesData}
-                  locationId={locationId}
                   name="locationTagIds"
                   required={requiredFields.locationTagIds}
                 />

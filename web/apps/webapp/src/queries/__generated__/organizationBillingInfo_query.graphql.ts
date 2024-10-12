@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0544ba4a0540a3ab8c1d54b076008f0e>>
+ * @generated SignedSource<<b069830cb69046d45e6e84f24da25b56>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -45,7 +45,7 @@ const node: ReaderFragment = {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./organizationBillingInfoQuery.graphql')
+      "operation": require('./organizationBillingInfo_refetchableFragment.graphql')
     }
   },
   "name": "organizationBillingInfo_query",
@@ -166,6 +166,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "2820b61e72bec3d08ee52e63edc196f9";
+(node as any).hash = "21bcc26f06ca53378b25c31153f3c099";
 
 export default node;

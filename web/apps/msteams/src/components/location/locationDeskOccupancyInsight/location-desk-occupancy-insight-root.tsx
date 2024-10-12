@@ -26,6 +26,7 @@ type Props = {
 const RootQuery = graphql`
   query locationDeskOccupancyInsightRoot_rootQuery($locationId: String!, $locationExists: Boolean!, $from: DateTime!, $to: DateTime!) {
     ...locationDeskOccupancyInsight_query
+    ...locationDeskOccupancyInsight_locationAnalytics_query
   }
 `;
 
@@ -35,6 +36,7 @@ const LocationDeskOccupancyInsightRoot = ({ queryReference, onReloadRequired, or
   return (
     <LocationDeskOccupancyInsight
       rootDataRelay={rootData}
+      rootDataLocationAnalyticsRelay={rootData}
       organizationId={organizationId}
       locationId={locationId}
       hideLocationDetails={hideLocationDetails}

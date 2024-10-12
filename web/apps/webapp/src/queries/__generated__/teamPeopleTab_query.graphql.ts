@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2c564ea8a949514303ee87537249029>>
+ * @generated SignedSource<<fbc4acca90028a24acef0ef6d557151b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,16 +11,6 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type teamPeopleTab_query$data = {
-  readonly paginatedTeamMembers?: {
-    readonly __id: string;
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"teamMemberCard_TeamMemberDetails">;
-      };
-    }>;
-    readonly totalCount: number | null | undefined;
-  } | null | undefined;
   readonly team: {
     readonly about: string | null | undefined;
     readonly canModify: boolean;
@@ -47,24 +37,14 @@ export type teamPeopleTab_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  "paginatedTeamMembers"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v2 = {
+var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
+v1 = [
   {
     "alias": null,
     "args": null,
@@ -77,70 +57,11 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "bookingPeopleNameSearchText"
-    },
-    {
-      "defaultValue": 50,
-      "kind": "LocalArgument",
-      "name": "count"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "cursor"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationExists"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationMemberSelectorOrganizationMembersSortingValues"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "peopleNameSearchText"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "teamExists"
-    },
-    {
-      "kind": "RootArgument",
       "name": "teamId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "teamPeopleSortingValues"
     }
   ],
   "kind": "Fragment",
-  "metadata": {
-    "connection": [
-      {
-        "count": "count",
-        "cursor": "cursor",
-        "direction": "forward",
-        "path": (v0/*: any*/)
-      }
-    ],
-    "refetch": {
-      "connection": {
-        "forward": {
-          "count": "count",
-          "cursor": "cursor"
-        },
-        "backward": null,
-        "path": (v0/*: any*/)
-      },
-      "fragmentPathInResult": [],
-      "operation": require('./teamMembers_PaginationQuery.graphql')
-    }
-  },
+  "metadata": null,
   "name": "teamPeopleTab_query",
   "selections": [
     {
@@ -157,8 +78,14 @@ return {
       "name": "team",
       "plural": false,
       "selections": [
-        (v1/*: any*/),
-        (v2/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -174,7 +101,7 @@ return {
           "name": "organization",
           "plural": false,
           "selections": [
-            (v2/*: any*/)
+            (v0/*: any*/)
           ],
           "storageKey": null
         },
@@ -200,7 +127,7 @@ return {
               "kind": "LinkedField",
               "name": "customer",
               "plural": false,
-              "selections": (v3/*: any*/),
+              "selections": (v1/*: any*/),
               "storageKey": null
             },
             {
@@ -210,7 +137,7 @@ return {
               "kind": "LinkedField",
               "name": "organizationMember",
               "plural": false,
-              "selections": (v3/*: any*/),
+              "selections": (v1/*: any*/),
               "storageKey": null
             }
           ],
@@ -218,132 +145,6 @@ return {
         }
       ],
       "storageKey": null
-    },
-    {
-      "condition": "teamExists",
-      "kind": "Condition",
-      "passingValue": true,
-      "selections": [
-        {
-          "alias": "paginatedTeamMembers",
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "orderBy",
-              "variableName": "teamPeopleSortingValues"
-            },
-            {
-              "fields": [
-                {
-                  "kind": "Variable",
-                  "name": "nameContains",
-                  "variableName": "peopleNameSearchText"
-                },
-                {
-                  "kind": "Variable",
-                  "name": "teamId",
-                  "variableName": "teamId"
-                }
-              ],
-              "kind": "ObjectValue",
-              "name": "where"
-            }
-          ],
-          "concreteType": "TeamMemberConnection",
-          "kind": "LinkedField",
-          "name": "__teamPeopleTab_paginatedTeamMembers_connection",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "totalCount",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "TeamMemberEdge",
-              "kind": "LinkedField",
-              "name": "edges",
-              "plural": true,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "TeamMemberDetails",
-                  "kind": "LinkedField",
-                  "name": "node",
-                  "plural": false,
-                  "selections": [
-                    (v1/*: any*/),
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "teamMemberCard_TeamMemberDetails"
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "__typename",
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "cursor",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "PageInfo",
-              "kind": "LinkedField",
-              "name": "pageInfo",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "endCursor",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "hasNextPage",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
-              "kind": "ClientExtension",
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__id",
-                  "storageKey": null
-                }
-              ]
-            }
-          ],
-          "storageKey": null
-        }
-      ]
     },
     {
       "args": null,
@@ -361,6 +162,6 @@ return {
 };
 })();
 
-(node as any).hash = "027698dc4ef258a47864414565a88125";
+(node as any).hash = "cfcef1301345e064c87ceeb2e4e3ece1";
 
 export default node;

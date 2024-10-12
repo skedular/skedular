@@ -1,7 +1,11 @@
 import { getLocationAddLink } from '@/components/location';
 import { LocationBookingsCard } from '@/components/location/locationBookingCard';
-import type { LocationOrderField, LocationOrderInput, locations_PaginationQuery } from '@/queries/__generated__/locations_PaginationQuery.graphql';
 import type { locations_query$key } from '@/queries/__generated__/locations_query.graphql';
+import type {
+  LocationOrderField,
+  LocationOrderInput,
+  locations_refetchableFragment,
+} from '@/queries/__generated__/locations_refetchableFragment.graphql';
 import type { locations_rootQuery } from '@/queries/__generated__/locations_rootQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
@@ -44,11 +48,11 @@ const Locations = ({ queryReference }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<locations_PaginationQuery, locations_query$key>(
+  } = usePaginationFragment<locations_refetchableFragment, locations_query$key>(
     graphql`
       fragment locations_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locations_PaginationQuery") {
+      @refetchable(queryName: "locations_refetchableFragment") {
         locations(first: $count, after: $cursor, where: { nameContains: $locationNameSearchText }, orderBy: $locationsSortingValues)
           @connection(key: "locations_locations") {
           __id

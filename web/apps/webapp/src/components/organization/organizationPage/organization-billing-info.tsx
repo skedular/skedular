@@ -1,5 +1,5 @@
-import type { organizationBillingInfoQuery } from '@/queries/__generated__/organizationBillingInfoQuery.graphql';
 import type { organizationBillingInfo_query$key } from '@/queries/__generated__/organizationBillingInfo_query.graphql';
+import type { organizationBillingInfo_refetchableFragment } from '@/queries/__generated__/organizationBillingInfo_refetchableFragment.graphql';
 import type { organizationBillingInfo_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationBillingInfo_setOrganizationBillingInfoMutation.graphql';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -45,9 +45,9 @@ const organizationBillingInfoSchema = object({
 });
 
 const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment<organizationBillingInfoQuery, organizationBillingInfo_query$key>(
+  const [rootData, refetch] = useRefetchableFragment<organizationBillingInfo_refetchableFragment, organizationBillingInfo_query$key>(
     graphql`
-      fragment organizationBillingInfo_query on Query @refetchable(queryName: "organizationBillingInfoQuery") {
+      fragment organizationBillingInfo_query on Query @refetchable(queryName: "organizationBillingInfo_refetchableFragment") {
         organization(id: $organizationId) {
           id
           name

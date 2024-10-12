@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b1bb287839ee9b93004b73c2c9b688f>>
+ * @generated SignedSource<<219b8d7868ead9a2814c907661d29108>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,12 +15,6 @@ export type organizationBookingInsight_query$data = {
     readonly logoUrl: string | null | undefined;
     readonly name: string;
   } | null | undefined;
-  readonly organizationAnalytics: {
-    readonly dailyBookingsTotals: ReadonlyArray<{
-      readonly date: any;
-      readonly total: number;
-    }>;
-  } | null | undefined;
   readonly " $fragmentType": "organizationBookingInsight_query";
 };
 export type organizationBookingInsight_query$key = {
@@ -32,79 +26,13 @@ const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "from"
-    },
-    {
-      "kind": "RootArgument",
       "name": "organizationId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "to"
     }
   ],
   "kind": "Fragment",
-  "metadata": {
-    "refetch": {
-      "connection": null,
-      "fragmentPathInResult": [],
-      "operation": require('./organizationBookingInsight_organizationAnalytics.graphql')
-    }
-  },
+  "metadata": null,
   "name": "organizationBookingInsight_query",
   "selections": [
-    {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "from",
-          "variableName": "from"
-        },
-        {
-          "kind": "Variable",
-          "name": "organizationId",
-          "variableName": "organizationId"
-        },
-        {
-          "kind": "Variable",
-          "name": "until",
-          "variableName": "to"
-        }
-      ],
-      "concreteType": "OrganizationAnalytics",
-      "kind": "LinkedField",
-      "name": "organizationAnalytics",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationDailyBookingsTotal",
-          "kind": "LinkedField",
-          "name": "dailyBookingsTotals",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "date",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "total",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": [
@@ -141,6 +69,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "94b88194e3b5185712c1ea22a327415c";
+(node as any).hash = "e17ccbc6ff92626f43ce5b6261436eea";
 
 export default node;

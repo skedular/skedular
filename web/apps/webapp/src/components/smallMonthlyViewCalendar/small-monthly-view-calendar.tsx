@@ -1,5 +1,6 @@
 import { BookingCard } from '@/components/booking';
-import type { smallMonthlyViewCalendarPaginationQuery } from '@/queries/__generated__/smallMonthlyViewCalendarPaginationQuery.graphql';
+import type { smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment } from '@/queries/__generated__/smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment.graphql';
+import type { smallMonthlyViewCalendar_bookings_query$key } from '@/queries/__generated__/smallMonthlyViewCalendar_bookings_query.graphql';
 import type { smallMonthlyViewCalendar_query$key } from '@/queries/__generated__/smallMonthlyViewCalendar_query.graphql';
 import type { smallMonthlyViewCalendar_rootQuery } from '@/queries/__generated__/smallMonthlyViewCalendar_rootQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -25,7 +26,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, startTransition, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import SmallMonthlyViewCalendarDay from './small-monthly-view-calendar-day';
 
 type Props = {
@@ -48,6 +49,7 @@ const RootQuery = graphql`
     $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]
   ) {
     ...smallMonthlyViewCalendar_query
+    ...smallMonthlyViewCalendar_bookings_query
   }
 `;
 
@@ -58,32 +60,9 @@ type OrganizationDetails = {
 
 const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
   const rootDataRelay = usePreloadedQuery<smallMonthlyViewCalendar_rootQuery>(RootQuery, queryReference);
-  const { data: rootData, refetch } = usePaginationFragment<smallMonthlyViewCalendarPaginationQuery, smallMonthlyViewCalendar_query$key>(
+  const rootData = useFragment<smallMonthlyViewCalendar_query$key>(
     graphql`
-      fragment smallMonthlyViewCalendar_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 1000 })
-      @refetchable(queryName: "smallMonthlyViewCalendarPaginationQuery") {
-        monthlyBookings: bookings(
-          first: $count
-          after: $cursor
-          where: { fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true }
-
-          orderBy: $smallMonthlyViewCalendarBookingsSortingValues
-        ) @connection(key: "SmallMonthlyViewCalendar_monthlyBookings") {
-          __id
-          edges {
-            node {
-              id
-              from
-              to
-              notes
-              customer {
-                photoUrl
-              }
-              ...bookingCard_BookingDetails
-            }
-          }
-        }
+      fragment smallMonthlyViewCalendar_query on Query {
         me {
           id
           name
@@ -100,6 +79,38 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
           name
         }
         ...bookingCard_query
+      }
+    `,
+    rootDataRelay,
+  );
+  const { data: rootDataBookings, refetch } = usePaginationFragment<
+    smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment,
+    smallMonthlyViewCalendar_bookings_query$key
+  >(
+    graphql`
+      fragment smallMonthlyViewCalendar_bookings_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 1000 })
+      @refetchable(queryName: "smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment") {
+        bookings(
+          first: $count
+          after: $cursor
+          where: { fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true }
+          orderBy: $smallMonthlyViewCalendarBookingsSortingValues
+        ) @connection(key: "SmallMonthlyViewCalendar_bookings") {
+          __id
+          edges {
+            node {
+              id
+              from
+              to
+              notes
+              customer {
+                photoUrl
+              }
+              ...bookingCard_BookingDetails
+            }
+          }
+        }
       }
     `,
     rootDataRelay,
@@ -122,14 +133,14 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
     });
   }, [refetch, globalReloadId, date]);
 
-  const connectionIds = useMemo(() => (rootData.monthlyBookings ? [rootData.monthlyBookings.__id] : []), [rootData.monthlyBookings]);
+  const connectionIds = useMemo(() => (rootDataBookings.bookings ? [rootDataBookings.bookings.__id] : []), [rootDataBookings.bookings]);
 
   const nodes = useMemo(() => {
-    if (!rootData.monthlyBookings) {
+    if (!rootDataBookings.bookings) {
       return [];
     }
 
-    return rootData.monthlyBookings.edges
+    return rootDataBookings.bookings.edges
       .map((edge) => edge.node)
       .sort((node1, node2) => {
         if (dayjs(node1.from).isBefore(dayjs(node2.from))) {
@@ -142,7 +153,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
 
         return 0;
       });
-  }, [rootData.monthlyBookings]);
+  }, [rootDataBookings.bookings]);
 
   const [pageContextOpen, setPageContextOpen] = useState(false);
   const organizations = useMemo<OrganizationDetails[]>(
@@ -181,7 +192,8 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
           slots={{
             toolbar: EmptyCalendarToolbar,
             day: SmallMonthlyViewCalendarDay({
-              rootData: rootData,
+              rootData,
+              rootDataBookings,
               connectionIds,
               organizationId: selectedOrganization ? selectedOrganization.id : undefined,
             }),

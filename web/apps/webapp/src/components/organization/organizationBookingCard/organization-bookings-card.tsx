@@ -22,14 +22,13 @@ type Props = {
 
 const RootQuery = graphql`
   query organizationBookingsCard_rootQuery(
-    $peopleNameSearchText: String
     $peopleSortingValues: [OrganizationMemberOrderInput!]!
     $organizationId: String!
-    $organizationExists: Boolean!
     $from: DateTime!
     $to: DateTime!
   ) {
     ...organizationPeopleBookings_query
+    ...organizationPeopleBookings_allBookings_query
   }
 `;
 
@@ -45,6 +44,7 @@ const OrganizationBookingsCard = ({
   return (
     <OrganizationPeopleBookings
       rootDataRelay={rootData}
+      rootDataAllBookingsRelay={rootData}
       organizationId={organizationId}
       organizationName={organizationName}
       organizationsConnectionIds={organizationsConnectionIds}
@@ -83,7 +83,6 @@ const OrganizationBookingsWithRelay = ({
           },
         ],
         organizationId,
-        organizationExists: !!organizationId,
         from: startDate.toISOString(),
         to: endDate.toISOString(),
       },

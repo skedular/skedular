@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<47584f688c847bd8950b9c821449ddf5>>
+ * @generated SignedSource<<86acd002c8a8d9709f1f7e15043b0c50>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,13 +26,12 @@ export type locationDesksTab_rootQuery$variables = {
   deskNameSearchText?: string | null | undefined;
   deskSortingValues: ReadonlyArray<DeskOrderInput>;
   fromToGetBookings?: any | null | undefined;
-  locationExists: boolean;
   locationId: string;
   toToGetBookings?: any | null | undefined;
   zoneTagType: string;
 };
 export type locationDesksTab_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_allBookings_query" | "locationDesksTab_paginatedLocationDesks_query" | "locationDesksTab_query">;
 };
 export type locationDesksTab_rootQuery = {
   response: locationDesksTab_rootQuery$data;
@@ -63,88 +62,88 @@ v3 = {
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "locationExists"
+  "name": "locationId"
 },
 v5 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "locationId"
+  "name": "toToGetBookings"
 },
 v6 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "toToGetBookings"
-},
-v7 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
   "name": "zoneTagType"
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v9 = {
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "uniqueId",
+  "storageKey": null
+},
+v9 = [
+  (v8/*: any*/)
+],
+v10 = {
   "kind": "Variable",
   "name": "locationId",
   "variableName": "locationId"
 },
-v10 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 50
-  },
+v11 = [
   {
     "kind": "Variable",
     "name": "orderBy",
-    "variableName": "deskSortingValues"
+    "variableName": "deskMultipleChoicesZonesSortingValues"
   },
   {
     "fields": [
-      (v9/*: any*/),
+      (v10/*: any*/),
       {
         "kind": "Variable",
-        "name": "nameContains",
-        "variableName": "deskNameSearchText"
+        "name": "tagType",
+        "variableName": "zoneTagType"
       }
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v14 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v15 = {
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -169,7 +168,7 @@ v15 = {
   ],
   "storageKey": null
 },
-v16 = {
+v17 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -181,38 +180,33 @@ v16 = {
     }
   ]
 },
-v17 = [
+v18 = [
   "where",
   "orderBy"
 ],
-v18 = [
+v19 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 50
+  },
   {
     "kind": "Variable",
     "name": "orderBy",
-    "variableName": "deskMultipleChoicesZonesSortingValues"
+    "variableName": "deskSortingValues"
   },
   {
     "fields": [
-      (v9/*: any*/),
+      (v10/*: any*/),
       {
         "kind": "Variable",
-        "name": "tagType",
-        "variableName": "zoneTagType"
+        "name": "nameContains",
+        "variableName": "deskNameSearchText"
       }
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
-],
-v19 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-},
-v20 = [
-  (v19/*: any*/)
 ];
 return {
   "fragment": {
@@ -223,8 +217,7 @@ return {
       (v3/*: any*/),
       (v4/*: any*/),
       (v5/*: any*/),
-      (v6/*: any*/),
-      (v7/*: any*/)
+      (v6/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -234,6 +227,16 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "locationDesksTab_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "locationDesksTab_paginatedLocationDesks_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "locationDesksTab_allBookings_query"
       }
     ],
     "type": "Query",
@@ -242,11 +245,10 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v5/*: any*/),
       (v4/*: any*/),
-      (v7/*: any*/),
-      (v3/*: any*/),
       (v6/*: any*/),
+      (v3/*: any*/),
+      (v5/*: any*/),
       (v1/*: any*/),
       (v2/*: any*/),
       (v0/*: any*/)
@@ -275,141 +277,9 @@ return {
             "name": "canModify",
             "storageKey": null
           },
-          (v8/*: any*/)
+          (v7/*: any*/)
         ],
         "storageKey": null
-      },
-      {
-        "condition": "locationExists",
-        "kind": "Condition",
-        "passingValue": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": (v10/*: any*/),
-            "concreteType": "DeskConnection",
-            "kind": "LinkedField",
-            "name": "paginatedLocationDesks",
-            "plural": false,
-            "selections": [
-              (v11/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "DeskEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "DeskDetails",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v8/*: any*/),
-                      (v12/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "deactivated",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "requireBookingApproval",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "LocationTagDetails",
-                        "kind": "LinkedField",
-                        "name": "locationTags",
-                        "plural": true,
-                        "selections": [
-                          (v8/*: any*/),
-                          (v12/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      (v13/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  (v14/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v15/*: any*/),
-              (v16/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": (v10/*: any*/),
-            "filters": (v17/*: any*/),
-            "handle": "connection",
-            "key": "locationDesksTab_paginatedLocationDesks",
-            "kind": "LinkedHandle",
-            "name": "paginatedLocationDesks"
-          },
-          {
-            "alias": null,
-            "args": (v18/*: any*/),
-            "concreteType": "LocationTagConnection",
-            "kind": "LinkedField",
-            "name": "paginatedLocationTags",
-            "plural": false,
-            "selections": [
-              (v11/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "LocationTagEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "LocationTagDetails",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v8/*: any*/),
-                      (v12/*: any*/),
-                      (v13/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  (v14/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v15/*: any*/),
-              (v16/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": (v18/*: any*/),
-            "filters": (v17/*: any*/),
-            "handle": "connection",
-            "key": "locationZonesTab_paginatedLocationTags",
-            "kind": "LinkedHandle",
-            "name": "paginatedLocationTags"
-          }
-        ]
       },
       {
         "alias": null,
@@ -419,7 +289,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v8/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -427,11 +297,136 @@ return {
             "kind": "LinkedField",
             "name": "preferredDesks",
             "plural": true,
-            "selections": (v20/*: any*/),
+            "selections": (v9/*: any*/),
             "storageKey": null
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v11/*: any*/),
+        "concreteType": "LocationTagConnection",
+        "kind": "LinkedField",
+        "name": "paginatedLocationTags",
+        "plural": false,
+        "selections": [
+          (v12/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "LocationTagEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "LocationTagDetails",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v7/*: any*/),
+                  (v13/*: any*/),
+                  (v14/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v15/*: any*/)
+            ],
+            "storageKey": null
+          },
+          (v16/*: any*/),
+          (v17/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v11/*: any*/),
+        "filters": (v18/*: any*/),
+        "handle": "connection",
+        "key": "locationZonesTab_paginatedLocationTags",
+        "kind": "LinkedHandle",
+        "name": "paginatedLocationTags"
+      },
+      {
+        "alias": null,
+        "args": (v19/*: any*/),
+        "concreteType": "DeskConnection",
+        "kind": "LinkedField",
+        "name": "paginatedLocationDesks",
+        "plural": false,
+        "selections": [
+          (v12/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "DeskEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "DeskDetails",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v7/*: any*/),
+                  (v13/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "deactivated",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "requireBookingApproval",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "LocationTagDetails",
+                    "kind": "LinkedField",
+                    "name": "locationTags",
+                    "plural": true,
+                    "selections": [
+                      (v7/*: any*/),
+                      (v13/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v14/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v15/*: any*/)
+            ],
+            "storageKey": null
+          },
+          (v16/*: any*/),
+          (v17/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v19/*: any*/),
+        "filters": (v18/*: any*/),
+        "handle": "connection",
+        "key": "locationDesksTab_paginatedLocationDesks",
+        "kind": "LinkedHandle",
+        "name": "paginatedLocationDesks"
       },
       {
         "alias": null,
@@ -469,7 +464,7 @@ return {
         "name": "allBookings",
         "plural": true,
         "selections": [
-          (v8/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -478,8 +473,8 @@ return {
             "name": "customer",
             "plural": false,
             "selections": [
-              (v19/*: any*/),
-              (v12/*: any*/),
+              (v8/*: any*/),
+              (v13/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -518,7 +513,7 @@ return {
             "kind": "LinkedField",
             "name": "desks",
             "plural": true,
-            "selections": (v20/*: any*/),
+            "selections": (v9/*: any*/),
             "storageKey": null
           }
         ],
@@ -527,16 +522,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6b32e6a68c6d858c9caf092d339aee7a",
+    "cacheID": "edef6bfb61b02689dd31c9c0f9016609",
     "id": null,
     "metadata": {},
     "name": "locationDesksTab_rootQuery",
     "operationKind": "query",
-    "text": "query locationDesksTab_rootQuery(\n  $locationId: String!\n  $locationExists: Boolean!\n  $zoneTagType: String!\n  $fromToGetBookings: DateTime\n  $toToGetBookings: DateTime\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]!\n  $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]\n) {\n  ...locationDesksTab_query\n}\n\nfragment bulkNewDeskDialog_query on Query {\n  ...deskMultipleChoicesZones_query\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  locationTags {\n    id\n    name\n  }\n}\n\nfragment deskCard_query on Query {\n  me {\n    id\n    preferredDesks {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    canModify\n    id\n  }\n}\n\nfragment deskMultipleChoicesZones_query on Query {\n  paginatedLocationTags(where: {locationId: $locationId, tagType: $zoneTagType}, orderBy: $deskMultipleChoicesZonesSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationDesksTab_query on Query {\n  location(id: $locationId) {\n    canModify\n    id\n  }\n  paginatedLocationDesks(first: 50, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...deskCard_query\n  ...deskMultipleChoicesZones_query\n  allBookings(where: {locationIds: [$locationId], fromGTE: $fromToGetBookings, toLTE: $toToGetBookings}) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    desks {\n      uniqueId\n    }\n  }\n  ...newDeskDialog_query\n  ...bulkNewDeskDialog_query\n}\n\nfragment newDeskDialog_query on Query {\n  ...deskMultipleChoicesZones_query\n}\n"
+    "text": "query locationDesksTab_rootQuery(\n  $locationId: String!\n  $zoneTagType: String!\n  $fromToGetBookings: DateTime\n  $toToGetBookings: DateTime\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]!\n  $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]\n) {\n  ...locationDesksTab_query\n  ...locationDesksTab_paginatedLocationDesks_query\n  ...locationDesksTab_allBookings_query\n}\n\nfragment bulkNewDeskDialog_query on Query {\n  ...deskMultipleChoicesZones_query\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  locationTags {\n    id\n    name\n  }\n}\n\nfragment deskCard_query on Query {\n  me {\n    id\n    preferredDesks {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    canModify\n    id\n  }\n}\n\nfragment deskMultipleChoicesZones_query on Query {\n  paginatedLocationTags(where: {locationId: $locationId, tagType: $zoneTagType}, orderBy: $deskMultipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationDesksTab_allBookings_query on Query {\n  allBookings(where: {locationIds: [$locationId], fromGTE: $fromToGetBookings, toLTE: $toToGetBookings}) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    desks {\n      uniqueId\n    }\n  }\n}\n\nfragment locationDesksTab_paginatedLocationDesks_query on Query {\n  paginatedLocationDesks(first: 50, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationDesksTab_query on Query {\n  location(id: $locationId) {\n    canModify\n    id\n  }\n  ...deskCard_query\n  ...deskMultipleChoicesZones_query\n  ...newDeskDialog_query\n  ...bulkNewDeskDialog_query\n}\n\nfragment newDeskDialog_query on Query {\n  ...deskMultipleChoicesZones_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6bf1ae52bf1cb5c4691cabc3622f9580";
+(node as any).hash = "0087e316f8c728f52dd6a91313683210";
 
 export default node;

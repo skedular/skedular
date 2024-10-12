@@ -129,12 +129,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           render={({ handleSubmit }) => (
             <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
               <DeskName name="name" required={requiredFields.name} />
-              <DeskMultipleChoicesZones
-                rootDataRelay={rootData}
-                locationId={locationId}
-                name="locationTagIds"
-                required={requiredFields.locationTagIds}
-              />
+              <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
               <DialogActions>
                 <Button color="secondary" variant="contained" onClick={onCancelClicked}>
                   Cancel

@@ -10,25 +10,21 @@ import graphql from 'babel-plugin-relay/macro';
 import { OrganizationLink } from 'components/organization';
 import { Dayjs } from 'dayjs';
 import { memo, useCallback, useTransition } from 'react';
-import { useRefetchableFragment } from 'react-relay';
+import { useFragment, useRefetchableFragment } from 'react-relay';
+import type { organizationBookingInsight_organizationAnalytics_query$key } from './__generated__/organizationBookingInsight_organizationAnalytics_query.graphql';
 import type { organizationBookingInsight_query$key } from './__generated__/organizationBookingInsight_query.graphql';
 
 type Props = {
   rootDataRelay: organizationBookingInsight_query$key;
+  rootDataOrganizationAnalyticsRelay: organizationBookingInsight_organizationAnalytics_query$key;
   organizationId: string;
   hideOrganizationDetails?: boolean;
 };
 
-const OrganizationBookingInsight = ({ rootDataRelay, organizationId, hideOrganizationDetails }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment(
+const OrganizationBookingInsight = ({ rootDataRelay, rootDataOrganizationAnalyticsRelay, organizationId, hideOrganizationDetails }: Props) => {
+  const rootData = useFragment(
     graphql`
-      fragment organizationBookingInsight_query on Query @refetchable(queryName: "organizationBookingInsight_organizationAnalytics") {
-        organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {
-          dailyBookingsTotals {
-            date
-            total
-          }
-        }
+      fragment organizationBookingInsight_query on Query {
         organization(id: $organizationId) {
           name
           logoUrl
@@ -36,6 +32,21 @@ const OrganizationBookingInsight = ({ rootDataRelay, organizationId, hideOrganiz
       }
     `,
     rootDataRelay,
+  );
+
+  const [rootDataOrganizationAnalytics, refetch] = useRefetchableFragment(
+    graphql`
+      fragment organizationBookingInsight_organizationAnalytics_query on Query
+      @refetchable(queryName: "organizationBookingInsight_organizationAnalytics_refetchableFragment") {
+        organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {
+          dailyBookingsTotals {
+            date
+            total
+          }
+        }
+      }
+    `,
+    rootDataOrganizationAnalyticsRelay,
   );
 
   const [, startTransition] = useTransition();
@@ -62,14 +73,14 @@ const OrganizationBookingInsight = ({ rootDataRelay, organizationId, hideOrganiz
     handleRefetch(from, until);
   };
 
-  if (!rootData.organizationAnalytics) {
+  if (!rootDataOrganizationAnalytics.organizationAnalytics) {
     return <></>;
   }
 
   const dataset =
-    rootData.organizationAnalytics.dailyBookingsTotals.length === 0
+    rootDataOrganizationAnalytics.organizationAnalytics.dailyBookingsTotals.length === 0
       ? [{ date: 'No data available', percentage: 0 }]
-      : rootData.organizationAnalytics.dailyBookingsTotals.map(({ date, total }) => ({
+      : rootDataOrganizationAnalytics.organizationAnalytics.dailyBookingsTotals.map(({ date, total }) => ({
           date: toDayAndMonthDate(date),
           total,
         }));

@@ -25,6 +25,7 @@ type Props = {
 const RootQuery = graphql`
   query locationBookingInsightRoot_rootQuery($locationId: String!, $locationExists: Boolean!, $from: DateTime!, $to: DateTime!) {
     ...locationBookingInsight_query
+    ...locationBookingInsight_locationAnalytics_query
   }
 `;
 
@@ -34,6 +35,7 @@ const LocationBookingInsightRoot = ({ queryReference, onReloadRequired, organiza
   return (
     <LocationBookingInsight
       rootDataRelay={rootData}
+      rootDataLocationAnalyticsRelay={rootData}
       organizationId={organizationId}
       locationId={locationId}
       hideLocationDetails={hideLocationDetails}

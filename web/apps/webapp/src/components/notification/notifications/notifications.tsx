@@ -1,10 +1,10 @@
 import { NotificationCard } from '@/components/notification';
+import type { notifications_query$key } from '@/queries/__generated__/notifications_query.graphql';
 import type {
   NotificationOrderField,
   NotificationOrderInput,
-  notifications_PaginationQuery,
-} from '@/queries/__generated__/notifications_PaginationQuery.graphql';
-import type { notifications_query$key } from '@/queries/__generated__/notifications_query.graphql';
+  notifications_refetchableFragment,
+} from '@/queries/__generated__/notifications_refetchableFragment.graphql';
 import type { notifications_rootQuery } from '@/queries/__generated__/notifications_rootQuery.graphql';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
@@ -36,11 +36,11 @@ const Notifications = ({ queryReference }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<notifications_PaginationQuery, notifications_query$key>(
+  } = usePaginationFragment<notifications_refetchableFragment, notifications_query$key>(
     graphql`
       fragment notifications_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "notifications_PaginationQuery") {
+      @refetchable(queryName: "notifications_refetchableFragment") {
         myNotifications(first: $count, after: $cursor, orderBy: $myNotificationsSortingValues) @connection(key: "notifications_myNotifications") {
           __id
           totalCount

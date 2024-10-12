@@ -21,10 +21,15 @@ import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { TeamOrderField, TeamOrderInput, organizationTeams_PaginationQuery } from './__generated__/organizationTeams_PaginationQuery.graphql';
+import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { organizationTeamsTab_query$key } from './__generated__/organizationTeamsTab_query.graphql';
 import type { organizationTeamsTab_rootQuery } from './__generated__/organizationTeamsTab_rootQuery.graphql';
+import type { organizationTeamsTab_teams_query$key } from './__generated__/organizationTeamsTab_teams_query.graphql';
+import type {
+  TeamOrderField,
+  TeamOrderInput,
+  organizationTeamsTab_teams_refetchableFragment,
+} from './__generated__/organizationTeamsTab_teams_refetchableFragment.graphql';
 
 type Props = {
   queryReference: PreloadedQuery<organizationTeamsTab_rootQuery, Record<string, unknown>>;
@@ -34,21 +39,33 @@ type Props = {
 const RootQuery = graphql`
   query organizationTeamsTab_rootQuery($organizationId: String!, $organizationTeamsSortingValues: [TeamOrderInput!]!, $teamNameSearchText: String) {
     ...organizationTeamsTab_query
+    ...organizationTeamsTab_teams_query
   }
 `;
 
 const OrganizationTeamsTab = ({ queryReference }: Props) => {
   const rootDataRelay = usePreloadedQuery<organizationTeamsTab_rootQuery>(RootQuery, queryReference);
+  const rootData = useFragment<organizationTeamsTab_query$key>(
+    graphql`
+      fragment organizationTeamsTab_query on Query {
+        organization(id: $organizationId) {
+          id
+          canModify
+        }
+      }
+    `,
+    rootDataRelay,
+  );
   const {
-    data: rootData,
+    data: rootDataTeams,
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationTeams_PaginationQuery, organizationTeamsTab_query$key>(
+  } = usePaginationFragment<organizationTeamsTab_teams_refetchableFragment, organizationTeamsTab_teams_query$key>(
     graphql`
-      fragment organizationTeamsTab_query on Query
+      fragment organizationTeamsTab_teams_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationTeams_PaginationQuery") {
+      @refetchable(queryName: "organizationTeamsTab_teams_refetchableFragment") {
         teams(
           first: $count
           after: $cursor
@@ -67,10 +84,6 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
               }
             }
           }
-        }
-        organization(id: $organizationId) {
-          id
-          canModify
         }
       }
     `,
@@ -132,8 +145,8 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => (rootData.teams ? [rootData.teams.__id] : []), [rootData.teams]);
-  const teamEdges = rootData.teams ? rootData.teams.edges : [];
+  const connectionIds = useMemo(() => (rootDataTeams.teams ? [rootDataTeams.teams.__id] : []), [rootDataTeams.teams]);
+  const teamEdges = rootDataTeams.teams ? rootDataTeams.teams.edges : [];
   const slicedEdges = teamEdges.slice(page * pageSize, page * pageSize + pageSize > teamEdges.length ? teamEdges.length : page * pageSize + pageSize);
 
   const handleSortingChanged = (direction: Direction, value: string) => {
@@ -196,7 +209,7 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
 
       <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
         <TablePagination
-          count={rootData.teams?.totalCount ? rootData.teams.totalCount : 0}
+          count={rootDataTeams.teams?.totalCount ? rootDataTeams.teams.totalCount : 0}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={pageSize}

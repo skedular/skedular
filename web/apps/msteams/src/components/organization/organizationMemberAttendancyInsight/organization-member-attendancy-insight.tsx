@@ -11,26 +11,26 @@ import graphql from 'babel-plugin-relay/macro';
 import { OrganizationLink } from 'components/organization';
 import { Dayjs } from 'dayjs';
 import { memo, useCallback, useTransition } from 'react';
-import { useRefetchableFragment } from 'react-relay';
+import { useFragment, useRefetchableFragment } from 'react-relay';
+import type { organizationMemberAttendancyInsight_organizationAnalytics_query$key } from './__generated__/organizationMemberAttendancyInsight_organizationAnalytics_query.graphql';
 import type { organizationMemberAttendancyInsight_query$key } from './__generated__/organizationMemberAttendancyInsight_query.graphql';
 
 type Props = {
   rootDataRelay: organizationMemberAttendancyInsight_query$key;
+  rootDataOrganizationAnalyticsRelay: organizationMemberAttendancyInsight_organizationAnalytics_query$key;
   organizationId: string;
   hideOrganizationDetails?: boolean;
 };
 
-const OrganizationMemberAttendancyInsight = ({ rootDataRelay, organizationId, hideOrganizationDetails }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment(
+const OrganizationMemberAttendancyInsight = ({
+  rootDataRelay,
+  rootDataOrganizationAnalyticsRelay,
+  organizationId,
+  hideOrganizationDetails,
+}: Props) => {
+  const rootData = useFragment(
     graphql`
-      fragment organizationMemberAttendancyInsight_query on Query
-      @refetchable(queryName: "organizationMemberAttendancyInsight_organizationAnalytics") {
-        organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {
-          memberAttendancePercentage {
-            date
-            percentage
-          }
-        }
+      fragment organizationMemberAttendancyInsight_query on Query {
         organization(id: $organizationId) {
           name
           logoUrl
@@ -38,6 +38,21 @@ const OrganizationMemberAttendancyInsight = ({ rootDataRelay, organizationId, hi
       }
     `,
     rootDataRelay,
+  );
+
+  const [rootDataOrganizationAnalytics, refetch] = useRefetchableFragment(
+    graphql`
+      fragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query
+      @refetchable(queryName: "organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment") {
+        organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {
+          memberAttendancePercentage {
+            date
+            percentage
+          }
+        }
+      }
+    `,
+    rootDataOrganizationAnalyticsRelay,
   );
 
   const [, startTransition] = useTransition();
@@ -64,14 +79,14 @@ const OrganizationMemberAttendancyInsight = ({ rootDataRelay, organizationId, hi
     handleRefetch(from, until);
   };
 
-  if (!rootData.organizationAnalytics) {
+  if (!rootDataOrganizationAnalytics.organizationAnalytics) {
     return <> </>;
   }
 
   const dataset =
-    rootData.organizationAnalytics.memberAttendancePercentage.length === 0
+    rootDataOrganizationAnalytics.organizationAnalytics.memberAttendancePercentage.length === 0
       ? [{ date: 'No data available', percentage: 0 }]
-      : rootData.organizationAnalytics.memberAttendancePercentage.map(({ date, percentage }) => ({
+      : rootDataOrganizationAnalytics.organizationAnalytics.memberAttendancePercentage.map(({ date, percentage }) => ({
           date: toDayAndMonthDate(date),
           percentage: toFixed(percentage, 2),
         }));

@@ -1,4 +1,7 @@
-import type { bookingDetailsSelectorQuery } from '@/queries/__generated__/bookingDetailsSelectorQuery.graphql';
+import type { bookingDetailsSelector_availableLocationDesks_query$key } from '@/queries/__generated__/bookingDetailsSelector_availableLocationDesks_query.graphql';
+import type { bookingDetailsSelector_availableLocationDesks_refetchableFragment } from '@/queries/__generated__/bookingDetailsSelector_availableLocationDesks_refetchableFragment.graphql';
+import type { bookingDetailsSelector_paginatedOrganizationMembers_query$key } from '@/queries/__generated__/bookingDetailsSelector_paginatedOrganizationMembers_query.graphql';
+import type { bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment } from '@/queries/__generated__/bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment.graphql';
 import type { bookingDetailsSelector_query$key } from '@/queries/__generated__/bookingDetailsSelector_query.graphql';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -10,10 +13,12 @@ import { Dayjs } from 'dayjs';
 import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { graphql, useFragment, usePaginationFragment, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: bookingDetailsSelector_query$key;
+  rootDataPaginatedOrganizationMembersRelay: bookingDetailsSelector_paginatedOrganizationMembers_query$key;
+  rootDataAvailableLocationDesksRelay: bookingDetailsSelector_availableLocationDesks_query$key;
 
   defaultOrganizationId?: string;
   organizationName: string;
@@ -75,6 +80,8 @@ type DeskDetails = {
 
 const BookingDetailsSelector = ({
   rootDataRelay,
+  rootDataPaginatedOrganizationMembersRelay,
+  rootDataAvailableLocationDesksRelay,
 
   defaultOrganizationId,
   organizationName,
@@ -98,38 +105,35 @@ const BookingDetailsSelector = ({
   bookingFrom,
   bookingTo,
 }: Props) => {
-  const { data: rootData, refetch } = usePaginationFragment<bookingDetailsSelectorQuery, bookingDetailsSelector_query$key>(
+  const rootData = useFragment<bookingDetailsSelector_query$key>(
     graphql`
-      fragment bookingDetailsSelector_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
-      @refetchable(queryName: "bookingDetailsSelectorQuery") {
+      fragment bookingDetailsSelector_query on Query {
         myOrganizations {
           id
           name
         }
-
         myLocations(organizationId: $organizationId) {
           id
           name
         }
-
-        availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks)
-          @include(if: $locationExists) {
-          uniqueId
-          name
-          locationTags {
-            uniqueId
-            name
-            tagType
-          }
-        }
-
-        bookingDetailsSelectorQueryPaginatedOrganizationMembers: paginatedOrganizationMembers(
+      }
+    `,
+    rootDataRelay,
+  );
+  const { data: rootDataPaginatedOrganizationMembers, refetch: refetchPaginatedOrganizationMembers } = usePaginationFragment<
+    bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment,
+    bookingDetailsSelector_paginatedOrganizationMembers_query$key
+  >(
+    graphql`
+      fragment bookingDetailsSelector_paginatedOrganizationMembers_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
+      @refetchable(queryName: "bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment") {
+        paginatedOrganizationMembers(
           first: $count
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText }
           orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues
-        ) @connection(key: "bookingDetailsSelectorQuery_bookingDetailsSelectorQueryPaginatedOrganizationMembers") @include(if: $organizationExists) {
+        ) @connection(key: "bookingDetailsSelectorQuery_paginatedOrganizationMembers") @include(if: $organizationExists) {
           __id
           totalCount
           edges {
@@ -148,7 +152,29 @@ const BookingDetailsSelector = ({
         }
       }
     `,
-    rootDataRelay,
+    rootDataPaginatedOrganizationMembersRelay,
+  );
+
+  const [rootDataAvailableLocationDesks, refetchAvailableLocationDesks] = useRefetchableFragment<
+    bookingDetailsSelector_availableLocationDesks_refetchableFragment,
+    bookingDetailsSelector_availableLocationDesks_query$key
+  >(
+    graphql`
+      fragment bookingDetailsSelector_availableLocationDesks_query on Query
+      @refetchable(queryName: "bookingDetailsSelector_availableLocationDesks_refetchableFragment") {
+        availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks)
+          @include(if: $locationExists) {
+          uniqueId
+          name
+          locationTags {
+            uniqueId
+            name
+            tagType
+          }
+        }
+      }
+    `,
+    rootDataAvailableLocationDesksRelay,
   );
 
   const [, startTransition] = useTransition();
@@ -163,12 +189,12 @@ const BookingDetailsSelector = ({
   );
 
   const customers = useMemo<OrganizationMemberDetails[]>(() => {
-    if (!rootData.bookingDetailsSelectorQueryPaginatedOrganizationMembers) {
+    if (!rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers) {
       return [];
     }
 
-    return rootData.bookingDetailsSelectorQueryPaginatedOrganizationMembers.edges.map(({ node }) => node);
-  }, [rootData.bookingDetailsSelectorQueryPaginatedOrganizationMembers]);
+    return rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.edges.map(({ node }) => node);
+  }, [rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers]);
 
   const locations = useMemo<LocationDetails[]>(
     () => (rootData.myLocations ? rootData.myLocations.map((location) => location) : []),
@@ -176,11 +202,11 @@ const BookingDetailsSelector = ({
   );
 
   const desks = useMemo<DeskDetails[]>(() => {
-    if (!rootData.availableLocationDesks) {
+    if (!rootDataAvailableLocationDesks.availableLocationDesks) {
       return [];
     }
 
-    return rootData.availableLocationDesks.map(({ uniqueId, name, locationTags }) => ({
+    return rootDataAvailableLocationDesks.availableLocationDesks.map(({ uniqueId, name, locationTags }) => ({
       uniqueId,
       name,
       zones: locationTags
@@ -190,17 +216,35 @@ const BookingDetailsSelector = ({
           name,
         })),
     }));
-  }, [rootData.availableLocationDesks]);
+  }, [rootDataAvailableLocationDesks.availableLocationDesks]);
 
-  const handleRefetch = useCallback(
-    (bookingPeopleNameSearchText: string, deskIds: string[], organizationId?: string, locationId?: string) => {
+  const handleRefetchPaginatedOrganizationMembers = useCallback(
+    (bookingPeopleNameSearchText: string, organizationId?: string) => {
       startTransition(() => {
-        refetch(
+        refetchPaginatedOrganizationMembers(
           {
             count: pageSize,
             bookingPeopleNameSearchText,
             organizationId: organizationId ?? '',
             organizationExists: !!organizationId,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
+    },
+    [refetchPaginatedOrganizationMembers, pageSize],
+  );
+
+  const handleRefetchAvailableLocationDesks = useCallback(
+    (deskIds: string[], locationId?: string) => {
+      startTransition(() => {
+        refetchAvailableLocationDesks(
+          {
             locationId: locationId ?? '',
             locationExists: !!locationId,
             deskIdsToIncludeToGetAvailableDesks: deskIds,
@@ -215,13 +259,23 @@ const BookingDetailsSelector = ({
         );
       });
     },
-    [refetch, pageSize, bookingFrom],
+    [refetchAvailableLocationDesks, bookingFrom],
   );
 
-  // Workaround to ensure we have all the entire form refreshed once any dependent values change
+  // Workaround to ensure we have the entire form refreshed once any dependent values change
   useEffect(() => {
-    handleRefetch(bookingPeopleNameSearchText, defaultDeskIds, organizationId, locationId);
-  }, [handleRefetch, bookingPeopleNameSearchText, organizationId, locationId, bookingFrom, bookingTo, defaultDeskIds]);
+    handleRefetchPaginatedOrganizationMembers(bookingPeopleNameSearchText, organizationId);
+    handleRefetchAvailableLocationDesks(defaultDeskIds, locationId);
+  }, [
+    handleRefetchPaginatedOrganizationMembers,
+    handleRefetchAvailableLocationDesks,
+    bookingPeopleNameSearchText,
+    organizationId,
+    locationId,
+    bookingFrom,
+    bookingTo,
+    defaultDeskIds,
+  ]);
 
   const filterOrganization = createFilterOptions<OrganizationDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
@@ -230,19 +284,19 @@ const BookingDetailsSelector = ({
   const handleOrganizationChange = (option: OrganizationDetails | null) => {
     const id = option?.id;
     setOrganizationId(id);
-    handleRefetch(bookingPeopleNameSearchText, defaultDeskIds, id, locationId);
+    handleRefetchPaginatedOrganizationMembers(bookingPeopleNameSearchText, id);
   };
 
   const handleLocationChange = (option: LocationDetails | null) => {
     const id = option?.id;
     setLocationId(id);
-    handleRefetch(bookingPeopleNameSearchText, defaultDeskIds, organizationId, id);
+    handleRefetchAvailableLocationDesks(defaultDeskIds, id);
   };
 
   const handleSearchTextChange = (str: string) => {
     setBookingPeopleNameSearchText(str);
 
-    handleRefetch(str, defaultDeskIds, organizationId, locationId);
+    handleRefetchPaginatedOrganizationMembers(str, organizationId);
   };
 
   const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6cf686ef9e035bd37005922689111ef1>>
+ * @generated SignedSource<<7d2dcc527d6a0011d0ba0912f4ae940f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,7 +29,7 @@ export type locationPeopleTab_rootQuery$variables = {
   peopleNameSearchText?: string | null | undefined;
 };
 export type locationPeopleTab_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationPeopleTab_query" | "locationPeopleTab_query_organizationMembers">;
+  readonly " $fragmentSpreads": FragmentRefs<"locationPeopleTab_paginatedCustomersByDefaultLocation_query" | "locationPeopleTab_paginatedLocationMembers_query" | "locationPeopleTab_query">;
 };
 export type locationPeopleTab_rootQuery = {
   response: locationPeopleTab_rootQuery$data;
@@ -226,7 +226,12 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "locationPeopleTab_query_organizationMembers"
+        "name": "locationPeopleTab_paginatedLocationMembers_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "locationPeopleTab_paginatedCustomersByDefaultLocation_query"
       }
     ],
     "type": "Query",
@@ -261,6 +266,13 @@ return {
           (v5/*: any*/),
           (v6/*: any*/)
         ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "locationMemberMembershipTypes",
         "storageKey": null
       },
       {
@@ -393,27 +405,20 @@ return {
             "name": "paginatedCustomersByDefaultLocation"
           }
         ]
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "locationMemberMembershipTypes",
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "947dc718fb92754ab39faa08d6908a79",
+    "cacheID": "1cafc4e944bf9dd141b93573fb6cd41c",
     "id": null,
     "metadata": {},
     "name": "locationPeopleTab_rootQuery",
     "operationKind": "query",
-    "text": "query locationPeopleTab_rootQuery(\n  $locationId: String!\n  $locationExists: Boolean!\n  $peopleNameSearchText: String\n  $locationPeopleSortingValues: [LocationMemberOrderInput!]\n  $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]\n) {\n  ...locationPeopleTab_query\n  ...locationPeopleTab_query_organizationMembers\n}\n\nfragment customerCard_CustomerDetails on CustomerDetails {\n  name\n  givenName\n  middleName\n  familyName\n  photoUrl\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationPeopleTab_query on Query {\n  location(id: $locationId) {\n    id\n    name\n  }\n  paginatedLocationMembers(first: 50, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationPeopleSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...locationSingleChoiceMembershipType_query\n}\n\nfragment locationPeopleTab_query_organizationMembers on Query {\n  paginatedCustomersByDefaultLocation(first: 50, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationOrganizationPeopleSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...customerCard_CustomerDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationSingleChoiceMembershipType_query on Query {\n  locationMemberMembershipTypes\n}\n"
+    "text": "query locationPeopleTab_rootQuery(\n  $locationId: String!\n  $locationExists: Boolean!\n  $peopleNameSearchText: String\n  $locationPeopleSortingValues: [LocationMemberOrderInput!]\n  $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]\n) {\n  ...locationPeopleTab_query\n  ...locationPeopleTab_paginatedLocationMembers_query\n  ...locationPeopleTab_paginatedCustomersByDefaultLocation_query\n}\n\nfragment customerCard_CustomerDetails on CustomerDetails {\n  name\n  givenName\n  middleName\n  familyName\n  photoUrl\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationPeopleTab_paginatedCustomersByDefaultLocation_query on Query {\n  paginatedCustomersByDefaultLocation(first: 50, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationOrganizationPeopleSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...customerCard_CustomerDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationPeopleTab_paginatedLocationMembers_query on Query {\n  paginatedLocationMembers(first: 50, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationPeopleSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationPeopleTab_query on Query {\n  location(id: $locationId) {\n    id\n    name\n  }\n  ...locationSingleChoiceMembershipType_query\n}\n\nfragment locationSingleChoiceMembershipType_query on Query {\n  locationMemberMembershipTypes\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d1b53be3975a1d0f718bf672a10bd602";
+(node as any).hash = "885ff4201f613c0ecb5081f9dc1f81dd";
 
 export default node;

@@ -21,8 +21,13 @@ import dayjs, { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { BookingOrderField, BookingOrderInput, teamBookings_PaginationQuery } from './__generated__/teamBookings_PaginationQuery.graphql';
+import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import type { teamBookingsTab_bookings_query$key } from './__generated__/teamBookingsTab_bookings_query.graphql';
+import type {
+  BookingOrderField,
+  BookingOrderInput,
+  teamBookingsTab_bookings_refetchableFragment,
+} from './__generated__/teamBookingsTab_bookings_refetchableFragment.graphql';
 import type { teamBookingsTab_query$key } from './__generated__/teamBookingsTab_query.graphql';
 import type { teamBookingsTab_rootQuery } from './__generated__/teamBookingsTab_rootQuery.graphql';
 
@@ -49,21 +54,34 @@ const RootQuery = graphql`
     $bookingsSearchCriteriaTo: DateTime!
   ) {
     ...teamBookingsTab_query
+    ...teamBookingsTab_bookings_query
   }
 `;
 
 const TeamBookingsTab = ({ queryReference, organizationId, teamId }: Props) => {
   const rootDataRelay = usePreloadedQuery<teamBookingsTab_rootQuery>(RootQuery, queryReference);
+  const rootData = useFragment<teamBookingsTab_query$key>(
+    graphql`
+      fragment teamBookingsTab_query on Query {
+        me {
+          id
+        }
+        ...bookingCard_query
+        ...newBookingDialog_query
+      }
+    `,
+    rootDataRelay,
+  );
   const {
-    data: rootData,
+    data: rootDataBookings,
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<teamBookings_PaginationQuery, teamBookingsTab_query$key>(
+  } = usePaginationFragment<teamBookingsTab_bookings_refetchableFragment, teamBookingsTab_bookings_query$key>(
     graphql`
-      fragment teamBookingsTab_query on Query
+      fragment teamBookingsTab_bookings_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "teamBookings_PaginationQuery") {
+      @refetchable(queryName: "teamBookingsTab_bookings_refetchableFragment") {
         bookings(
           first: $count
           after: $cursor
@@ -84,11 +102,6 @@ const TeamBookingsTab = ({ queryReference, organizationId, teamId }: Props) => {
             }
           }
         }
-        me {
-          id
-        }
-        ...bookingCard_query
-        ...newBookingDialog_query
       }
     `,
     rootDataRelay,
@@ -152,20 +165,20 @@ const TeamBookingsTab = ({ queryReference, organizationId, teamId }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => (rootData.bookings ? [rootData.bookings.__id] : []), [rootData.bookings]);
+  const connectionIds = useMemo(() => (rootDataBookings.bookings ? [rootDataBookings.bookings.__id] : []), [rootDataBookings.bookings]);
   const bookings = useMemo(() => {
-    if (!rootData.bookings) {
+    if (!rootDataBookings.bookings) {
       return [];
     }
 
-    const bookingEdges = rootData.bookings.edges;
+    const bookingEdges = rootDataBookings.bookings.edges;
     const slicedEdges = bookingEdges.slice(
       page * pageSize,
       page * pageSize + pageSize > bookingEdges.length ? bookingEdges.length : page * pageSize + pageSize,
     );
 
     return slicedEdges.map(({ node }) => node);
-  }, [page, pageSize, rootData.bookings]);
+  }, [page, pageSize, rootDataBookings.bookings]);
 
   const handleAddBookingClick = () => {
     setIsAddBookingDialogOpen(true);
@@ -213,7 +226,7 @@ const TeamBookingsTab = ({ queryReference, organizationId, teamId }: Props) => {
     }
   };
 
-  if (!rootData.me || !rootData.bookings) {
+  if (!rootData.me || !rootDataBookings.bookings) {
     return <></>;
   }
 
@@ -241,7 +254,7 @@ const TeamBookingsTab = ({ queryReference, organizationId, teamId }: Props) => {
 
         <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
           <TablePagination
-            count={rootData.bookings.totalCount ? rootData.bookings.totalCount : 0}
+            count={rootDataBookings.bookings.totalCount ? rootDataBookings.bookings.totalCount : 0}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={pageSize}
@@ -328,11 +341,11 @@ const TeamBookingsTabWithRelay = ({ onReloadRequired, organizationId, teamId }: 
     loadQuery(
       {
         organizationId: organizationId ?? '',
+        organizationExists: !!organizationId,
         teamId,
         locationId: '',
         locationExists: false,
         deskIdsToIncludeToGetAvailableDesks: [],
-        organizationExists: false,
         bookingSortingValues: [
           {
             direction: 'Ascending',

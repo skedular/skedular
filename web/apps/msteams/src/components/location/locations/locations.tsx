@@ -22,8 +22,8 @@ import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { LocationOrderField, LocationOrderInput, locations_PaginationQuery } from './__generated__/locations_PaginationQuery.graphql';
 import type { locations_query$key } from './__generated__/locations_query.graphql';
+import type { LocationOrderField, LocationOrderInput, locations_refetchableFragment } from './__generated__/locations_refetchableFragment.graphql';
 import type { locations_rootQuery } from './__generated__/locations_rootQuery.graphql';
 
 type Props = {
@@ -45,11 +45,11 @@ const Locations = ({ queryReference, organizationId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<locations_PaginationQuery, locations_query$key>(
+  } = usePaginationFragment<locations_refetchableFragment, locations_query$key>(
     graphql`
       fragment locations_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locations_PaginationQuery") {
+      @refetchable(queryName: "locations_refetchableFragment") {
         locations(
           first: $count
           after: $cursor

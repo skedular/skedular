@@ -1,10 +1,11 @@
 import { OrganizationMemberSelector } from '@/components/organization';
+import type { teamPeopleTab_inviteCustomersToJoinTeamMutation } from '@/queries/__generated__/teamPeopleTab_inviteCustomersToJoinTeamMutation.graphql';
+import type { teamPeopleTab_paginatedTeamMembers_query$key } from '@/queries/__generated__/teamPeopleTab_paginatedTeamMembers_query.graphql';
 import type {
   TeamMemberOrderField,
   TeamMemberOrderInput,
-  teamMembers_PaginationQuery,
-} from '@/queries/__generated__/teamMembers_PaginationQuery.graphql';
-import type { teamPeopleTab_inviteCustomersToJoinTeamMutation } from '@/queries/__generated__/teamPeopleTab_inviteCustomersToJoinTeamMutation.graphql';
+  teamPeopleTab_paginatedTeamMembers_refetchableFragment,
+} from '@/queries/__generated__/teamPeopleTab_paginatedTeamMembers_refetchableFragment.graphql';
 import type { teamPeopleTab_query$key } from '@/queries/__generated__/teamPeopleTab_query.graphql';
 import type { teamPeopleTab_rootQuery } from '@/queries/__generated__/teamPeopleTab_rootQuery.graphql';
 import type { teamPeopleTab_updateTeamMutation } from '@/queries/__generated__/teamPeopleTab_updateTeamMutation.graphql';
@@ -38,7 +39,7 @@ import { useSnackbar } from 'notistack';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { PreloadedQuery, graphql, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, graphql, useFragment, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { array, object, string } from 'yup';
 import TeamMemberCard from './team-member-card';
 
@@ -61,6 +62,7 @@ const RootQuery = graphql`
     $peopleNameSearchText: String
   ) {
     ...teamPeopleTab_query
+    ...teamPeopleTab_paginatedTeamMembers_query
   }
 `;
 
@@ -91,16 +93,9 @@ const membersToInviteSchema = object({
 
 const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
   const rootDataRelay = usePreloadedQuery<teamPeopleTab_rootQuery>(RootQuery, queryReference);
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<teamMembers_PaginationQuery, teamPeopleTab_query$key>(
+  const rootData = useFragment<teamPeopleTab_query$key>(
     graphql`
-      fragment teamPeopleTab_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "teamMembers_PaginationQuery") {
+      fragment teamPeopleTab_query on Query {
         team(id: $teamId) {
           id
           name
@@ -118,6 +113,22 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
             }
           }
         }
+        ...teamMemberCard_query
+        ...organizationMemberSelector_query
+      }
+    `,
+    rootDataRelay,
+  );
+  const {
+    data: rootDataPaginatedTeamMembers,
+    loadNext,
+    isLoadingNext,
+    refetch,
+  } = usePaginationFragment<teamPeopleTab_paginatedTeamMembers_refetchableFragment, teamPeopleTab_paginatedTeamMembers_query$key>(
+    graphql`
+      fragment teamPeopleTab_paginatedTeamMembers_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
+      @refetchable(queryName: "teamPeopleTab_paginatedTeamMembers_refetchableFragment") {
         paginatedTeamMembers(
           first: $count
           after: $cursor
@@ -133,8 +144,6 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
             }
           }
         }
-        ...teamMemberCard_query
-        ...organizationMemberSelector_query
       }
     `,
     rootDataRelay,
@@ -234,7 +243,10 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  useMemo(() => (rootData.paginatedTeamMembers ? [rootData.paginatedTeamMembers.__id] : []), [rootData.paginatedTeamMembers]);
+  useMemo(
+    () => (rootDataPaginatedTeamMembers.paginatedTeamMembers ? [rootDataPaginatedTeamMembers.paginatedTeamMembers.__id] : []),
+    [rootDataPaginatedTeamMembers.paginatedTeamMembers],
+  );
 
   // Workaround to ensure we have all the zones if new zones added using zone dialog
   useEffect(() => {
@@ -349,12 +361,12 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
     setInvitePeopleDialogOpen(false);
   };
 
-  if (!rootData.team || !rootData.paginatedTeamMembers) {
+  if (!rootData.team || !rootDataPaginatedTeamMembers.paginatedTeamMembers) {
     return <></>;
   }
 
-  const teamMemberEdges = rootData.paginatedTeamMembers.edges;
-  const count = rootData.paginatedTeamMembers.totalCount ? rootData.paginatedTeamMembers.totalCount : 0;
+  const teamMemberEdges = rootDataPaginatedTeamMembers.paginatedTeamMembers.edges;
+  const count = rootDataPaginatedTeamMembers.paginatedTeamMembers.totalCount ? rootDataPaginatedTeamMembers.paginatedTeamMembers.totalCount : 0;
   const slicedrEdges = teamMemberEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > teamMemberEdges.length ? teamMemberEdges.length : page * pageSize + pageSize,
@@ -555,7 +567,7 @@ const TeamPeopleTabWithRelay = ({ onReloadRequired, organizationId, teamId }: Re
         teamId,
         teamExists: !!teamId,
         organizationId: organizationId ?? '',
-        organizationExists: false,
+        organizationExists: !!organizationId,
         teamPeopleSortingValues: [
           {
             direction: 'Ascending',

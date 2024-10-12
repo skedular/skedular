@@ -1,5 +1,12 @@
 import { BulkNewDeskDialog, DeskCard, NewDeskDialog } from '@/components/desk';
-import type { DeskOrderField, DeskOrderInput, desks_PaginationQuery } from '@/queries/__generated__/desks_PaginationQuery.graphql';
+import type { locationDesksTab_allBookings_query$key } from '@/queries/__generated__/locationDesksTab_allBookings_query.graphql';
+import type { locationDesksTab_allBookings_refetchableFragment } from '@/queries/__generated__/locationDesksTab_allBookings_refetchableFragment.graphql';
+import type { locationDesksTab_paginatedLocationDesks_query$key } from '@/queries/__generated__/locationDesksTab_paginatedLocationDesks_query.graphql';
+import type {
+  DeskOrderField,
+  DeskOrderInput,
+  locationDesksTab_paginatedLocationDesks_refetchableFragment,
+} from '@/queries/__generated__/locationDesksTab_paginatedLocationDesks_refetchableFragment.graphql';
 import type { locationDesksTab_query$key } from '@/queries/__generated__/locationDesksTab_query.graphql';
 import type { locationDesksTab_rootQuery } from '@/queries/__generated__/locationDesksTab_rootQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -26,7 +33,7 @@ import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   queryReference: PreloadedQuery<locationDesksTab_rootQuery, Record<string, unknown>>;
@@ -37,7 +44,6 @@ type Props = {
 const RootQuery = graphql`
   query locationDesksTab_rootQuery(
     $locationId: String!
-    $locationExists: Boolean!
     $zoneTagType: String!
     $fromToGetBookings: DateTime
     $toToGetBookings: DateTime
@@ -46,30 +52,43 @@ const RootQuery = graphql`
     $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
   ) {
     ...locationDesksTab_query
+    ...locationDesksTab_paginatedLocationDesks_query
+    ...locationDesksTab_allBookings_query
   }
 `;
 
 const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<locationDesksTab_rootQuery>(RootQuery, queryReference);
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<desks_PaginationQuery, locationDesksTab_query$key>(
+  const rootData = useFragment<locationDesksTab_query$key>(
     graphql`
-      fragment locationDesksTab_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "desks_PaginationQuery") {
+      fragment locationDesksTab_query on Query {
         location(id: $locationId) {
           canModify
         }
+        ...deskCard_query
+        ...deskMultipleChoicesZones_query
+        ...newDeskDialog_query
+        ...bulkNewDeskDialog_query
+      }
+    `,
+    rootDataRelay,
+  );
+  const {
+    data: rootDataRefetchPaginatedLocationDesks,
+    loadNext: loadNextRefetchPaginatedLocationDesks,
+    isLoadingNext: isLoadingNextrefetchPaginatedLocationDesks,
+    refetch: refetchPaginatedLocationDesks,
+  } = usePaginationFragment<locationDesksTab_paginatedLocationDesks_refetchableFragment, locationDesksTab_paginatedLocationDesks_query$key>(
+    graphql`
+      fragment locationDesksTab_paginatedLocationDesks_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
+      @refetchable(queryName: "locationDesksTab_paginatedLocationDesks_refetchableFragment") {
         paginatedLocationDesks(
           first: $count
           after: $cursor
           where: { locationId: $locationId, nameContains: $deskNameSearchText }
           orderBy: $deskSortingValues
-        ) @connection(key: "locationDesksTab_paginatedLocationDesks") @include(if: $locationExists) {
+        ) @connection(key: "locationDesksTab_paginatedLocationDesks") {
           __id
           totalCount
           edges {
@@ -79,8 +98,16 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
             }
           }
         }
-        ...deskCard_query
-        ...deskMultipleChoicesZones_query
+      }
+    `,
+    rootDataRelay,
+  );
+  const [rootDatarefetchAllBookings, refetchAllBookings] = useRefetchableFragment<
+    locationDesksTab_allBookings_refetchableFragment,
+    locationDesksTab_allBookings_query$key
+  >(
+    graphql`
+      fragment locationDesksTab_allBookings_query on Query @refetchable(queryName: "locationDesksTab_allBookings_refetchableFragment") {
         allBookings(where: { locationIds: [$locationId], fromGTE: $fromToGetBookings, toLTE: $toToGetBookings }) {
           id
           customer {
@@ -95,8 +122,6 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
             uniqueId
           }
         }
-        ...newDeskDialog_query
-        ...bulkNewDeskDialog_query
       }
     `,
     rootDataRelay,
@@ -125,34 +150,23 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
 
     setPageSize(parseInt(event.target.value, 10));
 
-    handleRefetch(pageSize, sortingOrder, selectedDate, deskNameSearchText);
+    handleRefetchPaginatedLocationDesks(pageSize, sortingOrder, deskNameSearchText);
   };
 
   const handleSelectedDateChange = (date: Dayjs | null) => {
     setSelectedDate(date);
 
-    handleRefetch(pageSize, sortingOrder, date, deskNameSearchText);
+    handleRefetchAllBookings(date);
   };
 
-  const handleRefetch = useCallback(
-    (pageSize: number, order: DeskOrderInput, date: Dayjs | null, deskNameSearchText: string) => {
-      let fromToGetBookings: string | null = null;
-      let toToGetBookings: string | null = null;
-
-      if (date) {
-        fromToGetBookings = startOfDay(date).toISOString();
-        toToGetBookings = endOfDay(date).toISOString();
-      }
-
+  const handleRefetchPaginatedLocationDesks = useCallback(
+    (pageSize: number, order: DeskOrderInput, deskNameSearchText: string) => {
       startTransition(() => {
-        refetch(
+        refetchPaginatedLocationDesks(
           {
             count: pageSize,
             deskSortingValues: [order],
             locationId,
-            locationExists: !!locationId,
-            fromToGetBookings,
-            toToGetBookings,
             deskNameSearchText,
           },
           {
@@ -164,38 +178,67 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
         );
       });
     },
-    [refetch, locationId],
+    [refetchPaginatedLocationDesks, locationId],
+  );
+
+  const handleRefetchAllBookings = useCallback(
+    (date: Dayjs | null) => {
+      let fromToGetBookings: string | null = null;
+      let toToGetBookings: string | null = null;
+
+      if (date) {
+        fromToGetBookings = startOfDay(date).toISOString();
+        toToGetBookings = endOfDay(date).toISOString();
+      }
+
+      startTransition(() => {
+        refetchAllBookings(
+          {
+            locationId,
+            fromToGetBookings,
+            toToGetBookings,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
+    },
+    [refetchAllBookings, locationId],
   );
 
   const loadNextPage = useCallback(() => {
-    if (isLoadingNext) {
+    if (isLoadingNextrefetchPaginatedLocationDesks) {
       return;
     }
 
-    loadNext(pageSize);
-  }, [loadNext, isLoadingNext, pageSize]);
+    loadNextRefetchPaginatedLocationDesks(pageSize);
+  }, [loadNextRefetchPaginatedLocationDesks, isLoadingNextrefetchPaginatedLocationDesks, pageSize]);
 
   const [deskNameSearchText, setDeskNameSearchText] = useState<string>('');
   const handleSearchTextChange = (str: string) => {
     setDeskNameSearchText(str);
 
-    handleRefetch(pageSize, sortingOrder, selectedDate, str);
+    handleRefetchPaginatedLocationDesks(pageSize, sortingOrder, str);
   };
 
   const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
   const connectionIds = useMemo(
-    () => (rootData.paginatedLocationDesks ? [rootData.paginatedLocationDesks.__id] : []),
-    [rootData.paginatedLocationDesks],
+    () => (rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks ? [rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.__id] : []),
+    [rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks],
   );
   const [isAddDeskDialogOpen, setIsAddDeskDialogOpen] = useState(false);
   const [isBulkAddDeskDialogOpen, setIsBulkAddDeskDialogOpen] = useState(false);
   const [pageContextOpen, setPageContextOpen] = useState(false);
 
-  if (!rootData.location || !rootData.paginatedLocationDesks) {
+  if (!rootData.location || !rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks) {
     return <></>;
   }
 
-  const desks = rootData.paginatedLocationDesks.edges;
+  const desks = rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.edges;
   const slicedEdges = desks.slice(page * pageSize, page * pageSize + pageSize > desks.length ? desks.length : page * pageSize + pageSize);
 
   const handlePageContextOpenStateChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -213,7 +256,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
   const handleAddDeskDialogAddClick = () => {
     setIsAddDeskDialogOpen(false);
 
-    handleRefetch(pageSize, sortingOrder, selectedDate, deskNameSearchText);
+    handleRefetchPaginatedLocationDesks(pageSize, sortingOrder, deskNameSearchText);
   };
 
   const handleAddDeskDialogCancelClick = () => {
@@ -227,7 +270,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
   const handleBulkAddDeskDialogAddClick = () => {
     setIsBulkAddDeskDialogOpen(false);
 
-    handleRefetch(pageSize, sortingOrder, selectedDate, deskNameSearchText);
+    handleRefetchPaginatedLocationDesks(pageSize, sortingOrder, deskNameSearchText);
   };
 
   const handleBulkAddDeskDialogCancelClick = () => {
@@ -240,13 +283,12 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
       field: value as unknown as DeskOrderField,
     });
 
-    handleRefetch(
+    handleRefetchPaginatedLocationDesks(
       pageSize,
       {
         direction,
         field: value as unknown as DeskOrderField,
       },
-      selectedDate,
       deskNameSearchText,
     );
   };
@@ -287,7 +329,11 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
 
       <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
         <TablePagination
-          count={rootData.paginatedLocationDesks.totalCount ? rootData.paginatedLocationDesks.totalCount : 0}
+          count={
+            rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.totalCount
+              ? rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.totalCount
+              : 0
+          }
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={pageSize}
@@ -303,7 +349,9 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
 
       <Grid container spacing={1}>
         {slicedEdges.map((edge) => {
-          const foundBooking = rootData.allBookings?.find((booking) => booking.desks.find(({ uniqueId }) => uniqueId === edge.node.id));
+          const foundBooking = rootDatarefetchAllBookings.allBookings?.find((booking) =>
+            booking.desks.find(({ uniqueId }) => uniqueId === edge.node.id),
+          );
 
           return (
             <Grid key={edge.node.id}>
@@ -360,7 +408,6 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
     loadQuery(
       {
         locationId,
-        locationExists: !!locationId,
         zoneTagType: TAG_TYPE_LOCATION_ZONE,
         fromToGetBookings: from,
         toToGetBookings: to,

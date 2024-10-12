@@ -28,21 +28,22 @@ import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toSh
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationLink } from 'components/organization';
 import { Dayjs } from 'dayjs';
-import { UpdateGlobalReloadIdContext } from 'libs/providers';
+import { GlobalReloadIdContext, UpdateGlobalReloadIdContext } from 'libs/providers';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useContext, useState, useTransition } from 'react';
-import { useMutation, useRefetchableFragment } from 'react-relay';
+import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import type { organizationPeopleBookings_addBookingMutation } from './__generated__/organizationPeopleBookings_addBookingMutation.graphql';
+import type { organizationPeopleBookings_allBookings_query$key } from './__generated__/organizationPeopleBookings_allBookings_query.graphql';
 import type { organizationPeopleBookings_clearCustomerDefaultOrganizationMutation } from './__generated__/organizationPeopleBookings_clearCustomerDefaultOrganizationMutation.graphql';
 import type { organizationPeopleBookings_deleteBookingMutation } from './__generated__/organizationPeopleBookings_deleteBookingMutation.graphql';
 import type { organizationPeopleBookings_deleteOrganizationMutation } from './__generated__/organizationPeopleBookings_deleteOrganizationMutation.graphql';
 import type { organizationPeopleBookings_query$key } from './__generated__/organizationPeopleBookings_query.graphql';
 import type { organizationPeopleBookings_setCustomerDefaultOrganizationMutation } from './__generated__/organizationPeopleBookings_setCustomerDefaultOrganizationMutation.graphql';
-import type { OrganizationMemberOrderInput } from './__generated__/organizationPeopleBookingsOrganizationMembers_PaginationQuery.graphql';
 
 type Props = {
   rootDataRelay: organizationPeopleBookings_query$key;
+  rootDataAllBookingsRelay: organizationPeopleBookings_allBookings_query$key;
   organizationId: string;
   organizationName?: string;
   organizationsConnectionIds: string[];
@@ -149,16 +150,16 @@ const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Find a per
 
 const OrganizationPeopleBookings = ({
   rootDataRelay,
+  rootDataAllBookingsRelay,
   organizationId,
   organizationName,
   organizationsConnectionIds,
   hideRemoveOrganizationOption,
 }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment(
+  const rootData = useFragment(
     graphql`
-      fragment organizationPeopleBookings_query on Query @refetchable(queryName: "organizationPeopleBookingsOrganizationMembers_PaginationQuery") {
-        organizationMembers(where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }, orderBy: $peopleSortingValues)
-          @include(if: $organizationExists) {
+      fragment organizationPeopleBookings_query on Query {
+        organizationMembers(where: { organizationId: $organizationId }, orderBy: $peopleSortingValues) {
           id
           customer {
             uniqueId
@@ -182,10 +183,19 @@ const OrganizationPeopleBookings = ({
           canModify
           canDelete
         }
-        organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {
+        organizationBookingPermissions(organizationId: $organizationId) {
           canAddBookingOnBehalf
           canDeleteBookingOnBehalf
         }
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [rootDataAllBookings, refetch] = useRefetchableFragment(
+    graphql`
+      fragment organizationPeopleBookings_allBookings_query on Query
+      @refetchable(queryName: "organizationPeopleBookings_allBookings_refetchableFragment") {
         allBookings(where: { organizationIds: [$organizationId], fromGTE: $from, toLT: $to }) {
           id
           from
@@ -215,7 +225,7 @@ const OrganizationPeopleBookings = ({
         }
       }
     `,
-    rootDataRelay,
+    rootDataAllBookingsRelay,
   );
 
   const [commitAddBooking] = useMutation<organizationPeopleBookings_addBookingMutation>(graphql`
@@ -292,20 +302,15 @@ const OrganizationPeopleBookings = ({
     }
   `);
 
+  const globalReloadId = useContext(GlobalReloadIdContext);
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
   const [, startTransition] = useTransition();
-  const [sortingOrganizationMemberOrder] = useState<OrganizationMemberOrderInput>({
-    direction: 'Ascending',
-    field: 'name',
-  });
   const [organizationRemoveConfirmationDialogOpen, setOrganizationRemoveConfirmationDialogOpen] = useState(false);
   const [startDate, setStartDate] = useState<Dayjs>(startOfWeek());
-  const [peopleNameSearchText] = useState<string>('');
-
   const handleRefetch = useCallback(
     (startDate: Dayjs) => {
       startTransition(() => {
@@ -313,10 +318,6 @@ const OrganizationPeopleBookings = ({
 
         refetch(
           {
-            peopleSortingValues: [sortingOrganizationMemberOrder],
-            peopleNameSearchText,
-            organizationId,
-            organizationExists: !!organizationId,
             from: startDate.toISOString(),
             to: endDate.toISOString(),
           },
@@ -326,8 +327,12 @@ const OrganizationPeopleBookings = ({
         );
       });
     },
-    [refetch, sortingOrganizationMemberOrder, peopleNameSearchText, organizationId],
+    [refetch],
   );
+
+  useEffect(() => {
+    handleRefetch(startDate);
+  }, [handleRefetch, globalReloadId, startDate]);
 
   if (!rootData.me || !rootData.organization || !rootData.organizationMembers) {
     return <></>;
@@ -343,7 +348,7 @@ const OrganizationPeopleBookings = ({
 
   const rows: RowType[] = finalMembersList
     .map((customer) => {
-      if (!rootData.allBookings) {
+      if (!rootDataAllBookings.allBookings) {
         return null;
       }
 
@@ -354,41 +359,43 @@ const OrganizationPeopleBookings = ({
         person: customer,
         mon: {
           customer,
-          booking: rootData.allBookings.find((booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString()),
+          booking: rootDataAllBookings.allBookings.find(
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString(),
+          ),
         },
         tue: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(1, 'day').toISOString(),
           ),
         },
         wed: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(2, 'day').toISOString(),
           ),
         },
         thu: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(3, 'day').toISOString(),
           ),
         },
         fri: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(4, 'day').toISOString(),
           ),
         },
         sat: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(5, 'day').toISOString(),
           ),
         },
         sun: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(6, 'day').toISOString(),
           ),
         },

@@ -1,4 +1,5 @@
 import { LocationLink } from '@/components/location';
+import type { locationBookingInsight_locationAnalytics_query$key } from '@/queries/__generated__/locationBookingInsight_locationAnalytics_query.graphql';
 import type { locationBookingInsight_query$key } from '@/queries/__generated__/locationBookingInsight_query.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -10,31 +11,41 @@ import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
 import { toDayAndMonthDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { memo, useCallback, useTransition } from 'react';
-import { graphql, useRefetchableFragment } from 'react-relay';
+import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: locationBookingInsight_query$key;
+  rootDataLocationAnalyticsRelay: locationBookingInsight_locationAnalytics_query$key;
   organizationId?: string;
   locationId: string;
   hideLocationDetails?: boolean;
 };
 
-const LocationBookingInsight = ({ rootDataRelay, organizationId, locationId, hideLocationDetails }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment(
+const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay, organizationId, locationId, hideLocationDetails }: Props) => {
+  const rootData = useFragment(
     graphql`
-      fragment locationBookingInsight_query on Query @refetchable(queryName: "locationBookingInsight_organizationAnalytics") {
-        locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {
-          dailyBookingsTotals {
-            date
-            total
-          }
-        }
+      fragment locationBookingInsight_query on Query {
         location(id: $locationId) {
           name
         }
       }
     `,
     rootDataRelay,
+  );
+
+  const [rootDataLocationAnalytics, refetch] = useRefetchableFragment(
+    graphql`
+      fragment locationBookingInsight_locationAnalytics_query on Query
+      @refetchable(queryName: "locationBookingInsight_locationAnalytics_refetchableFragment") {
+        locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {
+          dailyBookingsTotals {
+            date
+            total
+          }
+        }
+      }
+    `,
+    rootDataLocationAnalyticsRelay,
   );
 
   const [, startTransition] = useTransition();
@@ -62,14 +73,14 @@ const LocationBookingInsight = ({ rootDataRelay, organizationId, locationId, hid
     handleRefetch(from, until);
   };
 
-  if (!rootData.locationAnalytics) {
+  if (!rootDataLocationAnalytics.locationAnalytics) {
     return <></>;
   }
 
   const dataset =
-    rootData.locationAnalytics.dailyBookingsTotals.length === 0
+    rootDataLocationAnalytics.locationAnalytics.dailyBookingsTotals.length === 0
       ? [{ date: 'No data available', percentage: 0 }]
-      : rootData.locationAnalytics.dailyBookingsTotals.map(({ date, total }) => ({
+      : rootDataLocationAnalytics.locationAnalytics.dailyBookingsTotals.map(({ date, total }) => ({
           date: toDayAndMonthDate(date),
           total,
         }));

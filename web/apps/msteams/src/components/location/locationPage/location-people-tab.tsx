@@ -29,28 +29,29 @@ import { useSnackbar } from 'notistack';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { PreloadedQuery, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, useFragment, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { array, object, string } from 'yup';
-import type {
-  LocationMemberOrderField,
-  LocationMemberOrderInput,
-  locationMembers_PaginationQuery,
-} from './__generated__/locationMembers_PaginationQuery.graphql';
 import type { locationPeopleTab_inviteCustomersToJoinLocationMutation } from './__generated__/locationPeopleTab_inviteCustomersToJoinLocationMutation.graphql';
-import type { locationPeopleTab_query$key } from './__generated__/locationPeopleTab_query.graphql';
-import type { locationPeopleTab_query_organizationMembers$key } from './__generated__/locationPeopleTab_query_organizationMembers.graphql';
 import type {
   CustomerOrderField,
   CustomerOrderInput,
-  locationPeopleTab_query_paginatedCustomersByDefaultLocation,
-} from './__generated__/locationPeopleTab_query_paginatedCustomersByDefaultLocation.graphql';
+  locationPeopleTab_organizationMembers_paginatedCustomersByDefaultLocation_refetchableFragment,
+} from './__generated__/locationPeopleTab_organizationMembers_paginatedCustomersByDefaultLocation_refetchableFragment.graphql';
+import type { locationPeopleTab_paginatedCustomersByDefaultLocation_query$key } from './__generated__/locationPeopleTab_paginatedCustomersByDefaultLocation_query.graphql';
+import type { locationPeopleTab_paginatedLocationMembers_query$key } from './__generated__/locationPeopleTab_paginatedLocationMembers_query.graphql';
+import type {
+  LocationMemberOrderField,
+  LocationMemberOrderInput,
+  locationPeopleTab_paginatedLocationMembers_refetchableFragment,
+} from './__generated__/locationPeopleTab_paginatedLocationMembers_refetchableFragment.graphql';
+import type { locationPeopleTab_query$key } from './__generated__/locationPeopleTab_query.graphql';
 import type { locationPeopleTab_rootQuery } from './__generated__/locationPeopleTab_rootQuery.graphql';
 import LocationMemberCard from './location-member-card';
 
 type Props = {
   queryReference: PreloadedQuery<locationPeopleTab_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
 };
 
@@ -63,7 +64,8 @@ const RootQuery = graphql`
     $locationOrganizationPeopleSortingValues: [CustomerOrderInput!]
   ) {
     ...locationPeopleTab_query
-    ...locationPeopleTab_query_organizationMembers
+    ...locationPeopleTab_paginatedLocationMembers_query
+    ...locationPeopleTab_paginatedCustomersByDefaultLocation_query
   }
 `;
 
@@ -86,20 +88,28 @@ const membersToInviteSchema = object({
 
 const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<locationPeopleTab_rootQuery>(RootQuery, queryReference);
-  const {
-    data: rootDataLocation,
-    loadNext: loadNextLocationMembers,
-    isLoadingNext: isLoadingNextLocationMembers,
-    refetch: refetchLocationMembers,
-  } = usePaginationFragment<locationMembers_PaginationQuery, locationPeopleTab_query$key>(
+  const rootData = useFragment<locationPeopleTab_query$key>(
     graphql`
-      fragment locationPeopleTab_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationMembers_PaginationQuery") {
+      fragment locationPeopleTab_query on Query {
         location(id: $locationId) {
           id
           name
         }
+        ...locationSingleChoiceMembershipType_query
+      }
+    `,
+    rootDataRelay,
+  );
+  const {
+    data: rootDataPaginatedLocationMembers,
+    loadNext: loadNextPaginatedLocationMembers,
+    isLoadingNext: isLoadingNextPaginatedLocationMembers,
+    refetch: refetchLocationMembers,
+  } = usePaginationFragment<locationPeopleTab_paginatedLocationMembers_refetchableFragment, locationPeopleTab_paginatedLocationMembers_query$key>(
+    graphql`
+      fragment locationPeopleTab_paginatedLocationMembers_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
+      @refetchable(queryName: "locationPeopleTab_paginatedLocationMembers_refetchableFragment") {
         paginatedLocationMembers(
           first: $count
           after: $cursor
@@ -115,7 +125,6 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
             }
           }
         }
-        ...locationSingleChoiceMembershipType_query
       }
     `,
     rootDataRelay,
@@ -123,14 +132,17 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
 
   const {
     data: rootDataPaginatedCustomersByDefaultLocation,
-    loadNext: loadNextpaginatedCustomersByDefaultLocation,
-    isLoadingNext: isLoadingNextpaginatedCustomersByDefaultLocation,
+    loadNext: loadNextPaginatedCustomersByDefaultLocation,
+    isLoadingNext: isLoadingNextPaginatedCustomersByDefaultLocation,
     refetch: refetchPaginatedCustomersByDefaultLocation,
-  } = usePaginationFragment<locationPeopleTab_query_paginatedCustomersByDefaultLocation, locationPeopleTab_query_organizationMembers$key>(
+  } = usePaginationFragment<
+    locationPeopleTab_organizationMembers_paginatedCustomersByDefaultLocation_refetchableFragment,
+    locationPeopleTab_paginatedCustomersByDefaultLocation_query$key
+  >(
     graphql`
-      fragment locationPeopleTab_query_organizationMembers on Query
+      fragment locationPeopleTab_paginatedCustomersByDefaultLocation_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationPeopleTab_query_paginatedCustomersByDefaultLocation") {
+      @refetchable(queryName: "locationPeopleTab_organizationMembers_paginatedCustomersByDefaultLocation_refetchableFragment") {
         paginatedCustomersByDefaultLocation(
           first: $count
           after: $cursor
@@ -228,24 +240,24 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
 
   const loadNextPage = useCallback(() => {
     if (organizationId) {
-      if (isLoadingNextpaginatedCustomersByDefaultLocation) {
+      if (isLoadingNextPaginatedCustomersByDefaultLocation) {
         return;
       }
 
-      loadNextpaginatedCustomersByDefaultLocation(pageSize);
+      loadNextPaginatedCustomersByDefaultLocation(pageSize);
     } else {
-      if (isLoadingNextLocationMembers) {
+      if (isLoadingNextPaginatedLocationMembers) {
         return;
       }
 
-      loadNextLocationMembers(pageSize);
+      loadNextPaginatedLocationMembers(pageSize);
     }
   }, [
     organizationId,
-    loadNextLocationMembers,
-    isLoadingNextLocationMembers,
-    loadNextpaginatedCustomersByDefaultLocation,
-    isLoadingNextpaginatedCustomersByDefaultLocation,
+    loadNextPaginatedLocationMembers,
+    isLoadingNextPaginatedLocationMembers,
+    loadNextPaginatedCustomersByDefaultLocation,
+    isLoadingNextPaginatedCustomersByDefaultLocation,
     pageSize,
   ]);
 
@@ -279,26 +291,30 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
 
       return [rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.__id];
     } else {
-      return rootDataLocation.paginatedLocationMembers ? [rootDataLocation.paginatedLocationMembers.__id] : [];
+      return rootDataPaginatedLocationMembers.paginatedLocationMembers ? [rootDataPaginatedLocationMembers.paginatedLocationMembers.__id] : [];
     }
-  }, [organizationId, rootDataLocation.paginatedLocationMembers, rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation]);
+  }, [
+    organizationId,
+    rootDataPaginatedLocationMembers.paginatedLocationMembers,
+    rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation,
+  ]);
 
   if (
-    !rootDataLocation.location ||
-    !rootDataLocation.paginatedLocationMembers ||
+    !rootData.location ||
+    !rootDataPaginatedLocationMembers.paginatedLocationMembers ||
     !rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation
   ) {
     return <></>;
   }
 
-  const locationMemberEdges = rootDataLocation.paginatedLocationMembers.edges;
+  const locationMemberEdges = rootDataPaginatedLocationMembers.paginatedLocationMembers.edges;
   const organizationMemberEdges = rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.edges;
   const count = organizationId
     ? rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.totalCount
       ? rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.totalCount
       : 0
-    : rootDataLocation.paginatedLocationMembers.totalCount
-      ? rootDataLocation.paginatedLocationMembers.totalCount
+    : rootDataPaginatedLocationMembers.paginatedLocationMembers.totalCount
+      ? rootDataPaginatedLocationMembers.paginatedLocationMembers.totalCount
       : 0;
   const slicedLocationMemberEdges = locationMemberEdges.slice(
     page * pageSize,
@@ -339,7 +355,7 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
   };
 
   const handleInvitePeopleClick = ({ emails: originalEmailsStr }: MembersToJoin) => {
-    if (!rootDataLocation.location || !originalEmailsStr) {
+    if (!rootData.location || !originalEmailsStr) {
       return;
     }
 
@@ -352,7 +368,7 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
       variables: {
         input: {
           clientMutationId: nanoid(),
-          locationId: rootDataLocation.location.id,
+          locationId: rootData.location.id,
           emails: emails
             .split(/[\s,]+/)
             .map((email) => email.trim())
@@ -361,7 +377,7 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to invite people to join location '${rootDataLocation.location?.name}'. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to invite people to join location '${rootData.location?.name}'. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -372,7 +388,7 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
         setInvitePeopleDialogOpen(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to invite people to join location '${rootDataLocation.location?.name}'. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to invite people to join location '${rootData.location?.name}'. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
@@ -441,7 +457,7 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
         {!organizationId &&
           slicedLocationMemberEdges.map((edge) => (
             <Grid key={edge.node.id}>
-              <LocationMemberCard data={rootDataLocation} locationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
+              <LocationMemberCard data={rootData} locationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
             </Grid>
           ))}
       </Grid>
@@ -487,7 +503,7 @@ const MemoLocationPeopleTab = memo(LocationPeopleTab);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
 };
 

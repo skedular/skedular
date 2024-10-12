@@ -22,8 +22,8 @@ import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { TeamOrderField, TeamOrderInput, teams_PaginationQuery } from './__generated__/teams_PaginationQuery.graphql';
 import type { teams_query$key } from './__generated__/teams_query.graphql';
+import type { TeamOrderField, TeamOrderInput, teams_refetchableFragment } from './__generated__/teams_refetchableFragment.graphql';
 import type { teams_rootQuery } from './__generated__/teams_rootQuery.graphql';
 
 type Props = {
@@ -45,11 +45,11 @@ const Teams = ({ queryReference, organizationId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<teams_PaginationQuery, teams_query$key>(
+  } = usePaginationFragment<teams_refetchableFragment, teams_query$key>(
     graphql`
       fragment teams_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "teams_PaginationQuery") {
+      @refetchable(queryName: "teams_refetchableFragment") {
         teams(
           first: $count
           after: $cursor

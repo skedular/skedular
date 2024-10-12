@@ -21,12 +21,13 @@ import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type {
   LocationOrderField,
   LocationOrderInput,
-  organizationLocations_PaginationQuery,
-} from './__generated__/organizationLocations_PaginationQuery.graphql';
+  organizationLocationsTab_location_refetchableFragment,
+} from './__generated__/organizationLocationsTab_location_refetchableFragment.graphql';
+import type { organizationLocationsTab_locations_query$key } from './__generated__/organizationLocationsTab_locations_query.graphql';
 import type { organizationLocationsTab_query$key } from './__generated__/organizationLocationsTab_query.graphql';
 import type { organizationLocationsTab_rootQuery } from './__generated__/organizationLocationsTab_rootQuery.graphql';
 
@@ -42,21 +43,33 @@ const RootQuery = graphql`
     $locationNameSearchText: String
   ) {
     ...organizationLocationsTab_query
+    ...organizationLocationsTab_locations_query
   }
 `;
 
 const OrganizationLocationsTab = ({ queryReference }: Props) => {
   const rootDataRelay = usePreloadedQuery<organizationLocationsTab_rootQuery>(RootQuery, queryReference);
+  const rootData = useFragment<organizationLocationsTab_query$key>(
+    graphql`
+      fragment organizationLocationsTab_query on Query {
+        organization(id: $organizationId) {
+          id
+          canModify
+        }
+      }
+    `,
+    rootDataRelay,
+  );
   const {
-    data: rootData,
+    data: rootDataLocations,
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationLocations_PaginationQuery, organizationLocationsTab_query$key>(
+  } = usePaginationFragment<organizationLocationsTab_location_refetchableFragment, organizationLocationsTab_locations_query$key>(
     graphql`
-      fragment organizationLocationsTab_query on Query
+      fragment organizationLocationsTab_locations_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationLocations_PaginationQuery") {
+      @refetchable(queryName: "organizationLocationsTab_location_refetchableFragment") {
         locations(
           first: $count
           after: $cursor
@@ -75,10 +88,6 @@ const OrganizationLocationsTab = ({ queryReference }: Props) => {
               }
             }
           }
-        }
-        organization(id: $organizationId) {
-          id
-          canModify
         }
       }
     `,
@@ -140,8 +149,8 @@ const OrganizationLocationsTab = ({ queryReference }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => (rootData.locations ? [rootData.locations.__id] : []), [rootData.locations]);
-  const locationEdges = rootData.locations ? rootData.locations.edges : [];
+  const connectionIds = useMemo(() => (rootDataLocations.locations ? [rootDataLocations.locations.__id] : []), [rootDataLocations.locations]);
+  const locationEdges = rootDataLocations.locations ? rootDataLocations.locations.edges : [];
   const slicedEdges = locationEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > locationEdges.length ? locationEdges.length : page * pageSize + pageSize,
@@ -207,7 +216,7 @@ const OrganizationLocationsTab = ({ queryReference }: Props) => {
 
       <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
         <TablePagination
-          count={rootData.locations?.totalCount ? rootData.locations.totalCount : 0}
+          count={rootDataLocations.locations?.totalCount ? rootDataLocations.locations.totalCount : 0}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={pageSize}

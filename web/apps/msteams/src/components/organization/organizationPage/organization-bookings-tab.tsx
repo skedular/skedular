@@ -21,12 +21,13 @@ import dayjs, { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import type { organizationBookingsTab_bookings_query$key } from './__generated__/organizationBookingsTab_bookings_query.graphql';
 import type {
   BookingOrderField,
   BookingOrderInput,
-  organizationBookings_PaginationQuery,
-} from './__generated__/organizationBookings_PaginationQuery.graphql';
+  organizationBookingsTab_bookings_refetchableFragment,
+} from './__generated__/organizationBookingsTab_bookings_refetchableFragment.graphql';
 import type { organizationBookingsTab_query$key } from './__generated__/organizationBookingsTab_query.graphql';
 import type { organizationBookingsTab_rootQuery } from './__generated__/organizationBookingsTab_rootQuery.graphql';
 
@@ -51,21 +52,34 @@ const RootQuery = graphql`
     $bookingsSearchCriteriaTo: DateTime!
   ) {
     ...organizationBookingsTab_query
+    ...organizationBookingsTab_bookings_query
   }
 `;
 
 const OrganizationBookingsTab = ({ queryReference, organizationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<organizationBookingsTab_rootQuery>(RootQuery, queryReference);
+  const rootData = useFragment<organizationBookingsTab_query$key>(
+    graphql`
+      fragment organizationBookingsTab_query on Query {
+        me {
+          id
+        }
+        ...bookingCard_query
+        ...newBookingDialog_query
+      }
+    `,
+    rootDataRelay,
+  );
   const {
-    data: rootData,
+    data: rootDataBookings,
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationBookings_PaginationQuery, organizationBookingsTab_query$key>(
+  } = usePaginationFragment<organizationBookingsTab_bookings_refetchableFragment, organizationBookingsTab_bookings_query$key>(
     graphql`
-      fragment organizationBookingsTab_query on Query
+      fragment organizationBookingsTab_bookings_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationBookings_PaginationQuery") {
+      @refetchable(queryName: "organizationBookingsTab_bookings_refetchableFragment") {
         bookings(
           first: $count
           after: $cursor
@@ -91,11 +105,6 @@ const OrganizationBookingsTab = ({ queryReference, organizationId }: Props) => {
             }
           }
         }
-        me {
-          id
-        }
-        ...bookingCard_query
-        ...newBookingDialog_query
       }
     `,
     rootDataRelay,
@@ -159,20 +168,20 @@ const OrganizationBookingsTab = ({ queryReference, organizationId }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => (rootData.bookings ? [rootData.bookings.__id] : []), [rootData.bookings]);
+  const connectionIds = useMemo(() => (rootDataBookings.bookings ? [rootDataBookings.bookings.__id] : []), [rootDataBookings.bookings]);
   const bookings = useMemo(() => {
-    if (!rootData.bookings) {
+    if (!rootDataBookings.bookings) {
       return [];
     }
 
-    const bookingEdges = rootData.bookings.edges;
+    const bookingEdges = rootDataBookings.bookings.edges;
     const slicedEdges = bookingEdges.slice(
       page * pageSize,
       page * pageSize + pageSize > bookingEdges.length ? bookingEdges.length : page * pageSize + pageSize,
     );
 
     return slicedEdges.map(({ node }) => node);
-  }, [page, pageSize, rootData.bookings]);
+  }, [page, pageSize, rootDataBookings.bookings]);
 
   const handleAddBookingClick = () => {
     setIsAddBookingDialogOpen(true);
@@ -220,7 +229,7 @@ const OrganizationBookingsTab = ({ queryReference, organizationId }: Props) => {
     }
   };
 
-  if (!rootData.bookings) {
+  if (!rootDataBookings.bookings) {
     return <></>;
   }
 
@@ -238,20 +247,17 @@ const OrganizationBookingsTab = ({ queryReference, organizationId }: Props) => {
             {!pageContextOpen && <Typography>{`From ${toShortDate(selectedFromDate)} until ${toShortDate(selectedUntilDate)}`}</Typography>}
           </AccordionSummary>
           <AccordionDetails>
-            <Grid container sx={{ justifyContent: 'flex-start' }}>
-              <DateRangePicker
-                localeText={{ start: 'From', end: 'To' }}
-                defaultValue={[selectedFromDate, selectedUntilDate]}
-                onChange={(dateRangeValue) => handleSelectedDateChange(dateRangeValue[0], dateRangeValue[1])}
-              />
-              <Grid sx={{ margin: 1 }} />
-            </Grid>
+            <DateRangePicker
+              localeText={{ start: 'From', end: 'To' }}
+              defaultValue={[selectedFromDate, selectedUntilDate]}
+              onChange={(dateRangeValue) => handleSelectedDateChange(dateRangeValue[0], dateRangeValue[1])}
+            />
           </AccordionDetails>
         </Accordion>
 
         <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
           <TablePagination
-            count={rootData.bookings.totalCount ? rootData.bookings.totalCount : 0}
+            count={rootDataBookings.bookings.totalCount ? rootDataBookings.bookings.totalCount : 0}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={pageSize}

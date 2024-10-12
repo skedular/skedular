@@ -1,5 +1,5 @@
-import type { deskMultipleChoicesZones_PaginationQuery } from '@/queries/__generated__/deskMultipleChoicesZones_PaginationQuery.graphql';
 import type { deskMultipleChoicesZones_query$key } from '@/queries/__generated__/deskMultipleChoicesZones_query.graphql';
+import type { deskMultipleChoicesZones_refetchableFragment } from '@/queries/__generated__/deskMultipleChoicesZones_refetchableFragment.graphql';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
@@ -9,7 +9,6 @@ import { graphql, usePaginationFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: deskMultipleChoicesZones_query$key;
-  locationId: string;
   name: string;
   required?: boolean;
 };
@@ -19,18 +18,18 @@ type ZoneDetails = {
   name: string;
 };
 
-const DeskMultipleChoicesZones = ({ rootDataRelay, locationId, name, required }: Props) => {
-  const { data: rootData, refetch } = usePaginationFragment<deskMultipleChoicesZones_PaginationQuery, deskMultipleChoicesZones_query$key>(
+const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
+  const { data: rootData, refetch } = usePaginationFragment<deskMultipleChoicesZones_refetchableFragment, deskMultipleChoicesZones_query$key>(
     graphql`
       fragment deskMultipleChoicesZones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "deskMultipleChoicesZones_PaginationQuery") {
+      @refetchable(queryName: "deskMultipleChoicesZones_refetchableFragment") {
         paginatedLocationTags(
           first: $count
           after: $cursor
           where: { locationId: $locationId, tagType: $zoneTagType }
           orderBy: $deskMultipleChoicesZonesSortingValues
-        ) @connection(key: "locationZonesTab_paginatedLocationTags") @include(if: $locationExists) {
+        ) @connection(key: "locationZonesTab_paginatedLocationTags") {
           __id
           totalCount
           edges {
@@ -57,15 +56,13 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, locationId, name, required }:
   const handleRefetch = useCallback(() => {
     startTransition(() => {
       refetch(
-        {
-          locationExists: !!locationId,
-        },
+        {},
         {
           fetchPolicy: 'store-and-network',
         },
       );
     });
-  }, [refetch, locationId]);
+  }, [refetch]);
 
   // Workaround to ensure we have all the zones if new zones added using zone dialog
   useEffect(() => {

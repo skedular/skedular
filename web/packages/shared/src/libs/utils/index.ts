@@ -1,6 +1,9 @@
 import dayjs, { Dayjs } from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import isToday from 'dayjs/plugin/isToday';
+import isTomorrow from 'dayjs/plugin/isTomorrow';
+import isYesterday from 'dayjs/plugin/isYesterday';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { PayloadError } from 'relay-runtime';
@@ -9,6 +12,9 @@ dayjs.extend(isoWeek);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
+dayjs.extend(isToday);
+dayjs.extend(isTomorrow);
+dayjs.extend(isYesterday);
 
 export type NameDetails = {
   name?: string | null;
@@ -28,6 +34,18 @@ const convertCalendarDayToStartOfDay = (date: Dayjs) => {
 const now = () => {
   const date = new Date();
   return dayjs().utc().set('year', date.getUTCFullYear()).set('month', date.getMonth()).set('date', date.getDate());
+};
+
+const isTodayDate = (date: Dayjs) => {
+  return date.isToday();
+};
+
+const isTomorrowDate = (date: Dayjs) => {
+  return date.isTomorrow();
+};
+
+const isYesterdayDate = (date: Dayjs) => {
+  return date.isYesterday();
 };
 
 const startOfDay = (date?: Dayjs | string | null | undefined) => {
@@ -201,6 +219,9 @@ export {
   getCustomerFullName,
   getCustomerShortName,
   getPublicSiteUrl,
+  isTodayDate,
+  isTomorrowDate,
+  isYesterdayDate,
   joinErrors,
   startOfDay,
   startOfMonth,

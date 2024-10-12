@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8a459a0eb65c68cbe24c1abb0808414e>>
+ * @generated SignedSource<<ffd5ab24eda5d2af8e62a2e1d06053ab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type organizationMemberAttendancyInsightRoot_rootQuery$variables = {
   to: any;
 };
 export type organizationMemberAttendancyInsightRoot_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMemberAttendancyInsight_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMemberAttendancyInsight_organizationAnalytics_query" | "organizationMemberAttendancyInsight_query">;
 };
 export type organizationMemberAttendancyInsightRoot_rootQuery = {
   response: organizationMemberAttendancyInsightRoot_rootQuery$data;
@@ -54,6 +54,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "organizationMemberAttendancyInsight_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "organizationMemberAttendancyInsight_organizationAnalytics_query"
       }
     ],
     "type": "Query",
@@ -69,6 +74,44 @@ return {
     "kind": "Operation",
     "name": "organizationMemberAttendancyInsightRoot_rootQuery",
     "selections": [
+      {
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "id",
+            "variableName": "organizationId"
+          }
+        ],
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "organization",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "logoUrl",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": [
@@ -120,58 +163,20 @@ return {
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "organizationId"
-          }
-        ],
-        "concreteType": "OrganizationDetails",
-        "kind": "LinkedField",
-        "name": "organization",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "logoUrl",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "b97f83f0f035dcd4b91007e2a2dabcb4",
+    "cacheID": "a437acb1972532f465dd3a350aa45d03",
     "id": null,
     "metadata": {},
     "name": "organizationMemberAttendancyInsightRoot_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMemberAttendancyInsightRoot_rootQuery(\n  $organizationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationMemberAttendancyInsight_query\n}\n\nfragment organizationMemberAttendancyInsight_query on Query {\n  organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {\n    memberAttendancePercentage {\n      date\n      percentage\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    id\n  }\n}\n"
+    "text": "query organizationMemberAttendancyInsightRoot_rootQuery(\n  $organizationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationMemberAttendancyInsight_query\n  ...organizationMemberAttendancyInsight_organizationAnalytics_query\n}\n\nfragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query {\n  organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {\n    memberAttendancePercentage {\n      date\n      percentage\n    }\n  }\n}\n\nfragment organizationMemberAttendancyInsight_query on Query {\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "408c54f14ef1293cb908a0cfa7227b14";
+(node as any).hash = "0e0af37bb6a29b0d18dea42b0353705d";
 
 export default node;

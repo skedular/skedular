@@ -262,8 +262,8 @@ const TeamAboutTabWithRelay = ({ onReloadRequired, organizationId, teamId }: Rel
     loadQuery(
       {
         organizationId: organizationId ?? '',
+        organizationExists: !!organizationId,
         teamId,
-        organizationExists: false,
       },
       {
         fetchPolicy: 'store-and-network',

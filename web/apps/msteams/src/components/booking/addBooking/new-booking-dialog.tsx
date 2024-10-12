@@ -32,6 +32,7 @@ type Props = {
   defaultTeamId?: string;
   hideOrganizationControl?: boolean;
   hideLocationControl?: boolean;
+  defaultDate?: Dayjs;
 };
 
 type BookingDetails = {
@@ -71,6 +72,7 @@ const NewBookingDialog = ({
   defaultTeamId,
   hideOrganizationControl,
   hideLocationControl,
+  defaultDate,
 }: Props) => {
   const rootData = useFragment(
     graphql`
@@ -82,6 +84,8 @@ const NewBookingDialog = ({
           canAddBookingOnBehalf
         }
         ...bookingDetailsSelector_query
+        ...bookingDetailsSelector_paginatedOrganizationMembers_query
+        ...bookingDetailsSelector_availableLocationDesks_query
       }
     `,
     rootDataRelay,
@@ -108,7 +112,7 @@ const NewBookingDialog = ({
   const schema = !!rootData.organizationBookingPermissions?.canAddBookingOnBehalf ? bookingSchema : bookingWithoutMemberSchema;
   const validate = makeValidate(schema);
   const requiredFields = makeRequired(schema);
-  const [from, setFrom] = useState<Dayjs | Date>(startOfDay());
+  const [from, setFrom] = useState<Dayjs | Date>(defaultDate ?? startOfDay());
   const to = useMemo(() => {
     if (from instanceof Date) {
       return endOfDay(dayjs(from));
@@ -208,6 +212,8 @@ const NewBookingDialog = ({
                 <BookingNotes name="notes" required={requiredFields.notes} />
                 <BookingDetailsSelector
                   rootDataRelay={rootData}
+                  rootDataPaginatedOrganizationMembersRelay={rootData}
+                  rootDataAvailableLocationDesksRelay={rootData}
                   defaultOrganizationId={organizationId}
                   organizationName="organization"
                   organizationRequired={requiredFields.organization}

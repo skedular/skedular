@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<960b23d426a44c544dc3965e142a707c>>
+ * @generated SignedSource<<9e51a0455ef552d9d978d0d7392652a2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type organizationBookingInsightRoot_rootQuery$variables = {
   to: any;
 };
 export type organizationBookingInsightRoot_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationBookingInsight_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationBookingInsight_organizationAnalytics_query" | "organizationBookingInsight_query">;
 };
 export type organizationBookingInsightRoot_rootQuery = {
   response: organizationBookingInsightRoot_rootQuery$data;
@@ -54,6 +54,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "organizationBookingInsight_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "organizationBookingInsight_organizationAnalytics_query"
       }
     ],
     "type": "Query",
@@ -69,6 +74,44 @@ return {
     "kind": "Operation",
     "name": "organizationBookingInsightRoot_rootQuery",
     "selections": [
+      {
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "id",
+            "variableName": "organizationId"
+          }
+        ],
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "organization",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "logoUrl",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": [
@@ -120,58 +163,20 @@ return {
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "organizationId"
-          }
-        ],
-        "concreteType": "OrganizationDetails",
-        "kind": "LinkedField",
-        "name": "organization",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "logoUrl",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "e64104fea2b2cba256a4babcacd42aea",
+    "cacheID": "9720b6160fe4f83158c82befcc6de51a",
     "id": null,
     "metadata": {},
     "name": "organizationBookingInsightRoot_rootQuery",
     "operationKind": "query",
-    "text": "query organizationBookingInsightRoot_rootQuery(\n  $organizationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationBookingInsight_query\n}\n\nfragment organizationBookingInsight_query on Query {\n  organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    id\n  }\n}\n"
+    "text": "query organizationBookingInsightRoot_rootQuery(\n  $organizationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationBookingInsight_query\n  ...organizationBookingInsight_organizationAnalytics_query\n}\n\nfragment organizationBookingInsight_organizationAnalytics_query on Query {\n  organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n}\n\nfragment organizationBookingInsight_query on Query {\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1d5d0517dbd9798ff99e340bde868855";
+(node as any).hash = "bacbb14f4a76e16885004a2ea62d4de7";
 
 export default node;

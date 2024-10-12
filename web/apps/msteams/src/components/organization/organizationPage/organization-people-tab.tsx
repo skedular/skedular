@@ -29,14 +29,15 @@ import { useSnackbar } from 'notistack';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { PreloadedQuery, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, useFragment, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { array, object, string } from 'yup';
+import type { organizationPeopleTab_inviteCustomersToJoinOrganizationMutation } from './__generated__/organizationPeopleTab_inviteCustomersToJoinOrganizationMutation.graphql';
+import type { organizationPeopleTab_paginatedOrganizationMembers_query$key } from './__generated__/organizationPeopleTab_paginatedOrganizationMembers_query.graphql';
 import type {
   OrganizationMemberOrderField,
   OrganizationMemberOrderInput,
-  organizationMembers_PaginationQuery,
-} from './__generated__/organizationMembers_PaginationQuery.graphql';
-import type { organizationPeopleTab_inviteCustomersToJoinOrganizationMutation } from './__generated__/organizationPeopleTab_inviteCustomersToJoinOrganizationMutation.graphql';
+  organizationPeopleTab_paginatedOrganizationMembers_refetchableFragment,
+} from './__generated__/organizationPeopleTab_paginatedOrganizationMembers_refetchableFragment.graphql';
 import type { organizationPeopleTab_query$key } from './__generated__/organizationPeopleTab_query.graphql';
 import type { organizationPeopleTab_rootQuery } from './__generated__/organizationPeopleTab_rootQuery.graphql';
 
@@ -54,6 +55,7 @@ const RootQuery = graphql`
     $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]
   ) {
     ...organizationPeopleTab_query
+    ...organizationPeopleTab_paginatedOrganizationMembers_query
   }
 `;
 
@@ -76,22 +78,32 @@ const membersToInviteSchema = object({
 
 const OrganizationPeopleTab = ({ queryReference, organizationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<organizationPeopleTab_rootQuery>(RootQuery, queryReference);
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<organizationMembers_PaginationQuery, organizationPeopleTab_query$key>(
+  const rootData = useFragment<organizationPeopleTab_query$key>(
     graphql`
-      fragment organizationPeopleTab_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationMembers_PaginationQuery") {
+      fragment organizationPeopleTab_query on Query {
         organization(id: $organizationId) {
           id
           name
           canInvitePeople
         }
         ...organizationSingleChoiceMembershipType_query
+      }
+    `,
+    rootDataRelay,
+  );
+  const {
+    data: rootDataPaginatedOrganizationMembers,
+    loadNext,
+    isLoadingNext,
+    refetch,
+  } = usePaginationFragment<
+    organizationPeopleTab_paginatedOrganizationMembers_refetchableFragment,
+    organizationPeopleTab_paginatedOrganizationMembers_query$key
+  >(
+    graphql`
+      fragment organizationPeopleTab_paginatedOrganizationMembers_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
+      @refetchable(queryName: "organizationPeopleTab_paginatedOrganizationMembers_refetchableFragment") {
         paginatedOrganizationMembers(
           first: $count
           after: $cursor
@@ -247,8 +259,11 @@ const OrganizationPeopleTab = ({ queryReference, organizationId }: Props) => {
 
   const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
   const connectionIds = useMemo(
-    () => (rootData.paginatedOrganizationMembers ? [rootData.paginatedOrganizationMembers.__id] : []),
-    [rootData.paginatedOrganizationMembers],
+    () =>
+      rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers
+        ? [rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.__id]
+        : [],
+    [rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers],
   );
 
   const handleSortingChanged = (direction: Direction, value: string) => {
@@ -267,11 +282,11 @@ const OrganizationPeopleTab = ({ queryReference, organizationId }: Props) => {
     );
   };
 
-  if (!rootData.organization || !rootData.paginatedOrganizationMembers) {
+  if (!rootData.organization || !rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers) {
     return <></>;
   }
 
-  const organizationMemberEdges = rootData.paginatedOrganizationMembers.edges;
+  const organizationMemberEdges = rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.edges;
   const slicedEdges = organizationMemberEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > organizationMemberEdges.length ? organizationMemberEdges.length : page * pageSize + pageSize,
@@ -301,7 +316,11 @@ const OrganizationPeopleTab = ({ queryReference, organizationId }: Props) => {
 
         <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
           <TablePagination
-            count={rootData.paginatedOrganizationMembers.totalCount ? rootData.paginatedOrganizationMembers.totalCount : 0}
+            count={
+              rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.totalCount
+                ? rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.totalCount
+                : 0
+            }
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={pageSize}

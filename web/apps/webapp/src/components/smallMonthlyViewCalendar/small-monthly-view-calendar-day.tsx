@@ -1,6 +1,7 @@
+import type { smallMonthlyViewCalendar_bookings_query$data } from '@/queries/__generated__/smallMonthlyViewCalendar_bookings_query.graphql';
+import type { smallMonthlyViewCalendar_query$data } from '@/queries/__generated__/smallMonthlyViewCalendar_query.graphql';
 import type { smallMonthlyViewCalendarDay_addBookingMutation } from '@/queries/__generated__/smallMonthlyViewCalendarDay_addBookingMutation.graphql';
 import type { smallMonthlyViewCalendarDay_deleteBookingMutation } from '@/queries/__generated__/smallMonthlyViewCalendarDay_deleteBookingMutation.graphql';
-import type { smallMonthlyViewCalendar_query$data } from '@/queries/__generated__/smallMonthlyViewCalendar_query.graphql';
 import Badge from '@mui/material/Badge';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
@@ -15,11 +16,12 @@ import { graphql, useMutation } from 'react-relay';
 
 type Props = {
   rootData: smallMonthlyViewCalendar_query$data;
+  rootDataBookings: smallMonthlyViewCalendar_bookings_query$data;
   connectionIds: string[];
   organizationId?: string;
 };
 
-const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }: Props) => {
+const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds, organizationId }: Props) => {
   const [commitAddBooking] = useMutation<smallMonthlyViewCalendarDay_addBookingMutation>(graphql`
     mutation smallMonthlyViewCalendarDay_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
       addBooking(input: $input) {
@@ -75,11 +77,11 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
   const renderDay = (props: PickersDayProps<Dayjs>): JSX.Element => {
-    if (!rootData.monthlyBookings || !rootData.monthlyBookings.__id) {
+    if (!rootDataBookings.bookings || !rootDataBookings.bookings.__id) {
       return <></>;
     }
 
-    const matchingBookingFound = rootData.monthlyBookings.edges
+    const matchingBookingFound = rootDataBookings.bookings.edges
       .map((edge) => edge.node)
       ?.find((booking) => {
         const from = dayjs(booking.from);

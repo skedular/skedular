@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3a961235e024a6750cfff8f05cb7e472>>
+ * @generated SignedSource<<77850b780ca294c1fc506d87fdd2202c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,12 +15,6 @@ export type organizationMemberAttendancyInsight_query$data = {
     readonly logoUrl: string | null | undefined;
     readonly name: string;
   } | null | undefined;
-  readonly organizationAnalytics: {
-    readonly memberAttendancePercentage: ReadonlyArray<{
-      readonly date: any;
-      readonly percentage: number;
-    }>;
-  } | null | undefined;
   readonly " $fragmentType": "organizationMemberAttendancyInsight_query";
 };
 export type organizationMemberAttendancyInsight_query$key = {
@@ -32,79 +26,13 @@ const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "from"
-    },
-    {
-      "kind": "RootArgument",
       "name": "organizationId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "to"
     }
   ],
   "kind": "Fragment",
-  "metadata": {
-    "refetch": {
-      "connection": null,
-      "fragmentPathInResult": [],
-      "operation": require('./organizationMemberAttendancyInsight_organizationAnalytics.graphql')
-    }
-  },
+  "metadata": null,
   "name": "organizationMemberAttendancyInsight_query",
   "selections": [
-    {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "from",
-          "variableName": "from"
-        },
-        {
-          "kind": "Variable",
-          "name": "organizationId",
-          "variableName": "organizationId"
-        },
-        {
-          "kind": "Variable",
-          "name": "until",
-          "variableName": "to"
-        }
-      ],
-      "concreteType": "OrganizationAnalytics",
-      "kind": "LinkedField",
-      "name": "organizationAnalytics",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationMemberAttendancePercentage",
-          "kind": "LinkedField",
-          "name": "memberAttendancePercentage",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "date",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "percentage",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": [
@@ -141,6 +69,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "c9995957b38909124e4f224564f9b0d9";
+(node as any).hash = "208af2b4140a0793b4848d9de03dacf4";
 
 export default node;

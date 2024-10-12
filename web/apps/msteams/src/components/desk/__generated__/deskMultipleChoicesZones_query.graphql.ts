@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<14b80586d40965a1f465507d4e3dfd21>>
+ * @generated SignedSource<<b1104f9a0097d5c864d732b752e300e4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type deskMultipleChoicesZones_query$data = {
-  readonly paginatedLocationTags?: {
+  readonly paginatedLocationTags: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -50,10 +50,6 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "locationExists"
-    },
-    {
-      "kind": "RootArgument",
       "name": "locationId"
     },
     {
@@ -81,144 +77,137 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./deskMultipleChoicesZones_PaginationQuery.graphql')
+      "operation": require('./deskMultipleChoicesZones_refetchableFragment.graphql')
     }
   },
   "name": "deskMultipleChoicesZones_query",
   "selections": [
     {
-      "condition": "locationExists",
-      "kind": "Condition",
-      "passingValue": true,
-      "selections": [
+      "alias": "paginatedLocationTags",
+      "args": [
         {
-          "alias": "paginatedLocationTags",
-          "args": [
+          "kind": "Variable",
+          "name": "orderBy",
+          "variableName": "deskMultipleChoicesZonesSortingValues"
+        },
+        {
+          "fields": [
             {
               "kind": "Variable",
-              "name": "orderBy",
-              "variableName": "deskMultipleChoicesZonesSortingValues"
+              "name": "locationId",
+              "variableName": "locationId"
             },
             {
-              "fields": [
-                {
-                  "kind": "Variable",
-                  "name": "locationId",
-                  "variableName": "locationId"
-                },
-                {
-                  "kind": "Variable",
-                  "name": "tagType",
-                  "variableName": "zoneTagType"
-                }
-              ],
-              "kind": "ObjectValue",
-              "name": "where"
+              "kind": "Variable",
+              "name": "tagType",
+              "variableName": "zoneTagType"
             }
           ],
-          "concreteType": "LocationTagConnection",
+          "kind": "ObjectValue",
+          "name": "where"
+        }
+      ],
+      "concreteType": "LocationTagConnection",
+      "kind": "LinkedField",
+      "name": "__locationZonesTab_paginatedLocationTags_connection",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "totalCount",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LocationTagEdge",
           "kind": "LinkedField",
-          "name": "__locationZonesTab_paginatedLocationTags_connection",
-          "plural": false,
+          "name": "edges",
+          "plural": true,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "totalCount",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "LocationTagEdge",
+              "concreteType": "LocationTagDetails",
               "kind": "LinkedField",
-              "name": "edges",
-              "plural": true,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "LocationTagDetails",
-                  "kind": "LinkedField",
-                  "name": "node",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "id",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "name",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "__typename",
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "cursor",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "PageInfo",
-              "kind": "LinkedField",
-              "name": "pageInfo",
+              "name": "node",
               "plural": false,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "endCursor",
+                  "name": "id",
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "hasNextPage",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
                   "storageKey": null
                 }
               ],
               "storageKey": null
             },
             {
-              "kind": "ClientExtension",
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__id",
-                  "storageKey": null
-                }
-              ]
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
-      ]
+      ],
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -226,6 +215,6 @@ return {
 };
 })();
 
-(node as any).hash = "99d1210db4b30d9fb227603c81f62163";
+(node as any).hash = "3a57cf6c9bb811e272dd185018921d1c";
 
 export default node;

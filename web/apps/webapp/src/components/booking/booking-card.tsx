@@ -99,6 +99,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           canDeleteBookingOnBehalf
         }
         ...bookingDetailsSelector_query
+        ...bookingDetailsSelector_paginatedOrganizationMembers_query
+        ...bookingDetailsSelector_availableLocationDesks_query
       }
     `,
     rootDataRelay,
@@ -708,6 +710,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                   <BookingNotes name="notes" required={requiredFields.notes} />
                   <BookingDetailsSelector
                     rootDataRelay={rootData}
+                    rootDataPaginatedOrganizationMembersRelay={rootData}
+                    rootDataAvailableLocationDesksRelay={rootData}
                     defaultOrganizationId={bookingDetails.organization?.uniqueId}
                     organizationName="organization"
                     organizationRequired={requiredFields.organization}

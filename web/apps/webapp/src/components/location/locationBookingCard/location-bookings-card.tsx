@@ -24,15 +24,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query locationBookingsCard_rootQuery(
-    $peopleNameSearchText: String
-    $peopleSortingValues: [LocationMemberOrderInput!]!
-    $locationId: String!
-    $locationExists: Boolean!
-    $from: DateTime!
-    $to: DateTime!
-  ) {
+  query locationBookingsCard_rootQuery($peopleSortingValues: [LocationMemberOrderInput!]!, $locationId: String!, $from: DateTime!, $to: DateTime!) {
     ...locationPeopleBookings_query
+    ...locationPeopleBookings_allBookings_query
   }
 `;
 
@@ -49,6 +43,7 @@ const LocationBookingsCard = ({
   return (
     <LocationPeopleBookings
       rootDataRelay={rootData}
+      rootDataAllBookingsRelay={rootData}
       organizationId={organizationId}
       locationId={locationId}
       locationName={locationName}
@@ -92,7 +87,6 @@ const LocationBookingsWithRelay = ({
           },
         ],
         locationId,
-        locationExists: !!locationId,
         from: startDate.toISOString(),
         to: endDate.toISOString(),
       },

@@ -24,13 +24,21 @@ type Props = {
 const RootQuery = graphql`
   query organizationBookingInsightRoot_rootQuery($organizationId: String!, $from: DateTime!, $to: DateTime!) {
     ...organizationBookingInsight_query
+    ...organizationBookingInsight_organizationAnalytics_query
   }
 `;
 
 const OrganizationBookingInsightRoot = ({ queryReference, onReloadRequired, organizationId, hideOrganizationDetails }: Props) => {
   const rootData = usePreloadedQuery<organizationBookingInsightRoot_rootQuery>(RootQuery, queryReference);
 
-  return <OrganizationBookingInsight rootDataRelay={rootData} organizationId={organizationId} hideOrganizationDetails={hideOrganizationDetails} />;
+  return (
+    <OrganizationBookingInsight
+      rootDataRelay={rootData}
+      rootDataOrganizationAnalyticsRelay={rootData}
+      organizationId={organizationId}
+      hideOrganizationDetails={hideOrganizationDetails}
+    />
+  );
 };
 
 const MemoLocationBookingInsightRoot = memo(OrganizationBookingInsightRoot);

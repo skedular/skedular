@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7ef1936e485c3573fd197b91dc7fb0cd>>
+ * @generated SignedSource<<d1302536213b7d5db0e63069428c5312>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type locationBookingInsightRoot_rootQuery$variables = {
   to: any;
 };
 export type locationBookingInsightRoot_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationBookingInsight_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"locationBookingInsight_locationAnalytics_query" | "locationBookingInsight_query">;
 };
 export type locationBookingInsightRoot_rootQuery = {
   response: locationBookingInsightRoot_rootQuery$data;
@@ -61,6 +61,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "locationBookingInsight_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "locationBookingInsight_locationAnalytics_query"
       }
     ],
     "type": "Query",
@@ -77,6 +82,37 @@ return {
     "kind": "Operation",
     "name": "locationBookingInsightRoot_rootQuery",
     "selections": [
+      {
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "id",
+            "variableName": "locationId"
+          }
+        ],
+        "concreteType": "LocationDetails",
+        "kind": "LinkedField",
+        "name": "location",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
       {
         "condition": "locationExists",
         "kind": "Condition",
@@ -135,51 +171,20 @@ return {
             "storageKey": null
           }
         ]
-      },
-      {
-        "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "locationId"
-          }
-        ],
-        "concreteType": "LocationDetails",
-        "kind": "LinkedField",
-        "name": "location",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "ce0ff10dd8974f03ad58b2cb8642a4ca",
+    "cacheID": "0a3b042089f3212639df88cf649ccbcc",
     "id": null,
     "metadata": {},
     "name": "locationBookingInsightRoot_rootQuery",
     "operationKind": "query",
-    "text": "query locationBookingInsightRoot_rootQuery(\n  $locationId: String!\n  $locationExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...locationBookingInsight_query\n}\n\nfragment locationBookingInsight_query on Query {\n  locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n  location(id: $locationId) {\n    name\n    id\n  }\n}\n"
+    "text": "query locationBookingInsightRoot_rootQuery(\n  $locationId: String!\n  $locationExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...locationBookingInsight_query\n  ...locationBookingInsight_locationAnalytics_query\n}\n\nfragment locationBookingInsight_locationAnalytics_query on Query {\n  locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n}\n\nfragment locationBookingInsight_query on Query {\n  location(id: $locationId) {\n    name\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f748f4f91267604a3cbe61dd14c06379";
+(node as any).hash = "a7aceba826bf3c331bc50ef47e517854";
 
 export default node;

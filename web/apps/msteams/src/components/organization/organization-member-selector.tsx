@@ -7,8 +7,8 @@ import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
-import type { organizationMemberSelector_organizationMembers_PaginationQuery } from './__generated__/organizationMemberSelector_organizationMembers_PaginationQuery.graphql';
 import type { organizationMemberSelector_query$key } from './__generated__/organizationMemberSelector_query.graphql';
+import type { organizationMemberSelector_refetchableFragment } from './__generated__/organizationMemberSelector_refetchableFragment.graphql';
 
 type Props = {
   rootDataRelay: organizationMemberSelector_query$key;
@@ -35,14 +35,11 @@ type OrganizationMemberDetails = {
 };
 
 const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, required, readOnly, multiple, useMemberId }: Props) => {
-  const { data: rootData, refetch } = usePaginationFragment<
-    organizationMemberSelector_organizationMembers_PaginationQuery,
-    organizationMemberSelector_query$key
-  >(
+  const { data: rootData, refetch } = usePaginationFragment<organizationMemberSelector_refetchableFragment, organizationMemberSelector_query$key>(
     graphql`
       fragment organizationMemberSelector_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
-      @refetchable(queryName: "organizationMemberSelector_organizationMembers_PaginationQuery") {
+      @refetchable(queryName: "organizationMemberSelector_refetchableFragment") {
         organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(
           first: $count
           after: $cursor

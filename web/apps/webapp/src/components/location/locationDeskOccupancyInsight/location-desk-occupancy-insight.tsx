@@ -1,4 +1,5 @@
 import { LocationLink } from '@/components/location';
+import type { locationDeskOccupancyInsight_locationAnalytics_query$key } from '@/queries/__generated__/locationDeskOccupancyInsight_locationAnalytics_query.graphql';
 import type { locationDeskOccupancyInsight_query$key } from '@/queries/__generated__/locationDeskOccupancyInsight_query.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -11,31 +12,41 @@ import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
 import { toDayAndMonthDate, toFixed } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { memo, useCallback, useTransition } from 'react';
-import { graphql, useRefetchableFragment } from 'react-relay';
+import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: locationDeskOccupancyInsight_query$key;
+  rootDataLocationAnalyticsRelay: locationDeskOccupancyInsight_locationAnalytics_query$key;
   organizationId?: string;
   locationId: string;
   hideLocationDetails?: boolean;
 };
 
-const LocationDeskOccupancyInsight = ({ rootDataRelay, organizationId, locationId, hideLocationDetails }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment(
+const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay, organizationId, locationId, hideLocationDetails }: Props) => {
+  const rootData = useFragment(
     graphql`
-      fragment locationDeskOccupancyInsight_query on Query @refetchable(queryName: "locationDeskOccupancyInsight_organizationAnalytics") {
-        locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {
-          desksOccupancyPercentage {
-            date
-            percentage
-          }
-        }
+      fragment locationDeskOccupancyInsight_query on Query {
         location(id: $locationId) {
           name
         }
       }
     `,
     rootDataRelay,
+  );
+
+  const [rootDataLocationAnalytics, refetch] = useRefetchableFragment(
+    graphql`
+      fragment locationDeskOccupancyInsight_locationAnalytics_query on Query
+      @refetchable(queryName: "locationDeskOccupancyInsight_locationAnalytics_refetchableFragment") {
+        locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {
+          desksOccupancyPercentage {
+            date
+            percentage
+          }
+        }
+      }
+    `,
+    rootDataLocationAnalyticsRelay,
   );
 
   const [, startTransition] = useTransition();
@@ -63,14 +74,14 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, organizationId, locationI
     handleRefetch(from, until);
   };
 
-  if (!rootData.locationAnalytics) {
+  if (!rootDataLocationAnalytics.locationAnalytics) {
     return <></>;
   }
 
   const dataset =
-    rootData.locationAnalytics.desksOccupancyPercentage.length === 0
+    rootDataLocationAnalytics.locationAnalytics.desksOccupancyPercentage.length === 0
       ? [{ date: 'No data available', percentage: 0 }]
-      : rootData.locationAnalytics.desksOccupancyPercentage.map(({ date, percentage }) => ({
+      : rootDataLocationAnalytics.locationAnalytics.desksOccupancyPercentage.map(({ date, percentage }) => ({
           date: toDayAndMonthDate(date),
           percentage: toFixed(percentage, 2),
         }));

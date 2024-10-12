@@ -1,0 +1,260 @@
+/**
+ * @generated SignedSource<<bac0ab51f0523c609c40714fb46f2063>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
+/* tslint:disable */
+/* eslint-disable */
+// @ts-nocheck
+
+import { ReaderFragment } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
+export type smallMonthlyViewCalendar_bookings_query$data = {
+  readonly bookings: {
+    readonly __id: string;
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly customer: {
+          readonly photoUrl: string | null | undefined;
+        };
+        readonly from: any;
+        readonly id: string;
+        readonly notes: string | null | undefined;
+        readonly to: any;
+        readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
+      };
+    }>;
+  } | null | undefined;
+  readonly " $fragmentType": "smallMonthlyViewCalendar_bookings_query";
+};
+export type smallMonthlyViewCalendar_bookings_query$key = {
+  readonly " $data"?: smallMonthlyViewCalendar_bookings_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"smallMonthlyViewCalendar_bookings_query">;
+};
+
+const node: ReaderFragment = (function(){
+var v0 = [
+  "bookings"
+];
+return {
+  "argumentDefinitions": [
+    {
+      "defaultValue": 1000,
+      "kind": "LocalArgument",
+      "name": "count"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "cursor"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "monthlyCalendarDateFrom"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "monthlyCalendarDateTo"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "smallMonthlyViewCalendarBookingsSortingValues"
+    }
+  ],
+  "kind": "Fragment",
+  "metadata": {
+    "connection": [
+      {
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
+        "path": (v0/*: any*/)
+      }
+    ],
+    "refetch": {
+      "connection": {
+        "forward": {
+          "count": "count",
+          "cursor": "cursor"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
+      "fragmentPathInResult": [],
+      "operation": require('./smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment.graphql')
+    }
+  },
+  "name": "smallMonthlyViewCalendar_bookings_query",
+  "selections": [
+    {
+      "alias": "bookings",
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "orderBy",
+          "variableName": "smallMonthlyViewCalendarBookingsSortingValues"
+        },
+        {
+          "fields": [
+            {
+              "kind": "Variable",
+              "name": "fromGTE",
+              "variableName": "monthlyCalendarDateFrom"
+            },
+            {
+              "kind": "Literal",
+              "name": "includeMineOnly",
+              "value": true
+            },
+            {
+              "kind": "Variable",
+              "name": "toLT",
+              "variableName": "monthlyCalendarDateTo"
+            }
+          ],
+          "kind": "ObjectValue",
+          "name": "where"
+        }
+      ],
+      "concreteType": "BookingConnection",
+      "kind": "LinkedField",
+      "name": "__SmallMonthlyViewCalendar_bookings_connection",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingEdge",
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "BookingDetails",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "from",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "to",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "notes",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "BookingCustomerDetails",
+                  "kind": "LinkedField",
+                  "name": "customer",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "photoUrl",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "bookingCard_BookingDetails"
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
+        }
+      ],
+      "storageKey": null
+    }
+  ],
+  "type": "Query",
+  "abstractKey": null
+};
+})();
+
+(node as any).hash = "4111ca29ceb53635087857700b5c345e";
+
+export default node;

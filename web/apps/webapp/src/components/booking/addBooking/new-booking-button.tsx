@@ -5,6 +5,7 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
+import { Dayjs } from 'dayjs';
 import { memo, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -12,12 +13,13 @@ import NewBookingDialog from './new-booking-dialog';
 
 type Props = {
   queryReference: PreloadedQuery<newBookingButton_rootQuery, Record<string, unknown>>;
+  onReloadRequired?: () => void;
   organizationId?: string;
   locationId?: string;
   defaultTeamId?: string;
   hideOrganizationControl?: boolean;
   hideLocationControl?: boolean;
-  onReloadRequired?: () => void;
+  defaultDate?: Dayjs;
 };
 
 const RootQuery = graphql`
@@ -43,6 +45,7 @@ const NewBookingButton = ({
   defaultTeamId,
   hideOrganizationControl,
   hideLocationControl,
+  defaultDate,
 }: Props) => {
   const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
   const [isAddBookingDialogOpen, setIsAddBookingDialogOpen] = useState(false);
@@ -79,6 +82,7 @@ const NewBookingButton = ({
         defaultTeamId={defaultTeamId}
         hideOrganizationControl={hideOrganizationControl}
         hideLocationControl={hideLocationControl}
+        defaultDate={defaultDate}
       />
     </>
   );
@@ -87,21 +91,23 @@ const NewBookingButton = ({
 const MemoNewBookingButton = memo(NewBookingButton);
 
 type RelayProps = {
+  onReloadRequired?: () => void;
   organizationId?: string;
   locationId?: string;
   defaultTeamId?: string;
   hideOrganizationControl?: boolean;
   hideLocationControl?: boolean;
-  onReloadRequired?: () => void;
+  defaultDate?: Dayjs;
 };
 
 const NewBookingButtonWithRelay = ({
+  onReloadRequired,
   organizationId,
   locationId,
   defaultTeamId,
   hideOrganizationControl,
   hideLocationControl,
-  onReloadRequired,
+  defaultDate,
 }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<newBookingButton_rootQuery>(RootQuery);
 
@@ -143,6 +149,7 @@ const NewBookingButtonWithRelay = ({
         hideOrganizationControl={hideOrganizationControl}
         hideLocationControl={hideLocationControl}
         onReloadRequired={onReloadRequired}
+        defaultDate={defaultDate}
       />
     </ErrorBoundary>
   );

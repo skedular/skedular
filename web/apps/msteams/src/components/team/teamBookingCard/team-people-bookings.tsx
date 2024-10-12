@@ -20,16 +20,7 @@ import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridCo
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BookingIcon as BookingIconComponent } from '@repo/shared/components/booking';
-import {
-  BookingIcon,
-  DangerIcon,
-  DeleteIcon,
-  EllipseMenuIcon,
-  NotPreferredIcon,
-  OrganizationIcon,
-  PreferredIcon,
-  SettingsIcon,
-} from '@repo/shared/components/icons';
+import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -38,21 +29,22 @@ import graphql from 'babel-plugin-relay/macro';
 import { OrganizationLink } from 'components/organization';
 import { TeamLink, getTeamBookingsLink, getTeamSettingsLink } from 'components/team';
 import { Dayjs } from 'dayjs';
-import { UpdateGlobalReloadIdContext } from 'libs/providers';
+import { GlobalReloadIdContext, UpdateGlobalReloadIdContext } from 'libs/providers';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useContext, useState, useTransition } from 'react';
-import { useMutation, useRefetchableFragment } from 'react-relay';
+import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import type { teamPeopleBookings_addBookingMutation } from './__generated__/teamPeopleBookings_addBookingMutation.graphql';
 import type { teamPeopleBookings_addCustomerDefaultTeamMutation } from './__generated__/teamPeopleBookings_addCustomerDefaultTeamMutation.graphql';
+import type { teamPeopleBookings_allBookings_query$key } from './__generated__/teamPeopleBookings_allBookings_query.graphql';
 import type { teamPeopleBookings_deleteBookingMutation } from './__generated__/teamPeopleBookings_deleteBookingMutation.graphql';
 import type { teamPeopleBookings_deleteTeamMutation } from './__generated__/teamPeopleBookings_deleteTeamMutation.graphql';
 import type { teamPeopleBookings_query$key } from './__generated__/teamPeopleBookings_query.graphql';
 import type { teamPeopleBookings_removeCustomerDefaultTeamMutation } from './__generated__/teamPeopleBookings_removeCustomerDefaultTeamMutation.graphql';
-import type { TeamMemberOrderInput } from './__generated__/teamPeopleBookingsTeamMembers_PaginationQuery.graphql';
 
 type Props = {
   rootDataRelay: teamPeopleBookings_query$key;
+  rootDataAllBookingsRelay: teamPeopleBookings_allBookings_query$key;
   organizationId: string;
   teamId: string;
   teamName?: string;
@@ -158,11 +150,19 @@ const dayIndex: { [key: string]: number } = { mon: 0, tue: 1, wed: 2, thu: 3, fr
 
 const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Find a person..." />;
 
-const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment(
+const TeamPeopleBookings = ({
+  rootDataRelay,
+  rootDataAllBookingsRelay,
+  organizationId,
+  teamId,
+  teamName,
+  teamsConnectionIds,
+  hideRemoveTeamOption,
+}: Props) => {
+  const rootData = useFragment(
     graphql`
-      fragment teamPeopleBookings_query on Query @refetchable(queryName: "teamPeopleBookingsTeamMembers_PaginationQuery") {
-        teamMembers(where: { teamId: $teamId, nameContains: $peopleNameSearchText }, orderBy: $peopleSortingValues) @include(if: $teamExists) {
+      fragment teamPeopleBookings_query on Query {
+        teamMembers(where: { teamId: $teamId }, orderBy: $peopleSortingValues) {
           id
           customer {
             uniqueId
@@ -189,10 +189,18 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
             name
           }
         }
-        teamBookingPermissions(teamId: $teamId) @include(if: $teamExists) {
+        teamBookingPermissions(teamId: $teamId) {
           canAddBookingOnBehalf
           canDeleteBookingOnBehalf
         }
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [rootDataAllBookings, refetch] = useRefetchableFragment(
+    graphql`
+      fragment teamPeopleBookings_allBookings_query on Query @refetchable(queryName: "teamPeopleBookings_allBookings_refetchableFragment") {
         allBookings(where: { teamIds: [$teamId], fromGTE: $from, toLT: $to }) {
           id
           from
@@ -222,7 +230,7 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
         }
       }
     `,
-    rootDataRelay,
+    rootDataAllBookingsRelay,
   );
 
   const [commitAddBooking] = useMutation<teamPeopleBookings_addBookingMutation>(graphql`
@@ -299,20 +307,15 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
     }
   `);
 
+  const globalReloadId = useContext(GlobalReloadIdContext);
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
   const [, startTransition] = useTransition();
-  const [sortingTeamMemberOrder] = useState<TeamMemberOrderInput>({
-    direction: 'Ascending',
-    field: 'name',
-  });
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
   const [startDate, setStartDate] = useState<Dayjs>(startOfWeek());
-  const [peopleNameSearchText] = useState<string>('');
-
   const handleRefetch = useCallback(
     (startDate: Dayjs) => {
       startTransition(() => {
@@ -320,12 +323,9 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
 
         refetch(
           {
-            peopleSortingValues: [sortingTeamMemberOrder],
-            peopleNameSearchText,
             organizationId: organizationId ?? '',
             fetchBookingPermission: !!organizationId,
             teamId,
-            teamExists: !!teamId,
             from: startDate.toISOString(),
             to: endDate.toISOString(),
           },
@@ -335,8 +335,12 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
         );
       });
     },
-    [refetch, sortingTeamMemberOrder, peopleNameSearchText, organizationId, teamId],
+    [refetch, organizationId, teamId],
   );
+
+  useEffect(() => {
+    handleRefetch(startDate);
+  }, [handleRefetch, globalReloadId, startDate]);
 
   if (!rootData.me || !rootData.team || !rootData.teamMembers) {
     return <></>;
@@ -352,7 +356,7 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
 
   const rows: RowType[] = finalMembersList
     .map((customer) => {
-      if (!rootData.allBookings) {
+      if (!rootDataAllBookings.allBookings) {
         return null;
       }
 
@@ -363,41 +367,43 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
         person: customer,
         mon: {
           customer,
-          booking: rootData.allBookings.find((booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString()),
+          booking: rootDataAllBookings.allBookings.find(
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString(),
+          ),
         },
         tue: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(1, 'day').toISOString(),
           ),
         },
         wed: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(2, 'day').toISOString(),
           ),
         },
         thu: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(3, 'day').toISOString(),
           ),
         },
         fri: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(4, 'day').toISOString(),
           ),
         },
         sat: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(5, 'day').toISOString(),
           ),
         },
         sun: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(6, 'day').toISOString(),
           ),
         },
@@ -837,17 +843,6 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
           }
         />
         <CardContent>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            {rootData.team.organization && (
-              <Link href={`/organization/${rootData.team.organization.uniqueId}`}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                  <OrganizationIcon />
-                  <Typography variant="body1">{rootData.team.organization.name}</Typography>
-                </Stack>
-              </Link>
-            )}
-          </Stack>
-
           <DataGrid
             rows={rows}
             columns={columns}

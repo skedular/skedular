@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<be481efde5fd1e980645b2c3d282bcd5>>
+ * @generated SignedSource<<16c4ad4b2c7e52bc0b8144e1196d378f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type organizationLocationsTab_rootQuery$variables = {
   organizationLocationsSortingValues: ReadonlyArray<LocationOrderInput>;
 };
 export type organizationLocationsTab_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationLocationsTab_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationLocationsTab_locations_query" | "organizationLocationsTab_query">;
 };
 export type organizationLocationsTab_rootQuery = {
   response: organizationLocationsTab_rootQuery$data;
@@ -45,7 +45,14 @@ v2 = {
   "kind": "LocalArgument",
   "name": "organizationLocationsSortingValues"
 },
-v3 = [
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v4 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -73,13 +80,6 @@ v3 = [
     "name": "where"
   }
 ],
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
 v5 = {
   "alias": null,
   "args": null,
@@ -102,6 +102,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "organizationLocationsTab_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "organizationLocationsTab_locations_query"
       }
     ],
     "type": "Query",
@@ -119,7 +124,32 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "id",
+            "variableName": "organizationId"
+          }
+        ],
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "organization",
+        "plural": false,
+        "selections": [
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canModify",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v4/*: any*/),
         "concreteType": "LocationConnection",
         "kind": "LinkedField",
         "name": "locations",
@@ -148,7 +178,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
+                  (v3/*: any*/),
                   (v5/*: any*/),
                   {
                     "alias": null,
@@ -231,7 +261,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v4/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -240,45 +270,20 @@ return {
         "key": "organizationLocationsTab_locations",
         "kind": "LinkedHandle",
         "name": "locations"
-      },
-      {
-        "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "organizationId"
-          }
-        ],
-        "concreteType": "OrganizationDetails",
-        "kind": "LinkedField",
-        "name": "organization",
-        "plural": false,
-        "selections": [
-          (v4/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "canModify",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "ba158816e4ee56564330f512f39ee377",
+    "cacheID": "fd2b4d1ba631785719675a93530040dd",
     "id": null,
     "metadata": {},
     "name": "organizationLocationsTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationLocationsTab_rootQuery(\n  $organizationId: String!\n  $organizationLocationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String\n) {\n  ...organizationLocationsTab_query\n}\n\nfragment organizationLocationsTab_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $organizationLocationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  organization(id: $organizationId) {\n    id\n    canModify\n  }\n}\n"
+    "text": "query organizationLocationsTab_rootQuery(\n  $organizationId: String!\n  $organizationLocationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String\n) {\n  ...organizationLocationsTab_query\n  ...organizationLocationsTab_locations_query\n}\n\nfragment organizationLocationsTab_locations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $organizationLocationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocationsTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    canModify\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e47a71d77620230e1cb8f6a9a5d4d98f";
+(node as any).hash = "89da8509ddc4479e87e87c04161cfd19";
 
 export default node;

@@ -24,6 +24,7 @@ type Props = {
 const RootQuery = graphql`
   query organizationMemberAttendancyInsightRoot_rootQuery($organizationId: String!, $from: DateTime!, $to: DateTime!) {
     ...organizationMemberAttendancyInsight_query
+    ...organizationMemberAttendancyInsight_organizationAnalytics_query
   }
 `;
 
@@ -31,7 +32,12 @@ const OrganizationMemberAttendancyInsightRoot = ({ queryReference, onReloadRequi
   const rootData = usePreloadedQuery<organizationMemberAttendancyInsightRoot_rootQuery>(RootQuery, queryReference);
 
   return (
-    <OrganizationMemberAttendancyInsight rootDataRelay={rootData} organizationId={organizationId} hideOrganizationDetails={hideOrganizationDetails} />
+    <OrganizationMemberAttendancyInsight
+      rootDataRelay={rootData}
+      rootDataOrganizationAnalyticsRelay={rootData}
+      organizationId={organizationId}
+      hideOrganizationDetails={hideOrganizationDetails}
+    />
   );
 };
 

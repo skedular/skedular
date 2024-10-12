@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5e09ed16f3f99147dee7901a847f9d58>>
+ * @generated SignedSource<<dedc98aaa8dd374a2c91f0e16889c118>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,7 @@ export type locationZonesTab_rootQuery$variables = {
   zoneTagType: string;
 };
 export type locationZonesTab_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationZonesTab_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"locationZonesTab_paginatedLocationTags_query" | "locationZonesTab_query">;
 };
 export type locationZonesTab_rootQuery = {
   response: locationZonesTab_rootQuery$data;
@@ -114,6 +114,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "locationZonesTab_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "locationZonesTab_paginatedLocationTags_query"
       }
     ],
     "type": "Query",
@@ -157,12 +162,42 @@ return {
         "storageKey": null
       },
       {
+        "alias": null,
+        "args": null,
+        "concreteType": "CustomerDetails",
+        "kind": "LinkedField",
+        "name": "me",
+        "plural": false,
+        "selections": [
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "CustomerLocationTagDetails",
+            "kind": "LinkedField",
+            "name": "preferredZones",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "uniqueId",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
         "condition": "locationExists",
         "kind": "Condition",
         "passingValue": true,
         "selections": [
           {
-            "alias": "locationZonesTabPaginatedTags",
+            "alias": null,
             "args": (v6/*: any*/),
             "concreteType": "LocationTagConnection",
             "kind": "LinkedField",
@@ -261,62 +296,32 @@ return {
             "storageKey": null
           },
           {
-            "alias": "locationZonesTabPaginatedTags",
+            "alias": null,
             "args": (v6/*: any*/),
             "filters": [
               "where",
               "orderBy"
             ],
             "handle": "connection",
-            "key": "locationZonesTab_locationZonesTabPaginatedTags",
+            "key": "locationZonesTab_paginatedLocationTags",
             "kind": "LinkedHandle",
             "name": "paginatedLocationTags"
           }
         ]
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "CustomerDetails",
-        "kind": "LinkedField",
-        "name": "me",
-        "plural": false,
-        "selections": [
-          (v5/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CustomerLocationTagDetails",
-            "kind": "LinkedField",
-            "name": "preferredZones",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "9b12900fbf9c420298a097d40700d846",
+    "cacheID": "e07e4a8937c3c2afc385a75509bccdac",
     "id": null,
     "metadata": {},
     "name": "locationZonesTab_rootQuery",
     "operationKind": "query",
-    "text": "query locationZonesTab_rootQuery(\n  $locationId: String!\n  $locationExists: Boolean!\n  $zoneTagType: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [LocationTagOrderInput!]!\n) {\n  ...locationZonesTab_query\n}\n\nfragment locationZonesTab_query on Query {\n  location(id: $locationId) {\n    canModify\n    id\n  }\n  locationZonesTabPaginatedTags: paginatedLocationTags(first: 50, where: {locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_LocationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  ...zoneCard_Query\n}\n\nfragment zoneCard_LocationTagDetails on LocationTagDetails {\n  id\n  name\n}\n\nfragment zoneCard_Query on Query {\n  me {\n    id\n    preferredZones {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    canModify\n    id\n  }\n}\n"
+    "text": "query locationZonesTab_rootQuery(\n  $locationId: String!\n  $locationExists: Boolean!\n  $zoneTagType: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [LocationTagOrderInput!]!\n) {\n  ...locationZonesTab_query\n  ...locationZonesTab_paginatedLocationTags_query\n}\n\nfragment locationZonesTab_paginatedLocationTags_query on Query {\n  paginatedLocationTags(first: 50, where: {locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_LocationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationZonesTab_query on Query {\n  location(id: $locationId) {\n    canModify\n    id\n  }\n  ...zoneCard_Query\n}\n\nfragment zoneCard_LocationTagDetails on LocationTagDetails {\n  id\n  name\n}\n\nfragment zoneCard_Query on Query {\n  me {\n    id\n    preferredZones {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    canModify\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "77c2380c80ad049a2c649f674ecd8ac8";
+(node as any).hash = "20a6e66a2c414f43321d505928598959";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c08750fe3c563933c0604b1656984ba7>>
+ * @generated SignedSource<<f0cef515bb0216344f973744ae092893>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type newBookingDialog_query$data = {
   readonly organizationBookingPermissions?: {
     readonly canAddBookingOnBehalf: boolean;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_availableLocationDesks_query" | "bookingDetailsSelector_paginatedOrganizationMembers_query" | "bookingDetailsSelector_query">;
   readonly " $fragmentType": "newBookingDialog_query";
 };
 export type newBookingDialog_query$key = {
@@ -93,12 +93,22 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "bookingDetailsSelector_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "bookingDetailsSelector_paginatedOrganizationMembers_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "bookingDetailsSelector_availableLocationDesks_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "327e24dbb87f1335d34da63e527a31ba";
+(node as any).hash = "7d9b1d3fc45f2cf3cdbcd3328032e2de";
 
 export default node;

@@ -2,11 +2,11 @@ import { LocationLink, getLocationBookingsLink, getLocationSettingsLink } from '
 import { OrganizationLink } from '@/components/organization';
 import type { locationPeopleBookings_addBookingMutation } from '@/queries/__generated__/locationPeopleBookings_addBookingMutation.graphql';
 import type { locationPeopleBookings_addCustomerDefaultLocationMutation } from '@/queries/__generated__/locationPeopleBookings_addCustomerDefaultLocationMutation.graphql';
+import type { locationPeopleBookings_allBookings_query$key } from '@/queries/__generated__/locationPeopleBookings_allBookings_query.graphql';
 import type { locationPeopleBookings_deleteBookingMutation } from '@/queries/__generated__/locationPeopleBookings_deleteBookingMutation.graphql';
 import type { locationPeopleBookings_deleteLocationMutation } from '@/queries/__generated__/locationPeopleBookings_deleteLocationMutation.graphql';
 import type { locationPeopleBookings_query$key } from '@/queries/__generated__/locationPeopleBookings_query.graphql';
 import type { locationPeopleBookings_removeCustomerDefaultLocationMutation } from '@/queries/__generated__/locationPeopleBookings_removeCustomerDefaultLocationMutation.graphql';
-import type { LocationMemberOrderInput } from '@/queries/__generated__/locationPeopleBookingsLocationMembers_PaginationQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -41,17 +41,18 @@ import {
 } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
-import { UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
+import { GlobalReloadIdContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useContext, useState, useTransition } from 'react';
-import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
+import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: locationPeopleBookings_query$key;
+  rootDataAllBookingsRelay: locationPeopleBookings_allBookings_query$key;
   organizationId?: string;
   locationId: string;
   locationName?: string;
@@ -159,17 +160,17 @@ const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Find a per
 
 const LocationPeopleBookings = ({
   rootDataRelay,
+  rootDataAllBookingsRelay,
   organizationId,
   locationId,
   locationName,
   locationsConnectionIds,
   hideRemoveLocationOption,
 }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment(
+  const rootData = useFragment(
     graphql`
-      fragment locationPeopleBookings_query on Query @refetchable(queryName: "locationPeopleBookingsLocationMembers_PaginationQuery") {
-        locationMembers(where: { locationId: $locationId, nameContains: $peopleNameSearchText }, orderBy: $peopleSortingValues)
-          @include(if: $locationExists) {
+      fragment locationPeopleBookings_query on Query {
+        locationMembers(where: { locationId: $locationId }, orderBy: $peopleSortingValues) {
           id
           customer {
             uniqueId
@@ -180,7 +181,7 @@ const LocationPeopleBookings = ({
             photoUrl
           }
         }
-        customersByDefaultLocation(where: { locationId: $locationId, nameContains: $peopleNameSearchText }) @include(if: $locationExists) {
+        customersByDefaultLocation(where: { locationId: $locationId }) {
           id
           name
           givenName
@@ -205,10 +206,18 @@ const LocationPeopleBookings = ({
             name
           }
         }
-        locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {
+        locationBookingPermissions(locationId: $locationId) {
           canAddBookingOnBehalf
           canDeleteBookingOnBehalf
         }
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [rootDataAllBookings, refetch] = useRefetchableFragment(
+    graphql`
+      fragment locationPeopleBookings_allBookings_query on Query @refetchable(queryName: "locationPeopleBookings_allBookings_refetchableFragment") {
         allBookings(where: { locationIds: [$locationId], fromGTE: $from, toLT: $to }) {
           id
           from
@@ -238,7 +247,7 @@ const LocationPeopleBookings = ({
         }
       }
     `,
-    rootDataRelay,
+    rootDataAllBookingsRelay,
   );
 
   const [commitAddBooking] = useMutation<locationPeopleBookings_addBookingMutation>(graphql`
@@ -315,20 +324,15 @@ const LocationPeopleBookings = ({
     }
   `);
 
+  const globalReloadId = useContext(GlobalReloadIdContext);
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
   const [, startTransition] = useTransition();
-  const [sortingLocationMemberOrder] = useState<LocationMemberOrderInput>({
-    direction: 'Ascending',
-    field: 'name',
-  });
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [startDate, setStartDate] = useState<Dayjs>(startOfWeek());
-  const [peopleNameSearchText] = useState<string>('');
-
   const handleRefetch = useCallback(
     (startDate: Dayjs) => {
       startTransition(() => {
@@ -336,12 +340,9 @@ const LocationPeopleBookings = ({
 
         refetch(
           {
-            peopleSortingValues: [sortingLocationMemberOrder],
-            peopleNameSearchText,
             organizationId: organizationId ?? '',
             fetchBookingPermission: !!organizationId,
             locationId,
-            locationExists: !!locationId,
             from: startDate.toISOString(),
             to: endDate.toISOString(),
           },
@@ -351,8 +352,12 @@ const LocationPeopleBookings = ({
         );
       });
     },
-    [refetch, sortingLocationMemberOrder, peopleNameSearchText, organizationId, locationId],
+    [refetch, organizationId, locationId],
   );
+
+  useEffect(() => {
+    handleRefetch(startDate);
+  }, [handleRefetch, globalReloadId, startDate]);
 
   if (!rootData.me || !rootData.location || !rootData.locationMembers || !rootData.customersByDefaultLocation) {
     return <></>;
@@ -370,7 +375,7 @@ const LocationPeopleBookings = ({
 
   const rows: RowType[] = finalMembersList
     .map((customer) => {
-      if (!rootData.allBookings) {
+      if (!rootDataAllBookings.allBookings) {
         return null;
       }
 
@@ -381,41 +386,43 @@ const LocationPeopleBookings = ({
         person: customer,
         mon: {
           customer,
-          booking: rootData.allBookings.find((booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString()),
+          booking: rootDataAllBookings.allBookings.find(
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString(),
+          ),
         },
         tue: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(1, 'day').toISOString(),
           ),
         },
         wed: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(2, 'day').toISOString(),
           ),
         },
         thu: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(3, 'day').toISOString(),
           ),
         },
         fri: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(4, 'day').toISOString(),
           ),
         },
         sat: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(5, 'day').toISOString(),
           ),
         },
         sun: {
           customer,
-          booking: rootData.allBookings.find(
+          booking: rootDataAllBookings.allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(6, 'day').toISOString(),
           ),
         },

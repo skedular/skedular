@@ -190,8 +190,8 @@ const AddTeamWithRelay = ({ organizationId }: RelayProps) => {
   useEffect(() => {
     loadQuery(
       {
-        organizationId: '',
-        organizationExists: false,
+        organizationId: organizationId ?? '',
+        organizationExists: !!organizationId,
         organizationMemberSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',
@@ -203,7 +203,7 @@ const AddTeamWithRelay = ({ organizationId }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId]);
+  }, [loadQuery, triggerReloadId, organizationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

@@ -1,7 +1,7 @@
 import { getTeamAddLink } from '@/components/team';
 import { TeamBookingsCard } from '@/components/team/teamBookingCard';
-import type { TeamOrderField, TeamOrderInput, teams_PaginationQuery } from '@/queries/__generated__/teams_PaginationQuery.graphql';
 import type { teams_query$key } from '@/queries/__generated__/teams_query.graphql';
+import type { TeamOrderField, TeamOrderInput, teams_refetchableFragment } from '@/queries/__generated__/teams_refetchableFragment.graphql';
 import type { teams_rootQuery } from '@/queries/__generated__/teams_rootQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
@@ -44,11 +44,11 @@ const Teams = ({ queryReference }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<teams_PaginationQuery, teams_query$key>(
+  } = usePaginationFragment<teams_refetchableFragment, teams_query$key>(
     graphql`
       fragment teams_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "teams_PaginationQuery") {
+      @refetchable(queryName: "teams_refetchableFragment") {
         teams(first: $count, after: $cursor, where: { nameContains: $teamNameSearchText }, orderBy: $teamsSortingValues)
           @connection(key: "teams_teams") {
           __id

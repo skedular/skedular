@@ -1,7 +1,12 @@
 import { NewZoneDialog, ZoneCard } from '@/components/zone';
+import type { locationZonesTab_paginatedLocationTags_query$key } from '@/queries/__generated__/locationZonesTab_paginatedLocationTags_query.graphql';
+import type {
+  LocationTagOrderField,
+  LocationTagOrderInput,
+  locationZonesTab_paginatedLocationTags_refetchableFragment,
+} from '@/queries/__generated__/locationZonesTab_paginatedLocationTags_refetchableFragment.graphql';
 import type { locationZonesTab_query$key } from '@/queries/__generated__/locationZonesTab_query.graphql';
 import type { locationZonesTab_rootQuery } from '@/queries/__generated__/locationZonesTab_rootQuery.graphql';
-import type { LocationTagOrderField, LocationTagOrderInput, zones_PaginationQuery } from '@/queries/__generated__/zones_PaginationQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -22,7 +27,7 @@ import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
   queryReference: PreloadedQuery<locationZonesTab_rootQuery, Record<string, unknown>>;
@@ -39,30 +44,39 @@ const RootQuery = graphql`
     $zoneSortingValues: [LocationTagOrderInput!]!
   ) {
     ...locationZonesTab_query
+    ...locationZonesTab_paginatedLocationTags_query
   }
 `;
 
 const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<locationZonesTab_rootQuery>(RootQuery, queryReference);
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<zones_PaginationQuery, locationZonesTab_query$key>(
+  const rootData = useFragment<locationZonesTab_query$key>(
     graphql`
-      fragment locationZonesTab_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "zones_PaginationQuery") {
+      fragment locationZonesTab_query on Query {
         location(id: $locationId) {
           canModify
         }
-        locationZonesTabPaginatedTags: paginatedLocationTags(
+        ...zoneCard_Query
+      }
+    `,
+    rootDataRelay,
+  );
+  const {
+    data: rootDataPaginatedLocationTags,
+    loadNext,
+    isLoadingNext,
+    refetch,
+  } = usePaginationFragment<locationZonesTab_paginatedLocationTags_refetchableFragment, locationZonesTab_paginatedLocationTags_query$key>(
+    graphql`
+      fragment locationZonesTab_paginatedLocationTags_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
+      @refetchable(queryName: "locationZonesTab_paginatedLocationTags_refetchableFragment") {
+        paginatedLocationTags(
           first: $count
           after: $cursor
           where: { locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText }
           orderBy: $zoneSortingValues
-        ) @connection(key: "locationZonesTab_locationZonesTabPaginatedTags") @include(if: $locationExists) {
+        ) @connection(key: "locationZonesTab_paginatedLocationTags") @include(if: $locationExists) {
           __id
           totalCount
           edges {
@@ -72,7 +86,6 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
             }
           }
         }
-        ...zoneCard_Query
       }
     `,
     rootDataRelay,
@@ -151,16 +164,16 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
 
   const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
   const connectionIds = useMemo(
-    () => (rootData.locationZonesTabPaginatedTags ? [rootData.locationZonesTabPaginatedTags.__id] : []),
-    [rootData.locationZonesTabPaginatedTags],
+    () => (rootDataPaginatedLocationTags.paginatedLocationTags ? [rootDataPaginatedLocationTags.paginatedLocationTags.__id] : []),
+    [rootDataPaginatedLocationTags.paginatedLocationTags],
   );
   const [isAddZoneDialogOpen, setIsAddZoneDialogOpen] = useState(false);
 
-  if (!rootData.location || !rootData.locationZonesTabPaginatedTags) {
+  if (!rootData.location || !rootDataPaginatedLocationTags.paginatedLocationTags) {
     return <></>;
   }
 
-  const locationTagEdges = rootData.locationZonesTabPaginatedTags.edges;
+  const locationTagEdges = rootDataPaginatedLocationTags.paginatedLocationTags.edges;
   const slicedEdges = locationTagEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > locationTagEdges.length ? locationTagEdges.length : page * pageSize + pageSize,
@@ -219,7 +232,7 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
 
       <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
         <TablePagination
-          count={rootData.locationZonesTabPaginatedTags.totalCount ? rootData.locationZonesTabPaginatedTags.totalCount : 0}
+          count={rootDataPaginatedLocationTags.paginatedLocationTags.totalCount ? rootDataPaginatedLocationTags.paginatedLocationTags.totalCount : 0}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={pageSize}

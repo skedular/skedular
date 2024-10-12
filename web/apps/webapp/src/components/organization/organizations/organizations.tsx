@@ -1,11 +1,11 @@
 import { getOrganizationAddLink } from '@/components/organization';
 import { OrganizationBookingsCard } from '@/components/organization/organizationBookingCard';
+import type { organizations_query$key } from '@/queries/__generated__/organizations_query.graphql';
 import type {
   OrganizationOrderField,
   OrganizationOrderInput,
-  organizations_PaginationQuery,
-} from '@/queries/__generated__/organizations_PaginationQuery.graphql';
-import type { organizations_query$key } from '@/queries/__generated__/organizations_query.graphql';
+  organizations_refetchableFragment,
+} from '@/queries/__generated__/organizations_refetchableFragment.graphql';
 import type { organizations_rootQuery } from '@/queries/__generated__/organizations_rootQuery.graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
@@ -48,11 +48,11 @@ const Organizations = ({ queryReference }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizations_PaginationQuery, organizations_query$key>(
+  } = usePaginationFragment<organizations_refetchableFragment, organizations_query$key>(
     graphql`
       fragment organizations_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizations_PaginationQuery") {
+      @refetchable(queryName: "organizations_refetchableFragment") {
         organizations(first: $count, after: $cursor, where: { nameContains: $organizationNameSearchText }, orderBy: $organizationsSortingValues)
           @connection(key: "organizations_organizations") {
           __id
