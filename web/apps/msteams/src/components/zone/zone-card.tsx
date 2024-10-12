@@ -155,6 +155,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {
@@ -199,6 +201,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {
@@ -236,6 +240,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Zone '${locationTagDetails.name}' has been set as the preferred zone.`, {
@@ -282,6 +288,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Zone '${locationTagDetails.name}' has been removed as your preferred zone.`, {

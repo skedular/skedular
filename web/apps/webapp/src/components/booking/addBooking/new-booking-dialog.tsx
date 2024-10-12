@@ -149,9 +149,11 @@ const NewBookingDialog = ({
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          onAddClicked();
+
+          return;
         }
+
+        onAddClicked();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {

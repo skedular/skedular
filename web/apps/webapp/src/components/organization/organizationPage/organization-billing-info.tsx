@@ -124,12 +124,14 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setEditing(false);
-          startTransition(() => {
-            refetch({ organizationId: rootData.organization?.id }, { fetchPolicy: 'store-and-network' });
-          });
+
+          return;
         }
+
+        setEditing(false);
+        startTransition(() => {
+          refetch({ organizationId: rootData.organization?.id }, { fetchPolicy: 'store-and-network' });
+        });
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update organization '${rootData.organization?.name}' billing contact info. Error: ${error.message}`, {

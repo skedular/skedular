@@ -300,6 +300,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {
@@ -363,6 +365,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {
@@ -415,6 +419,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {
@@ -467,6 +473,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Desk '${deskName}' has been set as the preferred desk.`, {
@@ -513,6 +521,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Desk '${deskName}' has been removed as your preferred desk.`, {

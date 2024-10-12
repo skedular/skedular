@@ -96,9 +96,11 @@ const AddOrganization = ({ queryReference }: Props) => {
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          router.back();
+
+          return;
         }
+
+        router.back();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to add new organization '${name}'. Error: ${error.message}`, {

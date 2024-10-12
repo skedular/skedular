@@ -70,11 +70,12 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setName('');
 
-          onAddClicked();
+          return;
         }
+
+        setName('');
+        onAddClicked();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to add zone '${name}'. Error: ${error.message}`, {

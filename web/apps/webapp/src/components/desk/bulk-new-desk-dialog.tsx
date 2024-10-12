@@ -92,13 +92,14 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setNamePrefix('');
-          setCount(0);
-          setLocationTagIds([]);
 
-          onAddClicked();
+          return;
         }
+
+        setNamePrefix('');
+        setCount(0);
+        setLocationTagIds([]);
+        onAddClicked();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to add desks. Error: ${error.message}`, {

@@ -10,10 +10,11 @@ import { endOfDay, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs
 import graphql from 'babel-plugin-relay/macro';
 import { BookingDate, BookingDetailsSelector, BookingNotes } from 'components/booking';
 import dayjs, { Dayjs } from 'dayjs';
+import { UpdateGlobalReloadIdContext } from 'libs/providers';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useMemo, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
 import { array, date, object, string } from 'yup';
@@ -102,8 +103,8 @@ const NewBookingDialog = ({
     }
   `);
 
+  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
-
   const schema = !!rootData.organizationBookingPermissions?.canAddBookingOnBehalf ? bookingSchema : bookingWithoutMemberSchema;
   const validate = makeValidate(schema);
   const requiredFields = makeRequired(schema);
@@ -150,9 +151,12 @@ const NewBookingDialog = ({
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          onAddClicked();
+
+          return;
         }
+
+        onAddClicked();
+        UpdateGlobalReloadId();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {

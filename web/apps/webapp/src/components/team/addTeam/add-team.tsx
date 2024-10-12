@@ -105,9 +105,11 @@ const AddTeam = ({ queryReference, organizationId }: Props) => {
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          router.back();
+
+          return;
         }
+
+        router.back();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to add new team '${name}'. Error: ${error.message}`, {

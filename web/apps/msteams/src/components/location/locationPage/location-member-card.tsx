@@ -101,6 +101,8 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {

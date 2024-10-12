@@ -162,9 +162,11 @@ const OrganizationPeopleTab = ({ queryReference, organizationId }: Props) => {
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setInvitePeopleDialogOpen(false);
+
+          return;
         }
+
+        setInvitePeopleDialogOpen(false);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to invite people to join organization '${rootData.organization?.name}'. Error: ${error.message}`, {

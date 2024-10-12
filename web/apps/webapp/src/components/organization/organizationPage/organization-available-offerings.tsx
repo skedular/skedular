@@ -77,9 +77,11 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onReloadRequired }: Pro
           });
 
           onReloadRequired();
-        } else {
-          onReloadRequired();
+
+          return;
         }
+
+        onReloadRequired();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to upgrade offering. Error: ${error.message}`, {

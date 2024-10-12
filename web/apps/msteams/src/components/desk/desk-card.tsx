@@ -264,6 +264,8 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {
@@ -305,6 +307,8 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {
@@ -357,6 +361,8 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {
@@ -407,6 +413,8 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {
@@ -447,6 +455,8 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Desk '${deskDetails.name}' has been set as the preferred desk.`, {
@@ -493,6 +503,8 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Desk '${deskDetails.name}' has been removed as your preferred desk.`, {
@@ -547,6 +559,8 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {
@@ -599,6 +613,8 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {

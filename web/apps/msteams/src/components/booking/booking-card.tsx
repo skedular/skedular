@@ -26,10 +26,11 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import dayjs, { Dayjs } from 'dayjs';
+import { UpdateGlobalReloadIdContext } from 'libs/providers';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useMemo, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
 import { array, date, object, string } from 'yup';
@@ -265,6 +266,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     }
   `);
 
+  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(bookingSchema);
@@ -301,7 +303,11 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
+
+        UpdateGlobalReloadId();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to make a booking '${shortDateFormatFrom}'. Error: ${error.message}`, {
@@ -364,7 +370,11 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
+
+        UpdateGlobalReloadId();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to delete booking '${shortDateFormatFrom}'. Error: ${error.message}`, {
@@ -416,7 +426,11 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
+
+        UpdateGlobalReloadId();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${error.message}`, {
@@ -468,6 +482,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Desk '${deskName}' has been set as the preferred desk.`, {
@@ -514,6 +530,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Desk '${deskName}' has been removed as your preferred desk.`, {

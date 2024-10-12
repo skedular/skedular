@@ -95,9 +95,11 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
           });
 
           setCardState(CardState.Pending);
-        } else {
-          setCardState(CardState.Rejected);
+
+          return;
         }
+
+        setCardState(CardState.Rejected);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to reject invitation to join team '${team?.name}'. Error: ${error.message}`, {
@@ -128,9 +130,11 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
           });
 
           setCardState(CardState.Pending);
-        } else {
-          setCardState(CardState.Accepted);
+
+          return;
         }
+
+        setCardState(CardState.Accepted);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to accept invitation to join team '${team?.name}'. Error: ${error.message}`, {

@@ -73,9 +73,11 @@ const AddLocation = ({ organizationId }: Props) => {
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          router.back();
+
+          return;
         }
+
+        router.back();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to add new location '${name}'. Error: ${error.message}`, {

@@ -550,6 +550,8 @@ const LocationPeopleBookings = ({
               variant: 'error',
               anchorOrigin,
             });
+
+            return;
           }
 
           let message = `Booking removed for ${getCustomerFullName(booking.customer)}`;
@@ -590,6 +592,8 @@ const LocationPeopleBookings = ({
               variant: 'error',
               anchorOrigin,
             });
+
+            return;
           }
 
           const booking = response.addBooking?.booking!;
@@ -689,6 +693,8 @@ const LocationPeopleBookings = ({
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Location '${locationName}' has been set as the preferred location.`, {
@@ -735,6 +741,8 @@ const LocationPeopleBookings = ({
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Location '${locationName}' has been removed as your preferred location.`, {
@@ -786,6 +794,8 @@ const LocationPeopleBookings = ({
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Location '${locationName}' has been successfully removed.`, {

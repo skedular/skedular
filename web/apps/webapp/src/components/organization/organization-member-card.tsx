@@ -101,6 +101,8 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
       },
       onError: (error) => {

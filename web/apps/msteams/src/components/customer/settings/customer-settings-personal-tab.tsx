@@ -110,9 +110,11 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setEditing(false);
+
+          return;
         }
+
+        setEditing(false);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update personal details. Error: ${error.message}`, {

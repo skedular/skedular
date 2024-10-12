@@ -124,9 +124,11 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setEditing(false);
+
+          return;
         }
+
+        setEditing(false);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update organization '${name}'. Error: ${error.message}`, {

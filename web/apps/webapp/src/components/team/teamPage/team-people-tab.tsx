@@ -268,10 +268,12 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setEditingOrganizationMembers(false);
-          handleRefetch(pageSize, sortingOrder, peopleNameSearchText);
+
+          return;
         }
+
+        setEditingOrganizationMembers(false);
+        handleRefetch(pageSize, sortingOrder, peopleNameSearchText);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update team '${rootData.team?.name}' members. Error: ${error.message}`, {
@@ -328,9 +330,11 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setInvitePeopleDialogOpen(false);
+
+          return;
         }
+
+        setInvitePeopleDialogOpen(false);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to invite people to join team '${rootData.team?.name}'. Error: ${error.message}`, {

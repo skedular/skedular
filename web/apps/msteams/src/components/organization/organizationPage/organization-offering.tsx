@@ -76,9 +76,11 @@ const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
           });
 
           onReloadRequired();
-        } else {
-          onReloadRequired();
+
+          return;
         }
+
+        onReloadRequired();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to cancel offering. Error: ${error.message}`, {

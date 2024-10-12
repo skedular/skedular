@@ -95,9 +95,11 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
           });
 
           setCardState(CardState.Pending);
-        } else {
-          setCardState(CardState.Rejected);
+
+          return;
         }
+
+        setCardState(CardState.Rejected);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to reject invitation to join location '${location?.name}'. Error: ${error.message}`, {
@@ -128,9 +130,11 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
           });
 
           setCardState(CardState.Pending);
-        } else {
-          setCardState(CardState.Accepted);
+
+          return;
         }
+
+        setCardState(CardState.Accepted);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to accept invitation to join location '${location?.name}'. Error: ${error.message}`, {

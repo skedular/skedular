@@ -20,7 +20,6 @@ type Props = {
 };
 
 const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }: Props) => {
-  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [commitAddBooking] = useMutation<smallMonthlyViewCalendarDay_addBookingMutation>(graphql`
     mutation smallMonthlyViewCalendarDay_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
       addBooking(input: $input) {
@@ -73,6 +72,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
     }
   `);
 
+  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
   const renderDay = (props: PickersDayProps<Dayjs>): JSX.Element => {
     if (!rootData.monthlyBookings || !rootData.monthlyBookings.__id) {
@@ -113,6 +113,8 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
                     variant: 'error',
                     anchorOrigin,
                   });
+
+                  return;
                 }
 
                 UpdateGlobalReloadId();
@@ -148,6 +150,8 @@ const SmallMonthlyViewCalendarDay = ({ rootData, connectionIds, organizationId }
                     variant: 'error',
                     anchorOrigin,
                   });
+
+                  return;
                 }
 
                 UpdateGlobalReloadId();

@@ -123,44 +123,46 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          if (!rootData.me) {
-            return;
-          }
 
-          commitCompleteOrganizationOnboarding({
-            variables: {
-              input: {
-                clientMutationId: nanoid(),
-              },
+          return;
+        }
+
+        if (!rootData.me) {
+          return;
+        }
+
+        commitCompleteOrganizationOnboarding({
+          variables: {
+            input: {
+              clientMutationId: nanoid(),
             },
-            onCompleted: (_, errors) => {
-              if (errors && errors.length > 0) {
-                enqueueSnackbar(`Failed to complete organization onboarding. Error: ${joinErrors(errors)}`, {
-                  variant: 'error',
-                  anchorOrigin,
-                });
-              } else {
-                setIsOnboardingOpen(false);
-              }
-            },
-            onError: (error) => {
-              enqueueSnackbar(`Failed to complete organization onboarding. Error: ${error.message}`, {
+          },
+          onCompleted: (_, errors) => {
+            if (errors && errors.length > 0) {
+              enqueueSnackbar(`Failed to complete organization onboarding. Error: ${joinErrors(errors)}`, {
                 variant: 'error',
                 anchorOrigin,
               });
-            },
-            optimisticResponse: {
-              completeOrganizationOnboarding: {
-                customer: {
-                  id: rootData.me.id,
-                  isOrganizationOnboardingDone: true,
-                  isLocationOnboardingDone: rootData.me ? rootData.me.isLocationOnboardingDone : false,
-                },
+            } else {
+              setIsOnboardingOpen(false);
+            }
+          },
+          onError: (error) => {
+            enqueueSnackbar(`Failed to complete organization onboarding. Error: ${error.message}`, {
+              variant: 'error',
+              anchorOrigin,
+            });
+          },
+          optimisticResponse: {
+            completeOrganizationOnboarding: {
+              customer: {
+                id: rootData.me.id,
+                isOrganizationOnboardingDone: true,
+                isLocationOnboardingDone: rootData.me ? rootData.me.isLocationOnboardingDone : false,
               },
             },
-          });
-        }
+          },
+        });
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to add new organization '${name}'. Error: ${error.message}`, {
@@ -202,9 +204,11 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setIsOnboardingOpen(false);
+
+          return;
         }
+
+        setIsOnboardingOpen(false);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to dismiss organization onboarding. Error: ${error.message}`, {

@@ -96,21 +96,23 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
           });
 
           setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
+
+          return;
+        }
+
+        if (response.addOrganizationPaymentMethodIntent) {
+          setStripePromise(loadStripe(response.addOrganizationPaymentMethodIntent?.publishedKeys));
+
+          setClientSecret(response.addOrganizationPaymentMethodIntent?.clientSecret);
+
+          setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_DETAILS);
         } else {
-          if (response.addOrganizationPaymentMethodIntent) {
-            setStripePromise(loadStripe(response.addOrganizationPaymentMethodIntent?.publishedKeys));
+          enqueueSnackbar(`Returned payment intent is null`, {
+            variant: 'error',
+            anchorOrigin,
+          });
 
-            setClientSecret(response.addOrganizationPaymentMethodIntent?.clientSecret);
-
-            setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_DETAILS);
-          } else {
-            enqueueSnackbar(`Returned payment intent is null`, {
-              variant: 'error',
-              anchorOrigin,
-            });
-
-            setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
-          }
+          setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
         }
       },
       onError: (error) => {
@@ -148,10 +150,11 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
+
+          return;
         }
 
+        setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
         onReloadRequired();
       },
       onError: (error) => {

@@ -521,6 +521,8 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
               variant: 'error',
               anchorOrigin,
             });
+
+            return;
           }
 
           let message = `Booking removed for ${getCustomerFullName(booking.customer)}`;
@@ -561,6 +563,8 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
               variant: 'error',
               anchorOrigin,
             });
+
+            return;
           }
 
           const booking = response.addBooking?.booking!;
@@ -660,6 +664,8 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Team '${teamName}' has been set as the preferred team.`, {
@@ -706,6 +712,8 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Team '${teamName}' has been removed as your preferred team.`, {
@@ -757,6 +765,8 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Team '${teamName}' has been successfully removed.`, {

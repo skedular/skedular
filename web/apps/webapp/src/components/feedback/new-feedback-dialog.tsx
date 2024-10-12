@@ -78,11 +78,12 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setFeedbackContent('');
 
-          onSendClicked();
+          return;
         }
+
+        setFeedbackContent('');
+        onSendClicked();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to submit feedback. Error: ${error.message}`, {

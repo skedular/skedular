@@ -130,9 +130,11 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setEditing(false);
+
+          return;
         }
+
+        setEditing(false);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update team '${name}'. Error: ${error.message}`, {

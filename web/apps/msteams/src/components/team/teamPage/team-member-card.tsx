@@ -140,9 +140,11 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          onRefetchNeeded();
+
+          return;
         }
+
+        onRefetchNeeded();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update team '${rootData.team?.name}'. Error: ${error.message}`, {

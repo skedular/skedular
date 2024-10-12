@@ -364,9 +364,11 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setInvitePeopleDialogOpen(false);
+
+          return;
         }
+
+        setInvitePeopleDialogOpen(false);
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to invite people to join location '${rootDataLocation.location?.name}'. Error: ${error.message}`, {

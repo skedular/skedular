@@ -522,6 +522,8 @@ const OrganizationPeopleBookings = ({
               variant: 'error',
               anchorOrigin,
             });
+
+            return;
           }
 
           let message = `Booking removed for ${getCustomerFullName(booking.customer)}`;
@@ -561,6 +563,8 @@ const OrganizationPeopleBookings = ({
               variant: 'error',
               anchorOrigin,
             });
+
+            return;
           }
 
           const booking = response.addBooking?.booking!;
@@ -660,6 +664,8 @@ const OrganizationPeopleBookings = ({
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`'${organizationName}' is now your default organization.`, {
@@ -701,6 +707,8 @@ const OrganizationPeopleBookings = ({
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`'${organizationName}' is no longer set as your default organization.`, {
@@ -752,6 +760,8 @@ const OrganizationPeopleBookings = ({
             variant: 'error',
             anchorOrigin,
           });
+
+          return;
         }
 
         enqueueSnackbar(`Organization '${organizationName}' has been successfully removed.`, {

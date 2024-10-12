@@ -89,12 +89,13 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
             variant: 'error',
             anchorOrigin,
           });
-        } else {
-          setName('');
-          setLocationTagIds([]);
 
-          onAddClicked();
+          return;
         }
+
+        setName('');
+        setLocationTagIds([]);
+        onAddClicked();
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to add desk '${name}'. Error: ${error.message}`, {
