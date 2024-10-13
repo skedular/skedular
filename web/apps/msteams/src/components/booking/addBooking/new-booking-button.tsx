@@ -22,6 +22,7 @@ type Props = {
   hideOrganizationControl?: boolean;
   hideLocationControl?: boolean;
   defaultDate?: Dayjs;
+  fullWidth?: boolean;
 };
 
 const RootQuery = graphql`
@@ -49,6 +50,7 @@ const NewBookingButton = ({
   hideOrganizationControl,
   hideLocationControl,
   defaultDate,
+  fullWidth,
 }: Props) => {
   const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
   const [isAddBookingDialogOpen, setIsAddBookingDialogOpen] = useState(false);
@@ -71,7 +73,14 @@ const NewBookingButton = ({
 
   return (
     <>
-      <Button variant="contained" startIcon={<NewIcon />} size="small" sx={{ alignSelf: 'flex-start' }} onClick={handleAddBookingClick}>
+      <Button
+        variant="contained"
+        startIcon={<NewIcon />}
+        size="small"
+        sx={{ alignSelf: 'flex-start' }}
+        onClick={handleAddBookingClick}
+        fullWidth={fullWidth}
+      >
         Make a booking
       </Button>
       <NewBookingDialog
@@ -102,6 +111,7 @@ type RelayProps = {
   hideOrganizationControl?: boolean;
   hideLocationControl?: boolean;
   defaultDate?: Dayjs;
+  fullWidth?: boolean;
 };
 
 const NewBookingButtonWithRelay = ({
@@ -113,6 +123,7 @@ const NewBookingButtonWithRelay = ({
   hideOrganizationControl,
   hideLocationControl,
   defaultDate,
+  fullWidth,
 }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<newBookingButton_rootQuery>(RootQuery);
 
@@ -156,6 +167,7 @@ const NewBookingButtonWithRelay = ({
         hideLocationControl={hideLocationControl}
         onReloadRequired={onReloadRequired}
         defaultDate={defaultDate}
+        fullWidth={fullWidth}
       />
     </ErrorBoundary>
   );
