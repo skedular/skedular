@@ -2,6 +2,7 @@ import { CustomerDaySummary } from '@/components/customer/customerDaySummary';
 import { LocationBookingsCard } from '@/components/location/locationBookingCard';
 import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type { dashboard_rootQuery } from '@/queries/__generated__/dashboard_rootQuery.graphql';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import { Loading } from '@repo/shared/components/loading';
@@ -48,24 +49,48 @@ const Dashboard = ({ queryReference }: Props) => {
   }
 
   return (
-    <Stack direction="row" spacing={1}>
-      <Stack direction="column" spacing={1}>
-        <CustomerDaySummary date={today} />
-        <CustomerDaySummary date={tomorrow} />
-      </Stack>
-      <Grid container spacing={2}>
-        {rootData.myTeams.map((team) => (
-          <Grid key={team.id}>
-            <TeamBookingsCard
-              organizationId={team.organization?.uniqueId}
-              organizationName={team.organization?.name}
-              teamId={team.id}
-              teamName={team.name}
-              teamsConnectionIds={[]}
-              hideRemoveTeamOption
-            />
+    <>
+      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+        <Stack direction="row" spacing={1}>
+          <Stack direction="column" spacing={1}>
+            <CustomerDaySummary date={today} />
+            <CustomerDaySummary date={tomorrow} />
+          </Stack>
+          <Grid container spacing={2}>
+            {rootData.myLocations.map((location) => (
+              <Grid key={location.id}>
+                <LocationBookingsCard
+                  organizationId={location.organization?.uniqueId}
+                  organizationName={location.organization?.name}
+                  locationId={location.id}
+                  locationName={location.name}
+                  locationsConnectionIds={[]}
+                  hideRemoveLocationOption
+                />
+              </Grid>
+            ))}
+            {rootData.myTeams.map((team) => (
+              <Grid key={team.id}>
+                <TeamBookingsCard
+                  organizationId={team.organization?.uniqueId}
+                  organizationName={team.organization?.name}
+                  teamId={team.id}
+                  teamName={team.name}
+                  teamsConnectionIds={[]}
+                  hideRemoveTeamOption
+                />
+              </Grid>
+            ))}
           </Grid>
-        ))}
+        </Stack>
+      </Box>
+      <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+        <Grid>
+          <CustomerDaySummary date={today} />
+        </Grid>
+        <Grid>
+          <CustomerDaySummary date={tomorrow} />
+        </Grid>
         {rootData.myLocations.map((location) => (
           <Grid key={location.id}>
             <LocationBookingsCard
@@ -78,8 +103,20 @@ const Dashboard = ({ queryReference }: Props) => {
             />
           </Grid>
         ))}
-      </Grid>
-    </Stack>
+        {rootData.myTeams.map((team) => (
+          <Grid key={team.id}>
+            <TeamBookingsCard
+              organizationId={team.organization?.uniqueId}
+              organizationName={team.organization?.name}
+              teamId={team.id}
+              teamName={team.name}
+              teamsConnectionIds={[]}
+              hideRemoveTeamOption
+            />
+          </Grid>
+        ))}
+      </Box>
+    </>
   );
 };
 
