@@ -1,0 +1,107 @@
+import { LocationBookingsCard } from '@/components/location/locationBookingCard';
+import { TeamBookingsCard } from '@/components/team/teamBookingCard';
+import type { dashboard_rootQuery } from '@/queries/__generated__/dashboard_rootQuery.graphql';
+import Grid from '@mui/material/Grid2';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
+import { memo, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+
+type Props = {
+  queryReference: PreloadedQuery<dashboard_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
+};
+
+const RootQuery = graphql`
+  query dashboard_rootQuery {
+    myLocations {
+      id
+      name
+      organization {
+        uniqueId
+        name
+      }
+    }
+    myTeams {
+      id
+      name
+      organization {
+        uniqueId
+        name
+      }
+    }
+  }
+`;
+
+const Dashboard = ({ queryReference }: Props) => {
+  const rootData = usePreloadedQuery<dashboard_rootQuery>(RootQuery, queryReference);
+  if (!rootData.myTeams || !rootData.myLocations) {
+    return <></>;
+  }
+
+  return (
+    <Grid container spacing={2}>
+      {rootData.myTeams.map((team) => (
+        <Grid key={team.id} sx={{ flexGrow: 1 }}>
+          <TeamBookingsCard
+            organizationId={team.organization?.uniqueId}
+            organizationName={team.organization?.name}
+            teamId={team.id}
+            teamName={team.name}
+            teamsConnectionIds={[]}
+            hideRemoveTeamOption
+          />
+        </Grid>
+      ))}
+      {rootData.myLocations.map((location) => (
+        <Grid key={location.id} sx={{ flexGrow: 1 }}>
+          <LocationBookingsCard
+            organizationId={location.organization?.uniqueId}
+            organizationName={location.organization?.name}
+            locationId={location.id}
+            locationName={location.name}
+            locationsConnectionIds={[]}
+            hideRemoveLocationOption
+          />
+        </Grid>
+      ))}
+    </Grid>
+  );
+};
+
+const MemoDashboard = memo(Dashboard);
+
+const DashboardWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<dashboard_rootQuery>(RootQuery);
+  const [triggerReload, setTriggerReload] = useState(0);
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {},
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReload]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReload(triggerReload + 1);
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoDashboard queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(DashboardWithRelay);
