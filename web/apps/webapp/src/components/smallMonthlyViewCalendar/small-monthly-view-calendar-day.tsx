@@ -89,7 +89,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
         return from.year() === props.day.year() && from.month() === props.day.month() && from.date() === props.day.date();
       });
 
-    const pickersDay = (
+    return (
       <PickersDay
         {...props}
         selected={false}
@@ -189,15 +189,14 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
             });
           }
         }}
-      />
-    );
-
-    return matchingBookingFound ? (
-      <Badge variant="dot" color="primary">
-        {pickersDay}
-      </Badge>
-    ) : (
-      pickersDay
+      >
+        {matchingBookingFound && (
+          <Badge variant="dot" color="primary">
+            {props.day.date()}
+          </Badge>
+        )}
+        {!matchingBookingFound && <> {props.day.date()}</>}
+      </PickersDay>
     );
   };
 
