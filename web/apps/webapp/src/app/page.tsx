@@ -1,14 +1,12 @@
 'use client';
 
-import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
+import { Dashboard } from '@/components/customer/dashboard';
 import { RootShell } from '@/components/rootShell';
-import { SmallMonthlyViewCalendar } from '@/components/smallMonthlyViewCalendar';
 import { memo } from 'react';
 
 const Home = () => (
   <RootShell>
-    <OrganizationOnboarding />
-    <SmallMonthlyViewCalendar />
+    <Dashboard />
   </RootShell>
 );
 

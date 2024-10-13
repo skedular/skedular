@@ -23,7 +23,8 @@ import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone'
 import { GlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, isTodayDate, isTomorrowDate, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import { memo, startTransition, useContext, useEffect, useMemo, useState } from 'react';
+import { nanoid } from 'nanoid';
+import { memo, startTransition, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 
@@ -402,6 +403,8 @@ type RelayProps = {
 
 const CustomerDaySummaryWithRelay = ({ date }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<customerDaySummary_rootQuery>(RootQuery);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [, startTransition] = useTransition();
 
   useEffect(() => {
     loadQuery(
@@ -416,15 +419,9 @@ const CustomerDaySummaryWithRelay = ({ date }: RelayProps) => {
   }, [loadQuery, date]);
 
   const handleReloadRequired = () => {
-    loadQuery(
-      {
-        from: date.toISOString(),
-        to: endOfDay(date).toISOString(),
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
+    startTransition(() => {
+      setTriggerReloadId(nanoid());
+    });
   };
 
   if (!queryReference) {
