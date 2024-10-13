@@ -26,8 +26,8 @@ type Props = {
   onReloadRequired?: () => void;
 };
 
-export const getLocationBaseLink = (id: string, organizationId: string) => `/organization/${organizationId}/location/${id}`;
-export const getLocationAddLink = (organizationId: string) => `/organization/${organizationId}/location/add`;
+export const getLocationBaseLink = (id: string, organizationId: string) => `/organizations/${organizationId}/locations/${id}`;
+export const getLocationAddLink = (organizationId: string) => `/organizations/${organizationId}/locations/add`;
 export const getLocationBookingsLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=bookings`;
 export const getLocationSettingsLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=about`;
 export const getLocationPeopleLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=people`;

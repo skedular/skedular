@@ -22,7 +22,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link component={NextLink} href="/organization">
+      <Link component={NextLink} href="/organizations">
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -33,7 +33,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link component={NextLink} href="/location">
+      <Link component={NextLink} href="/locations">
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -44,7 +44,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link component={NextLink} href="/team">
+      <Link component={NextLink} href="/teams">
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -55,7 +55,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link component={NextLink} href="/notification">
+      <Link component={NextLink} href="/notifications">
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>

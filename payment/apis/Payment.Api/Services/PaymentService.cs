@@ -93,7 +93,7 @@ public class PaymentService(
                 Criteria = query => query.SetupIntentId == setupIntentId && query.ClientSecret == clientSecret
             }.AddInclude(query => query.Organization)).FirstAsync(cancellationToken);
 
-        var redirectUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, "organization",
+        var redirectUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, "organizations",
             organizationStripePaymentMethod.Organization.Id);
 
         await using var transaction =

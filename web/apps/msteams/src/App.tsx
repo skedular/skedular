@@ -38,35 +38,35 @@ const router = createBrowserRouter([
     element: <Install />,
   },
   {
-    path: '/organization/:organizationId',
+    path: '/organizations/:organizationId',
     element: <Organization />,
   },
   {
-    path: '/organization/:organizationId/location',
+    path: '/organizations/:organizationId/locations',
     element: <Locations />,
   },
   {
-    path: '/organization/:organizationId/location/add',
+    path: '/organizations/:organizationId/locations/add',
     element: <AddOrganizationLocation />,
   },
   {
-    path: '/organization/:organizationId/location/:locationId',
+    path: '/organizations/:organizationId/locations/:locationId',
     element: <OrganizationLocation />,
   },
   {
-    path: '/organization/:organizationId/team',
+    path: '/organizations/:organizationId/teams',
     element: <Teams />,
   },
   {
-    path: '/organization/:organizationId/team/add',
+    path: '/organizations/:organizationId/teams/add',
     element: <AddOrganizationTeam />,
   },
   {
-    path: '/organization/:organizationId/team/:teamId',
+    path: '/organizations/:organizationId/teams/:teamId',
     element: <OrganizationTeam />,
   },
   {
-    path: '/:organizationId/notification',
+    path: '/:organizationId/notifications',
     element: <Notifications />,
   },
   {

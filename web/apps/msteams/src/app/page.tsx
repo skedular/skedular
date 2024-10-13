@@ -29,7 +29,7 @@ const Home = ({ queryReference }: Props) => {
     if (!rootData.isAzureTenantInstalled || !rootData.azureTenantOrganization) {
       navigate('/install');
     } else {
-      navigate(`/organization/${rootData.azureTenantOrganization.id}`);
+      navigate(`/organizations/${rootData.azureTenantOrganization.id}`);
     }
   }, [navigate, rootData.isAzureTenantInstalled, rootData.azureTenantOrganization]);
 

@@ -28,8 +28,8 @@ type Props = {
 };
 
 export const getLocationBaseLink = (id: string, organizationId?: string) =>
-  organizationId ? `/organization/${organizationId}/location/${id}` : `/location/${id}`;
-export const getLocationAddLink = (organizationId?: string) => (organizationId ? `/organization/${organizationId}/location/add` : `/location/add`);
+  organizationId ? `/organizations/${organizationId}/locations/${id}` : `/locations/${id}`;
+export const getLocationAddLink = (organizationId?: string) => (organizationId ? `/organizations/${organizationId}/locations/add` : `/locations/add`);
 export const getLocationBookingsLink = (id: string, organizationId?: string) => `${getLocationBaseLink(id, organizationId)}?tab=bookings`;
 export const getLocationSettingsLink = (id: string, organizationId?: string) => `${getLocationBaseLink(id, organizationId)}?tab=about`;
 export const getLocationPeopleLink = (id: string, organizationId?: string) => `${getLocationBaseLink(id, organizationId)}?tab=people`;

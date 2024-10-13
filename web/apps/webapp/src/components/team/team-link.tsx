@@ -25,8 +25,8 @@ type Props = {
 };
 
 export const getTeamBaseLink = (id: string, organizationId?: string) =>
-  organizationId ? `/organization/${organizationId}/team/${id}` : `/team/${id}`;
-export const getTeamAddLink = (organizationId?: string) => (organizationId ? `/organization/${organizationId}/team/add` : `/team/add`);
+  organizationId ? `/organizations/${organizationId}/teams/${id}` : `/teams/${id}`;
+export const getTeamAddLink = (organizationId?: string) => (organizationId ? `/organizations/${organizationId}/teams/add` : `/teams/add`);
 export const getTeamBookingsLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=bookings`;
 export const getTeamSettingsLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=about`;
 export const getTeamPeopleLink = (id: string, organizationId?: string) => `${getTeamBaseLink(id, organizationId)}?tab=people`;

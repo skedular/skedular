@@ -26,8 +26,8 @@ type Props = {
   onReloadRequired?: () => void;
 };
 
-export const getOrganizationBaseLink = (id: string) => `/organization/${id}`;
-export const getOrganizationAddLink = () => `/organization/add`;
+export const getOrganizationBaseLink = (id: string) => `/organizations/${id}`;
+export const getOrganizationAddLink = () => `/organizations/add`;
 export const getOrganizationBookingsLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=bookings`;
 export const getOrganizationSettingsLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=about`;
 export const getOrganizationPeopleLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=people`;

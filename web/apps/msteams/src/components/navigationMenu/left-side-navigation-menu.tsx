@@ -26,7 +26,7 @@ const LeftSideNavigationMenu = () => {
 
   return (
     <List>
-      <Link href={`/organization/${finalOrganizationId}`}>
+      <Link href={`/organizations/${finalOrganizationId}`}>
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -37,7 +37,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href={`/organization/${finalOrganizationId}/location`}>
+      <Link href={`/organizations/${finalOrganizationId}/locations`}>
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -48,7 +48,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href={`/organization/${finalOrganizationId}/team`}>
+      <Link href={`/organizations/${finalOrganizationId}/teams`}>
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
@@ -59,7 +59,7 @@ const LeftSideNavigationMenu = () => {
         </ListItem>
       </Link>
 
-      <Link href={`/${finalOrganizationId}/notification`}>
+      <Link href={`/${finalOrganizationId}/notifications`}>
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
