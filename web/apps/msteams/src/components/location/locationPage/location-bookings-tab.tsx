@@ -2,13 +2,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -16,7 +14,7 @@ import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingCard } from 'components/booking';
-import { NewBookingDialog } from 'components/booking/addBooking';
+import { NewBookingButton } from 'components/booking/addBooking';
 import dayjs, { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
@@ -57,7 +55,7 @@ const RootQuery = graphql`
   }
 `;
 
-const LocationBookingsTab = ({ queryReference, organizationId, locationId }: Props) => {
+const LocationBookingsTab = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<locationBookingsTab_rootQuery>(RootQuery, queryReference);
   const rootData = useFragment<locationBookingsTab_query$key>(
     graphql`
@@ -111,7 +109,6 @@ const LocationBookingsTab = ({ queryReference, organizationId, locationId }: Pro
     direction: 'Ascending',
     field: 'from',
   });
-  const [isAddBookingDialogOpen, setIsAddBookingDialogOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
   const [pageContextOpen, setPageContextOpen] = useState(false);
@@ -179,20 +176,6 @@ const LocationBookingsTab = ({ queryReference, organizationId, locationId }: Pro
     return slicedEdges.map(({ node }) => node);
   }, [page, pageSize, rootDataBookings.bookings]);
 
-  const handleAddBookingClick = () => {
-    setIsAddBookingDialogOpen(true);
-  };
-
-  const handleAddBookingDialogAddClick = () => {
-    setIsAddBookingDialogOpen(false);
-
-    handleRefetch(pageSize, sortingOrder, selectedFromDate, selectedUntilDate);
-  };
-
-  const handleAddBookingDialogCancelClick = () => {
-    setIsAddBookingDialogOpen(false);
-  };
-
   const handleSortingChanged = (direction: Direction, value: string) => {
     setSortingOrder({
       direction,
@@ -233,9 +216,14 @@ const LocationBookingsTab = ({ queryReference, organizationId, locationId }: Pro
     <>
       <Stack direction="column" spacing={1}>
         <Stack direction="row" sx={{ width: 'auto' }}>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddBookingClick}>
-            Make a booking
-          </Button>
+          <NewBookingButton
+            onReloadRequired={onReloadRequired}
+            organizationId={organizationId}
+            locationId={locationId}
+            connectionIds={connectionIds}
+            hideLocationControl={true}
+            hideOrganizationControl={true}
+          />
         </Stack>
 
         <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
@@ -304,18 +292,6 @@ const LocationBookingsTab = ({ queryReference, organizationId, locationId }: Pro
           })}
         </Grid>
       </Stack>
-
-      <NewBookingDialog
-        rootDataRelay={rootData}
-        connectionIds={connectionIds}
-        isDialogOpen={isAddBookingDialogOpen}
-        onAddClicked={handleAddBookingDialogAddClick}
-        onCancelClicked={handleAddBookingDialogCancelClick}
-        organizationId={organizationId}
-        locationId={locationId}
-        hideOrganizationControl={true}
-        hideLocationControl={true}
-      />
     </>
   );
 };

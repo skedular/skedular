@@ -15,6 +15,7 @@ import NewBookingDialog from './new-booking-dialog';
 type Props = {
   queryReference: PreloadedQuery<newBookingButton_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
+  connectionIds?: string[];
   organizationId: string;
   locationId?: string;
   defaultTeamId?: string;
@@ -41,6 +42,7 @@ const RootQuery = graphql`
 const NewBookingButton = ({
   queryReference,
   onReloadRequired,
+  connectionIds,
   organizationId,
   locationId,
   defaultTeamId,
@@ -74,7 +76,7 @@ const NewBookingButton = ({
       </Button>
       <NewBookingDialog
         rootDataRelay={rootData}
-        connectionIds={[]}
+        connectionIds={connectionIds ?? []}
         isDialogOpen={isAddBookingDialogOpen}
         onAddClicked={handleAddBookingDialogAddClick}
         onCancelClicked={handleAddBookingDialogCancelClick}
@@ -93,6 +95,7 @@ const MemoNewBookingButton = memo(NewBookingButton);
 
 type RelayProps = {
   onReloadRequired?: () => void;
+  connectionIds?: string[];
   organizationId: string;
   locationId?: string;
   defaultTeamId?: string;
@@ -103,6 +106,7 @@ type RelayProps = {
 
 const NewBookingButtonWithRelay = ({
   onReloadRequired,
+  connectionIds,
   organizationId,
   locationId,
   defaultTeamId,
@@ -144,6 +148,7 @@ const NewBookingButtonWithRelay = ({
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
       <MemoNewBookingButton
         queryReference={queryReference}
+        connectionIds={connectionIds}
         organizationId={organizationId}
         locationId={locationId}
         defaultTeamId={defaultTeamId}
