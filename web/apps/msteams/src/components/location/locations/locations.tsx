@@ -174,7 +174,7 @@ const Locations = ({ queryReference, organizationId }: Props) => {
   return (
     <Stack direction="column" spacing={1}>
       <Link href={getLocationAddLink(organizationId)}>
-        <Button variant="contained" startIcon={<AddIcon />}>
+        <Button variant="contained" size="small" startIcon={<AddIcon />}>
           Add Location
         </Button>
       </Link>

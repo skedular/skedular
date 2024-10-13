@@ -409,7 +409,7 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
       {!organizationId && (
         <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
           <Grid>
-            <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
+            <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
               Invite People
             </Button>
           </Grid>

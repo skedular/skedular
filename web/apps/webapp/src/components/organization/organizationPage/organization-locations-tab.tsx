@@ -196,7 +196,7 @@ const OrganizationLocationsTab = ({ queryReference }: Props) => {
       {rootData.organization.canModify && (
         <Stack direction="row" sx={{ width: 'auto' }}>
           <Link component={NextLink} href={getLocationAddLink(rootData.organization.id)}>
-            <Button variant="contained" startIcon={<AddIcon />}>
+            <Button variant="contained" size="small" startIcon={<AddIcon />}>
               Add Location
             </Button>
           </Link>

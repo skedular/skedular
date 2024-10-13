@@ -213,7 +213,7 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
     <>
       {rootData.location.canModify && (
         <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddZoneClick}>
+          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddZoneClick}>
             Add Zone
           </Button>
         </Stack>

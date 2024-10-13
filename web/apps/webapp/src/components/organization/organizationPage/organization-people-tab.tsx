@@ -296,7 +296,7 @@ const OrganizationPeopleTab = ({ queryReference, organizationId }: Props) => {
       <Stack direction="column" spacing={1}>
         {rootData.organization.canInvitePeople && (
           <Stack direction="row" sx={{ width: 'auto' }}>
-            <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
+            <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
               Invite People
             </Button>
           </Stack>

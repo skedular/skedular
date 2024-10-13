@@ -298,10 +298,10 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
     <>
       {rootData.location.canModify && (
         <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddDeskClick}>
+          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddDeskClick}>
             Add Desk
           </Button>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={handleBulkAddDeskClick}>
+          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleBulkAddDeskClick}>
             Bulk Add Desk
           </Button>
         </Stack>

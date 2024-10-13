@@ -207,7 +207,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
         <>
           <Typography variant="h6">Payment method</Typography>
           <Typography>No payment method setup yet</Typography>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddNewPaymentMethodClick}>
+          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddNewPaymentMethodClick}>
             Add payment method
           </Button>
         </>

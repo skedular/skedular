@@ -168,7 +168,7 @@ const Teams = ({ queryReference }: Props) => {
   return (
     <Stack direction="column" spacing={1}>
       <Link component={NextLink} href={getTeamAddLink()}>
-        <Button variant="contained" startIcon={<AddIcon />}>
+        <Button variant="contained" size="small" startIcon={<AddIcon />}>
           Add Team
         </Button>
       </Link>

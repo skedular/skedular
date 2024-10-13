@@ -189,7 +189,7 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
       {rootData.organization.canModify && (
         <Stack direction="row" sx={{ width: 'auto' }}>
           <Link href={getTeamAddLink(rootData.organization.id)}>
-            <Button variant="contained" startIcon={<AddIcon />}>
+            <Button variant="contained" size="small" startIcon={<AddIcon />}>
               Add Team
             </Button>
           </Link>

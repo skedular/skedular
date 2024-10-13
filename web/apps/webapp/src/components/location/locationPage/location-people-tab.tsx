@@ -403,7 +403,7 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
     <>
       {!organizationId && (
         <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
+          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
             Invite People
           </Button>
         </Stack>
