@@ -1,5 +1,5 @@
 import { BookingCard } from '@/components/booking';
-import { NewBookingDialog } from '@/components/booking/addBooking';
+import { NewBookingButton } from '@/components/booking/addBooking';
 import type { organizationBookingsTab_bookings_query$key } from '@/queries/__generated__/organizationBookingsTab_bookings_query.graphql';
 import type {
   BookingOrderField,
@@ -12,13 +12,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import Typography from '@mui/material/Typography';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -55,7 +53,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationBookingsTab = ({ queryReference, organizationId }: Props) => {
+const OrganizationBookingsTab = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<organizationBookingsTab_rootQuery>(RootQuery, queryReference);
   const rootData = useFragment<organizationBookingsTab_query$key>(
     graphql`
@@ -114,7 +112,6 @@ const OrganizationBookingsTab = ({ queryReference, organizationId }: Props) => {
     direction: 'Ascending',
     field: 'from',
   });
-  const [isAddBookingDialogOpen, setIsAddBookingDialogOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
   const [pageContextOpen, setPageContextOpen] = useState(false);
@@ -182,20 +179,6 @@ const OrganizationBookingsTab = ({ queryReference, organizationId }: Props) => {
     return slicedEdges.map(({ node }) => node);
   }, [page, pageSize, rootDataBookings.bookings]);
 
-  const handleAddBookingClick = () => {
-    setIsAddBookingDialogOpen(true);
-  };
-
-  const handleAddBookingDialogAddClick = () => {
-    setIsAddBookingDialogOpen(false);
-
-    handleRefetch(pageSize, sortingOrder, selectedFromDate, selectedUntilDate);
-  };
-
-  const handleAddBookingDialogCancelClick = () => {
-    setIsAddBookingDialogOpen(false);
-  };
-
   const handleSortingChanged = (direction: Direction, value: string) => {
     setSortingOrder({
       direction,
@@ -236,9 +219,13 @@ const OrganizationBookingsTab = ({ queryReference, organizationId }: Props) => {
     <>
       <Stack direction="column" spacing={1}>
         <Stack direction="row" sx={{ width: 'auto' }}>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddBookingClick}>
-            Make a booking
-          </Button>
+          <NewBookingButton
+            onReloadRequired={onReloadRequired}
+            organizationId={organizationId}
+            connectionIds={connectionIds}
+            hideLocationControl={false}
+            hideOrganizationControl={true}
+          />
         </Stack>
 
         <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
@@ -307,17 +294,6 @@ const OrganizationBookingsTab = ({ queryReference, organizationId }: Props) => {
           })}
         </Grid>
       </Stack>
-
-      <NewBookingDialog
-        rootDataRelay={rootData}
-        connectionIds={connectionIds}
-        isDialogOpen={isAddBookingDialogOpen}
-        onAddClicked={handleAddBookingDialogAddClick}
-        onCancelClicked={handleAddBookingDialogCancelClick}
-        organizationId={organizationId}
-        hideOrganizationControl={true}
-        hideLocationControl={false}
-      />
     </>
   );
 };
