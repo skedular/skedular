@@ -8,6 +8,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import graphql from 'babel-plugin-relay/macro';
+import { Bookings } from 'components/booking/bookingsPage';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -18,7 +19,6 @@ import type { organization_rootQuery } from './__generated__/organization_rootQu
 import OrganizationAboutTab from './organization-about-tab';
 import OrganizationAnalyticsTab from './organization-analytics-tab';
 import OrganizationBillingTab from './organization-billing-tab';
-import OrganizationBookingsTab from './organization-bookings-tab';
 import OrganizationLocationsTab from './organization-locations-tab';
 import OrganizationOfferingTab from './organization-offering-tab';
 import OrganizationPeopleTab from './organization-people-tab';
@@ -131,7 +131,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
       </Tabs>
 
       <>
-        {tabIndex === 0 && <OrganizationBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+        {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 1 && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 2 && <OrganizationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === 3 && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}

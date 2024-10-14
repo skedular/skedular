@@ -5,6 +5,7 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
+import { Bookings } from 'components/booking/bookingsPage';
 import { TeamLink } from 'components/team';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -13,7 +14,6 @@ import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useSearchParams } from 'react-router-dom';
 import type { team_rootQuery } from './__generated__/team_rootQuery.graphql';
 import TeamAboutTab from './team-about-tab';
-import TeamBookingsTab from './team-bookings-tab';
 import TeamPeopleTab from './team-people-tab';
 
 type Props = {
@@ -83,7 +83,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
       </Tabs>
 
       <>
-        {tabIndex === 0 && <TeamBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+        {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
         {tabIndex === 1 && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
         {tabIndex === 2 && <TeamPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
       </>

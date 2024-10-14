@@ -1,3 +1,4 @@
+import { Bookings } from '@/components/booking/bookingsPage';
 import { TeamLink } from '@/components/team';
 import type { team_rootQuery } from '@/queries/__generated__/team_rootQuery.graphql';
 import Stack from '@mui/material/Stack';
@@ -13,7 +14,6 @@ import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import TeamAboutTab from './team-about-tab';
-import TeamBookingsTab from './team-bookings-tab';
 import TeamPeopleTab from './team-people-tab';
 
 type Props = {
@@ -84,7 +84,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
       </Tabs>
 
       <>
-        {tabIndex === 0 && <TeamBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+        {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
         {tabIndex === 1 && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
         {tabIndex === 2 && <TeamPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
       </>

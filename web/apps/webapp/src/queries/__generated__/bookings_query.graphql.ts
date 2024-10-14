@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0346eba3a3ff444969086fce5a1ceaa3>>
+ * @generated SignedSource<<d1fd68fa320861b2463502e6cd3a0254>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,23 +10,23 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type teamBookingsTab_query$data = {
+export type bookings_query$data = {
   readonly me: {
     readonly id: string;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"bookingCard_query" | "newBookingDialog_query">;
-  readonly " $fragmentType": "teamBookingsTab_query";
+  readonly " $fragmentType": "bookings_query";
 };
-export type teamBookingsTab_query$key = {
-  readonly " $data"?: teamBookingsTab_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"teamBookingsTab_query">;
+export type bookings_query$key = {
+  readonly " $data"?: bookings_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"bookings_query">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "teamBookingsTab_query",
+  "name": "bookings_query",
   "selections": [
     {
       "alias": null,
@@ -61,6 +61,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "2c36f4197323e2207a0e5a9365db94dc";
+(node as any).hash = "b1cb96661a32ca79ec5f32c6d388dfe5";
 
 export default node;

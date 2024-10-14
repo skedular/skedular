@@ -1,3 +1,4 @@
+import { Bookings } from '@/components/booking/bookingsPage';
 import { LocationLink } from '@/components/location';
 import type { location_rootQuery } from '@/queries/__generated__/location_rootQuery.graphql';
 import Stack from '@mui/material/Stack';
@@ -14,7 +15,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import LocationAboutTab from './location-about-tab';
 import LocationAnalyticsTab from './location-analytics-tab';
-import LocationBookingsTab from './location-bookings-tab';
 import LocationDesksTab from './location-desks-tab';
 import LocationPeopleTab from './location-people-tab';
 import LocationZonesTab from './location-zones-tab';
@@ -103,7 +103,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
       </Tabs>
 
       <>
-        {tabIndex === 0 && <LocationBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+        {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 2 && <LocationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 3 && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}

@@ -5,6 +5,7 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
+import { Bookings } from 'components/booking/bookingsPage';
 import { LocationLink } from 'components/location';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -14,7 +15,6 @@ import { useSearchParams } from 'react-router-dom';
 import type { location_rootQuery } from './__generated__/location_rootQuery.graphql';
 import LocationAboutTab from './location-about-tab';
 import LocationAnalyticsTab from './location-analytics-tab';
-import LocationBookingsTab from './location-bookings-tab';
 import LocationDesksTab from './location-desks-tab';
 import LocationPeopleTab from './location-people-tab';
 import LocationZonesTab from './location-zones-tab';
@@ -102,7 +102,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
       </Tabs>
 
       <>
-        {tabIndex === 0 && <LocationBookingsTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+        {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 2 && <LocationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 3 && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9f79eb823724cf0ab8e53af1b9012b6d>>
+ * @generated SignedSource<<09674acee229af69777d78e794d322e5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type teamBookingsTab_bookings_query$data = {
+export type bookings_bookings_query$data = {
   readonly bookings: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -26,11 +26,11 @@ export type teamBookingsTab_bookings_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "teamBookingsTab_bookings_query";
+  readonly " $fragmentType": "bookings_bookings_query";
 };
-export type teamBookingsTab_bookings_query$key = {
-  readonly " $data"?: teamBookingsTab_bookings_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"teamBookingsTab_bookings_query">;
+export type bookings_bookings_query$key = {
+  readonly " $data"?: bookings_bookings_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"bookings_bookings_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -63,6 +63,14 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "locationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
+    },
+    {
+      "kind": "RootArgument",
       "name": "teamId"
     }
   ],
@@ -86,10 +94,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./teamBookingsTab_bookings_refetchableFragment.graphql')
+      "operation": require('./bookings_bookings_refetchableFragment.graphql')
     }
   },
-  "name": "teamBookingsTab_bookings_query",
+  "name": "bookings_bookings_query",
   "selections": [
     {
       "alias": "bookings",
@@ -120,6 +128,28 @@ return {
               "items": [
                 {
                   "kind": "Variable",
+                  "name": "locationIds.0",
+                  "variableName": "locationId"
+                }
+              ],
+              "kind": "ListValue",
+              "name": "locationIds"
+            },
+            {
+              "items": [
+                {
+                  "kind": "Variable",
+                  "name": "organizationIds.0",
+                  "variableName": "organizationId"
+                }
+              ],
+              "kind": "ListValue",
+              "name": "organizationIds"
+            },
+            {
+              "items": [
+                {
+                  "kind": "Variable",
                   "name": "teamIds.0",
                   "variableName": "teamId"
                 }
@@ -134,7 +164,7 @@ return {
       ],
       "concreteType": "BookingConnection",
       "kind": "LinkedField",
-      "name": "__teamBookingsTab_bookings_connection",
+      "name": "__bookings_bookings_connection",
       "plural": false,
       "selections": [
         {
@@ -270,6 +300,6 @@ return {
 };
 })();
 
-(node as any).hash = "4f2f5bb25f66bfd57e898bd88d715e62";
+(node as any).hash = "1aec922ff4cf99a358c1e7e98229bc15";
 
 export default node;
