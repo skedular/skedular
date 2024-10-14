@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { endOfWeek, startOfWeek } from '@repo/shared/libs/utils';
+import { endOfIsoWeek, startOfIsoWeek } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationLink } from 'components/organization';
 import { TeamLink } from 'components/team';
@@ -62,8 +62,8 @@ const TeamBookingsWithRelay = ({ organizationId, organizationName, teamId, teamN
   const [queryReference, loadQuery] = useQueryLoader<teamBookingsCard_rootQuery>(RootQuery);
 
   useEffect(() => {
-    const startDate = startOfWeek();
-    const endDate = endOfWeek(startDate);
+    const startDate = startOfIsoWeek();
+    const endDate = endOfIsoWeek(startDate);
 
     loadQuery(
       {

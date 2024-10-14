@@ -48,6 +48,30 @@ const isYesterdayDate = (date: Dayjs) => {
   return date.isYesterday();
 };
 
+const isInSameWeek = (dayA: Dayjs, dayB: Dayjs | null | undefined) => {
+  if (dayB == null) {
+    return false;
+  }
+
+  return dayA.isSame(dayB, 'week');
+};
+
+const isInSameMonth = (dayA: Dayjs, dayB: Dayjs | null | undefined) => {
+  if (dayB == null) {
+    return false;
+  }
+
+  return dayA.isSame(dayB, 'month');
+};
+
+const isInSameYear = (dayA: Dayjs, dayB: Dayjs | null | undefined) => {
+  if (dayB == null) {
+    return false;
+  }
+
+  return dayA.isSame(dayB, 'year');
+};
+
 const startOfDay = (date?: Dayjs | string | null | undefined) => {
   const finalDate = date ? dayjs(date) : now();
 
@@ -61,11 +85,21 @@ const endOfDay = (date: Dayjs | string) => {
 const startOfWeek = (date?: Dayjs | string | null | undefined) => {
   const finalDate = date ? dayjs(date) : now();
 
-  return finalDate.startOf('isoWeek');
+  return finalDate.startOf('week');
 };
 
 const endOfWeek = (date?: Dayjs | string | null | undefined) => {
   return startOfWeek(date).add(1, 'week');
+};
+
+const startOfIsoWeek = (date?: Dayjs | string | null | undefined) => {
+  const finalDate = date ? dayjs(date) : now();
+
+  return finalDate.startOf('isoWeek');
+};
+
+const endOfIsoWeek = (date?: Dayjs | string | null | undefined) => {
+  return startOfIsoWeek(date).add(1, 'week');
 };
 
 const startOfMonth = (date?: Dayjs | string | null | undefined) => {
@@ -212,6 +246,7 @@ export {
   decodeBase64,
   encodeBase64,
   endOfDay,
+  endOfIsoWeek,
   endOfMonth,
   endOfWeek,
   getCurrentCompleteUrl,
@@ -219,11 +254,15 @@ export {
   getCustomerFullName,
   getCustomerShortName,
   getPublicSiteUrl,
+  isInSameMonth,
+  isInSameWeek,
+  isInSameYear,
   isTodayDate,
   isTomorrowDate,
   isYesterdayDate,
   joinErrors,
   startOfDay,
+  startOfIsoWeek,
   startOfMonth,
   startOfWeek,
   toDayAndMonthDate,

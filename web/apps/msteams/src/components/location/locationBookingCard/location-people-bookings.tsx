@@ -33,7 +33,7 @@ import {
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { endOfDay, endOfWeek, getCustomerFullName, joinErrors, startOfWeek, toShortDate } from '@repo/shared/libs/utils';
+import { endOfDay, endOfIsoWeek, getCustomerFullName, joinErrors, startOfIsoWeek, toShortDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { LocationLink, getLocationBookingsLink, getLocationSettingsLink } from 'components/location';
 import { OrganizationLink } from 'components/organization';
@@ -333,11 +333,11 @@ const LocationPeopleBookings = ({
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
   const [, startTransition] = useTransition();
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
-  const [startDate, setStartDate] = useState<Dayjs>(startOfWeek());
+  const [startDate, setStartDate] = useState<Dayjs>(startOfIsoWeek());
   const handleRefetch = useCallback(
     (startDate: Dayjs) => {
       startTransition(() => {
-        const endDate = endOfWeek(startDate);
+        const endDate = endOfIsoWeek(startDate);
 
         refetch(
           {
@@ -641,7 +641,7 @@ const LocationPeopleBookings = ({
   };
 
   const handleDateRangeTypeChange = (event: React.MouseEvent<HTMLElement>, value: DateRangeType) => {
-    let start = startOfWeek();
+    let start = startOfIsoWeek();
     if (value === DateRangeType.NextWeek) {
       start = start.add(1, 'week');
     }

@@ -8,7 +8,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { endOfWeek, startOfWeek } from '@repo/shared/libs/utils';
+import { endOfIsoWeek, startOfIsoWeek } from '@repo/shared/libs/utils';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -75,8 +75,8 @@ const LocationBookingsWithRelay = ({
   const [queryReference, loadQuery] = useQueryLoader<locationBookingsCard_rootQuery>(RootQuery);
 
   useEffect(() => {
-    const startDate = startOfWeek();
-    const endDate = endOfWeek(startDate);
+    const startDate = startOfIsoWeek();
+    const endDate = endOfIsoWeek(startDate);
 
     loadQuery(
       {

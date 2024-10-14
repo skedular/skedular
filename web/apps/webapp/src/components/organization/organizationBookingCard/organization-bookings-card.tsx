@@ -6,7 +6,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { endOfWeek, startOfWeek } from '@repo/shared/libs/utils';
+import { endOfIsoWeek, startOfIsoWeek } from '@repo/shared/libs/utils';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -71,8 +71,8 @@ const OrganizationBookingsWithRelay = ({
   const [queryReference, loadQuery] = useQueryLoader<organizationBookingsCard_rootQuery>(RootQuery);
 
   useEffect(() => {
-    const startDate = startOfWeek();
-    const endDate = endOfWeek(startDate);
+    const startDate = startOfIsoWeek();
+    const endDate = endOfIsoWeek(startDate);
 
     loadQuery(
       {
