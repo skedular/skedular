@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bef72320e2bdfac5dcd09a2dec97ae7f>>
+ * @generated SignedSource<<6de09d22a52d6e7012821baa6d1420fa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,9 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type FeedbackChannel = "MsTeams" | "Slack" | "Web" | "%future added value";
 export type SubmitCustomerFeedbackInput = {
+  channel: FeedbackChannel;
   clientMutationId?: string | null | undefined;
   feedbackContent: string;
   id: string;

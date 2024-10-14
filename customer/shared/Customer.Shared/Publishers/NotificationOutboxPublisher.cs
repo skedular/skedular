@@ -41,10 +41,18 @@ public class NotificationOutboxPublisher(
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)
     {
+        var channel = customerFeedback.Channel switch
+        {
+            FeedbackChannelType.Web => "Web",
+            FeedbackChannelType.Slack => "Slack",
+            FeedbackChannelType.MsTeams => "MsTeams",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
         var data = new NewCustomerFeedbackData
         {
             Subject =
-                $"You received new feedback from {customerFeedback.Customer.GetCustomerName()} through Web channel",
+                $"You received new feedback from {customerFeedback.Customer.GetCustomerName()} through {channel} channel",
             FeedbackContent = string.IsNullOrWhiteSpace(customerFeedback.Content)
                 ? string.Empty
                 : customerFeedback.Content

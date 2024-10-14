@@ -202,9 +202,16 @@ message DismissSetupPreferredZonesInput {
 message DismissSetupPreferredDesksInput {
 }
 
+enum FeedbackChannel {
+    Web = 0;
+    Slack = 1;
+    MsTeams = 2;
+}
+
 message SubmitFeedbackInput {
     string id = 1;
     string feedback = 2;
+    FeedbackChannel channel = 3;
 }
 
 message Feedback {

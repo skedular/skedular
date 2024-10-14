@@ -1,4 +1,5 @@
 using Api.Shared;
+using Customer.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,6 +11,8 @@ namespace Customer.Shared.Database.Entities;
 public class CustomerFeedback : EntityBase
 {
     public string? Content { get; set; }
+
+    public FeedbackChannelType? Channel { get; set; }
 
     public virtual Customer Customer { get; set; }
 }

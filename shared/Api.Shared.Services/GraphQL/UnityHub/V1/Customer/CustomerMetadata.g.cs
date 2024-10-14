@@ -250,10 +250,17 @@ type CustomerDeskDetails {
     name: String
 }
 
+enum FeedbackChannel {
+    Web
+    Slack
+    MsTeams
+}
+
 input SubmitCustomerFeedbackInput {
     clientMutationId: String
     id: String!
     feedbackContent: String!
+    channel: FeedbackChannel!
 }
 
 type SubmitCustomerFeedbackPayload {

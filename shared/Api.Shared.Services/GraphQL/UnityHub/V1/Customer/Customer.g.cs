@@ -402,6 +402,14 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
         }
         
 
+        public enum FeedbackChannel
+        {
+            Web,
+            Slack,
+            MsTeams
+        }
+        
+
         
         public abstract class Mutation
         {
@@ -828,6 +836,9 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
 
             [HotChocolate.GraphQLName("feedbackContent")]
             public string FeedbackContent { get; set; }
+
+            [HotChocolate.GraphQLName("channel")]
+            public FeedbackChannel Channel { get; set; }
 
         }
         

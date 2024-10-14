@@ -8,6 +8,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Grpc.Core;
 using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService;
+using FeedbackChannel = Api.Shared.Services.Grpc.UnityHub.Customer.V1.FeedbackChannel;
 using Version = Api.Shared.Services.Grpc.UnityHub.Customer.V1.Version;
 
 namespace Customer.Api.Grpc;
@@ -182,10 +183,22 @@ public class CustomerGrpcService(
     public override async Task<Feedback> SubmitFeedback(SubmitFeedbackInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
+
         return new Feedback
         {
             Id = (await customerFeedbackService.SubmitFeedbackAsync(
-                new CustomerFeedback { Id = request.Id, Content = request.Feedback.ToSafeString() },
+                new CustomerFeedback
+                {
+                    Id = request.Id,
+                    Content = request.Feedback.ToSafeString(),
+                    Channel = request.Channel switch
+                    {
+                        FeedbackChannel.Web => FeedbackChannelType.Web,
+                        FeedbackChannel.Slack => FeedbackChannelType.Slack,
+                        FeedbackChannel.MsTeams => FeedbackChannelType.MsTeams,
+                        _ => throw new ArgumentOutOfRangeException()
+                    }
+                },
                 context.CancellationToken)).Id
         };
     }

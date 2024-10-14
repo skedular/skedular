@@ -1,10 +1,12 @@
 using Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Customer.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Models;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
 using Desk = Customer.Shared.Models.Desk;
+using FeedbackChannel = Api.Shared.Services.GraphQL.UnityHub.V1.Customer.FeedbackChannel;
 using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
 using LocationTag = Customer.Shared.Models.LocationTag;
@@ -180,7 +182,18 @@ public class Mapper : IMapper
     };
 
     public CustomerFeedback MapTo(SubmitCustomerFeedbackInput src) =>
-        new() { Id = src.Id, Content = src.FeedbackContent };
+        new()
+        {
+            Id = src.Id,
+            Content = src.FeedbackContent,
+            Channel = src.Channel switch
+            {
+                FeedbackChannel.Web => FeedbackChannelType.Web,
+                FeedbackChannel.Slack => FeedbackChannelType.Slack,
+                FeedbackChannel.MsTeams => FeedbackChannelType.MsTeams,
+                _ => throw new ArgumentOutOfRangeException()
+            }
+        };
 
     public SubmitCustomerFeedbackPayload MapTo(CustomerFeedback src, string? clientMutationId) =>
         new() { Id = src.Id, ClientMutationId = clientMutationId };
@@ -269,12 +282,13 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             Content = src.Content,
+            Channel = src.Channel,
             Customer = MapTo(src.Customer)
         };
 
     public Shared.Database.Entities.CustomerFeedback MapTo(CustomerFeedback src,
         Shared.Database.Entities.Customer customer) =>
-        new() { Id = src.Id, Content = src.Content, Customer = customer };
+        new() { Id = src.Id, Content = src.Content, Channel = src.Channel, Customer = customer };
 
     public Shared.Models.Customer MapTo(Admin_AddInput src) =>
         new()

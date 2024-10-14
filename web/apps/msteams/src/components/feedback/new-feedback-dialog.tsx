@@ -71,6 +71,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
           clientMutationId: nanoid(),
           id,
           feedbackContent,
+          channel: 'MsTeams',
         },
       },
       onCompleted: (_, errors) => {

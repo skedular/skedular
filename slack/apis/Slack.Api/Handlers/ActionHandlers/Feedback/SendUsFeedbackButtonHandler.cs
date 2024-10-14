@@ -108,7 +108,8 @@ public class SendUsFeedbackButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var submitFeedbackInput = new SubmitFeedbackInput { Id = randomHelper.Generate() };
+        var submitFeedbackInput =
+            new SubmitFeedbackInput { Id = randomHelper.Generate(), Channel = FeedbackChannel.Slack };
         var values = viewSubmission.View.State.Values;
 
         if (values.TryGetValue(FeedbackKey, out var notesBlock))

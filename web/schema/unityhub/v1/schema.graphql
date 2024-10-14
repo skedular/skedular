@@ -761,6 +761,11 @@ enum CustomerOrderField {
   timezone
   locale
 }
+enum FeedbackChannel {
+  Web
+  Slack
+  MsTeams
+}
 enum DeskBookingDetailBookingStatus {
   AWAIT_ACCEPTANCE
   ACCEPTED
@@ -984,6 +989,7 @@ input SubmitCustomerFeedbackInput {
   clientMutationId: String
   id: String!
   feedbackContent: String!
+  channel: FeedbackChannel!
 }
 input UpdateMyCustomerDetailsInput {
   clientMutationId: String

@@ -70,6 +70,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
           clientMutationId: nanoid(),
           id,
           feedbackContent,
+          channel: 'Web',
         },
       },
       onCompleted: (_, errors) => {
