@@ -6,6 +6,7 @@ using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Sanitization;
 using BookingOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Booking.BookingOrderInput;
 using BookingOrderField = Api.Shared.Services.GraphQL.UnityHub.V1.Booking.BookingOrderField;
 using OrderDirection = Api.Shared.Services.GraphQL.UnityHub.V1.Booking.OrderDirection;
@@ -60,6 +61,10 @@ public class BookingQuery(IMapper mapper) : Query
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
+        where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
+        where.LocationIds = where.LocationIds.RemoveInvalidIds();
+        where.TeamIds = where.TeamIds.RemoveInvalidIds();
+
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
