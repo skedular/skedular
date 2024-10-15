@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bc044c1f741b115e6fcff81756d21f0d>>
+ * @generated SignedSource<<816029f33cd0f0978c61c716af2463ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,10 +21,10 @@ export type AddBookingInput = {
   teamId?: string | null | undefined;
   to: any;
 };
-export type locationPeopleBookings_addBookingMutation$variables = {
+export type bookingsWeekGrid_addBookingMutation$variables = {
   input: AddBookingInput;
 };
-export type locationPeopleBookings_addBookingMutation$data = {
+export type bookingsWeekGrid_addBookingMutation$data = {
   readonly addBooking: {
     readonly booking: {
       readonly customer: {
@@ -49,9 +49,9 @@ export type locationPeopleBookings_addBookingMutation$data = {
     };
   } | null | undefined;
 };
-export type locationPeopleBookings_addBookingMutation = {
-  response: locationPeopleBookings_addBookingMutation$data;
-  variables: locationPeopleBookings_addBookingMutation$variables;
+export type bookingsWeekGrid_addBookingMutation = {
+  response: bookingsWeekGrid_addBookingMutation$data;
+  variables: bookingsWeekGrid_addBookingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -201,7 +201,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "locationPeopleBookings_addBookingMutation",
+    "name": "bookingsWeekGrid_addBookingMutation",
     "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -210,20 +210,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "locationPeopleBookings_addBookingMutation",
+    "name": "bookingsWeekGrid_addBookingMutation",
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "72fca8aa5f395507d91f8199c47778a2",
+    "cacheID": "2167d3c2416708db9cdb0440dae4d980",
     "id": null,
     "metadata": {},
-    "name": "locationPeopleBookings_addBookingMutation",
+    "name": "bookingsWeekGrid_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation locationPeopleBookings_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      customer {\n        name\n        givenName\n        middleName\n        familyName\n      }\n      location {\n        name\n      }\n      desks {\n        name\n        locationTags {\n          uniqueId\n          name\n          tagType\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingsWeekGrid_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      customer {\n        name\n        givenName\n        middleName\n        familyName\n      }\n      location {\n        name\n      }\n      desks {\n        name\n        locationTags {\n          uniqueId\n          name\n          tagType\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6fff4b4c5f84a7869a176a55f79b02d7";
+(node as any).hash = "ef869b1d5c66a574a2c8e96db09d6dab";
 
 export default node;

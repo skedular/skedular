@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<be75d02506ed3414c4c1ad2775c8d488>>
+ * @generated SignedSource<<31731d6478d5d7900531ed8b3b4ee278>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,10 +30,6 @@ export type locationPeopleBookings_query$data = {
       readonly uniqueId: string;
     } | null | undefined;
   } | null | undefined;
-  readonly locationBookingPermissions: {
-    readonly canAddBookingOnBehalf: boolean;
-    readonly canDeleteBookingOnBehalf: boolean;
-  } | null | undefined;
   readonly locationMembers: ReadonlyArray<{
     readonly customer: {
       readonly familyName: string | null | undefined;
@@ -51,6 +47,7 @@ export type locationPeopleBookings_query$data = {
     }>;
     readonly id: string;
   } | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"bookingsWeekGrid_allBookings_query" | "bookingsWeekGrid_query">;
   readonly " $fragmentType": "locationPeopleBookings_query";
 };
 export type locationPeopleBookings_query$key = {
@@ -59,61 +56,60 @@ export type locationPeopleBookings_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "kind": "Variable",
-    "name": "locationId",
-    "variableName": "locationId"
-  }
-],
-v1 = {
-  "fields": (v0/*: any*/),
+var v0 = {
+  "fields": [
+    {
+      "kind": "Variable",
+      "name": "locationId",
+      "variableName": "locationId"
+    }
+  ],
   "kind": "ObjectValue",
   "name": "where"
 },
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "givenName",
   "storageKey": null
 },
-v6 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "middleName",
   "storageKey": null
 },
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "familyName",
   "storageKey": null
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -143,14 +139,14 @@ return {
           "name": "orderBy",
           "variableName": "peopleSortingValues"
         },
-        (v1/*: any*/)
+        (v0/*: any*/)
       ],
       "concreteType": "LocationMemberDetails",
       "kind": "LinkedField",
       "name": "locationMembers",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -159,12 +155,12 @@ return {
           "name": "customer",
           "plural": false,
           "selections": [
+            (v2/*: any*/),
             (v3/*: any*/),
             (v4/*: any*/),
             (v5/*: any*/),
             (v6/*: any*/),
-            (v7/*: any*/),
-            (v8/*: any*/)
+            (v7/*: any*/)
           ],
           "storageKey": null
         }
@@ -174,19 +170,19 @@ return {
     {
       "alias": null,
       "args": [
-        (v1/*: any*/)
+        (v0/*: any*/)
       ],
       "concreteType": "CustomerDetails",
       "kind": "LinkedField",
       "name": "customersByDefaultLocation",
       "plural": true,
       "selections": [
-        (v2/*: any*/),
+        (v1/*: any*/),
+        (v3/*: any*/),
         (v4/*: any*/),
         (v5/*: any*/),
         (v6/*: any*/),
-        (v7/*: any*/),
-        (v8/*: any*/)
+        (v7/*: any*/)
       ],
       "storageKey": null
     },
@@ -198,7 +194,7 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v2/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -207,7 +203,7 @@ return {
           "name": "defaultLocations",
           "plural": true,
           "selections": [
-            (v3/*: any*/)
+            (v2/*: any*/)
           ],
           "storageKey": null
         }
@@ -228,7 +224,7 @@ return {
       "name": "location",
       "plural": false,
       "selections": [
-        (v4/*: any*/),
+        (v3/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -265,8 +261,8 @@ return {
           "name": "organization",
           "plural": false,
           "selections": [
-            (v3/*: any*/),
-            (v4/*: any*/)
+            (v2/*: any*/),
+            (v3/*: any*/)
           ],
           "storageKey": null
         }
@@ -274,29 +270,14 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": (v0/*: any*/),
-      "concreteType": "LocationBookingPermissions",
-      "kind": "LinkedField",
-      "name": "locationBookingPermissions",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canAddBookingOnBehalf",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canDeleteBookingOnBehalf",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "bookingsWeekGrid_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "bookingsWeekGrid_allBookings_query"
     }
   ],
   "type": "Query",
@@ -304,6 +285,6 @@ return {
 };
 })();
 
-(node as any).hash = "4551eacedaecb3d6e3ca740577f3af6d";
+(node as any).hash = "6823d3b937dc248ec1e9e1eb4c37ff66";
 
 export default node;

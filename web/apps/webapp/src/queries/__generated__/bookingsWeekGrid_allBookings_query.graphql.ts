@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d27603f4be3c7eec094a099d4b71dcb0>>
+ * @generated SignedSource<<af2f021b4ac38884f415c43150f2528d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type teamPeopleBookings_allBookings_query$data = {
+export type bookingsWeekGrid_allBookings_query$data = {
   readonly allBookings: ReadonlyArray<{
     readonly customer: {
       readonly familyName: string | null | undefined;
@@ -38,11 +38,11 @@ export type teamPeopleBookings_allBookings_query$data = {
     } | null | undefined;
     readonly to: any;
   }> | null | undefined;
-  readonly " $fragmentType": "teamPeopleBookings_allBookings_query";
+  readonly " $fragmentType": "bookingsWeekGrid_allBookings_query";
 };
-export type teamPeopleBookings_allBookings_query$key = {
-  readonly " $data"?: teamPeopleBookings_allBookings_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"teamPeopleBookings_allBookings_query">;
+export type bookingsWeekGrid_allBookings_query$key = {
+  readonly " $data"?: bookingsWeekGrid_allBookings_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"bookingsWeekGrid_allBookings_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -71,6 +71,14 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "locationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
+    },
+    {
+      "kind": "RootArgument",
       "name": "teamId"
     },
     {
@@ -83,10 +91,10 @@ return {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./teamPeopleBookings_allBookings_refetchableFragment.graphql')
+      "operation": require('./bookingsWeekGrid_allBookings_refetchableFragment.graphql')
     }
   },
-  "name": "teamPeopleBookings_allBookings_query",
+  "name": "bookingsWeekGrid_allBookings_query",
   "selections": [
     {
       "alias": null,
@@ -97,6 +105,28 @@ return {
               "kind": "Variable",
               "name": "fromGTE",
               "variableName": "from"
+            },
+            {
+              "items": [
+                {
+                  "kind": "Variable",
+                  "name": "locationIds.0",
+                  "variableName": "locationId"
+                }
+              ],
+              "kind": "ListValue",
+              "name": "locationIds"
+            },
+            {
+              "items": [
+                {
+                  "kind": "Variable",
+                  "name": "organizationIds.0",
+                  "variableName": "organizationId"
+                }
+              ],
+              "kind": "ListValue",
+              "name": "organizationIds"
             },
             {
               "items": [
@@ -247,6 +277,6 @@ return {
 };
 })();
 
-(node as any).hash = "d8ec63c2f792c21b3ccdf83c0fa21f03";
+(node as any).hash = "6209f0db765a06bdc05d8e5d0b49190d";
 
 export default node;

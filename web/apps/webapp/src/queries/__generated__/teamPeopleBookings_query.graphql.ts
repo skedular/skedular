@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1470e7d365196f116d1f418cf23d1db2>>
+ * @generated SignedSource<<af8036c060f66e5c60fb0618dcdd951c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,10 +27,6 @@ export type teamPeopleBookings_query$data = {
       readonly uniqueId: string;
     } | null | undefined;
   } | null | undefined;
-  readonly teamBookingPermissions: {
-    readonly canAddBookingOnBehalf: boolean;
-    readonly canDeleteBookingOnBehalf: boolean;
-  } | null | undefined;
   readonly teamMembers: ReadonlyArray<{
     readonly customer: {
       readonly familyName: string | null | undefined;
@@ -42,6 +38,7 @@ export type teamPeopleBookings_query$data = {
     };
     readonly id: string;
   }> | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"bookingsWeekGrid_allBookings_query" | "bookingsWeekGrid_query">;
   readonly " $fragmentType": "teamPeopleBookings_query";
 };
 export type teamPeopleBookings_query$key = {
@@ -50,28 +47,21 @@ export type teamPeopleBookings_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "kind": "Variable",
-    "name": "teamId",
-    "variableName": "teamId"
-  }
-],
-v1 = {
+var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -102,7 +92,13 @@ return {
           "variableName": "peopleSortingValues"
         },
         {
-          "fields": (v0/*: any*/),
+          "fields": [
+            {
+              "kind": "Variable",
+              "name": "teamId",
+              "variableName": "teamId"
+            }
+          ],
           "kind": "ObjectValue",
           "name": "where"
         }
@@ -112,7 +108,7 @@ return {
       "name": "teamMembers",
       "plural": true,
       "selections": [
-        (v1/*: any*/),
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -121,8 +117,8 @@ return {
           "name": "customer",
           "plural": false,
           "selections": [
+            (v1/*: any*/),
             (v2/*: any*/),
-            (v3/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -165,7 +161,7 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v1/*: any*/),
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -174,7 +170,7 @@ return {
           "name": "defaultTeams",
           "plural": true,
           "selections": [
-            (v2/*: any*/)
+            (v1/*: any*/)
           ],
           "storageKey": null
         }
@@ -195,7 +191,7 @@ return {
       "name": "team",
       "plural": false,
       "selections": [
-        (v3/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -225,8 +221,8 @@ return {
           "name": "organization",
           "plural": false,
           "selections": [
-            (v2/*: any*/),
-            (v3/*: any*/)
+            (v1/*: any*/),
+            (v2/*: any*/)
           ],
           "storageKey": null
         }
@@ -234,29 +230,14 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": (v0/*: any*/),
-      "concreteType": "TeamBookingPermissions",
-      "kind": "LinkedField",
-      "name": "teamBookingPermissions",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canAddBookingOnBehalf",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canDeleteBookingOnBehalf",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "bookingsWeekGrid_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "bookingsWeekGrid_allBookings_query"
     }
   ],
   "type": "Query",
@@ -264,6 +245,6 @@ return {
 };
 })();
 
-(node as any).hash = "efbde983752173a0d050ac675cca49c6";
+(node as any).hash = "878c27168fed06b22035579f8468fb52";
 
 export default node;

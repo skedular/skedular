@@ -24,9 +24,18 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query teamBookingsCard_rootQuery($peopleSortingValues: [TeamMemberOrderInput!]!, $teamId: String!, $from: DateTime!, $to: DateTime!) {
+  query teamBookingsCard_rootQuery(
+    $peopleSortingValues: [TeamMemberOrderInput!]!
+    $organizationId: String!
+    $organizationExists: Boolean!
+    $locationId: String!
+    $locationExists: Boolean!
+    $teamId: String!
+    $teamExists: Boolean!
+    $from: DateTime!
+    $to: DateTime!
+  ) {
     ...teamPeopleBookings_query
-    ...teamPeopleBookings_allBookings_query
   }
 `;
 
@@ -36,7 +45,6 @@ const TeamBookingsCard = ({ queryReference, organizationId, teamId, teamName, te
   return (
     <TeamPeopleBookings
       rootDataRelay={rootData}
-      rootDataAllBookingsRelay={rootData}
       organizationId={organizationId}
       teamId={teamId}
       teamName={teamName}
@@ -72,7 +80,12 @@ const TeamBookingsWithRelay = ({ organizationId, organizationName, teamId, teamN
             field: 'name',
           },
         ],
+        organizationId: organizationId ?? '',
+        organizationExists: !!organizationId,
+        locationId: '',
+        locationExists: false,
         teamId,
+        teamExists: !!teamId,
         from: startDate.toISOString(),
         to: endDate.toISOString(),
       },

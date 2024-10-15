@@ -1,13 +1,10 @@
+import { BookingsWeekGrid } from '@/components/booking';
 import { LocationLink, getLocationBookingsLink, getLocationSettingsLink } from '@/components/location';
 import { OrganizationLink } from '@/components/organization';
-import type { locationPeopleBookings_addBookingMutation } from '@/queries/__generated__/locationPeopleBookings_addBookingMutation.graphql';
 import type { locationPeopleBookings_addCustomerDefaultLocationMutation } from '@/queries/__generated__/locationPeopleBookings_addCustomerDefaultLocationMutation.graphql';
-import type { locationPeopleBookings_allBookings_query$key } from '@/queries/__generated__/locationPeopleBookings_allBookings_query.graphql';
-import type { locationPeopleBookings_deleteBookingMutation } from '@/queries/__generated__/locationPeopleBookings_deleteBookingMutation.graphql';
 import type { locationPeopleBookings_deleteLocationMutation } from '@/queries/__generated__/locationPeopleBookings_deleteLocationMutation.graphql';
 import type { locationPeopleBookings_query$key } from '@/queries/__generated__/locationPeopleBookings_query.graphql';
 import type { locationPeopleBookings_removeCustomerDefaultLocationMutation } from '@/queries/__generated__/locationPeopleBookings_removeCustomerDefaultLocationMutation.graphql';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -25,10 +22,6 @@ import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
-import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridColDef, MuiEvent } from '@mui/x-data-grid';
-import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BookingIcon as BookingIconComponent } from '@repo/shared/components/booking';
 import {
   BookingIcon,
   DangerIcon,
@@ -40,19 +33,16 @@ import {
   SettingsIcon,
 } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
-import { GlobalReloadIdContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { endOfDay, endOfIsoWeek, getCustomerFullName, joinErrors, startOfIsoWeek, toShortDate } from '@repo/shared/libs/utils';
+import { joinErrors, startOfIsoWeek } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
-import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
+import { memo, useState } from 'react';
+import { graphql, useFragment, useMutation } from 'react-relay';
 
 type Props = {
   rootDataRelay: locationPeopleBookings_query$key;
-  rootDataAllBookingsRelay: locationPeopleBookings_allBookings_query$key;
   organizationId?: string;
   locationId: string;
   locationName?: string;
@@ -99,68 +89,8 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
   },
 };
 
-type CustomerDetails = {
-  readonly uniqueId: string;
-  readonly givenName?: string | null | undefined;
-  readonly middleName?: string | null | undefined;
-  readonly familyName?: string | null | undefined;
-  readonly name?: string | null | undefined;
-  readonly photoUrl?: string | null | undefined;
-};
-
-type LocationDetails = {
-  readonly name?: string | null | undefined;
-};
-
-type LocationTagDetails = {
-  readonly uniqueId: string;
-  readonly name?: string | null | undefined;
-  readonly tagType?: string | null | undefined;
-};
-
-type DeskDetails = {
-  readonly name?: string | null | undefined;
-  readonly locationTags: ReadonlyArray<LocationTagDetails>;
-};
-
-type TeamDetails = {
-  readonly name?: string | null | undefined;
-};
-
-type BookingDetails = {
-  readonly id: string;
-  readonly customer: CustomerDetails;
-  readonly location?: LocationDetails | null | undefined;
-  readonly team?: TeamDetails | null | undefined;
-  readonly desks: ReadonlyArray<DeskDetails>;
-  readonly from: any;
-  readonly to: any;
-};
-
-type BookingAndCustomerDetails = {
-  customer: CustomerDetails;
-  booking: BookingDetails | null | undefined;
-};
-
-type RowType = {
-  id: string;
-  person: CustomerDetails;
-  mon: BookingAndCustomerDetails;
-  tue: BookingAndCustomerDetails;
-  wed: BookingAndCustomerDetails;
-  thu: BookingAndCustomerDetails;
-  fri: BookingAndCustomerDetails;
-  sat: BookingAndCustomerDetails;
-  sun: BookingAndCustomerDetails;
-};
-
-const dayIndex: { [key: string]: number } = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
-
-const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Find a person..." />;
-
 const LocationPeopleBookings = ({
   rootDataRelay,
-  rootDataAllBookingsRelay,
   organizationId,
   locationId,
   locationName,
@@ -206,87 +136,12 @@ const LocationPeopleBookings = ({
             name
           }
         }
-        locationBookingPermissions(locationId: $locationId) {
-          canAddBookingOnBehalf
-          canDeleteBookingOnBehalf
-        }
+        ...bookingsWeekGrid_query
+        ...bookingsWeekGrid_allBookings_query
       }
     `,
     rootDataRelay,
   );
-
-  const [rootDataAllBookings, refetch] = useRefetchableFragment(
-    graphql`
-      fragment locationPeopleBookings_allBookings_query on Query @refetchable(queryName: "locationPeopleBookings_allBookings_refetchableFragment") {
-        allBookings(where: { locationIds: [$locationId], fromGTE: $from, toLT: $to }) {
-          id
-          from
-          to
-          customer {
-            uniqueId
-            name
-            givenName
-            middleName
-            familyName
-            photoUrl
-          }
-          location {
-            name
-          }
-          team {
-            name
-          }
-          desks {
-            name
-            locationTags {
-              uniqueId
-              name
-              tagType
-            }
-          }
-        }
-      }
-    `,
-    rootDataAllBookingsRelay,
-  );
-
-  const [commitAddBooking] = useMutation<locationPeopleBookings_addBookingMutation>(graphql`
-    mutation locationPeopleBookings_addBookingMutation($input: AddBookingInput!) {
-      addBooking(input: $input) {
-        booking {
-          id
-          from
-          customer {
-            name
-            givenName
-            middleName
-            familyName
-          }
-          location {
-            name
-          }
-          desks {
-            name
-            locationTags {
-              uniqueId
-              name
-              tagType
-            }
-          }
-        }
-      }
-    }
-  `);
-
-  const [commitDeleteBooking] = useMutation<locationPeopleBookings_deleteBookingMutation>(graphql`
-    mutation locationPeopleBookings_deleteBookingMutation($input: DeleteBookingInput!) {
-      deleteBooking(input: $input) {
-        booking {
-          id
-        }
-      }
-    }
-  `);
 
   const [commitDeleteLocation] = useMutation<locationPeopleBookings_deleteLocationMutation>(graphql`
     mutation locationPeopleBookings_deleteLocationMutation($connectionIds: [ID!]!, $input: DeleteLocationInput!) {
@@ -324,40 +179,12 @@ const LocationPeopleBookings = ({
     }
   `);
 
-  const globalReloadId = useContext(GlobalReloadIdContext);
-  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const { enqueueSnackbar } = useSnackbar();
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
-  const [, startTransition] = useTransition();
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [startDate, setStartDate] = useState<Dayjs>(startOfIsoWeek());
-  const handleRefetch = useCallback(
-    (startDate: Dayjs) => {
-      startTransition(() => {
-        const endDate = endOfIsoWeek(startDate);
-
-        refetch(
-          {
-            organizationId: organizationId ?? '',
-            fetchBookingPermission: !!organizationId,
-            locationId,
-            from: startDate.toISOString(),
-            to: endDate.toISOString(),
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [refetch, organizationId, locationId],
-  );
-
-  useEffect(() => {
-    handleRefetch(startDate);
-  }, [handleRefetch, globalReloadId, startDate]);
 
   if (!rootData.me || !rootData.location || !rootData.locationMembers || !rootData.customersByDefaultLocation) {
     return <></>;
@@ -366,278 +193,6 @@ const LocationPeopleBookings = ({
   const allMembers = rootData.location?.organization
     ? rootData.customersByDefaultLocation.map((customer) => ({ ...customer, uniqueId: customer.id }))
     : rootData.locationMembers.map((member) => member.customer);
-  const meAsMember = allMembers.find((customer) => customer.uniqueId === rootData.me!.id);
-  const otherMembers = allMembers.filter((customer) => customer.uniqueId !== rootData.me!.id);
-  let finalMembersList = otherMembers;
-  if (meAsMember) {
-    finalMembersList = [meAsMember, ...otherMembers];
-  }
-
-  const rows: RowType[] = finalMembersList
-    .map((customer) => {
-      if (!rootDataAllBookings.allBookings) {
-        return null;
-      }
-
-      const customerId = customer.uniqueId;
-
-      return {
-        id: customerId,
-        person: customer,
-        mon: {
-          customer,
-          booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString(),
-          ),
-        },
-        tue: {
-          customer,
-          booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(1, 'day').toISOString(),
-          ),
-        },
-        wed: {
-          customer,
-          booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(2, 'day').toISOString(),
-          ),
-        },
-        thu: {
-          customer,
-          booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(3, 'day').toISOString(),
-          ),
-        },
-        fri: {
-          customer,
-          booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(4, 'day').toISOString(),
-          ),
-        },
-        sat: {
-          customer,
-          booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(5, 'day').toISOString(),
-          ),
-        },
-        sun: {
-          customer,
-          booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(6, 'day').toISOString(),
-          ),
-        },
-      };
-    })
-    .filter((row) => !!row);
-
-  const getApplyQuickFilterNameSearch: GetApplyQuickFilterFn<any, unknown> = (value) => {
-    return (cellValue) => {
-      const lowercaseValue = value.toLowerCase();
-      const customer = cellValue as CustomerDetails;
-
-      return Object.entries(customer).some(
-        ([key, value]) => key !== 'uniqueId' && key !== 'photoUrl' && typeof value === 'string' && value.toLowerCase().includes(lowercaseValue),
-      );
-    };
-  };
-
-  const columns: GridColDef<(typeof rows)[number]>[] = [
-    {
-      field: 'person',
-      headerName: '',
-      renderCell: (params) => (
-        <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-          <CustomerAvatar name={params.value} photo={{ url: params.value.photoUrl }} size="small" showFullName={true} />
-        </Box>
-      ),
-      getApplyQuickFilterFn: getApplyQuickFilterNameSearch,
-    },
-    {
-      field: 'mon',
-      headerName: 'Mon',
-      width: 50,
-      editable: false,
-      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
-      align: 'center',
-      display: 'flex',
-    },
-    {
-      field: 'tue',
-      headerName: 'Tue',
-      width: 50,
-      editable: false,
-      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
-      align: 'center',
-      display: 'flex',
-    },
-    {
-      field: 'wed',
-      headerName: 'Wed',
-      width: 50,
-      editable: false,
-      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
-      align: 'center',
-      display: 'flex',
-    },
-    {
-      field: 'thu',
-      headerName: 'Thu',
-      width: 50,
-      editable: false,
-      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
-      align: 'center',
-      display: 'flex',
-    },
-    {
-      field: 'fri',
-      headerName: 'Fri',
-      width: 50,
-      editable: false,
-      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
-      align: 'center',
-      display: 'flex',
-    },
-    {
-      field: 'sat',
-      headerName: 'Sat',
-      width: 50,
-      editable: false,
-      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
-      align: 'center',
-      display: 'flex',
-    },
-    {
-      field: 'sun',
-      headerName: 'Sun',
-      width: 50,
-      editable: false,
-      renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
-      align: 'center',
-      display: 'flex',
-    },
-  ];
-
-  const handleCellClick = (params: GridCellParams, event: MuiEvent, details: GridCallbackDetails) => {
-    const { customer, booking } = params.value as BookingAndCustomerDetails;
-    if (!booking && !rootData.locationBookingPermissions?.canAddBookingOnBehalf && rootData.me?.id !== customer.uniqueId) {
-      enqueueSnackbar(`You are not authorized to make a booking on behalf of someone else`, {
-        variant: 'error',
-        anchorOrigin,
-      });
-
-      return;
-    }
-
-    if (booking && !rootData.locationBookingPermissions?.canDeleteBookingOnBehalf && rootData.me?.id !== customer.uniqueId) {
-      enqueueSnackbar(`You are not authorized to remove this booking on behalf of someone else`, {
-        variant: 'error',
-        anchorOrigin,
-      });
-
-      return;
-    }
-
-    const id = booking ? booking.id : nanoid();
-    const index = dayIndex[params.field]!;
-    const startOfDay = startDate.add(index, 'day');
-    const from = startOfDay.toISOString();
-    const to = endOfDay(startOfDay).toISOString();
-    const fromToPrint = toShortDate(startOfDay);
-
-    if (booking) {
-      commitDeleteBooking({
-        variables: {
-          input: {
-            clientMutationId: nanoid(),
-            id,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to delete booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
-              variant: 'error',
-              anchorOrigin,
-            });
-
-            return;
-          }
-
-          let message = `Booking removed for ${getCustomerFullName(booking.customer)}`;
-
-          if (booking.location) {
-            message += ` at the "${booking.location!.name}"`;
-          }
-
-          message += ` on ${toShortDate(booking.from)}`;
-
-          handleRefetch(startDate);
-          enqueueSnackbar(message, { variant: 'success', anchorOrigin });
-          UpdateGlobalReloadId();
-        },
-        onError: (error) => {
-          enqueueSnackbar(`Failed to delete booking '${fromToPrint}'. Error: ${error.message}`, {
-            variant: 'error',
-            anchorOrigin,
-          });
-        },
-      });
-    } else {
-      commitAddBooking({
-        variables: {
-          input: {
-            clientMutationId: nanoid(),
-            id,
-            customerId: customer.uniqueId,
-            from,
-            to,
-            organizationId,
-            locationId,
-            deskIds: [],
-          },
-        },
-        onCompleted: (response, errors) => {
-          if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
-              variant: 'error',
-              anchorOrigin,
-            });
-
-            return;
-          }
-
-          const booking = response.addBooking?.booking!;
-          let message = `Booking added for ${getCustomerFullName(booking.customer)} to work`;
-
-          if (booking.location) {
-            message += ` from the "${booking.location!.name}"`;
-          }
-
-          if (booking.desks.length > 0) {
-            message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
-
-            const zones = booking.desks.flatMap(({ locationTags }) => locationTags).filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
-            if (zones.length > 0) {
-              const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
-
-              message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
-            }
-          }
-
-          message += ` on ${toShortDate(booking.from)}`;
-
-          handleRefetch(startDate);
-          enqueueSnackbar(message, { variant: 'success', anchorOrigin });
-          UpdateGlobalReloadId();
-        },
-        onError: (error) => {
-          enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {
-            variant: 'error',
-            anchorOrigin,
-          });
-        },
-      });
-    }
-  };
 
   const handleDateRangeTypeChange = (event: React.MouseEvent<HTMLElement>, value: DateRangeType) => {
     let start = startOfIsoWeek();
@@ -647,11 +202,7 @@ const LocationPeopleBookings = ({
 
     setStartDate(start);
     setDateRangeType(value);
-
-    handleRefetch(start);
   };
-
-  const rowCount = rootData.location.organization ? rootData.customersByDefaultLocation.length : rootData.locationMembers.length;
 
   let moreActionsOption: MoreActionsMenuItemType[] = [];
   if (rootData.me.defaultLocations.some((location) => location.uniqueId === locationId)) {
@@ -871,24 +422,12 @@ const LocationPeopleBookings = ({
             </Typography>
           </Stack>
 
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            hideFooterPagination={rowCount <= 10}
-            initialState={{
-              pagination: {
-                rowCount,
-                paginationModel: {
-                  pageSize: 10,
-                },
-              },
-            }}
-            pageSizeOptions={[10]}
-            ignoreDiacritics
-            disableRowSelectionOnClick
-            density="compact"
-            onCellClick={handleCellClick}
-            slots={{ toolbar: QuickSearchToolbar }}
+          <BookingsWeekGrid
+            rootDataRelay={rootData}
+            rootDataAllBookingsRelay={rootData}
+            organizationId={organizationId}
+            startDate={startDate}
+            customers={allMembers}
           />
         </CardContent>
       </Card>

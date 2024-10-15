@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ad37781cef16dcca0fadf950649d9757>>
+ * @generated SignedSource<<4ff2ebcc3d2128ffe2c7312f3c4757ef>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,10 +24,6 @@ export type organizationPeopleBookings_query$data = {
     readonly logoUrl: string | null | undefined;
     readonly name: string;
   } | null | undefined;
-  readonly organizationBookingPermissions: {
-    readonly canAddBookingOnBehalf: boolean;
-    readonly canDeleteBookingOnBehalf: boolean;
-  } | null | undefined;
   readonly organizationMembers: ReadonlyArray<{
     readonly customer: {
       readonly familyName: string | null | undefined;
@@ -39,6 +35,7 @@ export type organizationPeopleBookings_query$data = {
     };
     readonly id: string;
   }> | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"bookingsWeekGrid_allBookings_query" | "bookingsWeekGrid_query">;
   readonly " $fragmentType": "organizationPeopleBookings_query";
 };
 export type organizationPeopleBookings_query$key = {
@@ -47,28 +44,21 @@ export type organizationPeopleBookings_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "kind": "Variable",
-    "name": "organizationId",
-    "variableName": "organizationId"
-  }
-],
-v1 = {
+var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -99,7 +89,13 @@ return {
           "variableName": "peopleSortingValues"
         },
         {
-          "fields": (v0/*: any*/),
+          "fields": [
+            {
+              "kind": "Variable",
+              "name": "organizationId",
+              "variableName": "organizationId"
+            }
+          ],
           "kind": "ObjectValue",
           "name": "where"
         }
@@ -109,7 +105,7 @@ return {
       "name": "organizationMembers",
       "plural": true,
       "selections": [
-        (v1/*: any*/),
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -118,8 +114,8 @@ return {
           "name": "customer",
           "plural": false,
           "selections": [
+            (v1/*: any*/),
             (v2/*: any*/),
-            (v3/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -162,7 +158,7 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v1/*: any*/),
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -171,7 +167,7 @@ return {
           "name": "defaultOrganization",
           "plural": false,
           "selections": [
-            (v2/*: any*/)
+            (v1/*: any*/)
           ],
           "storageKey": null
         }
@@ -192,7 +188,7 @@ return {
       "name": "organization",
       "plural": false,
       "selections": [
-        (v3/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -225,29 +221,14 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": (v0/*: any*/),
-      "concreteType": "OrganizationBookingPermissions",
-      "kind": "LinkedField",
-      "name": "organizationBookingPermissions",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canAddBookingOnBehalf",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canDeleteBookingOnBehalf",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "bookingsWeekGrid_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "bookingsWeekGrid_allBookings_query"
     }
   ],
   "type": "Query",
@@ -255,6 +236,6 @@ return {
 };
 })();
 
-(node as any).hash = "ff0697fb1d0e8b9c170d42360600d16b";
+(node as any).hash = "b321daa843de647da19f1dce6a297434";
 
 export default node;

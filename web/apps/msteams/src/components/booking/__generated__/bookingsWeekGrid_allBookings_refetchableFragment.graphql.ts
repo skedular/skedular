@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<40e4d930082799a5861bfa151a0df568>>
+ * @generated SignedSource<<049cb8d5d06976dfbd98718e4a705cd7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,17 +10,19 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationPeopleBookings_allBookings_refetchableFragment$variables = {
+export type bookingsWeekGrid_allBookings_refetchableFragment$variables = {
   from?: any | null | undefined;
+  locationId: string;
   organizationId: string;
+  teamId: string;
   to?: any | null | undefined;
 };
-export type organizationPeopleBookings_allBookings_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationPeopleBookings_allBookings_query">;
+export type bookingsWeekGrid_allBookings_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"bookingsWeekGrid_allBookings_query">;
 };
-export type organizationPeopleBookings_allBookings_refetchableFragment = {
-  response: organizationPeopleBookings_allBookings_refetchableFragment$data;
-  variables: organizationPeopleBookings_allBookings_refetchableFragment$variables;
+export type bookingsWeekGrid_allBookings_refetchableFragment = {
+  response: bookingsWeekGrid_allBookings_refetchableFragment$data;
+  variables: bookingsWeekGrid_allBookings_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -33,7 +35,17 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
+    "name": "locationId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
     "name": "organizationId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "teamId"
   },
   {
     "defaultValue": null,
@@ -63,12 +75,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationPeopleBookings_allBookings_refetchableFragment",
+    "name": "bookingsWeekGrid_allBookings_refetchableFragment",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "organizationPeopleBookings_allBookings_query"
+        "name": "bookingsWeekGrid_allBookings_query"
       }
     ],
     "type": "Query",
@@ -78,7 +90,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationPeopleBookings_allBookings_refetchableFragment",
+    "name": "bookingsWeekGrid_allBookings_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -94,12 +106,34 @@ return {
                 "items": [
                   {
                     "kind": "Variable",
+                    "name": "locationIds.0",
+                    "variableName": "locationId"
+                  }
+                ],
+                "kind": "ListValue",
+                "name": "locationIds"
+              },
+              {
+                "items": [
+                  {
+                    "kind": "Variable",
                     "name": "organizationIds.0",
                     "variableName": "organizationId"
                   }
                 ],
                 "kind": "ListValue",
                 "name": "organizationIds"
+              },
+              {
+                "items": [
+                  {
+                    "kind": "Variable",
+                    "name": "teamIds.0",
+                    "variableName": "teamId"
+                  }
+                ],
+                "kind": "ListValue",
+                "name": "teamIds"
               },
               {
                 "kind": "Variable",
@@ -236,16 +270,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "967cf9f61bf5ca68c46500a60a80c2c2",
+    "cacheID": "3b7cb903d351623a780b3fb9201c5e7d",
     "id": null,
     "metadata": {},
-    "name": "organizationPeopleBookings_allBookings_refetchableFragment",
+    "name": "bookingsWeekGrid_allBookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationPeopleBookings_allBookings_refetchableFragment(\n  $from: DateTime\n  $organizationId: String!\n  $to: DateTime\n) {\n  ...organizationPeopleBookings_allBookings_query\n}\n\nfragment organizationPeopleBookings_allBookings_query on Query {\n  allBookings(where: {organizationIds: [$organizationId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query bookingsWeekGrid_allBookings_refetchableFragment(\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $teamId: String!\n  $to: DateTime\n) {\n  ...bookingsWeekGrid_allBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  allBookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      name\n    }\n    team {\n      name\n    }\n    desks {\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0e354f89f5f24c4db9eb14b7c19f3e57";
+(node as any).hash = "6209f0db765a06bdc05d8e5d0b49190d";
 
 export default node;

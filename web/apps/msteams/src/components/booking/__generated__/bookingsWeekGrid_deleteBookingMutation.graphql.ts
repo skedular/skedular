@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<90dbc0409b7d249a96bdca6e72020419>>
+ * @generated SignedSource<<74ca7392eb21efd25edd724920c0a83a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,19 +13,19 @@ export type DeleteBookingInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type teamPeopleBookings_deleteBookingMutation$variables = {
+export type bookingsWeekGrid_deleteBookingMutation$variables = {
   input: DeleteBookingInput;
 };
-export type teamPeopleBookings_deleteBookingMutation$data = {
+export type bookingsWeekGrid_deleteBookingMutation$data = {
   readonly deleteBooking: {
     readonly booking: {
       readonly id: string;
     };
   } | null | undefined;
 };
-export type teamPeopleBookings_deleteBookingMutation = {
-  response: teamPeopleBookings_deleteBookingMutation$data;
-  variables: teamPeopleBookings_deleteBookingMutation$variables;
+export type bookingsWeekGrid_deleteBookingMutation = {
+  response: bookingsWeekGrid_deleteBookingMutation$data;
+  variables: bookingsWeekGrid_deleteBookingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -78,7 +78,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "teamPeopleBookings_deleteBookingMutation",
+    "name": "bookingsWeekGrid_deleteBookingMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -87,20 +87,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "teamPeopleBookings_deleteBookingMutation",
+    "name": "bookingsWeekGrid_deleteBookingMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "d77b63e064c19c9042e265ae107e6616",
+    "cacheID": "5f810639760432b143d2422061eeeab9",
     "id": null,
     "metadata": {},
-    "name": "teamPeopleBookings_deleteBookingMutation",
+    "name": "bookingsWeekGrid_deleteBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation teamPeopleBookings_deleteBookingMutation(\n  $input: DeleteBookingInput!\n) {\n  deleteBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
+    "text": "mutation bookingsWeekGrid_deleteBookingMutation(\n  $input: DeleteBookingInput!\n) {\n  deleteBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7e022a9b46c4ee8421e52ca02df2bab2";
+(node as any).hash = "f3946fbc243de2027eaabb587e4c4657";
 
 export default node;

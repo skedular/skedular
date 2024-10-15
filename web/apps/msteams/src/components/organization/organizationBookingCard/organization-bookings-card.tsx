@@ -25,11 +25,14 @@ const RootQuery = graphql`
   query organizationBookingsCard_rootQuery(
     $peopleSortingValues: [OrganizationMemberOrderInput!]!
     $organizationId: String!
+    $locationId: String!
+    $locationExists: Boolean!
+    $teamId: String!
+    $teamExists: Boolean!
     $from: DateTime!
     $to: DateTime!
   ) {
     ...organizationPeopleBookings_query
-    ...organizationPeopleBookings_allBookings_query
   }
 `;
 
@@ -45,7 +48,6 @@ const OrganizationBookingsCard = ({
   return (
     <OrganizationPeopleBookings
       rootDataRelay={rootData}
-      rootDataAllBookingsRelay={rootData}
       organizationId={organizationId}
       organizationName={organizationName}
       organizationsConnectionIds={organizationsConnectionIds}
@@ -84,6 +86,10 @@ const OrganizationBookingsWithRelay = ({
           },
         ],
         organizationId,
+        locationId: '',
+        locationExists: false,
+        teamId: '',
+        teamExists: false,
         from: startDate.toISOString(),
         to: endDate.toISOString(),
       },
