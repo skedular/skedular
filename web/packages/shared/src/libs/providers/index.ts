@@ -5,8 +5,7 @@ export type { ExtendedPaletteMode } from './palette-mode-provider';
 export {
   SelectedOrganizationContext,
   default as SelectedOrganizationProvider,
-  UpdateSelectedOrganizationContext
+  UpdateSelectedOrganizationContext,
 } from './selected-organization-provider';
 export { default as SnackbarProvider } from './snackbar-provider';
 export { default as ThemeProvider } from './theme-provider';
-

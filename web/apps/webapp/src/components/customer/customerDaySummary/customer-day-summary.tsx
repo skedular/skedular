@@ -8,9 +8,10 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
-import Popper from '@mui/material/Popper';
+import Popover from '@mui/material/Popover';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -361,37 +362,52 @@ const CustomerDaySummary = ({ queryReference, date, onReloadRequired }: Props) =
     title = toShortDateWithDayAndMonthOnly(date);
   }
 
+  const handleClose = () => {
+    setBookingPopperAnchorEl(null);
+    setBookingPopperLatestUniqueId('');
+  };
+
   return (
-    <>
-      <Card sx={{ maxWidth: 500, height: '100%' }}>
-        <CardHeader
-          title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="body1">{title}</Typography>
-            </Stack>
-          }
-          subheader={getMyBookingsComponents(myBookings)}
-        />
-        <CardContent>
-          {summerizedRows.length !== 0 && (
-            <>
-              {summerizedRows.slice(0, summerizedRows.length - 1).map((row, index) => (
-                <Stack key={index} direction="column" spacing={1}>
-                  {row}
-                  <Divider />
-                </Stack>
-              ))}
-              {summerizedRows[summerizedRows.length - 1]}
-            </>
-          )}
-        </CardContent>
-      </Card>
-      <Popper open={Boolean(bookingPopperAnchorEl)} anchorEl={bookingPopperAnchorEl} placement="right-start">
-        <Paper sx={{ border: 1, p: 1 }}>
-          <Typography variant="body1">{bookingPopperMessage}</Typography>
-        </Paper>
-      </Popper>
-    </>
+    <ClickAwayListener onClickAway={handleClose}>
+      <>
+        <Card sx={{ maxWidth: 500, height: '100%' }}>
+          <CardHeader
+            title={
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                <Typography variant="body1">{title}</Typography>
+              </Stack>
+            }
+            subheader={getMyBookingsComponents(myBookings)}
+          />
+          <CardContent>
+            {summerizedRows.length !== 0 && (
+              <>
+                {summerizedRows.slice(0, summerizedRows.length - 1).map((row, index) => (
+                  <Stack key={index} direction="column" spacing={1}>
+                    {row}
+                    <Divider />
+                  </Stack>
+                ))}
+                {summerizedRows[summerizedRows.length - 1]}
+              </>
+            )}
+          </CardContent>
+        </Card>
+        <Popover
+          open={Boolean(bookingPopperAnchorEl)}
+          anchorEl={bookingPopperAnchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+        >
+          <Paper sx={{ border: 1, p: 1 }}>
+            <Typography variant="body1">{bookingPopperMessage}</Typography>
+          </Paper>
+        </Popover>
+      </>
+    </ClickAwayListener>
   );
 };
 
@@ -416,7 +432,7 @@ const CustomerDaySummaryWithRelay = ({ date }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, date]);
+  }, [loadQuery, triggerReloadId, date]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
