@@ -11,14 +11,14 @@ export default withAuth({
 export const config = {
   matcher: [
     '/',
-    '/organization',
-    '/organization/:slug*',
-    '/notification',
-    '/notification/:slug*',
-    '/location',
-    '/location/:slug*',
-    '/team',
-    '/team/:slug*',
+    '/organizations',
+    '/organizations/:slug*',
+    '/locations',
+    '/locations/:slug*',
+    '/teams',
+    '/teams/:slug*',
+    '/notifications',
+    '/notifications/:slug*',
     '/settings',
   ],
 };
