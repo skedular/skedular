@@ -35,6 +35,7 @@ public interface ICustomerService
 
     Task<Shared.Models.Customer> AddAsync(
         Shared.Models.Customer customer,
+        bool sendNewCustomerJoinedEmail,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Customer> AddIdentityAsync(
@@ -52,7 +53,8 @@ public class CustomerService(
     ICustomerOutboxPublisher customerOutboxPublisher,
     IMapper mapper,
     IContext context,
-    IRandomHelper randomHelper) : ICustomerService
+    IRandomHelper randomHelper,
+    INotificationOutboxPublisher notificationOutboxPublisher) : ICustomerService
 {
     public async Task<Shared.Models.Customer> GetByIdAsync(string customerId, CancellationToken cancellationToken)
     {
@@ -90,7 +92,7 @@ public class CustomerService(
             throw new CustomerNotFound();
         }
 
-        return await AddAsync(mapper.MapTo(context.PropertyBag), cancellationToken);
+        return await AddAsync(mapper.MapTo(context.PropertyBag), true, cancellationToken);
     }
 
     public async Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(
@@ -133,6 +135,7 @@ public class CustomerService(
 
     public async Task<Shared.Models.Customer> AddAsync(
         Shared.Models.Customer customer,
+        bool sendNewCustomerJoinedEmail,
         CancellationToken cancellationToken)
     {
         var existingCustomer =
@@ -272,6 +275,15 @@ public class CustomerService(
             [customer],
             repositoryFactory.CustomerRepository.UnitOfWork,
             cancellationToken);
+
+
+        if (sendNewCustomerJoinedEmail)
+        {
+            await notificationOutboxPublisher.PublishNewCustomerJoinedSubmittedAsync(
+                customer,
+                repositoryFactory.CustomerRepository.UnitOfWork,
+                cancellationToken);
+        }
 
         await repositoryFactory.IdentityRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

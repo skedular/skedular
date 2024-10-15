@@ -151,6 +151,14 @@ services:
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
+      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinOrganizationNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinOrganizationExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinLocationNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
     networks:
       unityhubio_network:
         aliases:
@@ -208,6 +216,14 @@ services:
       Slack__SuccessInstallUrl: https://staging.unityhub.io/slack-success-install
       AzureEntra__ClientId: ${STAGING_UNITYHUBIO_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${STAGING_UNITYHUBIO_AZURE_ENTRA_CLIENT_SECRET}
+      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinOrganizationNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinOrganizationExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinLocationNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
     networks:
       unityhubio_network:
         aliases:
@@ -283,6 +299,14 @@ services:
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
+      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinOrganizationNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinOrganizationExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinLocationNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
     networks:
       unityhubio_network:
         aliases:
@@ -340,6 +364,14 @@ services:
       Slack__SuccessInstallUrl: https://unityhub.io/slack-success-install
       AzureEntra__ClientId: ${PRODUCTION_UNITYHUBIO_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${PRODUCTION_UNITYHUBIO_AZURE_ENTRA_CLIENT_SECRET}
+      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinOrganizationNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinOrganizationExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinLocationNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
     networks:
       unityhubio_network:
         aliases:

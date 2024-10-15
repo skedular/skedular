@@ -20,12 +20,23 @@ public interface INotificationOutboxPublisher
         CustomerFeedback customerFeedback,
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken);
+
+    Task PublishNewCustomerJoinedSubmittedAsync(
+        Models.Customer customer,
+        IUnitOfWork unitOfWork,
+        CancellationToken cancellationToken);
 }
 
 public class NewCustomerFeedbackData
 {
     [JsonPropertyName("subject")] public string Subject { get; set; } = string.Empty;
     [JsonPropertyName("feedbackContent")] public string FeedbackContent { get; set; } = string.Empty;
+}
+
+public class NewCustomerJoinedData
+{
+    [JsonPropertyName("subject")] public string Subject { get; set; } = string.Empty;
+    [JsonPropertyName("content")] public string Content { get; set; } = string.Empty;
 }
 
 public class NotificationOutboxPublisher(
@@ -85,8 +96,58 @@ public class NotificationOutboxPublisher(
             }
         };
 
-        @event.Data.AfterState.Email.ToAddresses.AddRange(emailConfiguration
-            .NewCustomerFeedbackThroughWebSubmittedEmailReceivers);
+        @event.Data.AfterState.Email.ToAddresses.AddRange(
+            emailConfiguration
+                .NewCustomerFeedbackThroughWebSubmittedEmailReceivers);
+
+        await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
+    }
+
+    public async Task PublishNewCustomerJoinedSubmittedAsync(
+        Models.Customer customer,
+        IUnitOfWork unitOfWork,
+        CancellationToken cancellationToken)
+    {
+        var emails = customer.Identities
+            .Aggregate(string.Empty, (acc, identity) => $"{acc}, {identity.Email}")
+            .Trim(',')
+            .Trim();
+        var data = new NewCustomerJoinedData
+        {
+            Subject = "New customer has joined UnityHub",
+            Content = $"New customer with ID {customer.Id} and email(s) {emails} has joined UnityHub"
+        };
+
+        var templateData = JsonSerializer.Serialize(data);
+        var key = new Key { CustomerId = customer.Id };
+        var @event = new Event
+        {
+            Metadata = Event.NewMetadata(
+                applicationConfiguration.DomainSource,
+                applicationConfiguration.AppSource,
+                Type.NotificationUpserted,
+                context.PropertyBag.CorrelationId),
+            Data = new Data
+            {
+                AfterState = new Notification
+                {
+                    Id = randomHelper.Generate(),
+                    NotificationType = NotificationType.Email,
+                    Email = new EmailDetails
+                    {
+                        Id = randomHelper.Generate(),
+                        TemplateId =
+                            emailConfiguration.NewCustomerJoinedThroughWebSubmittedEmailTemplateName,
+                        TemplateData = templateData,
+                        Sender = emailConfiguration.NewCustomerJoinedThroughWebSubmittedEmailSender
+                    }
+                }
+            }
+        };
+
+        @event.Data.AfterState.Email.ToAddresses.AddRange(
+            emailConfiguration
+                .NewCustomerJoinedThroughWebSubmittedEmailReceivers);
 
         await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
     }

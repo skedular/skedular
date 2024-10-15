@@ -48,6 +48,10 @@ data "aws_ssm_parameter" "parameter_store_name_new_customer_feedback_through_web
   name = module.customer_domain_common.parameter_store_name_new_customer_feedback_email_template_arn
 }
 
+data "aws_ssm_parameter" "parameter_store_name_new_customer_joined_through_web_email_template_arn" {
+  name = module.customer_domain_common.parameter_store_name_new_customer_joined_email_template_arn
+}
+
 data "aws_ssm_parameter" "parameter_store_name_new_customer_feedback_through_slack_email_template_arn" {
   name = module.slack_domain_common.parameter_store_name_new_customer_feedback_email_template_arn
 }
@@ -92,6 +96,7 @@ data "aws_iam_policy_document" "lambda_ses_policy_document" {
     resources = [
       data.aws_ses_domain_identity.default.arn,
       data.aws_ssm_parameter.parameter_store_name_new_customer_feedback_through_web_email_template_arn.value,
+      data.aws_ssm_parameter.parameter_store_name_new_customer_joined_through_web_email_template_arn.value,
       data.aws_ssm_parameter.parameter_store_name_new_customer_feedback_through_slack_email_template_arn.value,
       data.aws_ssm_parameter.parameter_store_name_invitation_to_join_organization_new_customer_email_template_arn.value,
       data.aws_ssm_parameter.parameter_store_name_invitation_to_join_organization_existing_customer_email_template_arn.value,
