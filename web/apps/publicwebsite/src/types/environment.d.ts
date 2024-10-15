@@ -1,4 +1,4 @@
-export {};
+export { };
 
 declare global {
   namespace NodeJS {
@@ -15,6 +15,8 @@ declare global {
       COGNITO_ISSUER: string;
       GOOGLE_CLIENT_ID: string;
       GOOGLE_CLIENT_SECRET: string;
+      AZURE_AD_CLIENT_ID: string;
+      AZURE_AD_CLIENT_SECRET: string;
       SLACK_CLIENT_ID: string;
       SLACK_CLIENT_SECRET: string;
       GATEWAY_ENDPOINT: string;
@@ -27,6 +29,7 @@ declare global {
       BOOKING_ENDPOINT: string;
       PAYMENT_ENDPOINT: string;
       BILLING_ENDPOINT: string;
+      MSTEAMS_ENDPOINT: string;
     }
   }
 }

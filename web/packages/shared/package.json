@@ -50,20 +50,11 @@
     "./components/zone": {
       "default": "./dist/components/zone/index.js"
     },
-    "./libs/analytics": {
-      "default": "./dist/libs/analytics/index.js"
-    },
-    "./libs/cookie-consent": {
-      "default": "./dist/libs/cookie-consent/index.js"
-    },
     "./libs/logger": {
       "default": "./dist/libs/logger/index.js"
     },
     "./libs/mui": {
       "default": "./dist/libs/mui/index.js"
-    },
-    "./libs/nextauth": {
-      "default": "./dist/libs/nextauth/index.js"
     },
     "./libs/providers": {
       "default": "./dist/libs/providers/index.js"
@@ -102,22 +93,16 @@
     "@mui/x-license-pro": "^6.10.2",
     "@mui/x-tree-view": "^7.20.0",
     "@mui/x-tree-view-pro": "^7.20.0",
-    "@next/third-parties": "^14.2.15",
     "@stripe/react-stripe-js": "^2.8.1",
     "@stripe/stripe-js": "^4.8.0",
-    "@vercel/analytics": "^1.3.1",
-    "cookies-next": "^4.3.0",
     "countries-list": "^3.1.1",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "final-form": "^4.20.10",
-    "jwt-decode": "^4.0.0",
     "lodash.debounce": "^4.0.8",
     "logrocket": "^9.0.0",
     "logrocket-react": "^6.0.3",
     "mui-rff": "^8.0.0",
-    "next": "14.2.15",
-    "next-auth": "^4.24.8",
     "notistack": "^3.0.1",
     "pino": "^9.4.0",
     "pino-logflare": "^0.4.2",
@@ -146,7 +131,6 @@
     "@types/relay-runtime": "^18.0.0",
     "@types/uuid": "^10.0.0",
     "eslint": "9.12.0",
-    "eslint-config-next": "^14.2.15",
     "globals": "^15.11.0",
     "graphql": "^16.9.0",
     "prettier": "^3.3.3",

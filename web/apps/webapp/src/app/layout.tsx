@@ -1,18 +1,15 @@
 'use client';
 
+import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
+import { GoogleAnalyticsProvider, LogRocketProvider, NextAuthProvider, RelayProvider } from '@/libs/providers';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
-import { GoogleAnalytics, GoogleTagManager } from '@repo/shared/libs/analytics';
 import { MuiXLicense } from '@repo/shared/libs/mui';
 import {
   DatePickerLocalizationProvider,
   GlobalReloadIdProvider,
-  GoogleAnalyticsProvider,
-  LogRocketProvider,
-  NextAuthProvider,
   PaletteModeContext,
   PaletteModeProvider,
-  RelayProvider,
   SelectedOrganizationProvider,
   SnackbarProvider,
   ThemeProvider,

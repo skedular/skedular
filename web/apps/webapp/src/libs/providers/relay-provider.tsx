@@ -1,9 +1,9 @@
 'use client';
 
+import { getEnvironment } from '@repo/shared/clients/graphql/unityhub';
 import { signIn, useSession } from 'next-auth/react';
 import { useMemo } from 'react';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
-import { getEnvironment } from '../../clients/graphql/unityhub';
 
 type Props = {
   children?: React.ReactNode;
@@ -21,7 +21,6 @@ const RelayProvider = ({ children }: Props) => {
       return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sessionExtended = session as any & SessionExtended;
 
     if (sessionExtended?.error === 'RefreshAccessTokenError') {

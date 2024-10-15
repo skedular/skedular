@@ -1,11 +1,8 @@
 'use client';
 
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
-import { GoogleAnalytics, GoogleTagManager } from '@repo/shared/libs/analytics';
 import {
   DatePickerLocalizationProvider,
-  GoogleAnalyticsProvider,
-  NextAuthProvider,
   PaletteModeContext,
   PaletteModeProvider,
   SnackbarProvider,
@@ -32,15 +29,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <ThemeProvider mode={paletteMode}>
         <SnackbarProvider>
           <DatePickerLocalizationProvider>
-            <NextAuthProvider>
-              <GoogleAnalyticsProvider
-                ignoreOptOutCookie={false}
-                forceOverride={true}
-                googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
-              >
                 {children}
-              </GoogleAnalyticsProvider>
-            </NextAuthProvider>
           </DatePickerLocalizationProvider>
         </SnackbarProvider>
       </ThemeProvider>
@@ -72,8 +61,6 @@ const ThemedRootLayout = ({ children }: { children: React.ReactNode }) => {
         <Analytics />
         <SpeedInsights />
       </body>
-      <GoogleAnalytics ignoreOptOutCookie={true} forceOverride={false} />
-      <GoogleTagManager ignoreOptOutCookie={true} forceOverride={false} />
     </html>
   );
 };

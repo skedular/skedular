@@ -1,10 +1,10 @@
+import logger from '@repo/shared/libs/logger';
 import { jwtDecode } from 'jwt-decode';
 import type { AuthOptions } from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import CognitoProvider from 'next-auth/providers/cognito';
 import GoogleProvider from 'next-auth/providers/google';
 import { v4 as uuidv4 } from 'uuid';
-import logger from '../logger';
 
 export interface TokenExtended {
   accessToken: string;
@@ -195,7 +195,6 @@ const authOptions: AuthOptions = {
         return token;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const tokenExtended = token as any & TokenExtended;
       if (Date.now() < tokenExtended.accessTokenExpires) {
         return token;

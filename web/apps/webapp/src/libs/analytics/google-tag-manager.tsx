@@ -1,7 +1,7 @@
+import { optOutCookieName } from '@/libs/cookie-consent';
 import { GoogleTagManager as GTM } from '@next/third-parties/google';
 import { getCookie, hasCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
-import { optOutCookieName } from '../cookie-consent';
 
 type Props = {
   ignoreOptOutCookie: boolean;

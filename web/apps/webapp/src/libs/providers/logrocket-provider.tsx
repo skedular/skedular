@@ -1,10 +1,10 @@
 'use client';
 
+import { optOutCookieName } from '@/libs/cookie-consent';
 import { getCookie, hasCookie } from 'cookies-next';
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import { useEffect, useState } from 'react';
-import { optOutCookieName } from '../cookie-consent';
 
 type Props = {
   children?: React.ReactNode;

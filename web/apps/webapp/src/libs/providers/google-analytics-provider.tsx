@@ -1,10 +1,10 @@
 'use client';
 
+import { optOutCookieName } from '@/libs/cookie-consent';
 import { sendGTMEvent } from '@next/third-parties/google';
 import { getCookie, hasCookie } from 'cookies-next';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { optOutCookieName } from '../cookie-consent';
 
 type Props = {
   children?: React.ReactNode;
@@ -44,7 +44,7 @@ const GoogleAnalyticsProvider = ({ children, ignoreOptOutCookie, forceOverride, 
         page: window.location.href,
       });
     }
-  }, [shouldUseAnalytics, pathname]);
+  }, [shouldUseAnalytics, pathname, googleTagManagerContainerId]);
 
   return <>{children}</>;
 };
