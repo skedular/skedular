@@ -61,7 +61,7 @@ public static class Offerings
         {
             OfferingCode.PayAsYouGoV1, new Offering
             {
-                Name = "Early bird",
+                Name = "Pay as you go",
                 FeatureSets =
                 [
                     FeatureSetCode.OrganizationUnlimitedUsers,
