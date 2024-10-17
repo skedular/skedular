@@ -371,7 +371,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <>
-        <Card sx={{ maxWidth: 500, minWidth, height: '100%' }}>
+        <Card sx={{ maxWidth: 500, minWidth }}>
           <CardHeader
             title={
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
