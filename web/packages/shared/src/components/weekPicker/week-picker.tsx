@@ -70,7 +70,7 @@ const Day = (
 
 type Props = {
   startWeek?: Dayjs;
-  onWeekChanged: (start: Dayjs, end: Dayjs) => void;
+  onWeekChanged: (date: Dayjs) => void;
 };
 
 const WeekPicker = ({ startWeek, onWeekChanged }: Props) => {
@@ -92,7 +92,7 @@ const WeekPicker = ({ startWeek, onWeekChanged }: Props) => {
     setStart(newStart);
     handleClose();
 
-    onWeekChanged(newStart, endOfWeek(newStart).add(-1, 'milliseconds'));
+    onWeekChanged(newStart);
   };
 
   let buttonTitle = '';
