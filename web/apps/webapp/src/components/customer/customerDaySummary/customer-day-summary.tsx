@@ -444,7 +444,7 @@ const CustomerDaySummaryWithRelay = ({ date, minWidth }: RelayProps) => {
 
   if (!queryReference) {
     return (
-      <Card sx={{ maxWidth: 500, height: '100%' }}>
+      <Card sx={{ maxWidth: 500 }}>
         <CardContent>
           <Skeleton variant="rounded" width={470} height={350} />
         </CardContent>
