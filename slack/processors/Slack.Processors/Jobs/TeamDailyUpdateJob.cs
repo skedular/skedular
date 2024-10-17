@@ -43,7 +43,7 @@ public class TeamDailyUpdateJob(
                             (now - query.CreatedAt).TotalHours >= 24 &&
                             query.DailyUpdateChannel != null &&
                             (!query.SlackChannelDailyUpdateLastSentAt.HasValue ||
-                             (now - query.SlackChannelDailyUpdateLastSentAt.Value).TotalHours >= 24)
+                             (now - query.SlackChannelDailyUpdateLastSentAt.Value).TotalHours >= 23)
                     }).ToListAsync(cancellationToken);
                 var teamIds = teams
                     .Where(item => now.IsMatchingHour(item.Timezone, 7))

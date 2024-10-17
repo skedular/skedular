@@ -145,7 +145,8 @@ public class SendUsFeedbackButtonHandler(
             workspace,
             workspaceMember,
             new CommonPageContext(context.PageContext),
-            viewSubmission.Hash, cancellationToken);
+            viewSubmission.Hash,
+            cancellationToken);
 
         return ViewSubmissionResponse.Null;
     }

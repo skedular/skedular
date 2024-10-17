@@ -364,7 +364,7 @@ public class SlackInternalSubscriber(
         var now = timeProvider.GetUtcNow();
         if (locationEntity?.DailyUpdateChannel is null ||
             (locationEntity.SlackChannelDailyUpdateLastSentAt is not null &&
-             (now - locationEntity.SlackChannelDailyUpdateLastSentAt.Value).TotalHours <= 24))
+             (now - locationEntity.SlackChannelDailyUpdateLastSentAt.Value).TotalHours <= 23))
         {
             return;
         }
@@ -501,7 +501,7 @@ public class SlackInternalSubscriber(
         var now = timeProvider.GetUtcNow();
         if (teamEntity?.DailyUpdateChannel is null ||
             (teamEntity.SlackChannelDailyUpdateLastSentAt is not null &&
-             (now - teamEntity.SlackChannelDailyUpdateLastSentAt.Value).TotalHours <= 24))
+             (now - teamEntity.SlackChannelDailyUpdateLastSentAt.Value).TotalHours <= 23))
         {
             return;
         }
