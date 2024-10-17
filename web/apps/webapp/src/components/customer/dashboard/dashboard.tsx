@@ -50,11 +50,11 @@ const Dashboard = ({ queryReference }: Props) => {
 
   return (
     <>
-      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+      <Box sx={{ display: { xs: 'none', sm: 'none', md: 'none', lg: 'block', xl: 'block' } }}>
         <Stack direction="row" spacing={1}>
           <Stack direction="column" spacing={1}>
-            <CustomerDaySummary date={today} />
-            <CustomerDaySummary date={tomorrow} />
+            <CustomerDaySummary date={today} minWidth={300} />
+            <CustomerDaySummary date={tomorrow} minWidth={300} />
           </Stack>
           <Grid container spacing={2}>
             {rootData.myLocations.map((location) => (
@@ -84,7 +84,7 @@ const Dashboard = ({ queryReference }: Props) => {
           </Grid>
         </Stack>
       </Box>
-      <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+      <Box sx={{ display: { xs: 'block', sm: 'block', md: 'block', lg: 'none', xl: 'none' } }}>
         <Grid>
           <CustomerDaySummary date={today} />
         </Grid>
