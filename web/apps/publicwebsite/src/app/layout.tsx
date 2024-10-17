@@ -10,15 +10,15 @@ import {
 } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { Roboto } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import { useContext } from 'react';
 
-const roboto = Roboto({
+const inter = Inter({
   weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-roboto',
+  variable: '--font-inter',
 });
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
@@ -52,7 +52,7 @@ const ThemedRootLayout = ({ children }: { children: React.ReactNode }) => {
           defer
         />
       )}
-      <body className={roboto.variable}>
+      <body className={inter.variable}>
         <PaletteModeProvider>
           <RootLayout>{children}</RootLayout>
         </PaletteModeProvider>

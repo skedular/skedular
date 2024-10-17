@@ -157,7 +157,6 @@ const getDesignTokens = (mode: PaletteMode) => {
       },
     },
     typography: {
-      fontFamily: 'var(--font-roboto)',
       h1: {
         fontSize: defaultTheme.typography.pxToRem(48),
         fontWeight: 600,

@@ -31,8 +31,9 @@ import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader, useRefetcha
 
 type Props = {
   queryReference: PreloadedQuery<customerDaySummary_rootQuery, Record<string, unknown>>;
-  date: Dayjs;
   onReloadRequired: () => void;
+  date: Dayjs;
+  minWidth?: number;
 };
 
 const RootQuery = graphql`
@@ -99,7 +100,7 @@ type BookingDetails = {
   readonly desks: ReadonlyArray<DeskDetails>;
 };
 
-const CustomerDaySummary = ({ queryReference, date, onReloadRequired }: Props) => {
+const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }: Props) => {
   const rootDataRelay = usePreloadedQuery<customerDaySummary_rootQuery>(RootQuery, queryReference);
   const [rootData, refetch] = useRefetchableFragment<customerDaySummary_refetchableFragment, customerDaySummary_query$key>(
     graphql`
@@ -370,7 +371,7 @@ const CustomerDaySummary = ({ queryReference, date, onReloadRequired }: Props) =
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <>
-        <Card sx={{ maxWidth: 500, height: '100%' }}>
+        <Card sx={{ maxWidth: 500, minWidth, height: '100%' }}>
           <CardHeader
             title={
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
@@ -415,9 +416,10 @@ const MemoCustomerDaySummary = memo(CustomerDaySummary);
 
 type RelayProps = {
   date: Dayjs;
+  minWidth?: number;
 };
 
-const CustomerDaySummaryWithRelay = ({ date }: RelayProps) => {
+const CustomerDaySummaryWithRelay = ({ date, minWidth }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<customerDaySummary_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -452,7 +454,7 @@ const CustomerDaySummaryWithRelay = ({ date }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoCustomerDaySummary queryReference={queryReference} date={date} onReloadRequired={handleReloadRequired} />
+      <MemoCustomerDaySummary queryReference={queryReference} date={date} onReloadRequired={handleReloadRequired} minWidth={minWidth} />
     </ErrorBoundary>
   );
 };
