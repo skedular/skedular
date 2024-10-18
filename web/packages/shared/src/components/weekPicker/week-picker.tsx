@@ -1,13 +1,15 @@
 import Button from '@mui/material/Button';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
+import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '../../libs/utils';
-import { ArrowDownIcon } from '../icons';
+import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, TodayIcon } from '../icons';
 
 interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
   isSelected: boolean;
@@ -95,6 +97,27 @@ const WeekPicker = ({ startWeek, onWeekChanged }: Props) => {
     onWeekChanged(newStart);
   };
 
+  const handleTodayClick = () => {
+    const newStart = startOfWeek();
+
+    setStart(newStart);
+    onWeekChanged(newStart);
+  };
+
+  const handlePreviousWeekClick = () => {
+    const newStart = start.add(-1, 'week');
+
+    setStart(newStart);
+    onWeekChanged(newStart);
+  };
+
+  const handleNextWeekClick = () => {
+    const newStart = start.add(1, 'week');
+
+    setStart(newStart);
+    onWeekChanged(newStart);
+  };
+
   let buttonTitle = '';
   const end = endOfWeek(start).add(-1, 'milliseconds');
   if (isInSameMonth(start, end)) {
@@ -108,8 +131,17 @@ const WeekPicker = ({ startWeek, onWeekChanged }: Props) => {
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <>
-        <Button variant="text" onClick={handleClick} endIcon={<ArrowDownIcon />}>
-          {buttonTitle}
+        <Button variant="outlined" color="inherit" onClick={handleTodayClick} startIcon={<TodayIcon />}>
+          Today
+        </Button>
+        <IconButton color="inherit" onClick={handlePreviousWeekClick}>
+          <ArrowLeftIcon />
+        </IconButton>
+        <IconButton color="inherit" onClick={handleNextWeekClick}>
+          <ArrowRightIcon />
+        </IconButton>
+        <Button variant="text" color="inherit" onClick={handleClick} endIcon={<ArrowDownIcon />}>
+          <Typography variant="h6">{buttonTitle}</Typography>
         </Button>
         <Popover
           open={Boolean(anchorEl)}

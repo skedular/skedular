@@ -14,7 +14,7 @@ import { UpdateGlobalReloadIdContext } from 'libs/providers';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useContext, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
 import { array, date, object, string } from 'yup';
@@ -120,6 +120,10 @@ const NewBookingDialog = ({
 
     return endOfDay(from);
   }, [from]);
+
+  useEffect(() => {
+    setFrom(defaultDate ?? startOfDay());
+  }, [defaultDate]);
 
   const handleAddClick = ({ date, member, notes, organization: organizationId, location: locationId, desks: deskIds }: BookingDetails) => {
     if (!rootData.me) {

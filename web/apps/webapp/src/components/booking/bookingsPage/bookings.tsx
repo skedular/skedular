@@ -8,20 +8,15 @@ import type {
 } from '@/queries/__generated__/bookings_bookings_refetchableFragment.graphql';
 import type { bookings_query$key } from '@/queries/__generated__/bookings_query.graphql';
 import type { bookings_rootQuery } from '@/queries/__generated__/bookings_rootQuery.graphql';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import Typography from '@mui/material/Typography';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { startOfDay, toShortDate } from '@repo/shared/libs/utils';
+import { WeekPicker } from '@repo/shared/components/weekPicker';
+import { endOfWeek, startOfDay, startOfWeek } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
@@ -118,10 +113,8 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
     field: 'from',
   });
   const [page, setPage] = useState(0);
+  const [startWeek, setStartWeek] = useState(startOfWeek);
   const [pageSize, setPageSize] = useState(50);
-  const [pageContextOpen, setPageContextOpen] = useState(false);
-  const [selectedFromDate, setSelectedFromDate] = useState<Dayjs | null>(startOfDay());
-  const [selectedUntilDate, setSelectedUntilDate] = useState<Dayjs | null>(startOfDay().add(1, 'month'));
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
@@ -136,18 +129,18 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
 
     setPageSize(parseInt(event.target.value, 10));
 
-    handleRefetch(pageSize, sortingOrder, selectedFromDate, selectedUntilDate);
+    handleRefetch(pageSize, sortingOrder, startWeek);
   };
 
   const handleRefetch = useCallback(
-    (pageSize: number, order: BookingOrderInput, from: Dayjs | null, until: Dayjs | null) => {
+    (pageSize: number, order: BookingOrderInput, date: Dayjs) => {
       startTransition(() => {
         refetch(
           {
             count: pageSize,
             bookingSortingValues: [order],
-            bookingsSearchCriteriaFrom: from && from.isValid() ? from.toISOString() : null,
-            bookingsSearchCriteriaTo: until && until.isValid() ? until.toISOString() : null,
+            bookingsSearchCriteriaFrom: date.toISOString(),
+            bookingsSearchCriteriaTo: endOfWeek(date).add(-1, 'milliseconds').toISOString(),
           },
           {
             fetchPolicy: 'store-and-network',
@@ -196,24 +189,14 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
         direction,
         field: value as unknown as BookingOrderField,
       },
-      selectedFromDate,
-      selectedUntilDate,
+      startWeek,
     );
   };
 
-  const handleSelectedDateChange = (from: Dayjs | null, until: Dayjs | null) => {
-    setSelectedFromDate(from);
-    setSelectedUntilDate(until);
+  const handleWeehChange = (date: Dayjs) => {
+    setStartWeek(date);
 
-    handleRefetch(pageSize, sortingOrder, from, until);
-  };
-
-  const handlePageContextOpenStateChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
-    if (isExpanded) {
-      setPageContextOpen(true);
-    } else {
-      setPageContextOpen(false);
-    }
+    handleRefetch(pageSize, sortingOrder, date);
   };
 
   if (!rootData.me || !rootDataBookings.bookings) {
@@ -223,7 +206,10 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
   return (
     <>
       <Stack direction="column" spacing={1}>
-        <Stack direction="row" sx={{ width: 'auto' }}>
+        <Stack direction="row" sx={{ width: 'auto', justifyContent: 'space-between' }}>
+          <Stack direction="row">
+            <WeekPicker startWeek={startWeek} onWeekChanged={handleWeehChange} />
+          </Stack>
           <NewBookingButton
             onReloadRequired={onReloadRequired}
             organizationId={organizationId}
@@ -231,21 +217,9 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
             connectionIds={connectionIds}
             hideLocationControl={true}
             hideOrganizationControl={true}
+            defaultDate={startWeek}
           />
         </Stack>
-
-        <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            {!pageContextOpen && <Typography>{`From ${toShortDate(selectedFromDate)} until ${toShortDate(selectedUntilDate)}`}</Typography>}
-          </AccordionSummary>
-          <AccordionDetails>
-            <DateRangePicker
-              localeText={{ start: 'From', end: 'To' }}
-              defaultValue={[selectedFromDate, selectedUntilDate]}
-              onChange={(dateRangeValue) => handleSelectedDateChange(dateRangeValue[0], dateRangeValue[1])}
-            />
-          </AccordionDetails>
-        </Accordion>
 
         <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
           <TablePagination
@@ -319,8 +293,8 @@ const BookingsWithRelay = ({ onReloadRequired, organizationId, locationId, teamI
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    const from = startOfDay().toISOString();
-    const to = startOfDay().add(1, 'month').toISOString();
+    const from = startOfWeek();
+    const to = endOfWeek(from).add(-1, 'milliseconds');
 
     loadQuery(
       {
@@ -342,9 +316,9 @@ const BookingsWithRelay = ({ onReloadRequired, organizationId, locationId, teamI
             field: 'name',
           },
         ],
-        bookingsSearchCriteriaFrom: from,
-        bookingsSearchCriteriaTo: to,
-        dateToGetAvailableDesks: from,
+        bookingsSearchCriteriaFrom: from.toISOString(),
+        bookingsSearchCriteriaTo: to.toISOString(),
+        dateToGetAvailableDesks: startOfDay().toISOString(),
       },
       {
         fetchPolicy: 'store-and-network',

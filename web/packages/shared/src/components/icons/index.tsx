@@ -49,6 +49,7 @@ export { default as CustomerIcon } from '@mui/icons-material/Person';
 export { default as RemoveIcon } from '@mui/icons-material/Remove';
 export { default as PreferredIcon } from '@mui/icons-material/Star';
 export { default as NotPreferredIcon } from '@mui/icons-material/StarOutline';
+export { default as TodayIcon } from '@mui/icons-material/Today';
 export { default as ViewIcon } from '@mui/icons-material/Visibility';
 
 type Props = {
