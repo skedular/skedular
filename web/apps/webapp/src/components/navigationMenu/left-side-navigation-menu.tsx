@@ -4,7 +4,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { CalendarIcon, LocationIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
+import { DashboardIcon, LocationIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { Logo } from '@repo/shared/components/logo';
 import NextLink from 'next/link';
 import { memo } from 'react';
@@ -20,9 +20,9 @@ const LeftSideNavigationMenu = () => {
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
-              <CalendarIcon />
+              <DashboardIcon />
             </ListItemIcon>
-            <ListItemText>Calendar</ListItemText>
+            <ListItemText>Dashboard</ListItemText>
           </ListItemButton>
         </ListItem>
       </Link>
