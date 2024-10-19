@@ -22,6 +22,7 @@ import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: appBar_query$key;
+  onReloadRequired: () => void;
   breadcrumb?: AppBarBreadcrumb;
 };
 

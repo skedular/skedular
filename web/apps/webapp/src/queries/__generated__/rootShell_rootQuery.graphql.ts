@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dd1404aa2009a1eeb804b47022858798>>
+ * @generated SignedSource<<08e527a0b037ba54b8b529074f68a7e5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,7 @@ export type rootShell_rootQuery$data = {
   readonly paymentCustomerRecordSynced: boolean;
   readonly slackCustomerRecordSynced: boolean;
   readonly teamCustomerRecordSynced: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"mainRootLayout_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"appBar_query">;
 };
 export type rootShell_rootQuery = {
   response: rootShell_rootQuery$data;
@@ -133,7 +133,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "mainRootLayout_query"
+        "name": "appBar_query"
       }
     ],
     "type": "Query",
@@ -230,16 +230,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7847e5d973dba0fa9344d1690d2d1aac",
+    "cacheID": "3c26aeb4f77d01cb0dd9727314b63170",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery {\n  me {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...mainRootLayout_query\n}\n\nfragment mainRootLayout_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
+    "text": "query rootShell_rootQuery {\n  me {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...appBar_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6e3f6eb4d09953409af393f5f6785681";
+(node as any).hash = "3882bcab1b8fda3e0cd6734e83f3470f";
 
 export default node;

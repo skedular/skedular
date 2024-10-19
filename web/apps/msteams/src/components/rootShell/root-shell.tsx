@@ -1,11 +1,16 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import Drawer from '@mui/material/Drawer';
+import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
-import { MainRootLayout } from 'components/layouts';
+import type { AppBarBreadcrumb } from 'components/appBar';
+import { AppBar } from 'components/appBar';
 import { FabNavigationMenu, LeftSideNavigationMenu } from 'components/navigationMenu';
 import { Observability } from 'components/observability';
 import { nanoid } from 'nanoid';
@@ -19,7 +24,7 @@ type Props = {
   onReloadRequired: () => void;
   children: React.ReactNode;
   title?: string | null;
-  rightSideContent?: React.JSX.Element;
+  appBarBreadcrumb?: AppBarBreadcrumb;
 };
 
 const RootQuery = graphql`
@@ -38,12 +43,14 @@ const RootQuery = graphql`
     teamCustomerRecordSynced
     isAzureTenantInstalled
     azureTenantAdminConsentUrl
+    ...appBar_query
   }
 `;
 
 const maxRetryAttemptsToReload = 20;
+const drawerWidth = 250;
 
-const RootShell = ({ queryReference, children, onReloadRequired, rightSideContent }: Props) => {
+const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrumb }: Props) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const [reloadCount, setReloadCount] = useState(0);
   const areCustomerRecordsSync = useCallback(
@@ -92,7 +99,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, rightSideConten
   if (!rootData.isAzureTenantInstalled) {
     return (
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
-        <Typography variant="h2">
+        <Typography variant="h4">
           Your administrator needs to install UnityHub for you. This is a one-time setup. Please click the button below to start the installation.
         </Typography>
         <Button variant="contained" onClick={handleInstallClicked}>
@@ -105,7 +112,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, rightSideConten
   if (reloadCount === maxRetryAttemptsToReload) {
     return (
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
-        <Typography variant="h2">There was an issue activating your account.</Typography>
+        <Typography variant="h4">There was an issue activating your account.</Typography>
       </Box>
     );
   }
@@ -117,19 +124,33 @@ const RootShell = ({ queryReference, children, onReloadRequired, rightSideConten
   return (
     <>
       <Observability />
-      <MainRootLayout leftSideContent={<LeftSideNavigationMenu />} rightSideContent={rightSideContent}>
-        <Box
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline enableColorScheme />
+        <Drawer
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignItems: 'left',
-            p: '3rem',
+            display: { xs: 'none', sm: 'block' },
+            width: drawerWidth,
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+            },
           }}
+          variant="persistent"
+          open={true}
         >
-          {children}
-        </Box>
-      </MainRootLayout>
+          <LeftSideNavigationMenu />
+        </Drawer>
+        <Grid container>
+          <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, display: { xs: 'block', sm: 'none' } }}>
+            <LeftSideNavigationMenu />
+          </Grid>
+          <Stack direction="column" sx={{ width: '100vw' }}>
+            <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} breadcrumb={appBarBreadcrumb} />
+          </Stack>
+          <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>{children}</Grid>
+        </Grid>
+      </Box>
       <FabNavigationMenu />
     </>
   );
@@ -140,10 +161,10 @@ const MemoRootShell = memo(RootShell);
 type RelayProps = {
   children: React.ReactNode;
   title?: string | null;
-  rightSideContent?: React.JSX.Element;
+  appBarBreadcrumb?: AppBarBreadcrumb;
 };
 
-const RootShellWithRelay = ({ title, children, rightSideContent }: RelayProps) => {
+const RootShellWithRelay = ({ title, children, appBarBreadcrumb }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -169,7 +190,7 @@ const RootShellWithRelay = ({ title, children, rightSideContent }: RelayProps) =
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} title={title} rightSideContent={rightSideContent}>
+      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} title={title} appBarBreadcrumb={appBarBreadcrumb}>
         {children}
       </MemoRootShell>
     </ErrorBoundary>

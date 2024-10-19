@@ -21,6 +21,7 @@ import type { appBar_query$key } from './__generated__/appBar_query.graphql';
 
 type Props = {
   rootDataRelay: appBar_query$key;
+  onReloadRequired: () => void;
   breadcrumb?: AppBarBreadcrumb;
 };
 

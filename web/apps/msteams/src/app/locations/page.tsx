@@ -1,3 +1,4 @@
+import type { AppBarBreadcrumb } from 'components/appBar';
 import { Locations } from 'components/location/locations';
 import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
@@ -19,8 +20,18 @@ const LocationsPage = () => {
     throw new Error('organizationId is required');
   }
 
+  const breadcrumps: AppBarBreadcrumb = {
+    items: [
+      {
+        label: 'Home',
+        href: '/',
+      },
+    ],
+    lastItemLabel: 'Locations',
+  };
+
   return (
-    <RootShell>
+    <RootShell appBarBreadcrumb={breadcrumps}>
       <Locations organizationId={finalOrganizationId} />
     </RootShell>
   );
