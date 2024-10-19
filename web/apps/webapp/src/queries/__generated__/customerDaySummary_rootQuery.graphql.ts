@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e33fa2f8cb28ecaa7090bcca0f4f5b0d>>
+ * @generated SignedSource<<94c3d269a24e18918841b21d2b221e47>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type customerDaySummary_rootQuery$variables = {
   from: any;
+  organizationId: string;
   to: any;
 };
 export type customerDaySummary_rootQuery$data = {
@@ -42,26 +43,29 @@ export type customerDaySummary_rootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "from"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "to"
-  }
-],
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "from"
+},
 v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationId"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "to"
+},
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = {
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": "CustomerDetails",
@@ -69,38 +73,45 @@ v2 = {
   "name": "me",
   "plural": false,
   "selections": [
-    (v1/*: any*/)
+    (v3/*: any*/)
   ],
   "storageKey": null
 },
-v3 = {
+v5 = [
+  {
+    "kind": "Variable",
+    "name": "organizationId",
+    "variableName": "organizationId"
+  }
+],
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v5 = [
-  (v4/*: any*/),
-  (v3/*: any*/)
+v8 = [
+  (v7/*: any*/),
+  (v6/*: any*/)
 ],
-v6 = {
+v9 = {
   "alias": null,
-  "args": null,
+  "args": (v5/*: any*/),
   "concreteType": "LocationDetails",
   "kind": "LinkedField",
   "name": "myLocations",
   "plural": true,
   "selections": [
-    (v1/*: any*/),
     (v3/*: any*/),
+    (v6/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -108,22 +119,22 @@ v6 = {
       "kind": "LinkedField",
       "name": "organization",
       "plural": false,
-      "selections": (v5/*: any*/),
+      "selections": (v8/*: any*/),
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v7 = {
+v10 = {
   "alias": null,
-  "args": null,
+  "args": (v5/*: any*/),
   "concreteType": "TeamDetails",
   "kind": "LinkedField",
   "name": "myTeams",
   "plural": true,
   "selections": [
-    (v1/*: any*/),
     (v3/*: any*/),
+    (v6/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -131,7 +142,7 @@ v7 = {
       "kind": "LinkedField",
       "name": "organization",
       "plural": false,
-      "selections": (v5/*: any*/),
+      "selections": (v8/*: any*/),
       "storageKey": null
     }
   ],
@@ -139,14 +150,18 @@ v7 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "customerDaySummary_rootQuery",
     "selections": [
-      (v2/*: any*/),
-      (v6/*: any*/),
-      (v7/*: any*/),
+      (v4/*: any*/),
+      (v9/*: any*/),
+      (v10/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -158,13 +173,17 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/),
+      (v2/*: any*/)
+    ],
     "kind": "Operation",
     "name": "customerDaySummary_rootQuery",
     "selections": [
-      (v2/*: any*/),
-      (v6/*: any*/),
-      (v7/*: any*/),
+      (v4/*: any*/),
+      (v9/*: any*/),
+      (v10/*: any*/),
       {
         "alias": null,
         "args": [
@@ -174,6 +193,17 @@ return {
                 "kind": "Variable",
                 "name": "fromGTE",
                 "variableName": "from"
+              },
+              {
+                "items": [
+                  {
+                    "kind": "Variable",
+                    "name": "organizationIds.0",
+                    "variableName": "organizationId"
+                  }
+                ],
+                "kind": "ListValue",
+                "name": "organizationIds"
               },
               {
                 "kind": "Variable",
@@ -190,7 +220,7 @@ return {
         "name": "allBookings",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -213,8 +243,8 @@ return {
             "name": "customer",
             "plural": false,
             "selections": [
-              (v4/*: any*/),
-              (v3/*: any*/),
+              (v7/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -253,7 +283,7 @@ return {
             "kind": "LinkedField",
             "name": "location",
             "plural": false,
-            "selections": (v5/*: any*/),
+            "selections": (v8/*: any*/),
             "storageKey": null
           },
           {
@@ -263,7 +293,7 @@ return {
             "kind": "LinkedField",
             "name": "team",
             "plural": false,
-            "selections": (v5/*: any*/),
+            "selections": (v8/*: any*/),
             "storageKey": null
           },
           {
@@ -274,8 +304,8 @@ return {
             "name": "desks",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
-              (v3/*: any*/),
+              (v7/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -284,8 +314,8 @@ return {
                 "name": "locationTags",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
-                  (v3/*: any*/),
+                  (v7/*: any*/),
+                  (v6/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -305,16 +335,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "60afc965145c92d12dc5143462442233",
+    "cacheID": "a4527b9bdacf5aeed90576ef670b0657",
     "id": null,
     "metadata": {},
     "name": "customerDaySummary_rootQuery",
     "operationKind": "query",
-    "text": "query customerDaySummary_rootQuery(\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  myLocations {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  ...customerDaySummary_query\n}\n\nfragment customerDaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query customerDaySummary_rootQuery(\n  $organizationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  ...customerDaySummary_query\n}\n\nfragment customerDaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to, organizationIds: [$organizationId]}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6bdeedf5de830451b70f79449bdd3691";
+(node as any).hash = "e9f037973320a20c30a9ab41c1d05bda";
 
 export default node;

@@ -151,7 +151,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
 
     updateBreadcrumps(breadcrumbs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rootData.organization, rootData.team]);
+  }, [rootData.organization, rootData.location, rootData.team]);
 
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {

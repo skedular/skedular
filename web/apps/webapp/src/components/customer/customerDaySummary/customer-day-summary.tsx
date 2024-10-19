@@ -37,11 +37,11 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query customerDaySummary_rootQuery($from: DateTime!, $to: DateTime!) {
+  query customerDaySummary_rootQuery($organizationId: String!, $from: DateTime!, $to: DateTime!) {
     me {
       id
     }
-    myLocations {
+    myLocations(organizationId: $organizationId) {
       id
       name
       organization {
@@ -49,7 +49,7 @@ const RootQuery = graphql`
         name
       }
     }
-    myTeams {
+    myTeams(organizationId: $organizationId) {
       id
       name
       organization {
@@ -105,7 +105,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
   const [rootData, refetch] = useRefetchableFragment<customerDaySummary_refetchableFragment, customerDaySummary_query$key>(
     graphql`
       fragment customerDaySummary_query on Query @refetchable(queryName: "customerDaySummary_refetchableFragment") {
-        allBookings(where: { fromGTE: $from, toLTE: $to }) {
+        allBookings(where: { fromGTE: $from, toLTE: $to, organizationIds: [$organizationId] }) {
           id
           from
           to
@@ -417,9 +417,10 @@ const MemoCustomerDaySummary = memo(CustomerDaySummary);
 type RelayProps = {
   date: Dayjs;
   minWidth?: number;
+  organizationId?: string;
 };
 
-const CustomerDaySummaryWithRelay = ({ date, minWidth }: RelayProps) => {
+const CustomerDaySummaryWithRelay = ({ date, minWidth, organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<customerDaySummary_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -429,12 +430,13 @@ const CustomerDaySummaryWithRelay = ({ date, minWidth }: RelayProps) => {
       {
         from: date.toISOString(),
         to: endOfDay(date).toISOString(),
+        organizationId: organizationId ?? '',
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, date]);
+  }, [loadQuery, triggerReloadId, date, organizationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
