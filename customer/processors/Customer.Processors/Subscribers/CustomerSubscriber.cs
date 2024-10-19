@@ -1,6 +1,5 @@
 ﻿using Api.Shared.Clients.Events.UnityHub.Customer.V1.Key;
 using Api.Shared.Clients.Events.UnityHub.Customer.V1.Value;
-using Confluent.Kafka;
 using Customer.Processors.Mappers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Configurations;
@@ -20,12 +19,16 @@ public class CustomerSubscriber(
     IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
+        Key key,
+        Event @event,
+        CancellationToken cancellationToken)
     {
         if (@event.Metadata.DomainSource == applicationConfiguration.DomainSource)
         {
             // Event raised previously by this domain, ignoring it.
-            return;
+            return EventSubscriberResults.Success;
         }
 
         switch (@event.Metadata.Type)
@@ -40,7 +43,7 @@ public class CustomerSubscriber(
                         logger.LogInformation(
                             "Ignoring Customer event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleCustomerUpsertedEventAsync(customer, existingCustomer, cancellationToken);
@@ -57,21 +60,20 @@ public class CustomerSubscriber(
                         logger.LogInformation(
                             "Ignoring Customer event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     if (existingCustomer is null)
                     {
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleCustomerDeletedEventAsync(existingCustomer, cancellationToken);
                 }
                 break;
-
-            default:
-                return;
         }
+
+        return EventSubscriberResults.Success;
     }
 
     private async Task HandleCustomerUpsertedEventAsync(

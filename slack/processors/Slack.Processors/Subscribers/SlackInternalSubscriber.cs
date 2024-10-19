@@ -6,7 +6,6 @@ using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Api.Shared.Services.Grpc.UnityHub.Location.V1;
 using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Api.Shared.Services.Grpc.UnityHub.Team.V1;
-using Confluent.Kafka;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Kafka.Consume;
@@ -62,7 +61,11 @@ public class SlackInternalSubscriber(
     TimeProvider timeProvider)
     : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
+        Key key,
+        Event @event,
+        CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -87,9 +90,10 @@ public class SlackInternalSubscriber(
                 break;
 
             case Type.DeactivateOrganizationMembersNotFoundOnSlack:
-            default:
-                return;
+                break;
         }
+
+        return EventSubscriberResults.Success;
     }
 
     private async Task HandleRefreshWorkspaceMembersEventAsync(string workspaceId, CancellationToken cancellationToken)

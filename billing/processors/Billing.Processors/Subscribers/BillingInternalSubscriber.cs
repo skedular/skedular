@@ -3,7 +3,6 @@ using Billing.Processors.Mappers;
 using Billing.Shared.Database.Entities;
 using Billing.Shared.Publishers;
 using Billing.Shared.Repositories;
-using Confluent.Kafka;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +19,11 @@ public class BillingInternalSubscriber(
     IBillingOutboxPublisher billingOutboxPublisher)
     : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
+        Key key,
+        Event @event,
+        CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -28,10 +31,9 @@ public class BillingInternalSubscriber(
                 await HandleGenerateOrganizationOfferingInvoiceEventAsync(@event.OrganizationOfferingId,
                     cancellationToken);
                 break;
-
-            default:
-                return;
         }
+
+        return EventSubscriberResults.Success;
     }
 
     private async Task HandleGenerateOrganizationOfferingInvoiceEventAsync(

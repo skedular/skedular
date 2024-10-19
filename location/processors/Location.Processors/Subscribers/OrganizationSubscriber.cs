@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Events.UnityHub.Organization.V1.Key;
 using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
-using Confluent.Kafka;
 using Enterprise.Shared.Kafka.Consume;
 using Location.Processors.Mappers;
 using Location.Shared.Database.Entities;
@@ -16,8 +15,8 @@ public class OrganizationSubscriber(
     IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(
-        Headers headers,
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
         Key key,
         Event @event,
         CancellationToken cancellationToken)
@@ -35,7 +34,7 @@ public class OrganizationSubscriber(
                         logger.LogInformation(
                             "Ignoring Organization event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleOrganizationUpsertedEventAsync(organization, existingOrganization, cancellationToken);
@@ -53,12 +52,12 @@ public class OrganizationSubscriber(
                         logger.LogInformation(
                             "Ignoring Organization event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     if (existingOrganization is null)
                     {
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleOrganizationDeletedEventAsync(existingOrganization, cancellationToken);
@@ -68,9 +67,10 @@ public class OrganizationSubscriber(
             case Type.InvitationToJoinOrganizationUpserted:
             case Type.InvitationToJoinOrganizationDeleted:
             case Type.OrganizationOfferingUpdated:
-            default:
-                return;
+                break;
         }
+
+        return EventSubscriberResults.Success;
     }
 
     private async Task HandleOrganizationUpsertedEventAsync(

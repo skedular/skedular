@@ -27,19 +27,15 @@ public class ProducerFactory(
             typeof(TKey),
             typeof(TValue));
 
-        var config = new ProducerConfig
-        {
-            BootstrapServers = kafkaConfiguration.BootstrapServers,
-            SecurityProtocol = kafkaConfiguration.SecurityProtocol,
-            SaslMechanism = kafkaConfiguration.SaslMechanism,
-            SaslUsername = kafkaConfiguration.SaslUsername,
-            SaslPassword = kafkaConfiguration.SaslPassword,
-            ClientId = clientNaming.GetClientId(),
-            EnableIdempotence = false
-        };
+        var config = BuildProducerConfig(kafkaConfiguration);
 
-        logger.LogTrace("Producer config: {Config}", config);
+        var producer = BuildProducer<TKey, TValue>(config);
 
+        return producer;
+    }
+
+    private IProducer<TKey, TValue> BuildProducer<TKey, TValue>(ProducerConfig config)
+    {
         var builder = new ProducerBuilder<TKey, TValue>(config);
 
         if (!KafkaSerialization.CanSerializeNatively<TKey>())
@@ -64,7 +60,42 @@ public class ProducerFactory(
             typeof(TValue));
 
         kafkaLogger.SetLogHandler(builder);
+        var producer = builder.Build();
 
-        return builder.Build();
+        return producer;
+    }
+
+    private ProducerConfig BuildProducerConfig(KafkaConfiguration kafkaConfiguration)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(kafkaConfiguration.BootstrapServers);
+
+        var config = new ProducerConfig(kafkaConfiguration.ProducerSettings)
+        {
+            ClientId = clientNaming.GetClientId(),
+            EnableIdempotence = false,
+            BootstrapServers = kafkaConfiguration.BootstrapServers
+        };
+
+        if (kafkaConfiguration.SecurityProtocol != null)
+        {
+            config.SecurityProtocol = kafkaConfiguration.SecurityProtocol;
+        }
+
+        if (kafkaConfiguration.SaslMechanism != null)
+        {
+            config.SaslMechanism = kafkaConfiguration.SaslMechanism;
+        }
+
+        if (kafkaConfiguration.SaslUsername != null)
+        {
+            config.SaslUsername = kafkaConfiguration.SaslUsername;
+        }
+
+        if (kafkaConfiguration.SaslPassword != null)
+        {
+            config.SaslPassword = kafkaConfiguration.SaslPassword;
+        }
+
+        return config;
     }
 }

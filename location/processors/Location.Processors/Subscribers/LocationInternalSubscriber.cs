@@ -1,5 +1,4 @@
 using Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Key;
-using Confluent.Kafka;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
@@ -18,17 +17,20 @@ public class LocationInternalSubscriber(
     TimeProvider timeProvider)
     : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
+        Key key,
+        Event @event,
+        CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
             case Type.RecordDailyDeskCount:
                 await HandleRecordDailyDeskCountEventAsync(@event, cancellationToken);
                 break;
-
-            default:
-                return;
         }
+
+        return EventSubscriberResults.Success;
     }
 
     private async Task HandleRecordDailyDeskCountEventAsync(Event @event, CancellationToken cancellationToken)

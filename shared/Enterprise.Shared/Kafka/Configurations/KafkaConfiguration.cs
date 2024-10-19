@@ -7,15 +7,15 @@ public class KafkaConfiguration
     public const string Key = "Kafka";
 
     public string BootstrapServers { get; set; } = string.Empty;
-    public int MaxMessageNumberToProcessAtAnyTime { get; set; } = 10;
     public SecurityProtocol? SecurityProtocol { get; set; }
     public SaslMechanism? SaslMechanism { get; set; }
     public bool UseSchemaRegistry { get; set; }
     public SchemaRegistryConfiguration? SchemaRegistry { get; set; }
+    public int RetryTopicCount { get; set; } = 3;
     public string OutgoingTopicPrefix { get; set; } = string.Empty;
     public string IncomingTopicPrefix { get; set; } = string.Empty;
-    public string SaslUsername { get; set; } = string.Empty;
-    public string SaslPassword { get; set; } = string.Empty;
+    public string? SaslUsername { get; set; }
+    public string? SaslPassword { get; set; }
     public AutoOffsetReset? AutoOffsetReset { get; set; }
 
     /// <summary>
@@ -49,4 +49,24 @@ public class KafkaConfiguration
     ///     it takes only session.timeout.ms to detect it.
     /// </remarks>
     public int? MaxPollIntervalMs { get; set; }
+
+    /// <summary>
+    ///     Dictionary of extra consumer settings.
+    ///     https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#fetch-max-bytes
+    /// </summary>
+    /// <remarks>Settings in the dictionary are overriden by this classes parameters if set</remarks>
+    /// <example>
+    ///     <code> { "ConsumerSettings": { "fetch.max.wait.ms": 300 } </code>
+    /// </example>
+    public Dictionary<string, string> ConsumerSettings { get; set; } = new();
+
+    /// <summary>
+    ///     Dictionary of extra producer settings.
+    ///     https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#fetch-max-bytes
+    /// </summary>
+    /// <remarks>Settings in the dictionary are overriden by this classes parameters if set</remarks>
+    /// <example>
+    ///     <code> { "ProducerSettings": { "buffer.memory": 33554432 } </code>
+    /// </example>
+    public Dictionary<string, string> ProducerSettings { get; set; } = new();
 }

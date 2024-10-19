@@ -3,7 +3,6 @@ using Api.Shared.Clients.Events.UnityHub.Team.V1.Value;
 using Booking.Processors.Mappers;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
-using Confluent.Kafka;
 using Enterprise.Shared.Kafka.Consume;
 using Team = Booking.Shared.Database.Entities.Team;
 using Type = Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Type;
@@ -15,7 +14,11 @@ public class TeamSubscriber(
     IMapper mapper,
     IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
+        Key key,
+        Event @event,
+        CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -28,7 +31,7 @@ public class TeamSubscriber(
                         logger.LogInformation(
                             "Ignoring Team event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleTeamUpsertedEventAsync(team, existingTeam, cancellationToken);
@@ -44,12 +47,12 @@ public class TeamSubscriber(
                         logger.LogInformation(
                             "Ignoring Team event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     if (existingTeam is null)
                     {
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleTeamDeletedEventAsync(existingTeam, cancellationToken);
@@ -58,9 +61,10 @@ public class TeamSubscriber(
 
             case Type.InvitationToJoinTeamUpserted:
             case Type.InvitationToJoinTeamDeleted:
-            default:
-                return;
+                break;
         }
+
+        return EventSubscriberResults.Success;
     }
 
     private async Task HandleTeamUpsertedEventAsync(

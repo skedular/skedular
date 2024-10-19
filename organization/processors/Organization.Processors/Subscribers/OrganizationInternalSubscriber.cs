@@ -3,7 +3,6 @@ using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Api.Shared.Services.Grpc.UnityHub.Location.V1;
 using Api.Shared.Services.Offering;
-using Confluent.Kafka;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Kafka.Consume;
@@ -40,7 +39,11 @@ public class OrganizationInternalSubscriber(
     IOrganizationMemberService organizationMemberService)
     : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
+        Key key,
+        Event @event,
+        CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -55,10 +58,9 @@ public class OrganizationInternalSubscriber(
             case Type.RefreshAzureTenantMembers:
                 await HandleRefreshAzureTenantMembersAsync(@event.AzureTenantId, cancellationToken);
                 break;
-
-            default:
-                return;
         }
+
+        return EventSubscriberResults.Success;
     }
 
     private async Task HandleRenewOrganizationOfferingEventAsync(Event @event, CancellationToken cancellationToken)

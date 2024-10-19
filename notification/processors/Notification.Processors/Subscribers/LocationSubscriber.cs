@@ -1,5 +1,4 @@
 ﻿using Api.Shared.Clients.Events.UnityHub.Location.V1.Key;
-using Confluent.Kafka;
 using Enterprise.Shared.Kafka.Consume;
 using Notification.Shared.Repositories;
 using Event = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event;
@@ -14,7 +13,11 @@ public class LocationSubscriber(
     IMapper mapper,
     IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
+        Key key,
+        Event @event,
+        CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -28,7 +31,7 @@ public class LocationSubscriber(
                         logger.LogInformation(
                             "Ignoring Location event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleLocationUpsertedEventAsync(location, existingLocation, cancellationToken);
@@ -45,12 +48,12 @@ public class LocationSubscriber(
                         logger.LogInformation(
                             "Ignoring Location event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     if (existingLocation is null)
                     {
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleLocationDeletedEventAsync(existingLocation, cancellationToken);
@@ -70,7 +73,7 @@ public class LocationSubscriber(
                         logger.LogInformation(
                             "Ignoring Notification event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleNotificationUpsertedEventAsync(notification, existingNotification, cancellationToken);
@@ -90,21 +93,20 @@ public class LocationSubscriber(
                         logger.LogInformation(
                             "Ignoring Notification event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     if (existingNotification is null)
                     {
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleNotificationDeletedEventAsync(existingNotification, cancellationToken);
                 }
                 break;
-
-            default:
-                return;
         }
+
+        return EventSubscriberResults.Success;
     }
 
     private async Task HandleLocationUpsertedEventAsync(

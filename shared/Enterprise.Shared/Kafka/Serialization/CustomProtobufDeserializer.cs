@@ -3,12 +3,12 @@ using Google.Protobuf;
 
 namespace Enterprise.Shared.Kafka.Serialization;
 
-public class CustomProtobufDeserializer<T> : IAsyncDeserializer<T> where T : class, IMessage<T>, new()
+public class CustomProtobufDeserializer<T> : IDeserializer<T> where T : class, IMessage<T>, new()
 {
     private readonly MessageParser<T> _parser = new(() => new T());
 
-    public Task<T> DeserializeAsync(
-        ReadOnlyMemory<byte> bytes,
+    public T Deserialize(
+        ReadOnlySpan<byte> bytes,
         bool isNull,
         SerializationContext context)
     {
@@ -20,6 +20,6 @@ public class CustomProtobufDeserializer<T> : IAsyncDeserializer<T> where T : cla
         var data = bytes.ToArray();
         var headerSize = data[0] == KafkaSerialization.MagicByte ? KafkaSerialization.HeaderByteCount : 0;
 
-        return Task.FromResult(_parser.ParseFrom(data, headerSize, data.Length - headerSize));
+        return _parser.ParseFrom(data, headerSize, data.Length - headerSize);
     }
 }

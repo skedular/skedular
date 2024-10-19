@@ -1,6 +1,5 @@
 ﻿using Api.Shared.Clients.Events.UnityHub.Notification.V1.Key;
 using Api.Shared.Clients.Events.UnityHub.Notification.V1.Value;
-using Confluent.Kafka;
 using Enterprise.Shared.Kafka.Consume;
 using Notification.Processors.Services;
 using Type = Api.Shared.Clients.Events.UnityHub.Notification.V1.Value.Type;
@@ -9,7 +8,11 @@ namespace Notification.Processors.Subscribers;
 
 public class NotificationSubscriber(IEmailService emailService) : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
+        Key key,
+        Event @event,
+        CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -17,7 +20,7 @@ public class NotificationSubscriber(IEmailService emailService) : IEventSubscrib
                 {
                     if (@event.Data.AfterState.NotificationType != NotificationType.Email)
                     {
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     var email = @event.Data.AfterState.Email;
@@ -31,9 +34,8 @@ public class NotificationSubscriber(IEmailService emailService) : IEventSubscrib
                         cancellationToken);
                 }
                 break;
-
-            default:
-                return;
         }
+
+        return EventSubscriberResults.Success;
     }
 }

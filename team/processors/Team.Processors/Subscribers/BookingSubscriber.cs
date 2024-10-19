@@ -1,5 +1,4 @@
 using Api.Shared.Clients.Events.UnityHub.Booking.V1.Key;
-using Confluent.Kafka;
 using Enterprise.Shared.Kafka.Consume;
 using Team.Processors.Mappers;
 using Team.Shared.Repositories;
@@ -14,7 +13,11 @@ public class BookingSubscriber(
     IMapper mapper,
     IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
+        Key key,
+        Event @event,
+        CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -28,7 +31,7 @@ public class BookingSubscriber(
                         logger.LogInformation(
                             "Ignoring Booking event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleBookingUpsertedEventAsync(booking, existingBooking, cancellationToken);
@@ -45,21 +48,20 @@ public class BookingSubscriber(
                         logger.LogInformation(
                             "Ignoring Booking event. Event timestamp is older that what is already processed.");
 
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     if (existingBooking is null)
                     {
-                        return;
+                        return EventSubscriberResults.Success;
                     }
 
                     await HandleBookingDeletedEventAsync(existingBooking, cancellationToken);
                 }
                 break;
-
-            default:
-                return;
         }
+
+        return EventSubscriberResults.Success;
     }
 
     private async Task HandleBookingUpsertedEventAsync(

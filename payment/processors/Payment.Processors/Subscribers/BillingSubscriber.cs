@@ -1,5 +1,4 @@
 using Api.Shared.Clients.Events.UnityHub.Billing.V1.Key;
-using Confluent.Kafka;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +21,11 @@ public class BillingSubscriber(
     ICreatable<PaymentIntent, PaymentIntentCreateOptions> stripePaymentIntentCreateService)
     : IEventSubscriber<Key, Event>
 {
-    public async Task HandleAsync(Headers headers, Key key, Event @event, CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(
+        EventContext eventContext,
+        Key key,
+        Event @event,
+        CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -33,12 +36,13 @@ public class BillingSubscriber(
 
             case Type.OrganizationBillingInfoUpdated:
                 // TODO: 20240601 - Morteza: Need to update Stripe customer billing info
-                return;
+                break;
 
             case Type.BillingOrganizationOfferingDeleted:
-            default:
-                return;
+                break;
         }
+
+        return EventSubscriberResults.Success;
     }
 
     private async Task HandleBillingOrganizationOfferingUpsertedEventAsync(
