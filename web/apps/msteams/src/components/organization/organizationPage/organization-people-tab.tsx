@@ -194,7 +194,7 @@ const OrganizationPeopleTab = ({ queryReference, organizationId }: Props) => {
     setInvitePeopleDialogOpen(false);
   };
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
       loadNextPage();
     }

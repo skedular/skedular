@@ -198,7 +198,7 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
   const validateMembersToInvite = makeValidate(membersToInviteSchema);
   const requiredMembersToInviteFields = makeRequired(membersToInviteSchema);
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
       loadNextPage();
     }

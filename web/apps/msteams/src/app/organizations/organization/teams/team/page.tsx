@@ -1,4 +1,7 @@
+import type { appBarBreadcrumbs } from 'components/appBar';
+import { getOrganizationBaseLink, getOrganizationTeamsBaseLink } from 'components/organization/organization-link';
 import { RootShell } from 'components/rootShell';
+import { getTeamBaseLink } from 'components/team/team-link';
 import { Team } from 'components/team/teamPage';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -33,8 +36,26 @@ const TeamPage = () => {
     throw new Error('teamId is required');
   }
 
+  const breadcrumps: appBarBreadcrumbs = {
+    items: [
+      {
+        label: 'Home',
+        href: '/',
+      },
+      {
+        label: '',
+        href: getOrganizationBaseLink(finalOrganizationId),
+      },
+      {
+        label: 'Teams',
+        href: getOrganizationTeamsBaseLink(finalOrganizationId),
+      },
+    ],
+    lastItemLabel: getTeamBaseLink(finalTeamId, finalOrganizationId),
+  };
+
   return (
-    <RootShell>
+    <RootShell appBarBreadcrumbs={breadcrumps}>
       <Team organizationId={finalOrganizationId} teamId={finalTeamId} />
     </RootShell>
   );

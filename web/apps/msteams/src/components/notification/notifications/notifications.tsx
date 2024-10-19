@@ -65,7 +65,7 @@ const Notifications = ({ queryReference }: Props) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
       loadNextPage();
     }

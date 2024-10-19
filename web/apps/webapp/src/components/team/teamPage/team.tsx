@@ -1,5 +1,7 @@
 import { Bookings } from '@/components/booking/bookingsPage';
+import { getOrganizationBaseLink } from '@/components/organization/organization-link';
 import { TeamLink } from '@/components/team';
+import { getTeamBaseLink } from '@/components/team/team-link';
 import type { team_rootQuery } from '@/queries/__generated__/team_rootQuery.graphql';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
@@ -7,10 +9,11 @@ import Tabs from '@mui/material/Tabs';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import TeamAboutTab from './team-about-tab';
@@ -24,8 +27,13 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query team_rootQuery($teamId: String!) {
+  query team_rootQuery($organizationId: String!, $organizationExists: Boolean!, $teamId: String!) {
+    organization(id: $organizationId) @include(if: $organizationExists) {
+      id
+      name
+    }
     team(id: $teamId) {
+      id
       name
       organization {
         uniqueId
@@ -39,7 +47,23 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
   const router = useRouter();
+  const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
   let initialTabIndex = 0;
+
+  useEffect(() => {
+    let breadcrumbs = new Map<string, string>();
+
+    if (rootData.organization) {
+      breadcrumbs = breadcrumbs.set(getOrganizationBaseLink(rootData.organization.id), rootData.organization?.name!);
+    }
+
+    if (rootData.team) {
+      breadcrumbs = breadcrumbs.set(getTeamBaseLink(rootData.team.id, rootData.organization?.id), rootData.team?.name!);
+    }
+
+    updateBreadcrumps(breadcrumbs);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rootData.organization, rootData.team]);
 
   if (tab === 'bookings') {
     initialTabIndex = 0;
@@ -51,7 +75,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
 
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
 
     let tab = '';
@@ -107,13 +131,15 @@ const TeamWithRelay = ({ organizationId, teamId }: RelayProps) => {
   useEffect(() => {
     loadQuery(
       {
+        organizationId: organizationId ?? '',
+        organizationExists: !!organizationId,
         teamId,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, teamId]);
+  }, [loadQuery, triggerReloadId, organizationId, teamId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

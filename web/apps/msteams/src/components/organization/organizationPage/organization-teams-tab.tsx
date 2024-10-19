@@ -100,7 +100,7 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
   const [pageContextOpen, setPageContextOpen] = useState(false);
   const [teamNameSearchText, setTeamNameSearchText] = useState<string>('');
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
       loadNextPage();
     }

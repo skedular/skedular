@@ -6,12 +6,14 @@ import { OrganizationAvatar } from '@repo/shared/components/avatars';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import graphql from 'babel-plugin-relay/macro';
 import { Bookings } from 'components/booking/bookingsPage';
+import { getOrganizationBaseLink } from 'components/organization/organization-link';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useSearchParams } from 'react-router-dom';
@@ -48,6 +50,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
   const tab = searchParams.get('tab');
   const addPaymentMethodStatus = searchParams.get('add-payment-method-status');
   const { enqueueSnackbar } = useSnackbar();
+  const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
   let initialTabIndex = 0;
 
   useEffect(() => {
@@ -59,6 +62,15 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
     } else if (addPaymentMethodStatus === 'added') {
     }
   }, [addPaymentMethodStatus, enqueueSnackbar]);
+
+  useEffect(() => {
+    if (!rootData.organization) {
+      return;
+    }
+
+    updateBreadcrumps(new Map([[getOrganizationBaseLink(rootData.organization.id), rootData.organization?.name!]]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rootData.organization]);
 
   if (tab === 'bookings') {
     initialTabIndex = 0;
@@ -80,7 +92,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
 
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
 
     let tab = '';

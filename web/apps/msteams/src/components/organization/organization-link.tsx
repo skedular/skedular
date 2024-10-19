@@ -27,6 +27,8 @@ type Props = {
 };
 
 export const getOrganizationBaseLink = (id: string) => `/organizations/${id}`;
+export const getOrganizationLocationsBaseLink = (id: string) => `/organizations/${id}/locations`;
+export const getOrganizationTeamsBaseLink = (id: string) => `/organizations/${id}/teams`;
 export const getOrganizationAddLink = () => `/organizations/add`;
 export const getOrganizationBookingsLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=bookings`;
 export const getOrganizationSettingsLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=about`;

@@ -1,12 +1,12 @@
 'use client';
 
-import type { AppBarBreadcrumb } from '@/components/appBar';
+import type { appBarBreadcrumbs } from '@/components/appBar';
 import { Notifications } from '@/components/notification/notifications';
 import { RootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
 const NotificationsPage = () => {
-  const breadcrumps: AppBarBreadcrumb = {
+  const breadcrumps: appBarBreadcrumbs = {
     items: [
       {
         label: 'Home',
@@ -17,7 +17,7 @@ const NotificationsPage = () => {
   };
 
   return (
-    <RootShell appBarBreadcrumb={breadcrumps}>
+    <RootShell appBarBreadcrumbs={breadcrumps}>
       <Notifications />
     </RootShell>
   );

@@ -2,6 +2,13 @@ import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
+import {
+  BreadcrumpsProvider,
+  DatePickerLocalizationProvider,
+  GlobalReloadIdProvider,
+  SnackbarProvider,
+  ThemeProvider,
+} from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Home } from 'app';
@@ -15,15 +22,7 @@ import { AddOrganizationTeam } from 'app/organizations/organization/teams/add';
 import { OrganizationTeam } from 'app/organizations/organization/teams/team';
 import { Settings } from 'app/settings';
 import { Teams } from 'app/teams';
-import {
-  DatePickerLocalizationProvider,
-  GlobalReloadIdProvider,
-  LogRocketProvider,
-  RelayProvider,
-  SnackbarProvider,
-  TeamsFxContext,
-  ThemeProvider,
-} from 'libs/providers';
+import { LogRocketProvider, RelayProvider, TeamsFxContext } from 'libs/providers';
 import { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './App.css';
@@ -124,18 +123,20 @@ const App = () => {
     <>
       <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
         <GlobalReloadIdProvider>
-          <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
-            <CssBaseline />
-            <SnackbarProvider>
-              <DatePickerLocalizationProvider>
-                <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>
-                  <RelayProvider token={token}>
-                    <RouterProvider router={router} />
-                  </RelayProvider>
-                </LogRocketProvider>
-              </DatePickerLocalizationProvider>
-            </SnackbarProvider>
-          </ThemeProvider>
+          <BreadcrumpsProvider>
+            <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
+              <CssBaseline />
+              <SnackbarProvider>
+                <DatePickerLocalizationProvider>
+                  <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>
+                    <RelayProvider token={token}>
+                      <RouterProvider router={router} />
+                    </RelayProvider>
+                  </LogRocketProvider>
+                </DatePickerLocalizationProvider>
+              </SnackbarProvider>
+            </ThemeProvider>
+          </BreadcrumpsProvider>
         </GlobalReloadIdProvider>
       </TeamsFxContext.Provider>
       <Analytics />

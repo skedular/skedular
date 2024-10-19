@@ -9,7 +9,7 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
-import type { AppBarBreadcrumb } from 'components/appBar';
+import type { appBarBreadcrumbs } from 'components/appBar';
 import { AppBar } from 'components/appBar';
 import { LeftSideNavigationMenu } from 'components/navigationMenu';
 import { Observability } from 'components/observability';
@@ -24,7 +24,7 @@ type Props = {
   onReloadRequired: () => void;
   children: React.ReactNode;
   title?: string | null;
-  appBarBreadcrumb?: AppBarBreadcrumb;
+  appBarBreadcrumbs?: appBarBreadcrumbs;
 };
 
 const RootQuery = graphql`
@@ -50,7 +50,7 @@ const RootQuery = graphql`
 const maxRetryAttemptsToReload = 20;
 const drawerWidth = 250;
 
-const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrumb }: Props) => {
+const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrumbs }: Props) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const [reloadCount, setReloadCount] = useState(0);
   const areCustomerRecordsSync = useCallback(
@@ -146,7 +146,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrum
             <LeftSideNavigationMenu />
           </Grid>
           <Stack direction="column" sx={{ width: '100vw' }}>
-            <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} breadcrumb={appBarBreadcrumb} />
+            <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} breadcrumbs={appBarBreadcrumbs} />
           </Stack>
           <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>{children}</Grid>
         </Grid>
@@ -160,10 +160,10 @@ const MemoRootShell = memo(RootShell);
 type RelayProps = {
   children: React.ReactNode;
   title?: string | null;
-  appBarBreadcrumb?: AppBarBreadcrumb;
+  appBarBreadcrumbs?: appBarBreadcrumbs;
 };
 
-const RootShellWithRelay = ({ title, children, appBarBreadcrumb }: RelayProps) => {
+const RootShellWithRelay = ({ title, children, appBarBreadcrumbs }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -189,7 +189,7 @@ const RootShellWithRelay = ({ title, children, appBarBreadcrumb }: RelayProps) =
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} title={title} appBarBreadcrumb={appBarBreadcrumb}>
+      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} title={title} appBarBreadcrumbs={appBarBreadcrumbs}>
         {children}
       </MemoRootShell>
     </ErrorBoundary>

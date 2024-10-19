@@ -6,13 +6,17 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { WeekPicker } from '@repo/shared/components/weekPicker';
+import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { endOfWeek, startOfDay, startOfWeek } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingCard } from 'components/booking';
 import { NewBookingButton } from 'components/booking/addBooking';
+import { getLocationBaseLink } from 'components/location/location-link';
+import { getOrganizationBaseLink } from 'components/organization/organization-link';
+import { getTeamBaseLink } from 'components/team/team-link';
 import dayjs, { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
-import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { bookings_bookings_query$key } from './__generated__/bookings_bookings_query.graphql';
@@ -39,6 +43,7 @@ const RootQuery = graphql`
     $locationId: String!
     $locationExists: Boolean!
     $teamId: String!
+    $teamExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
     $bookingPeopleNameSearchText: String
@@ -59,6 +64,18 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
       fragment bookings_query on Query {
         me {
           id
+        }
+        organization(id: $organizationId) @include(if: $organizationExists) {
+          id
+          name
+        }
+        location(id: $locationId) @include(if: $locationExists) {
+          id
+          name
+        }
+        team(id: $teamId) @include(if: $teamExists) {
+          id
+          name
         }
         ...bookingCard_query
         ...newBookingDialog_query
@@ -116,8 +133,28 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
   const [page, setPage] = useState(0);
   const [startWeek, setStartWeek] = useState(startOfWeek);
   const [pageSize, setPageSize] = useState(50);
+  const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+  useEffect(() => {
+    let breadcrumbs = new Map<string, string>();
+
+    if (rootData.organization) {
+      breadcrumbs = breadcrumbs.set(getOrganizationBaseLink(rootData.organization.id), rootData.organization?.name!);
+    }
+
+    if (rootData.location && rootData.organization) {
+      breadcrumbs = breadcrumbs.set(getLocationBaseLink(rootData.location.id, rootData.organization?.id), rootData.location?.name!);
+    }
+
+    if (rootData.team && rootData.organization) {
+      breadcrumbs = breadcrumbs.set(getTeamBaseLink(rootData.team.id, rootData.organization?.id), rootData.team?.name!);
+    }
+
+    updateBreadcrumps(breadcrumbs);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rootData.organization, rootData.team]);
+
+  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
       loadNextPage();
     }
@@ -304,6 +341,7 @@ const BookingsWithRelay = ({ onReloadRequired, organizationId, locationId, teamI
         locationId: locationId ?? '',
         locationExists: !!locationId,
         teamId: teamId ?? '',
+        teamExists: !!teamId,
         deskIdsToIncludeToGetAvailableDesks: [],
         bookingSortingValues: [
           {

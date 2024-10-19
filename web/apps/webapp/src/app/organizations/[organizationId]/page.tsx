@@ -1,5 +1,7 @@
 'use client';
 
+import type { appBarBreadcrumbs } from '@/components/appBar';
+import { getOrganizationBaseLink } from '@/components/organization/organization-link';
 import { Organization } from '@/components/organization/organizationPage';
 import { RootShell } from '@/components/rootShell';
 import { useParams } from 'next/navigation';
@@ -21,8 +23,18 @@ const OrganizationPage = () => {
     throw new Error('organizationId is required');
   }
 
+  const breadcrumps: appBarBreadcrumbs = {
+    items: [
+      {
+        label: 'Home',
+        href: '/',
+      },
+    ],
+    lastItemLabel: getOrganizationBaseLink(finalOrganizationId),
+  };
+
   return (
-    <RootShell>
+    <RootShell appBarBreadcrumbs={breadcrumps}>
       <Organization organizationId={finalOrganizationId} />
     </RootShell>
   );

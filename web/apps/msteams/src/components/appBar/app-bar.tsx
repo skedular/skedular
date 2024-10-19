@@ -11,31 +11,31 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { FeedbackIcon, SettingsIcon } from '@repo/shared/components/icons';
-import { PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
+import { BreadcrumpsContext, PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewFeedbackDialog } from 'components/feedback';
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { useFragment } from 'react-relay';
 import type { appBar_query$key } from './__generated__/appBar_query.graphql';
 
 type Props = {
   rootDataRelay: appBar_query$key;
   onReloadRequired: () => void;
-  breadcrumb?: AppBarBreadcrumb;
+  breadcrumbs?: appBarBreadcrumbs;
 };
 
-type AppBarBreadcrumbItem = {
+type appBarBreadcrumbsItem = {
   label: string;
   href: string;
 };
 
-export type AppBarBreadcrumb = {
-  items?: AppBarBreadcrumbItem[];
+export type appBarBreadcrumbs = {
+  items?: appBarBreadcrumbsItem[];
   lastItemLabel?: string;
 };
 
-const AppBar = ({ rootDataRelay, breadcrumb }: Props) => {
+const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
   const rootData = useFragment<appBar_query$key>(
     graphql`
       fragment appBar_query on Query {
@@ -56,6 +56,7 @@ const AppBar = ({ rootDataRelay, breadcrumb }: Props) => {
   );
 
   const paletteMode = useContext(PaletteModeContext);
+  const breadcrumpsContext = useContext(BreadcrumpsContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
@@ -76,16 +77,39 @@ const AppBar = ({ rootDataRelay, breadcrumb }: Props) => {
     setSubmitFeedbackDialogOpen(false);
   };
 
+  const breadcrumpsLinks = useMemo<appBarBreadcrumbsItem[]>(() => {
+    if (!breadcrumbs?.items) {
+      return [];
+    }
+
+    return breadcrumbs.items.map((item) => {
+      return breadcrumpsContext.has(item.href)
+        ? {
+            href: item.href,
+            label: breadcrumpsContext.get(item.href)!,
+          }
+        : item;
+    });
+  }, [breadcrumbs?.items, breadcrumpsContext]);
+
+  const lastBreadcrumpsLabel = useMemo<string | undefined>(() => {
+    if (!breadcrumbs?.lastItemLabel) {
+      return undefined;
+    }
+
+    return breadcrumpsContext.has(breadcrumbs?.lastItemLabel) ? breadcrumpsContext.get(breadcrumbs?.lastItemLabel) : breadcrumbs.lastItemLabel;
+  }, [breadcrumbs?.lastItemLabel, breadcrumpsContext]);
+
   return (
     <>
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1 }}>
-        <Breadcrumbs maxItems={3}>
-          {breadcrumb?.items?.map((item, index) => (
-            <Link key={index} underline="hover" href={item.href}>
-              <Typography>{item.label}</Typography>
+        <Breadcrumbs maxItems={5}>
+          {breadcrumpsLinks?.map(({ href, label }, index) => (
+            <Link key={index} underline="hover" href={href}>
+              <Typography>{label}</Typography>
             </Link>
           ))}
-          {breadcrumb?.lastItemLabel && <Typography>{breadcrumb?.lastItemLabel}</Typography>}
+          {lastBreadcrumpsLabel && <Typography>{lastBreadcrumpsLabel}</Typography>}
         </Breadcrumbs>
 
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>

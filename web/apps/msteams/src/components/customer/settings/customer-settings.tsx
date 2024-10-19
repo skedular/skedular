@@ -45,7 +45,7 @@ const CustomerSettings = ({ queryReference }: Props) => {
 
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
 
     let tab = '';
