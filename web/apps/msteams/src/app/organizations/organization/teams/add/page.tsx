@@ -1,3 +1,4 @@
+import type { AppBarBreadcrumb } from 'components/appBar';
 import { RootShell } from 'components/rootShell';
 import { AddTeam } from 'components/team/addTeam';
 import { memo } from 'react';
@@ -19,8 +20,22 @@ const AddTeamPage = () => {
     throw new Error('organizationId is required');
   }
 
+  const breadcrumps: AppBarBreadcrumb = {
+    items: [
+      {
+        label: 'Home',
+        href: '/',
+      },
+      {
+        label: 'Teams',
+        href: '/teams',
+      },
+    ],
+    lastItemLabel: 'Add new team',
+  };
+
   return (
-    <RootShell>
+    <RootShell appBarBreadcrumb={breadcrumps}>
       <AddTeam organizationId={finalOrganizationId} />
     </RootShell>
   );

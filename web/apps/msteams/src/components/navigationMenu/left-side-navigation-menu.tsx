@@ -30,7 +30,7 @@ const LeftSideNavigationMenu = () => {
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
-              <BookingIcon />
+              <BookingIcon excludeTooltip />
             </ListItemIcon>
             <ListItemText>Bookings</ListItemText>
           </ListItemButton>
@@ -41,7 +41,7 @@ const LeftSideNavigationMenu = () => {
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
-              <LocationIcon />
+              <LocationIcon excludeTooltip />
             </ListItemIcon>
             <ListItemText>Locations</ListItemText>
           </ListItemButton>
@@ -52,7 +52,7 @@ const LeftSideNavigationMenu = () => {
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
-              <TeamIcon />
+              <TeamIcon excludeTooltip />
             </ListItemIcon>
             <ListItemText>Teams</ListItemText>
           </ListItemButton>
@@ -63,7 +63,7 @@ const LeftSideNavigationMenu = () => {
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
-              <NotificationsIcon />
+              <NotificationsIcon excludeTooltip />
             </ListItemIcon>
             <ListItemText>Notifications</ListItemText>
           </ListItemButton>
@@ -74,7 +74,7 @@ const LeftSideNavigationMenu = () => {
         <ListItem disablePadding>
           <ListItemButton>
             <ListItemIcon>
-              <SettingsIcon />
+              <SettingsIcon excludeTooltip />
             </ListItemIcon>
             <ListItemText>Settings</ListItemText>
           </ListItemButton>

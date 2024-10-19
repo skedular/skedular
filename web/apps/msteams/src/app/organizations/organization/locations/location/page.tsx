@@ -1,3 +1,4 @@
+import type { AppBarBreadcrumb } from 'components/appBar';
 import { Location } from 'components/location/locationPage';
 import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
@@ -33,8 +34,22 @@ const LocationPage = () => {
     throw new Error('locationId is required');
   }
 
+  const breadcrumps: AppBarBreadcrumb = {
+    items: [
+      {
+        label: 'Home',
+        href: '/',
+      },
+      {
+        label: 'Locations',
+        href: '/locations',
+      },
+    ],
+    lastItemLabel: 'Add new location',
+  };
+
   return (
-    <RootShell>
+    <RootShell appBarBreadcrumb={breadcrumps}>
       <Location organizationId={finalOrganizationId} locationId={finalLocationId} />
     </RootShell>
   );

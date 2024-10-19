@@ -9,80 +9,78 @@ import { Logo } from '@repo/shared/components/logo';
 import NextLink from 'next/link';
 import { memo } from 'react';
 
-const LeftSideNavigationMenu = () => {
-  return (
-    <List>
+const LeftSideNavigationMenu = () => (
+  <List>
+    <ListItem disablePadding>
+      <Logo />
+    </ListItem>
+
+    <Link component={NextLink} href="/">
       <ListItem disablePadding>
-        <Logo />
+        <ListItemButton>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText>Dashboard</ListItemText>
+        </ListItemButton>
       </ListItem>
+    </Link>
 
-      <Link component={NextLink} href="/">
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText>Dashboard</ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </Link>
+    <Link component={NextLink} href="/organizations">
+      <ListItem disablePadding>
+        <ListItemButton>
+          <ListItemIcon>
+            <OrganizationIcon excludeTooltip />
+          </ListItemIcon>
+          <ListItemText>Organizations</ListItemText>
+        </ListItemButton>
+      </ListItem>
+    </Link>
 
-      <Link component={NextLink} href="/organizations">
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <OrganizationIcon />
-            </ListItemIcon>
-            <ListItemText>Organizations</ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </Link>
+    <Link component={NextLink} href="/locations">
+      <ListItem disablePadding>
+        <ListItemButton>
+          <ListItemIcon>
+            <LocationIcon excludeTooltip />
+          </ListItemIcon>
+          <ListItemText>Locations</ListItemText>
+        </ListItemButton>
+      </ListItem>
+    </Link>
 
-      <Link component={NextLink} href="/locations">
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <LocationIcon />
-            </ListItemIcon>
-            <ListItemText>Locations</ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </Link>
+    <Link component={NextLink} href="/teams">
+      <ListItem disablePadding>
+        <ListItemButton>
+          <ListItemIcon>
+            <TeamIcon excludeTooltip />
+          </ListItemIcon>
+          <ListItemText>Teams</ListItemText>
+        </ListItemButton>
+      </ListItem>
+    </Link>
 
-      <Link component={NextLink} href="/teams">
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <TeamIcon />
-            </ListItemIcon>
-            <ListItemText>Teams</ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </Link>
+    <Link component={NextLink} href="/notifications">
+      <ListItem disablePadding>
+        <ListItemButton>
+          <ListItemIcon>
+            <NotificationsIcon excludeTooltip />
+          </ListItemIcon>
+          <ListItemText>Notifications</ListItemText>
+        </ListItemButton>
+      </ListItem>
+    </Link>
 
-      <Link component={NextLink} href="/notifications">
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <NotificationsIcon />
-            </ListItemIcon>
-            <ListItemText>Notifications</ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </Link>
-
-      <Link component={NextLink} href="/settings">
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText>Settings</ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </Link>
-    </List>
-  );
-};
+    <Link component={NextLink} href="/settings">
+      <ListItem disablePadding>
+        <ListItemButton>
+          <ListItemIcon>
+            <SettingsIcon excludeTooltip />
+          </ListItemIcon>
+          <ListItemText>Settings</ListItemText>
+        </ListItemButton>
+      </ListItem>
+    </Link>
+  </List>
+);
 
 export default memo(LeftSideNavigationMenu);

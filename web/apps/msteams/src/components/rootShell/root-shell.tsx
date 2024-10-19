@@ -11,7 +11,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
 import type { AppBarBreadcrumb } from 'components/appBar';
 import { AppBar } from 'components/appBar';
-import { FabNavigationMenu, LeftSideNavigationMenu } from 'components/navigationMenu';
+import { LeftSideNavigationMenu } from 'components/navigationMenu';
 import { Observability } from 'components/observability';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useState, useTransition } from 'react';
@@ -151,7 +151,6 @@ const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrum
           <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>{children}</Grid>
         </Grid>
       </Box>
-      <FabNavigationMenu />
     </>
   );
 };

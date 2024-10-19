@@ -1,5 +1,5 @@
 import { BookingsWeekGrid } from '@/components/booking';
-import { OrganizationLink } from '@/components/organization';
+import { getOrganizationBookingsLink, getOrganizationSettingsLink, OrganizationLink } from '@/components/organization';
 import type { organizationPeopleBookings_clearCustomerDefaultOrganizationMutation } from '@/queries/__generated__/organizationPeopleBookings_clearCustomerDefaultOrganizationMutation.graphql';
 import type { organizationPeopleBookings_deleteOrganizationMutation } from '@/queries/__generated__/organizationPeopleBookings_deleteOrganizationMutation.graphql';
 import type { organizationPeopleBookings_query$key } from '@/queries/__generated__/organizationPeopleBookings_query.graphql';
@@ -353,12 +353,12 @@ const OrganizationPeopleBookings = ({
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
               <Stack direction="row">
-                <Link component={NextLink} href={`/organization/${organizationId}?tab=bookings`}>
+                <Link component={NextLink} href={getOrganizationBookingsLink(organizationId)}>
                   <BookingIcon />
                 </Link>
 
                 {rootData.organization.canModify && (
-                  <Link component={NextLink} href={`/organization/${organizationId}?tab=about`}>
+                  <Link component={NextLink} href={getOrganizationSettingsLink(organizationId)}>
                     <SettingsIcon color="secondary" />
                   </Link>
                 )}
