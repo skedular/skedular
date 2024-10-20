@@ -148,16 +148,8 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      <Stack direction="row" sx={{ justifyContent: 'flex-end' }} spacing={1}>
-        {!editing && (
-          <Button size="large" color="primary" onClick={handleEditClick}>
-            <EditIcon />
-          </Button>
-        )}
-      </Stack>
-
       {!editing && (
-        <Stack direction="column" spacing={1}>
+        <>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">Designation</Typography>
             <Typography variant="body1">{rootData.me.designation}</Typography>
@@ -192,7 +184,12 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
             <Typography variant="h6">Timezone</Typography>
             <Typography variant="body1">{rootData.me.timezone}</Typography>
           </Stack>
-        </Stack>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+            <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditClick}>
+              Edit
+            </Button>
+          </Stack>
+        </>
       )}
       {editing && (
         <Paper elevation={24} sx={{ padding: 2 }}>

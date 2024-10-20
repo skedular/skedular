@@ -399,18 +399,16 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
         </Stack>
       )}
 
-      {rootData.team?.organization && (
-        <Stack direction="row" sx={{ justifyContent: 'flex-end' }} spacing={1}>
-          {!editingOrganizationMembers && rootData.team.canModify && (
-            <Button size="large" color="primary" onClick={handleEditOrganizationMembersClick}>
-              <EditIcon />
-            </Button>
-          )}
-        </Stack>
-      )}
-
       {!editingOrganizationMembers && (
         <>
+          {rootData.team?.organization && rootData.team.canModify && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditOrganizationMembersClick}>
+                Edit Members
+              </Button>
+            </Stack>
+          )}
+
           <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
             <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>

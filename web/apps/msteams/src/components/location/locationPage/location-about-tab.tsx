@@ -137,15 +137,8 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
 
   return (
     <>
-      <Stack direction="row" sx={{ justifyContent: 'flex-end' }} spacing={1}>
-        {!editing && rootData.location.canModify && (
-          <Button size="large" color="primary" onClick={handleEditClick}>
-            <EditIcon />
-          </Button>
-        )}
-      </Stack>
       {!editing && (
-        <Stack direction="column" spacing={1}>
+        <>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Typography variant="h6">About</Typography>
             <Typography variant="body1">{location.about}</Typography>
@@ -163,7 +156,14 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
               <Typography variant="body1">{location.organization.name}</Typography>
             </Stack>
           )}
-        </Stack>
+          {rootData.location.canModify && (
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditClick}>
+                Edit
+              </Button>
+            </Stack>
+          )}
+        </>
       )}
       {editing && (
         <Paper elevation={24} sx={{ padding: 2 }}>

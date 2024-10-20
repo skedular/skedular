@@ -1,4 +1,3 @@
-import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
@@ -65,15 +64,11 @@ const CustomerSettings = ({ queryReference }: Props) => {
 
   return (
     <>
-      <Stack direction="column" spacing={1}>
-        <CustomerAvatar name={rootData.me} photo={{ url: rootData.me.photoUrl }} sx={{ marginBottom: 1 }} />
-      </Stack>
+      <CustomerAvatar name={rootData.me} photo={{ url: rootData.me.photoUrl }} sx={{ marginBottom: 1 }} />
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Personal" />
       </Tabs>
-      <Stack direction="column" spacing={1}>
-        {tabIndex === 0 && <CustomerSettingsPersonalTab rootDataRelay={rootData} />}
-      </Stack>
+      {tabIndex === 0 && <CustomerSettingsPersonalTab rootDataRelay={rootData} />}
     </>
   );
 };
