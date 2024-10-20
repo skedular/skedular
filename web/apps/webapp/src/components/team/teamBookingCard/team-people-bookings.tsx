@@ -25,7 +25,7 @@ import Typography from '@mui/material/Typography';
 import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { joinErrors, startOfIsoWeek } from '@repo/shared/libs/utils';
+import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
@@ -159,14 +159,14 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
-  const [startDate, setStartDate] = useState<Dayjs>(startOfIsoWeek());
+  const [startDate, setStartDate] = useState<Dayjs>(startOfDay());
 
   if (!rootData.me || !rootData.team || !rootData.teamMembers) {
     return <></>;
   }
 
-  const handleDateRangeTypeChange = (event: React.MouseEvent<HTMLElement>, value: DateRangeType) => {
-    let start = startOfIsoWeek();
+  const handleDateRangeTypeChange = (_: React.MouseEvent<HTMLElement>, value: DateRangeType) => {
+    let start = startOfDay();
     if (value === DateRangeType.NextWeek) {
       start = start.add(1, 'week');
     }

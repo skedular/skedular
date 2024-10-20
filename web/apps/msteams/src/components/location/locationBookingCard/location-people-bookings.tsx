@@ -27,7 +27,7 @@ import {
 } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { joinErrors, startOfIsoWeek } from '@repo/shared/libs/utils';
+import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingsWeekGrid } from 'components/booking';
 import { LocationLink, getLocationBookingsLink, getLocationSettingsLink } from 'components/location';
@@ -185,7 +185,7 @@ const LocationPeopleBookings = ({
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
-  const [startDate, setStartDate] = useState<Dayjs>(startOfIsoWeek());
+  const [startDate, setStartDate] = useState<Dayjs>(startOfDay());
 
   if (!rootData.me || !rootData.location || !rootData.locationMembers || !rootData.customersByDefaultLocation) {
     return <></>;
@@ -195,8 +195,8 @@ const LocationPeopleBookings = ({
     ? rootData.customersByDefaultLocation.map((customer) => ({ ...customer, uniqueId: customer.id }))
     : rootData.locationMembers.map((member) => member.customer);
 
-  const handleDateRangeTypeChange = (event: React.MouseEvent<HTMLElement>, value: DateRangeType) => {
-    let start = startOfIsoWeek();
+  const handleDateRangeTypeChange = (_: React.MouseEvent<HTMLElement>, value: DateRangeType) => {
+    let start = startOfDay();
     if (value === DateRangeType.NextWeek) {
       start = start.add(1, 'week');
     }

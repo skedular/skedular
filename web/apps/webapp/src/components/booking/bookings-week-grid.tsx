@@ -10,7 +10,7 @@ import { BookingIcon as BookingIconComponent } from '@repo/shared/components/boo
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { GlobalReloadIdContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { endOfDay, endOfIsoWeek, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
+import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
@@ -73,16 +73,14 @@ type BookingAndCustomerDetails = {
 type RowType = {
   id: string;
   person: CustomerDetails;
-  mon: BookingAndCustomerDetails;
-  tue: BookingAndCustomerDetails;
-  wed: BookingAndCustomerDetails;
-  thu: BookingAndCustomerDetails;
-  fri: BookingAndCustomerDetails;
-  sat: BookingAndCustomerDetails;
-  sun: BookingAndCustomerDetails;
+  Mon: BookingAndCustomerDetails;
+  Tue: BookingAndCustomerDetails;
+  Wed: BookingAndCustomerDetails;
+  Thu: BookingAndCustomerDetails;
+  Fri: BookingAndCustomerDetails;
+  Sat: BookingAndCustomerDetails;
+  Sun: BookingAndCustomerDetails;
 };
-
-const dayIndex: { [key: string]: number } = { mon: 0, tue: 1, wed: 2, thu: 3, fri: 4, sat: 5, sun: 6 };
 
 const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Find a person..." />;
 
@@ -190,7 +188,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
   const handleRefetch = useCallback(
     (startDate: Dayjs) => {
       startTransition(() => {
-        const endDate = endOfIsoWeek(startDate);
+        const endDate = startDate.add(1, 'week').add(-1, 'milliseconds');
 
         refetch(
           {
@@ -214,6 +212,18 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
     return <></>;
   }
 
+  const day = startDate.day();
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const correctedDaysOfWeek = [...daysOfWeek.slice(day), ...daysOfWeek.slice(0, day)];
+  const daysOfWeekMap = correctedDaysOfWeek.reduce(
+    (acc, day, index) => {
+      acc[day] = index;
+
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
   const meAsMember = customers.find((customer) => customer.uniqueId === rootData.me!.id);
   const otherMembers = customers.filter((customer) => customer.uniqueId !== rootData.me!.id);
   let finalMembersList = otherMembers;
@@ -232,46 +242,46 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       return {
         id: customerId,
         person: customer,
-        mon: {
+        Mon: {
           customer,
           booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.toISOString(),
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Mon']!, 'day').toISOString(),
           ),
         },
-        tue: {
+        Tue: {
           customer,
           booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(1, 'day').toISOString(),
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Tue']!, 'day').toISOString(),
           ),
         },
-        wed: {
+        Wed: {
           customer,
           booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(2, 'day').toISOString(),
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Wed']!, 'day').toISOString(),
           ),
         },
-        thu: {
+        Thu: {
           customer,
           booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(3, 'day').toISOString(),
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Thu']!, 'day').toISOString(),
           ),
         },
-        fri: {
+        Fri: {
           customer,
           booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(4, 'day').toISOString(),
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Fri']!, 'day').toISOString(),
           ),
         },
-        sat: {
+        Sat: {
           customer,
           booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(5, 'day').toISOString(),
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Sat']!, 'day').toISOString(),
           ),
         },
-        sun: {
+        Sun: {
           customer,
           booking: rootDataAllBookings.allBookings.find(
-            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(6, 'day').toISOString(),
+            (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Sun']!, 'day').toISOString(),
           ),
         },
       };
@@ -301,8 +311,8 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       getApplyQuickFilterFn: getApplyQuickFilterNameSearch,
     },
     {
-      field: 'mon',
-      headerName: 'Mon',
+      field: correctedDaysOfWeek[0]!,
+      headerName: correctedDaysOfWeek[0]!,
       width: 50,
       editable: false,
       renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
@@ -310,8 +320,8 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       display: 'flex',
     },
     {
-      field: 'tue',
-      headerName: 'Tue',
+      field: correctedDaysOfWeek[1]!,
+      headerName: correctedDaysOfWeek[1]!,
       width: 50,
       editable: false,
       renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
@@ -319,8 +329,8 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       display: 'flex',
     },
     {
-      field: 'wed',
-      headerName: 'Wed',
+      field: correctedDaysOfWeek[2]!,
+      headerName: correctedDaysOfWeek[2]!,
       width: 50,
       editable: false,
       renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
@@ -328,8 +338,8 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       display: 'flex',
     },
     {
-      field: 'thu',
-      headerName: 'Thu',
+      field: correctedDaysOfWeek[3]!,
+      headerName: correctedDaysOfWeek[3]!,
       width: 50,
       editable: false,
       renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
@@ -337,8 +347,8 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       display: 'flex',
     },
     {
-      field: 'fri',
-      headerName: 'Fri',
+      field: correctedDaysOfWeek[4]!,
+      headerName: correctedDaysOfWeek[4]!,
       width: 50,
       editable: false,
       renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
@@ -346,8 +356,8 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       display: 'flex',
     },
     {
-      field: 'sat',
-      headerName: 'Sat',
+      field: correctedDaysOfWeek[5]!,
+      headerName: correctedDaysOfWeek[5]!,
       width: 50,
       editable: false,
       renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
@@ -355,8 +365,8 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       display: 'flex',
     },
     {
-      field: 'sun',
-      headerName: 'Sun',
+      field: correctedDaysOfWeek[6]!,
+      headerName: correctedDaysOfWeek[6]!,
       width: 50,
       editable: false,
       renderCell: (params) => <BookingIconComponent booking={params.value.booking} />,
@@ -386,7 +396,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
     }
 
     const id = booking ? booking.id : nanoid();
-    const index = dayIndex[params.field]!;
+    const index = daysOfWeekMap[params.field]!;
     const startOfDay = startDate.add(index, 'day');
     const from = startOfDay.toISOString();
     const to = endOfDay(startOfDay).toISOString();

@@ -1,6 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
-import isoWeek from 'dayjs/plugin/isoWeek';
 import isToday from 'dayjs/plugin/isToday';
 import isTomorrow from 'dayjs/plugin/isTomorrow';
 import isYesterday from 'dayjs/plugin/isYesterday';
@@ -8,7 +7,6 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { PayloadError } from 'relay-runtime';
 
-dayjs.extend(isoWeek);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
@@ -90,16 +88,6 @@ const startOfWeek = (date?: Dayjs | string | null | undefined) => {
 
 const endOfWeek = (date?: Dayjs | string | null | undefined) => {
   return startOfWeek(date).add(1, 'week');
-};
-
-const startOfIsoWeek = (date?: Dayjs | string | null | undefined) => {
-  const finalDate = date ? dayjs(date) : now();
-
-  return finalDate.startOf('isoWeek');
-};
-
-const endOfIsoWeek = (date?: Dayjs | string | null | undefined) => {
-  return startOfIsoWeek(date).add(1, 'week');
 };
 
 const startOfMonth = (date?: Dayjs | string | null | undefined) => {
@@ -246,7 +234,6 @@ export {
   decodeBase64,
   encodeBase64,
   endOfDay,
-  endOfIsoWeek,
   endOfMonth,
   endOfWeek,
   getCurrentCompleteUrl,
@@ -262,7 +249,6 @@ export {
   isYesterdayDate,
   joinErrors,
   startOfDay,
-  startOfIsoWeek,
   startOfMonth,
   startOfWeek,
   toDayAndMonthDate,
