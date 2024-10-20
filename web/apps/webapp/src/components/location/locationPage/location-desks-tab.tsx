@@ -29,11 +29,11 @@ import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { endOfDay, keyboardDebounceTimeout, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   queryReference: PreloadedQuery<locationDesksTab_rootQuery, Record<string, unknown>>;
@@ -225,7 +225,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
     handleRefetchPaginatedLocationDesks(pageSize, sortingOrder, str);
   };
 
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
   const connectionIds = useMemo(
     () => (rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks ? [rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.__id] : []),
     [rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks],

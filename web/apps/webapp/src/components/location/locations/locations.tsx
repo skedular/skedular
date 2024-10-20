@@ -18,8 +18,6 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
-import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
@@ -83,7 +81,6 @@ const Locations = ({ queryReference }: Props) => {
     handleRefetch(pageSize, sortingOrder, str);
   };
 
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
       loadNextPage();
@@ -164,7 +161,7 @@ const Locations = ({ queryReference }: Props) => {
       </Link>
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Search size="small" placeholder="Find a location..." defaultValue={locationNameSearchText} onChange={debounceSearchTextChange} />
+        <Search size="small" placeholder="Find a location..." defaultValue={locationNameSearchText} onChange={handleSearchTextChange} />
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
             count={rootData.locations.totalCount ? rootData.locations.totalCount : 0}

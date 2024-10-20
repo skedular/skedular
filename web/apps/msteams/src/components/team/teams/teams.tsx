@@ -9,11 +9,9 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getTeamAddLink } from 'components/team';
 import { TeamBookingsCard } from 'components/team/teamBookingCard';
-import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -84,7 +82,6 @@ const Teams = ({ queryReference, organizationId }: Props) => {
     handleRefetch(pageSize, sortingOrder, str);
   };
 
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
       loadNextPage();
@@ -166,7 +163,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
       </Link>
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Search size="small" placeholder="Find a team..." defaultValue={teamNameSearchText} onChange={debounceSearchTextChange} />
+        <Search size="small" placeholder="Find a team..." defaultValue={teamNameSearchText} onChange={handleSearchTextChange} />
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
             count={rootData.teams.totalCount ? rootData.teams.totalCount : 0}

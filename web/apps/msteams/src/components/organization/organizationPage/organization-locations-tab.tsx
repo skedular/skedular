@@ -17,11 +17,11 @@ import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getLocationAddLink } from 'components/location';
 import { LocationBookingsCard } from 'components/location/locationBookingCard';
-import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useDebounceCallback } from 'usehooks-ts';
 import type {
   LocationOrderField,
   LocationOrderInput,
@@ -185,7 +185,7 @@ const OrganizationLocationsTab = ({ queryReference }: Props) => {
 
     handleRefetch(pageSize, sortingOrder, str);
   };
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
 
   if (!rootData.organization) {
     return <></>;

@@ -20,11 +20,11 @@ import { endOfDay, keyboardDebounceTimeout, startOfDay, toShortDate } from '@rep
 import graphql from 'babel-plugin-relay/macro';
 import { BulkNewDeskDialog, DeskCard, NewDeskDialog } from 'components/desk';
 import { Dayjs } from 'dayjs';
-import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import { useDebounceCallback } from 'usehooks-ts';
 import type { locationDesksTab_allBookings_query$key } from './__generated__/locationDesksTab_allBookings_query.graphql';
 import type { locationDesksTab_allBookings_refetchableFragment } from './__generated__/locationDesksTab_allBookings_refetchableFragment.graphql';
 import type { locationDesksTab_paginatedLocationDesks_query$key } from './__generated__/locationDesksTab_paginatedLocationDesks_query.graphql';
@@ -226,7 +226,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
     handleRefetchPaginatedLocationDesks(pageSize, sortingOrder, str);
   };
 
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
   const connectionIds = useMemo(
     () => (rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks ? [rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.__id] : []),
     [rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks],

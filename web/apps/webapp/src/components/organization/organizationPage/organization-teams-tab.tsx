@@ -24,12 +24,12 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
-import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   queryReference: PreloadedQuery<organizationTeamsTab_rootQuery, Record<string, unknown>>;
@@ -178,7 +178,7 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
 
     handleRefetch(pageSize, sortingOrder, str);
   };
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
 
   if (!rootData.organization) {
     return <></>;

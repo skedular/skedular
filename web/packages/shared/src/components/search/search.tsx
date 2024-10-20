@@ -1,7 +1,9 @@
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import debounce from 'lodash.debounce';
 import { memo } from 'react';
+import { keyboardDebounceTimeout } from '../../libs/utils';
 
 type Props = {
   size?: 'small' | 'medium';
@@ -19,6 +21,8 @@ const Search = ({ size, placeholder, defaultValue, onChange }: Props) => {
     onChange(event.target.value);
   };
 
+  const debounceChanged = debounce(handleChanged, keyboardDebounceTimeout);
+
   return (
     <OutlinedInput
       size={size}
@@ -28,7 +32,7 @@ const Search = ({ size, placeholder, defaultValue, onChange }: Props) => {
           <SearchRoundedIcon fontSize="small" />
         </InputAdornment>
       }
-      onChange={handleChanged}
+      onChange={debounceChanged}
       defaultValue={defaultValue}
     />
   );

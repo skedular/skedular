@@ -27,8 +27,7 @@ import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
-import debounce from 'lodash.debounce';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
@@ -388,8 +387,6 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
 
     handleRefetch(pageSize, sortingOrder, str);
   };
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
-
   return (
     <>
       {!organizationId && (
@@ -415,7 +412,7 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
       {!editingOrganizationMembers && (
         <>
           <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-            <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={debounceSearchTextChange} />
+            <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <TablePagination
                 count={count}

@@ -17,11 +17,11 @@ import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getTeamAddLink } from 'components/team';
 import { TeamBookingsCard } from 'components/team/teamBookingCard';
-import debounce from 'lodash.debounce';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useDebounceCallback } from 'usehooks-ts';
 import type { organizationTeamsTab_query$key } from './__generated__/organizationTeamsTab_query.graphql';
 import type { organizationTeamsTab_rootQuery } from './__generated__/organizationTeamsTab_rootQuery.graphql';
 import type { organizationTeamsTab_teams_query$key } from './__generated__/organizationTeamsTab_teams_query.graphql';
@@ -178,7 +178,7 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
 
     handleRefetch(pageSize, sortingOrder, str);
   };
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
 
   if (!rootData.organization) {
     return <></>;

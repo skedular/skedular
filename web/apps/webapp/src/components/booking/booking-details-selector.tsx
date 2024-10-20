@@ -10,10 +10,10 @@ import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { graphql, useFragment, usePaginationFragment, useRefetchableFragment } from 'react-relay';
+import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   rootDataRelay: bookingDetailsSelector_query$key;
@@ -299,7 +299,7 @@ const BookingDetailsSelector = ({
     handleRefetchPaginatedOrganizationMembers(str, organizationId);
   };
 
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
 
   return (
     <>

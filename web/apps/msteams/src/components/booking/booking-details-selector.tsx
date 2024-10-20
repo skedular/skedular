@@ -6,10 +6,10 @@ import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone'
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { Dayjs } from 'dayjs';
-import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { useFragment, usePaginationFragment, useRefetchableFragment } from 'react-relay';
+import { useDebounceCallback } from 'usehooks-ts';
 import type { bookingDetailsSelector_availableLocationDesks_query$key } from './__generated__/bookingDetailsSelector_availableLocationDesks_query.graphql';
 import type { bookingDetailsSelector_availableLocationDesks_refetchableFragment } from './__generated__/bookingDetailsSelector_availableLocationDesks_refetchableFragment.graphql';
 import type { bookingDetailsSelector_paginatedOrganizationMembers_query$key } from './__generated__/bookingDetailsSelector_paginatedOrganizationMembers_query.graphql';
@@ -300,7 +300,7 @@ const BookingDetailsSelector = ({
     handleRefetchPaginatedOrganizationMembers(str, organizationId);
   };
 
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
 
   return (
     <>

@@ -3,10 +3,10 @@ import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { usePaginationFragment } from 'react-relay';
+import { useDebounceCallback } from 'usehooks-ts';
 import type { organizationMemberSelector_query$key } from './__generated__/organizationMemberSelector_query.graphql';
 import type { organizationMemberSelector_refetchableFragment } from './__generated__/organizationMemberSelector_refetchableFragment.graphql';
 
@@ -101,17 +101,17 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
     [refetch, organizationId],
   );
 
-  if (!rootData.organizationMemberSelectorPaginatedOrganizationMembers) {
-    return <></>;
-  }
-
   const handleSearchTextChange = (str: string) => {
     setBookingPeopleNameSearchText(str);
 
     handleRefetch(pageSize, str);
   };
 
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
+
+  if (!rootData.organizationMemberSelectorPaginatedOrganizationMembers) {
+    return <></>;
+  }
 
   return (
     <Autocomplete

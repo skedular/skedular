@@ -52,7 +52,6 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "final-form": "^4.20.10",
-    "lodash.debounce": "^4.0.8",
     "logrocket": "^9.0.0",
     "logrocket-react": "^6.0.3",
     "mui-rff": "^8.0.0",

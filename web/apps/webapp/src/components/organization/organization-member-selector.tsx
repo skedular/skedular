@@ -4,10 +4,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
-import debounce from 'lodash.debounce';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
+import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   rootDataRelay: organizationMemberSelector_query$key;
@@ -105,17 +105,17 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
     [refetch, organizationId],
   );
 
-  if (!rootData.organizationMemberSelectorPaginatedOrganizationMembers) {
-    return <></>;
-  }
-
   const handleSearchTextChange = (str: string) => {
     setBookingPeopleNameSearchText(str);
 
     handleRefetch(pageSize, str);
   };
 
-  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
+
+  if (!rootData.organizationMemberSelectorPaginatedOrganizationMembers) {
+    return <></>;
+  }
 
   return (
     <Autocomplete
