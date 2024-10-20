@@ -8,28 +8,22 @@ import type {
   TeamOrderInput,
   organizationTeamsTab_teams_refetchableFragment,
 } from '@/queries/__generated__/organizationTeamsTab_teams_refetchableFragment.graphql';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   queryReference: PreloadedQuery<organizationTeamsTab_rootQuery, Record<string, unknown>>;
@@ -97,7 +91,6 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
   });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
-  const [pageContextOpen, setPageContextOpen] = useState(false);
   const [teamNameSearchText, setTeamNameSearchText] = useState<string>('');
 
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -165,20 +158,11 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
     );
   };
 
-  const handlePageContextOpenStateChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
-    if (isExpanded) {
-      setPageContextOpen(true);
-    } else {
-      setPageContextOpen(false);
-    }
-  };
-
   const handleSearchTextChange = (str: string) => {
     setTeamNameSearchText(str);
 
     handleRefetch(pageSize, sortingOrder, str);
   };
-  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
 
   if (!rootData.organization) {
     return <></>;
@@ -196,32 +180,25 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
         </Stack>
       )}
 
-      <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} />
-        <AccordionDetails>
-          <TextField
-            defaultValue={teamNameSearchText}
-            helperText="Enter team name to narrow down the teams list"
-            onChange={(event) => debounceSearchTextChange(event?.target.value)}
+      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+        <Search size="small" placeholder="Find a team..." defaultValue={teamNameSearchText} onChange={handleSearchTextChange} />
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <TablePagination
+            count={rootDataTeams.teams?.totalCount ? rootDataTeams.teams.totalCount : 0}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={pageSize}
+            onRowsPerPageChange={handlePageSizeChange}
           />
-        </AccordionDetails>
-      </Accordion>
-
-      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-        <TablePagination
-          count={rootDataTeams.teams?.totalCount ? rootDataTeams.teams.totalCount : 0}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={pageSize}
-          onRowsPerPageChange={handlePageSizeChange}
-        />
-        <Sorting
-          options={[{ id: 'name', label: 'Name' }]}
-          defaultOption={sortingOrder.field}
-          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-          onValueChange={handleSortingChanged}
-        />
+          <Sorting
+            options={[{ id: 'name', label: 'Name' }]}
+            defaultOption={sortingOrder.field}
+            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+            onValueChange={handleSortingChanged}
+          />
+        </Stack>
       </Stack>
+
       <Grid container spacing={1}>
         {slicedEdges.map((edge) => {
           if (!edge.node.organization) {
