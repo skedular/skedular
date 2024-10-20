@@ -1,7 +1,7 @@
 import type { appBarBreadcrumbs } from 'components/appBar';
-import { getLocationBaseLink } from 'components/location/location-link';
+import { getLocationBaseLink } from 'components/location';
 import { Location } from 'components/location/locationPage';
-import { getOrganizationBaseLink, getOrganizationLocationsBaseLink } from 'components/organization/organization-link';
+import { getOrganizationBaseLink, getOrganizationLocationsBaseLink } from 'components/organization';
 import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';

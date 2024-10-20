@@ -1,9 +1,9 @@
 'use client';
 
 import type { appBarBreadcrumbs } from '@/components/appBar';
-import { getOrganizationBaseLink, getOrganizationTeamsBaseLink } from '@/components/organization/organization-link';
+import { getOrganizationBaseLink, getOrganizationTeamsBaseLink } from '@/components/organization';
 import { RootShell } from '@/components/rootShell';
-import { getTeamBaseLink } from '@/components/team/team-link';
+import { getTeamBaseLink } from '@/components/team';
 import { Team } from '@/components/team/teamPage';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';

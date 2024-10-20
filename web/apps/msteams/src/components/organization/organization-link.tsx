@@ -27,9 +27,15 @@ type Props = {
 };
 
 export const getOrganizationBaseLink = (id: string) => `/organizations/${id}`;
-export const getOrganizationLocationsBaseLink = (id: string) => `/organizations/${id}/locations`;
-export const getOrganizationTeamsBaseLink = (id: string) => `/organizations/${id}/teams`;
 export const getOrganizationAddLink = () => `/organizations/add`;
+
+export const getOrganizationBookingsBaseLink = (id: string) => getOrganizationBookingsLink(id);
+export const getOrganizationMembersBaseLink = (id: string) => getOrganizationPeopleLink(id);
+export const getOrganizationLocationsBaseLink = (id: string) => getOrganizationLocationLink(id);
+export const getOrganizationTeamsBaseLink = (id: string) => getOrganizationTeamsLink(id);
+export const getOrganizationAnalyticsBaseLink = (id: string) => getOrganizationAnalyticsLink(id);
+export const getOrganizationSettingsBaseLink = (id: string) => getOrganizationSettingsLink(id);
+
 export const getOrganizationBookingsLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=bookings`;
 export const getOrganizationSettingsLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=about`;
 export const getOrganizationPeopleLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=people`;

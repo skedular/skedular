@@ -10,7 +10,7 @@ import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import graphql from 'babel-plugin-relay/macro';
 import { Bookings } from 'components/booking/bookingsPage';
-import { getOrganizationBaseLink } from 'components/organization/organization-link';
+import { getOrganizationBaseLink } from 'components/organization';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';

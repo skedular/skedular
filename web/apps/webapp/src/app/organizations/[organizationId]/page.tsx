@@ -1,7 +1,7 @@
 'use client';
 
 import type { appBarBreadcrumbs } from '@/components/appBar';
-import { getOrganizationBaseLink } from '@/components/organization/organization-link';
+import { getOrganizationBaseLink } from '@/components/organization';
 import { Organization } from '@/components/organization/organizationPage';
 import { RootShell } from '@/components/rootShell';
 import { useParams } from 'next/navigation';

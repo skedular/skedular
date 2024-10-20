@@ -1,5 +1,5 @@
 import { Bookings } from '@/components/booking/bookingsPage';
-import { getOrganizationBaseLink } from '@/components/organization/organization-link';
+import { getOrganizationBaseLink } from '@/components/organization';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';

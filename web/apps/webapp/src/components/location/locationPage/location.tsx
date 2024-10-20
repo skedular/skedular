@@ -1,7 +1,6 @@
 import { Bookings } from '@/components/booking/bookingsPage';
-import { LocationLink } from '@/components/location';
-import { getLocationBaseLink } from '@/components/location/location-link';
-import { getOrganizationBaseLink } from '@/components/organization/organization-link';
+import { LocationLink, getLocationBaseLink } from '@/components/location';
+import { getOrganizationBaseLink } from '@/components/organization';
 import type { location_rootQuery } from '@/queries/__generated__/location_rootQuery.graphql';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';

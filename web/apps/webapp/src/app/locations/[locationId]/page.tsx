@@ -1,7 +1,7 @@
 'use client';
 
 import type { appBarBreadcrumbs } from '@/components/appBar';
-import { getLocationBaseLink } from '@/components/location/location-link';
+import { getLocationBaseLink } from '@/components/location';
 import { Location } from '@/components/location/locationPage';
 import { RootShell } from '@/components/rootShell';
 import { useParams } from 'next/navigation';

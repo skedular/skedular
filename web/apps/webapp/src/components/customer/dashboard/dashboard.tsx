@@ -1,6 +1,6 @@
 import { CustomerDaySummary } from '@/components/customer/customerDaySummary';
 import { LocationBookingsCard } from '@/components/location/locationBookingCard';
-import { getOrganizationBaseLink } from '@/components/organization/organization-link';
+import { getOrganizationBaseLink } from '@/components/organization';
 import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type { dashboard_rootQuery } from '@/queries/__generated__/dashboard_rootQuery.graphql';
 import Box from '@mui/material/Box';

@@ -5,7 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { BookingIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
-import { getOrganizationLocationsBaseLink, getOrganizationTeamsBaseLink } from 'components/organization/organization-link';
+import { getOrganizationLocationsBaseLink, getOrganizationTeamsBaseLink } from 'components/organization';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 

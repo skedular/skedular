@@ -1,8 +1,8 @@
 import { BookingCard } from '@/components/booking';
 import { NewBookingButton } from '@/components/booking/addBooking';
-import { getLocationBaseLink } from '@/components/location/location-link';
-import { getOrganizationBaseLink } from '@/components/organization/organization-link';
-import { getTeamBaseLink } from '@/components/team/team-link';
+import { getLocationBaseLink } from '@/components/location';
+import { getOrganizationBaseLink } from '@/components/organization';
+import { getTeamBaseLink } from '@/components/team';
 import type { bookings_bookings_query$key } from '@/queries/__generated__/bookings_bookings_query.graphql';
 import type {
   BookingOrderField,

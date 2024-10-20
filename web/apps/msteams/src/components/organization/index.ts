@@ -1,14 +1,20 @@
 export {
   default as OrganizationLink,
   getOrganizationAddLink,
+  getOrganizationAnalyticsBaseLink,
   getOrganizationAnalyticsLink,
   getOrganizationBaseLink,
   getOrganizationBillingLink,
+  getOrganizationBookingsBaseLink,
   getOrganizationBookingsLink,
   getOrganizationLocationLink,
+  getOrganizationLocationsBaseLink,
+  getOrganizationMembersBaseLink,
   getOrganizationOfferingLink,
   getOrganizationPeopleLink,
+  getOrganizationSettingsBaseLink,
   getOrganizationSettingsLink,
+  getOrganizationTeamsBaseLink,
   getOrganizationTeamsLink,
 } from './organization-link';
 export { default as OrganizationMemberCard } from './organization-member-card';
