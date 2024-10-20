@@ -23,7 +23,6 @@ const Search = ({ size, placeholder, defaultValue, onChange }: Props) => {
     <OutlinedInput
       size={size}
       placeholder={placeholder}
-      sx={{ width: { xs: '100%', md: '25ch' } }}
       startAdornment={
         <InputAdornment position="start">
           <SearchRoundedIcon fontSize="small" />
