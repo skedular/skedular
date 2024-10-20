@@ -288,7 +288,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
       )}
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <Search size="small" placeholder="Find a desk..." defaultValue={deskNameSearchText} onChange={handleSearchTextChange} />
           <DayPicker onDateChanged={handleSelectedDateChange} />
         </Stack>

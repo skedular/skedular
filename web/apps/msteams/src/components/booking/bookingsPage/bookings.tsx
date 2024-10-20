@@ -243,11 +243,8 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
 
   return (
     <>
-      <Stack direction="column" spacing={1}>
-        <Stack direction="row" sx={{ width: 'auto', justifyContent: 'space-between' }}>
-          <Stack direction="row">
-            <WeekPicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChange} />
-          </Stack>
+      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <NewBookingButton
             onReloadRequired={onReloadRequired}
             organizationId={organizationId}
@@ -257,9 +254,9 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
             hideOrganizationControl={true}
             defaultDate={startWeek}
           />
+          <WeekPicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChange} />
         </Stack>
-
-        <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
             count={rootDataBookings.bookings.totalCount ? rootDataBookings.bookings.totalCount : 0}
             page={page}
@@ -282,36 +279,36 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
             onValueChange={handleSortingChanged}
           />
         </Stack>
-
-        <Grid container spacing={1}>
-          {bookings.map((booking) => {
-            const canJoinBooking =
-              booking.customer.uniqueId === rootData.me?.id
-                ? false
-                : !!!bookings
-                    .filter((otherBooking) => otherBooking.customer.uniqueId === rootData.me?.id)
-                    .find((myBooking) => {
-                      const from = dayjs(booking.from);
-                      const myFrom = dayjs(myBooking.from);
-
-                      return from.year() === myFrom.year() && from.month() === myFrom.month() && from.date() === myFrom.date();
-                    });
-
-            return (
-              <Grid key={booking.id}>
-                <BookingCard
-                  rootDataRelay={rootData}
-                  bookingDetailsRelay={booking}
-                  connectionIds={connectionIds}
-                  hideOrganizationControl={true}
-                  hideLocationControl={true}
-                  canJoinBooking={canJoinBooking}
-                />
-              </Grid>
-            );
-          })}
-        </Grid>
       </Stack>
+
+      <Grid container spacing={1}>
+        {bookings.map((booking) => {
+          const canJoinBooking =
+            booking.customer.uniqueId === rootData.me?.id
+              ? false
+              : !!!bookings
+                  .filter((otherBooking) => otherBooking.customer.uniqueId === rootData.me?.id)
+                  .find((myBooking) => {
+                    const from = dayjs(booking.from);
+                    const myFrom = dayjs(myBooking.from);
+
+                    return from.year() === myFrom.year() && from.month() === myFrom.month() && from.date() === myFrom.date();
+                  });
+
+          return (
+            <Grid key={booking.id}>
+              <BookingCard
+                rootDataRelay={rootData}
+                bookingDetailsRelay={booking}
+                connectionIds={connectionIds}
+                hideOrganizationControl={true}
+                hideLocationControl={true}
+                canJoinBooking={canJoinBooking}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
     </>
   );
 };
