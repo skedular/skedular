@@ -2,22 +2,40 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
+import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { getOrganizationBaseLink } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo } from 'react';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { useMutation } from 'react-relay';
+import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useNavigate } from 'react-router-dom';
 import { object, string } from 'yup';
 import type { addLocation_addLocationMutation } from './__generated__/addLocation_addLocationMutation.graphql';
+import type { addLocation_rootQuery } from './__generated__/addLocation_rootQuery.graphql';
 
 type Props = {
-  organizationId: string;
+  queryReference: PreloadedQuery<addLocation_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
+  organizationId?: string;
 };
+
+const RootQuery = graphql`
+  query addLocation_rootQuery($organizationId: String!, $organizationExists: Boolean!) {
+    organization(id: $organizationId) @include(if: $organizationExists) {
+      id
+      name
+    }
+  }
+`;
 
 type LocationDetails = {
   name: string;
@@ -31,7 +49,8 @@ const locationSchema = object({
   timezone: string().nullable(),
 });
 
-const AddLocation = ({ organizationId }: Props) => {
+const AddLocation = ({ queryReference, organizationId }: Props) => {
+  const rootData = usePreloadedQuery<addLocation_rootQuery>(RootQuery, queryReference);
   const [commitAddLocation] = useMutation<addLocation_addLocationMutation>(graphql`
     mutation addLocation_addLocationMutation($input: AddLocationInput!) @raw_response_type {
       addLocation(input: $input) {
@@ -49,6 +68,18 @@ const AddLocation = ({ organizationId }: Props) => {
   const navigate = useNavigate();
   const validate = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
+  const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
+
+  useEffect(() => {
+    let breadcrumbs = new Map<string, string>();
+
+    if (rootData.organization) {
+      breadcrumbs = breadcrumbs.set(getOrganizationBaseLink(rootData.organization.id), rootData.organization?.name!);
+    }
+
+    updateBreadcrumps(breadcrumbs);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rootData.organization]);
 
   const handleCancelClick = () => {
     navigate(-1);
@@ -130,4 +161,44 @@ const AddLocation = ({ organizationId }: Props) => {
   );
 };
 
-export default memo(AddLocation);
+const MemoAddLocation = memo(AddLocation);
+
+type RelayProps = {
+  organizationId?: string;
+};
+
+const AddLocationWithRelay = ({ organizationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<addLocation_rootQuery>(RootQuery);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        organizationId: organizationId ?? '',
+        organizationExists: !!organizationId,
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReloadId, organizationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReloadId(nanoid());
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoAddLocation queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(AddLocationWithRelay);

@@ -29,6 +29,10 @@ const OrganizationPage = () => {
         label: 'Home',
         href: '/',
       },
+      {
+        label: 'Organizations',
+        href: '/organizations',
+      },
     ],
     lastItemLabel: getOrganizationBaseLink(finalOrganizationId),
   };

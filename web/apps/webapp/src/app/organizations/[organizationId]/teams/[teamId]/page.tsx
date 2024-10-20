@@ -45,6 +45,10 @@ const TeamPage = () => {
         href: '/',
       },
       {
+        label: 'Organizations',
+        href: '/organizations',
+      },
+      {
         label: '',
         href: getOrganizationBaseLink(finalOrganizationId),
       },

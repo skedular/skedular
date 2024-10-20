@@ -5,14 +5,15 @@ import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { OrganizationMemberSelector } from 'components/organization';
+import { getOrganizationBaseLink, OrganizationMemberSelector } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -36,6 +37,10 @@ const RootQuery = graphql`
   ) {
     me {
       id
+    }
+    organization(id: $organizationId) @include(if: $organizationExists) {
+      id
+      name
     }
     ...organizationMemberSelector_query
   }
@@ -74,6 +79,18 @@ const AddTeam = ({ queryReference, organizationId }: Props) => {
   const navigate = useNavigate();
   const validate = makeValidate(teamSchema);
   const requiredFields = makeRequired(teamSchema);
+  const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
+
+  useEffect(() => {
+    let breadcrumbs = new Map<string, string>();
+
+    if (rootData.organization) {
+      breadcrumbs = breadcrumbs.set(getOrganizationBaseLink(rootData.organization.id), rootData.organization?.name!);
+    }
+
+    updateBreadcrumps(breadcrumbs);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rootData.organization]);
 
   const handleCancelClick = () => {
     navigate(-1);

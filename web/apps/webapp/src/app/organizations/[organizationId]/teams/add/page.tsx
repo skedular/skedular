@@ -1,5 +1,7 @@
 'use client';
 
+import type { AppBarBreadcrumbs } from '@/components/appBar';
+import { getOrganizationBaseLink, getOrganizationTeamsBaseLink } from '@/components/organization';
 import { RootShell } from '@/components/rootShell';
 import { AddTeam } from '@/components/team/addTeam';
 import { useParams } from 'next/navigation';
@@ -21,8 +23,30 @@ const AddTeamPage = () => {
     throw new Error('organizationId is required');
   }
 
+  const breadcrumps: AppBarBreadcrumbs = {
+    items: [
+      {
+        label: 'Home',
+        href: '/',
+      },
+      {
+        label: 'Organizations',
+        href: '/organizations',
+      },
+      {
+        label: '',
+        href: getOrganizationBaseLink(finalOrganizationId),
+      },
+      {
+        label: 'Teams',
+        href: getOrganizationTeamsBaseLink(finalOrganizationId),
+      },
+    ],
+    lastItemLabel: 'Add new team',
+  };
+
   return (
-    <RootShell>
+    <RootShell appBarBreadcrumbs={breadcrumps}>
       <AddTeam organizationId={finalOrganizationId} />
     </RootShell>
   );

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aa4dc1281ba81afc180a9b35d9d83fb0>>
+ * @generated SignedSource<<314907d6f98079dd2b3e8e7abd20cd11>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,6 +25,10 @@ export type addTeam_rootQuery$variables = {
 export type addTeam_rootQuery$data = {
   readonly me: {
     readonly id: string;
+  } | null | undefined;
+  readonly organization?: {
+    readonly id: string;
+    readonly name: string;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"organizationMemberSelector_query">;
 };
@@ -73,7 +77,33 @@ v5 = {
   ],
   "storageKey": null
 },
-v6 = [
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": [
+    {
+      "kind": "Variable",
+      "name": "id",
+      "variableName": "organizationId"
+    }
+  ],
+  "concreteType": "OrganizationDetails",
+  "kind": "LinkedField",
+  "name": "organization",
+  "plural": false,
+  "selections": [
+    (v4/*: any*/),
+    (v6/*: any*/)
+  ],
+  "storageKey": null
+},
+v8 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -115,6 +145,14 @@ return {
     "selections": [
       (v5/*: any*/),
       {
+        "condition": "organizationExists",
+        "kind": "Condition",
+        "passingValue": true,
+        "selections": [
+          (v7/*: any*/)
+        ]
+      },
+      {
         "args": null,
         "kind": "FragmentSpread",
         "name": "organizationMemberSelector_query"
@@ -140,9 +178,10 @@ return {
         "kind": "Condition",
         "passingValue": true,
         "selections": [
+          (v7/*: any*/),
           {
             "alias": "organizationMemberSelectorPaginatedOrganizationMembers",
-            "args": (v6/*: any*/),
+            "args": (v8/*: any*/),
             "concreteType": "OrganizationMemberConnection",
             "kind": "LinkedField",
             "name": "paginatedOrganizationMembers",
@@ -187,13 +226,7 @@ return {
                             "name": "uniqueId",
                             "storageKey": null
                           },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "name",
-                            "storageKey": null
-                          },
+                          (v6/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -287,7 +320,7 @@ return {
           },
           {
             "alias": "organizationMemberSelectorPaginatedOrganizationMembers",
-            "args": (v6/*: any*/),
+            "args": (v8/*: any*/),
             "filters": [
               "where",
               "orderBy"
@@ -302,16 +335,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3b8ebf396a0d145b1b7a80eeb9ab4789",
+    "cacheID": "6097257ebfbf1417dbe30b25c35c7053",
     "id": null,
     "metadata": {},
     "name": "addTeam_rootQuery",
     "operationKind": "query",
-    "text": "query addTeam_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $bookingPeopleNameSearchText: String\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  me {\n    id\n  }\n  ...organizationMemberSelector_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query addTeam_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $bookingPeopleNameSearchText: String\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  me {\n    id\n  }\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    name\n  }\n  ...organizationMemberSelector_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f67f6cb129f00dbbd3a0ad7f62fc529c";
+(node as any).hash = "ca4d8ce86bc042912ab78e06392c18b7";
 
 export default node;
