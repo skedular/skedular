@@ -35,6 +35,9 @@
     "./components/relayError": {
       "default": "./dist/components/relayError/index.js"
     },
+    "./components/search": {
+      "default": "./dist/components/search/index.js"
+    },
     "./components/slackButtons": {
       "default": "./dist/components/slackButtons/index.js"
     },

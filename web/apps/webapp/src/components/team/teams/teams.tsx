@@ -3,20 +3,16 @@ import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type { teams_query$key } from '@/queries/__generated__/teams_query.graphql';
 import type { TeamOrderField, TeamOrderInput, teams_refetchableFragment } from '@/queries/__generated__/teams_refetchableFragment.graphql';
 import type { teams_rootQuery } from '@/queries/__generated__/teams_rootQuery.graphql';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import TextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import debounce from 'lodash.debounce';
@@ -76,7 +72,6 @@ const Teams = ({ queryReference }: Props) => {
   });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
-  const [pageContextOpen, setPageContextOpen] = useState(false);
   const [teamNameSearchText, setTeamNameSearchText] = useState<string>('');
   const handleSearchTextChange = (str: string) => {
     setTeamNameSearchText(str);
@@ -85,15 +80,6 @@ const Teams = ({ queryReference }: Props) => {
   };
 
   const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
-
-  const handlePageContextOpenStateChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
-    if (isExpanded) {
-      setPageContextOpen(true);
-    } else {
-      setPageContextOpen(false);
-    }
-  };
-
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
       loadNextPage();
@@ -173,31 +159,23 @@ const Teams = ({ queryReference }: Props) => {
         </Button>
       </Link>
 
-      <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} />
-        <AccordionDetails>
-          <TextField
-            defaultValue={teamNameSearchText}
-            helperText="Enter team name to narrow down the teams list"
-            onChange={(event) => debounceSearchTextChange(event?.target.value)}
+      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+        <Search size="small" placeholder="Find a team..." defaultValue={teamNameSearchText} onChange={debounceSearchTextChange} />
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <TablePagination
+            count={rootData.teams.totalCount ? rootData.teams.totalCount : 0}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={pageSize}
+            onRowsPerPageChange={handlePageSizeChange}
           />
-        </AccordionDetails>
-      </Accordion>
-
-      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-        <TablePagination
-          count={rootData.teams.totalCount ? rootData.teams.totalCount : 0}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={pageSize}
-          onRowsPerPageChange={handlePageSizeChange}
-        />
-        <Sorting
-          options={[{ id: 'name', label: 'Name' }]}
-          defaultOption={sortingOrder.field}
-          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-          onValueChange={handleSortingChanged}
-        />
+          <Sorting
+            options={[{ id: 'name', label: 'Name' }]}
+            defaultOption={sortingOrder.field}
+            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+            onValueChange={handleSortingChanged}
+          />
+        </Stack>
       </Stack>
 
       <Grid container spacing={1}>

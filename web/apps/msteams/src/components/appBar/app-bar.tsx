@@ -1,5 +1,3 @@
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -11,7 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { FeedbackIcon, SettingsIcon } from '@repo/shared/components/icons';
-import { BreadcrumpsContext, PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
+import { BreadcrumpsContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewFeedbackDialog } from 'components/feedback';
@@ -55,9 +53,7 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
     rootDataRelay,
   );
 
-  const paletteMode = useContext(PaletteModeContext);
   const breadcrumpsContext = useContext(BreadcrumpsContext);
-  const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
 
@@ -118,18 +114,6 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
               <FeedbackIcon />
             </IconButton>
           </Tooltip>
-
-          {paletteMode === 'dark' && (
-            <IconButton sx={{ ml: 1 }} onClick={() => updatePaletteMode('light')}>
-              <LightModeIcon />
-            </IconButton>
-          )}
-
-          {paletteMode === 'light' && (
-            <IconButton sx={{ ml: 1 }} onClick={() => updatePaletteMode('dark')}>
-              <DarkModeIcon />
-            </IconButton>
-          )}
 
           <IconButton onClick={handleProfileMenuOpenClick}>
             <CustomerAvatar
