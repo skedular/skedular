@@ -1,22 +1,16 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '@repo/shared/components/generics';
+import { DayPicker } from '@repo/shared/components/datePickers';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
-import { endOfDay, keyboardDebounceTimeout, startOfDay, toShortDate } from '@repo/shared/libs/utils';
+import { endOfDay, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BulkNewDeskDialog, DeskCard, NewDeskDialog } from 'components/desk';
 import { Dayjs } from 'dayjs';
@@ -24,7 +18,6 @@ import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
-import { useDebounceCallback } from 'usehooks-ts';
 import type { locationDesksTab_allBookings_query$key } from './__generated__/locationDesksTab_allBookings_query.graphql';
 import type { locationDesksTab_allBookings_refetchableFragment } from './__generated__/locationDesksTab_allBookings_refetchableFragment.graphql';
 import type { locationDesksTab_paginatedLocationDesks_query$key } from './__generated__/locationDesksTab_paginatedLocationDesks_query.graphql';
@@ -136,7 +129,6 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
 
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(startOfDay());
 
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
@@ -154,9 +146,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
     handleRefetchPaginatedLocationDesks(pageSize, sortingOrder, deskNameSearchText);
   };
 
-  const handleSelectedDateChange = (date: Dayjs | null) => {
-    setSelectedDate(date);
-
+  const handleSelectedDateChange = (date: Dayjs) => {
     handleRefetchAllBookings(date);
   };
 
@@ -226,14 +216,12 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
     handleRefetchPaginatedLocationDesks(pageSize, sortingOrder, str);
   };
 
-  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
   const connectionIds = useMemo(
     () => (rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks ? [rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.__id] : []),
     [rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks],
   );
   const [isAddDeskDialogOpen, setIsAddDeskDialogOpen] = useState(false);
   const [isBulkAddDeskDialogOpen, setIsBulkAddDeskDialogOpen] = useState(false);
-  const [pageContextOpen, setPageContextOpen] = useState(false);
 
   if (!rootData.location || !rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks) {
     return <></>;
@@ -241,14 +229,6 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
 
   const desks = rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.edges;
   const slicedEdges = desks.slice(page * pageSize, page * pageSize + pageSize > desks.length ? desks.length : page * pageSize + pageSize);
-
-  const handlePageContextOpenStateChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
-    if (isExpanded) {
-      setPageContextOpen(true);
-    } else {
-      setPageContextOpen(false);
-    }
-  };
 
   const handleAddDeskClick = () => {
     setIsAddDeskDialogOpen(true);
@@ -307,45 +287,30 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
         </Stack>
       )}
 
-      <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          {!pageContextOpen && <Typography>{toShortDate(selectedDate)}</Typography>}
-        </AccordionSummary>
-        <AccordionDetails>
-          <StaticDatePicker
-            slots={{
-              toolbar: EmptyCalendarToolbar,
-            }}
-            slotProps={SimpleCalendarSlotProps}
-            defaultValue={selectedDate}
-            onChange={handleSelectedDateChange}
+      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+        <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <Search size="small" placeholder="Find a desk..." defaultValue={deskNameSearchText} onChange={handleSearchTextChange} />
+          <DayPicker onDateChanged={handleSelectedDateChange} />
+        </Stack>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <TablePagination
+            count={
+              rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.totalCount
+                ? rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.totalCount
+                : 0
+            }
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={pageSize}
+            onRowsPerPageChange={handlePageSizeChange}
           />
-          <TextField
-            defaultValue={deskNameSearchText}
-            helperText="Enter desk or zone name to narrow down the desks list"
-            onChange={(event) => debounceSearchTextChange(event?.target.value)}
+          <Sorting
+            options={[{ id: 'name', label: 'Name' }]}
+            defaultOption={sortingOrder.field}
+            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+            onValueChange={handleSortingChanged}
           />
-        </AccordionDetails>
-      </Accordion>
-
-      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-        <TablePagination
-          count={
-            rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.totalCount
-              ? rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.totalCount
-              : 0
-          }
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={pageSize}
-          onRowsPerPageChange={handlePageSizeChange}
-        />
-        <Sorting
-          options={[{ id: 'name', label: 'Name' }]}
-          defaultOption={sortingOrder.field}
-          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-          onValueChange={handleSortingChanged}
-        />
+        </Stack>
       </Stack>
 
       <Grid container spacing={1}>

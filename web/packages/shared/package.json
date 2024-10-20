@@ -14,6 +14,9 @@
     "./components/booking": {
       "default": "./dist/components/booking/index.js"
     },
+    "./components/datePickers": {
+      "default": "./dist/components/datePickers/index.js"
+    },
     "./components/document": {
       "default": "./dist/components/document/index.js"
     },
@@ -46,9 +49,6 @@
     },
     "./components/transitions": {
       "default": "./dist/components/transitions/index.js"
-    },
-    "./components/weekPicker": {
-      "default": "./dist/components/weekPicker/index.js"
     },
     "./components/zone": {
       "default": "./dist/components/zone/index.js"

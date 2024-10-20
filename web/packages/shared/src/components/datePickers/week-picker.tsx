@@ -71,13 +71,13 @@ const Day = (
 };
 
 type Props = {
-  startWeek?: Dayjs;
+  defaultStartWeek?: Dayjs;
   onWeekChanged: (date: Dayjs) => void;
 };
 
-const WeekPicker = ({ startWeek, onWeekChanged }: Props) => {
+const WeekPicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
   const [hoveredDay, setHoveredDay] = useState<Dayjs | null>(null);
-  const [start, setStart] = useState(startWeek ?? startOfWeek());
+  const [start, setStart] = useState(defaultStartWeek ?? startOfWeek());
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {

@@ -1,11 +1,11 @@
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { WeekPicker } from '@repo/shared/components/datePickers';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { WeekPicker } from '@repo/shared/components/weekPicker';
 import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { endOfWeek, startOfDay, startOfWeek } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -246,7 +246,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
       <Stack direction="column" spacing={1}>
         <Stack direction="row" sx={{ width: 'auto', justifyContent: 'space-between' }}>
           <Stack direction="row">
-            <WeekPicker startWeek={startWeek} onWeekChanged={handleWeehChange} />
+            <WeekPicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChange} />
           </Stack>
           <NewBookingButton
             onReloadRequired={onReloadRequired}
