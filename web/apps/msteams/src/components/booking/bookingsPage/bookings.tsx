@@ -5,6 +5,7 @@ import { WeekPicker } from '@repo/shared/components/datePickers';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { endOfWeek, startOfDay, startOfWeek } from '@repo/shared/libs/utils';
@@ -51,6 +52,7 @@ const RootQuery = graphql`
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaTo: DateTime!
+    $peopleNameSearchText: String
   ) {
     ...bookings_query
     ...bookings_bookings_query
@@ -102,6 +104,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
             teamIds: [$teamId]
             fromGTE: $bookingsSearchCriteriaFrom
             fromLTE: $bookingsSearchCriteriaTo
+            nameContains: $peopleNameSearchText
             includeMineOnly: false
           }
           orderBy: $bookingSortingValues
@@ -133,6 +136,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
   const [page, setPage] = useState(0);
   const [startWeek, setStartWeek] = useState(startOfWeek);
   const [pageSize, setPageSize] = useState(50);
+  const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
 
   useEffect(() => {
@@ -167,11 +171,11 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
 
     setPageSize(parseInt(event.target.value, 10));
 
-    handleRefetch(pageSize, sortingOrder, startWeek);
+    handleRefetch(pageSize, sortingOrder, startWeek, peopleNameSearchText);
   };
 
   const handleRefetch = useCallback(
-    (pageSize: number, order: BookingOrderInput, date: Dayjs) => {
+    (pageSize: number, order: BookingOrderInput, date: Dayjs, peopleNameSearchText: string) => {
       startTransition(() => {
         refetch(
           {
@@ -179,6 +183,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
             bookingSortingValues: [order],
             bookingsSearchCriteriaFrom: date.toISOString(),
             bookingsSearchCriteriaTo: endOfWeek(date).add(-1, 'milliseconds').toISOString(),
+            peopleNameSearchText,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -228,13 +233,20 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
         field: value as unknown as BookingOrderField,
       },
       startWeek,
+      peopleNameSearchText,
     );
   };
 
   const handleWeehChange = (date: Dayjs) => {
     setStartWeek(date);
 
-    handleRefetch(pageSize, sortingOrder, date);
+    handleRefetch(pageSize, sortingOrder, date, peopleNameSearchText);
+  };
+
+  const handleSearchTextChange = (str: string) => {
+    setPeopleNameSearchText(str);
+
+    handleRefetch(pageSize, sortingOrder, startWeek, str);
   };
 
   if (!rootData.me || !rootDataBookings.bookings) {
@@ -255,6 +267,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
             defaultDate={startWeek}
           />
           <WeekPicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChange} />
+          <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
         </Stack>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
