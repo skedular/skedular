@@ -9,10 +9,6 @@ import type {
 import type { teamPeopleTab_query$key } from '@/queries/__generated__/teamPeopleTab_query.graphql';
 import type { teamPeopleTab_rootQuery } from '@/queries/__generated__/teamPeopleTab_rootQuery.graphql';
 import type { teamPeopleTab_updateTeamMutation } from '@/queries/__generated__/teamPeopleTab_updateTeamMutation.graphql';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -23,11 +19,11 @@ import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import MUITextField from '@mui/material/TextField';
 import { AddIcon, EditIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -191,7 +187,6 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
   const requiredTeamFields = makeRequired(teamSchema);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
-  const [pageContextOpen, setPageContextOpen] = useState(false);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [invitePeopleDialogOpen, setInvitePeopleDialogOpen] = useState(false);
   const validateMembersToInvite = makeValidate(membersToInviteSchema);
@@ -388,20 +383,12 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
     );
   };
 
-  const handlePageContextOpenStateChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
-    if (isExpanded) {
-      setPageContextOpen(true);
-    } else {
-      setPageContextOpen(false);
-    }
-  };
-
-  const handlePoepleSearchTextChange = (str: string) => {
+  const handleSearchTextChange = (str: string) => {
     setPeopleNameSearchText(str);
 
     handleRefetch(pageSize, sortingOrder, str);
   };
-  const debouncePeopleSearchTextChange = debounce(handlePoepleSearchTextChange, keyboardDebounceTimeout);
+  const debounceSearchTextChange = debounce(handleSearchTextChange, keyboardDebounceTimeout);
 
   return (
     <>
@@ -427,37 +414,29 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
 
       {!editingOrganizationMembers && (
         <>
-          <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} />
-            <AccordionDetails>
-              <MUITextField
-                defaultValue={peopleNameSearchText}
-                helperText="Enter name to narrow down the members list"
-                onChange={(event) => debouncePeopleSearchTextChange(event?.target.value)}
+          <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+            <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={debounceSearchTextChange} />
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <TablePagination
+                count={count}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={pageSize}
+                onRowsPerPageChange={handlePageSizeChange}
               />
-            </AccordionDetails>
-          </Accordion>
-
-          <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-            <TablePagination
-              count={count}
-              page={page}
-              onPageChange={handleChangePage}
-              rowsPerPage={pageSize}
-              onRowsPerPageChange={handlePageSizeChange}
-            />
-            <Sorting
-              options={[
-                { id: 'createdAt', label: 'Join date' },
-                { id: 'name', label: 'Name' },
-                { id: 'givenName', label: 'Given name' },
-                { id: 'middleName', label: 'Middle name' },
-                { id: 'familyName', label: 'Family Name' },
-              ]}
-              defaultOption={sortingOrder.field}
-              defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-              onValueChange={handleSortingChanged}
-            />
+              <Sorting
+                options={[
+                  { id: 'createdAt', label: 'Join date' },
+                  { id: 'name', label: 'Name' },
+                  { id: 'givenName', label: 'Given name' },
+                  { id: 'middleName', label: 'Middle name' },
+                  { id: 'familyName', label: 'Family Name' },
+                ]}
+                defaultOption={sortingOrder.field}
+                defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+                onValueChange={handleSortingChanged}
+              />
+            </Stack>
           </Stack>
 
           <Grid container spacing={1}>

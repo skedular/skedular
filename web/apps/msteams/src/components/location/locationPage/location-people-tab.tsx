@@ -1,7 +1,3 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -11,11 +7,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import MUITextField from '@mui/material/TextField';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
@@ -261,19 +257,10 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
     pageSize,
   ]);
 
-  const [pageContextOpen, setPageContextOpen] = useState(false);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [invitePeopleDialogOpen, setInvitePeopleDialogOpen] = useState(false);
   const validateMembersToInvite = makeValidate(membersToInviteSchema);
   const requiredMembersToInviteFields = makeRequired(membersToInviteSchema);
-
-  const handlePageContextOpenStateChange = (event: React.SyntheticEvent, isExpanded: boolean) => {
-    if (isExpanded) {
-      setPageContextOpen(true);
-    } else {
-      setPageContextOpen(false);
-    }
-  };
 
   const handleSearchTextChange = (str: string) => {
     setPeopleNameSearchText(str);
@@ -410,40 +397,34 @@ const LocationPeopleTab = ({ queryReference, onReloadRequired, organizationId, l
         </Stack>
       )}
 
-      <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%' }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} />
-        <AccordionDetails>
-          <MUITextField
-            defaultValue={peopleNameSearchText}
-            helperText="Enter name to narrow down the people list"
-            onChange={(event) => debounceSearchTextChange(event?.target.value)}
+      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+        <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={debounceSearchTextChange} />
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <TablePagination
+            count={count}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={pageSize}
+            onRowsPerPageChange={handlePageSizeChange}
           />
-        </AccordionDetails>
-      </Accordion>
-
-      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
-        <TablePagination
-          count={count}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={pageSize}
-          onRowsPerPageChange={handlePageSizeChange}
-        />
-        <Sorting
-          options={[
-            { id: 'name', label: 'Name' },
-            { id: 'givenName', label: 'Given name' },
-            { id: 'middleName', label: 'Middle name' },
-            { id: 'familyName', label: 'Family Name' },
-            { id: 'membershipType', label: 'Membership type' },
-            { id: 'createdAt', label: 'Join date' },
-          ]}
-          defaultOption={organizationId ? sortingCustomerOrder.field : sortingLocationMemberOrder.field}
-          defaultSortingDirectionValue={
-            organizationId ? (sortingCustomerOrder.direction as unknown as Direction) : (sortingLocationMemberOrder.direction as unknown as Direction)
-          }
-          onValueChange={handleSortingChanged}
-        />
+          <Sorting
+            options={[
+              { id: 'name', label: 'Name' },
+              { id: 'givenName', label: 'Given name' },
+              { id: 'middleName', label: 'Middle name' },
+              { id: 'familyName', label: 'Family Name' },
+              { id: 'membershipType', label: 'Membership type' },
+              { id: 'createdAt', label: 'Join date' },
+            ]}
+            defaultOption={organizationId ? sortingCustomerOrder.field : sortingLocationMemberOrder.field}
+            defaultSortingDirectionValue={
+              organizationId
+                ? (sortingCustomerOrder.direction as unknown as Direction)
+                : (sortingLocationMemberOrder.direction as unknown as Direction)
+            }
+            onValueChange={handleSortingChanged}
+          />
+        </Stack>
       </Stack>
 
       <Grid container spacing={1}>
