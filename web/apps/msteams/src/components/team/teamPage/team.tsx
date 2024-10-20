@@ -1,4 +1,3 @@
-import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { Loading } from '@repo/shared/components/loading';
@@ -96,7 +95,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
   }
 
   return (
-    <Stack direction="column" spacing={1}>
+    <>
       <TeamLink organizationId={organizationId} id={teamId} name={rootData.team?.name} excludeLink />
 
       <Tabs value={tabIndex} onChange={handleTabChange}>
@@ -105,12 +104,10 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
         <Tab label="People" />
       </Tabs>
 
-      <>
-        {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
-        {tabIndex === 1 && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
-        {tabIndex === 2 && <TeamPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
-      </>
-    </Stack>
+      {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+      {tabIndex === 1 && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+      {tabIndex === 2 && <TeamPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+    </>
   );
 };
 

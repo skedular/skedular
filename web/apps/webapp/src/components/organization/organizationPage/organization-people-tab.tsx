@@ -278,53 +278,51 @@ const OrganizationPeopleTab = ({ queryReference, organizationId }: Props) => {
 
   return (
     <>
-      <Stack direction="column" spacing={1}>
-        {rootData.organization.canInvitePeople && (
-          <Stack direction="row" sx={{ width: 'auto' }}>
-            <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-              Invite People
-            </Button>
-          </Stack>
-        )}
-
-        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <TablePagination
-              count={
-                rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.totalCount
-                  ? rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.totalCount
-                  : 0
-              }
-              page={page}
-              onPageChange={handleChangePage}
-              rowsPerPage={pageSize}
-              onRowsPerPageChange={handlePageSizeChange}
-            />
-            <Sorting
-              options={[
-                { id: 'name', label: 'Name' },
-                { id: 'givenName', label: 'Given name' },
-                { id: 'middleName', label: 'Middle name' },
-                { id: 'familyName', label: 'Family Name' },
-                { id: 'membershipType', label: 'Membership type' },
-                { id: 'createdAt', label: 'Join date' },
-              ]}
-              defaultOption={sortingOrder.field}
-              defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-              onValueChange={handleSortingChanged}
-            />
-          </Stack>
+      {rootData.organization.canInvitePeople && (
+        <Stack direction="row" sx={{ width: 'auto' }}>
+          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
+            Invite People
+          </Button>
         </Stack>
+      )}
 
-        <Grid container spacing={1}>
-          {slicedEdges.map((edge) => (
-            <Grid key={edge.node.id}>
-              <OrganizationMemberCard data={rootData} organizationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
-            </Grid>
-          ))}
-        </Grid>
+      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+        <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <TablePagination
+            count={
+              rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.totalCount
+                ? rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.totalCount
+                : 0
+            }
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={pageSize}
+            onRowsPerPageChange={handlePageSizeChange}
+          />
+          <Sorting
+            options={[
+              { id: 'name', label: 'Name' },
+              { id: 'givenName', label: 'Given name' },
+              { id: 'middleName', label: 'Middle name' },
+              { id: 'familyName', label: 'Family Name' },
+              { id: 'membershipType', label: 'Membership type' },
+              { id: 'createdAt', label: 'Join date' },
+            ]}
+            defaultOption={sortingOrder.field}
+            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+            onValueChange={handleSortingChanged}
+          />
+        </Stack>
       </Stack>
+
+      <Grid container spacing={1}>
+        {slicedEdges.map((edge) => (
+          <Grid key={edge.node.id}>
+            <OrganizationMemberCard data={rootData} organizationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
+          </Grid>
+        ))}
+      </Grid>
 
       <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
         <DialogTitle>Invite people to join your organization</DialogTitle>

@@ -65,7 +65,7 @@ const CustomerSettings = ({ queryReference }: Props) => {
   }
 
   return (
-    <Stack direction="column" spacing={1}>
+    <>
       <Stack direction="column" spacing={1}>
         <CustomerAvatar name={rootData.me} photo={{ url: rootData.me.photoUrl }} sx={{ marginBottom: 1 }} />
       </Stack>
@@ -75,7 +75,7 @@ const CustomerSettings = ({ queryReference }: Props) => {
       <Stack direction="column" spacing={1}>
         {tabIndex === 0 && <CustomerSettingsPersonalTab rootDataRelay={rootData} />}
       </Stack>
-    </Stack>
+    </>
   );
 };
 

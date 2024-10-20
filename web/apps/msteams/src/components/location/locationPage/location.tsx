@@ -1,4 +1,3 @@
-import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { Loading } from '@repo/shared/components/loading';
@@ -112,7 +111,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
   }
 
   return (
-    <Stack direction="column" spacing={1}>
+    <>
       <LocationLink organizationId={organizationId} id={locationId} name={rootData.location?.name} excludeLink />
 
       <Tabs value={tabIndex} onChange={handleTabChange}>
@@ -139,7 +138,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
           />
         )}
       </>
-    </Stack>
+    </>
   );
 };
 

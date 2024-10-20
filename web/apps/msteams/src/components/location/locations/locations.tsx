@@ -155,7 +155,7 @@ const Locations = ({ queryReference, organizationId }: Props) => {
   };
 
   return (
-    <Stack direction="column" spacing={1}>
+    <>
       <Link href={getLocationAddLink(organizationId)}>
         <Button variant="contained" size="small" startIcon={<AddIcon />}>
           Add Location
@@ -200,7 +200,7 @@ const Locations = ({ queryReference, organizationId }: Props) => {
           );
         })}
       </Grid>
-    </Stack>
+    </>
   );
 };
 

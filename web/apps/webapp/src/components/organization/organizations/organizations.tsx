@@ -149,7 +149,7 @@ const Organizations = ({ queryReference }: Props) => {
   };
 
   return (
-    <Stack direction="column" spacing={1}>
+    <>
       <Link component={NextLink} href={getOrganizationAddLink()}>
         <Button variant="contained" size="small" startIcon={<AddIcon />}>
           Add Organization
@@ -182,7 +182,7 @@ const Organizations = ({ queryReference }: Props) => {
           </Grid>
         ))}
       </Grid>
-    </Stack>
+    </>
   );
 };
 

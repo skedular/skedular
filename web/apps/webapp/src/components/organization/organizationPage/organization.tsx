@@ -126,7 +126,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
   }
 
   return (
-    <Stack direction="column" spacing={1}>
+    <>
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} sx={{ marginBottom: 1 }} />
         <Typography variant="h6">{rootData.organization?.name}</Typography>
@@ -143,23 +143,21 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
         {rootData.organization.canViewAnalytics && <Tab label="Analytics" />}
       </Tabs>
 
-      <>
-        {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-        {tabIndex === 1 && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-        {tabIndex === 2 && <OrganizationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-        {tabIndex === 3 && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-        {tabIndex === 4 && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-        {tabIndex === 5 && rootData.organization.canModify && (
-          <OrganizationOfferingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
-        )}
-        {tabIndex === 6 && rootData.organization.canModify && (
-          <OrganizationBillingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
-        )}
-        {tabIndex === 7 && rootData.organization.canViewAnalytics && (
-          <OrganizationAnalyticsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
-        )}
-      </>
-    </Stack>
+      {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === 1 && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === 2 && <OrganizationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === 3 && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === 4 && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === 5 && rootData.organization.canModify && (
+        <OrganizationOfferingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
+      )}
+      {tabIndex === 6 && rootData.organization.canModify && (
+        <OrganizationBillingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
+      )}
+      {tabIndex === 7 && rootData.organization.canViewAnalytics && (
+        <OrganizationAnalyticsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
+      )}
+    </>
   );
 };
 

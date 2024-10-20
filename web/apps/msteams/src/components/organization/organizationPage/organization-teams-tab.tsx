@@ -169,7 +169,7 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
   }
 
   return (
-    <Stack direction="column" spacing={1}>
+    <>
       {rootData.organization.canModify && (
         <Stack direction="row" sx={{ width: 'auto' }}>
           <Link href={getTeamAddLink(rootData.organization.id)}>
@@ -218,7 +218,7 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
           );
         })}
       </Grid>
-    </Stack>
+    </>
   );
 };
 

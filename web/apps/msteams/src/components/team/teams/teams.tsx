@@ -155,7 +155,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
   };
 
   return (
-    <Stack direction="column" spacing={1}>
+    <>
       <Link href={getTeamAddLink(organizationId)}>
         <Button variant="contained" size="small" startIcon={<AddIcon />}>
           Add Team
@@ -200,7 +200,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
           );
         })}
       </Grid>
-    </Stack>
+    </>
   );
 };
 

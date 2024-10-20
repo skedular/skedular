@@ -274,7 +274,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
     }
 
     return (
-      <Stack direction="column" spacing={1}>
+      <>
         <LocationLink
           organizationId={location.organization?.uniqueId}
           id={locationId}
@@ -307,7 +307,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
             ))}
           </AvatarGroup>
         </Stack>
-      </Stack>
+      </>
     );
   };
 
@@ -318,7 +318,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
     }
 
     return (
-      <Stack direction="column" spacing={1}>
+      <>
         <TeamLink organizationId={team.organization?.uniqueId} id={teamId} name={team.name} enableViewDetails onReloadRequired={onReloadRequired} />
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <AvatarGroup max={10}>
@@ -345,7 +345,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
             ))}
           </AvatarGroup>
         </Stack>
-      </Stack>
+      </>
     );
   };
 

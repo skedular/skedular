@@ -2,7 +2,6 @@ import { Bookings } from '@/components/booking/bookingsPage';
 import { LocationLink, getLocationBaseLink } from '@/components/location';
 import { getOrganizationBaseLink } from '@/components/organization';
 import type { location_rootQuery } from '@/queries/__generated__/location_rootQuery.graphql';
-import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { Loading } from '@repo/shared/components/loading';
@@ -113,7 +112,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
   }
 
   return (
-    <Stack direction="column" spacing={1}>
+    <>
       <LocationLink organizationId={rootData.location.organization?.uniqueId} id={locationId} name={rootData.location?.name} excludeLink />
 
       <Tabs value={tabIndex} onChange={handleTabChange}>
@@ -125,22 +124,20 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
         {rootData.location.canViewAnalytics && <Tab label="Analytics" />}
       </Tabs>
 
-      <>
-        {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
-        {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
-        {tabIndex === 2 && <LocationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
-        {tabIndex === 3 && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
-        {tabIndex === 4 && <LocationDesksTab onReloadRequired={onReloadRequired} locationId={locationId} />}
-        {tabIndex === 5 && rootData.location.canViewAnalytics && (
-          <LocationAnalyticsTab
-            onReloadRequired={onReloadRequired}
-            organizationId={organizationId}
-            locationId={locationId}
-            locationName={rootData.location.name}
-          />
-        )}
-      </>
-    </Stack>
+      {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+      {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+      {tabIndex === 2 && <LocationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+      {tabIndex === 3 && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+      {tabIndex === 4 && <LocationDesksTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+      {tabIndex === 5 && rootData.location.canViewAnalytics && (
+        <LocationAnalyticsTab
+          onReloadRequired={onReloadRequired}
+          organizationId={organizationId}
+          locationId={locationId}
+          locationName={rootData.location.name}
+        />
+      )}
+    </>
   );
 };
 

@@ -130,7 +130,7 @@ const Notifications = ({ queryReference }: Props) => {
   };
 
   return (
-    <Stack direction="column" spacing={1}>
+    <>
       <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
         <TablePagination
           count={rootData.myNotifications.totalCount ? rootData.myNotifications.totalCount : 0}
@@ -154,7 +154,7 @@ const Notifications = ({ queryReference }: Props) => {
           </Grid>
         ))}
       </Grid>
-    </Stack>
+    </>
   );
 };
 
