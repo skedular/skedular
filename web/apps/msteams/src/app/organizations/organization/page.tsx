@@ -1,4 +1,4 @@
-import type { appBarBreadcrumbs } from 'components/appBar';
+import type { AppBarBreadcrumbs } from 'components/appBar';
 import { getOrganizationBaseLink } from 'components/organization';
 import { Organization } from 'components/organization/organizationPage';
 import { RootShell } from 'components/rootShell';
@@ -21,7 +21,7 @@ const OrganizationPage = () => {
     throw new Error('organizationId is required');
   }
 
-  const breadcrumps: appBarBreadcrumbs = {
+  const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
         label: 'Home',

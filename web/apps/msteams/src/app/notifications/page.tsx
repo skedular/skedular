@@ -1,10 +1,10 @@
-import type { appBarBreadcrumbs } from 'components/appBar';
+import type { AppBarBreadcrumbs } from 'components/appBar';
 import { Notifications } from 'components/notification/notifications';
 import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
 
 const NotificationsPage = () => {
-  const breadcrumps: appBarBreadcrumbs = {
+  const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
         label: 'Home',

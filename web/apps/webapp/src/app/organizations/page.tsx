@@ -1,12 +1,12 @@
 'use client';
 
-import type { appBarBreadcrumbs } from '@/components/appBar';
+import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { Organizations } from '@/components/organization/organizations';
 import { RootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
 const OrganizationsPage = () => {
-  const breadcrumps: appBarBreadcrumbs = {
+  const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
         label: 'Home',

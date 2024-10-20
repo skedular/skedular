@@ -1,4 +1,4 @@
-import type { appBarBreadcrumbs } from 'components/appBar';
+import type { AppBarBreadcrumbs } from 'components/appBar';
 import { AddLocation } from 'components/location/addLocation';
 import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
@@ -20,7 +20,7 @@ const AddLocationPage = () => {
     throw new Error('organizationId is required');
   }
 
-  const breadcrumps: appBarBreadcrumbs = {
+  const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
         label: 'Home',

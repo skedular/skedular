@@ -22,16 +22,16 @@ import type { appBar_query$key } from './__generated__/appBar_query.graphql';
 type Props = {
   rootDataRelay: appBar_query$key;
   onReloadRequired: () => void;
-  breadcrumbs?: appBarBreadcrumbs;
+  breadcrumbs?: AppBarBreadcrumbs;
 };
 
-type appBarBreadcrumbsItem = {
+type AppBarBreadcrumbsItem = {
   label: string;
   href: string;
 };
 
-export type appBarBreadcrumbs = {
-  items?: appBarBreadcrumbsItem[];
+export type AppBarBreadcrumbs = {
+  items?: AppBarBreadcrumbsItem[];
   lastItemLabel?: string;
 };
 
@@ -77,7 +77,7 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
     setSubmitFeedbackDialogOpen(false);
   };
 
-  const breadcrumpsLinks = useMemo<appBarBreadcrumbsItem[]>(() => {
+  const breadcrumpsLinks = useMemo<AppBarBreadcrumbsItem[]>(() => {
     if (!breadcrumbs?.items) {
       return [];
     }

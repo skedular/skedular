@@ -9,7 +9,7 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
-import type { appBarBreadcrumbs } from 'components/appBar';
+import type { AppBarBreadcrumbs } from 'components/appBar';
 import { AppBar } from 'components/appBar';
 import { LeftSideNavigationMenu } from 'components/navigationMenu';
 import { Observability } from 'components/observability';
@@ -24,7 +24,7 @@ type Props = {
   onReloadRequired: () => void;
   children: React.ReactNode;
   title?: string | null;
-  appBarBreadcrumbs?: appBarBreadcrumbs;
+  appBarBreadcrumbs?: AppBarBreadcrumbs;
 };
 
 const RootQuery = graphql`
@@ -160,7 +160,7 @@ const MemoRootShell = memo(RootShell);
 type RelayProps = {
   children: React.ReactNode;
   title?: string | null;
-  appBarBreadcrumbs?: appBarBreadcrumbs;
+  appBarBreadcrumbs?: AppBarBreadcrumbs;
 };
 
 const RootShellWithRelay = ({ title, children, appBarBreadcrumbs }: RelayProps) => {

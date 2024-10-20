@@ -1,12 +1,12 @@
 'use client';
 
-import type { appBarBreadcrumbs } from '@/components/appBar';
+import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { Dashboard } from '@/components/customer/dashboard';
 import { RootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
 const Home = () => {
-  const breadcrumps: appBarBreadcrumbs = {
+  const breadcrumps: AppBarBreadcrumbs = {
     lastItemLabel: 'Home',
   };
 

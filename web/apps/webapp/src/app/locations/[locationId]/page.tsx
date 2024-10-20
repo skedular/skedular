@@ -1,6 +1,6 @@
 'use client';
 
-import type { appBarBreadcrumbs } from '@/components/appBar';
+import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { getLocationBaseLink } from '@/components/location';
 import { Location } from '@/components/location/locationPage';
 import { RootShell } from '@/components/rootShell';
@@ -23,7 +23,7 @@ const LocationPage = () => {
     throw new Error('locationId is required');
   }
 
-  const breadcrumps: appBarBreadcrumbs = {
+  const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
         label: 'Home',

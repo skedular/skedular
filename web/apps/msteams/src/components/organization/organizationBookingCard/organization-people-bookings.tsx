@@ -21,7 +21,7 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { joinErrors, startOfIsoWeek } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingsWeekGrid } from 'components/booking';
-import { getOrganizationBookingsLink, getOrganizationSettingsLink, OrganizationLink } from 'components/organization';
+import { getOrganizationBookingsBaseLink, getOrganizationSettingsBaseLink, OrganizationLink } from 'components/organization';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
@@ -353,12 +353,12 @@ const OrganizationPeopleBookings = ({
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
               <Stack direction="row">
-                <Link href={getOrganizationBookingsLink(organizationId)}>
+                <Link href={getOrganizationBookingsBaseLink(organizationId)}>
                   <BookingIcon />
                 </Link>
 
                 {rootData.organization.canModify && (
-                  <Link href={getOrganizationSettingsLink(organizationId)}>
+                  <Link href={getOrganizationSettingsBaseLink(organizationId)}>
                     <SettingsIcon color="secondary" />
                   </Link>
                 )}

@@ -1,6 +1,6 @@
 'use client';
 
-import type { appBarBreadcrumbs } from '@/components/appBar';
+import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { RootShell } from '@/components/rootShell';
 import { getTeamBaseLink } from '@/components/team';
 import { Team } from '@/components/team/teamPage';
@@ -23,7 +23,7 @@ const TeamPage = () => {
     throw new Error('teamId is required');
   }
 
-  const breadcrumps: appBarBreadcrumbs = {
+  const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
         label: 'Home',
