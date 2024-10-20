@@ -1,6 +1,6 @@
 import type { AppBarBreadcrumbs } from 'components/appBar';
+import { Dashboard } from 'components/customer/dashboard';
 import { getOrganizationBaseLink } from 'components/organization';
-import { Organization } from 'components/organization/organizationPage';
 import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -33,7 +33,7 @@ const OrganizationPage = () => {
 
   return (
     <RootShell appBarBreadcrumbs={breadcrumps}>
-      <Organization organizationId={finalOrganizationId} />
+      <Dashboard organizationId={finalOrganizationId} />
     </RootShell>
   );
 };

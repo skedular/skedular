@@ -32,7 +32,7 @@ const LeftSideNavigationMenu = () => {
             <ListItemIcon>
               <BookingIcon excludeTooltip />
             </ListItemIcon>
-            <ListItemText>Bookings</ListItemText>
+            <ListItemText>Dashboard</ListItemText>
           </ListItemButton>
         </ListItem>
       </Link>
