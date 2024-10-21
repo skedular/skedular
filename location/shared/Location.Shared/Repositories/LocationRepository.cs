@@ -224,7 +224,9 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
                 location.Organization != null && location.Organization.Id == organizationId);
         }
 
-        return await query.AsNoTracking().ToListAsync(cancellationToken);
+        return await query
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<ICollection<Database.Entities.Location>> GetAllAsync(CancellationToken cancellationToken) =>
