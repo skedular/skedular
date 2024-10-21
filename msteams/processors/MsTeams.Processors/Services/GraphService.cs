@@ -87,6 +87,9 @@ public class GraphService(
         ArgumentNullException.ThrowIfNull(response);
         ArgumentNullException.ThrowIfNull(response.Value);
 
-        return response.Value.Where(item => !(bool)item.AdditionalData["isArchived"]).Select(mapper.MapTo).ToList();
+        return response.Value
+            .Where(item => !item.IsArchived.HasValue || !item.IsArchived.Value)
+            .Select(mapper.MapTo)
+            .ToList();
     }
 }
