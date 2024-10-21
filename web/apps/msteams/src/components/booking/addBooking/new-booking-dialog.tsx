@@ -211,7 +211,7 @@ const NewBookingDialog = ({
             setFrom(values.date);
 
             return (
-              <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
                 <BookingDate name="date" required={requiredFields.date} />
                 <BookingNotes name="notes" required={requiredFields.notes} />
                 <BookingDetailsSelector

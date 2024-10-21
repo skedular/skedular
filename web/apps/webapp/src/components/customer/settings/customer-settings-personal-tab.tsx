@@ -151,7 +151,7 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
       }}
       validate={validate}
       render={({ handleSubmit }) => (
-        <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+        <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
           <TextField label="Designation" name="designation" required={requiredFields.designation} />
           <TextField label="Title" name="title" required={requiredFields.title} />
           <TextField label="Name" name="name" required={requiredFields.name} />

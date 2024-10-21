@@ -336,7 +336,7 @@ const OrganizationPeopleTab = ({ queryReference, organizationId }: Props) => {
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
                 <TextField
                   label="Emails"
                   name="emails"
