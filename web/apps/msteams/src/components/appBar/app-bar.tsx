@@ -24,13 +24,15 @@ type Props = {
 };
 
 type AppBarBreadcrumbsItem = {
-  label: string;
   href: string;
+  label: string;
+  icon?: React.ReactNode;
 };
 
 export type AppBarBreadcrumbs = {
   items?: AppBarBreadcrumbsItem[];
   lastItemLabel?: string;
+  lastItemIcon?: React.ReactNode;
 };
 
 const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
@@ -73,7 +75,7 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
     setSubmitFeedbackDialogOpen(false);
   };
 
-  const breadcrumpsLinks = useMemo<AppBarBreadcrumbsItem[]>(() => {
+  const breadcrumpsLinks = useMemo(() => {
     if (!breadcrumbs?.items) {
       return [];
     }
@@ -81,6 +83,7 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
     return breadcrumbs.items.map((item) => {
       return breadcrumpsContext.has(item.href)
         ? {
+            icon: item.icon,
             href: item.href,
             label: breadcrumpsContext.get(item.href)!,
           }
@@ -88,24 +91,29 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
     });
   }, [breadcrumbs?.items, breadcrumpsContext]);
 
-  const lastBreadcrumpsLabel = useMemo<string | undefined>(() => {
+  const lastBreadcrumps = useMemo(() => {
     if (!breadcrumbs?.lastItemLabel) {
       return undefined;
     }
 
-    return breadcrumpsContext.has(breadcrumbs?.lastItemLabel) ? breadcrumpsContext.get(breadcrumbs?.lastItemLabel) : breadcrumbs.lastItemLabel;
-  }, [breadcrumbs?.lastItemLabel, breadcrumpsContext]);
+    const label = breadcrumpsContext.has(breadcrumbs?.lastItemLabel) ? breadcrumpsContext.get(breadcrumbs?.lastItemLabel) : breadcrumbs.lastItemLabel;
+    const icon = breadcrumbs?.lastItemIcon;
+
+    return [icon, label];
+  }, [breadcrumbs?.lastItemLabel, breadcrumbs?.lastItemIcon, breadcrumpsContext]);
 
   return (
     <>
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1 }}>
         <Breadcrumbs maxItems={5}>
-          {breadcrumpsLinks?.map(({ href, label }, index) => (
+          {breadcrumpsLinks?.map(({ href, icon, label }, index) => (
             <Link key={index} underline="hover" href={href}>
-              <Typography>{label}</Typography>
+              {icon && <Typography>{icon}</Typography>}
+              {!icon && label && <Typography>{label}</Typography>}
             </Link>
           ))}
-          {lastBreadcrumpsLabel && <Typography>{lastBreadcrumpsLabel}</Typography>}
+          {lastBreadcrumps && lastBreadcrumps[0] && <Typography>{lastBreadcrumps[0]}</Typography>}
+          {lastBreadcrumps && !lastBreadcrumps[0] && lastBreadcrumps[1] && <Typography>{lastBreadcrumps[1]}</Typography>}
         </Breadcrumbs>
 
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>

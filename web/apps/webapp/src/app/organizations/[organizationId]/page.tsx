@@ -4,6 +4,7 @@ import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { getOrganizationBaseLink } from '@/components/organization';
 import { Organization } from '@/components/organization/organizationPage';
 import { RootShell } from '@/components/rootShell';
+import { HomeIcon } from '@repo/shared/components/icons';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
 
@@ -26,6 +27,7 @@ const OrganizationPage = () => {
   const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
+        icon: <HomeIcon />,
         label: 'Home',
         href: '/',
       },

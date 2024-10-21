@@ -1,3 +1,4 @@
+import { HomeIcon } from '@repo/shared/components/icons';
 import type { AppBarBreadcrumbs } from 'components/appBar';
 import { RootShell } from 'components/rootShell';
 import { Teams } from 'components/team/teams';
@@ -23,6 +24,7 @@ const TeamsPage = () => {
   const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
+        icon: <HomeIcon />,
         label: 'Home',
         href: '/',
       },

@@ -4,6 +4,7 @@ import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { getOrganizationBaseLink, getOrganizationTeamsBaseLink } from '@/components/organization';
 import { RootShell } from '@/components/rootShell';
 import { AddTeam } from '@/components/team/addTeam';
+import { HomeIcon } from '@repo/shared/components/icons';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
 
@@ -26,6 +27,7 @@ const AddTeamPage = () => {
   const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
+        icon: <HomeIcon />,
         label: 'Home',
         href: '/',
       },

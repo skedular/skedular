@@ -220,3 +220,12 @@ export const ViewDetailsIcon = ({ fontSize, excludeTooltip, tip, color }: Props)
       <Fullscreen fontSize={fontSize} color={color} />
     </TooltipIcon>
   );
+
+export const HomeIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+  excludeTooltip ? (
+    <Home fontSize={fontSize} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'Home'}>
+      <Home fontSize={fontSize} color={color ?? 'action'} />
+    </TooltipIcon>
+  );

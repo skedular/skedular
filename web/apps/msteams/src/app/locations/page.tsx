@@ -1,3 +1,4 @@
+import { HomeIcon } from '@repo/shared/components/icons';
 import type { AppBarBreadcrumbs } from 'components/appBar';
 import { Locations } from 'components/location/locations';
 import { RootShell } from 'components/rootShell';
@@ -23,6 +24,7 @@ const LocationsPage = () => {
   const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
+        icon: <HomeIcon />,
         label: 'Home',
         href: '/',
       },

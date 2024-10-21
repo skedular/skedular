@@ -1,3 +1,4 @@
+import { HomeIcon } from '@repo/shared/components/icons';
 import type { AppBarBreadcrumbs } from 'components/appBar';
 import { getLocationBaseLink } from 'components/location';
 import { Location } from 'components/location/locationPage';
@@ -39,6 +40,7 @@ const LocationPage = () => {
   const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
+        icon: <HomeIcon />,
         label: 'Home',
         href: '/',
       },
