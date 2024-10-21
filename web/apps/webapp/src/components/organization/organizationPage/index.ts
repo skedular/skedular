@@ -6,4 +6,3 @@ export { default as OrganizationLocations } from './organization-locations-tab';
 export { default as OrganizationOffering } from './organization-offering-tab';
 export { default as OrganizationPeople } from './organization-people-tab';
 export { default as OrganizationTeams } from './organization-teams-tab';
-

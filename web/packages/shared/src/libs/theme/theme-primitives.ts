@@ -3,6 +3,14 @@ import { alpha, createTheme, PaletteMode, Shadows } from '@mui/material/styles';
 const defaultTheme = createTheme();
 const customShadows: Shadows = [...defaultTheme.shadows];
 
+export const coal = 'rgb(30, 33, 48)';
+export const emerald = 'rgb(116, 215, 126)';
+export const sandstone = 'rgb(239, 238, 235)';
+export const violet = 'rgb(202,185,255)';
+export const aqua = 'rgb(161,217,232)';
+export const subbeam = 'rgb(249,214,110)';
+export const flame = 'rgb(254,147,111)';
+
 export const brand = {
   50: 'hsl(210, 100%, 95%)',
   100: 'hsl(210, 100%, 92%)',
@@ -67,6 +75,10 @@ export const red = {
   800: 'hsl(0, 95%, 12%)',
   900: 'hsl(0, 93%, 6%)',
 };
+
+const fontFamily = ['Inter'].join(',');
+const headerFontFamily = ['Barlow'].join(',');
+const bodyFontFamily = ['Inter'].join(',');
 
 const getDesignTokens = (mode: PaletteMode) => {
   customShadows[1] =
@@ -157,51 +169,63 @@ const getDesignTokens = (mode: PaletteMode) => {
       },
     },
     typography: {
+      fontFamily,
       h1: {
         fontSize: defaultTheme.typography.pxToRem(48),
         fontWeight: 600,
         lineHeight: 1.2,
         letterSpacing: -0.5,
+        fontFamily: headerFontFamily,
       },
       h2: {
         fontSize: defaultTheme.typography.pxToRem(36),
         fontWeight: 600,
         lineHeight: 1.2,
+        fontFamily: headerFontFamily,
       },
       h3: {
         fontSize: defaultTheme.typography.pxToRem(30),
         lineHeight: 1.2,
+        fontFamily: headerFontFamily,
       },
       h4: {
         fontSize: defaultTheme.typography.pxToRem(24),
         fontWeight: 600,
         lineHeight: 1.5,
+        fontFamily: headerFontFamily,
       },
       h5: {
         fontSize: defaultTheme.typography.pxToRem(20),
         fontWeight: 600,
+        fontFamily: bodyFontFamily,
       },
       h6: {
         fontSize: defaultTheme.typography.pxToRem(18),
         fontWeight: 600,
+        fontFamily: bodyFontFamily,
       },
       subtitle1: {
         fontSize: defaultTheme.typography.pxToRem(18),
+        fontFamily: bodyFontFamily,
       },
       subtitle2: {
         fontSize: defaultTheme.typography.pxToRem(14),
         fontWeight: 500,
+        fontFamily: bodyFontFamily,
       },
       body1: {
         fontSize: defaultTheme.typography.pxToRem(14),
+        fontFamily: bodyFontFamily,
       },
       body2: {
         fontSize: defaultTheme.typography.pxToRem(14),
         fontWeight: 400,
+        fontFamily: bodyFontFamily,
       },
       caption: {
         fontSize: defaultTheme.typography.pxToRem(12),
         fontWeight: 400,
+        fontFamily: bodyFontFamily,
       },
     },
     shape: {

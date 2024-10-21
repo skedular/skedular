@@ -10,16 +10,8 @@ import {
 } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import { useContext } from 'react';
-
-const inter = Inter({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const paletteMode = useContext(PaletteModeContext);
@@ -52,7 +44,7 @@ const ThemedRootLayout = ({ children }: { children: React.ReactNode }) => {
           defer
         />
       )}
-      <body className={inter.variable}>
+      <body>
         <PaletteModeProvider>
           <RootLayout>{children}</RootLayout>
         </PaletteModeProvider>
