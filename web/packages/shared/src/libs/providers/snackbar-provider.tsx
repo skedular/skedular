@@ -10,7 +10,11 @@ const SnackbarProvider = ({ children }: Props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  return <Provider maxSnack={isMobile ? 3 : 10}>{children}</Provider>;
+  return (
+    <Provider maxSnack={isMobile ? 2 : 5} autoHideDuration={3000}>
+      {children}
+    </Provider>
+  );
 };
 
 export default SnackbarProvider;
