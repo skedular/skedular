@@ -6,17 +6,10 @@ import { memo } from 'react';
 
 const Logo = () => (
   <Link href="/" style={{ textDecoration: 'none' }}>
-    <Stack direction="row">
+    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
       <Box component="img" src="/images/logo.png" sx={{ width: 60, height: 60 }} alt="UnityHub Logo" />
-      <Typography
-        variant="h4"
-        sx={{
-          fontWeight: 700,
-          color: 'primary.main',
-          py: 1.2,
-        }}
-      >
-        unityhub.io
+      <Typography variant="h3" sx={{ fontWeight: 700 }}>
+        UnityHub
       </Typography>
     </Stack>
   </Link>
