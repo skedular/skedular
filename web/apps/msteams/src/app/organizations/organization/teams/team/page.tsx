@@ -1,6 +1,6 @@
 import { HomeIcon } from '@repo/shared/components/icons';
 import type { AppBarBreadcrumbs } from 'components/appBar';
-import { getOrganizationBaseLink, getOrganizationTeamsBaseLink } from 'components/organization';
+import { getOrganizationTeamsBaseLink } from 'components/organization';
 import { RootShell } from 'components/rootShell';
 import { getTeamBaseLink } from 'components/team';
 import { Team } from 'components/team/teamPage';
@@ -43,10 +43,6 @@ const TeamPage = () => {
         icon: <HomeIcon />,
         label: 'Home',
         href: '/',
-      },
-      {
-        label: '',
-        href: getOrganizationBaseLink(finalOrganizationId),
       },
       {
         label: 'Teams',

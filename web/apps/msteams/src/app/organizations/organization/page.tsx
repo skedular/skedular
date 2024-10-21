@@ -1,7 +1,6 @@
 import { HomeIcon } from '@repo/shared/components/icons';
 import type { AppBarBreadcrumbs } from 'components/appBar';
 import { Dashboard } from 'components/customer/dashboard';
-import { getOrganizationBaseLink } from 'components/organization';
 import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -23,14 +22,8 @@ const OrganizationPage = () => {
   }
 
   const breadcrumps: AppBarBreadcrumbs = {
-    items: [
-      {
-        icon: <HomeIcon />,
-        label: 'Home',
-        href: '/',
-      },
-    ],
-    lastItemLabel: getOrganizationBaseLink(finalOrganizationId),
+    lastItemIcon: <HomeIcon />,
+    lastItemLabel: 'Home',
   };
 
   return (

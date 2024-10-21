@@ -31,7 +31,6 @@ import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingsWeekGrid } from 'components/booking';
 import { LocationLink, getLocationBookingsLink, getLocationSettingsLink } from 'components/location';
-import { OrganizationLink } from 'components/organization';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
@@ -381,9 +380,6 @@ const LocationPeopleBookings = ({
           title={
             <Stack direction="column">
               <LocationLink organizationId={organizationId} id={locationId} name={locationName} />
-              {rootData.location.organization && (
-                <OrganizationLink id={rootData.location.organization.uniqueId} name={rootData.location.organization.name} />
-              )}
             </Stack>
           }
           subheader={

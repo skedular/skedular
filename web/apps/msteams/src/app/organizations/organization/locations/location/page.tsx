@@ -2,7 +2,7 @@ import { HomeIcon } from '@repo/shared/components/icons';
 import type { AppBarBreadcrumbs } from 'components/appBar';
 import { getLocationBaseLink } from 'components/location';
 import { Location } from 'components/location/locationPage';
-import { getOrganizationBaseLink, getOrganizationLocationsBaseLink } from 'components/organization';
+import { getOrganizationLocationsBaseLink } from 'components/organization';
 import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -43,10 +43,6 @@ const LocationPage = () => {
         icon: <HomeIcon />,
         label: 'Home',
         href: '/',
-      },
-      {
-        label: '',
-        href: getOrganizationBaseLink(finalOrganizationId),
       },
       {
         label: 'Locations',

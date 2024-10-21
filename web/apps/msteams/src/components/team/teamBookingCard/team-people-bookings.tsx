@@ -21,7 +21,6 @@ import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingsWeekGrid } from 'components/booking';
-import { OrganizationLink } from 'components/organization';
 import { TeamLink, getTeamBookingsLink, getTeamSettingsLink } from 'components/team';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
@@ -107,10 +106,6 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
           hasFutureBooking
           canModify
           canDelete
-          organization {
-            uniqueId
-            name
-          }
         }
         ...bookingsWeekGrid_query
         ...bookingsWeekGrid_allBookings_query
@@ -352,7 +347,6 @@ const TeamPeopleBookings = ({ rootDataRelay, organizationId, teamId, teamName, t
           title={
             <Stack direction="column">
               <TeamLink organizationId={organizationId} id={teamId} name={teamName} />
-              {rootData.team.organization && <OrganizationLink id={rootData.team.organization.uniqueId} name={rootData.team.organization.name} />}
             </Stack>
           }
           subheader={

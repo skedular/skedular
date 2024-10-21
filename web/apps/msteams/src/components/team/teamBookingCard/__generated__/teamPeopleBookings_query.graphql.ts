@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af8036c060f66e5c60fb0618dcdd951c>>
+ * @generated SignedSource<<50d73e4dddfb7a276a7eb0c067017d7d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,10 +22,6 @@ export type teamPeopleBookings_query$data = {
     readonly canModify: boolean;
     readonly hasFutureBooking: boolean;
     readonly name: string;
-    readonly organization: {
-      readonly name: string;
-      readonly uniqueId: string;
-    } | null | undefined;
   } | null | undefined;
   readonly teamMembers: ReadonlyArray<{
     readonly customer: {
@@ -212,19 +208,6 @@ return {
           "kind": "ScalarField",
           "name": "canDelete",
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "TeamOrganizationDetails",
-          "kind": "LinkedField",
-          "name": "organization",
-          "plural": false,
-          "selections": [
-            (v1/*: any*/),
-            (v2/*: any*/)
-          ],
-          "storageKey": null
         }
       ],
       "storageKey": null
@@ -245,6 +228,6 @@ return {
 };
 })();
 
-(node as any).hash = "878c27168fed06b22035579f8468fb52";
+(node as any).hash = "89500b109e59d8bee603660740466f68";
 
 export default node;
