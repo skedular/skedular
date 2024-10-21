@@ -1,5 +1,3 @@
-'use client';
-
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import { PaletteMode } from '@mui/material/styles';
 import { useMemo } from 'react';

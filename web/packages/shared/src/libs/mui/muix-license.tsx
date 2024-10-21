@@ -1,5 +1,3 @@
-'use client';
-
 import { generateLicense, LicenseInfo } from '@mui/x-license-pro';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';

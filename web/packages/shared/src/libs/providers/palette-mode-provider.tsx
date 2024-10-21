@@ -1,5 +1,3 @@
-'use client';
-
 import { useMediaQuery } from '@mui/material';
 import { PaletteMode } from '@mui/material/styles';
 import { createContext, useEffect, useState } from 'react';

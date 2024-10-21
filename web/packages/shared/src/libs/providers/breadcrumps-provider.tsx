@@ -1,5 +1,3 @@
-'use client';
-
 import { createContext, useState } from 'react';
 
 export const BreadcrumpsContext = createContext<Map<string, string>>(new Map());
