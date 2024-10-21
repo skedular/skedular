@@ -1,9 +1,6 @@
 import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { EditIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -70,13 +67,8 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const [editing, setEditing] = useState(false);
   const validate = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
-
-  const handleEditClick = () => {
-    setEditing(true);
-  };
 
   const handleLocationUpdateClick = ({ name, about, timezone }: LocationDetails) => {
     if (!rootData.location) {
@@ -104,7 +96,10 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        setEditing(false);
+        enqueueSnackbar(`Location details updated.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update location '${name}'. Error: ${error.message}`, {
@@ -125,10 +120,6 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
     });
   };
 
-  const handleCancelClick = () => {
-    setEditing(false);
-  };
-
   if (!rootData.location) {
     return null;
   }
@@ -136,65 +127,28 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
   const location = rootData.location;
 
   return (
-    <>
-      {!editing && (
-        <>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">About</Typography>
-            <Typography variant="body1">{location.about}</Typography>
+    <Form
+      onSubmit={handleLocationUpdateClick}
+      initialValues={{
+        name: location.name,
+        about: location.about,
+        timezone: location.timezone,
+      }}
+      validate={validate}
+      render={({ handleSubmit }) => (
+        <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+          <TextField label="Name" name="name" required={requiredFields.name} />
+          <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
+          <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+
+          <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+            <Button color="primary" variant="contained" type="submit">
+              Update
+            </Button>
           </Stack>
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Timezone</Typography>
-            <Typography variant="body1">{location.timezone}</Typography>
-          </Stack>
-
-          {location.organization && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="h6">Organization</Typography>
-
-              <Typography variant="body1">{location.organization.name}</Typography>
-            </Stack>
-          )}
-          {rootData.location.canModify && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditClick}>
-                Edit
-              </Button>
-            </Stack>
-          )}
-        </>
+        </Stack>
       )}
-      {editing && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
-          <Form
-            onSubmit={handleLocationUpdateClick}
-            initialValues={{
-              name: location.name,
-              about: location.about,
-              timezone: location.timezone,
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
-                <TextField label="Name" name="name" required={requiredFields.name} />
-                <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-                <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Update
-                  </Button>
-                </Stack>
-              </Stack>
-            )}
-          />
-        </Paper>
-      )}
-    </>
+    />
   );
 };
 

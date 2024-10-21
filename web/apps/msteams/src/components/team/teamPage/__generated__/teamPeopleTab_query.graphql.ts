@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fbc4acca90028a24acef0ef6d557151b>>
+ * @generated SignedSource<<a8fecbce7002da9ebce4f32ee336a2ee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,6 +27,7 @@ export type teamPeopleTab_query$data = {
     readonly organization: {
       readonly name: string;
     } | null | undefined;
+    readonly timezone: string | null | undefined;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"organizationMemberSelector_query" | "teamMemberCard_query">;
   readonly " $fragmentType": "teamPeopleTab_query";
@@ -91,6 +92,13 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "about",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "timezone",
           "storageKey": null
         },
         {
@@ -162,6 +170,6 @@ return {
 };
 })();
 
-(node as any).hash = "cfcef1301345e064c87ceeb2e4e3ece1";
+(node as any).hash = "e6530c8b7a506f0a9c0da5910ec01d4f";
 
 export default node;

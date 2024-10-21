@@ -2,14 +2,7 @@ import { OrganizationMultipleChoicesIndustries } from '@/components/organization
 import type { organizationAboutTab_rootQuery } from '@/queries/__generated__/organizationAboutTab_rootQuery.graphql';
 import type { organizationAboutTab_updateOrganizationMutation } from '@/queries/__generated__/organizationAboutTab_updateOrganizationMutation.graphql';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
-import Grid from '@mui/material/Grid2';
-import MuiLink from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import { EditIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -60,8 +53,6 @@ type OrganizationDetails = {
   industrySubCategoryIds: string[];
 };
 
-const maxChipTextWidthToDisplay = 200;
-
 const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three charcters long.').required('Organization name is required'),
   about: string().nullable(),
@@ -89,14 +80,8 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const [editing, setEditing] = useState(false);
   const validate = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
-
-  const handleEditClick = () => {
-    setEditing(true);
-  };
-
   const organization = rootData.organization;
 
   const handleUpdateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
@@ -127,7 +112,10 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
           return;
         }
 
-        setEditing(false);
+        enqueueSnackbar(`Organization details updated.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update organization '${name}'. Error: ${error.message}`, {
@@ -152,94 +140,39 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
     });
   };
 
-  const handleCancelClick = () => {
-    setEditing(false);
-  };
-
   if (!organization) {
     return <></>;
   }
 
   return (
-    <>
-      {!editing && (
-        <>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">About</Typography>
-            <Typography variant="body1">{organization.about}</Typography>
-          </Stack>
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Website</Typography>
-            {organization.website && (
-              <MuiLink href={organization?.website} target="_blank" rel="noopener noreferrer">
-                {organization.website}
-              </MuiLink>
-            )}
-          </Stack>
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Industry</Typography>
-            <Grid sx={{ marginLeft: 1 }}>
-              {organization.industrySubCategories.map(({ id, name }) => (
-                <Tooltip key={id} title={name}>
-                  <Chip
-                    label={name}
-                    sx={{
-                      marginRight: 1,
-                      maxWidth: maxChipTextWidthToDisplay,
-                    }}
-                  />
-                </Tooltip>
-              ))}
-            </Grid>
-          </Stack>
-
-          {rootData.organization.canModify && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditClick}>
-                Edit
-              </Button>
-            </Stack>
-          )}
-        </>
-      )}
-      {editing && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
-          <Form
-            onSubmit={handleUpdateClick}
-            initialValues={{
-              name: organization.name,
-              about: organization.about,
-              website: organization.website,
-              industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
-                <TextField label="Name" name="name" required={requiredFields.name} />
-                <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-                <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />
-                <OrganizationMultipleChoicesIndustries
-                  rootDataRelay={rootData}
-                  name="industrySubCategoryIds"
-                  required={requiredFields.industrySubCategoryIds}
-                />
-
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Update
-                  </Button>
-                </Stack>
-              </Stack>
-            )}
+    <Form
+      onSubmit={handleUpdateClick}
+      initialValues={{
+        name: organization.name,
+        about: organization.about,
+        website: organization.website,
+        industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
+      }}
+      validate={validate}
+      render={({ handleSubmit }) => (
+        <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+          <TextField label="Name" name="name" required={requiredFields.name} />
+          <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
+          <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />
+          <OrganizationMultipleChoicesIndustries
+            rootDataRelay={rootData}
+            name="industrySubCategoryIds"
+            required={requiredFields.industrySubCategoryIds}
           />
-        </Paper>
+
+          <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+            <Button color="primary" variant="contained" type="submit">
+              Update
+            </Button>
+          </Stack>
+        </Stack>
       )}
-    </>
+    />
   );
 };
 

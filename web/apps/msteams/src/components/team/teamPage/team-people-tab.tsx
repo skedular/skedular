@@ -96,6 +96,7 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
           id
           name
           about
+          timezone
           organization {
             name
           }
@@ -264,6 +265,7 @@ const TeamPeopleTab = ({ queryReference, organizationId, teamId }: Props) => {
           id: rootData.team.id,
           name: rootData.team.name,
           about: rootData.team.about,
+          timezone: rootData.team.timezone,
           customerIds: [],
           organizationId,
           organizationMemberIds: [...new Set(organizationMemberIds)],

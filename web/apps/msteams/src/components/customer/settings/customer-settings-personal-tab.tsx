@@ -1,16 +1,13 @@
 import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { EditIcon } from '@repo/shared/components/icons';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
 import { object, string } from 'yup';
@@ -78,13 +75,8 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const [editing, setEditing] = useState(false);
   const validate = makeValidate(settingsSchema);
   const requiredFields = makeRequired(settingsSchema);
-
-  const handleEditClick = () => {
-    setEditing(true);
-  };
 
   const handleSettingsUpdateClick = ({ timezone, designation, title, name, givenName, middleName, familyName }: SettingsDetails) => {
     if (!rootData.me) {
@@ -114,7 +106,10 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
           return;
         }
 
-        setEditing(false);
+        enqueueSnackbar(`Personal settings updated.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update personal details. Error: ${error.message}`, {
@@ -139,97 +134,41 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
     });
   };
 
-  const handleCancelClick = () => {
-    setEditing(false);
-  };
-
   if (!rootData.me) {
     return null;
   }
 
   return (
-    <>
-      {!editing && (
-        <>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Designation</Typography>
-            <Typography variant="body1">{rootData.me.designation}</Typography>
-          </Stack>
+    <Form
+      onSubmit={handleSettingsUpdateClick}
+      initialValues={{
+        timezone: rootData.me.timezone,
+        designation: rootData.me.designation,
+        title: rootData.me.title,
+        name: rootData.me.name,
+        givenName: rootData.me.givenName,
+        middleName: rootData.me.middleName,
+        familyName: rootData.me.familyName,
+      }}
+      validate={validate}
+      render={({ handleSubmit }) => (
+        <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+          <TextField label="Designation" name="designation" required={requiredFields.designation} />
+          <TextField label="Title" name="title" required={requiredFields.title} />
+          <TextField label="Name" name="name" required={requiredFields.name} />
+          <TextField label="Given Name" name="givenName" required={requiredFields.givenName} />
+          <TextField label="Middle Name" name="middleName" required={requiredFields.middleName} />
+          <TextField label="Family Name" name="familyName" required={requiredFields.familyName} />
+          <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Title</Typography>
-            <Typography variant="body1">{rootData.me.title}</Typography>
-          </Stack>
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Name</Typography>
-            <Typography variant="body1">{rootData.me.name}</Typography>
-          </Stack>
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Given Name</Typography>
-            <Typography variant="body1">{rootData.me.givenName}</Typography>
-          </Stack>
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Middle Name</Typography>
-            <Typography variant="body1">{rootData.me.middleName}</Typography>
-          </Stack>
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Family Name</Typography>
-            <Typography variant="body1">{rootData.me.familyName}</Typography>
-          </Stack>
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Timezone</Typography>
-            <Typography variant="body1">{rootData.me.timezone}</Typography>
-          </Stack>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditClick}>
-              Edit
+          <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+            <Button color="primary" variant="contained" type="submit">
+              Update
             </Button>
           </Stack>
-        </>
+        </Stack>
       )}
-      {editing && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
-          <Form
-            onSubmit={handleSettingsUpdateClick}
-            initialValues={{
-              timezone: rootData.me.timezone,
-              designation: rootData.me.designation,
-              title: rootData.me.title,
-              name: rootData.me.name,
-              givenName: rootData.me.givenName,
-              middleName: rootData.me.middleName,
-              familyName: rootData.me.familyName,
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
-                <TextField label="Designation" name="designation" required={requiredFields.designation} />
-                <TextField label="Title" name="title" required={requiredFields.title} />
-                <TextField label="Name" name="name" required={requiredFields.name} />
-                <TextField label="Given Name" name="givenName" required={requiredFields.givenName} />
-                <TextField label="Middle Name" name="middleName" required={requiredFields.middleName} />
-                <TextField label="Family Name" name="familyName" required={requiredFields.familyName} />
-                <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Update
-                  </Button>
-                </Stack>
-              </Stack>
-            )}
-          />
-        </Paper>
-      )}
-    </>
+    />
   );
 };
 

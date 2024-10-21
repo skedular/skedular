@@ -1,12 +1,8 @@
-import { OrganizationMemberSelector } from '@/components/organization';
 import type { teamAboutTab_rootQuery } from '@/queries/__generated__/teamAboutTab_rootQuery.graphql';
 import type { teamAboutTab_updateTeamMutation } from '@/queries/__generated__/teamAboutTab_updateTeamMutation.graphql';
 import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { EditIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -19,7 +15,7 @@ import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { array, object, string } from 'yup';
+import { object, string } from 'yup';
 
 type Props = {
   queryReference: PreloadedQuery<teamAboutTab_rootQuery, Record<string, unknown>>;
@@ -61,14 +57,12 @@ type TeamDetails = {
   name: string;
   about: string | null;
   timezone: string;
-  organizationMemberIds: string[];
 };
 
 const teamSchema = object({
   name: string().min(3, 'Team name must be at least three charcters long.').required('Team name is required'),
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
-  organizationMemberIds: array().nullable(),
 });
 
 const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
@@ -98,15 +92,10 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
   `);
 
   const { enqueueSnackbar } = useSnackbar();
-  const [editing, setEditing] = useState(false);
   const validate = makeValidate(teamSchema);
   const requiredFields = makeRequired(teamSchema);
 
-  const handleEditClick = () => {
-    setEditing(true);
-  };
-
-  const handleTeamUpdateClick = ({ name, about, timezone, organizationMemberIds }: TeamDetails) => {
+  const handleTeamUpdateClick = ({ name, about, timezone }: TeamDetails) => {
     if (!rootData.team) {
       return;
     }
@@ -121,7 +110,9 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
           timezone,
           customerIds: rootData.team.members.filter((member) => member.customer).map((member) => member.customer.uniqueId),
           organizationId,
-          organizationMemberIds: [...new Set(organizationMemberIds)],
+          organizationMemberIds: rootData.team.members
+            .filter((member) => member.organizationMember)
+            .map((member) => member.organizationMember!.uniqueId),
         },
       },
       onCompleted: (_, errors) => {
@@ -134,7 +125,10 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        setEditing(false);
+        enqueueSnackbar(`Team details updated.`, {
+          variant: 'success',
+          anchorOrigin,
+        });
       },
       onError: (error) => {
         enqueueSnackbar(`Failed to update team '${name}'. Error: ${error.message}`, {
@@ -157,10 +151,6 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
     });
   };
 
-  const handleCancelClick = () => {
-    setEditing(false);
-  };
-
   if (!rootData.team) {
     return null;
   }
@@ -168,76 +158,31 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
   const team = rootData.team;
 
   return (
-    <>
-      {!editing && (
-        <>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">About</Typography>
-            <Typography variant="body1">{team.about}</Typography>
-          </Stack>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Timezone</Typography>
-            <Typography variant="body1">{team.timezone}</Typography>
-          </Stack>
-          {team.organization && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="h6">Organization</Typography>
-              <Typography variant="body1">{team.organization.name}</Typography>
-            </Stack>
-          )}
-          {rootData.team.canModify && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditClick}>
-                Edit
-              </Button>
-            </Stack>
-          )}
-        </>
-      )}
-      {editing && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
-          <Form
-            onSubmit={handleTeamUpdateClick}
-            initialValues={{
-              name: team.name,
-              about: team.about,
-              timezone: team.timezone,
-              organizationMemberIds: rootData.team.members
-                .filter((member) => member.organizationMember)
-                .map(({ organizationMember }) => organizationMember!.uniqueId),
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
-                <TextField label="Name" name="name" required={requiredFields.name} />
-                <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-                <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+    <Form
+      onSubmit={handleTeamUpdateClick}
+      initialValues={{
+        name: team.name,
+        about: team.about,
+        timezone: team.timezone,
+        organizationMemberIds: rootData.team.members
+          .filter((member) => member.organizationMember)
+          .map(({ organizationMember }) => organizationMember!.uniqueId),
+      }}
+      validate={validate}
+      render={({ handleSubmit }) => (
+        <Stack direction="column" spacing={1} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+          <TextField label="Name" name="name" required={requiredFields.name} />
+          <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
+          <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
 
-                {rootData.team?.organization && (
-                  <OrganizationMemberSelector
-                    rootDataRelay={rootData}
-                    organizationId={organizationId}
-                    name="organizationMemberIds"
-                    required={requiredFields.organizationMemberIds}
-                    multiple={true}
-                    useMemberId={true}
-                  />
-                )}
-
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Update
-                  </Button>
-                </Stack>
-              </Stack>
-            )}
-          />
-        </Paper>
+          <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+            <Button color="primary" variant="contained" type="submit">
+              Update
+            </Button>
+          </Stack>
+        </Stack>
       )}
-    </>
+    />
   );
 };
 
