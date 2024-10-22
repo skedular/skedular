@@ -34,6 +34,7 @@ import { LocationLink, getLocationBookingsLink, getLocationSettingsLink } from '
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
+import type { JSX } from 'react';
 import { memo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
 import type { locationPeopleBookings_addCustomerDefaultLocationMutation } from './__generated__/locationPeopleBookings_addCustomerDefaultLocationMutation.graphql';

@@ -25,6 +25,7 @@ import { TeamLink, getTeamBookingsLink, getTeamSettingsLink } from 'components/t
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
+import type { JSX } from 'react';
 import { memo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
 import type { teamPeopleBookings_addCustomerDefaultTeamMutation } from './__generated__/teamPeopleBookings_addCustomerDefaultTeamMutation.graphql';

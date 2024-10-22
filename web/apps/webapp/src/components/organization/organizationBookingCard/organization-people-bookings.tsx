@@ -29,6 +29,7 @@ import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { useSnackbar } from 'notistack';
+import type { JSX } from 'react';
 import { memo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 

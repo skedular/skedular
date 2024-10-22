@@ -1,10 +1,10 @@
 import logger from '@repo/shared/libs/logger';
 import { jwtDecode } from 'jwt-decode';
+import { nanoid } from 'nanoid';
 import type { AuthOptions } from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import CognitoProvider from 'next-auth/providers/cognito';
 import GoogleProvider from 'next-auth/providers/google';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface TokenExtended {
   accessToken: string;
@@ -172,7 +172,7 @@ const authOptions: AuthOptions = {
   ],
   callbacks: {
     async signIn({ user, profile }) {
-      const corelationId = uuidv4();
+      const corelationId = nanoid();
 
       logger.info({ corelationId, user, profile }, 'User is trying to sign in...');
 

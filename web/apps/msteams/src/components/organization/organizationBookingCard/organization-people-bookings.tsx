@@ -25,6 +25,7 @@ import { getOrganizationBookingsBaseLink, getOrganizationSettingsBaseLink, Organ
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
+import type { JSX } from 'react';
 import { memo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
 import type { organizationPeopleBookings_clearCustomerDefaultOrganizationMutation } from './__generated__/organizationPeopleBookings_clearCustomerDefaultOrganizationMutation.graphql';

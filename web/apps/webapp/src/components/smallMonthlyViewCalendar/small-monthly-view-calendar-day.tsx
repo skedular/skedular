@@ -11,6 +11,7 @@ import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
+import type { JSX } from 'react';
 import { useContext } from 'react';
 import { graphql, useMutation } from 'react-relay';
 
