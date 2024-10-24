@@ -70,7 +70,7 @@ public class NotificationOutboxPublisher(
             Subject = $"You are invited to join location {location.Name}",
             Greetings = "Hi",
             LocationName = string.IsNullOrWhiteSpace(location.Name) ? string.Empty : location.Name,
-            LocationLink = Url.Combine(applicationConfiguration.WebAppBaseDomain, "notification"),
+            LocationLink = Url.Combine(applicationConfiguration.WebAppBaseDomain, "notifications"),
             CustomerName = inviterCustomer.GetCustomerName()
         };
         var templateData = JsonSerializer.Serialize(data);
@@ -118,7 +118,7 @@ public class NotificationOutboxPublisher(
             Subject = $"You are invited to join location {location.Name}",
             Greetings = $"Hi {inviteeCustomer.GetCustomerName()}",
             LocationName = string.IsNullOrWhiteSpace(location.Name) ? string.Empty : location.Name,
-            LocationLink = Url.Combine(applicationConfiguration.WebAppBaseDomain, "notification"),
+            LocationLink = Url.Combine(applicationConfiguration.WebAppBaseDomain, "notifications"),
             CustomerName = inviterCustomer.GetCustomerName()
         };
         var templateData = JsonSerializer.Serialize(data);
