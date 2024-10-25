@@ -22,8 +22,8 @@ import OrganizationAboutTab from './organization-about-tab';
 import OrganizationAnalyticsTab from './organization-analytics-tab';
 import OrganizationBillingTab from './organization-billing-tab';
 import OrganizationLocationsTab from './organization-locations-tab';
+import OrganizationMembersTab from './organization-members-tab';
 import OrganizationOfferingTab from './organization-offering-tab';
-import OrganizationPeopleTab from './organization-people-tab';
 import OrganizationTeamsTab from './organization-teams-tab';
 
 type Props = {
@@ -145,7 +145,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
 
       {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === 1 && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === 2 && <OrganizationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === 2 && <OrganizationMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === 3 && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === 4 && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === 5 && rootData.organization.canModify && (

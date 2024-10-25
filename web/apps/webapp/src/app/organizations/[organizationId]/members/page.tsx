@@ -2,7 +2,7 @@
 
 import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { getOrganizationBaseLink } from '@/components/organization/organization-link';
-import { OrganizationPeople } from '@/components/organization/organizationPage';
+import { OrganizationMembers } from '@/components/organization/organizationPage';
 import { RootShell } from '@/components/rootShell';
 import { HomeIcon } from '@repo/shared/components/icons';
 import { useParams } from 'next/navigation';
@@ -43,7 +43,7 @@ const OrganizationsPage = () => {
 
   return (
     <RootShell appBarBreadcrumbs={breadcrumps}>
-      <OrganizationPeople onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <OrganizationMembers onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
     </RootShell>
   );
 };

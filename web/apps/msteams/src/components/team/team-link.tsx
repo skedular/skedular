@@ -27,7 +27,7 @@ export const getTeamBaseLink = (id: string, organizationId: string) => `/organiz
 export const getTeamAddLink = (organizationId: string) => `/organizations/${organizationId}/teams/add`;
 export const getTeamBookingsLink = (id: string, organizationId: string) => `${getTeamBaseLink(id, organizationId)}?tab=bookings`;
 export const getTeamSettingsLink = (id: string, organizationId: string) => `${getTeamBaseLink(id, organizationId)}?tab=about`;
-export const getTeamPeopleLink = (id: string, organizationId: string) => `${getTeamBaseLink(id, organizationId)}?tab=people`;
+export const getTeamMembersLink = (id: string, organizationId: string) => `${getTeamBaseLink(id, organizationId)}?tab=people`;
 
 const TeamLink = ({
   organizationId,
@@ -49,7 +49,7 @@ const TeamLink = ({
   } else if (settingsLink) {
     href = getTeamSettingsLink(id, organizationId);
   } else if (peopleLink) {
-    href = getTeamPeopleLink(id, organizationId);
+    href = getTeamMembersLink(id, organizationId);
   } else {
     href = getTeamBaseLink(id, organizationId);
   }

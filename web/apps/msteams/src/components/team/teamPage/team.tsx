@@ -15,7 +15,7 @@ import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useSearchParams } from 'react-router-dom';
 import type { team_rootQuery } from './__generated__/team_rootQuery.graphql';
 import TeamAboutTab from './team-about-tab';
-import TeamPeopleTab from './team-people-tab';
+import TeamMembersTab from './team-members-tab';
 
 type Props = {
   queryReference: PreloadedQuery<team_rootQuery, Record<string, unknown>>;
@@ -106,7 +106,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
 
       {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
       {tabIndex === 1 && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
-      {tabIndex === 2 && <TeamPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+      {tabIndex === 2 && <TeamMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
     </>
   );
 };

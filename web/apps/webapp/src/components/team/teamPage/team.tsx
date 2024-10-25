@@ -15,7 +15,7 @@ import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import TeamAboutTab from './team-about-tab';
-import TeamPeopleTab from './team-people-tab';
+import TeamMembersTab from './team-members-tab';
 
 type Props = {
   queryReference: PreloadedQuery<team_rootQuery, Record<string, unknown>>;
@@ -107,7 +107,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
 
       {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
       {tabIndex === 1 && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
-      {tabIndex === 2 && <TeamPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+      {tabIndex === 2 && <TeamMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
     </>
   );
 };

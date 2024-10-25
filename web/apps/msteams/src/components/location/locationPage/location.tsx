@@ -17,7 +17,7 @@ import type { location_rootQuery } from './__generated__/location_rootQuery.grap
 import LocationAboutTab from './location-about-tab';
 import LocationAnalyticsTab from './location-analytics-tab';
 import LocationDesksTab from './location-desks-tab';
-import LocationPeopleTab from './location-people-tab';
+import LocationMembersTab from './location-members-tab';
 import LocationZonesTab from './location-zones-tab';
 
 type Props = {
@@ -126,7 +126,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
       <>
         {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
-        {tabIndex === 2 && <LocationPeopleTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+        {tabIndex === 2 && <LocationMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === 3 && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
         {tabIndex === 4 && <LocationDesksTab onReloadRequired={onReloadRequired} locationId={locationId} />}
         {tabIndex === 5 && rootData.location.canViewAnalytics && (

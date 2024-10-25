@@ -30,7 +30,7 @@ export const getLocationBaseLink = (id: string, organizationId: string) => `/org
 export const getLocationAddLink = (organizationId: string) => `/organizations/${organizationId}/locations/add`;
 export const getLocationBookingsLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=bookings`;
 export const getLocationSettingsLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=about`;
-export const getLocationPeopleLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=people`;
+export const getLocationMembersLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=people`;
 export const getLocationZonesLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=zones`;
 export const getLocationDesksLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=desks`;
 export const getLocationAnalyticsLink = (id: string, organizationId: string) => `${getLocationBaseLink(id, organizationId)}?tab=analytics`;
@@ -58,7 +58,7 @@ const LocationLink = ({
   } else if (settingsLink) {
     href = getLocationSettingsLink(id, organizationId);
   } else if (peopleLink) {
-    href = getLocationPeopleLink(id, organizationId);
+    href = getLocationMembersLink(id, organizationId);
   } else if (zonesLink) {
     href = getLocationZonesLink(id, organizationId);
   } else if (desksLink) {
