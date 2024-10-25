@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<816029f33cd0f0978c61c716af2463ce>>
+ * @generated SignedSource<<c900371b35b83e18999cc12a4b661c1d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type AddBookingInput = {
   to: any;
 };
 export type bookingsWeekGrid_addBookingMutation$variables = {
+  connectionIds: ReadonlyArray<string>;
   input: AddBookingInput;
 };
 export type bookingsWeekGrid_addBookingMutation$data = {
@@ -32,6 +33,7 @@ export type bookingsWeekGrid_addBookingMutation$data = {
         readonly givenName: string | null | undefined;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
+        readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
         readonly locationTags: ReadonlyArray<{
@@ -45,11 +47,58 @@ export type bookingsWeekGrid_addBookingMutation$data = {
       readonly id: string;
       readonly location: {
         readonly name: string;
+        readonly uniqueId: string;
       } | null | undefined;
+      readonly organization: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
+      readonly team: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
+      readonly to: any;
+    };
+  } | null | undefined;
+};
+export type bookingsWeekGrid_addBookingMutation$rawResponse = {
+  readonly addBooking: {
+    readonly booking: {
+      readonly customer: {
+        readonly familyName: string | null | undefined;
+        readonly givenName: string | null | undefined;
+        readonly middleName: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      };
+      readonly desks: ReadonlyArray<{
+        readonly locationTags: ReadonlyArray<{
+          readonly name: string;
+          readonly tagType: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+        readonly name: string;
+      }>;
+      readonly from: any;
+      readonly id: string;
+      readonly location: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
+      readonly organization: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
+      readonly team: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
+      readonly to: any;
     };
   } | null | undefined;
 };
 export type bookingsWeekGrid_addBookingMutation = {
+  rawResponse: bookingsWeekGrid_addBookingMutation$rawResponse;
   response: bookingsWeekGrid_addBookingMutation$data;
   variables: bookingsWeekGrid_addBookingMutation$variables;
 };
@@ -59,150 +108,187 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
+    "name": "connectionIds"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
     "name": "input"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "uniqueId",
+  "storageKey": null
+},
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "BookingPayload",
-    "kind": "LinkedField",
-    "name": "addBooking",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "BookingDetails",
-        "kind": "LinkedField",
-        "name": "booking",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "from",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "BookingCustomerDetails",
-            "kind": "LinkedField",
-            "name": "customer",
-            "plural": false,
-            "selections": [
-              (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "givenName",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "middleName",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "familyName",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "BookingLocationDetails",
-            "kind": "LinkedField",
-            "name": "location",
-            "plural": false,
-            "selections": [
-              (v1/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "BookingDeskDetails",
-            "kind": "LinkedField",
-            "name": "desks",
-            "plural": true,
-            "selections": [
-              (v1/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "BookingLocationTagDetails",
-                "kind": "LinkedField",
-                "name": "locationTags",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "uniqueId",
-                    "storageKey": null
-                  },
-                  (v1/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "tagType",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
+v4 = [
+  (v2/*: any*/),
+  (v3/*: any*/)
+],
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "BookingDetails",
+  "kind": "LinkedField",
+  "name": "booking",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "from",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "to",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingCustomerDetails",
+      "kind": "LinkedField",
+      "name": "customer",
+      "plural": false,
+      "selections": [
+        (v2/*: any*/),
+        (v3/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "givenName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "middleName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "familyName",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingOrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": (v4/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingLocationDetails",
+      "kind": "LinkedField",
+      "name": "location",
+      "plural": false,
+      "selections": (v4/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingTeamDetails",
+      "kind": "LinkedField",
+      "name": "team",
+      "plural": false,
+      "selections": (v4/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingDeskDetails",
+      "kind": "LinkedField",
+      "name": "desks",
+      "plural": true,
+      "selections": [
+        (v3/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingLocationTagDetails",
+          "kind": "LinkedField",
+          "name": "locationTags",
+          "plural": true,
+          "selections": [
+            (v2/*: any*/),
+            (v3/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "tagType",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "bookingsWeekGrid_addBookingMutation",
-    "selections": (v2/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "BookingPayload",
+        "kind": "LinkedField",
+        "name": "addBooking",
+        "plural": false,
+        "selections": [
+          (v5/*: any*/)
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Mutation",
     "abstractKey": null
   },
@@ -211,19 +297,53 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "bookingsWeekGrid_addBookingMutation",
-    "selections": (v2/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "BookingPayload",
+        "kind": "LinkedField",
+        "name": "addBooking",
+        "plural": false,
+        "selections": [
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "filters": null,
+            "handle": "appendNode",
+            "key": "",
+            "kind": "LinkedHandle",
+            "name": "booking",
+            "handleArgs": [
+              {
+                "kind": "Variable",
+                "name": "connections",
+                "variableName": "connectionIds"
+              },
+              {
+                "kind": "Literal",
+                "name": "edgeTypeName",
+                "value": "BookingDetails"
+              }
+            ]
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "cacheID": "2167d3c2416708db9cdb0440dae4d980",
+    "cacheID": "87030422eb217a0accd1483ffce8fa91",
     "id": null,
     "metadata": {},
     "name": "bookingsWeekGrid_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingsWeekGrid_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      customer {\n        name\n        givenName\n        middleName\n        familyName\n      }\n      location {\n        name\n      }\n      desks {\n        name\n        locationTags {\n          uniqueId\n          name\n          tagType\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingsWeekGrid_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        name\n        locationTags {\n          uniqueId\n          name\n          tagType\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ef869b1d5c66a574a2c8e96db09d6dab";
+(node as any).hash = "20cccbf18d7fa0e39210ecd2b7c43a6b";
 
 export default node;

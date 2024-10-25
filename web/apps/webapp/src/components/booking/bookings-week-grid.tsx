@@ -1,5 +1,6 @@
 import type { bookingsWeekGrid_addBookingMutation } from '@/queries/__generated__/bookingsWeekGrid_addBookingMutation.graphql';
 import type { bookingsWeekGrid_allBookings_query$key } from '@/queries/__generated__/bookingsWeekGrid_allBookings_query.graphql';
+import type { bookingsWeekGrid_allBookings_refetchableFragment } from '@/queries/__generated__/bookingsWeekGrid_allBookings_refetchableFragment.graphql';
 import type { bookingsWeekGrid_deleteBookingMutation } from '@/queries/__generated__/bookingsWeekGrid_deleteBookingMutation.graphql';
 import type { bookingsWeekGrid_query$key } from '@/queries/__generated__/bookingsWeekGrid_query.graphql';
 import Box from '@mui/material/Box';
@@ -14,8 +15,8 @@ import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/sh
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { memo, useCallback, useContext, useEffect, useTransition } from 'react';
-import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
+import { memo, useCallback, useContext, useEffect, useMemo, useTransition } from 'react';
+import { graphql, useFragment, useMutation, usePaginationFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: bookingsWeekGrid_query$key;
@@ -108,33 +109,48 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
     rootDataRelay,
   );
 
-  const [rootDataAllBookings, refetch] = useRefetchableFragment(
+  const { data: rootDataAllBookings, refetch } = usePaginationFragment<
+    bookingsWeekGrid_allBookings_refetchableFragment,
+    bookingsWeekGrid_allBookings_query$key
+  >(
     graphql`
-      fragment bookingsWeekGrid_allBookings_query on Query @refetchable(queryName: "bookingsWeekGrid_allBookings_refetchableFragment") {
-        allBookings(where: { organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to }) {
-          id
-          from
-          to
-          customer {
-            uniqueId
-            name
-            givenName
-            middleName
-            familyName
-            photoUrl
-          }
-          location {
-            name
-          }
-          team {
-            name
-          }
-          desks {
-            name
-            locationTags {
-              uniqueId
-              name
-              tagType
+      fragment bookingsWeekGrid_allBookings_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
+      @refetchable(queryName: "bookingsWeekGrid_allBookings_refetchableFragment") {
+        bookings(
+          first: $count
+          after: $cursor
+          where: { organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to }
+        ) @connection(key: "bookingsWeekGrid_bookings") {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              from
+              to
+              customer {
+                uniqueId
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+              }
+              location {
+                name
+              }
+              team {
+                name
+              }
+              desks {
+                name
+                locationTags {
+                  uniqueId
+                  name
+                  tagType
+                }
+              }
             }
           }
         }
@@ -144,18 +160,29 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
   );
 
   const [commitAddBooking] = useMutation<bookingsWeekGrid_addBookingMutation>(graphql`
-    mutation bookingsWeekGrid_addBookingMutation($input: AddBookingInput!) {
+    mutation bookingsWeekGrid_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
       addBooking(input: $input) {
-        booking {
+        booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
           id
           from
+          to
           customer {
+            uniqueId
             name
             givenName
             middleName
             familyName
           }
+          organization {
+            uniqueId
+            name
+          }
           location {
+            uniqueId
+            name
+          }
+          team {
+            uniqueId
             name
           }
           desks {
@@ -172,10 +199,10 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
   `);
 
   const [commitDeleteBooking] = useMutation<bookingsWeekGrid_deleteBookingMutation>(graphql`
-    mutation bookingsWeekGrid_deleteBookingMutation($input: DeleteBookingInput!) {
+    mutation bookingsWeekGrid_deleteBookingMutation($connectionIds: [ID!]!, $input: DeleteBookingInput!) {
       deleteBooking(input: $input) {
         booking {
-          id
+          id @deleteEdge(connections: $connectionIds)
         }
       }
     }
@@ -188,7 +215,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
   const handleRefetch = useCallback(
     (startDate: Dayjs) => {
       startTransition(() => {
-        const endDate = startDate.add(1, 'week').add(-1, 'milliseconds');
+        const endDate = startDate.add(1, 'week');
 
         refetch(
           {
@@ -208,7 +235,13 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
     handleRefetch(startDate);
   }, [handleRefetch, globalReloadId, startDate]);
 
-  if (!rootData.me) {
+  const connectionIds = useMemo(() => (rootDataAllBookings.bookings ? [rootDataAllBookings.bookings.__id] : []), [rootDataAllBookings.bookings]);
+  const allBookings = useMemo(
+    () => (rootDataAllBookings.bookings?.edges ? rootDataAllBookings.bookings.edges.map(({ node }) => node) : []),
+    [rootDataAllBookings.bookings],
+  );
+
+  if (!rootData.me || !rootDataAllBookings.bookings) {
     return <></>;
   }
 
@@ -233,10 +266,6 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
 
   const rows: RowType[] = finalMembersList
     .map((customer) => {
-      if (!rootDataAllBookings.allBookings) {
-        return null;
-      }
-
       const customerId = customer.uniqueId;
 
       return {
@@ -244,43 +273,43 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
         person: customer,
         Mon: {
           customer,
-          booking: rootDataAllBookings.allBookings.find(
+          booking: allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Mon']!, 'day').toISOString(),
           ),
         },
         Tue: {
           customer,
-          booking: rootDataAllBookings.allBookings.find(
+          booking: allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Tue']!, 'day').toISOString(),
           ),
         },
         Wed: {
           customer,
-          booking: rootDataAllBookings.allBookings.find(
+          booking: allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Wed']!, 'day').toISOString(),
           ),
         },
         Thu: {
           customer,
-          booking: rootDataAllBookings.allBookings.find(
+          booking: allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Thu']!, 'day').toISOString(),
           ),
         },
         Fri: {
           customer,
-          booking: rootDataAllBookings.allBookings.find(
+          booking: allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Fri']!, 'day').toISOString(),
           ),
         },
         Sat: {
           customer,
-          booking: rootDataAllBookings.allBookings.find(
+          booking: allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Sat']!, 'day').toISOString(),
           ),
         },
         Sun: {
           customer,
-          booking: rootDataAllBookings.allBookings.find(
+          booking: allBookings.find(
             (booking) => booking.customer!.uniqueId === customerId && booking.from === startDate.add(daysOfWeekMap['Sun']!, 'day').toISOString(),
           ),
         },
@@ -405,6 +434,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
     if (booking) {
       commitDeleteBooking({
         variables: {
+          connectionIds,
           input: {
             clientMutationId: nanoid(),
             id,
@@ -428,7 +458,6 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
 
           message += ` on ${toShortDate(booking.from)}`;
 
-          handleRefetch(startDate);
           enqueueSnackbar(message, { variant: 'success', anchorOrigin });
           UpdateGlobalReloadId();
         },
@@ -442,6 +471,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
     } else {
       commitAddBooking({
         variables: {
+          connectionIds,
           input: {
             clientMutationId: nanoid(),
             id,
@@ -484,7 +514,6 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
 
           message += ` on ${toShortDate(booking.from)}`;
 
-          handleRefetch(startDate);
           enqueueSnackbar(message, { variant: 'success', anchorOrigin });
           UpdateGlobalReloadId();
         },
@@ -493,6 +522,41 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
             variant: 'error',
             anchorOrigin,
           });
+        },
+        optimisticResponse: {
+          addBooking: {
+            booking: {
+              id,
+              from,
+              to,
+              customer: {
+                uniqueId: customer.uniqueId,
+                name: '',
+                givenName: '',
+                middleName: '',
+                familyName: '',
+              },
+              organization: organizationId
+                ? {
+                    uniqueId: organizationId,
+                    name: '',
+                  }
+                : null,
+              location: locationId
+                ? {
+                    uniqueId: locationId,
+                    name: '',
+                  }
+                : null,
+              team: teamId
+                ? {
+                    uniqueId: teamId,
+                    name: '',
+                  }
+                : null,
+              desks: [],
+            },
+          },
         },
       });
     }

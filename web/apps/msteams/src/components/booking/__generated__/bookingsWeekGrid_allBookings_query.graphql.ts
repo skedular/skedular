@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af2f021b4ac38884f415c43150f2528d>>
+ * @generated SignedSource<<aa568c27f4e79a35a5ee30b0c09aebbc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,33 +11,39 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingsWeekGrid_allBookings_query$data = {
-  readonly allBookings: ReadonlyArray<{
-    readonly customer: {
-      readonly familyName: string | null | undefined;
-      readonly givenName: string | null | undefined;
-      readonly middleName: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly photoUrl: string | null | undefined;
-      readonly uniqueId: string;
-    };
-    readonly desks: ReadonlyArray<{
-      readonly locationTags: ReadonlyArray<{
-        readonly name: string;
-        readonly tagType: string | null | undefined;
-        readonly uniqueId: string;
-      }>;
-      readonly name: string;
+  readonly bookings: {
+    readonly __id: string;
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly customer: {
+          readonly familyName: string | null | undefined;
+          readonly givenName: string | null | undefined;
+          readonly middleName: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly photoUrl: string | null | undefined;
+          readonly uniqueId: string;
+        };
+        readonly desks: ReadonlyArray<{
+          readonly locationTags: ReadonlyArray<{
+            readonly name: string;
+            readonly tagType: string | null | undefined;
+            readonly uniqueId: string;
+          }>;
+          readonly name: string;
+        }>;
+        readonly from: any;
+        readonly id: string;
+        readonly location: {
+          readonly name: string;
+        } | null | undefined;
+        readonly team: {
+          readonly name: string;
+        } | null | undefined;
+        readonly to: any;
+      };
     }>;
-    readonly from: any;
-    readonly id: string;
-    readonly location: {
-      readonly name: string;
-    } | null | undefined;
-    readonly team: {
-      readonly name: string;
-    } | null | undefined;
-    readonly to: any;
-  }> | null | undefined;
+    readonly totalCount: number | null | undefined;
+  } | null | undefined;
   readonly " $fragmentType": "bookingsWeekGrid_allBookings_query";
 };
 export type bookingsWeekGrid_allBookings_query$key = {
@@ -46,25 +52,38 @@ export type bookingsWeekGrid_allBookings_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = {
+var v0 = [
+  "bookings"
+],
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = [
-  (v1/*: any*/)
+v3 = [
+  (v2/*: any*/)
 ];
 return {
   "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "count"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "cursor"
+    },
     {
       "kind": "RootArgument",
       "name": "from"
@@ -88,8 +107,23 @@ return {
   ],
   "kind": "Fragment",
   "metadata": {
+    "connection": [
+      {
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
+        "path": (v0/*: any*/)
+      }
+    ],
     "refetch": {
-      "connection": null,
+      "connection": {
+        "forward": {
+          "count": "count",
+          "cursor": "cursor"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
       "fragmentPathInResult": [],
       "operation": require('./bookingsWeekGrid_allBookings_refetchableFragment.graphql')
     }
@@ -97,7 +131,7 @@ return {
   "name": "bookingsWeekGrid_allBookings_query",
   "selections": [
     {
-      "alias": null,
+      "alias": "bookings",
       "args": [
         {
           "fields": [
@@ -149,124 +183,204 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "BookingDetails",
+      "concreteType": "BookingConnection",
       "kind": "LinkedField",
-      "name": "allBookings",
-      "plural": true,
+      "name": "__bookingsWeekGrid_bookings_connection",
+      "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "id",
+          "name": "totalCount",
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "from",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "to",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingCustomerDetails",
+          "concreteType": "BookingEdge",
           "kind": "LinkedField",
-          "name": "customer",
-          "plural": false,
-          "selections": [
-            (v0/*: any*/),
-            (v1/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "givenName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "middleName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "familyName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "photoUrl",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingLocationDetails",
-          "kind": "LinkedField",
-          "name": "location",
-          "plural": false,
-          "selections": (v2/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingTeamDetails",
-          "kind": "LinkedField",
-          "name": "team",
-          "plural": false,
-          "selections": (v2/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingDeskDetails",
-          "kind": "LinkedField",
-          "name": "desks",
+          "name": "edges",
           "plural": true,
           "selections": [
-            (v1/*: any*/),
             {
               "alias": null,
               "args": null,
-              "concreteType": "BookingLocationTagDetails",
+              "concreteType": "BookingDetails",
               "kind": "LinkedField",
-              "name": "locationTags",
-              "plural": true,
+              "name": "node",
+              "plural": false,
               "selections": [
-                (v0/*: any*/),
-                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "tagType",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "from",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "to",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "BookingCustomerDetails",
+                  "kind": "LinkedField",
+                  "name": "customer",
+                  "plural": false,
+                  "selections": [
+                    (v1/*: any*/),
+                    (v2/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "givenName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "middleName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "familyName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "photoUrl",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "BookingLocationDetails",
+                  "kind": "LinkedField",
+                  "name": "location",
+                  "plural": false,
+                  "selections": (v3/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "BookingTeamDetails",
+                  "kind": "LinkedField",
+                  "name": "team",
+                  "plural": false,
+                  "selections": (v3/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "BookingDeskDetails",
+                  "kind": "LinkedField",
+                  "name": "desks",
+                  "plural": true,
+                  "selections": [
+                    (v2/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "BookingLocationTagDetails",
+                      "kind": "LinkedField",
+                      "name": "locationTags",
+                      "plural": true,
+                      "selections": [
+                        (v1/*: any*/),
+                        (v2/*: any*/),
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "tagType",
+                          "storageKey": null
+                        }
+                      ],
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
                   "storageKey": null
                 }
               ],
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
@@ -277,6 +391,6 @@ return {
 };
 })();
 
-(node as any).hash = "6209f0db765a06bdc05d8e5d0b49190d";
+(node as any).hash = "53381094d70aa5f6e7d256ae52b1301a";
 
 export default node;

@@ -84,7 +84,7 @@ const LocationBookingsWithRelay = ({
 
   useEffect(() => {
     const startDate = startOfDay();
-    const endDate = startDate.add(1, 'week').add(-1, 'milliseconds');
+    const endDate = startDate.add(1, 'week');
 
     loadQuery(
       {
