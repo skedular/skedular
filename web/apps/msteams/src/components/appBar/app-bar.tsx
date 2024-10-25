@@ -112,7 +112,7 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
               {!icon && label && <Typography>{label}</Typography>}
             </Link>
           ))}
-          {lastBreadcrumps && lastBreadcrumps[0] && <Typography>{lastBreadcrumps[0]}</Typography>}
+          {lastBreadcrumps && lastBreadcrumps[0] && lastBreadcrumps[0]}
           {lastBreadcrumps && !lastBreadcrumps[0] && lastBreadcrumps[1] && <Typography>{lastBreadcrumps[1]}</Typography>}
         </Breadcrumbs>
 
