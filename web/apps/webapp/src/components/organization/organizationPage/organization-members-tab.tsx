@@ -2,9 +2,9 @@ import { OrganizationMemberCard } from '@/components/organization';
 import type { organizationMembersTab_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/organizationMembersTab_inviteCustomersToJoinOrganizationMutation.graphql';
 import type { organizationMembersTab_paginatedOrganizationMembers_query$key } from '@/queries/__generated__/organizationMembersTab_paginatedOrganizationMembers_query.graphql';
 import type {
-    OrganizationMemberOrderField,
-    OrganizationMemberOrderInput,
-    organizationMembersTab_paginatedOrganizationMembers_refetchableFragment,
+  OrganizationMemberOrderField,
+  OrganizationMemberOrderInput,
+  organizationMembersTab_paginatedOrganizationMembers_refetchableFragment,
 } from '@/queries/__generated__/organizationMembersTab_paginatedOrganizationMembers_refetchableFragment.graphql';
 import type { organizationMembersTab_query$key } from '@/queries/__generated__/organizationMembersTab_query.graphql';
 import type { organizationMembersTab_rootQuery } from '@/queries/__generated__/organizationMembersTab_rootQuery.graphql';
@@ -165,7 +165,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to invite people to join organization '${rootData.organization?.name}'. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to invite member to join organization '${rootData.organization?.name}'. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -176,7 +176,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
         setInvitePeopleDialogOpen(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to invite people to join organization '${rootData.organization?.name}'. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to invite member to join organization '${rootData.organization?.name}'. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
@@ -281,7 +281,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
       {rootData.organization.canInvitePeople && (
         <Stack direction="row" sx={{ width: 'auto' }}>
           <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-            Invite People
+            Invite Member
           </Button>
         </Stack>
       )}
@@ -325,7 +325,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
       </Grid>
 
       <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
-        <DialogTitle>Invite people to join your organization</DialogTitle>
+        <DialogTitle>Invite member to join your organization</DialogTitle>
         <DialogContent>
           <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>
 

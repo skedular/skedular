@@ -2,9 +2,9 @@ import { OrganizationMemberSelector } from '@/components/organization';
 import type { teamMembersTab_inviteCustomersToJoinTeamMutation } from '@/queries/__generated__/teamMembersTab_inviteCustomersToJoinTeamMutation.graphql';
 import type { teamMembersTab_paginatedTeamMembers_query$key } from '@/queries/__generated__/teamMembersTab_paginatedTeamMembers_query.graphql';
 import type {
-    TeamMemberOrderField,
-    TeamMemberOrderInput,
-    teamMembersTab_paginatedTeamMembers_refetchableFragment,
+  TeamMemberOrderField,
+  TeamMemberOrderInput,
+  teamMembersTab_paginatedTeamMembers_refetchableFragment,
 } from '@/queries/__generated__/teamMembersTab_paginatedTeamMembers_refetchableFragment.graphql';
 import type { teamMembersTab_query$key } from '@/queries/__generated__/teamMembersTab_query.graphql';
 import type { teamMembersTab_rootQuery } from '@/queries/__generated__/teamMembersTab_rootQuery.graphql';
@@ -334,7 +334,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to invite people to join team '${rootData.team?.name}'. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to invite member to join team '${rootData.team?.name}'. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -345,7 +345,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
         setInvitePeopleDialogOpen(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to invite people to join team '${rootData.team?.name}'. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to invite member to join team '${rootData.team?.name}'. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
@@ -395,7 +395,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
         <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
           <Grid>
             <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-              Invite People
+              Invite Member
             </Button>
           </Grid>
         </Stack>
@@ -488,7 +488,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
       )}
 
       <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
-        <DialogTitle>Invite people to join your team</DialogTitle>
+        <DialogTitle>Invite member to join your team</DialogTitle>
         <DialogContent>
           <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>
 

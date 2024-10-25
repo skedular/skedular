@@ -361,7 +361,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to invite people to join location '${rootData.location?.name}'. Error: ${joinErrors(errors)}`, {
+          enqueueSnackbar(`Failed to invite member to join location '${rootData.location?.name}'. Error: ${joinErrors(errors)}`, {
             variant: 'error',
             anchorOrigin,
           });
@@ -372,7 +372,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
         setInvitePeopleDialogOpen(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to invite people to join location '${rootData.location?.name}'. Error: ${error.message}`, {
+        enqueueSnackbar(`Failed to invite member to join location '${rootData.location?.name}'. Error: ${error.message}`, {
           variant: 'error',
           anchorOrigin,
         });
@@ -389,7 +389,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
       {!organizationId && (
         <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
           <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-            Invite People
+            Invite Member
           </Button>
         </Stack>
       )}
@@ -441,7 +441,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
       </Grid>
 
       <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
-        <DialogTitle>Invite people to join your location</DialogTitle>
+        <DialogTitle>Invite member to join your location</DialogTitle>
         <DialogContent>
           <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>
 

@@ -70,7 +70,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
     initialTabIndex = 0;
   } else if (tab === 'about') {
     initialTabIndex = 1;
-  } else if (tab === 'people') {
+  } else if (tab === 'memebrs') {
     initialTabIndex = 2;
   } else if (tab === 'zones') {
     initialTabIndex = 3;
@@ -92,7 +92,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
     } else if (newValue === 1) {
       tab = 'about';
     } else if (newValue === 2) {
-      tab = 'people';
+      tab = 'memebrs';
     } else if (newValue === 3) {
       tab = 'zones';
     } else if (newValue === 4) {
@@ -117,7 +117,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />
         <Tab label="About" />
-        <Tab label="People" />
+        <Tab label="Memebrs" />
         <Tab label="Zones" />
         <Tab label="Desks" />
         {rootData.location.canViewAnalytics && <Tab label="Analytics" />}

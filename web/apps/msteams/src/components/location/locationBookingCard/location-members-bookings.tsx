@@ -16,14 +16,14 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import {
-    BookingIcon,
-    DangerIcon,
-    DeleteIcon,
-    DeskIcon,
-    EllipseMenuIcon,
-    NotPreferredIcon,
-    PreferredIcon,
-    SettingsIcon,
+  BookingIcon,
+  DangerIcon,
+  DeleteIcon,
+  DeskIcon,
+  EllipseMenuIcon,
+  NotPreferredIcon,
+  PreferredIcon,
+  SettingsIcon,
 } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';

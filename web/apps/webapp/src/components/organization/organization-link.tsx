@@ -31,7 +31,7 @@ export const getOrganizationBaseLink = (id: string) => `/organizations/${id}`;
 export const getOrganizationAddLink = () => `/organizations/add`;
 export const getOrganizationBookingsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=bookings`;
 export const getOrganizationSettingsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=about`;
-export const getOrganizationMembersBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=people`;
+export const getOrganizationMembersBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=memebrs`;
 export const getOrganizationLocationsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=locations`;
 export const getOrganizationTeamsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=teams`;
 export const getOrganizationOfferingBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=offering`;
