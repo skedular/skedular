@@ -47,7 +47,7 @@ public class RefreshAzureTenantMembersJob(
                     await msTeamsInternalPublisher.PublishRefreshAzureTenantMembersAsync(tenantIds, cancellationToken);
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken);
+                await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
             }
             catch (OperationCanceledException)
             {
