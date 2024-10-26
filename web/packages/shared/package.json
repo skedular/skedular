@@ -35,6 +35,9 @@
     "./components/logo": {
       "default": "./dist/components/logo/index.js"
     },
+    "./components/notification": {
+      "default": "./dist/components/notification/index.js"
+    },
     "./components/relayError": {
       "default": "./dist/components/relayError/index.js"
     },
@@ -62,9 +65,6 @@
     "./libs/providers": {
       "default": "./dist/libs/providers/index.js"
     },
-    "./libs/snackbar": {
-      "default": "./dist/libs/snackbar/index.js"
-    },
     "./libs/theme": {
       "default": "./dist/libs/theme/index.js"
     },
@@ -83,19 +83,19 @@
     "@date-io/date-fns": "^3.0.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mui/icons-material": "^6.1.4",
-    "@mui/lab": "6.0.0-beta.12",
-    "@mui/material": "^6.1.4",
-    "@mui/x-charts": "^7.21.0",
-    "@mui/x-data-grid": "^7.21.0",
-    "@mui/x-data-grid-premium": "^7.21.0",
-    "@mui/x-data-grid-pro": "^7.21.0",
-    "@mui/x-date-pickers": "^7.21.0",
-    "@mui/x-date-pickers-pro": "^7.21.0",
+    "@mui/icons-material": "^6.1.5",
+    "@mui/lab": "6.0.0-beta.13",
+    "@mui/material": "^6.1.5",
+    "@mui/x-charts": "^7.22.0",
+    "@mui/x-data-grid": "^7.22.0",
+    "@mui/x-data-grid-premium": "^7.22.0",
+    "@mui/x-data-grid-pro": "^7.22.0",
+    "@mui/x-date-pickers": "^7.22.0",
+    "@mui/x-date-pickers-pro": "^7.22.0",
     "@mui/x-license": "^7.21.0",
     "@mui/x-license-pro": "^6.10.2",
-    "@mui/x-tree-view": "^7.21.0",
-    "@mui/x-tree-view-pro": "^7.21.0",
+    "@mui/x-tree-view": "^7.22.0",
+    "@mui/x-tree-view-pro": "^7.22.0",
     "@stripe/react-stripe-js": "^2.8.1",
     "@stripe/stripe-js": "^4.9.0",
     "countries-list": "^3.1.1",
@@ -106,7 +106,6 @@
     "logrocket": "^9.0.0",
     "logrocket-react": "^6.0.3",
     "mui-rff": "^8.0.0",
-    "notistack": "^3.0.1",
     "pino": "^9.5.0",
     "pino-logflare": "^0.4.2",
     "react": "18.3.1",
@@ -115,6 +114,7 @@
     "react-error-boundary": "^4.1.2",
     "react-final-form": "^6.5.9",
     "react-relay": "^18.1.0",
+    "react-toastify": "^10.0.6",
     "relay-runtime": "^18.1.0",
     "usehooks-ts": "^3.1.0",
     "uuid": "^10.0.0",
@@ -126,9 +126,9 @@
     "@repo/typescript-config": "workspace:^",
     "@types/lodash.debounce": "^4.0.9",
     "@types/logrocket-react": "^3.0.3",
-    "@types/node": "^22.7.7",
+    "@types/node": "^22.8.1",
     "@types/pino": "^7.0.5",
-    "@types/react": "^18.3.11",
+    "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/react-relay": "^16.0.6",
     "@types/relay-runtime": "^18.1.0",

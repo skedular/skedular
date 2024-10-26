@@ -9,15 +9,21 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { AddIcon, RemoveIcon } from '@repo/shared/components/icons';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { Elements } from '@stripe/react-stripe-js';
 import type { Stripe } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import OrganizationPaymentMethodSetupForm from './organization-payment-method-setup-form';
 
 type Props = {
@@ -70,7 +76,8 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [addNewPaymentMethodState, setAddNewPaymentMethodState] = useState(AddOrganizationPaymentMethodState.NOT_STARTED);
   const [clientSecret, setClientSecret] = useState('');
   const [stripePromise, setStripePromise] = useState<Promise<Stripe | null>>();
@@ -79,6 +86,8 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
     if (!rootData.organization) {
       return;
     }
+
+    const toastId = themedToast(<NotificationContent content={`Adding payment method...`} />, infoNotificationOptions);
 
     commitAddOrganizationPaymentMethodIntent({
       variables: {
@@ -89,9 +98,9 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
       },
       onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to add new payment method. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add new payment method. Error: ${joinErrors(errors)}.`} />,
           });
 
           setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
@@ -106,18 +115,23 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
 
           setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_DETAILS);
         } else {
-          enqueueSnackbar(`Returned payment intent is null`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Returned payment intent is null.`} />,
+          });
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Payment method added.`} />,
           });
 
           setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
         }
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to add new payment method. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to add new payment method. Error: ${error.message}.`} />,
         });
 
         setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
@@ -136,6 +150,8 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
       return;
     }
 
+    const toastId = themedToast(<NotificationContent content={`Removing payment method...`} />, infoNotificationOptions);
+
     commitRemoveOrganizationPaymentMethod({
       variables: {
         input: {
@@ -145,21 +161,26 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove payment method. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove payment method. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Payment method removed.`} />,
+        });
+
         setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
         onReloadRequired();
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove payment method. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove payment method. Error: ${error.message}.`} />,
         });
 
         onReloadRequired();

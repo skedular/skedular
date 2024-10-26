@@ -4,16 +4,22 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useState } from 'react';
+import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 import type { newDeskDialog_addDeskMutation } from './__generated__/newDeskDialog_addDeskMutation.graphql';
 import type { newDeskDialog_query$key } from './__generated__/newDeskDialog_query.graphql';
@@ -63,14 +69,14 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
-  const [name, setName] = useState<string>('');
-  const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
 
   const handleAddClick = ({ name, locationTagIds }: DeskDetails) => {
     const id = nanoid();
+    const toastId = themedToast(<NotificationContent content={`Adding desk '${name}'...`} />, infoNotificationOptions);
 
     commitAddDesk({
       variables: {
@@ -85,24 +91,28 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to add desk '${name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add desk '${name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        setName('');
-        setLocationTagIds([]);
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk ${name} added.`} />,
+        });
+
         onAddClicked();
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to add desk '${name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to add desk '${name}'. Error: ${error.message}.`} />,
         });
       },
+
       optimisticResponse: {
         addDesk: {
           desk: {
@@ -122,8 +132,8 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
         <Form
           onSubmit={handleAddClick}
           initialValues={{
-            name,
-            locationTagIds,
+            name: '',
+            locationTagIds: [],
           }}
           validate={validate}
           render={({ handleSubmit }) => (

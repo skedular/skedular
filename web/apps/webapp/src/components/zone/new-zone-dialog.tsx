@@ -5,16 +5,22 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useState } from 'react';
+import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 
 type Props = {
@@ -45,13 +51,14 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(zoneSchema);
   const requiredFields = makeRequired(zoneSchema);
-  const [name, setName] = useState<string>('');
 
   const handleAddClick = ({ name }: ZoneDetails) => {
     const id = nanoid();
+    const toastId = themedToast(<NotificationContent content={`Adding zone '${name}'...`} />, infoNotificationOptions);
 
     commitAddZone({
       variables: {
@@ -66,21 +73,25 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to add zone '${name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add zone '${name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        setName('');
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zone ${name} added.`} />,
+        });
+
         onAddClicked();
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to add zone '${name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to add zone '${name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -101,7 +112,7 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
         <Form
           onSubmit={handleAddClick}
           initialValues={{
-            name,
+            name: '',
           }}
           validate={validate}
           render={({ handleSubmit }) => (

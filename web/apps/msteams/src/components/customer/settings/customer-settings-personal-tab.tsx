@@ -1,15 +1,21 @@
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import type { customerSettingsPersonalTab_query$key } from './__generated__/customerSettingsPersonalTab_query.graphql';
 import type { customerSettingsPersonalTab_updateMyCustomerDetailsMutation } from './__generated__/customerSettingsPersonalTab_updateMyCustomerDetailsMutation.graphql';
@@ -74,7 +80,8 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(settingsSchema);
   const requiredFields = makeRequired(settingsSchema);
 
@@ -82,6 +89,8 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
     if (!rootData.me) {
       return;
     }
+
+    const toastId = themedToast(<NotificationContent content={`Updating personal details'...`} />, infoNotificationOptions);
 
     commitUpdateMyCustomerDetails({
       variables: {
@@ -98,23 +107,23 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to update personal details. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update personal details. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        enqueueSnackbar(`Personal settings updated.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Personal settings updated.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to update personal details. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update personal details. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {

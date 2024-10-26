@@ -12,17 +12,23 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { DangerIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon, ZoneIcon } from '@repo/shared/components/icons';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useMemo, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import type { zoneCard_LocationTagDetails$key } from './__generated__/zoneCard_LocationTagDetails.graphql';
 import type { zoneCard_Query$key } from './__generated__/zoneCard_Query.graphql';
@@ -120,7 +126,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(zoneSchema);
   const requiredFields = makeRequired(zoneSchema);
@@ -141,6 +148,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
   const handleConfirmRemovingZoneClick = () => {
     setZoneRemoveConfirmationDialogOpen(false);
 
+    const toastId = themedToast(<NotificationContent content={`Removing zone '${locationTagDetails.name}'...`} />, infoNotificationOptions);
+
     commitDeleteLocationTag({
       variables: {
         connectionIds: connectionIds,
@@ -151,18 +160,23 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to delete location '${locationTagDetails.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove zone '${locationTagDetails.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zone ${locationTagDetails.name} removed.`} />,
+        });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to delete location '${locationTagDetails.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove zone '${locationTagDetails.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -184,7 +198,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
   };
 
   const handleSaveClick = ({ name }: LocationTagDetails) => {
-    setEditing(false);
+    const toastId = themedToast(<NotificationContent content={`Updating zone '${locationTagDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateLocationTag({
       variables: {
@@ -197,18 +211,25 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to update Zone '${locationTagDetails.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update zone '${locationTagDetails.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zone ${name} updated.`} />,
+        });
+
+        setEditing(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to update Zone '${locationTagDetails.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update zone '${locationTagDetails.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -227,6 +248,11 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       return;
     }
 
+    const toastId = themedToast(
+      <NotificationContent content={`Setting zone '${locationTagDetails.name}' as your preferred zone...`} />,
+      infoNotificationOptions,
+    );
+
     commitAddCustomerDefaultLocationTag({
       variables: {
         input: {
@@ -236,23 +262,29 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to set zone '${locationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to set zone '${locationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`}
+              />
+            ),
           });
 
           return;
         }
 
-        enqueueSnackbar(`Zone '${locationTagDetails.name}' has been set as the preferred zone.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zone '${locationTagDetails.name}' has been set as the preferred zone.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to set zone '${locationTagDetails.name}' as your preferred zone. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to set zone '${locationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />
+          ),
         });
       },
       optimisticResponse: {
@@ -275,6 +307,11 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       return;
     }
 
+    const toastId = themedToast(
+      <NotificationContent content={`Removing zone '${locationTagDetails.name}' as your preferred zone...`} />,
+      infoNotificationOptions,
+    );
+
     commitRemoveCustomerDefaultLocationTag({
       variables: {
         input: {
@@ -284,23 +321,31 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove the zone '${locationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the zone '${locationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`}
+              />
+            ),
           });
 
           return;
         }
 
-        enqueueSnackbar(`Zone '${locationTagDetails.name}' has been removed as your preferred zone.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zone '${locationTagDetails.name}' has been removed as your preferred zone.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove the zone '${locationTagDetails.name}' as your preferred zone. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent
+              content={`Failed to remove the zone '${locationTagDetails.name}' as your preferred zone. Error: ${error.message}.`}
+            />
+          ),
         });
       },
       optimisticResponse: {
@@ -381,7 +426,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
                     Cancel
                   </Button>
                   <Button color="primary" variant="contained" type="submit">
-                    Save
+                    Update
                   </Button>
                 </Stack>
               </Stack>
@@ -394,7 +439,6 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
         <DialogTitle>Remove zone</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove the zone "${locationTagDetails.name}"?`}</DialogContentText>
-
           <DialogActions>
             <Button color="secondary" variant="outlined" onClick={handleCancelRemovingZoneClick}>
               Cancel

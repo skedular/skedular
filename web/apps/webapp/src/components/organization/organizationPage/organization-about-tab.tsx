@@ -4,17 +4,23 @@ import type { organizationAboutTab_updateOrganizationMutation } from '@/queries/
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 
 type Props = {
@@ -79,7 +85,8 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
   const organization = rootData.organization;
@@ -90,6 +97,10 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
     }
 
     const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
+    const toastId = themedToast(
+      <NotificationContent content={`Updating organization '${rootData.organization.name}'...`} />,
+      infoNotificationOptions,
+    );
 
     commitUpdateOrganization({
       variables: {
@@ -104,23 +115,23 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to update organization '${name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${rootData.organization?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        enqueueSnackbar(`Organization details updated.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${name} details updated.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to update organization '${name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update organization '${rootData.organization?.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {

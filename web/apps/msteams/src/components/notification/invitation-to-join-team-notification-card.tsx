@@ -7,13 +7,19 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useMemo, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import type { invitationToJoinTeamNotificationCard_NotificationDetails$key } from './__generated__/invitationToJoinTeamNotificationCard_NotificationDetails.graphql';
 import type { invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation } from './__generated__/invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation.graphql';
 import type { invitationToJoinTeamNotificationCard_rejectInvitationToJoinTeamMutation } from './__generated__/invitationToJoinTeamNotificationCard_rejectInvitationToJoinTeamMutation.graphql';
@@ -74,12 +80,15 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
     }
   `);
 
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const invitedBy = useMemo(() => notificationDetails.invitedBy, [notificationDetails]);
   const team = useMemo(() => notificationDetails.team, [notificationDetails]);
-  const { enqueueSnackbar } = useSnackbar();
   const [cardState, setCardState] = useState<CardState>(CardState.Pending);
 
   const handleRejectClick = () => {
+    const toastId = themedToast(<NotificationContent content={`Rejecting invitation to join team '${team?.name}'...`} />, infoNotificationOptions);
+
     commitRejectInvitationToJoinTeam({
       variables: {
         input: {
@@ -89,9 +98,9 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to reject invitation to join team '${team?.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to reject invitation to join team '${team?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           setCardState(CardState.Pending);
@@ -102,9 +111,9 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
         setCardState(CardState.Rejected);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to reject invitation to join team '${team?.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to reject invitation to join team '${team?.name}'. Error: ${error.message}.`} />,
         });
 
         setCardState(CardState.Pending);
@@ -115,6 +124,8 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
   };
 
   const handleAcceptClick = () => {
+    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join team '${team?.name}'...`} />, infoNotificationOptions);
+
     commitAcceptInvitationToJoinTeam({
       variables: {
         input: {
@@ -124,9 +135,9 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to accept invitation to join team '${team?.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to accept invitation to join team '${team?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           setCardState(CardState.Pending);
@@ -134,12 +145,17 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Invitation to join team '${team?.name} accepted.`} />,
+        });
+
         setCardState(CardState.Accepted);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to accept invitation to join team '${team?.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to accept invitation to join team '${team?.name}'. Error: ${error.message}.`} />,
         });
 
         setCardState(CardState.Pending);

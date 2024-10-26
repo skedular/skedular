@@ -25,18 +25,24 @@ import {
   PreferredIcon,
   SettingsIcon,
 } from '@repo/shared/components/icons';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingsWeekGrid } from 'components/booking';
-import { LocationLink, getLocationBookingsLink, getLocationSettingsLink } from 'components/location';
+import { getLocationBookingsLink, getLocationSettingsLink, LocationLink } from 'components/location';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
 import type { JSX } from 'react';
-import { memo, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import type { locationMembersBookings_addCustomerDefaultLocationMutation } from './__generated__/locationMembersBookings_addCustomerDefaultLocationMutation.graphql';
 import type { locationMembersBookings_deleteLocationMutation } from './__generated__/locationMembersBookings_deleteLocationMutation.graphql';
 import type { locationMembersBookings_query$key } from './__generated__/locationMembersBookings_query.graphql';
@@ -180,7 +186,8 @@ const LocationMembersBookings = ({
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
@@ -242,6 +249,11 @@ const LocationMembersBookings = ({
       return;
     }
 
+    const toastId = themedToast(
+      <NotificationContent content={`Setting location '${locationName}' as your preferred location...`} />,
+      infoNotificationOptions,
+    );
+
     commitAddCustomerDefaultLocation({
       variables: {
         input: {
@@ -251,25 +263,28 @@ const LocationMembersBookings = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to set location '${locationName}' as your preferred location. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to set location '${locationName}' as your preferred location. Error: ${joinErrors(errors)}.`} />
+            ),
           });
 
           return;
         }
 
-        enqueueSnackbar(`Location '${locationName}' has been set as the preferred location.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationName}' has been set as the preferred location.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to set location '${locationName}' as your preferred location. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set location '${locationName}' as your preferred location. Error: ${error.message}.`} />,
         });
       },
+
       optimisticResponse: {
         addCustomerDefaultLocation: {
           customer: {
@@ -290,6 +305,11 @@ const LocationMembersBookings = ({
       return;
     }
 
+    const toastId = themedToast(
+      <NotificationContent content={`Removing location '${locationName}' as your preferred location...`} />,
+      infoNotificationOptions,
+    );
+
     commitRemoveCustomerDefaultLocation({
       variables: {
         input: {
@@ -299,23 +319,29 @@ const LocationMembersBookings = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove the location '${locationName}' as your preferred location. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the location '${locationName}' as your preferred location. Error: ${joinErrors(errors)}.`}
+              />
+            ),
           });
 
           return;
         }
 
-        enqueueSnackbar(`Location '${locationName}' has been removed as your preferred location.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationName}' has been removed as your preferred location.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove the location '${locationName}' as your preferred location. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to remove the location '${locationName}' as your preferred location. Error: ${error.message}.`} />
+          ),
         });
       },
       optimisticResponse: {
@@ -342,6 +368,8 @@ const LocationMembersBookings = ({
       return;
     }
 
+    const toastId = themedToast(<NotificationContent content={`Removing location '${locationName}'...`} />, infoNotificationOptions);
+
     commitDeleteLocation({
       variables: {
         connectionIds: locationsConnectionIds,
@@ -352,23 +380,23 @@ const LocationMembersBookings = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove location '${locationName}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove location '${locationName}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        enqueueSnackbar(`Location '${locationName}' has been successfully removed.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationName}' has been successfully removed.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove location '${locationName}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove location '${locationName}'. Error: ${error.message}.`} />,
         });
       },
     });

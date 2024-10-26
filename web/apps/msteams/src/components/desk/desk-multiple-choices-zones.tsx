@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
-import { memo, useCallback, useEffect, useMemo, useTransition } from 'react';
+import { memo, useMemo } from 'react';
 import { usePaginationFragment } from 'react-relay';
 import type { deskMultipleChoicesZones_query$key } from './__generated__/deskMultipleChoicesZones_query.graphql';
 import type { deskMultipleChoicesZones_refetchableFragment } from './__generated__/deskMultipleChoicesZones_refetchableFragment.graphql';
@@ -20,7 +20,7 @@ type ZoneDetails = {
 };
 
 const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
-  const { data: rootData, refetch } = usePaginationFragment<deskMultipleChoicesZones_refetchableFragment, deskMultipleChoicesZones_query$key>(
+  const { data: rootData } = usePaginationFragment<deskMultipleChoicesZones_refetchableFragment, deskMultipleChoicesZones_query$key>(
     graphql`
       fragment deskMultipleChoicesZones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
@@ -45,8 +45,6 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
     rootDataRelay,
   );
 
-  const [, startTransition] = useTransition();
-
   const zones = useMemo<ZoneDetails[]>(() => {
     if (!rootData.paginatedLocationTags) {
       return [];
@@ -54,22 +52,6 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
 
     return rootData.paginatedLocationTags.edges.map(({ node }) => node);
   }, [rootData.paginatedLocationTags]);
-
-  const handleRefetch = useCallback(() => {
-    startTransition(() => {
-      refetch(
-        {},
-        {
-          fetchPolicy: 'store-and-network',
-        },
-      );
-    });
-  }, [refetch]);
-
-  // Workaround to ensure we have all the zones if new zones added using zone dialog
-  useEffect(() => {
-    handleRefetch();
-  }, [handleRefetch]);
 
   if (!rootData.paginatedLocationTags) {
     return <></>;

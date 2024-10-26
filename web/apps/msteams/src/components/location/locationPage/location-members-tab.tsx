@@ -9,22 +9,28 @@ import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { CustomerCard } from 'components/customer';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { PreloadedQuery, useFragment, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 import type { locationMembersTab_inviteCustomersToJoinLocationMutation } from './__generated__/locationMembersTab_inviteCustomersToJoinLocationMutation.graphql';
 import type {
@@ -158,8 +164,9 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
     rootDataRelay,
   );
 
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [, startTransition] = useTransition();
-  const { enqueueSnackbar } = useSnackbar();
   const [commitInviteCustomersToJoinLocation] = useMutation<locationMembersTab_inviteCustomersToJoinLocationMutation>(graphql`
     mutation locationMembersTab_inviteCustomersToJoinLocationMutation($input: InviteCustomersToJoinLocationInput!) {
       inviteCustomersToJoinLocation(input: $input) {
@@ -348,6 +355,11 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
       return;
     }
 
+    const toastId = themedToast(
+      <NotificationContent content={`Inviting people to join location '${rootData.location.name}'...`} />,
+      infoNotificationOptions,
+    );
+
     commitInviteCustomersToJoinLocation({
       variables: {
         input: {
@@ -361,20 +373,27 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to invite member to join location '${rootData.location?.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to invite people to join location '${rootData.location?.name}'. Error: ${joinErrors(errors)}.`} />
+            ),
           });
 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Invitation sent to people to join location ${rootData.location?.name}.`} />,
+        });
+
         setInvitePeopleDialogOpen(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to invite member to join location '${rootData.location?.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to invite people to join location '${rootData.location?.name}'. Error: ${error.message}.`} />,
         });
       },
     });
@@ -389,7 +408,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
       {!organizationId && (
         <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
           <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-            Invite Member
+            Invite People
           </Button>
         </Stack>
       )}
@@ -441,7 +460,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
       </Grid>
 
       <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
-        <DialogTitle>Invite member to join your location</DialogTitle>
+        <DialogTitle>Invite people to join your location</DialogTitle>
         <DialogContent>
           <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>
 

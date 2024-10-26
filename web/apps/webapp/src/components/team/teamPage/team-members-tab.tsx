@@ -21,20 +21,26 @@ import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import { AddIcon, EditIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { PreloadedQuery, graphql, useFragment, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 import TeamMemberCard from './team-member-card';
 
@@ -176,12 +182,13 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     }
   `);
 
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<TeamMemberOrderInput>({
     direction: 'Ascending',
     field: 'name',
   });
-  const { enqueueSnackbar } = useSnackbar();
   const [editingOrganizationMembers, setEditingOrganizationMembers] = useState(false);
   const validateTeam = makeValidate(teamSchema);
   const requiredTeamFields = makeRequired(teamSchema);
@@ -243,11 +250,6 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     [rootDataPaginatedTeamMembers.paginatedTeamMembers],
   );
 
-  // Workaround to ensure we have all the zones if new zones added using zone dialog
-  useEffect(() => {
-    handleRefetch(pageSize, sortingOrder, peopleNameSearchText);
-  }, [handleRefetch, pageSize, sortingOrder, peopleNameSearchText]);
-
   const handleEditOrganizationMembersClick = () => {
     setEditingOrganizationMembers(true);
   };
@@ -256,6 +258,8 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     if (!rootData.team) {
       return;
     }
+
+    const toastId = themedToast(<NotificationContent content={`Updating team '${rootData.team.name}' members...`} />, infoNotificationOptions);
 
     commitUpdateTeam({
       variables: {
@@ -272,21 +276,26 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to update team '${rootData.team?.name}' members. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update team '${rootData.team?.name}' members. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team ${rootData.team?.name} members updated.`} />,
+        });
+
         setEditingOrganizationMembers(false);
         handleRefetch(pageSize, sortingOrder, peopleNameSearchText);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to update team '${rootData.team?.name}' members. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update team '${rootData.team?.name}' members. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -321,6 +330,8 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
       return;
     }
 
+    const toastId = themedToast(<NotificationContent content={`Inviting people to join team '${rootData.team.name}'...`} />, infoNotificationOptions);
+
     commitInviteCustomersToJoinTeam({
       variables: {
         input: {
@@ -334,20 +345,25 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to invite member to join team '${rootData.team?.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to invite people to join team '${rootData.team?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Invitation sent to people to join team ${rootData.team?.name}.`} />,
+        });
+
         setInvitePeopleDialogOpen(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to invite member to join team '${rootData.team?.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to invite people to join team '${rootData.team?.name}'. Error: ${error.message}.`} />,
         });
       },
     });
@@ -395,7 +411,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
         <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
           <Grid>
             <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-              Invite Member
+              Invite People
             </Button>
           </Grid>
         </Stack>
@@ -488,7 +504,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
       )}
 
       <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
-        <DialogTitle>Invite member to join your team</DialogTitle>
+        <DialogTitle>Invite people to join your team</DialogTitle>
         <DialogContent>
           <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>
 

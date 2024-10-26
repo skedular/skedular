@@ -26,17 +26,23 @@ import {
   NotPreferredIcon,
   PreferredIcon,
 } from '@repo/shared/components/icons';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { ZonesLine } from '@repo/shared/components/zone';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useMemo, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 import type { deskCard_DeskDetails$key } from './__generated__/deskCard_DeskDetails.graphql';
 import type { deskCard_addCustomerDefaultDeskMutation } from './__generated__/deskCard_addCustomerDefaultDeskMutation.graphql';
@@ -194,7 +200,8 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
@@ -250,6 +257,8 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
   const handleConfirmRemovingDeskClick = () => {
     setDeskRemoveConfirmationDialogOpen(false);
 
+    const toastId = themedToast(<NotificationContent content={`Removing desk '${deskDetails.name}'...`} />, infoNotificationOptions);
+
     commitDeleteDesk({
       variables: {
         connectionIds: connectionIds,
@@ -260,18 +269,23 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to delete desk '${deskDetails.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove desk '${deskDetails.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk ${deskDetails.name} removed.`} />,
+        });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to delete desk '${deskDetails.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove desk '${deskDetails.name}'. Error: ${error.message}.`} />,
         });
       },
     });
@@ -289,6 +303,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     setDeskDeactivateConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
+    const toastId = themedToast(<NotificationContent content={`Deactivating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
       variables: {
@@ -303,18 +318,23 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to deactivate Desk '${deskDetails.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate Desk '${deskDetails.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk ${deskDetails.name} deactivated.`} />,
+        });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to deactivate Desk '${deskDetails.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate Desk '${deskDetails.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -343,6 +363,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     setDeskActivateConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
+    const toastId = themedToast(<NotificationContent content={`Activating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
       variables: {
@@ -357,18 +378,23 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to deactivate Desk '${deskDetails.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate Desk '${deskDetails.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk ${deskDetails.name} activated.`} />,
+        });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to deactivate Desk '${deskDetails.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate Desk '${deskDetails.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -394,7 +420,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
   };
 
   const handleSaveClick = ({ name, locationTagIds }: DeskDetails) => {
-    setEditing(false);
+    const toastId = themedToast(<NotificationContent content={`Updating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
       variables: {
@@ -409,18 +435,25 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to update Desk '${deskDetails.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update Desk '${deskDetails.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk ${name} updated.`} />,
+        });
+
+        setEditing(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to update Desk '${deskDetails.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update Desk '${deskDetails.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -442,6 +475,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       return;
     }
 
+    const toastId = themedToast(
+      <NotificationContent content={`Setting desk '${deskDetails.name}' as your preferred desk...`} />,
+      infoNotificationOptions,
+    );
+
     commitAddCustomerDefaultDesk({
       variables: {
         input: {
@@ -451,25 +489,28 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to set desk '${deskDetails.name}' as your preferred desk. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to set desk '${deskDetails.name}' as your preferred desk. Error: ${joinErrors(errors)}.`} />
+            ),
           });
 
           return;
         }
 
-        enqueueSnackbar(`Desk '${deskDetails.name}' has been set as the preferred desk.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk '${deskDetails.name}' has been set as the preferred desk.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to set desk '${deskDetails.name}' as your preferred desk. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set desk '${deskDetails.name}' as your preferred desk. Error: ${error.message}.`} />,
         });
       },
+
       optimisticResponse: {
         addCustomerDefaultDesk: {
           customer: {
@@ -490,6 +531,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       return;
     }
 
+    const toastId = themedToast(
+      <NotificationContent content={`Removing desk '${deskDetails.name}' as your preferred desk...`} />,
+      infoNotificationOptions,
+    );
+
     commitRemoveCustomerDefaultDesk({
       variables: {
         input: {
@@ -499,23 +545,29 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove the desk '${deskDetails.name}' as your preferred desk. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the desk '${deskDetails.name}' as your preferred desk. Error: ${joinErrors(errors)}.`}
+              />
+            ),
           });
 
           return;
         }
 
-        enqueueSnackbar(`Desk '${deskDetails.name}' has been removed as your preferred desk.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk '${deskDetails.name}' has been removed as your preferred desk.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove the desk '${deskDetails.name}' as your preferred desk. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to remove the desk '${deskDetails.name}' as your preferred desk. Error: ${error.message}.`} />
+          ),
         });
       },
       optimisticResponse: {
@@ -541,6 +593,10 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     setSetDeskApprovalRequirementConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
+    const toastId = themedToast(
+      <NotificationContent content={`Setting '${deskDetails.name}' require approval property...`} />,
+      infoNotificationOptions,
+    );
 
     commitUpdateDesk({
       variables: {
@@ -555,18 +611,25 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to set Desk '${deskDetails.name}' require approval property. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to set desk '${deskDetails.name}' require approval property. Error: ${joinErrors(errors)}.`} />
+            ),
           });
 
           return;
         }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Set desk '${deskDetails.name}' require approval property.`} />,
+        });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to set Desk '${deskDetails.name}' require approval property. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set desk '${deskDetails.name}' require approval property. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -595,6 +658,10 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     setRemoveDeskApprovalRequirementConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
+    const toastId = themedToast(
+      <NotificationContent content={`Unsetting '${deskDetails.name}' require approval property...`} />,
+      infoNotificationOptions,
+    );
 
     commitUpdateDesk({
       variables: {
@@ -609,18 +676,25 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to unset Desk '${deskDetails.name}' require approval property. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to unset desk '${deskDetails.name}' require approval property. Error: ${joinErrors(errors)}.`} />
+            ),
           });
 
           return;
         }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Unset desk '${deskDetails.name}' require approval property.`} />,
+        });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to unset Desk '${deskDetails.name}' require approval property. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to unset desk '${deskDetails.name}' require approval property. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -756,12 +830,13 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
                   name="locationTagIds"
                   required={requiredFields.locationTagIds}
                 />
+
                 <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
                   </Button>
                   <Button color="primary" variant="contained" type="submit">
-                    Save
+                    Update
                   </Button>
                 </Stack>
               </Stack>

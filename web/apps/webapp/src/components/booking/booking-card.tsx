@@ -28,17 +28,22 @@ import {
   PreferredIcon,
   TeamIcon,
 } from '@repo/shared/components/icons';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
-import { UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
 import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import { array, date, object, string } from 'yup';
 import BookingDate from './booking-date';
 import BookingDetailsSelector from './booking-details-selector';
@@ -267,8 +272,9 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     }
   `);
 
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
-  const { enqueueSnackbar } = useSnackbar();
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(bookingSchema);
   const requiredFields = makeRequired(bookingSchema);
@@ -282,6 +288,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     }
 
     const id = nanoid();
+    const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
 
     commitAddBooking({
       variables: {
@@ -298,22 +305,47 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           deskIds: [],
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to make a booking '${shortDateFormatFrom}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
+        const booking = response.addBooking?.booking!;
+        let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
+
+        if (booking.location) {
+          message += ` from the "${booking.location!.name}"`;
+        }
+
+        if (booking.desks.length > 0) {
+          message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
+
+          const zones = booking.desks.flatMap(({ locationTags }) => locationTags).filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
+          if (zones.length > 0) {
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+
+            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
+          }
+        }
+
+        message += ` on ${toShortDate(booking.from)}.`;
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={message} />,
+        });
+
         UpdateGlobalReloadId();
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to make a booking '${shortDateFormatFrom}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -357,6 +389,15 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
   };
 
   const handleDeleteClick = () => {
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.customer)}`;
+    if (bookingDetails.location) {
+      bookingDetailsInfo += ` at the "${bookingDetails.location!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+
+    const toastId = themedToast(<NotificationContent content={`Removing booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
+
     commitDeleteBooking({
       variables: {
         connectionIds,
@@ -367,20 +408,24 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to delete booking '${shortDateFormatFrom}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
+        });
         UpdateGlobalReloadId();
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to delete booking '${shortDateFormatFrom}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}.`} />,
         });
       },
     });
@@ -395,8 +440,6 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
   };
 
   const handleSaveClick = ({ date, member: memberId, notes, organization: organizationId, location: locationId, desks: deskIds }: BookingDetails) => {
-    setEditing(false);
-
     if (!rootData.me) {
       return;
     }
@@ -405,6 +448,15 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     const from = start.toISOString();
     const to = endOfDay(start).toISOString();
     const shortDateTimeFormatFrom = toShortDate(start);
+
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.customer)}`;
+    if (bookingDetails.location) {
+      bookingDetailsInfo += ` at the "${bookingDetails.location!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+
+    const toastId = themedToast(<NotificationContent content={`Updating booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
     commitUpdateBooking({
       variables: {
@@ -423,20 +475,25 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Booking ${bookingDetailsInfo} updated.`} />,
+        });
         UpdateGlobalReloadId();
+        setEditing(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -470,6 +527,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       return;
     }
 
+    const toastId = themedToast(<NotificationContent content={`Setting '${deskName}' as your preferred desk...`} />, infoNotificationOptions);
+
     commitAddCustomerDefaultDesk({
       variables: {
         input: {
@@ -479,23 +538,23 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to set desk '${deskName}' as your preferred desk. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to set desk '${deskName}' as your preferred desk. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        enqueueSnackbar(`Desk '${deskName}' has been set as the preferred desk.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk '${deskName}' has been set as the preferred desk.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to set desk '${deskName}' as your preferred desk. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set desk '${deskName}' as your preferred desk. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -518,6 +577,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       return;
     }
 
+    const toastId = themedToast(<NotificationContent content={`Removing '${deskName}' as your preferred desk...`} />, infoNotificationOptions);
+
     commitRemoveCustomerDefaultDesk({
       variables: {
         input: {
@@ -527,23 +588,23 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove the desk '${deskName}' as your preferred desk. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove the desk '${deskName}' as your preferred desk. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        enqueueSnackbar(`Desk '${deskName}' has been removed as your preferred desk.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk '${deskName}' has been removed as your preferred desk.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove the desk '${deskName}' as your preferred desk. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove the desk '${deskName}' as your preferred desk. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -735,7 +796,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                       Cancel
                     </Button>
                     <Button color="primary" variant="contained" type="submit">
-                      Save
+                      Update
                     </Button>
                   </Stack>
                 </Stack>

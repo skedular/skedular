@@ -5,16 +5,22 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerShortName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useState } from 'react';
+import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import type { newFeedbackDialog_query$key } from './__generated__/newFeedbackDialog_query.graphql';
 import type { newFeedbackDialog_submitCustomerFeedbackMutation } from './__generated__/newFeedbackDialog_submitCustomerFeedbackMutation.graphql';
@@ -57,13 +63,14 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(zoneSchema);
   const requiredFields = makeRequired(zoneSchema);
-  const [feedbackContent, setFeedbackContent] = useState<string>('');
 
-  const handleSendClick = ({ feedback: feedbackContent }: FeedbackDetails) => {
+  const handleSubmitFeedbackClick = ({ feedback: feedbackContent }: FeedbackDetails) => {
     const id = nanoid();
+    const toastId = themedToast(<NotificationContent content={`Submitting feedback...`} />, infoNotificationOptions);
 
     commitSubmitCustomerFeedback({
       variables: {
@@ -76,21 +83,25 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to submit feedback. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to submit feedback. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        setFeedbackContent('');
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Feedback submitted.`} />,
+        });
+
         onSendClicked();
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to submit feedback. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to submit feedback. Error: ${error.message}.`} />,
         });
       },
     });
@@ -101,9 +112,9 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
       <DialogTitle>Send us feedback</DialogTitle>
       <DialogContent>
         <Form
-          onSubmit={handleSendClick}
+          onSubmit={handleSubmitFeedbackClick}
           initialValues={{
-            feedbackContent,
+            feedbackContent: '',
           }}
           validate={validate}
           render={({ handleSubmit }) => (

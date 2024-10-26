@@ -105,7 +105,33 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
               to
               notes
               customer {
+                uniqueId
+                name
+                givenName
+                middleName
+                familyName
                 photoUrl
+              }
+              organization {
+                uniqueId
+                name
+              }
+              location {
+                uniqueId
+                name
+              }
+              team {
+                uniqueId
+                name
+              }
+              desks {
+                uniqueId
+                name
+                locationTags {
+                  uniqueId
+                  name
+                  tagType
+                }
               }
               ...bookingCard_BookingDetails
             }

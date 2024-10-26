@@ -16,18 +16,24 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingsWeekGrid } from 'components/booking';
-import { TeamLink, getTeamBookingsLink, getTeamSettingsLink } from 'components/team';
+import { getTeamBookingsLink, getTeamSettingsLink, TeamLink } from 'components/team';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
 import type { JSX } from 'react';
-import { memo, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import type { teamMembersBookings_addCustomerDefaultTeamMutation } from './__generated__/teamMembersBookings_addCustomerDefaultTeamMutation.graphql';
 import type { teamMembersBookings_deleteTeamMutation } from './__generated__/teamMembersBookings_deleteTeamMutation.graphql';
 import type { teamMembersBookings_query$key } from './__generated__/teamMembersBookings_query.graphql';
@@ -151,7 +157,8 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
@@ -209,6 +216,8 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       return;
     }
 
+    const toastId = themedToast(<NotificationContent content={`Setting team '${teamName}' as your preferred team...`} />, infoNotificationOptions);
+
     commitAddCustomerDefaultTeam({
       variables: {
         input: {
@@ -218,23 +227,23 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to set team '${teamName}' as your preferred team. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to set team '${teamName}' as your preferred team. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        enqueueSnackbar(`Team '${teamName}' has been set as the preferred team.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team '${teamName}' has been set as the preferred team.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to set team '${teamName}' as your preferred team. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set team '${teamName}' as your preferred team. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -257,6 +266,8 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       return;
     }
 
+    const toastId = themedToast(<NotificationContent content={`Removing team '${teamName}' as your preferred team...`} />, infoNotificationOptions);
+
     commitRemoveCustomerDefaultTeam({
       variables: {
         input: {
@@ -266,23 +277,23 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove the team '${teamName}' as your preferred team. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove the team '${teamName}' as your preferred team. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        enqueueSnackbar(`Team '${teamName}' has been removed as your preferred team.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team '${teamName}' has been removed as your preferred team.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove the team '${teamName}' as your preferred team. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove the team '${teamName}' as your preferred team. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -309,6 +320,8 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       return;
     }
 
+    const toastId = themedToast(<NotificationContent content={`Removing team '${teamName}'...`} />, infoNotificationOptions);
+
     commitDeleteTeam({
       variables: {
         connectionIds: teamsConnectionIds,
@@ -319,23 +332,23 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove team '${teamName}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove team '${teamName}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        enqueueSnackbar(`Team '${teamName}' has been successfully removed.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team '${teamName}' has been successfully removed.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove team '${teamName}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove team '${teamName}'. Error: ${error.message}.`} />,
         });
       },
     });

@@ -22,16 +22,22 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
-import { useSnackbar } from 'notistack';
 import type { JSX } from 'react';
-import { memo, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 
 type Props = {
   rootDataRelay: organizationMembersBookings_query$key;
@@ -157,7 +163,8 @@ const OrganizationMembersBookings = ({
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [dateRangeType, setDateRangeType] = useState(DateRangeType.ThisWeek);
@@ -215,6 +222,11 @@ const OrganizationMembersBookings = ({
       return;
     }
 
+    const toastId = themedToast(
+      <NotificationContent content={`Setting organization '${organizationName}' as your default organization...`} />,
+      infoNotificationOptions,
+    );
+
     commitSetCustomerDefaultOrganization({
       variables: {
         input: {
@@ -224,23 +236,25 @@ const OrganizationMembersBookings = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to mark '${organizationName}' as your default organization. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to set '${organizationName}' as your default organization. Error: ${joinErrors(errors)}.`} />
+            ),
           });
 
           return;
         }
 
-        enqueueSnackbar(`'${organizationName}' is now your default organization.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`'${organizationName}' is now your default organization.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to mark '${organizationName}' as your default organization. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set '${organizationName}' as your default organization. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -259,6 +273,11 @@ const OrganizationMembersBookings = ({
       return;
     }
 
+    const toastId = themedToast(
+      <NotificationContent content={`Unsetting organization '${organizationName}' as your default organization...`} />,
+      infoNotificationOptions,
+    );
+
     commitClearCustomerDefaultOrganization({
       variables: {
         input: {
@@ -267,23 +286,25 @@ const OrganizationMembersBookings = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to clear '${organizationName}' as your default organization. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to unset '${organizationName}' as your default organization. Error: ${joinErrors(errors)}.`} />
+            ),
           });
 
           return;
         }
 
-        enqueueSnackbar(`'${organizationName}' is no longer set as your default organization.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`'${organizationName}' is no longer set as your default organization.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to clear '${organizationName}' as your default organization. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to unset '${organizationName}' as your default organization. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -310,6 +331,8 @@ const OrganizationMembersBookings = ({
       return;
     }
 
+    const toastId = themedToast(<NotificationContent content={`Removing organization '${organizationName}'...`} />, infoNotificationOptions);
+
     commitDeleteOrganization({
       variables: {
         connectionIds: organizationsConnectionIds,
@@ -320,23 +343,23 @@ const OrganizationMembersBookings = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to remove organization '${organizationName}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove organization '${organizationName}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        enqueueSnackbar(`Organization '${organizationName}' has been successfully removed.`, {
-          variant: 'success',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization '${organizationName}' has been successfully removed.`} />,
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to remove organization '${organizationName}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove organization '${organizationName}'. Error: ${error.message}.`} />,
         });
       },
     });

@@ -15,14 +15,20 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { EditIcon } from '@repo/shared/components/icons';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { convertStringToLowercaseExceptFirstLetter, getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 
 type Props = {
@@ -69,7 +75,8 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(organizationMemberSchema);
   const requiredFields = makeRequired(organizationMemberSchema);
@@ -83,9 +90,8 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
   };
 
   const handleSaveClick = ({ membershipType: membershipTypeStr }: OrganizationMemberDetails) => {
-    setEditing(false);
-
     const membershipType = membershipTypeStr as unknown as OrganizationMemberMembershipType;
+    const toastId = themedToast(<NotificationContent content={`Updating organization membership...`} />, infoNotificationOptions);
 
     commitChangeOrganizationMemberOwnershipType({
       variables: {
@@ -97,18 +103,25 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to update membership to ${membershipType}. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update membership to ${membershipType}. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization membership updated.`} />,
+        });
+
+        setEditing(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to update membership to '${membershipType}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update membership to '${membershipType}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -170,7 +183,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
                     Cancel
                   </Button>
                   <Button color="primary" variant="contained" type="submit">
-                    Save
+                    Update
                   </Button>
                 </Stack>
               </Stack>

@@ -11,14 +11,20 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { DangerIcon, DeleteIcon } from '@repo/shared/components/icons';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useMemo, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import type { teamMemberCard_TeamMemberDetails$key } from './__generated__/teamMemberCard_TeamMemberDetails.graphql';
 import type { teamMemberCard_query$key } from './__generated__/teamMemberCard_query.graphql';
 import type { teamMemberCard_updateTeamMutation } from './__generated__/teamMemberCard_updateTeamMutation.graphql';
@@ -89,7 +95,8 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [teamMemberRemoveConfirmationDialogOpen, setTeamMemberRemoveConfirmationDialogOpen] = useState(false);
   const customer = useMemo(() => {
     if (teamMemberDetails.customer) {
@@ -111,12 +118,14 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
     setTeamMemberRemoveConfirmationDialogOpen(false);
   };
 
-  const handleConfirmRemovingDeskClick = () => {
+  const handleConfirmRemovingTeamMemberClick = () => {
     if (!rootData.team) {
       return;
     }
 
     setTeamMemberRemoveConfirmationDialogOpen(false);
+
+    const toastId = themedToast(<NotificationContent content={`Removing team member...`} />, infoNotificationOptions);
 
     commitUpdateTeam({
       variables: {
@@ -136,20 +145,25 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to update team '${rootData.team?.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove team member'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team member removed.`} />,
+        });
+
         onRefetchNeeded();
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to update team '${rootData.team?.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove team member. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -195,7 +209,7 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
             <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamMemberClick}>
               Cancel
             </Button>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskClick}>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingTeamMemberClick}>
               Remove
             </Button>
           </DialogActions>

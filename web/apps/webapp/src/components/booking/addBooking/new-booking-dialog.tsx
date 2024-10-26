@@ -7,17 +7,23 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { endOfDay, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
+import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
+import { endOfDay, getCustomerFullName, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
 import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import { array, date, object, string } from 'yup';
 
 type Props = {
@@ -100,14 +106,41 @@ const NewBookingDialog = ({
           notes
           customer {
             uniqueId
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
+          }
+          organization {
+            uniqueId
+            name
+          }
+          location {
+            uniqueId
+            name
+          }
+          team {
+            uniqueId
+            name
+          }
+          desks {
+            uniqueId
+            name
+            locationTags {
+              uniqueId
+              name
+              tagType
+            }
           }
         }
       }
     }
   `);
 
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
-  const { enqueueSnackbar } = useSnackbar();
   const schema = !!rootData.organizationBookingPermissions?.canAddBookingOnBehalf ? bookingSchema : bookingWithoutMemberSchema;
   const validate = makeValidate(schema);
   const requiredFields = makeRequired(schema);
@@ -135,6 +168,7 @@ const NewBookingDialog = ({
     const to = endOfDay(finalDate).toISOString();
     const fromToPrint = toShortDate(startOfDay(finalDate));
     const customerId = member ?? rootData.me?.id;
+    const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
 
     commitAddBooking({
       variables: {
@@ -152,23 +186,48 @@ const NewBookingDialog = ({
           teamId: defaultTeamId,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
+        const booking = response.addBooking?.booking!;
+        let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
+
+        if (booking.location) {
+          message += ` from the "${booking.location!.name}"`;
+        }
+
+        if (booking.desks.length > 0) {
+          message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
+
+          const zones = booking.desks.flatMap(({ locationTags }) => locationTags).filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
+          if (zones.length > 0) {
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+
+            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
+          }
+        }
+
+        message += ` on ${toShortDate(booking.from)}.`;
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={message} />,
+        });
+
         onAddClicked();
         UpdateGlobalReloadId();
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -179,8 +238,32 @@ const NewBookingDialog = ({
             to,
             notes,
             customer: {
-              uniqueId: customerId,
+              uniqueId: rootData.me.id,
+              name: '',
+              givenName: '',
+              middleName: '',
+              familyName: '',
+              photoUrl: '',
             },
+            organization: organizationId
+              ? {
+                  uniqueId: organizationId,
+                  name: '',
+                }
+              : null,
+            location: locationId
+              ? {
+                  uniqueId: locationId,
+                  name: '',
+                }
+              : null,
+            team: defaultTeamId
+              ? {
+                  uniqueId: defaultTeamId,
+                  name: '',
+                }
+              : null,
+            desks: [],
           },
         },
       },

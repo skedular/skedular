@@ -19,20 +19,26 @@ import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { PreloadedQuery, graphql, useFragment, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 
 type Props = {
@@ -126,6 +132,8 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<OrganizationMemberOrderInput>({
     direction: 'Ascending',
@@ -133,7 +141,6 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
   });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
-  const { enqueueSnackbar } = useSnackbar();
   const [invitePeopleDialogOpen, setInvitePeopleDialogOpen] = useState(false);
   const validate = makeValidate(membersToInviteSchema);
   const requiredFields = makeRequired(membersToInviteSchema);
@@ -152,6 +159,11 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
       return;
     }
 
+    const toastId = themedToast(
+      <NotificationContent content={`Inviting people to join organization '${rootData.organization.name}'...`} />,
+      infoNotificationOptions,
+    );
+
     commitInviteCustomersToJoinOrganization({
       variables: {
         input: {
@@ -165,20 +177,33 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to invite member to join organization '${rootData.organization?.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to invite people to join organization '${rootData.organization?.name}'. Error: ${joinErrors(errors)}.`}
+              />
+            ),
           });
 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Invitation sent to people to join organization ${rootData.organization?.name}.`} />,
+        });
+
         setInvitePeopleDialogOpen(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to invite member to join organization '${rootData.organization?.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent
+              content={`Failed to invite people to join organization '${rootData.organization?.name}'. Error: ${error.message}.`}
+            />
+          ),
         });
       },
     });
@@ -281,7 +306,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
       {rootData.organization.canInvitePeople && (
         <Stack direction="row" sx={{ width: 'auto' }}>
           <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-            Invite Member
+            Invite People
           </Button>
         </Stack>
       )}
@@ -325,7 +350,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
       </Grid>
 
       <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
-        <DialogTitle>Invite member to join your organization</DialogTitle>
+        <DialogTitle>Invite people to join your organization</DialogTitle>
         <DialogContent>
           <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>
 

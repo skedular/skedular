@@ -3,16 +3,21 @@ import type { GetApplyQuickFilterFn, GridCallbackDetails, GridCellParams, GridCo
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BookingIcon as BookingIconComponent } from '@repo/shared/components/booking';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
-import { GlobalReloadIdContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { GlobalReloadIdContext, PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
 import { memo, useCallback, useContext, useEffect, useMemo, useTransition } from 'react';
 import { useFragment, useMutation, usePaginationFragment } from 'react-relay';
+import { toast } from 'react-toastify';
 import type { bookingsWeekGrid_addBookingMutation } from './__generated__/bookingsWeekGrid_addBookingMutation.graphql';
 import type { bookingsWeekGrid_allBookings_query$key } from './__generated__/bookingsWeekGrid_allBookings_query.graphql';
 import type { bookingsWeekGrid_allBookings_refetchableFragment } from './__generated__/bookingsWeekGrid_allBookings_refetchableFragment.graphql';
@@ -209,9 +214,10 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
     }
   `);
 
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const globalReloadId = useContext(GlobalReloadIdContext);
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
-  const { enqueueSnackbar } = useSnackbar();
   const [, startTransition] = useTransition();
   const handleRefetch = useCallback(
     (startDate: Dayjs) => {
@@ -408,31 +414,37 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
   const handleCellClick = (params: GridCellParams, event: MuiEvent, details: GridCallbackDetails) => {
     const { customer, booking } = params.value as BookingAndCustomerDetails;
     if (!booking && !rootData.organizationBookingPermissions?.canAddBookingOnBehalf && rootData.me?.id !== customer.uniqueId) {
-      enqueueSnackbar(`You are not authorized to make a booking on behalf of someone else`, {
-        variant: 'error',
-        anchorOrigin,
-      });
+      themedToast(<NotificationContent content={`You are not authorized to make a booking on behalf of someone else.`} />, errorNotificationOptions);
 
       return;
     }
 
     if (booking && !rootData.organizationBookingPermissions?.canDeleteBookingOnBehalf && rootData.me?.id !== customer.uniqueId) {
-      enqueueSnackbar(`You are not authorized to remove this booking on behalf of someone else`, {
-        variant: 'error',
-        anchorOrigin,
-      });
+      themedToast(
+        <NotificationContent content={`You are not authorized to remove this booking on behalf of someone else.`} />,
+        errorNotificationOptions,
+      );
 
       return;
     }
 
     const id = booking ? booking.id : nanoid();
     const index = daysOfWeekMap[params.field]!;
-    const startOfDay = startDate.add(index, 'day');
-    const from = startOfDay.toISOString();
-    const to = endOfDay(startOfDay).toISOString();
-    const fromToPrint = toShortDate(startOfDay);
+    const correctedStartDate = startDate.add(index, 'day');
+    const from = correctedStartDate.toISOString();
+    const to = endOfDay(correctedStartDate).toISOString();
+    const fromToPrint = toShortDate(correctedStartDate);
 
     if (booking) {
+      let bookingDetailsInfo = `for ${getCustomerFullName(booking.customer)}`;
+      if (booking.location) {
+        bookingDetailsInfo += ` at the "${booking.location!.name}"`;
+      }
+
+      bookingDetailsInfo += ` on ${toShortDate(booking.from)}`;
+
+      const toastId = themedToast(<NotificationContent content={`Removing booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
+
       commitDeleteBooking({
         variables: {
           connectionIds,
@@ -443,33 +455,31 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to delete booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
-              variant: 'error',
-              anchorOrigin,
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
             });
 
             return;
           }
 
-          let message = `Booking removed for ${getCustomerFullName(booking.customer)}`;
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
+          });
 
-          if (booking.location) {
-            message += ` at the "${booking.location!.name}"`;
-          }
-
-          message += ` on ${toShortDate(booking.from)}`;
-
-          enqueueSnackbar(message, { variant: 'success', anchorOrigin });
           UpdateGlobalReloadId();
         },
         onError: (error) => {
-          enqueueSnackbar(`Failed to delete booking '${fromToPrint}'. Error: ${error.message}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
           });
         },
       });
     } else {
+      const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
+
       commitAddBooking({
         variables: {
           connectionIds,
@@ -487,16 +497,16 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
         },
         onCompleted: (response, errors) => {
           if (errors && errors.length > 0) {
-            enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
-              variant: 'error',
-              anchorOrigin,
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}.`} />,
             });
 
             return;
           }
 
           const booking = response.addBooking?.booking!;
-          let message = `Booking added for ${getCustomerFullName(booking.customer)} to work`;
+          let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
 
           if (booking.location) {
             message += ` from the "${booking.location!.name}"`;
@@ -513,15 +523,18 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
             }
           }
 
-          message += ` on ${toShortDate(booking.from)}`;
+          message += ` on ${toShortDate(booking.from)}.`;
 
-          enqueueSnackbar(message, { variant: 'success', anchorOrigin });
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={message} />,
+          });
           UpdateGlobalReloadId();
         },
         onError: (error) => {
-          enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            type: 'error',
+            render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${error.message}.`} />,
           });
         },
         optimisticResponse: {

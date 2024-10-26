@@ -9,17 +9,23 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { PreloadedQuery, graphql, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { toast } from 'react-toastify';
 import { array, boolean, object, string } from 'yup';
 
 type Props = {
@@ -95,14 +101,16 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
-  const [activeStep, setActiveStep] = useState(0);
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const [activeStep] = useState(0);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(!rootData.me?.isOrganizationOnboardingDone);
   const validate = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
   const handleOrganizationCreateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
     const id = nanoid();
     const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
+    const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
     commitAddOrganization({
       variables: {
@@ -119,9 +127,9 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to add new organization '${name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -139,18 +147,23 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
           },
           onCompleted: (_, errors) => {
             if (errors && errors.length > 0) {
-              enqueueSnackbar(`Failed to complete organization onboarding. Error: ${joinErrors(errors)}`, {
-                variant: 'error',
-                anchorOrigin,
+              toast.update(toastId, {
+                ...errorNotificationOptions,
+                render: <NotificationContent content={`Failed to complete organization onboarding. Error: ${joinErrors(errors)}.`} />,
               });
             } else {
+              toast.update(toastId, {
+                ...successNotificationOptions,
+                render: <NotificationContent content={`Organization ${name} added.`} />,
+              });
+
               setIsOnboardingOpen(false);
             }
           },
           onError: (error) => {
-            enqueueSnackbar(`Failed to complete organization onboarding. Error: ${error.message}`, {
-              variant: 'error',
-              anchorOrigin,
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to complete organization onboarding. Error: ${error.message}.`} />,
             });
           },
           optimisticResponse: {
@@ -165,9 +178,9 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to add new organization '${name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -192,6 +205,8 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
       return;
     }
 
+    const toastId = themedToast(<NotificationContent content={`Dismissing organization onboarding...`} />, infoNotificationOptions);
+
     commitCompleteOrganizationOnboarding({
       variables: {
         input: {
@@ -200,20 +215,25 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to dismiss organization onboarding. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to dismiss organization onboarding. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization onboarding dismissed.`} />,
+        });
+
         setIsOnboardingOpen(false);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to dismiss organization onboarding. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to dismiss organization onboarding. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {

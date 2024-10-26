@@ -9,12 +9,18 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 
 type Props = {
   rootDataRelay: organizationOffering_query$key;
@@ -53,12 +59,18 @@ const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
 
   const handleCancelClick = () => {
     if (!rootData.organization) {
       return;
     }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Cancelling organization '${rootData.organization.name}' offering...`} />,
+      infoNotificationOptions,
+    );
 
     commitCancelOrganizationOffering({
       variables: {
@@ -69,9 +81,13 @@ const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to cancel offering. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to cancel organization '${rootData.organization?.name}' offering. Error: ${joinErrors(errors)}.`}
+              />
+            ),
           });
 
           onReloadRequired();
@@ -79,12 +95,19 @@ const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization '${rootData.organization?.name}' offering cancelled.`} />,
+        });
+
         onReloadRequired();
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to cancel offering. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to cancel organization '${rootData.organization?.name}' offering. Error: ${error.message}.`} />
+          ),
         });
 
         onReloadRequired();

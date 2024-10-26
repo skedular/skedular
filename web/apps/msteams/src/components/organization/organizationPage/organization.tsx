@@ -4,19 +4,19 @@ import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import { OrganizationAvatar } from '@repo/shared/components/avatars';
 import { Loading } from '@repo/shared/components/loading';
+import { NotificationContent, errorNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext, UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import graphql from 'babel-plugin-relay/macro';
 import { Bookings } from 'components/booking/bookingsPage';
 import { getOrganizationBaseLink } from 'components/organization';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import type { organization_rootQuery } from './__generated__/organization_rootQuery.graphql';
 import OrganizationAboutTab from './organization-about-tab';
 import OrganizationAnalyticsTab from './organization-analytics-tab';
@@ -46,22 +46,20 @@ const RootQuery = graphql`
 
 const Organization = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<organization_rootQuery>(RootQuery, queryReference);
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get('tab');
   const addPaymentMethodStatus = searchParams.get('add-payment-method-status');
-  const { enqueueSnackbar } = useSnackbar();
   const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
   let initialTabIndex = 0;
 
   useEffect(() => {
     if (addPaymentMethodStatus === 'failed') {
-      enqueueSnackbar('Failed to add payment method', {
-        variant: 'error',
-        anchorOrigin,
-      });
+      themedToast(<NotificationContent content={`Failed to add payment method`} />, errorNotificationOptions);
     } else if (addPaymentMethodStatus === 'added') {
     }
-  }, [addPaymentMethodStatus, enqueueSnackbar]);
+  }, [addPaymentMethodStatus, themedToast]);
 
   useEffect(() => {
     if (!rootData.organization) {

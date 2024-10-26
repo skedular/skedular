@@ -10,12 +10,18 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useMemo, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 
 type Props = {
   notificationDetailsRelay: invitationToJoinLocationNotificationCard_NotificationDetails$key;
@@ -73,12 +79,18 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
     }
   `);
 
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const invitedBy = useMemo(() => notificationDetails.invitedBy, [notificationDetails]);
   const location = useMemo(() => notificationDetails.location, [notificationDetails]);
-  const { enqueueSnackbar } = useSnackbar();
   const [cardState, setCardState] = useState<CardState>(CardState.Pending);
 
   const handleRejectClick = () => {
+    const toastId = themedToast(
+      <NotificationContent content={`Rejecting invitation to join location '${location?.name}'...`} />,
+      infoNotificationOptions,
+    );
+
     commitRejectInvitationToJoinLocation({
       variables: {
         input: {
@@ -88,9 +100,11 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to reject invitation to join location '${location?.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to reject invitation to join location '${location?.name}'. Error: ${joinErrors(errors)}.`} />
+            ),
           });
 
           setCardState(CardState.Pending);
@@ -98,12 +112,17 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Invitation to join location '${location?.name} rejected.`} />,
+        });
+
         setCardState(CardState.Rejected);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to reject invitation to join location '${location?.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to reject invitation to join location '${location?.name}'. Error: ${error.message}.`} />,
         });
 
         setCardState(CardState.Pending);
@@ -114,6 +133,11 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
   };
 
   const handleAcceptClick = () => {
+    const toastId = themedToast(
+      <NotificationContent content={`Accpeting invitation to join location '${location?.name}'...`} />,
+      infoNotificationOptions,
+    );
+
     commitAcceptInvitationToJoinLocation({
       variables: {
         input: {
@@ -123,9 +147,11 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to accept invitation to join location '${location?.name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to accept invitation to join location '${location?.name}'. Error: ${joinErrors(errors)}.`} />
+            ),
           });
 
           setCardState(CardState.Pending);
@@ -133,12 +159,17 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Invitation to join location '${location?.name} accepted.`} />,
+        });
+
         setCardState(CardState.Accepted);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to accept invitation to join location '${location?.name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to accept invitation to join location '${location?.name}'. Error: ${error.message}.`} />,
         });
 
         setCardState(CardState.Pending);

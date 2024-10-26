@@ -1,19 +1,21 @@
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { NotificationContent, errorNotificationOptions } from '@repo/shared/components/notification';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { useSnackbar } from 'notistack';
-import { memo, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
+import { toast } from 'react-toastify';
 
 type Props = {
   onCancelClick: () => void;
 };
 
 const OrganizationPaymentMethodSetupForm = ({ onCancelClick }: Props) => {
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const stripe = useStripe();
   const elements = useElements();
-  const { enqueueSnackbar } = useSnackbar();
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddClick = async () => {
@@ -30,10 +32,7 @@ const OrganizationPaymentMethodSetupForm = ({ onCancelClick }: Props) => {
       },
     });
 
-    enqueueSnackbar(error.message, {
-      variant: 'error',
-      anchorOrigin,
-    });
+    themedToast(<NotificationContent content={error.message} />, errorNotificationOptions);
 
     setIsAdding(false);
   };

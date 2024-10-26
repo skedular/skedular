@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<036092862c2585b3b426e201760802e0>>
+ * @generated SignedSource<<5b1a530f5ce9201d95aa2c0a601ed6ff>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,11 +29,37 @@ export type newBookingDialog_addBookingMutation$data = {
   readonly addBooking: {
     readonly booking: {
       readonly customer: {
+        readonly familyName: string | null | undefined;
+        readonly givenName: string | null | undefined;
+        readonly middleName: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly photoUrl: string | null | undefined;
         readonly uniqueId: string;
       };
+      readonly desks: ReadonlyArray<{
+        readonly locationTags: ReadonlyArray<{
+          readonly name: string;
+          readonly tagType: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
       readonly from: any;
       readonly id: string;
+      readonly location: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
       readonly notes: string | null | undefined;
+      readonly organization: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
+      readonly team: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
       readonly to: any;
     };
   } | null | undefined;
@@ -42,11 +68,37 @@ export type newBookingDialog_addBookingMutation$rawResponse = {
   readonly addBooking: {
     readonly booking: {
       readonly customer: {
+        readonly familyName: string | null | undefined;
+        readonly givenName: string | null | undefined;
+        readonly middleName: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly photoUrl: string | null | undefined;
         readonly uniqueId: string;
       };
+      readonly desks: ReadonlyArray<{
+        readonly locationTags: ReadonlyArray<{
+          readonly name: string;
+          readonly tagType: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
       readonly from: any;
       readonly id: string;
+      readonly location: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
       readonly notes: string | null | undefined;
+      readonly organization: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
+      readonly team: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
       readonly to: any;
     };
   } | null | undefined;
@@ -78,6 +130,24 @@ v1 = [
   }
 ],
 v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "uniqueId",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v4 = [
+  (v2/*: any*/),
+  (v3/*: any*/)
+],
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingDetails",
@@ -121,11 +191,97 @@ v2 = {
       "name": "customer",
       "plural": false,
       "selections": [
+        (v2/*: any*/),
+        (v3/*: any*/),
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "uniqueId",
+          "name": "givenName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "middleName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "familyName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "photoUrl",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingOrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": (v4/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingLocationDetails",
+      "kind": "LinkedField",
+      "name": "location",
+      "plural": false,
+      "selections": (v4/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingTeamDetails",
+      "kind": "LinkedField",
+      "name": "team",
+      "plural": false,
+      "selections": (v4/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingDeskDetails",
+      "kind": "LinkedField",
+      "name": "desks",
+      "plural": true,
+      "selections": [
+        (v2/*: any*/),
+        (v3/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingLocationTagDetails",
+          "kind": "LinkedField",
+          "name": "locationTags",
+          "plural": true,
+          "selections": [
+            (v2/*: any*/),
+            (v3/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "tagType",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -149,7 +305,7 @@ return {
         "name": "addBooking",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
@@ -171,7 +327,7 @@ return {
         "name": "addBooking",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -199,16 +355,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9faeebb504065ca8cb5ed3f240e67dca",
+    "cacheID": "6c08cc78dd87b13c89e8344857caa8fa",
     "id": null,
     "metadata": {},
     "name": "newBookingDialog_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation newBookingDialog_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      customer {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation newBookingDialog_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        locationTags {\n          uniqueId\n          name\n          tagType\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6ccd19902e2cfc17af608cb299a8d799";
+(node as any).hash = "1b6c154a02d31328155eb66f2f988cf3";
 
 export default node;

@@ -3,21 +3,26 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext, UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getOrganizationBaseLink } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import type { addLocation_addLocationMutation } from './__generated__/addLocation_addLocationMutation.graphql';
 import type { addLocation_rootQuery } from './__generated__/addLocation_rootQuery.graphql';
@@ -64,7 +69,8 @@ const AddLocation = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const navigate = useNavigate();
   const validate = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
@@ -87,6 +93,7 @@ const AddLocation = ({ queryReference, organizationId }: Props) => {
 
   const handleLocationCreateClick = ({ name, about, timezone }: LocationDetails) => {
     const id = nanoid();
+    const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
 
     commitAddLocation({
       variables: {
@@ -101,20 +108,25 @@ const AddLocation = ({ queryReference, organizationId }: Props) => {
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to add new location '${name}'. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location ${name} added.`} />,
+        });
+
         navigate(-1);
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to add new location '${name}'. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {

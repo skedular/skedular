@@ -2,13 +2,7 @@ import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
-import {
-  BreadcrumpsProvider,
-  DatePickerLocalizationProvider,
-  GlobalReloadIdProvider,
-  SnackbarProvider,
-  ThemeProvider,
-} from '@repo/shared/libs/providers';
+import { BreadcrumpsProvider, DatePickerLocalizationProvider, GlobalReloadIdProvider, ThemeProvider } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Home } from 'app';
@@ -25,6 +19,8 @@ import { Teams } from 'app/teams';
 import { LogRocketProvider, RelayProvider, TeamsFxContext } from 'libs/providers';
 import { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 const router = createBrowserRouter([
@@ -126,15 +122,13 @@ const App = () => {
           <BreadcrumpsProvider>
             <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
               <CssBaseline />
-              <SnackbarProvider>
-                <DatePickerLocalizationProvider>
-                  <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>
-                    <RelayProvider token={token}>
-                      <RouterProvider router={router} />
-                    </RelayProvider>
-                  </LogRocketProvider>
-                </DatePickerLocalizationProvider>
-              </SnackbarProvider>
+              <DatePickerLocalizationProvider>
+                <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>
+                  <RelayProvider token={token}>
+                    <RouterProvider router={router} />
+                  </RelayProvider>
+                </LogRocketProvider>
+              </DatePickerLocalizationProvider>
             </ThemeProvider>
           </BreadcrumpsProvider>
         </GlobalReloadIdProvider>
@@ -142,6 +136,7 @@ const App = () => {
       <Analytics />
       <SpeedInsights />
       <MuiXLicense />
+      <ToastContainer position="top-right" pauseOnFocusLoss pauseOnHover hideProgressBar={false} draggable rtl={false} />
     </>
   );
 };

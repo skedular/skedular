@@ -4,16 +4,22 @@ import type { smallMonthlyViewCalendarDay_addBookingMutation } from '@/queries/_
 import type { smallMonthlyViewCalendarDay_deleteBookingMutation } from '@/queries/__generated__/smallMonthlyViewCalendarDay_deleteBookingMutation.graphql';
 import Badge from '@mui/material/Badge';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
-import { UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
-import { convertCalendarDayToStartOfDay, endOfDay, joinErrors, toShortDate } from '@repo/shared/libs/utils';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
+import { convertCalendarDayToStartOfDay, endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
 import type { JSX } from 'react';
 import { useContext } from 'react';
 import { graphql, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 
 type Props = {
   rootData: smallMonthlyViewCalendar_query$data;
@@ -75,8 +81,9 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
     }
   `);
 
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
-  const { enqueueSnackbar } = useSnackbar();
   const renderDay = (props: PickersDayProps<Dayjs>): JSX.Element => {
     if (!rootDataBookings.bookings || !rootDataBookings.bookings.__id) {
       return <></>;
@@ -102,6 +109,15 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
           const fromToPrint = toShortDate(startOfDay);
 
           if (matchingBookingFound) {
+            let bookingDetailsInfo = `for ${getCustomerFullName(matchingBookingFound.customer)}`;
+            if (matchingBookingFound.location) {
+              bookingDetailsInfo += ` at the "${matchingBookingFound.location!.name}"`;
+            }
+
+            bookingDetailsInfo += ` on ${toShortDate(matchingBookingFound.from)}`;
+
+            const toastId = themedToast(<NotificationContent content={`Removing booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
+
             commitDeleteBooking({
               variables: {
                 connectionIds,
@@ -112,20 +128,25 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
               },
               onCompleted: (_, errors) => {
                 if (errors && errors.length > 0) {
-                  enqueueSnackbar(`Failed to delete booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
-                    variant: 'error',
-                    anchorOrigin,
+                  toast.update(toastId, {
+                    ...errorNotificationOptions,
+                    render: <NotificationContent content={`Failed to remove booking '${fromToPrint}'. Error: ${joinErrors(errors)}.`} />,
                   });
 
                   return;
                 }
 
+                toast.update(toastId, {
+                  ...successNotificationOptions,
+                  render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
+                });
+
                 UpdateGlobalReloadId();
               },
               onError: (error) => {
-                enqueueSnackbar(`Failed to delete booking '${fromToPrint}'. Error: ${error.message}`, {
-                  variant: 'error',
-                  anchorOrigin,
+                toast.update(toastId, {
+                  ...errorNotificationOptions,
+                  render: <NotificationContent content={`Failed to remove booking '${fromToPrint}'. Error: ${error.message}.`} />,
                 });
               },
             });
@@ -133,6 +154,8 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
             if (!rootData.me) {
               return;
             }
+
+            const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
 
             commitAddBooking({
               variables: {
@@ -147,22 +170,47 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
                   deskIds: [],
                 },
               },
-              onCompleted: (_, errors) => {
+              onCompleted: (response, errors) => {
                 if (errors && errors.length > 0) {
-                  enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}`, {
-                    variant: 'error',
-                    anchorOrigin,
+                  toast.update(toastId, {
+                    ...errorNotificationOptions,
+                    render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}.`} />,
                   });
 
                   return;
                 }
 
+                const booking = response.addBooking?.booking!;
+                let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
+
+                if (booking.location) {
+                  message += ` from the "${booking.location!.name}"`;
+                }
+
+                if (booking.desks.length > 0) {
+                  message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
+
+                  const zones = booking.desks.flatMap(({ locationTags }) => locationTags).filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
+                  if (zones.length > 0) {
+                    const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+
+                    message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
+                  }
+                }
+
+                message += ` on ${toShortDate(booking.from)}.`;
+
+                toast.update(toastId, {
+                  ...successNotificationOptions,
+                  render: <NotificationContent content={message} />,
+                });
+
                 UpdateGlobalReloadId();
               },
               onError: (error) => {
-                enqueueSnackbar(`Failed to make a booking '${fromToPrint}'. Error: ${error.message}`, {
-                  variant: 'error',
-                  anchorOrigin,
+                toast.update(toastId, {
+                  ...errorNotificationOptions,
+                  render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${error.message}.`} />,
                 });
               },
               optimisticResponse: {

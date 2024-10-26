@@ -4,16 +4,22 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useState } from 'react';
+import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
 import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
 import { array, number, object, string } from 'yup';
 import type { bulkNewDeskDialog_bulkAddDeskMutation } from './__generated__/bulkNewDeskDialog_bulkAddDeskMutation.graphql';
 import type { bulkNewDeskDialog_query$key } from './__generated__/bulkNewDeskDialog_query.graphql';
@@ -64,15 +70,14 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
     }
   `);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
-  const [namePrefix, setNamePrefix] = useState<string>('');
-  const [count, setCount] = useState(0);
-  const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
 
   const handleAddClick = ({ namePrefix, count, locationTagIds }: DeskDetails) => {
     const ids = Array.from(Array(count).keys()).map((_) => nanoid());
+    const toastId = themedToast(<NotificationContent content={`Adding desks...`} />, infoNotificationOptions);
 
     commitAddDesk({
       variables: {
@@ -89,23 +94,25 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to add desks. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add desks. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        setNamePrefix('');
-        setCount(0);
-        setLocationTagIds([]);
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desks added.`} />,
+        });
+
         onAddClicked();
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to add desk. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to add desk. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -123,9 +130,9 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
         <Form
           onSubmit={handleAddClick}
           initialValues={{
-            namePrefix,
-            count,
-            locationTagIds,
+            namePrefix: '',
+            count: 0,
+            locationTagIds: [],
           }}
           validate={validate}
           render={({ handleSubmit }) => (

@@ -7,14 +7,20 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SingleChoiceCountry } from '@repo/shared/components/forms';
 import { EditIcon } from '@repo/shared/components/icons';
-import { SnackbarAnchorOrigin as anchorOrigin } from '@repo/shared/libs/snackbar';
+import {
+  NotificationContent,
+  errorNotificationOptions,
+  infoNotificationOptions,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useSnackbar } from 'notistack';
-import { memo, useState, useTransition } from 'react';
+import { memo, useContext, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
+import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 
 type Props = {
@@ -86,8 +92,9 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
     }
   `);
 
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [, startTransition] = useTransition();
-  const { enqueueSnackbar } = useSnackbar();
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(organizationBillingInfoSchema);
   const requiredFields = makeRequired(organizationBillingInfoSchema);
@@ -102,6 +109,11 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
     if (!rootData.organization) {
       return;
     }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Updating organization '${rootData.organization.name} billing contact info'...`} />,
+      infoNotificationOptions,
+    );
 
     commitSetOrganizationBillingInfo({
       variables: {
@@ -120,13 +132,22 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          enqueueSnackbar(`Failed to update organization '${rootData.organization?.name}' billing contact info. Error: ${joinErrors(errors)}`, {
-            variant: 'error',
-            anchorOrigin,
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to update organization '${rootData.organization?.name}' billing contact info. Error: ${joinErrors(errors)}.`}
+              />
+            ),
           });
 
           return;
         }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${rootData.organization?.name} billing contact info updated.`} />,
+        });
 
         setEditing(false);
         startTransition(() => {
@@ -134,9 +155,13 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
         });
       },
       onError: (error) => {
-        enqueueSnackbar(`Failed to update organization '${rootData.organization?.name}' billing contact info. Error: ${error.message}`, {
-          variant: 'error',
-          anchorOrigin,
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent
+              content={`Failed to update organization '${rootData.organization?.name}' billing contact info. Error: ${error.message}.`}
+            />
+          ),
         });
       },
       optimisticResponse: {
