@@ -15,6 +15,7 @@ import { OrganizationLocation } from 'app/organizations/organization/locations/l
 import { AddOrganizationTeam } from 'app/organizations/organization/teams/add';
 import { OrganizationTeam } from 'app/organizations/organization/teams/team';
 import { Settings } from 'app/settings';
+import { StartInstall } from 'app/start-install';
 import { Teams } from 'app/teams';
 import { LogRocketProvider, RelayProvider, TeamsFxContext } from 'libs/providers';
 import { useEffect, useState } from 'react';
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: '/install',
     element: <Install />,
+  },
+  {
+    path: '/start-install',
+    element: <StartInstall />,
   },
   {
     path: '/organizations/:organizationId',

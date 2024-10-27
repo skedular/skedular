@@ -35,6 +35,7 @@ export { default as EditIcon } from '@mui/icons-material/Edit';
 export { default as FeedIcon } from '@mui/icons-material/Feed';
 export { default as FeedbackIcon } from '@mui/icons-material/Feedback';
 export { default as AnalyticsIcon } from '@mui/icons-material/Insights';
+export { default as InstallIcon } from '@mui/icons-material/InstallDesktop';
 export { default as ArrowDownIcon } from '@mui/icons-material/KeyboardArrowDown';
 export { default as ArrowLeftIcon } from '@mui/icons-material/KeyboardArrowLeft';
 export { default as ArrowRightIcon } from '@mui/icons-material/KeyboardArrowRight';

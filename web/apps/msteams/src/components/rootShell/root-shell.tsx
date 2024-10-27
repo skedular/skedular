@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid2';
@@ -41,8 +40,6 @@ const RootQuery = graphql`
     paymentCustomerRecordSynced
     slackCustomerRecordSynced
     teamCustomerRecordSynced
-    isAzureTenantInstalled
-    azureTenantAdminConsentUrl
     ...appBar_query
   }
 `;
@@ -91,23 +88,6 @@ const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrum
       clearInterval(intervalId);
     };
   }, [rootData.me, reloadCount, onReloadRequired, areCustomerRecordsSync]);
-
-  const handleInstallClicked = () => {
-    window.open(rootData.azureTenantAdminConsentUrl);
-  };
-
-  if (!rootData.isAzureTenantInstalled) {
-    return (
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
-        <Typography variant="h4">
-          Your administrator needs to install UnityHub for you. This is a one-time setup. Please click the button below to start the installation.
-        </Typography>
-        <Button variant="contained" onClick={handleInstallClicked}>
-          Install
-        </Button>
-      </Box>
-    );
-  }
 
   if (reloadCount === maxRetryAttemptsToReload) {
     return (

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a4536921189da90973d15d5291ae269b>>
+ * @generated SignedSource<<08e527a0b037ba54b8b529074f68a7e5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,10 +12,8 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type rootShell_rootQuery$variables = Record<PropertyKey, never>;
 export type rootShell_rootQuery$data = {
-  readonly azureTenantAdminConsentUrl: string;
   readonly billingCustomerRecordSynced: boolean;
   readonly bookingCustomerRecordSynced: boolean;
-  readonly isAzureTenantInstalled: boolean;
   readonly locationCustomerRecordSynced: boolean;
   readonly me: {
     readonly id: string;
@@ -103,20 +101,6 @@ v9 = {
   "kind": "ScalarField",
   "name": "teamCustomerRecordSynced",
   "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isAzureTenantInstalled",
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "azureTenantAdminConsentUrl",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -146,8 +130,6 @@ return {
       (v7/*: any*/),
       (v8/*: any*/),
       (v9/*: any*/),
-      (v10/*: any*/),
-      (v11/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -244,22 +226,20 @@ return {
       (v6/*: any*/),
       (v7/*: any*/),
       (v8/*: any*/),
-      (v9/*: any*/),
-      (v10/*: any*/),
-      (v11/*: any*/)
+      (v9/*: any*/)
     ]
   },
   "params": {
-    "cacheID": "89ec2b2cccfcbd21aaa8b726359873b8",
+    "cacheID": "3c26aeb4f77d01cb0dd9727314b63170",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery {\n  me {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  isAzureTenantInstalled\n  azureTenantAdminConsentUrl\n  ...appBar_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
+    "text": "query rootShell_rootQuery {\n  me {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...appBar_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6480ebc57774330ae304a571b59980b7";
+(node as any).hash = "3882bcab1b8fda3e0cd6734e83f3470f";
 
 export default node;
