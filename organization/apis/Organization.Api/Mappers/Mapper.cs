@@ -260,7 +260,8 @@ public class Mapper : IMapper
                         Code = item.ToOfferingCode(),
                         Name = offering.Name,
                         UnitPrice = offering.UnitPrice,
-                        FeatureSet = MapTo(offering).ToArray()
+                        FeatureSet = MapTo(offering).ToArray(),
+                        Free = item.IsFreeOffering()
                     };
                 }).ToArray();
 
@@ -539,7 +540,8 @@ public class Mapper : IMapper
             Start = src.Start,
             End = src.End,
             UnitPrice = src.UnitPrice,
-            FeatureSet = MapTo(offering).ToArray()
+            FeatureSet = MapTo(offering).ToArray(),
+            Free = src.Code.IsFreeOffering()
         };
     }
 

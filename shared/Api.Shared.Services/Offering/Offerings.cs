@@ -8,19 +8,21 @@ public class Offering
     public int MaxUserCount { get; set; }
     public int MaxLocationCount { get; set; }
     public int MaxTeamCount { get; set; }
-    public int MaxOrganizationCount { get; set; }
 }
 
 public enum OfferingCode
 {
     EarlyBirdV1 = 0,
-    FreeTierV1 = 1,
-    PayAsYouGoV1 = 2
+    FreeTierV1 = 10000,
+    PayAsYouGoV1 = 20000,
+    Simple100V1 = 30000,
+    EnterpriseCustomV1 = 1000000
 }
 
 public static class Offerings
 {
-    public static ICollection<OfferingCode> AllOfferings = [OfferingCode.PayAsYouGoV1];
+    public static readonly ICollection<OfferingCode> AllOfferings =
+        [OfferingCode.PayAsYouGoV1, OfferingCode.Simple100V1, OfferingCode.EnterpriseCustomV1];
 
     public static IDictionary<OfferingCode, Offering> OfferingSet { get; } = new Dictionary<OfferingCode, Offering>
     {
@@ -37,8 +39,7 @@ public static class Offerings
                 UnitPrice = 0,
                 MaxUserCount = -1,
                 MaxLocationCount = -1,
-                MaxTeamCount = -1,
-                MaxOrganizationCount = -1
+                MaxTeamCount = -1
             }
         },
         {
@@ -47,15 +48,14 @@ public static class Offerings
                 Name = "Free",
                 FeatureSets =
                 [
-                    FeatureSetCode.OrganizationUpToTenUser,
+                    FeatureSetCode.OrganizationUpTo10Users,
                     FeatureSetCode.OrganizationUpToOneLocation,
                     FeatureSetCode.OrganizationUpToOneTeam
                 ],
                 UnitPrice = 0,
                 MaxUserCount = 10,
                 MaxLocationCount = 1,
-                MaxTeamCount = 1,
-                MaxOrganizationCount = 1
+                MaxTeamCount = 1
             }
         },
         {
@@ -71,8 +71,39 @@ public static class Offerings
                 UnitPrice = 300,
                 MaxUserCount = -1,
                 MaxLocationCount = -1,
-                MaxTeamCount = -1,
-                MaxOrganizationCount = -1
+                MaxTeamCount = -1
+            }
+        },
+        {
+            OfferingCode.Simple100V1, new Offering
+            {
+                Name = "Simple 100",
+                FeatureSets =
+                [
+                    FeatureSetCode.OrganizationUpTo100Users,
+                    FeatureSetCode.OrganizationUnlimitedLocations,
+                    FeatureSetCode.OrganizationUnlimitedTeams
+                ],
+                UnitPrice = 200,
+                MaxUserCount = 100,
+                MaxLocationCount = -1,
+                MaxTeamCount = -1
+            }
+        },
+        {
+            OfferingCode.EnterpriseCustomV1, new Offering
+            {
+                Name = "Enterprise",
+                FeatureSets =
+                [
+                    FeatureSetCode.OrganizationUpToXUsers,
+                    FeatureSetCode.OrganizationUnlimitedLocations,
+                    FeatureSetCode.OrganizationUnlimitedTeams
+                ],
+                UnitPrice = -1,
+                MaxUserCount = -1,
+                MaxLocationCount = -1,
+                MaxTeamCount = -1
             }
         }
     };
@@ -90,6 +121,8 @@ public static class Offerings
             "EARLY_BIRD_V1" => OfferingCode.EarlyBirdV1,
             "FREE_TIER_V1" => OfferingCode.FreeTierV1,
             "PAY_AS_YOU_GO_V1" => OfferingCode.PayAsYouGoV1,
+            "SIMPLE_100_V1" => OfferingCode.Simple100V1,
+            "ENTERPRISE_CUSTOM_V1" => OfferingCode.EnterpriseCustomV1,
             _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code))
         };
 
@@ -99,6 +132,8 @@ public static class Offerings
             OfferingCode.EarlyBirdV1 => "EARLY_BIRD_V1",
             OfferingCode.FreeTierV1 => "FREE_TIER_V1",
             OfferingCode.PayAsYouGoV1 => "PAY_AS_YOU_GO_V1",
+            OfferingCode.Simple100V1 => "SIMPLE_100_V1",
+            OfferingCode.EnterpriseCustomV1 => "ENTERPRISE_CUSTOM_V1",
             _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code))
         };
 

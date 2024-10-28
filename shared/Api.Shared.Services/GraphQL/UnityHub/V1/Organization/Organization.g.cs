@@ -359,6 +359,9 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
             [HotChocolate.GraphQLName("featureSet")]
             public OrganizationFeatureSetDetails[] FeatureSet { get; set; }
 
+            [HotChocolate.GraphQLName("free")]
+            public bool Free { get; set; }
+
         }
         
 
@@ -700,6 +703,9 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
 
             [HotChocolate.GraphQLName("featureSet")]
             public OrganizationFeatureSetDetails[] FeatureSet { get; set; }
+
+            [HotChocolate.GraphQLName("free")]
+            public bool Free { get; set; }
 
         }
         

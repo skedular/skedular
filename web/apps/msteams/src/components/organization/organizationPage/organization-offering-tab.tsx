@@ -33,7 +33,7 @@ const OrganizationOfferingTab = ({ queryReference, onReloadRequired }: Props) =>
   const rootData = usePreloadedQuery<organizationOfferingTab_rootQuery>(RootQuery, queryReference);
 
   return (
-    <Stack direction="column" spacing={1}>
+    <Stack spacing={1}>
       <OrganizationOffering rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       {rootData.organization?.availableOfferings && rootData.organization?.availableOfferings.length > 0 && (
         <OrganizationAvailableOfferings rootDataRelay={rootData} onReloadRequired={onReloadRequired} />

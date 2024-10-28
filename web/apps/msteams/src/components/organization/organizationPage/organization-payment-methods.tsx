@@ -88,8 +88,6 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Adding payment method...`} />, infoNotificationOptions);
-
     commitAddOrganizationPaymentMethodIntent({
       variables: {
         input: {
@@ -99,11 +97,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
       },
       onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new payment method. Error: ${joinErrors(errors)}.`} />,
-          });
-
+          themedToast(<NotificationContent content={`Failed to add new payment method. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
           setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
 
           return;
@@ -111,30 +105,15 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
 
         if (response.addOrganizationPaymentMethodIntent) {
           setStripePromise(loadStripe(response.addOrganizationPaymentMethodIntent?.publishedKeys));
-
           setClientSecret(response.addOrganizationPaymentMethodIntent?.clientSecret);
-
           setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_DETAILS);
         } else {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Returned payment intent is null.`} />,
-          });
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Payment method added.`} />,
-          });
-
+          themedToast(<NotificationContent content={`Payment method added.`} />, successNotificationOptions);
           setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
         }
       },
       onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add new payment method. Error: ${error.message}.`} />,
-        });
-
+        themedToast(<NotificationContent content={`Failed to add new payment method. Error: ${error.message}.`} />, errorNotificationOptions);
         setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.NOT_STARTED);
       },
     });

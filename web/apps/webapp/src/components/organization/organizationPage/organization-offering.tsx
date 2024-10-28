@@ -44,6 +44,7 @@ const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
               name
               description
             }
+            free
           }
         }
       }
@@ -144,7 +145,7 @@ const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
             ))}
           </List>
 
-          {offering.unitPrice > 0 && (
+          {!offering.free && (
             <CardActions sx={{ justifyContent: 'flex-end' }}>
               <Button color="secondary" variant="contained" onClick={() => handleCancelClick()}>
                 Cancel

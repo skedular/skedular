@@ -6,6 +6,7 @@ import CardHeader from '@mui/material/CardHeader';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import {
   NotificationContent,
@@ -118,7 +119,7 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onReloadRequired }: Pro
       <Typography variant="h6">Available offerings</Typography>
       {!availableOfferingExist && <Typography variant="h6">No offering is available</Typography>}
       {availableOfferingExist && (
-        <>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           {rootData.organization?.availableOfferings?.map(({ code, name, unitPrice, featureSet }) => {
             return (
               <Card elevation={24} sx={{ maxWidth: 500, height: '100%' }} key={code}>
@@ -157,7 +158,7 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onReloadRequired }: Pro
               </Card>
             );
           })}
-        </>
+        </Stack>
       )}
     </>
   );

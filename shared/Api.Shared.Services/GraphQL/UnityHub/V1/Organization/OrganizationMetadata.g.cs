@@ -288,6 +288,7 @@ type OrganizationAvailableOfferingDetails {
     name: String!
     unitPrice: Int!
     featureSet: [OrganizationFeatureSetDetails!]!
+    free: Boolean!
 }
 
 type OrganizationOfferingDetails implements Node {
@@ -298,6 +299,7 @@ type OrganizationOfferingDetails implements Node {
     end: DateTime!
     unitPrice: Int!
     featureSet: [OrganizationFeatureSetDetails!]!
+    free: Boolean!
 }
 
 type OrganizationFeatureSetDetails {

@@ -8,12 +8,14 @@ public class Feature
 
 public enum FeatureSetCode
 {
-    OrganizationUpToTenUser = 0,
-    OrganizationUnlimitedUsers = 1,
-    OrganizationUpToOneLocation = 2,
-    OrganizationUpToOneTeam = 3,
-    OrganizationUnlimitedLocations = 4,
-    OrganizationUnlimitedTeams = 5
+    OrganizationUpToXUsers = 0,
+    OrganizationUpTo10Users = 1,
+    OrganizationUnlimitedUsers = 2,
+    OrganizationUpToOneLocation = 3,
+    OrganizationUpToOneTeam = 4,
+    OrganizationUnlimitedLocations = 5,
+    OrganizationUnlimitedTeams = 6,
+    OrganizationUpTo100Users = 7
 }
 
 public class Features
@@ -21,10 +23,25 @@ public class Features
     public static IDictionary<FeatureSetCode, Feature> FeatureSet { get; } = new Dictionary<FeatureSetCode, Feature>
     {
         {
-            FeatureSetCode.OrganizationUpToTenUser,
+            FeatureSetCode.OrganizationUpToXUsers,
+            new Feature
+            {
+                Name = "For up to X users", Description = "Allow up to X monthly active users in an organization"
+            }
+        },
+        {
+            FeatureSetCode.OrganizationUpTo10Users,
             new Feature
             {
                 Name = "For up to 10 users", Description = "Allow up to 10 monthly active users in an organization"
+            }
+        },
+        {
+            FeatureSetCode.OrganizationUpTo100Users,
+            new Feature
+            {
+                Name = "For up to 100 users",
+                Description = "Allow up to 100 monthly active users in an organization"
             }
         },
         {

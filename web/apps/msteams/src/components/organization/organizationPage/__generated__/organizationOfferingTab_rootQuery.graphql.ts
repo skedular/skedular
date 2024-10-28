@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<00c2385cd6ea77949c921853858945e2>>
+ * @generated SignedSource<<5fd9f7713e70023d894eb38d527b9fff>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -190,7 +190,14 @@ return {
                 "storageKey": null
               },
               (v5/*: any*/),
-              (v6/*: any*/)
+              (v6/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "free",
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
@@ -207,12 +214,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4ce177c862b63f661a9cfb65555cad7c",
+    "cacheID": "9e514e8c2dace259c36b3470b0cf4adf",
     "id": null,
     "metadata": {},
     "name": "organizationOfferingTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationOfferingTab_rootQuery(\n  $organizationId: String!\n) {\n  organization(id: $organizationId) {\n    id\n    availableOfferings {\n      code\n    }\n  }\n  ...organizationOffering_query\n  ...organizationAvailableOfferings_query\n}\n\nfragment organizationAvailableOfferings_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    hasAttachedPaymentMethod\n    availableOfferings {\n      code\n      name\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n    }\n  }\n}\n\nfragment organizationOffering_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    offering {\n      id\n      name\n      start\n      end\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n    }\n  }\n}\n"
+    "text": "query organizationOfferingTab_rootQuery(\n  $organizationId: String!\n) {\n  organization(id: $organizationId) {\n    id\n    availableOfferings {\n      code\n    }\n  }\n  ...organizationOffering_query\n  ...organizationAvailableOfferings_query\n}\n\nfragment organizationAvailableOfferings_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    hasAttachedPaymentMethod\n    availableOfferings {\n      code\n      name\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n    }\n  }\n}\n\nfragment organizationOffering_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    offering {\n      id\n      name\n      start\n      end\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n      free\n    }\n  }\n}\n"
   }
 };
 })();

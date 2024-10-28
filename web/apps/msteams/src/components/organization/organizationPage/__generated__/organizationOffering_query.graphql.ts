@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d1f0056ee2d3b91c22a28cebba3c5b2>>
+ * @generated SignedSource<<c2311a9b9223f9aa30c4ad5371fc5139>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,7 @@ export type organizationOffering_query$data = {
         readonly description: string;
         readonly name: string;
       }>;
+      readonly free: boolean;
       readonly id: string;
       readonly name: string;
       readonly start: any;
@@ -124,6 +125,13 @@ return {
                 }
               ],
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "free",
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -137,6 +145,6 @@ return {
 };
 })();
 
-(node as any).hash = "a3a3a2234e10e7b2f328b3060953c5ad";
+(node as any).hash = "2b3b8591a608825785a7f5da1ae1fb2a";
 
 export default node;
