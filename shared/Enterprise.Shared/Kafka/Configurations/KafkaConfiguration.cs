@@ -51,6 +51,11 @@ public class KafkaConfiguration
     public int? MaxPollIntervalMs { get; set; }
 
     /// <summary>
+    /// Maximum time the broker may wait to fill the Fetch response with fetch. min. bytes of messages. default: 500 importance: low
+    /// </summary>
+    public int? FetchWaitMaxMs { get; set; }
+    
+    /// <summary>
     ///     Dictionary of extra consumer settings.
     ///     https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#fetch-max-bytes
     /// </summary>

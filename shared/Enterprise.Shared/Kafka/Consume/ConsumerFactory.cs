@@ -65,7 +65,7 @@ public class ConsumerFactory(
         ArgumentException.ThrowIfNullOrEmpty(kafkaConfiguration.BootstrapServers);
         ArgumentException.ThrowIfNullOrEmpty(groupId);
 
-        var consumerConfig = new ConsumerConfig(kafkaConfiguration.ConsumerSettings)
+        var config = new ConsumerConfig(kafkaConfiguration.ConsumerSettings)
         {
             ClientId = clientNaming.GetClientId(),
             EnableAutoOffsetStore = false,
@@ -76,39 +76,44 @@ public class ConsumerFactory(
 
         if (kafkaConfiguration.SecurityProtocol != null)
         {
-            consumerConfig.SecurityProtocol = kafkaConfiguration.SecurityProtocol;
+            config.SecurityProtocol = kafkaConfiguration.SecurityProtocol;
         }
 
         if (kafkaConfiguration.SaslMechanism != null)
         {
-            consumerConfig.SaslMechanism = kafkaConfiguration.SaslMechanism;
+            config.SaslMechanism = kafkaConfiguration.SaslMechanism;
         }
 
         if (kafkaConfiguration.SaslUsername != null)
         {
-            consumerConfig.SaslUsername = kafkaConfiguration.SaslUsername;
+            config.SaslUsername = kafkaConfiguration.SaslUsername;
         }
 
         if (kafkaConfiguration.SaslPassword != null)
         {
-            consumerConfig.SaslPassword = kafkaConfiguration.SaslPassword;
+            config.SaslPassword = kafkaConfiguration.SaslPassword;
         }
 
         if (kafkaConfiguration.HeartbeatIntervalMs != null)
         {
-            consumerConfig.HeartbeatIntervalMs = kafkaConfiguration.HeartbeatIntervalMs;
+            config.HeartbeatIntervalMs = kafkaConfiguration.HeartbeatIntervalMs;
         }
 
         if (kafkaConfiguration.SessionTimeoutMs != null)
         {
-            consumerConfig.SessionTimeoutMs = kafkaConfiguration.SessionTimeoutMs;
+            config.SessionTimeoutMs = kafkaConfiguration.SessionTimeoutMs;
         }
 
         if (kafkaConfiguration.MaxPollIntervalMs != null)
         {
-            consumerConfig.MaxPollIntervalMs = kafkaConfiguration.MaxPollIntervalMs;
+            config.MaxPollIntervalMs = kafkaConfiguration.MaxPollIntervalMs;
         }
 
-        return consumerConfig;
+        if (kafkaConfiguration.FetchWaitMaxMs != null)
+        {
+            config.FetchWaitMaxMs = kafkaConfiguration.FetchWaitMaxMs;
+        }
+
+        return config;
     }
 }
