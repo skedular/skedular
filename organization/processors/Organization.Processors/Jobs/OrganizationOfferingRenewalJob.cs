@@ -49,7 +49,7 @@ public class OrganizationOfferingRenewalJob(
                         cancellationToken);
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
+                await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
             }
             catch (OperationCanceledException)
             {

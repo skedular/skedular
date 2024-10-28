@@ -7,10 +7,10 @@ using MsTeams.Shared.Repositories;
 
 namespace MsTeams.Processors.Jobs;
 
-public class RefreshRefreshAzureTenantTeamsAndChannelsJob(
+public class RefreshAzureTenantTeamsAndChannelsJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<RefreshRefreshAzureTenantTeamsAndChannelsJob> logger,
+    ILogger<RefreshAzureTenantTeamsAndChannelsJob> logger,
     ITimeHelper timeHelper) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -51,7 +51,7 @@ public class RefreshRefreshAzureTenantTeamsAndChannelsJob(
                         cancellationToken);
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
+                await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -59,7 +59,7 @@ public class RefreshRefreshAzureTenantTeamsAndChannelsJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshRefreshAzureTenantTeamsAndChannelsJob));
+                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshAzureTenantTeamsAndChannelsJob));
             }
         } while (true);
     }
