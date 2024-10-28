@@ -74,44 +74,49 @@ public class ConsumerFactory(
             BootstrapServers = kafkaConfiguration.BootstrapServers
         };
 
-        if (kafkaConfiguration.SecurityProtocol != null)
+        if (kafkaConfiguration.SecurityProtocol is not null)
         {
             config.SecurityProtocol = kafkaConfiguration.SecurityProtocol;
         }
 
-        if (kafkaConfiguration.SaslMechanism != null)
+        if (kafkaConfiguration.SaslMechanism is not null)
         {
             config.SaslMechanism = kafkaConfiguration.SaslMechanism;
         }
 
-        if (kafkaConfiguration.SaslUsername != null)
+        if (kafkaConfiguration.SaslUsername is not null)
         {
             config.SaslUsername = kafkaConfiguration.SaslUsername;
         }
 
-        if (kafkaConfiguration.SaslPassword != null)
+        if (kafkaConfiguration.SaslPassword is not null)
         {
             config.SaslPassword = kafkaConfiguration.SaslPassword;
         }
 
-        if (kafkaConfiguration.HeartbeatIntervalMs != null)
+        if (kafkaConfiguration.HeartbeatIntervalMs is not null)
         {
             config.HeartbeatIntervalMs = kafkaConfiguration.HeartbeatIntervalMs;
         }
 
-        if (kafkaConfiguration.SessionTimeoutMs != null)
+        if (kafkaConfiguration.SessionTimeoutMs is not null)
         {
             config.SessionTimeoutMs = kafkaConfiguration.SessionTimeoutMs;
         }
 
-        if (kafkaConfiguration.MaxPollIntervalMs != null)
+        if (kafkaConfiguration.MaxPollIntervalMs is not null)
         {
             config.MaxPollIntervalMs = kafkaConfiguration.MaxPollIntervalMs;
         }
 
-        if (kafkaConfiguration.FetchWaitMaxMs != null)
+        if (kafkaConfiguration.FetchWaitMaxMs is not null)
         {
             config.FetchWaitMaxMs = kafkaConfiguration.FetchWaitMaxMs;
+        }
+
+        if (kafkaConfiguration.CancellationDelayMaxMs is not null)
+        {
+            config.CancellationDelayMaxMs = kafkaConfiguration.CancellationDelayMaxMs.Value;
         }
 
         return config;

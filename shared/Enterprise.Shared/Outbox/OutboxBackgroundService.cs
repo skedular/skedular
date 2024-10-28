@@ -79,7 +79,8 @@ public class OutboxBackgroundService<TDbContext>(
 
             await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
             await using var transaction =
-                await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted,
+                await dbContext.Database.BeginTransactionAsync(
+                    IsolationLevel.ReadCommitted,
                     cancellationToken);
 
             var retryTime = TimeSpan.FromSeconds(OutboxParameters.RetryTime.TotalSeconds);

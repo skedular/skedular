@@ -56,6 +56,12 @@ public class KafkaConfiguration
     public int? FetchWaitMaxMs { get; set; }
     
     /// <summary>
+    /// The maximum length of time (in milliseconds) before a cancellation request is acted on. Low values may result in measurably higher CPU usage.
+    /// default: 100 range: 1 <= dotnet. cancellation. delay. max. ms <= 10000 importance: low
+    /// </summary>
+    public int? CancellationDelayMaxMs { get; set; }
+
+    /// <summary>
     ///     Dictionary of extra consumer settings.
     ///     https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#fetch-max-bytes
     /// </summary>

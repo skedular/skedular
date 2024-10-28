@@ -76,24 +76,29 @@ public class ProducerFactory(
             BootstrapServers = kafkaConfiguration.BootstrapServers
         };
 
-        if (kafkaConfiguration.SecurityProtocol != null)
+        if (kafkaConfiguration.SecurityProtocol is not null)
         {
             config.SecurityProtocol = kafkaConfiguration.SecurityProtocol;
         }
 
-        if (kafkaConfiguration.SaslMechanism != null)
+        if (kafkaConfiguration.SaslMechanism is not null)
         {
             config.SaslMechanism = kafkaConfiguration.SaslMechanism;
         }
 
-        if (kafkaConfiguration.SaslUsername != null)
+        if (kafkaConfiguration.SaslUsername is not null)
         {
             config.SaslUsername = kafkaConfiguration.SaslUsername;
         }
 
-        if (kafkaConfiguration.SaslPassword != null)
+        if (kafkaConfiguration.SaslPassword is not null)
         {
             config.SaslPassword = kafkaConfiguration.SaslPassword;
+        }
+
+        if (kafkaConfiguration.CancellationDelayMaxMs is not null)
+        {
+            config.CancellationDelayMaxMs = kafkaConfiguration.CancellationDelayMaxMs.Value;
         }
 
         return config;
