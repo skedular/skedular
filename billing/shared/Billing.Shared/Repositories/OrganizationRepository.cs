@@ -10,6 +10,12 @@ public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    Task<Organization?> GetByIdAsync(
+        string id,
+        bool includeAllOfferings,
+        CancellationToken cancellationToken);
+
     Task<ICollection<Organization>> GetAllAsync(CancellationToken cancellationToken);
     Organization Add(Organization organization);
     Organization Update(Organization organization);
@@ -19,14 +25,24 @@ public interface IOrganizationRepository : IRepository<Organization>
 internal static class OrganizationExtensions
 {
     internal static
-        IIncludableQueryable<Organization, ICollection<OrganizationOffering>> AddDependentObjects(
-            this IQueryable<Organization> originalQuery) =>
-        originalQuery
-            .Include(query =>
-                query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.OrganizationOfferings); // TODO: 20240601 - Morteza - Only include active offerings;
+        IIncludableQueryable<Organization, ICollection<Identity>> AddDependentObjects(
+            this IQueryable<Organization> originalQuery,
+            bool includeAllOfferings) =>
+        includeAllOfferings
+            ? originalQuery.Include(query => query.OrganizationOfferings
+                    .OrderByDescending(organizationOffering => organizationOffering.End))
+                .Include(query =>
+                    query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+                .ThenInclude(query => query.Customer)
+                .ThenInclude(query => query.Identities)
+            : originalQuery.Include(query => query.OrganizationOfferings
+                    .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
+                    .OrderByDescending(organizationOffering => organizationOffering.End)
+                    .Take(1))
+                .Include(query =>
+                    query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+                .ThenInclude(query => query.Customer)
+                .ThenInclude(query => query.Identities);
 }
 
 public class OrganizationRepository(BillingDbContext dbContext, TimeProvider timeProvider)
@@ -45,16 +61,22 @@ public class OrganizationRepository(BillingDbContext dbContext, TimeProvider tim
     }
 
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await GetByIdAsync(id, false, cancellationToken);
+
+    public async Task<Organization?> GetByIdAsync(
+        string id,
+        bool includeAllOfferings,
+        CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => query.Id == id)
-            .AddDependentObjects()
+            .AddDependentObjects(includeAllOfferings)
             .OrderBy(query => query.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<ICollection<Organization>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue)
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .ToListAsync(cancellationToken);
 
     public Organization Add(Organization organization)

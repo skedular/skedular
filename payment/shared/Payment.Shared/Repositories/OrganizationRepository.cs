@@ -1,5 +1,6 @@
 ﻿using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Payment.Shared.Database;
 using Payment.Shared.Database.Entities;
 
@@ -9,9 +10,44 @@ public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    Task<Organization?> GetByIdAsync(
+        string id,
+        bool includeAllOfferings,
+        CancellationToken cancellationToken);
+
     Organization Add(Organization organization);
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
+}
+
+internal static class OrganizationExtensions
+{
+    internal static IIncludableQueryable<Organization, IEnumerable<OrganizationStripePaymentMethod>>
+        AddDependentObjects(
+            this IQueryable<Organization> originalQuery,
+            bool includeAllOfferings)
+    {
+        var updatedQuery = originalQuery
+            .Include(query =>
+                query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query.Identities);
+
+        return includeAllOfferings
+            ? updatedQuery.Include(query => query.OrganizationOfferings
+                    .OrderByDescending(organizationOffering => organizationOffering.End))
+                .ThenInclude(query => query.OrganizationOfferingStripePaymentIntents)
+                .Include(query => query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod =>
+                    !organizationStripePaymentMethod.DeletedAt.HasValue))
+            : updatedQuery.Include(query => query.OrganizationOfferings
+                    .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
+                    .OrderByDescending(organizationOffering => organizationOffering.End)
+                    .Take(1))
+                .ThenInclude(query => query.OrganizationOfferingStripePaymentIntents)
+                .Include(query => query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod =>
+                    !organizationStripePaymentMethod.DeletedAt.HasValue));
+    }
 }
 
 public class OrganizationRepository(PaymentDbContext dbContext, TimeProvider timeProvider)
@@ -30,19 +66,15 @@ public class OrganizationRepository(PaymentDbContext dbContext, TimeProvider tim
     }
 
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await GetByIdAsync(id, false, cancellationToken);
+
+    public async Task<Organization?> GetByIdAsync(
+        string id,
+        bool includeAllOfferings,
+        CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => query.Id == id)
-            .Include(query =>
-                query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.OrganizationOfferings
-                .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
-                .OrderByDescending(organizationOffering => organizationOffering.End)
-                .Take(1))
-            .ThenInclude(query => query.OrganizationOfferingStripePaymentIntents)
-            .Include(query => query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod =>
-                !organizationStripePaymentMethod.DeletedAt.HasValue))
+            .AddDependentObjects(includeAllOfferings)
             .OrderBy(query => query.Id)
             .FirstOrDefaultAsync(cancellationToken);
 

@@ -34,7 +34,10 @@ public class OrganizationSubscriber(
                 {
                     var organization = mapper.MapTo(@event);
                     var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
+                        await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                            organization.Id,
+                            true,
+                            cancellationToken);
                     if (existingOrganization is not null && existingOrganization.ModifiedAt > organization.ModifiedAt)
                     {
                         logger.LogInformation(
@@ -158,10 +161,14 @@ public class OrganizationSubscriber(
         var updatedItems = existingOrganization.OrganizationOfferings
             .Where(organizationOffering =>
                 organization.OrganizationOfferings.Any(item => item.Id == organizationOffering.Id)).Select(
-                organizationOffering => repositoryFactory.OrganizationOfferingRepository.Update(
-                    mapper.MergeToEntity(
+                organizationOffering =>
+                {
+                    var mappedUpdatedOffering = mapper.MergeToEntity(
                         organization.OrganizationOfferings.Single(item => item.Id == organizationOffering.Id),
-                        organizationOffering, existingOrganization))).ToList();
+                        organizationOffering, existingOrganization);
+                    mappedUpdatedOffering.DeletedAt = null;
+                    return repositoryFactory.OrganizationOfferingRepository.Update(mappedUpdatedOffering);
+                }).ToList();
         var addedItems = organization.OrganizationOfferings
             .Where(organizationOffering =>
                 existingOrganization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id)).Select(

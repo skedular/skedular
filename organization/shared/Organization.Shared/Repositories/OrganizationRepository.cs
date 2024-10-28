@@ -12,7 +12,15 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationRepository : IRepository<Database.Entities.Organization>
 {
     Task<Database.Entities.Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
-    Task<Database.Entities.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    Task<Database.Entities.Organization?> GetByIdAsync(
+        string id,
+        CancellationToken cancellationToken);
+
+    Task<Database.Entities.Organization?> GetByIdAsync(
+        string id,
+        bool includeAllOfferings,
+        CancellationToken cancellationToken);
 
     Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(
         string customerId,
@@ -37,26 +45,40 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
 internal static class OrganizationExtensions
 {
     internal static IIncludableQueryable<Database.Entities.Organization, ICollection<Team>> AddDependentObjects(
-        this IQueryable<Database.Entities.Organization> originalQuery) =>
-        originalQuery
+        this IQueryable<Database.Entities.Organization> originalQuery,
+        bool includeAllOfferings)
+    {
+        var updatedQuery = originalQuery
             .Include(query => query.AzureTenants.Where(azureTenant => !azureTenant.DeletedAt.HasValue))
             .ThenInclude(query =>
                 query.AzureTenantMembers.Where(azureTenantMember => !azureTenantMember.DeletedAt.HasValue))
             .Include(query =>
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
-            .Include(query => query.TermsOfUse)
-            .Include(query => query.OrganizationOfferings
-                .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
-                .OrderByDescending(organizationOffering => organizationOffering.End)
-                .Take(1))
-            .ThenInclude(query => query.OrganizationOfferingActiveMembers)
-            .ThenInclude(query => query.OrganizationMember)
-            .ThenInclude(query => query.Customer)
-            .Include(query => query.IndustrySubCategories)
-            .ThenInclude(query => query.IndustryMainCategory)
-            .Include(query => query.Locations)
-            .Include(query => query.Teams);
+            .Include(query => query.TermsOfUse);
+
+        return includeAllOfferings
+            ? updatedQuery.Include(query => query.OrganizationOfferings
+                    .OrderByDescending(organizationOffering => organizationOffering.End))
+                .ThenInclude(query => query.OrganizationOfferingActiveMembers)
+                .ThenInclude(query => query.OrganizationMember)
+                .ThenInclude(query => query.Customer)
+                .Include(query => query.IndustrySubCategories)
+                .ThenInclude(query => query.IndustryMainCategory)
+                .Include(query => query.Locations)
+                .Include(query => query.Teams)
+            : updatedQuery.Include(query => query.OrganizationOfferings
+                    .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
+                    .OrderByDescending(organizationOffering => organizationOffering.End)
+                    .Take(1))
+                .ThenInclude(query => query.OrganizationOfferingActiveMembers)
+                .ThenInclude(query => query.OrganizationMember)
+                .ThenInclude(query => query.Customer)
+                .Include(query => query.IndustrySubCategories)
+                .ThenInclude(query => query.IndustryMainCategory)
+                .Include(query => query.Locations)
+                .Include(query => query.Teams);
+    }
 
     internal static IQueryable<Database.Entities.Organization> AddSearchCriteria(
         this IQueryable<Database.Entities.Organization> query,
@@ -194,9 +216,15 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
     }
 
     public async Task<Database.Entities.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await GetByIdAsync(id, false, cancellationToken);
+
+    public async Task<Database.Entities.Organization?> GetByIdAsync(
+        string id,
+        bool includeAllOfferings,
+        CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => query.Id == id)
-            .AddDependentObjects()
+            .AddDependentObjects(includeAllOfferings)
             .OrderBy(query => query.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
@@ -206,7 +234,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue &&
                             query.OrganizationMembers.Select(item => item.Customer.Id).Contains(customerId))
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
@@ -216,14 +244,14 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue &&
                             query.AzureTenants.Any(azureTenant => azureTenant.Id == azureTenantId))
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .OrderBy(query => query.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue)
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .ToListAsync(cancellationToken);
 
     public Database.Entities.Organization Remove(Database.Entities.Organization organization)
@@ -252,7 +280,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
                 .AddSearchCriteria(searchCriteria)
                 .AddSortingOrders(orderByFields)
                 .ApplyPaginationFilters(paginationInputParam, orderByFields)
-                .AddDependentObjects()
+                .AddDependentObjects(false)
                 .ToListAsync(cancellationToken))
             .ToEdges(orderByFields)
             .GetPaginatedInfo(paginationInputParam);
