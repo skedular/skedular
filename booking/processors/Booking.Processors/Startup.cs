@@ -26,10 +26,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddKafka()
             .AddKafkaReliableEventConsumers<
-                BookingSubscriber,
-                Api.Shared.Clients.Events.UnityHub.Booking.V1.Key.Key,
-                Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.UnityHub.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>(kafkaConfiguration)

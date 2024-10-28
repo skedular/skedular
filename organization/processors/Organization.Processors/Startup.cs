@@ -49,10 +49,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                 Api.Shared.Clients.Events.UnityHub.Location.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
-                OrganizationSubscriber,
-                Api.Shared.Clients.Events.UnityHub.Organization.V1.Key.Key,
-                Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
                 PaymentSubscriber,
                 Api.Shared.Clients.Events.UnityHub.Payment.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Payment.V1.Value.Event>(kafkaConfiguration)
