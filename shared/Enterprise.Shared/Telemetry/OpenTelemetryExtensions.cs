@@ -41,7 +41,6 @@ public static class OpenTelemetryExtensions
             .AddSingleton<IPropagatorFunctionProvider<IPropagatorEntity>,
                 PropagatorEntityFunctions>();
 
-
         services.AddOpenTelemetry()
             .WithMetrics(builder =>
                 {
@@ -50,7 +49,8 @@ public static class OpenTelemetryExtensions
                             MetricsIngestEnabled: true
                         })
                     {
-                        builder.AddMeter(MeterProviderNaming.UnityHubMeterProviderName,
+                        builder.AddMeter(
+                            MeterProviderNaming.UnityHubMeterProviderName,
                             MeterProviderNaming.UnityHubMeterProviderVersion);
                     }
                 }
