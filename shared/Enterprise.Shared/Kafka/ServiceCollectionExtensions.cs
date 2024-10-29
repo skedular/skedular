@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddKafka(
         this IServiceCollection services,
-        bool useTelemetry = true)
+        bool useTelemetry = false)
     {
         services
             .AddSingleton(typeof(IKafkaPublisher<,>), typeof(KafkaPublisher<,>))
