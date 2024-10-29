@@ -22,7 +22,8 @@ public class Program : WebHostServiceBase<Program>
             Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"),
             cancellationToken);
 
-        await Task.WhenAll(Gateway.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
+        await Task.WhenAll(
+            Gateway.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Billing.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Booking.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Customer.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
