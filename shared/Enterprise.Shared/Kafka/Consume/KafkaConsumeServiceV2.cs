@@ -336,7 +336,7 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
         Exception ex,
         CancellationToken cancellationToken)
     {
-        var retryTopicName = _topicNames[_topicNames.IndexOf(consumeResult.Topic)];
+        var retryTopicName = _topicNames[_topicNames.IndexOf(consumeResult.Topic) + 1];
         var topicPartition = consumeResult.TopicPartition;
 
         _logger.LogError(ex,
