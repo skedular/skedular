@@ -75,7 +75,7 @@ const NewBookingButton = ({
       <Button
         variant="contained"
         startIcon={<NewIcon />}
-        size="small"
+        size="medium"
         sx={{ alignSelf: 'flex-start' }}
         onClick={handleAddBookingClick}
         fullWidth={fullWidth}

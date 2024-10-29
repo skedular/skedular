@@ -67,7 +67,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
     initialTabIndex = 0;
   } else if (tab === 'about') {
     initialTabIndex = 1;
-  } else if (tab === 'memebrs') {
+  } else if (tab === 'members') {
     initialTabIndex = 2;
   }
 
@@ -83,7 +83,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
     } else if (newValue === 1) {
       tab = 'about';
     } else if (newValue === 2) {
-      tab = 'memebrs';
+      tab = 'members';
     }
 
     if (tab) {
@@ -102,7 +102,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />
         <Tab label="About" />
-        <Tab label="Memebrs" />
+        <Tab label="Members" />
       </Tabs>
 
       {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
