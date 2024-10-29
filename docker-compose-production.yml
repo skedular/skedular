@@ -53,33 +53,33 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_LOG4J_ROOT_LOGLEVEL: "WARN"
       KAFKA_TOOLS_LOG4J_LOGLEVEL: "ERROR"
-      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: "http://schema-registry.localhost:9100"
+      # KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: "http://schema-registry.localhost:9100"
     networks:
       unityhubio_network:
         aliases:
           - kafka.localhost
 
-  schema-registry:
-    image: confluentinc/cp-schema-registry:latest
-    restart: unless-stopped
-    depends_on:
-      - kafka
-    environment:
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka.localhost:19092"
-      SCHEMA_REGISTRY_HOST_NAME: "schema-registry"
-      SCHEMA_REGISTRY_LISTENERS: "http://schema-registry:9100"
-    networks:
-      unityhubio_network:
-        aliases:
-          - schema-registry.localhost
+  # schema-registry:
+  #   image: confluentinc/cp-schema-registry:latest
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - kafka
+  #   environment:
+  #     SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka.localhost:19092"
+  #     SCHEMA_REGISTRY_HOST_NAME: "schema-registry"
+  #     SCHEMA_REGISTRY_LISTENERS: "http://schema-registry:9100"
+  #   networks:
+  #     unityhubio_network:
+  #       aliases:
+  #         - schema-registry.localhost
 
-  zipkin:
-    image: openzipkin/zipkin:latest
-    restart: unless-stopped
-    networks:
-      unityhubio_network:
-        aliases:
-          - zipkin.localhost
+  # zipkin:
+  #   image: openzipkin/zipkin:latest
+  #   restart: unless-stopped
+  #   networks:
+  #     unityhubio_network:
+  #       aliases:
+  #         - zipkin.localhost
 
   # staging-infra-provision:
   #   image: ghcr.io/unityhubio/allinfra:latest
@@ -242,7 +242,7 @@ services:
     depends_on:
       - zookeeper
       - kafka
-      - schema-registry
+      # - schema-registry
       - postgres
     networks:
       - unityhubio_network
@@ -307,6 +307,7 @@ services:
       Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      OpenTelemetry__ZipkinEnabled: false
     networks:
       unityhubio_network:
         aliases:
@@ -372,6 +373,7 @@ services:
       Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      OpenTelemetry__ZipkinEnabled: false
     networks:
       unityhubio_network:
         aliases:
