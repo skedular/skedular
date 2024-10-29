@@ -177,4 +177,42 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    public static IServiceCollection AddKafkaReliableEventConsumersV2<TSubscriber, TKey, TEvent>(
+        this IServiceCollection services,
+        KafkaConfiguration kafkaConfiguration)
+        where TSubscriber : class, IEventSubscriber<TKey, TEvent>
+        where TKey : IEvent, new()
+        where TEvent : IEvent, new()
+    {
+        services.AddScoped<IEventSubscriber<TKey, TEvent>, TSubscriber>();
+        services.TryAddSingleton<IKafkaMessageHandler<TKey, TEvent>, KafkaMessageHandler<TKey, TEvent>>();
+
+        var kafkaTopicInfo = KafkaTopicHelper.GetKafkaTopicInfo<TEvent>();
+        var topicSetting = new TopicSetting<TEvent>(
+            kafkaTopicInfo.RetryTopicCount,
+            DelayBaseSeconds,
+            kafkaConfiguration.IncomingTopicPrefix);
+
+        var retryTopicSetting = new TopicSetting<TEvent>(
+            kafkaTopicInfo.RetryTopicCount,
+            DelayBaseSeconds,
+            kafkaConfiguration.OutgoingTopicPrefix);
+
+        services.AddSingleton<IHostedService, KafkaConsumeServiceV2<TKey, TEvent>>(
+            sp => new KafkaConsumeServiceV2<TKey, TEvent>(
+                sp.GetRequiredService<ILogger<KafkaConsumeServiceV2<TKey, TEvent>>>(),
+                sp.GetRequiredService<ApplicationConfiguration>(),
+                sp.GetRequiredService<KafkaTelemetryConfiguration>(),
+                new List<string> { topicSetting.Topic }.Concat(retryTopicSetting.RetryTopics.Select(item => item.Topic))
+                    .Concat([retryTopicSetting.DeadLetterTopic]).ToList(),
+                kafkaConfiguration,
+                sp.GetRequiredService<IConsumerFactory>(),
+                sp.GetRequiredService<IProducerFactory>(),
+                sp.GetRequiredService<IHostApplicationLifetimeWrapper>(),
+                sp.GetRequiredService<IKafkaMessageHandler<TKey, TEvent>>(),
+                sp.GetRequiredService<IKafkaActivityTracer>()));
+
+        return services;
+    }
 }

@@ -11,68 +11,62 @@ using OpenTelemetry.Trace;
 
 namespace Enterprise.Shared.Kafka.Consume;
 
-public class KafkaConsumeService<TKey, TEvent> : BackgroundService
+public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
     where TKey : IEvent, new() where TEvent : IEvent, new()
 {
     private readonly IConsumer<byte[], byte[]> _consumer;
-    private readonly KafkaConfiguration _consumerKafkaConfiguration;
     private readonly string _formattedTopicNames;
     private readonly string _groupId;
     private readonly IHostApplicationLifetimeWrapper _hostApplicationLifetimeWrapper;
     private readonly IKafkaActivityTracer _kafkaActivityTracer;
+    private readonly KafkaConfiguration _kafkaConfiguration;
     private readonly IKafkaMessageHandler<TKey, TEvent> _kafkaMessageHandler;
     private readonly KafkaTelemetryConfiguration _kafkaTelemetryConfiguration;
     private readonly ILogger _logger;
-    private readonly IProducer<byte[], byte[]>? _producer;
-    private readonly double? _retryDelaySeconds;
-    private readonly string? _retryTopicName;
-    private readonly TimeProvider _timeProvider;
-    private readonly IReadOnlyCollection<string> _topicNames;
+    private readonly IProducer<byte[], byte[]> _producer;
+    private readonly List<string> _topicNames;
+    private readonly IReadOnlyCollection<string> _topicsToSubscribe;
 
-    public KafkaConsumeService(
-        ILogger<KafkaConsumeService<TKey, TEvent>> logger,
+    public KafkaConsumeServiceV2(
+        ILogger<KafkaConsumeServiceV2<TKey, TEvent>> logger,
         ApplicationConfiguration applicationConfiguration,
         KafkaTelemetryConfiguration kafkaTelemetryConfiguration,
         IReadOnlyCollection<string> topicNames,
-        KafkaConfiguration consumerKafkaConfiguration,
+        KafkaConfiguration kafkaConfiguration,
         IConsumerFactory consumerFactory,
-        string? retryTopicName,
-        double? retryDelaySeconds,
-        KafkaConfiguration? retryTopicKafkaConfiguration,
-        IProducerFactory? producerFactory,
+        IProducerFactory producerFactory,
         IHostApplicationLifetimeWrapper hostHostApplicationLifetimeWrapper,
         IKafkaMessageHandler<TKey, TEvent> kafkaMessageHandler,
-        IKafkaActivityTracer kafkaActivityTracer,
-        TimeProvider timeProvider)
+        IKafkaActivityTracer kafkaActivityTracer)
     {
         _groupId = applicationConfiguration.GetSource();
         ArgumentException.ThrowIfNullOrWhiteSpace(_groupId);
 
+        if (topicNames.Count <= 1)
+        {
+            throw new ArgumentException("At least main topic and dead letter topic are required.", nameof(topicNames));
+        }
+
         _hostApplicationLifetimeWrapper = hostHostApplicationLifetimeWrapper;
         _kafkaMessageHandler = kafkaMessageHandler;
         _kafkaActivityTracer = kafkaActivityTracer;
-        _topicNames = topicNames;
-        _formattedTopicNames = _topicNames.Count == 1
-            ? _topicNames.First()
-            : $"\"{string.Join(", ", _topicNames)}\"";
+        _topicNames = topicNames.ToList();
+        _topicsToSubscribe = _topicNames.Take(topicNames.Count - 1).ToList();
+        _formattedTopicNames = _topicsToSubscribe.Count == 1
+            ? _topicsToSubscribe.First()
+            : $"\"{string.Join(", ", _topicsToSubscribe)}\"";
 
         _logger = logger;
         _kafkaTelemetryConfiguration = kafkaTelemetryConfiguration;
-        _consumerKafkaConfiguration = consumerKafkaConfiguration;
+        _kafkaConfiguration = kafkaConfiguration;
 
-        _retryTopicName = retryTopicName;
-        _retryDelaySeconds = retryDelaySeconds;
-        _timeProvider = timeProvider;
-        _producer = producerFactory is null || retryTopicKafkaConfiguration is null
-            ? null
-            : producerFactory.Build<byte[], byte[]>(retryTopicKafkaConfiguration);
-        _consumer = consumerFactory.Build<byte[], byte[]>(
-            consumerKafkaConfiguration, builder =>
-            {
-                builder.SetPartitionsRevokedHandler(PartitionRevokedHandler);
-                builder.SetPartitionsAssignedHandler(PartitionAssignedHandler);
-                builder.SetPartitionsLostHandler(PartitionsLostHandler);
-            });
+        _producer = producerFactory.Build<byte[], byte[]>(_kafkaConfiguration);
+        _consumer = consumerFactory.Build<byte[], byte[]>(kafkaConfiguration, builder =>
+        {
+            builder.SetPartitionsRevokedHandler(PartitionRevokedHandler);
+            builder.SetPartitionsAssignedHandler(PartitionAssignedHandler);
+            builder.SetPartitionsLostHandler(PartitionsLostHandler);
+        });
     }
 
     private void PartitionsLostHandler(
@@ -121,7 +115,7 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
 
                 try
                 {
-                    _consumer.Subscribe(_topicNames);
+                    _consumer.Subscribe(_topicsToSubscribe);
                 }
                 catch (Exception ex)
                 {
@@ -243,7 +237,7 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
                         ex,
                         "Broker Error! Error: {Code}: {Reason} || Subscription: {Subscription} || Server(s): {Servers} ",
                         error.Code, error.Reason, _consumer.Subscription,
-                        _consumerKafkaConfiguration.BootstrapServers);
+                        _kafkaConfiguration.BootstrapServers);
                     Environment.ExitCode = (int)error.Code;
                     _hostApplicationLifetimeWrapper.StopApplication();
 
@@ -255,6 +249,14 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
 
     private bool MatchesConsumerGroup(ConsumeResult<byte[], byte[]> consumeResult)
     {
+        // This is the main topic
+        if (consumeResult.Topic == _topicNames.First())
+        {
+            _logger.LogTrace("{Topic} is the main topic", consumeResult.Topic);
+
+            return true;
+        }
+
         var consumerGroup = consumeResult.Message.GetConsumerGroup();
 
         _logger.LogTrace("{Topic} Matching consumer group: {GroupId}", consumeResult.Topic, _groupId);
@@ -282,34 +284,6 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
         return match;
     }
 
-    private async Task PauseIfNeededAsync(
-        ConsumeResult<byte[], byte[]> consumeResult,
-        CancellationToken cancellationToken)
-    {
-        // This is the main topic, not retry topic, no need to pause. Messages arrived in this
-        // topic need to be immediately processed.
-        if (_retryDelaySeconds is null)
-        {
-            return;
-        }
-
-        var topicPartition = consumeResult.TopicPartition;
-        var secondsDifference = GetTimestampDifferenceSecondsFromNow(consumeResult);
-
-        if (secondsDifference < _retryDelaySeconds)
-        {
-            var fromSeconds = TimeSpan.FromSeconds(_retryDelaySeconds.Value - secondsDifference);
-
-            await Task.Delay(fromSeconds, cancellationToken);
-        }
-        else
-        {
-            _logger.LogTrace("No delay - Processing message from {Topic} - {Partition}",
-                topicPartition.Topic,
-                topicPartition.Partition.Value);
-        }
-    }
-
     private async Task ProcessEventAsync(
         ConsumeResult<byte[], byte[]> consumeResult,
         CancellationToken cancellationToken)
@@ -318,24 +292,11 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
         {
             if (MatchesConsumerGroup(consumeResult))
             {
-                await PauseIfNeededAsync(consumeResult, cancellationToken);
                 await _kafkaMessageHandler.HandleMessageAsync(consumeResult, cancellationToken);
             }
         }
         catch (Exception ex)
         {
-            var topicPartition = consumeResult.TopicPartition;
-
-            if (string.IsNullOrWhiteSpace(_retryTopicName))
-            {
-                _logger.LogCritical(ex,
-                    "Failed to process the message from {Topic} - {Partition}",
-                    topicPartition.Topic,
-                    topicPartition.Partition.Value);
-
-                throw;
-            }
-
             await PushExceptionToRetryAsync(consumeResult, ex, cancellationToken);
         }
 
@@ -375,28 +336,20 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
         Exception ex,
         CancellationToken cancellationToken)
     {
+        var retryTopicName = _topicNames[_topicNames.IndexOf(consumeResult.Topic)];
         var topicPartition = consumeResult.TopicPartition;
 
         _logger.LogError(ex,
             "Failed to process the message from {Topic} - {Partition}. Moving the message to retry topic: {RetryTopicName}",
             topicPartition.Topic,
             topicPartition.Partition.Value,
-            _retryTopicName);
+            retryTopicName);
 
         consumeResult.Message.SetTimestamp();
         consumeResult.Message.SetConsumerGroup(_groupId);
         consumeResult.Message.SetLastException(ex);
 
         // This would either move the message into retry topic or dead letter queue.
-        await _producer.ProduceAsync(_retryTopicName, consumeResult.Message, cancellationToken);
+        await _producer.ProduceAsync(retryTopicName, consumeResult.Message, cancellationToken);
     }
-
-    /// <summary>
-    ///     Get the difference in seconds between the current time and the message timestamp
-    /// </summary>
-    /// <param name="consumeResult"></param>
-    /// <returns></returns>
-    private double GetTimestampDifferenceSecondsFromNow(
-        ConsumeResult<byte[], byte[]> consumeResult) =>
-        (_timeProvider.GetUtcNow() - consumeResult.Message.GetTimestamp()).TotalSeconds;
 }

@@ -51,13 +51,15 @@ public class KafkaConfiguration
     public int? MaxPollIntervalMs { get; set; }
 
     /// <summary>
-    /// Maximum time the broker may wait to fill the Fetch response with fetch. min. bytes of messages. default: 500 importance: low
+    ///     Maximum time the broker may wait to fill the Fetch response with fetch. min. bytes of messages. default: 500
+    ///     importance: low
     /// </summary>
     public int? FetchWaitMaxMs { get; set; }
-    
+
     /// <summary>
-    /// The maximum length of time (in milliseconds) before a cancellation request is acted on. Low values may result in measurably higher CPU usage.
-    /// default: 100 range: 1 <= dotnet. cancellation. delay. max. ms <= 10000 importance: low
+    ///     The maximum length of time (in milliseconds) before a cancellation request is acted on. Low values may result in
+    ///     measurably higher CPU usage.
+    ///     default: 100 range: 1 <= dotnet. cancellation. delay. max. ms <= 10000 importance: low
     /// </summary>
     public int? CancellationDelayMaxMs { get; set; }
 

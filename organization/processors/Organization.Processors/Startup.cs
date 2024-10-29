@@ -32,27 +32,27 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 
         services
             .AddKafka()
-            .AddKafkaReliableEventConsumers<
+            .AddKafkaReliableEventConsumersV2<
                 OrganizationInternalSubscriber,
                 Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
+            .AddKafkaReliableEventConsumersV2<
                 BookingSubscriber,
                 Api.Shared.Clients.Events.UnityHub.Booking.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
+            .AddKafkaReliableEventConsumersV2<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.UnityHub.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
+            .AddKafkaReliableEventConsumersV2<
                 LocationSubscriber,
                 Api.Shared.Clients.Events.UnityHub.Location.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
+            .AddKafkaReliableEventConsumersV2<
                 PaymentSubscriber,
                 Api.Shared.Clients.Events.UnityHub.Payment.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Payment.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
+            .AddKafkaReliableEventConsumersV2<
                 TeamSubscriber,
                 Key,
                 Event>(kafkaConfiguration);
