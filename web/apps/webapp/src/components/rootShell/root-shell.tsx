@@ -2,6 +2,7 @@ import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { AppBar } from '@/components/appBar';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
+import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -32,6 +33,7 @@ const RootQuery = graphql`
   query rootShell_rootQuery {
     me {
       id
+      isOrganizationOnboardingDone
     }
     billingCustomerRecordSynced
     bookingCustomerRecordSynced
@@ -139,7 +141,14 @@ const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrum
           <Stack direction="column" sx={{ width: '100vw' }}>
             <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} breadcrumbs={appBarBreadcrumbs} />
           </Stack>
-          <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>{children}</Grid>
+          {!rootData.me.isOrganizationOnboardingDone && (
+            <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>
+              <OrganizationOnboarding />
+            </Grid>
+          )}
+          {rootData.me.isOrganizationOnboardingDone && (
+            <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>{children}</Grid>
+          )}
         </Grid>
       </Box>
     </>
