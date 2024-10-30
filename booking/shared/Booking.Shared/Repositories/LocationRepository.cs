@@ -23,8 +23,7 @@ internal static class LocationExtensions
         this IQueryable<Location> originalQuery,
         bool includeDeactivated) =>
         originalQuery
-            .Include(query =>
-                query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
+            .Include(query => query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Tags.Where(desk => !desk.DeletedAt.HasValue))

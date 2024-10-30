@@ -202,7 +202,11 @@ public class TagService(
 
         var deletedTag = mapper.MapTo(repositoryFactory.TagRepository.Remove(tag));
 
-        await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)],
+        var mappedLocation = mapper.MapTo(existingLocation);
+        mappedLocation.Tags = mappedLocation.Tags.Where(item => item.Id != tagId).ToList();
+
+        await locationOutboxPublisher.PublishLocationAsync(
+            [mappedLocation],
             repositoryFactory.TagRepository.UnitOfWork,
             cancellationToken);
         await repositoryFactory.TagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

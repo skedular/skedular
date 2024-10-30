@@ -312,7 +312,11 @@ public class DeskService(
 
         var deletedDesk = mapper.MapTo(repositoryFactory.DeskRepository.Remove(desk), mapper.MapTo(existingLocation));
 
-        await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)],
+        var mappedLocation = mapper.MapTo(existingLocation);
+        mappedLocation.Desks = mappedLocation.Desks.Where(item => item.Id != deskId).ToList();
+
+        await locationOutboxPublisher.PublishLocationAsync(
+            [mappedLocation],
             repositoryFactory.DeskRepository.UnitOfWork,
             cancellationToken);
         await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
