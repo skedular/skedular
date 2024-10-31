@@ -92,25 +92,35 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddGraphQLServer()
             .AddCustomGraphqlInstrumentation()
-            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Billing),
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Billing),
                 Metadata.Schema)
-            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Booking),
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Booking),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Booking.Metadata.Schema)
-            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Customer),
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Customer),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Customer.Metadata.Schema)
-            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Location),
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Location),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Location.Metadata.Schema)
-            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.MsTeams),
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.MsTeams),
                 Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams.Metadata.Schema)
-            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Notification),
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Notification),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Notification.Metadata.Schema)
-            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Organization),
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Organization),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Organization.Metadata.Schema)
-            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Payment),
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Payment),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Payment.Metadata.Schema)
-            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Slack),
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Slack),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Slack.Metadata.Schema)
-            .AddRemoteSchemaFromString(nameof(subgraphsConfigurations.Team),
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Team),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Team.Metadata.Schema);
 
         services

@@ -2,6 +2,7 @@ using Api.Shared.Models;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Exceptions;
+using Microsoft.Extensions.Caching.Memory;
 using Customer = Booking.Shared.Models.Customer;
 using Organization = Booking.Shared.Database.Entities.Organization;
 
@@ -20,7 +21,10 @@ public interface IOrganizationAuthorizationService
     Task<OrganizationPermissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
-public class OrganizationAuthorizationService(ICustomerService customerService, IRepositoryFactory repositoryFactory)
+public class OrganizationAuthorizationService(
+    ICustomerService customerService,
+    IRepositoryFactory repositoryFactory,
+    IMemoryCache memoryCache)
     : IOrganizationAuthorizationService
 {
     public bool CanViewOrganizationDetails(Organization organization, Customer customer) =>
@@ -67,9 +71,23 @@ public class OrganizationAuthorizationService(ICustomerService customerService, 
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-            organizationId,
-            cancellationToken);
+        var organization = await memoryCache.GetOrCreateAsync<Organization>($"organization-{organizationId}",
+            async cacheEntry =>
+            {
+                cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(1);
+
+                var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                    organizationId,
+                    cancellationToken);
+
+                if (organization is null)
+                {
+                    throw new OrganizationNotFound();
+                }
+
+                return organization;
+            });
+
         if (organization is null)
         {
             throw new OrganizationNotFound();
