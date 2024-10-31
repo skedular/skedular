@@ -17,7 +17,7 @@ public interface INotificationService
 
 public class NotificationService(
     IRepositoryFactory repositoryFactory,
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IMapper mapper) : INotificationService
 {
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Notification>>, int)>
@@ -27,7 +27,7 @@ public class NotificationService(
             ICollection<NotificationOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         // Ensure we do not return other customer notification by forcing CustomerId as search criteria
         searchCriteria.InviteeId = customer.Id;
 

@@ -38,7 +38,7 @@ public class TeamQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
@@ -71,7 +71,7 @@ public class TeamQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        var customerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
@@ -120,7 +120,7 @@ public class TeamQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        var customerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
@@ -144,7 +144,7 @@ public class TeamQuery(IMapper mapper) : Query
         ArgumentException.ThrowIfNullOrWhiteSpace(where.TeamId);
 
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        var customerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await customerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;

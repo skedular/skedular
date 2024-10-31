@@ -29,6 +29,7 @@ public class OrganizationBillingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IOrganizationAuthorizationService organizationAuthorizationService,
+    ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     IMapper mapper,
     IBillingOutboxPublisher billingOutboxPublisher)
@@ -36,7 +37,7 @@ public class OrganizationBillingService(
 {
     public async Task<Organization> GetBillingInfoById(string organizationId, CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)

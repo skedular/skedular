@@ -26,7 +26,7 @@ public interface IDeskService
 
 public class DeskService(
     IRepositoryFactory repositoryFactory,
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ILocationAuthorizationService locationAuthorizationService,
     IMapper mapper) : IDeskService
@@ -42,7 +42,7 @@ public class DeskService(
             return [];
         }
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)
@@ -102,7 +102,7 @@ public class DeskService(
             return [];
         }
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var location =
             await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAsync(
                 locationId,

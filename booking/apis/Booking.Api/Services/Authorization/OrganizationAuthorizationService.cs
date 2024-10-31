@@ -22,7 +22,7 @@ public interface IOrganizationAuthorizationService
 }
 
 public class OrganizationAuthorizationService(
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IRepositoryFactory repositoryFactory,
     IMemoryCache memoryCache)
     : IOrganizationAuthorizationService
@@ -70,7 +70,7 @@ public class OrganizationAuthorizationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var organization = await memoryCache.GetOrCreateAsync<Organization>($"organization-{organizationId}",
             async cacheEntry =>
             {

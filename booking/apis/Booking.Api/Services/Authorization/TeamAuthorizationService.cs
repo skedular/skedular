@@ -22,7 +22,7 @@ public interface ITeamAuthorizationService
 
 public class TeamAuthorizationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IRepositoryFactory repositoryFactory,
     IMemoryCache memoryCache)
     : ITeamAuthorizationService
@@ -110,7 +110,7 @@ public class TeamAuthorizationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var team = await memoryCache.GetOrCreateAsync<Team>($"team-{teamId}",
             async cacheEntry =>
             {

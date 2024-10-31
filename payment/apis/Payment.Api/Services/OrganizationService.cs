@@ -16,7 +16,7 @@ public interface IOrganizationService
 public class OrganizationService(
     IRepositoryFactory repositoryFactory,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IMapper mapper)
     : IOrganizationService
 {
@@ -24,7 +24,7 @@ public class OrganizationService(
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)

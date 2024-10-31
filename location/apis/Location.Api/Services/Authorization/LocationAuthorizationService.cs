@@ -17,7 +17,7 @@ public interface ILocationAuthorizationService
 }
 
 public class LocationAuthorizationService(
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IRepositoryFactory repositoryFactory,
     IOrganizationAuthorizationService organizationAuthorizationService)
     : ILocationAuthorizationService
@@ -97,7 +97,7 @@ public class LocationAuthorizationService(
 
     public async Task<Permissions> GetPermissionsAsync(string locationId, CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(
             locationId,
             cancellationToken);

@@ -1,10 +1,7 @@
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Slack.Api.Mappers;
 using Slack.Shared.Models;
 using Slack.Shared.Repositories;
@@ -15,12 +12,11 @@ namespace Slack.Api.Services;
 
 public interface ICustomerService
 {
-    Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
+    Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(CancellationToken cancellationToken);
 
-    Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
-        string id,
-        CancellationToken cancellationToken);
+    Task<(Customer, Shared.Database.Entities.Customer)>
+        GetCustomerAsync(string id, CancellationToken cancellationToken);
 
     ValueTask<Customer> GetAsync(WorkspaceMember workspaceMember, CancellationToken cancellationToken);
     ValueTask<Customer> GetByIdAsync(string customerId, CancellationToken cancellationToken);
@@ -31,41 +27,14 @@ public class CustomerService(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     IContext context,
-    global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService.CustomerServiceClient customerServiceClient,
-    IMemoryCache memoryCache) : ICustomerService, IDisposable
+    global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService.CustomerServiceClient customerServiceClient)
+    : ICustomerService, IDisposable
 {
     private readonly SemaphoreSlim _cachedCustomerByIdLock = new(1, 1);
     private readonly SemaphoreSlim _cachedCustomerLock = new(1, 1);
     private Customer? _cachedCustomer;
     private Customer? _cachedCustomerById;
     private bool _disposed;
-
-    public async Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
-
-        var key = $"customer-exists-{context.PropertyBag.VerifiableToken}";
-        if (memoryCache.Get<bool>(key))
-        {
-            return true;
-        }
-
-        memoryCache.Remove(key);
-        return await memoryCache.GetOrCreateAsync(
-            key,
-            async cacheEntry =>
-            {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-
-                return await repositoryFactory.CustomerRepository.Query(
-                    new Specification<Shared.Database.Entities.Customer>
-                    {
-                        Criteria = query => !query.DeletedAt.HasValue && query.Identities
-                            .Select(identity => identity.Id)
-                            .Contains(context.PropertyBag.VerifiableToken)
-                    }).AsNoTracking().AnyAsync(cancellationToken);
-            });
-    }
 
     public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
         CancellationToken cancellationToken)
@@ -82,6 +51,21 @@ public class CustomerService(
         }
 
         return (mapper.MapTo(customer)!, customer);
+    }
+
+    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(context.PropertyBag.VerifiableToken))
+        {
+            return (null, null);
+        }
+
+        var customer =
+            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
+                context.PropertyBag.VerifiableToken,
+                cancellationToken);
+        return customer is null ? (null, null) : (mapper.MapTo(customer)!, customer);
     }
 
     public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(

@@ -29,7 +29,7 @@ public class PaymentQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
@@ -39,15 +39,15 @@ public class PaymentQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
-        if (!await service.DoesCustomerExistAsync(cancellationToken))
+        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var organizationService = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
+        var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
         return mapper
-            .MapTo(await organizationService.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken))
+            .MapTo(await service.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken))
             .ToArray();
     }
 }

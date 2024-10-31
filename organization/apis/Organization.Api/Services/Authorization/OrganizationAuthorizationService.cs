@@ -16,7 +16,7 @@ public interface IOrganizationAuthorizationService
     Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
-public class OrganizationAuthorizationService(ICustomerService customerService, IRepositoryFactory repositoryFactory)
+public class OrganizationAuthorizationService(ICachedCustomerService cachedCustomerService, IRepositoryFactory repositoryFactory)
     : IOrganizationAuthorizationService
 {
     public bool CanView(Shared.Database.Entities.Organization organization, Customer customer) =>
@@ -52,7 +52,7 @@ public class OrganizationAuthorizationService(ICustomerService customerService, 
 
     public async Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             organizationId,
             cancellationToken);

@@ -21,7 +21,7 @@ public interface IOrganizationAnalyticsService
 
 public class OrganizationAnalyticsService(
     IRepositoryFactory repositoryFactory,
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService) : IOrganizationAnalyticsService
 {
     public async Task<(ICollection<OrganizationMemberAttendancePercentage>, ICollection<OrganizationDailyBookingsTotal>
@@ -34,7 +34,7 @@ public class OrganizationAnalyticsService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)

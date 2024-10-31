@@ -21,7 +21,7 @@ public interface ILocationAnalyticsService
 
 public class LocationAnalyticsService(
     IRepositoryFactory repositoryFactory,
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     ILocationAuthorizationService locationAuthorizationService) : ILocationAnalyticsService
 {
     public async Task<(ICollection<LocationDesksOccupancyPercentage>, ICollection<LocationDailyBookingsTotal>
@@ -34,7 +34,7 @@ public class LocationAnalyticsService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var location =
             await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
         if (location is null)

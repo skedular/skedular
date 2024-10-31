@@ -15,6 +15,7 @@ public static class Extensions
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<ILocationAuthorizationService, LocationAuthorizationService>()
             .AddScoped<ICustomerService, CustomerService>()
+            .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<ILocationService, LocationService>()
             .AddScoped<ILocationMemberService, LocationMemberService>()
             .AddScoped<ITagService, TagService>()

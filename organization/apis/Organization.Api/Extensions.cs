@@ -15,6 +15,7 @@ public static class Extensions
             .AddScoped<IAzureTenantOnboardingService, AzureTenantOnboardingService>()
             .AddScoped<IAzureTenantService, AzureTenantService>()
             .AddScoped<ICustomerService, CustomerService>()
+            .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<IOrganizationTermsOfUseService, OrganizationTermsOfUseService>()
             .AddScoped<IIndustryMainCategoryService, IndustryMainCategoryService>()
             .AddScoped<IOrganizationService, OrganizationService>()

@@ -16,7 +16,7 @@ public interface ITeamAuthorizationService
 }
 
 public class TeamAuthorizationService(
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IRepositoryFactory repositoryFactory,
     IOrganizationAuthorizationService organizationAuthorizationService)
     : ITeamAuthorizationService
@@ -80,7 +80,7 @@ public class TeamAuthorizationService(
 
     public async Task<Permissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(
             teamId,
             cancellationToken);

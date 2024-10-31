@@ -47,6 +47,7 @@ public class TeamService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
+    ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
@@ -60,7 +61,7 @@ public class TeamService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerOptionalAsync(cancellationToken);
+        var (customer, _) = await customerService.GetNullableCustomerAsync(cancellationToken);
         Organization? organization = null;
         if (team.Organization is not null)
         {
@@ -217,7 +218,7 @@ public class TeamService(
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+            (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         }
 
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
@@ -236,7 +237,7 @@ public class TeamService(
             ICollection<TeamOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         // Ensure we do not return other customer team by forcing CustomerId as search criteria
         searchCriteria.CustomerId = customer.Id;
 
@@ -263,7 +264,7 @@ public class TeamService(
         string? organizationId,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(organizationId))
         {

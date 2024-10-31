@@ -1,55 +1,43 @@
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Location.Api.Mappers;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Location.Api.Services;
 
 public interface ICustomerService
 {
-    Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
-    Task<(Customer?, Shared.Database.Entities.Customer?)> GetCustomerOptionalAsync(CancellationToken cancellationToken);
     Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
+    Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(CancellationToken cancellationToken);
+
+    Task<(Customer, Shared.Database.Entities.Customer)>
+        GetCustomerAsync(string id, CancellationToken cancellationToken);
 }
 
 public class CustomerService(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
-    IContext context,
-    IMemoryCache memoryCache) : ICustomerService
+    IContext context) : ICustomerService
 {
-    public async Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
+        CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
 
-        var key = $"customer-exists-{context.PropertyBag.VerifiableToken}";
-        if (memoryCache.Get<bool>(key))
+        var customer =
+            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
+                context.PropertyBag.VerifiableToken,
+                cancellationToken);
+        if (customer is null)
         {
-            return true;
+            throw new CustomerNotFound();
         }
 
-        memoryCache.Remove(key);
-        return await memoryCache.GetOrCreateAsync(
-            key,
-            async cacheEntry =>
-            {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-
-                return await repositoryFactory.CustomerRepository.Query(
-                    new Specification<Shared.Database.Entities.Customer>
-                    {
-                        Criteria = query => !query.DeletedAt.HasValue && query.Identities
-                            .Select(identity => identity.Id)
-                            .Contains(context.PropertyBag.VerifiableToken)
-                    }).AsNoTracking().AnyAsync(cancellationToken);
-            });
+        return (mapper.MapTo(customer)!, customer);
     }
 
-    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetCustomerOptionalAsync(
+    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(context.PropertyBag.VerifiableToken))
@@ -65,14 +53,12 @@ public class CustomerService(
     }
 
     public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
+        string id,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer =
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                context.PropertyBag.VerifiableToken,
-                cancellationToken);
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken);
         if (customer is null)
         {
             throw new CustomerNotFound();

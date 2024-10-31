@@ -60,10 +60,7 @@ public class CustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
 
-        var customer =
-            await repositoryFactory.CustomerRepository.GetByIdAsync(
-                customerId,
-                cancellationToken);
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
         if (customer is null)
         {
             throw new CustomerNotFound();

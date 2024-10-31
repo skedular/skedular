@@ -34,6 +34,7 @@ public interface ILocationMemberService
 public class LocationMemberService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
+    ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     ILocationAuthorizationService locationAuthorizationService,
     ILocationOutboxPublisher locationOutboxPublisher,
@@ -46,7 +47,7 @@ public class LocationMemberService(
             ICollection<LocationMemberOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var location =
             await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId,
                 cancellationToken);

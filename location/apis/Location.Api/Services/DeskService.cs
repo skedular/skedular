@@ -45,6 +45,7 @@ public class DeskService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
+    ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     ILocationAuthorizationService locationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
@@ -55,7 +56,7 @@ public class DeskService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(deskId);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var desk = await repositoryFactory.DeskRepository.GetByIdAsync(deskId, cancellationToken);
         if (desk is null)
         {
@@ -331,7 +332,7 @@ public class DeskService(
             ICollection<DeskOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var location =
             await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId, cancellationToken);
         if (location is null)

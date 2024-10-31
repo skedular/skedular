@@ -35,6 +35,7 @@ public interface ITeamMemberService
 public class TeamMemberService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
+    ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     ITeamAuthorizationService teamAuthorizationService,
     ITeamOutboxPublisher teamOutboxPublisher,
@@ -47,7 +48,7 @@ public class TeamMemberService(
             ICollection<TeamMemberOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(searchCriteria.TeamId, cancellationToken);
         if (team is null)
         {

@@ -38,7 +38,7 @@ public class LocationQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
@@ -72,8 +72,8 @@ public class LocationQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
-        if (!await customerService.DoesCustomerExistAsync(cancellationToken))
+        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
@@ -122,8 +122,8 @@ public class LocationQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
-        if (!await customerService.DoesCustomerExistAsync(cancellationToken))
+        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
@@ -146,8 +146,8 @@ public class LocationQuery(IMapper mapper) : Query
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
 
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
-        if (!await customerService.DoesCustomerExistAsync(cancellationToken))
+        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
@@ -222,8 +222,8 @@ public class LocationQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
-        if (!await customerService.DoesCustomerExistAsync(cancellationToken))
+        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
@@ -275,8 +275,8 @@ public class LocationQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
-        if (!await customerService.DoesCustomerExistAsync(cancellationToken))
+        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }

@@ -46,6 +46,7 @@ public class BookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
+    ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ILocationAuthorizationService locationAuthorizationService,
@@ -236,7 +237,7 @@ public class BookingService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingId);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var booking =
             await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);
         if (booking is null)
@@ -258,7 +259,7 @@ public class BookingService(
         Shared.Models.Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+            (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         }
 
         List<string>? organizationIds = null;

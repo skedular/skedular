@@ -23,7 +23,7 @@ public interface ILocationAuthorizationService
 
 public class LocationAuthorizationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IRepositoryFactory repositoryFactory,
     IMemoryCache memoryCache)
     : ILocationAuthorizationService
@@ -130,7 +130,7 @@ public class LocationAuthorizationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var location = await memoryCache.GetOrCreateAsync<Location>($"location-{locationId}",
             async cacheEntry =>
             {

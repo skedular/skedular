@@ -38,6 +38,7 @@ public interface IOrganizationMemberService
 public class OrganizationMemberService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
+    ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
@@ -50,7 +51,7 @@ public class OrganizationMemberService(
             ICollection<OrganizationMemberOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId,
                 cancellationToken);

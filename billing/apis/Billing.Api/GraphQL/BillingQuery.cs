@@ -29,7 +29,7 @@ public class BillingQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
@@ -44,7 +44,7 @@ public class BillingQuery(IMapper mapper) : Query
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var customerService = scope.ServiceProvider.GetRequiredService<ICustomerService>();
+        var customerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         var customerExist = await customerService.DoesCustomerExistAsync(cancellationToken);
         if (!customerExist)
         {

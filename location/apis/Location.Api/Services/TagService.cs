@@ -35,6 +35,7 @@ public class TagService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
+    ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     ILocationAuthorizationService locationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
@@ -45,7 +46,7 @@ public class TagService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var tag =
             await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken);
         if (tag is null)
@@ -221,7 +222,7 @@ public class TagService(
             ICollection<TagOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
         var location =
             await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId,
                 cancellationToken);
