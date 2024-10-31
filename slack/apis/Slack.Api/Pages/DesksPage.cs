@@ -43,6 +43,7 @@ public interface IDesksPage
 
 public class DesksPage(
     AsyncPageRenderingService asyncPageRenderingService,
+    SlackConfiguration slackConfiguration,
     LocationConfiguration locationConfiguration,
     CustomerConfiguration customerConfiguration,
     BookingConfiguration bookingConfiguration,
@@ -149,55 +150,8 @@ public class DesksPage(
         }
     }
 
-    public Task Handle(ButtonAction action, BlockActionRequest request)
-    {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
-    }
-
-    public Task Handle(DatePickerAction action, BlockActionRequest request)
-    {
-        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
-    }
-
-    public Task Handle(StaticSelectAction action, BlockActionRequest request)
-    {
-        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
-    }
-
-    public async Task RenderWithContextAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        CommonPageContext commonPageContext,
-        string? hash,
+    public async Task HandleAsync(DatePickerAction action, BlockActionRequest request,
         CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DesksPage);
-        if (commonPageContext.PageContext.DesksPage.DesksPagination.IsEmpty())
-        {
-            await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
-        }
-        else
-        {
-            await RenderInternalAsync(
-                workspace,
-                workspaceMember,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentAfter,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentFirst,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentBefore,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentLast,
-                commonPageContext,
-                hash,
-                cancellationToken);
-        }
-    }
-
-    public async Task Handle(DatePickerAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
@@ -224,7 +178,8 @@ public class DesksPage(
         }
     }
 
-    public async Task Handle(StaticSelectAction action, BlockActionRequest request, CancellationToken cancellationToken)
+    public async Task HandleAsync(StaticSelectAction action, BlockActionRequest request,
+        CancellationToken cancellationToken)
     {
         var workspaceEntity =
             await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
@@ -314,6 +269,69 @@ public class DesksPage(
                 workspaceMember,
                 request.TriggerId,
                 context,
+                cancellationToken);
+        }
+    }
+
+    public async Task Handle(ButtonAction action, BlockActionRequest request)
+    {
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
+    }
+
+    public async Task Handle(DatePickerAction action, BlockActionRequest request)
+    {
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
+    }
+
+    public async Task Handle(StaticSelectAction action, BlockActionRequest request)
+    {
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
+    }
+
+    public async Task RenderWithContextAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CommonPageContext commonPageContext,
+        string? hash,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DesksPage);
+        if (commonPageContext.PageContext.DesksPage.DesksPagination.IsEmpty())
+        {
+            await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
+        }
+        else
+        {
+            await RenderInternalAsync(
+                workspace,
+                workspaceMember,
+                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentAfter,
+                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentFirst,
+                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentBefore,
+                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentLast,
+                commonPageContext,
+                hash,
                 cancellationToken);
         }
     }

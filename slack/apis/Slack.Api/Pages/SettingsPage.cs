@@ -34,6 +34,7 @@ public interface ISettingsPage
 
 public class SettingsPage(
     AsyncPageRenderingService asyncPageRenderingService,
+    SlackConfiguration slackConfiguration,
     BillingConfiguration billingConfiguration,
     IWorkspaceMemberService workspaceMemberService,
     IRepositoryFactory repositoryFactory,
@@ -172,25 +173,40 @@ public class SettingsPage(
         }
     }
 
-    public Task Handle(ChannelSelectAction action, BlockActionRequest request)
+    public async Task Handle(ChannelSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ChannelSelectActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.ChannelSelectActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 
-    public Task Handle(CheckboxGroupAction action, BlockActionRequest request)
+    public async Task Handle(CheckboxGroupAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 
-    public Task Handle(StaticSelectAction action, BlockActionRequest request)
+    public async Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 
     public async Task RenderWithContextAsync(

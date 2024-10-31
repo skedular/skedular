@@ -23,6 +23,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Desk;
 
 public class BulkAddDesksButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
+    SlackConfiguration slackConfiguration,
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
     ICustomerService customerService,
@@ -147,11 +148,16 @@ public class BulkAddDesksButtonHandler(
             });
     }
 
-    public Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)

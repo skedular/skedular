@@ -15,6 +15,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Commons;
 
 public class DismissSetupPreferredZonesButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
+    SlackConfiguration slackConfiguration,
     CustomerConfiguration customerConfiguration,
     CustomerService.CustomerServiceClient customerServiceClient,
     IRepositoryFactory repositoryFactory,
@@ -54,10 +55,15 @@ public class DismissSetupPreferredZonesButtonHandler(
             cancellationToken);
     }
 
-    public Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 }

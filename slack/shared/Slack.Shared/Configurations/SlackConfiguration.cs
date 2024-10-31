@@ -11,4 +11,5 @@ public class SlackConfiguration
     public string SigningSecret { get; set; } = string.Empty;
     public Uri? RedirectUrl { get; set; }
     public Uri? SuccessInstallUrl { get; set; }
+    public bool EnableAsyncMode { get; set; }
 }

@@ -15,6 +15,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class CancelBookingButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
+    SlackConfiguration slackConfiguration,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
     IBookingService bookingService,
@@ -70,10 +71,15 @@ public class CancelBookingButtonHandler(
             cancellationToken);
     }
 
-    public Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 }

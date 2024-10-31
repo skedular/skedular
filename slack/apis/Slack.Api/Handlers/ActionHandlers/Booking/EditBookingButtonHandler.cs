@@ -31,6 +31,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class EditBookingButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
+    SlackConfiguration slackConfiguration,
     BookingConfiguration bookingConfiguration,
     LocationConfiguration locationConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
@@ -155,11 +156,16 @@ public class EditBookingButtonHandler(
             });
     }
 
-    public Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)

@@ -21,6 +21,7 @@ namespace Slack.Api.Handlers.ActionHandlers.Team;
 
 public class AddTeamButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
+    SlackConfiguration slackConfiguration,
     TeamConfiguration teamConfiguration,
     TeamService.TeamServiceClient teamServiceClient,
     ICustomerService customerService,
@@ -109,11 +110,16 @@ public class AddTeamButtonHandler(
             });
     }
 
-    public Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)

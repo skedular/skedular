@@ -39,6 +39,7 @@ public interface IHomePage
 
 public class HomePage(
     AsyncPageRenderingService asyncPageRenderingService,
+    SlackConfiguration slackConfiguration,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
     IWorkspaceMemberService workspaceMemberService,
@@ -363,39 +364,64 @@ public class HomePage(
         }
     }
 
-    public Task Handle(ButtonAction action, BlockActionRequest request)
+    public async Task Handle(ButtonAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.ButtonActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 
-    public Task Handle(CheckboxGroupAction action, BlockActionRequest request)
+    public async Task Handle(CheckboxGroupAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.CheckboxGroupActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 
-    public Task Handle(DatePickerAction action, BlockActionRequest request)
+    public async Task Handle(DatePickerAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.DatePickerActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 
-    public Task Handle(StaticSelectAction action, BlockActionRequest request)
+    public async Task Handle(StaticSelectAction action, BlockActionRequest request)
     {
-        asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.StaticSelectActionHandlerStream.OnNext((GetType(), action, request));
+        }
+        else
+        {
+            await HandleAsync(action, request, CancellationToken.None);
+        }
     }
 
-    public Task Handle(AppHomeOpened slackEvent)
+    public async Task Handle(AppHomeOpened slackEvent)
     {
-        asyncPageRenderingService.EventHandlerStream.OnNext((GetType(), slackEvent));
-
-        return Task.CompletedTask;
+        if (slackConfiguration.EnableAsyncMode)
+        {
+            asyncPageRenderingService.EventHandlerStream.OnNext((GetType(), slackEvent));
+        }
+        else
+        {
+            await HandleAsync(slackEvent, CancellationToken.None);
+        }
     }
 
     public async Task RenderWithContextAsync(
