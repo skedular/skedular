@@ -2,6 +2,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.Security.Jobs;
 using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Time;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ public static class Extensions
 {
     public static IServiceCollection AddSecurity(this IServiceCollection services) =>
         services
+            .AddHostedService<SecurityDependenciesRefresherJob>()
             .AddScoped<IGrpcAuthenticator, GrpcAuthenticator>()
             .AddSingleton<ICognitoTokenService, CognitoTokenService>()
             .AddSingleton<IGoogleTokenService, GoogleTokenService>()

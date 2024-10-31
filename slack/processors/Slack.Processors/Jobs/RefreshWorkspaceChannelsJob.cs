@@ -57,7 +57,7 @@ public class RefreshWorkspaceChannelsJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshWorkspaceMembersJob));
+                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshWorkspaceChannelsJob));
             }
         } while (true);
     }

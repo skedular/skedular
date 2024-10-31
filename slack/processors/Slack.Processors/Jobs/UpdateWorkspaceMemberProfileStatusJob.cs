@@ -83,7 +83,7 @@ public class UpdateWorkspaceMemberProfileStatusJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshWorkspaceMembersJob));
+                logger.LogError(ex, "Failed to run job: {job}", nameof(UpdateWorkspaceMemberProfileStatusJob));
             }
         } while (true);
     }

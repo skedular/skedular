@@ -64,7 +64,7 @@ public class LocationDailyUpdateJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshWorkspaceMembersJob));
+                logger.LogError(ex, "Failed to run job: {job}", nameof(LocationDailyUpdateJob));
             }
         } while (true);
     }

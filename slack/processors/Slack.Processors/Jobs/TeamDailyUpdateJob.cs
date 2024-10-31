@@ -63,7 +63,7 @@ public class TeamDailyUpdateJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshWorkspaceMembersJob));
+                logger.LogError(ex, "Failed to run job: {job}", nameof(TeamDailyUpdateJob));
             }
         } while (true);
     }
