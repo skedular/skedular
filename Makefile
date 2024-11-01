@@ -33,25 +33,41 @@ format: ## Format the source
 	@goimports -w $(GOFILES)
 
 .PHONY: services-restart
-services-restart:
+services-all-restart:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d
 
 .PHONY: services-start
-services-start:
+services-all-start:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d
 
 .PHONY: services-stop
-services-stop:
+services-all-stop:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down
 
 .PHONY: services-terminate
-services-terminate:
+services-all-terminate:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down -v
+
+services-restart:
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down staging-infra-provision staging-processors-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d staging-infra-provision staging-processors-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01
+
+.PHONY: services-start
+services-start:
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d staging-infra-provision staging-processors-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01
+
+.PHONY: services-stop
+services-stop:
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down staging-infra-provision staging-processors-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01
 
 .PHONY: publicwebsite-restart
 publicwebsite-restart:
