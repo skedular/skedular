@@ -20,10 +20,10 @@ public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
     topicName: "billing.v1.internal",
-    topicPartitionCount: 5,
+    topicPartitionCount: 3,
     retryTopicNamePrefix: "billing.v1.internal.retry",
     retryTopicCount: 1,
-    retryTopicPartitionCount: 5,
+    retryTopicPartitionCount: 3,
     deadLetterTopicName: "billing.v1.internal.deadletter",
     deadLetterTopicPartitionCount: 3,
     protobufSchema: "syntax = \"proto3\";package billinginternal;option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Key\";message Key {    string organizationOfferingId = 1;}")]

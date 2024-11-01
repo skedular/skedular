@@ -20,10 +20,10 @@ public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
     topicName: "team.v1.event",
-    topicPartitionCount: 5,
+    topicPartitionCount: 3,
     retryTopicNamePrefix: "team.v1.event.retry",
     retryTopicCount: 1,
-    retryTopicPartitionCount: 5,
+    retryTopicPartitionCount: 3,
     deadLetterTopicName: "team.v1.event.deadletter",
     deadLetterTopicPartitionCount: 3,
     protobufSchema: "syntax = \"proto3\";package team;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.Team.V1.Value\";enum Type {  TeamUpserted = 0;  TeamDeleted = 1;  InvitationToJoinTeamUpserted = 2;  InvitationToJoinTeamDeleted = 3;}message Event {  Metadata metadata = 1;  Data data = 2;}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}message Data {   oneof payload {    Team teamAfterState = 1;    InvitationToJoinTeam invitationToJoinTeamAfterState = 2;  }}message Team {  string id = 1;  google.protobuf.Timestamp deletedAt = 2;  string name = 3;  string about = 4;  repeated Member members = 5;  string organizationId = 6;  string timezone = 7;}enum MembershipType {  MembershipTypeOwner = 0;  MembershipTypeAdministrator = 1;  MembershipTypeMember = 2;} message Member {  string id = 1;  MembershipType membershipType = 2;  string customerId = 3;  OrganizationMember organizationMember = 4;}message OrganizationMember {  string customerId = 1;  string organizationMemberId = 2;  string organizationId = 3;}message InvitationToJoinTeam {  string id = 1;  google.protobuf.Timestamp deletedAt = 2;  string teamId = 3;  string invitedById = 4;  string inviteeId = 5;}")]

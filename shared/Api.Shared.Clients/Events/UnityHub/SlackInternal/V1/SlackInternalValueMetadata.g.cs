@@ -20,10 +20,10 @@ public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
     topicName: "slack.v1.internal",
-    topicPartitionCount: 5,
+    topicPartitionCount: 3,
     retryTopicNamePrefix: "slack.v1.internal.retry",
     retryTopicCount: 1,
-    retryTopicPartitionCount: 5,
+    retryTopicPartitionCount: 3,
     deadLetterTopicName: "slack.v1.internal.deadletter",
     deadLetterTopicPartitionCount: 3,
     protobufSchema: "syntax = \"proto3\";package slackinternal;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Value\";enum Type {  RefreshWorkspaceMembers = 0;  RefreshWorkspaceChannels = 1;  SendWorkspaceLocationDailyUpdateMessage = 2;  UpdateWorkspaceMemberProfileStatus = 3;  DeactivateOrganizationMembersNotFoundOnSlack = 4;  SendWorkspaceTeamDailyUpdateMessage = 5;}message Event {  Metadata metadata = 1;  oneof payload {    string workspaceId = 2;    string locationId = 3;    string workspaceMemberId = 4;    string teamId = 5;  }}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}")]

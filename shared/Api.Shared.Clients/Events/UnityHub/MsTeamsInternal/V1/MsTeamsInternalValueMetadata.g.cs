@@ -20,10 +20,10 @@ public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
     topicName: "msteams.v1.internal",
-    topicPartitionCount: 5,
+    topicPartitionCount: 3,
     retryTopicNamePrefix: "msteams.v1.internal.retry",
     retryTopicCount: 1,
-    retryTopicPartitionCount: 5,
+    retryTopicPartitionCount: 3,
     deadLetterTopicName: "msteams.v1.internal.deadletter",
     deadLetterTopicPartitionCount: 3,
     protobufSchema: "syntax = \"proto3\";package msteamsinternal;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value\";enum Type {  RefreshAzureTenantTeamsAndChannels = 0;}message Event {  Metadata metadata = 1;  oneof payload {    string AzureTenantId = 2;  }}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}")]

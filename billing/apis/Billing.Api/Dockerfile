@@ -15,10 +15,12 @@ RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet publish "Billing.Api.cspr
 
 FROM base AS final
 
+RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 RUN groupadd --gid 2000 unityhubio && useradd --uid 1000 --gid 2000 unityhubio
 RUN chown unityhubio:unityhubio /app
-USER unityhubio:unityhubio 
+USER unityhubio:unityhubio
 
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Billing.Api.dll"]

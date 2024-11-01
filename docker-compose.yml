@@ -1,12 +1,9 @@
 networks:
-  unityhub_network:
+  unityhubio_network:
 
 volumes:
-  unityhub_postgres_data:
-  unityhub_postgresold_data:
-  unityhub_zookeeper_data:
-  unityhub_zookeeper_log:
-  unityhub_kafka_data:
+  unityhubio_postgres_data:
+  unityhubio_kafka1_data:
 
 services:
   postgres:
@@ -14,7 +11,7 @@ services:
     command: postgres -c 'max_connections=10000'
     restart: unless-stopped
     volumes:
-      - unityhub_postgres_data:/var/lib/postgresql/data
+      - unityhubio_postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: "8b974997c3c54b10a556f089377505d7"
       POSTGRES_PASSWORD: "123456"
@@ -25,82 +22,99 @@ services:
       - all
       - gateway
     networks:
-      unityhub_network:
+      unityhubio_network:
         aliases:
           - postgres.localhost
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    restart: unless-stopped
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    volumes:
-      - unityhub_zookeeper_data:/var/lib/zookeeper/data
-      - unityhub_zookeeper_log:/var/lib/zookeeper/log
-    profiles:
-      - core
-      - all
-    networks:
-      - unityhub_network
-
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    restart: unless-stopped
-    depends_on:
-      - zookeeper
+  kafka1:
+    image: confluentinc/cp-server:latest
     ports:
       - "19092:19092"
     volumes:
-      - unityhub_kafka_data:/var/lib/kafka/data
+      - unityhubio_kafka1_data:/var/lib/kafka/data
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_ADVERTISED_LISTENERS: "LISTENER_DOCKER_INTERNAL://kafka:9092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-kafka.localhost}:19092"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT"
-      KAFKA_INTER_BROKER_LISTENER_NAME: "LISTENER_DOCKER_INTERNAL"
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka1:29092,PLAINTEXT_HOST://kafka1.localhost:19092"
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: "kafka1:19092"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_LOG4J_ROOT_LOGLEVEL: "WARN"
-      KAFKA_TOOLS_LOG4J_LOGLEVEL: "ERROR"
-      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: "http://schema-registry.localhost:9100"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka1:29093"
+      KAFKA_LISTENERS: "PLAINTEXT://kafka1:29092,CONTROLLER://kafka1:29093,PLAINTEXT_HOST://0.0.0.0:19092"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_LOG_DIR: "/tmp/kafka-logs"
+      KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
+      # Replace CLUSTER_ID with a unique base64 UUID using "bin/kafka-storage.sh random-uuid"
+      # See https://docs.confluent.io/kafka/operations-tools/kafka-tools.html#kafka-storage-sh
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
     profiles:
       - core
       - all
     networks:
-      unityhub_network:
+      unityhubio_network:
         aliases:
-          - kafka.localhost
+          - kafka1.localhost
 
   schema-registry:
     image: confluentinc/cp-schema-registry:latest
-    restart: unless-stopped
+    hostname: schema-registry
+    container_name: schema-registry
     depends_on:
-      - kafka
+      - kafka1
     ports:
       - "9100:9100"
     environment:
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka.localhost:19092"
-      SCHEMA_REGISTRY_HOST_NAME: "schema-registry"
-      SCHEMA_REGISTRY_LISTENERS: "http://schema-registry:9100"
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka1:29092"
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:9100
     profiles:
       - core
       - all
     networks:
-      unityhub_network:
+      unityhubio_network:
         aliases:
           - schema-registry.localhost
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:latest
+    hostname: control-center
+    container_name: control-center
+    depends_on:
+      - kafka1
+      - schema-registry
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: "kafka1:29092"
+      CONTROL_CENTER_CONNECT_HEALTHCHECK_ENDPOINT: "/connectors"
+      CONTROL_CENTER_KSQL_KSQLDB1_ADVERTISED_URL: "http://localhost:8088"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:9100"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021
+    profiles:
+      - core
+      - all
+    networks:
+      - unityhubio_network
 
   kowl:
     image: docker.redpanda.com/redpandadata/console:latest
     restart: unless-stopped
     depends_on:
       - schema-registry
-      - kafka
+      - kafka1
     environment:
-      KAFKA_BROKERS: "kafka.localhost:19092"
+      KAFKA_BROKERS: "kafka1.localhost:19092"
       KAFKA_SCHEMAREGISTRY_URLS: http://schema-registry.localhost:9100
       KAFKA_SCHEMAREGISTRY_ENABLED: "TRUE"
     ports:
@@ -109,7 +123,7 @@ services:
       - core
       - all
     networks:
-      - unityhub_network
+      - unityhubio_network
 
   zipkin:
     image: openzipkin/zipkin:latest
@@ -120,6 +134,6 @@ services:
     ports:
       - 9411:9411
     networks:
-      unityhub_network:
+      unityhubio_network:
         aliases:
           - zipkin.localhost

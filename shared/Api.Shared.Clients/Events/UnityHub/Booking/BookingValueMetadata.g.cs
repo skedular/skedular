@@ -20,10 +20,10 @@ public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
     topicName: "booking.v1.event",
-    topicPartitionCount: 5,
+    topicPartitionCount: 3,
     retryTopicNamePrefix: "booking.v1.event.retry",
     retryTopicCount: 1,
-    retryTopicPartitionCount: 5,
+    retryTopicPartitionCount: 3,
     deadLetterTopicName: "booking.v1.event.deadletter",
     deadLetterTopicPartitionCount: 3,
     protobufSchema: "syntax = \"proto3\";package booking;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.Booking.V1.Value\";enum Type {  BookingUpserted = 0;  BookingDeleted = 1;}message Event {  Metadata metadata = 1;  Data data = 2;}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}message Data { Booking afterState = 1; }message Booking {  string id = 1;  google.protobuf.Timestamp deletedAt = 2;  string customerId = 3;  string organizationId = 4;  google.protobuf.Timestamp from = 5;  google.protobuf.Timestamp to = 6;  string notes = 7;  string locationId = 8;  repeated string deskIds = 9;  string teamId = 10;  repeated DeskBookingDetail deskBookingDetails = 11;}enum BookingStatus {  AwaitAcceptance = 0;  Accepted = 1;  Declined = 2;}message DeskBookingDetail {  string id = 1;  string deskId = 2;  BookingStatus status = 3;}")]

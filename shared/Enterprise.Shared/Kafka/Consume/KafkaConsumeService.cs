@@ -388,7 +388,7 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
         consumeResult.Message.SetLastException(ex);
 
         // This would either move the message into retry topic or dead letter queue.
-        await _producer.ProduceAsync(_retryTopicName, consumeResult.Message, cancellationToken);
+        await _producer!.ProduceAsync(_retryTopicName, consumeResult.Message, cancellationToken);
     }
 
     /// <summary>
