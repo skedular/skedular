@@ -13,7 +13,9 @@ public interface ICustomerDetailsService
         CancellationToken cancellationToken);
 }
 
-public class CustomerDetailsService(ICustomerHelperService customerHelperService) : ICustomerDetailsService
+public class CustomerDetailsService(
+    ICustomerHelperService customerHelperService,
+    ICachedCustomerService cachedCustomerService) : ICustomerDetailsService
 {
     public async Task<Shared.Models.Customer> UpdateMyCustomerDetailsAsync(
         string? timezone,
@@ -33,6 +35,11 @@ public class CustomerDetailsService(ICustomerHelperService customerHelperService
         customer.GivenName = givenName;
         customer.MiddleName = middleName;
         customer.FamilyName = familyName;
-        return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
+
+        var result = await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
+
+        cachedCustomerService.CleanCache();
+
+        return result;
     }
 }

@@ -49,7 +49,7 @@ public class CustomerService(
             await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
                 context.PropertyBag.VerifiableToken,
                 cancellationToken);
-        return customer is null ? (null, null) : (mapper.MapTo(customer)!, customer);
+        return customer is null ? (null, null) : (mapper.MapTo(customer), customer);
     }
 
     public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(

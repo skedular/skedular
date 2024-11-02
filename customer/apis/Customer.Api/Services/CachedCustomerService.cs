@@ -1,21 +1,28 @@
+using Customer.Api.Mappers;
+using Customer.Shared.Repositories;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using MsTeams.Api.Mappers;
-using MsTeams.Shared.Models;
-using MsTeams.Shared.Repositories;
 
-namespace MsTeams.Api.Services;
+namespace Customer.Api.Services;
 
 public interface ICachedCustomerService
 {
     Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
-    Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
 
-    Task<(Customer, Shared.Database.Entities.Customer)>
+    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
+        CancellationToken cancellationToken);
+
+    Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(
+        CancellationToken cancellationToken);
+
+    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)>
         GetCustomerAsync(string id, CancellationToken cancellationToken);
+
+    void CleanCache();
+    void CleanCache(string id);
 }
 
 public class CachedCustomerService(
@@ -28,8 +35,17 @@ public class CachedCustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
 
+        var key = $"customer-exists-{context.PropertyBag.VerifiableToken}";
+        if (memoryCache.TryGetValue<bool>(key, out var entry))
+        {
+            if (entry)
+            {
+                return true;
+            }
+        }
+
         return await memoryCache.GetOrCreateAsync(
-            $"customer-exists-{context.PropertyBag.VerifiableToken}",
+            key,
             async cacheEntry =>
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
@@ -44,7 +60,7 @@ public class CachedCustomerService(
             });
     }
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
+    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
@@ -68,7 +84,25 @@ public class CachedCustomerService(
             });
     }
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
+    public async Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(context.PropertyBag.VerifiableToken))
+        {
+            return (null, null);
+        }
+
+        try
+        {
+            return await GetCustomerAsync(cancellationToken);
+        }
+        catch (CustomerNotFound)
+        {
+            return (null, null);
+        }
+    }
+
+    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
         string id,
         CancellationToken cancellationToken)
     {
@@ -88,5 +122,19 @@ public class CachedCustomerService(
 
                 return (mapper.MapTo(customer)!, customer);
             });
+    }
+
+    public void CleanCache()
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
+
+        memoryCache.Remove($"customer-verifiabletoken-{context.PropertyBag.VerifiableToken}");
+    }
+
+    public void CleanCache(string id)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        memoryCache.Remove($"customer-id-{id}");
     }
 }

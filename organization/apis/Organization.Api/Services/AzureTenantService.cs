@@ -59,12 +59,14 @@ public class AzureTenantService(
 
         var tenantId = context.PropertyBag.AzureTenantId;
         var key = $"tenant-exists-{tenantId}";
-        if (memoryCache.Get<bool>(key))
+        if (memoryCache.TryGetValue<bool>(key, out var entry))
         {
-            return true;
+            if (entry)
+            {
+                return true;
+            }
         }
 
-        memoryCache.Remove(key);
         return await memoryCache.GetOrCreateAsync(
             key,
             async cacheEntry =>

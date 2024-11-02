@@ -1,11 +1,11 @@
-using Slack.Api.Mappers;
-using Slack.Shared.Models;
-using Slack.Shared.Repositories;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Slack.Api.Mappers;
+using Slack.Shared.Models;
+using Slack.Shared.Repositories;
 
 namespace Slack.Api.Services;
 
@@ -28,18 +28,8 @@ public class CachedCustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
 
-        var key = $"customer-exists-{context.PropertyBag.VerifiableToken}";
-        if (memoryCache.TryGetValue<bool>(key, out var entry))
-        {
-            if (entry)
-            {
-                return true;
-            }
-        }
-
-        memoryCache.Remove(key);
         return await memoryCache.GetOrCreateAsync(
-            key,
+            $"customer-exists-{context.PropertyBag.VerifiableToken}",
             async cacheEntry =>
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
@@ -59,15 +49,8 @@ public class CachedCustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
 
-        var key = $"customer-verifiabletoken-{context.PropertyBag.VerifiableToken}";
-        if (memoryCache.TryGetValue<(Customer, Shared.Database.Entities.Customer)>(key, out var entry))
-        {
-            return entry;
-        }
-
-        memoryCache.Remove(key);
         return await memoryCache.GetOrCreateAsync(
-            key,
+            $"customer-verifiabletoken-{context.PropertyBag.VerifiableToken}",
             async cacheEntry =>
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
@@ -91,15 +74,8 @@ public class CachedCustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var key = $"customer-id-{id}";
-        if (memoryCache.TryGetValue<(Customer, Shared.Database.Entities.Customer)>(key, out var entry))
-        {
-            return entry;
-        }
-
-        memoryCache.Remove(key);
         return await memoryCache.GetOrCreateAsync(
-            key,
+            $"customer-id-{id}",
             async cacheEntry =>
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);

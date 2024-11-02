@@ -21,10 +21,12 @@ public interface ICustomerService
     Task<Shared.Models.Customer> GetByIdAsync(string customerId, CancellationToken cancellationToken);
     Task<Shared.Models.Customer> GetMeAsync(bool addCustomerIfNotExist, CancellationToken cancellationToken);
 
-    Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(string verifiableToken,
+    Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(
+        string verifiableToken,
         CancellationToken cancellationToken);
 
-    Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByEmailAsync(string email,
+    Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByEmailAsync(
+        string email,
         CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Customer>>, int )> GetPaginatedCustomersAsync(
@@ -54,7 +56,8 @@ public class CustomerService(
     IMapper mapper,
     IContext context,
     IRandomHelper randomHelper,
-    INotificationOutboxPublisher notificationOutboxPublisher) : ICustomerService
+    INotificationOutboxPublisher notificationOutboxPublisher,
+    ICachedCustomerService cachedCustomerService) : ICustomerService
 {
     public async Task<Shared.Models.Customer> GetByIdAsync(string customerId, CancellationToken cancellationToken)
     {
@@ -75,10 +78,7 @@ public class CustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
 
-        var customer =
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                context.PropertyBag.VerifiableToken!,
-                cancellationToken);
+        var (_, customer) = await cachedCustomerService.GetNullableCustomerAsync(cancellationToken);
         if (customer is not null)
         {
             return mapper.MapTo(customer);
