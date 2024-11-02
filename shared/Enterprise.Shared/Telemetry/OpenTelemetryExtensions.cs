@@ -41,7 +41,8 @@ public static class OpenTelemetryExtensions
             .AddSingleton<IPropagatorFunctionProvider<IPropagatorEntity>,
                 PropagatorEntityFunctions>();
 
-        services.AddOpenTelemetry()
+        services
+            .AddOpenTelemetry()
             .WithMetrics(builder =>
                 {
                     if (openTelemetrySettings is
