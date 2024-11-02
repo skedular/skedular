@@ -8,4 +8,6 @@ public class OpenTelemetrySettings
     public bool OtlpEnabled { get; set; }
     public string OtlpEndpoint { get; set; } = string.Empty;
     public bool MetricsIngestEnabled { get; set; }
+    public bool JaegerEnabled { get; set; }
+    public string JaegerEndpoint { get; set; } = string.Empty;
 }

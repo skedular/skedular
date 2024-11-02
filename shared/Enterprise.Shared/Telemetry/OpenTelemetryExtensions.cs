@@ -90,37 +90,38 @@ public static class OpenTelemetryExtensions
                     .GetSection("OpenTelemetry")
                     .Get<OpenTelemetrySettings>();
 
-                // Exporters
-                if (telemetrySettings is
-                    {
-                        ConsoleEnabled: true
-                    })
+                if (telemetrySettings is null)
+                {
+                    return;
+                }
+
+                if (telemetrySettings.ConsoleEnabled)
                 {
                     builder.AddConsoleExporter();
                 }
 
-                if (telemetrySettings is
-                    {
-                        ZipkinEnabled: true
-                    })
-                    // Zipkin is the lighter / less featured predecessor of Jaegar
+                if (telemetrySettings.ZipkinEnabled)
                 {
                     builder.AddZipkinExporter(options =>
                     {
-                        options.Endpoint =
-                            new Uri(telemetrySettings.ZipkinEndpoint);
+                        options.Endpoint = new Uri(telemetrySettings.ZipkinEndpoint);
                     });
                 }
 
-                if (telemetrySettings is
-                    {
-                        OtlpEnabled: true
-                    })
+                if (telemetrySettings.JaegerEnabled)
                 {
-                    builder.AddOtlpExporter(otlpOptions =>
+                    builder.AddJaegerExporter(options =>
                     {
-                        otlpOptions.Protocol = OtlpExportProtocol.HttpProtobuf;
-                        otlpOptions.Endpoint = new Uri(telemetrySettings.OtlpEndpoint);
+                        options.Endpoint = new Uri(telemetrySettings.JaegerEndpoint);
+                    });
+                }
+
+                if (telemetrySettings.OtlpEnabled)
+                {
+                    builder.AddOtlpExporter(options =>
+                    {
+                        options.Protocol = OtlpExportProtocol.Grpc;
+                        options.Endpoint = new Uri(telemetrySettings.OtlpEndpoint);
                     });
                 }
             });

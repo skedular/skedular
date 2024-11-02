@@ -22,15 +22,15 @@ services:
         aliases:
           - postgres.localhost
 
-  zipkin:
-    image: openzipkin/zipkin:latest
+  jaeger:
+    image: jaegertracing/all-in-one:latest
     restart: unless-stopped
     ports:
-      - 9411:9411
+      - 16686:16686
     networks:
       unityhubio_network:
         aliases:
-          - zipkin.localhost
+          - jaeger.localhost
 
   kafka1:
     image: confluentinc/cp-kafka:latest
@@ -79,7 +79,7 @@ services:
     image: ghcr.io/unityhubio/allapis:latest
     restart: unless-stopped
     depends_on:
-      zipkin:
+      jaeger:
         condition: service_started
       staging-infra-provision:
         condition: service_completed_successfully
@@ -155,7 +155,7 @@ services:
     image: ghcr.io/unityhubio/allprocessors:latest
     restart: unless-stopped
     depends_on:
-      zipkin:
+      jaeger:
         condition: service_started
       staging-infra-provision:
         condition: service_completed_successfully
@@ -246,7 +246,7 @@ services:
     image: ghcr.io/unityhubio/allapis:latest
     restart: unless-stopped
     depends_on:
-      zipkin:
+      jaeger:
         condition: service_started
       prod-infra-provision:
         condition: service_completed_successfully
@@ -324,7 +324,7 @@ services:
     image: ghcr.io/unityhubio/allprocessors:latest
     restart: unless-stopped
     depends_on:
-      zipkin:
+      jaeger:
         condition: service_started
       prod-infra-provision:
         condition: service_completed_successfully
