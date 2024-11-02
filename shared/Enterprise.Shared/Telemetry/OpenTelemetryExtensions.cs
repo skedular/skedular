@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka;
+﻿using System.Data.Common;
+using Confluent.Kafka;
 using Enterprise.Shared.Kafka.Telemetry;
 using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Telemetry.Configurations;
@@ -77,15 +78,25 @@ public static class OpenTelemetryExtensions
                 builder.AddHttpClientInstrumentation();
                 builder.AddHotChocolateInstrumentation();
 
-                builder.AddEntityFrameworkCoreInstrumentation(options =>
+                if (openTelemetrySettings is not null)
                 {
-                    options.EnrichWithIDbCommand = (activity, command) =>
+                    if (openTelemetrySettings.EntityFrameworkEnabled)
                     {
-                        activity.DisplayName = $"{command.CommandType} main";
-                        activity.SetTag("db.type", command.CommandType);
-                        activity.SetTag("db.text", command.CommandText);
-                    };
-                });
+                        builder.AddEntityFrameworkCoreInstrumentation(options =>
+                        {
+                            options.EnrichWithIDbCommand = (activity, command) =>
+                            {
+                                activity.DisplayName = $"{command.CommandType} main";
+                                activity.SetTag("db.type", command.CommandType);
+                                activity.SetTag("db.text", command.CommandText);
+                                activity.SetTag("db.parameters",
+                                    string.Join(", ",
+                                        command.Parameters.OfType<DbParameter>().Select(parameter =>
+                                            $"{parameter.ParameterName}={parameter.Value}")));
+                            };
+                        });
+                    }
+                }
 
                 services
                     .AddActivitySource(TelemetryKeys.IncomingActivitySourceName)
@@ -93,39 +104,37 @@ public static class OpenTelemetryExtensions
                     .AddActivitySource(TelemetryKeys.ProducerActivitySourceName)
                     .AddActivitySource(Outbox.Telemetry.TelemetryKeys.ActivitySourceName);
 
-                if (openTelemetrySettings is null)
+                if (openTelemetrySettings is not null)
                 {
-                    return;
-                }
-
-                if (openTelemetrySettings.ConsoleEnabled)
-                {
-                    builder.AddConsoleExporter();
-                }
-
-                if (openTelemetrySettings.ZipkinEnabled)
-                {
-                    builder.AddZipkinExporter(options =>
+                    if (openTelemetrySettings.ConsoleEnabled)
                     {
-                        options.Endpoint = new Uri(openTelemetrySettings.ZipkinEndpoint);
-                    });
-                }
+                        builder.AddConsoleExporter();
+                    }
 
-                if (openTelemetrySettings.JaegerEnabled)
-                {
-                    builder.AddJaegerExporter(options =>
+                    if (openTelemetrySettings.ZipkinEnabled)
                     {
-                        options.Endpoint = new Uri(openTelemetrySettings.JaegerEndpoint);
-                    });
-                }
+                        builder.AddZipkinExporter(options =>
+                        {
+                            options.Endpoint = new Uri(openTelemetrySettings.ZipkinEndpoint);
+                        });
+                    }
 
-                if (openTelemetrySettings.OtlpEnabled)
-                {
-                    builder.AddOtlpExporter(options =>
+                    if (openTelemetrySettings.JaegerEnabled)
                     {
-                        options.Protocol = OtlpExportProtocol.Grpc;
-                        options.Endpoint = new Uri(openTelemetrySettings.OtlpEndpoint);
-                    });
+                        builder.AddJaegerExporter(options =>
+                        {
+                            options.Endpoint = new Uri(openTelemetrySettings.JaegerEndpoint);
+                        });
+                    }
+
+                    if (openTelemetrySettings.OtlpEnabled)
+                    {
+                        builder.AddOtlpExporter(options =>
+                        {
+                            options.Protocol = OtlpExportProtocol.Grpc;
+                            options.Endpoint = new Uri(openTelemetrySettings.OtlpEndpoint);
+                        });
+                    }
                 }
             });
 

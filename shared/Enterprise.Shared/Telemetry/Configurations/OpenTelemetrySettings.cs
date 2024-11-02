@@ -12,4 +12,5 @@ public class OpenTelemetrySettings
     public bool MetricsIngestEnabled { get; set; }
     public bool JaegerEnabled { get; set; }
     public string JaegerEndpoint { get; set; } = string.Empty;
+    public bool EntityFrameworkEnabled { get; set; }
 }
