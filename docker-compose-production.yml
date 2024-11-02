@@ -137,6 +137,10 @@ services:
       Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      OpenTelemetry__ZipkinEnabled: false
+      OpenTelemetry__JaegerEnabled: true
+      OpenTelemetry__OtlpEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: false
     healthcheck:
       test:
         [
@@ -215,6 +219,10 @@ services:
       Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      OpenTelemetry__ZipkinEnabled: false
+      OpenTelemetry__JaegerEnabled: true
+      OpenTelemetry__OtlpEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: false
     healthcheck:
       test:
         [
@@ -306,6 +314,10 @@ services:
       Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      OpenTelemetry__ZipkinEnabled: false
+      OpenTelemetry__JaegerEnabled: true
+      OpenTelemetry__OtlpEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: false
     healthcheck:
       test:
         [
@@ -386,6 +398,10 @@ services:
       Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      OpenTelemetry__ZipkinEnabled: false
+      OpenTelemetry__JaegerEnabled: true
+      OpenTelemetry__OtlpEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: false
     healthcheck:
       test:
         [
