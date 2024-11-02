@@ -2,7 +2,6 @@
 using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Kafka.Configurations;
-using Enterprise.Shared.Security.Jobs;
 using Enterprise.Shared.Telemetry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,8 +23,7 @@ public abstract class StartupCustom(IConfiguration configuration, IWebHostEnviro
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services
-            .WithOpenTelemetryCustom(Configuration, GetType().Assembly.GetName().Name!, Environment.EnvironmentName);
+        services.WithOpenTelemetryCustom(Configuration, GetType().Assembly.GetName().Name!);
 
         var applicationConfiguration =
             Configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();

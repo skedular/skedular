@@ -16,7 +16,8 @@ public static class HealthCheckExtensions
         this IServiceCollection services,
         NpgsqlDataSource npgsqlDataSource,
         int healthCheckTimeOutInSeconds = 5) =>
-        services.AddHealthChecks()
+        services
+            .AddHealthChecks()
             .AddNpgSql(
                 new NpgSqlHealthCheckOptions(npgsqlDataSource),
                 tags: s_tags,

@@ -2,6 +2,8 @@
 
 public class OpenTelemetrySettings
 {
+    public const string Key = "OpenTelemetry";
+
     public bool ConsoleEnabled { get; set; }
     public bool ZipkinEnabled { get; set; }
     public string ZipkinEndpoint { get; set; } = string.Empty;

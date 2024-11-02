@@ -11,7 +11,6 @@ public interface IActivityPropagator<in T> where T : class
     /// <param name="destination"></param>
     void PropagateActivity(T destination);
 
-
     /// <summary>
     ///     Create and start an activity using incoming headers
     /// </summary>

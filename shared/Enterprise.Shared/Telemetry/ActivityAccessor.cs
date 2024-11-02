@@ -6,16 +6,9 @@ namespace Enterprise.Shared.Telemetry;
 
 public interface IActivityAccessor
 {
-    void AddEvent(
-        string name,
-        string tagPrefix,
-        IDictionary<string, string> tags);
-
+    void AddEvent(string name, string tagPrefix, IDictionary<string, string> tags);
     void RecordException(Exception exception);
-
-    IActivitySource GetActivitySource(
-        string activitySourceName
-    );
+    IActivitySource GetActivitySource(string activitySourceName);
 }
 
 /// <summary>
@@ -25,7 +18,6 @@ public class ActivityAccessor : IActivityAccessor
 {
     private static readonly ActivitySourceFacade s_noopActivitySourceName = new("noop");
     private readonly IActivityGetter _activityGetter;
-
     private readonly IDictionary<string, IActivitySource> _activitySources;
     private readonly ILogger<ActivityAccessor> _logger;
 
@@ -38,7 +30,6 @@ public class ActivityAccessor : IActivityAccessor
         _logger = logger;
         _activitySources = activitySources.ToDictionary(source => source.Name);
     }
-
 
     public void RecordException(Exception exception)
     {
@@ -58,10 +49,7 @@ public class ActivityAccessor : IActivityAccessor
     /// <param name="name">Required</param>
     /// <param name="tagPrefix">Required</param>
     /// <param name="tags"></param>
-    public void AddEvent(
-        string name,
-        string tagPrefix,
-        IDictionary<string, string> tags)
+    public void AddEvent(string name, string tagPrefix, IDictionary<string, string> tags)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentException.ThrowIfNullOrWhiteSpace(tagPrefix);
@@ -86,9 +74,7 @@ public class ActivityAccessor : IActivityAccessor
         activity.AddEvent(activityEvent);
     }
 
-    public IActivitySource GetActivitySource(
-        string activitySourceName
-    )
+    public IActivitySource GetActivitySource(string activitySourceName)
     {
         if (_activitySources.TryGetValue(activitySourceName, out var source))
         {

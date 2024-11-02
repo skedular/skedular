@@ -3,6 +3,11 @@ using OpenTelemetry.Context.Propagation;
 
 namespace Enterprise.Shared.Telemetry;
 
+public interface IPropagationContextGetter
+{
+    PropagationContext? GetPropagationContext();
+}
+
 public class PropagationContextGetter(IActivityGetter activityGetter) : IPropagationContextGetter
 {
     public PropagationContext? GetPropagationContext()

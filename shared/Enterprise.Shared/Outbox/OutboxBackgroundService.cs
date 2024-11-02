@@ -95,14 +95,13 @@ public class OutboxBackgroundService<TDbContext>(
             }
 
             var kafkaHeaders = ConvertToKafkaHeaders(outboxEvent.Headers);
-
-            var activitySource =
-                activityAccessor.GetActivitySource(TelemetryKeys.ActivitySourceName);
+            var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.ActivitySourceName);
 
             using (dictionaryActivityPropagator.StartActivityFromPropagationContext(
                        outboxEvent.Headers,
                        activitySource,
-                       TelemetryKeys.EventSend, ActivityKind.Producer))
+                       TelemetryKeys.EventSend,
+                       ActivityKind.Producer))
             {
                 var message = new Message<byte[]?, byte[]>
                 {
@@ -129,8 +128,7 @@ public class OutboxBackgroundService<TDbContext>(
                 {
                     outboxEvent.RetryCount += 1;
                     outboxEvent.LastRetry = DateTimeOffset.UtcNow;
-                    outboxEvent.ProcessingErrors =
-                        ex.ToString().Truncate(Constants.MaxOutboxProcessingErrorsLength);
+                    outboxEvent.ProcessingErrors = ex.ToString().Truncate(Constants.MaxOutboxProcessingErrorsLength);
 
                     var level = outboxEvent.RetryCount <
                                 OutboxParameters.CriticalRetryThreshold

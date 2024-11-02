@@ -17,15 +17,12 @@ public static class OpenTelemetryExtensions
     public static IServiceCollection WithOpenTelemetryCustom(
         this IServiceCollection services,
         IConfiguration configuration,
-        string appName,
-        string environ = "")
+        string appName)
     {
         services.AddSingleton<IActivityAccessor, ActivityAccessor>();
         services.AddSingleton<TextMapPropagator, StandardTextMapPropagator>();
 
-        var openTelemetrySettings = configuration
-            .GetSection("OpenTelemetry")
-            .Get<OpenTelemetrySettings>();
+        var openTelemetrySettings = configuration.GetSection(OpenTelemetrySettings.Key).Get<OpenTelemetrySettings>();
 
         services.AddSingleton<IOpenTelemetryInstrumentation, OpenTelemetryInstrumentation>();
         services.AddSingleton<IActivityGetter, ActivityGetter>();
@@ -80,48 +77,54 @@ public static class OpenTelemetryExtensions
                 builder.AddHttpClientInstrumentation();
                 builder.AddHotChocolateInstrumentation();
 
+                builder.AddEntityFrameworkCoreInstrumentation(options =>
+                {
+                    options.EnrichWithIDbCommand = (activity, command) =>
+                    {
+                        activity.DisplayName = $"{command.CommandType} main";
+                        activity.SetTag("db.type", command.CommandType);
+                        activity.SetTag("db.text", command.CommandText);
+                    };
+                });
+
                 services
                     .AddActivitySource(TelemetryKeys.IncomingActivitySourceName)
                     .AddActivitySource(TelemetryKeys.ConsumerActivitySourceName)
                     .AddActivitySource(TelemetryKeys.ProducerActivitySourceName)
                     .AddActivitySource(Outbox.Telemetry.TelemetryKeys.ActivitySourceName);
 
-                var telemetrySettings = configuration
-                    .GetSection("OpenTelemetry")
-                    .Get<OpenTelemetrySettings>();
-
-                if (telemetrySettings is null)
+                if (openTelemetrySettings is null)
                 {
                     return;
                 }
 
-                if (telemetrySettings.ConsoleEnabled)
+                if (openTelemetrySettings.ConsoleEnabled)
                 {
                     builder.AddConsoleExporter();
                 }
 
-                if (telemetrySettings.ZipkinEnabled)
+                if (openTelemetrySettings.ZipkinEnabled)
                 {
                     builder.AddZipkinExporter(options =>
                     {
-                        options.Endpoint = new Uri(telemetrySettings.ZipkinEndpoint);
+                        options.Endpoint = new Uri(openTelemetrySettings.ZipkinEndpoint);
                     });
                 }
 
-                if (telemetrySettings.JaegerEnabled)
+                if (openTelemetrySettings.JaegerEnabled)
                 {
                     builder.AddJaegerExporter(options =>
                     {
-                        options.Endpoint = new Uri(telemetrySettings.JaegerEndpoint);
+                        options.Endpoint = new Uri(openTelemetrySettings.JaegerEndpoint);
                     });
                 }
 
-                if (telemetrySettings.OtlpEnabled)
+                if (openTelemetrySettings.OtlpEnabled)
                 {
                     builder.AddOtlpExporter(options =>
                     {
                         options.Protocol = OtlpExportProtocol.Grpc;
-                        options.Endpoint = new Uri(telemetrySettings.OtlpEndpoint);
+                        options.Endpoint = new Uri(openTelemetrySettings.OtlpEndpoint);
                     });
                 }
             });
@@ -133,19 +136,11 @@ public static class OpenTelemetryExtensions
     ///     Adds an activity source using the provided name. The activity source is added to the telemetry source list
     ///     automatically
     /// </summary>
-    /// <param name="serviceCollection"></param>
+    /// <param name="services"></param>
     /// <param name="activitySourceName"></param>
     /// <returns></returns>
-    public static IServiceCollection AddActivitySource(
-        this IServiceCollection serviceCollection,
-        string activitySourceName)
-    {
-        serviceCollection.AddSingleton<IActivitySource>(_ =>
-            new ActivitySourceFacade(activitySourceName));
-
-        serviceCollection.ConfigureOpenTelemetryTracerProvider(builder =>
-            builder.AddSource(activitySourceName));
-
-        return serviceCollection;
-    }
+    public static IServiceCollection AddActivitySource(this IServiceCollection services, string activitySourceName) =>
+        services
+            .AddSingleton<IActivitySource>(_ => new ActivitySourceFacade(activitySourceName))
+            .ConfigureOpenTelemetryTracerProvider(builder => builder.AddSource(activitySourceName));
 }
