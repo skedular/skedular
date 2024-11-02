@@ -18,6 +18,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddDatabase(Configuration, true, "BillingPostgresConnection")
             .WithPooledDbContextFactory<BillingDbContext>(Migration.SetAssembly, Environment)
+            .AddOutboxBackgroundService()
             .AddOutboxService()
             .AddDatabaseHealthCheck();
 

@@ -32,6 +32,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddDatabase(Configuration, true, "SlackPostgresConnection")
             .WithPooledDbContextFactory<SlackDbContext>(Migration.SetAssembly, Environment)
+            .AddOutboxBackgroundService()
             .AddOutboxService()
             .AddDatabaseHealthCheck();
 

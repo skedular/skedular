@@ -8,15 +8,22 @@ namespace Enterprise.Shared.Outbox;
 
 public static class OutboxExtensions
 {
+    public static DatabaseSetupContext<TDbContext> AddOutboxBackgroundService<TDbContext>(
+        this DatabaseSetupContext<TDbContext> databaseSetup)
+        where TDbContext : DbContext, IOutboxStore
+    {
+        databaseSetup.ServiceCollection.AddHostedService<OutboxBackgroundService<TDbContext>>();
+
+        return databaseSetup;
+    }
+
     public static DatabaseSetupContext<TDbContext> AddOutboxService<TDbContext>(
         this DatabaseSetupContext<TDbContext> databaseSetup)
         where TDbContext : DbContext, IOutboxStore
     {
         databaseSetup.ServiceCollection
             .AddSingleton(typeof(IOutboxEventPublisher<,>), typeof(OutboxEventPublisher<,>))
-            .AddHostedService<OutboxBackgroundService<TDbContext>>();
-
-        databaseSetup.ServiceCollection.Decorate<IDbTransactionBuilder, OutboxTransactionBuilderDecorator>();
+            .Decorate<IDbTransactionBuilder, OutboxTransactionBuilderDecorator>();
 
         return databaseSetup;
     }

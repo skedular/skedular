@@ -31,8 +31,8 @@ public class OutboxBackgroundService<TDbContext>(
                 context,
                 thresholdRetryTime,
                 token) => context.Outbox.TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
-                .Where(x => x.RetryCount == 0 || x.LastRetry < thresholdRetryTime)
-                .OrderBy(x => x.RetryCount)
+                .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdRetryTime)
+                .OrderBy(query => query.RetryCount)
                 .FirstOrDefault());
 
     /// <summary>

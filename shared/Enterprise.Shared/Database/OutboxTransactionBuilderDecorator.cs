@@ -4,18 +4,10 @@ namespace Enterprise.Shared.Database;
 
 public class OutboxTransactionBuilderDecorator(IDbTransactionBuilder transactionBuilder) : IDbTransactionBuilder
 {
-    public IDbContextTransaction BeginTransaction(IUnitOfWork unit)
-    {
-        var dbContextTransaction = transactionBuilder.BeginTransaction(unit);
-
-        return new TransactionDecorator(dbContextTransaction);
-    }
+    public IDbContextTransaction BeginTransaction(IUnitOfWork unit) =>
+        new TransactionDecorator(transactionBuilder.BeginTransaction(unit));
 
     public async Task<IDbContextTransaction> BeginTransactionAsync(IUnitOfWork unit,
-        CancellationToken cancellationToken)
-    {
-        var dbContextTransaction = await transactionBuilder.BeginTransactionAsync(unit, cancellationToken);
-
-        return new TransactionDecorator(dbContextTransaction);
-    }
+        CancellationToken cancellationToken) =>
+        new TransactionDecorator(await transactionBuilder.BeginTransactionAsync(unit, cancellationToken));
 }
