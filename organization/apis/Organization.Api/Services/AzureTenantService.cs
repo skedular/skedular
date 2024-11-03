@@ -66,7 +66,8 @@ public class AzureTenantService(
                 return true;
             }
         }
-
+        
+        memoryCache.Remove(key);
         return await memoryCache.GetOrCreateAsync(
             key,
             async cacheEntry =>
