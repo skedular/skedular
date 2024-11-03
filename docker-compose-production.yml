@@ -22,20 +22,6 @@ services:
         aliases:
           - postgres.localhost
 
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    restart: unless-stopped
-    ports:
-      - 16686:16686
-    environment:
-      SPAN_STORAGE_TYPE: memory
-      MEMORY_MAX_TRACES: 100000
-      MEMORY_TTL: 15m
-    networks:
-      unityhubio_network:
-        aliases:
-          - jaeger.localhost
-
   kafka1:
     image: confluentinc/cp-kafka:latest
     volumes:
@@ -83,8 +69,6 @@ services:
     image: ghcr.io/unityhubio/allapis:latest
     restart: unless-stopped
     depends_on:
-      jaeger:
-        condition: service_started
       staging-infra-provision:
         condition: service_completed_successfully
     ports:
@@ -142,9 +126,9 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
       OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: true
-      OpenTelemetry__OtlpEnabled: true
-      OpenTelemetry__EntityFrameworkEnabled: true
+      OpenTelemetry__JaegerEnabled: false
+      OpenTelemetry__OtlpEnabled: false
+      OpenTelemetry__EntityFrameworkEnabled: false
     healthcheck:
       test:
         [
@@ -163,8 +147,6 @@ services:
     image: ghcr.io/unityhubio/allprocessors:latest
     restart: unless-stopped
     depends_on:
-      jaeger:
-        condition: service_started
       staging-infra-provision:
         condition: service_completed_successfully
       staging-apis-01:
@@ -224,9 +206,9 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
       OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: true
-      OpenTelemetry__OtlpEnabled: true
-      OpenTelemetry__EntityFrameworkEnabled: true
+      OpenTelemetry__JaegerEnabled: false
+      OpenTelemetry__OtlpEnabled: false
+      OpenTelemetry__EntityFrameworkEnabled: false
     healthcheck:
       test:
         [
@@ -245,8 +227,6 @@ services:
     image: ghcr.io/unityhubio/alljobs:latest
     restart: unless-stopped
     depends_on:
-      jaeger:
-        condition: service_started
       staging-infra-provision:
         condition: service_completed_successfully
       staging-processors-01:
@@ -306,8 +286,8 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
       OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: true
-      OpenTelemetry__OtlpEnabled: true
+      OpenTelemetry__JaegerEnabled: false
+      OpenTelemetry__OtlpEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
     healthcheck:
       test:
@@ -340,8 +320,6 @@ services:
     image: ghcr.io/unityhubio/allapis:latest
     restart: unless-stopped
     depends_on:
-      jaeger:
-        condition: service_started
       prod-infra-provision:
         condition: service_completed_successfully
       staging-apis-01:
@@ -401,9 +379,9 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: true
-      OpenTelemetry__OtlpEnabled: true
-      OpenTelemetry__EntityFrameworkEnabled: true
+      OpenTelemetry__JaegerEnabled: false
+      OpenTelemetry__OtlpEnabled: false
+      OpenTelemetry__EntityFrameworkEnabled: false
     healthcheck:
       test:
         [
@@ -422,8 +400,6 @@ services:
     image: ghcr.io/unityhubio/allprocessors:latest
     restart: unless-stopped
     depends_on:
-      jaeger:
-        condition: service_started
       prod-infra-provision:
         condition: service_completed_successfully
       prod-apis-01:
@@ -483,9 +459,9 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: true
-      OpenTelemetry__OtlpEnabled: true
-      OpenTelemetry__EntityFrameworkEnabled: true
+      OpenTelemetry__JaegerEnabled: false
+      OpenTelemetry__OtlpEnabled: false
+      OpenTelemetry__EntityFrameworkEnabled: false
     healthcheck:
       test:
         [
@@ -504,8 +480,6 @@ services:
     image: ghcr.io/unityhubio/alljobs:latest
     restart: unless-stopped
     depends_on:
-      jaeger:
-        condition: service_started
       prod-infra-provision:
         condition: service_completed_successfully
       prod-processors-01:
@@ -565,8 +539,8 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
       OpenTelemetry__ZipkinEnabled: false
-      OpenTelemetry__JaegerEnabled: true
-      OpenTelemetry__OtlpEnabled: true
+      OpenTelemetry__JaegerEnabled: false
+      OpenTelemetry__OtlpEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
     healthcheck:
       test:
