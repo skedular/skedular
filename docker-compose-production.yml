@@ -27,6 +27,10 @@ services:
     restart: unless-stopped
     ports:
       - 16686:16686
+    environment:
+      SPAN_STORAGE_TYPE: memory
+      MEMORY_MAX_TRACES: 100000
+      MEMORY_TTL: 15m
     networks:
       unityhubio_network:
         aliases:
