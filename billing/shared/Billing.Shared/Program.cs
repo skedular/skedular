@@ -1,6 +1,6 @@
 ﻿using Billing.Shared.Database;
+using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Infrastructure.Configuration.Extensions;
 using Microsoft.Extensions.Hosting;
 
 namespace Billing.Shared;

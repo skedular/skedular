@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using Enterprise.Shared.Infrastructure.Configuration.Extensions;
+using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Infrastructure.Filters;
 using Enterprise.Shared.Logging;
 using Microsoft.AspNetCore.Hosting;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Path = System.IO.Path;
 
-namespace Enterprise.Shared.Infrastructure.Configuration.Extensions;
+namespace Enterprise.Shared.Configurations.Extensions;
 
 public static class ConfigurationBuilderExtensions
 {

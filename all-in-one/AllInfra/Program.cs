@@ -3,7 +3,7 @@
 using Api.Shared.Clients.Events.UnityHub.Billing.V1.Value;
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Infrastructure.Configuration.Extensions;
+using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 using Microsoft.Extensions.Configuration;

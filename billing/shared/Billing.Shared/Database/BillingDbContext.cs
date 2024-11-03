@@ -1,6 +1,6 @@
 using Billing.Shared.Database.Entities;
+using Enterprise.Shared.Configurations.Extensions;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Infrastructure.Configuration.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;

@@ -1,5 +1,5 @@
-﻿using Enterprise.Shared.Database;
-using Enterprise.Shared.Infrastructure.Configuration.Extensions;
+﻿using Enterprise.Shared.Configurations.Extensions;
+using Enterprise.Shared.Database;
 using Microsoft.Extensions.Hosting;
 using Slack.Shared.Database;
 
