@@ -28,8 +28,18 @@ public class CachedCustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
 
+        var key = $"customer-exists-{context.PropertyBag.VerifiableToken}";
+        if (memoryCache.TryGetValue<bool>(key, out var entry))
+        {
+            if (entry)
+            {
+                return true;
+            }
+        }
+
+        memoryCache.Remove(key);
         return await memoryCache.GetOrCreateAsync(
-            $"customer-exists-{context.PropertyBag.VerifiableToken}",
+            key,
             async cacheEntry =>
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);

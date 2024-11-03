@@ -44,6 +44,7 @@ public class CachedCustomerService(
             }
         }
 
+        memoryCache.Remove(key);
         return await memoryCache.GetOrCreateAsync(
             key,
             async cacheEntry =>
