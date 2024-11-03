@@ -6,7 +6,6 @@ using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 using Notification.Processors.Subscribers;
 using Notification.Shared;
-using Notification.Shared.Configurations;
 using Notification.Shared.Database;
 
 namespace Notification.Processors;
@@ -47,13 +46,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                 Key,
                 Event>(kafkaConfiguration);
 
-        var notificationConfiguration =
-            Configuration.GetSection(NotificationConfiguration.Key).Get<NotificationConfiguration>();
-        ArgumentNullException.ThrowIfNull(notificationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(notificationConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(notificationConfiguration.BaseUri);
-        services.AddSingleton(notificationConfiguration);
-
         services
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
@@ -61,12 +53,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddRepositoryFactory()
             .AddPublishers()
             .AddServices()
-            .AddMappers();
+            .AddMappers()
+            .AddUnityHubGrpcServices(Configuration);
     }
 
     public override void Configure(IApplicationBuilder app) =>
-        app.UseApplicationBuilderDefaults(
-            Environment,
-            Configuration
-        );
+        app.UseApplicationBuilderDefaults(Environment, Configuration);
 }

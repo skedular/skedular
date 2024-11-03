@@ -6,7 +6,6 @@ using Enterprise.Shared.Outbox;
 using Notification.Api.GraphQL;
 using Notification.Api.Grpc;
 using Notification.Shared;
-using Notification.Shared.Configurations;
 using Notification.Shared.Database;
 
 namespace Notification.Api;
@@ -19,7 +18,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddDatabase(Configuration, true, "NotificationPostgresConnection")
             .WithPooledDbContextFactory<NotificationDbContext>(Migration.SetAssembly, Environment)
-            .AddOutboxBackgroundService()
             .AddOutboxService()
             .AddDatabaseHealthCheck();
 
@@ -32,12 +30,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                     .AddQueryType<NotificationQuery>();
             });
 
-        var notificationConfiguration =
-            Configuration.GetSection(NotificationConfiguration.Key).Get<NotificationConfiguration>();
-        ArgumentNullException.ThrowIfNull(notificationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(notificationConfiguration.ApiKey);
-        services.AddSingleton(notificationConfiguration);
-
         services
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
@@ -46,7 +38,8 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddPublishers()
             .AddOutboxPublishers()
             .AddServices()
-            .AddMappers();
+            .AddMappers()
+            .AddUnityHubGrpcServices(Configuration);
     }
 
     public override void Configure(IApplicationBuilder app) =>

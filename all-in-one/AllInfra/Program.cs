@@ -52,7 +52,8 @@ public class Program : WebHostServiceBase<Program>
                 .CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.OrganizationMember.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Payment.V1.Value.Event>(),
             kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Value.Event>(),
-            kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event>());
+            kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event>()
+        );
 
         // await Task.WhenAll([
         //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Key>(),
@@ -112,9 +113,16 @@ public class Program : WebHostServiceBase<Program>
         // ]);
 
         await Task.WhenAll(
-            Billing.Shared.Program.Main(args), Booking.Shared.Program.Main(args),
-            Customer.Shared.Program.Main(args), Location.Shared.Program.Main(args), MsTeams.Shared.Program.Main(args),
-            Notification.Shared.Program.Main(args), Organization.Shared.Program.Main(args),
-            Payment.Shared.Program.Main(args), Slack.Shared.Program.Main(args), Team.Shared.Program.Main(args));
+            Billing.Shared.Program.Main(args),
+            Booking.Shared.Program.Main(args),
+            Customer.Shared.Program.Main(args),
+            Location.Shared.Program.Main(args),
+            MsTeams.Shared.Program.Main(args),
+            Notification.Shared.Program.Main(args),
+            Organization.Shared.Program.Main(args),
+            Payment.Shared.Program.Main(args),
+            Slack.Shared.Program.Main(args),
+            Team.Shared.Program.Main(args)
+        );
     }
 }

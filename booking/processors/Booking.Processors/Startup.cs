@@ -53,8 +53,5 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
     }
 
     public override void Configure(IApplicationBuilder app) =>
-        app.UseApplicationBuilderDefaults(
-            Environment,
-            Configuration
-        );
+        app.UseApplicationBuilderDefaults(Environment, Configuration);
 }

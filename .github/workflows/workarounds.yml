@@ -85,6 +85,18 @@ jobs:
           dockerRepository: allprocessors
           pushDockerImage: true
 
+      - name: Build, Test and Push Image - All Jobs
+        uses: "./.github/actions/build-test-push"
+        with:
+          dockerFilePath: ./all-in-one/AllJobs/Dockerfile
+          dockerBuildContextPath: .
+          dockerRegistry: ghcr.io
+          dockerRegistryUsername: ${{ github.actor }}
+          dockerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
+          dockerNamespace: unityhubio
+          dockerRepository: alljobs
+          pushDockerImage: true
+
       - name: Build, Test and Push Image - All Infra
         uses: "./.github/actions/build-test-push"
         with:

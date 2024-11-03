@@ -18,7 +18,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddDatabase(Configuration, true, "PaymentPostgresConnection")
             .WithPooledDbContextFactory<PaymentDbContext>(Migration.SetAssembly, Environment)
-            .AddOutboxBackgroundService()
             .AddOutboxService()
             .AddDatabaseHealthCheck();
 
@@ -40,7 +39,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddMappers()
             .AddStripe(Configuration);
     }
 

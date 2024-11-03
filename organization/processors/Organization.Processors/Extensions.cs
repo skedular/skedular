@@ -1,4 +1,3 @@
-using Organization.Processors.Jobs;
 using Organization.Processors.Mappers;
 using Organization.Processors.Services;
 
@@ -10,10 +9,7 @@ public static class Extensions
         services.AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<OrganizationDailyMemberCountRecorderJob>()
-            .AddHostedService<OrganizationOfferingRenewalJob>()
-            .AddHostedService<RefreshAzureTenantMembersJob>();
+        services;
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services

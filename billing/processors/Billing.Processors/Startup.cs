@@ -47,14 +47,9 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddMappers()
-            .AddJobs()
             .AddUnityHubGrpcServices(Configuration);
     }
 
     public override void Configure(IApplicationBuilder app) =>
-        app.UseApplicationBuilderDefaults(
-            Environment,
-            Configuration
-        );
+        app.UseApplicationBuilderDefaults(Environment, Configuration);
 }

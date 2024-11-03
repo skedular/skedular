@@ -32,6 +32,7 @@ public class Program : WebHostServiceBase<Program>
             Notification.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Payment.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Slack.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Team.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken));
+            Team.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken)
+        );
     }
 }

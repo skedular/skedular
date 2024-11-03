@@ -1,4 +1,3 @@
-using MsTeams.Processors.Jobs;
 using MsTeams.Processors.Mappers;
 using MsTeams.Processors.Services;
 
@@ -14,6 +13,5 @@ public static class Extensions
             .AddScoped<IGraphService, GraphService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<RefreshAzureTenantTeamsAndChannelsJob>();
+        services;
 }

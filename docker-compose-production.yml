@@ -140,7 +140,7 @@ services:
       OpenTelemetry__ZipkinEnabled: false
       OpenTelemetry__JaegerEnabled: true
       OpenTelemetry__OtlpEnabled: true
-      OpenTelemetry__EntityFrameworkEnabled: false
+      OpenTelemetry__EntityFrameworkEnabled: true
     healthcheck:
       test:
         [
@@ -222,12 +222,94 @@ services:
       OpenTelemetry__ZipkinEnabled: false
       OpenTelemetry__JaegerEnabled: true
       OpenTelemetry__OtlpEnabled: true
-      OpenTelemetry__EntityFrameworkEnabled: false
+      OpenTelemetry__EntityFrameworkEnabled: true
     healthcheck:
       test:
         [
           "CMD-SHELL",
           "curl -f http://localhost:10004/health/readiness || exit 1 && curl -f http://localhost:10104/health/readiness || exit 1 && curl -f http://localhost:10204/health/readiness || exit 1 && curl -f http://localhost:10304/health/readiness || exit 1 && curl -f http://localhost:10404/health/readiness || exit 1 && curl -f http://localhost:10504/health/readiness || exit 1 && curl -f http://localhost:10604/health/readiness || exit 1 && curl -f http://localhost:10704/health/readiness || exit 1 && curl -f http://localhost:10804/health/readiness || exit 1 && curl -f http://localhost:10904/health/readiness || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 100
+    networks:
+      unityhubio_network:
+        aliases:
+          - staging-processors-01.localhost
+
+  staging-jobs-01:
+    image: ghcr.io/unityhubio/alljobs:latest
+    restart: unless-stopped
+    depends_on:
+      jaeger:
+        condition: service_started
+      staging-infra-provision:
+        condition: service_completed_successfully
+      staging-processors-01:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Application__Environment: staging
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp
+      Application__IdentityProviders__Cognito__Audiences: 7369u947e21plbor9hc4n1r15n,b7lr0dm0454j4df2g6u6l2al
+      Application__IdentityProviders__Google__ApplicationId: 661765198440-lgar8febodjaudbn3ij5tgngqiv0qioi.apps.googleusercontent.com
+      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
+      Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
+      Application__WebAppBaseDomain: https://app.staging.unityhub.io
+      Application__ApiBaseDomain: https://apistaging.unityhub.io
+      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
+      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__IncomingTopicPrefix: staging
+      Kafka__OutgoingTopicPrefix: staging
+      Billing__ApiKey: ${STAGING_UNITYHUBIO_BILLING_APIKEY}
+      Billing__GrpcUrl: http://staging-apis-01:10802
+      Booking__ApiKey: ${STAGING_UNITYHUBIO_BOOKING_APIKEY}
+      Booking__GrpcUrl: http://staging-apis-01:10302
+      Customer__ApiKey: ${STAGING_UNITYHUBIO_CUSTOMER_APIKEY}
+      Customer__GrpcUrl: http://staging-apis-01:10002
+      Location__ApiKey: ${STAGING_UNITYHUBIO_LOCATION_APIKEY}
+      Location__GrpcUrl: http://staging-apis-01:10602
+      Notification__ApiKey: ${STAGING_UNITYHUBIO_NOTIFICATION_APIKEY}
+      Notification__GrpcUrl: http://staging-apis-01:10402
+      Organization__ApiKey: ${STAGING_UNITYHUBIO_ORGANIZATION_APIKEY}
+      Organization__GrpcUrl: http://staging-apis-01:10202
+      Payment__ApiKey: ${STAGING_UNITYHUBIO_PAYMENT_APIKEY}
+      Payment__GrpcUrl: http://staging-apis-01:10102
+      Slack__ApiKey: ${STAGING_UNITYHUBIO_SLACK_APIKEY}
+      Slack__GrpcUrl: http://staging-apis-01:10702
+      Team__ApiKey: ${STAGING_UNITYHUBIO_TEAM_APIKEY}
+      Team__GrpcUrl: http://staging-apis-01:10502
+      Stripe__PublishableKey: ${STAGING_UNITYHUBIO_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${STAGING_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Slack__AppId: A05H0126U7Q
+      Slack__ClientId: "118234978193.5578036232262"
+      Slack__ClientSecret: ${STAGING_UNITYHUBIO_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${STAGING_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__RedirectUrl: https://slackapistaging.unityhub.io/slack/api/v1/callback
+      Slack__SuccessInstallUrl: https://staging.unityhub.io/slack-success-install
+      AzureEntra__ClientId: ${STAGING_UNITYHUBIO_AZURE_ENTRA_CLIENT_ID}
+      AzureEntra__ClientSecret: ${STAGING_UNITYHUBIO_AZURE_ENTRA_CLIENT_SECRET}
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
+      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinOrganizationNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinOrganizationExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinLocationNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@staging.unityhub.io>"
+      OpenTelemetry__ZipkinEnabled: false
+      OpenTelemetry__JaegerEnabled: true
+      OpenTelemetry__OtlpEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: false
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:10007/health/readiness || exit 1 && curl -f http://localhost:10107/health/readiness || exit 1 && curl -f http://localhost:10207/health/readiness || exit 1 && curl -f http://localhost:10307/health/readiness || exit 1 && curl -f http://localhost:10407/health/readiness || exit 1 && curl -f http://localhost:10507/health/readiness || exit 1 && curl -f http://localhost:10607/health/readiness || exit 1 && curl -f http://localhost:10707/health/readiness || exit 1 && curl -f http://localhost:10807/health/readiness || exit 1 && curl -f http://localhost:10907/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -317,7 +399,7 @@ services:
       OpenTelemetry__ZipkinEnabled: false
       OpenTelemetry__JaegerEnabled: true
       OpenTelemetry__OtlpEnabled: true
-      OpenTelemetry__EntityFrameworkEnabled: false
+      OpenTelemetry__EntityFrameworkEnabled: true
     healthcheck:
       test:
         [
@@ -342,7 +424,87 @@ services:
         condition: service_completed_successfully
       prod-apis-01:
         condition: service_healthy
-      staging-processors-01:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Application__Environment: prod
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF
+      Application__IdentityProviders__Cognito__Audiences: 275ohbeul0cra95kbmpqr6d4o,5kiq7l4sclaloiqgnelj7mcd5g
+      Application__IdentityProviders__Google__ApplicationId: 874220940328-a7o1801134uepnlijk69sue6fs1nl8gr.apps.googleusercontent.com
+      Application__IdentityProviders__Google__Issuer: https://accounts.google.com
+      Application__PublicWebSiteBaseDomain: https://unityhub.io
+      Application__WebAppBaseDomain: https://app.unityhub.io
+      Application__ApiBaseDomain: https://api.unityhub.io
+      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
+      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__IncomingTopicPrefix: prod
+      Kafka__OutgoingTopicPrefix: prod
+      Billing__ApiKey: ${PRODUCTION_UNITYHUBIO_BILLING_APIKEY}
+      Billing__GrpcUrl: http://prod-apis-01:10802
+      Booking__ApiKey: ${PRODUCTION_UNITYHUBIO_BOOKING_APIKEY}
+      Booking__GrpcUrl: http://prod-apis-01:10302
+      Customer__ApiKey: ${PRODUCTION_UNITYHUBIO_CUSTOMER_APIKEY}
+      Customer__GrpcUrl: http://prod-apis-01:10002
+      Location__ApiKey: ${PRODUCTION_UNITYHUBIO_LOCATION_APIKEY}
+      Location__GrpcUrl: http://prod-apis-01:10602
+      Notification__ApiKey: ${PRODUCTION_UNITYHUBIO_NOTIFICATION_APIKEY}
+      Notification__GrpcUrl: http://prod-apis-01:10402
+      Organization__ApiKey: ${PRODUCTION_UNITYHUBIO_ORGANIZATION_APIKEY}
+      Organization__GrpcUrl: http://prod-apis-01:10202
+      Payment__ApiKey: ${PRODUCTION_UNITYHUBIO_PAYMENT_APIKEY}
+      Payment__GrpcUrl: http://prod-apis-01:10102
+      Slack__ApiKey: ${PRODUCTION_UNITYHUBIO_SLACK_APIKEY}
+      Slack__GrpcUrl: http://prod-apis-01:10702
+      Team__ApiKey: ${PRODUCTION_UNITYHUBIO_TEAM_APIKEY}
+      Team__GrpcUrl: http://prod-apis-01:10502
+      Stripe__PublishableKey: ${PRODUCTION_UNITYHUBIO_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${PRODUCTION_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Slack__AppId: A05H015F9QE
+      Slack__ClientId: "118234978193.5578039519830"
+      Slack__ClientSecret: ${PRODUCTION_UNITYHUBIO_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${PRODUCTION_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__RedirectUrl: https://slackapi.unityhub.io/slack/api/v1/callback
+      Slack__SuccessInstallUrl: https://unityhub.io/slack-success-install
+      AzureEntra__ClientId: ${PRODUCTION_UNITYHUBIO_AZURE_ENTRA_CLIENT_ID}
+      AzureEntra__ClientSecret: ${PRODUCTION_UNITYHUBIO_AZURE_ENTRA_CLIENT_SECRET}
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
+      Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinOrganizationNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinOrganizationExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinLocationNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinLocationExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinTeamNewCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      Email__InviteToJoinTeamExistingCustomerEmailSender: "UnityHub <no-reply@unityhub.io>"
+      OpenTelemetry__ZipkinEnabled: false
+      OpenTelemetry__JaegerEnabled: true
+      OpenTelemetry__OtlpEnabled: true
+      OpenTelemetry__EntityFrameworkEnabled: true
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:10004/health/readiness || exit 1 && curl -f http://localhost:10104/health/readiness || exit 1 && curl -f http://localhost:10204/health/readiness || exit 1 && curl -f http://localhost:10304/health/readiness || exit 1 && curl -f http://localhost:10404/health/readiness || exit 1 && curl -f http://localhost:10504/health/readiness || exit 1 && curl -f http://localhost:10604/health/readiness || exit 1 && curl -f http://localhost:10704/health/readiness || exit 1 && curl -f http://localhost:10804/health/readiness || exit 1 && curl -f http://localhost:10904/health/readiness || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 100
+    networks:
+      unityhubio_network:
+        aliases:
+          - prod-processors-01.localhost
+
+  prod-jobs-01:
+    image: ghcr.io/unityhubio/alljobs:latest
+    restart: unless-stopped
+    depends_on:
+      jaeger:
+        condition: service_started
+      prod-infra-provision:
+        condition: service_completed_successfully
+      prod-processors-01:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Production
@@ -406,7 +568,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10004/health/readiness || exit 1 && curl -f http://localhost:10104/health/readiness || exit 1 && curl -f http://localhost:10204/health/readiness || exit 1 && curl -f http://localhost:10304/health/readiness || exit 1 && curl -f http://localhost:10404/health/readiness || exit 1 && curl -f http://localhost:10504/health/readiness || exit 1 && curl -f http://localhost:10604/health/readiness || exit 1 && curl -f http://localhost:10704/health/readiness || exit 1 && curl -f http://localhost:10804/health/readiness || exit 1 && curl -f http://localhost:10904/health/readiness || exit 1",
+          "curl -f http://localhost:10007/health/readiness || exit 1 && curl -f http://localhost:10107/health/readiness || exit 1 && curl -f http://localhost:10207/health/readiness || exit 1 && curl -f http://localhost:10307/health/readiness || exit 1 && curl -f http://localhost:10407/health/readiness || exit 1 && curl -f http://localhost:10507/health/readiness || exit 1 && curl -f http://localhost:10607/health/readiness || exit 1 && curl -f http://localhost:10707/health/readiness || exit 1 && curl -f http://localhost:10807/health/readiness || exit 1 && curl -f http://localhost:10907/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -414,4 +576,4 @@ services:
     networks:
       unityhubio_network:
         aliases:
-          - prod-processors-01.localhost
+          - prod-jobs-01.localhost

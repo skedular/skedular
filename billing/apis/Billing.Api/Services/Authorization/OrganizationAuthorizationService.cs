@@ -13,7 +13,9 @@ public interface IOrganizationAuthorizationService
     Task<OrganizationLevelPermissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
-public class OrganizationAuthorizationService(ICachedCustomerService cachedCustomerService, IRepositoryFactory repositoryFactory)
+public class OrganizationAuthorizationService(
+    ICachedCustomerService cachedCustomerService,
+    IRepositoryFactory repositoryFactory)
     : IOrganizationAuthorizationService
 {
     public bool CanViewBillingInfo(Organization organization, Customer customer)
