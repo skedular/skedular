@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<604daf1b265383d15fd05915cf41c88a>>
+ * @generated SignedSource<<95c64619a9c08fb1d35ce12e42fdb03b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,10 +14,20 @@ export type bookingDetailsSelector_query$data = {
   readonly myLocations: ReadonlyArray<{
     readonly id: string;
     readonly name: string;
+    readonly organization: {
+      readonly uniqueId: string;
+    } | null | undefined;
   }> | null | undefined;
   readonly myOrganizations: ReadonlyArray<{
     readonly id: string;
     readonly name: string;
+  }> | null | undefined;
+  readonly myTeams: ReadonlyArray<{
+    readonly id: string;
+    readonly name: string;
+    readonly organization: {
+      readonly uniqueId: string;
+    } | null | undefined;
   }> | null | undefined;
   readonly " $fragmentType": "bookingDetailsSelector_query";
 };
@@ -27,19 +37,33 @@ export type bookingDetailsSelector_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v2 = [
+  {
+    "kind": "Variable",
+    "name": "organizationId",
+    "variableName": "organizationId"
+  }
+],
+v3 = [
   {
     "alias": null,
     "args": null,
     "kind": "ScalarField",
-    "name": "id",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "name",
+    "name": "uniqueId",
     "storageKey": null
   }
 ];
@@ -61,23 +85,56 @@ return {
       "kind": "LinkedField",
       "name": "myOrganizations",
       "plural": true,
-      "selections": (v0/*: any*/),
+      "selections": [
+        (v0/*: any*/),
+        (v1/*: any*/)
+      ],
       "storageKey": null
     },
     {
       "alias": null,
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "organizationId",
-          "variableName": "organizationId"
-        }
-      ],
+      "args": (v2/*: any*/),
       "concreteType": "LocationDetails",
       "kind": "LinkedField",
       "name": "myLocations",
       "plural": true,
-      "selections": (v0/*: any*/),
+      "selections": [
+        (v0/*: any*/),
+        (v1/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LocationOrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": (v3/*: any*/),
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": (v2/*: any*/),
+      "concreteType": "TeamDetails",
+      "kind": "LinkedField",
+      "name": "myTeams",
+      "plural": true,
+      "selections": [
+        (v0/*: any*/),
+        (v1/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "TeamOrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": (v3/*: any*/),
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -86,6 +143,6 @@ return {
 };
 })();
 
-(node as any).hash = "3a40173705e449bc3e81acee69e3b1be";
+(node as any).hash = "32f8299327a0ee80809b4a25f25049b2";
 
 export default node;

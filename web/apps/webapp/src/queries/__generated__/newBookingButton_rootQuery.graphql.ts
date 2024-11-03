@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8931183cbd043baf16f33fbe7452f8ad>>
+ * @generated SignedSource<<95519ae006940a58cdeac571c971558c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -129,8 +129,7 @@ v13 = {
   "storageKey": null
 },
 v14 = [
-  (v8/*: any*/),
-  (v13/*: any*/)
+  (v12/*: any*/)
 ];
 return {
   "fragment": {
@@ -361,7 +360,10 @@ return {
         "kind": "LinkedField",
         "name": "myOrganizations",
         "plural": true,
-        "selections": (v14/*: any*/),
+        "selections": [
+          (v8/*: any*/),
+          (v13/*: any*/)
+        ],
         "storageKey": null
       },
       {
@@ -371,7 +373,43 @@ return {
         "kind": "LinkedField",
         "name": "myLocations",
         "plural": true,
-        "selections": (v14/*: any*/),
+        "selections": [
+          (v8/*: any*/),
+          (v13/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "LocationOrganizationDetails",
+            "kind": "LinkedField",
+            "name": "organization",
+            "plural": false,
+            "selections": (v14/*: any*/),
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v10/*: any*/),
+        "concreteType": "TeamDetails",
+        "kind": "LinkedField",
+        "name": "myTeams",
+        "plural": true,
+        "selections": [
+          (v8/*: any*/),
+          (v13/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "TeamOrganizationDetails",
+            "kind": "LinkedField",
+            "name": "organization",
+            "plural": false,
+            "selections": (v14/*: any*/),
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       },
       {
@@ -433,12 +471,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1fcb1f1d174fcf572dd5be416d791054",
+    "cacheID": "1809e57fbdd581d8630acbfcbeb3c034",
     "id": null,
     "metadata": {},
     "name": "newBookingButton_rootQuery",
     "operationKind": "query",
-    "text": "query newBookingButton_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $locationId: String!\n  $locationExists: Boolean!\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n) {\n  ...newBookingDialog_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) @include(if: $locationExists) {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookingDetailsSelector_paginatedOrganizationMembers_query on Query {\n  paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n}\n\nfragment newBookingDialog_query on Query {\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n  }\n  ...bookingDetailsSelector_query\n  ...bookingDetailsSelector_paginatedOrganizationMembers_query\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n"
+    "text": "query newBookingButton_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $locationId: String!\n  $locationExists: Boolean!\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n) {\n  ...newBookingDialog_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) @include(if: $locationExists) {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookingDetailsSelector_paginatedOrganizationMembers_query on Query {\n  paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n\nfragment newBookingDialog_query on Query {\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n  }\n  ...bookingDetailsSelector_query\n  ...bookingDetailsSelector_paginatedOrganizationMembers_query\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n"
   }
 };
 })();

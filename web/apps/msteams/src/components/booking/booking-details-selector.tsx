@@ -116,6 +116,16 @@ const BookingDetailsSelector = ({
         myLocations(organizationId: $organizationId) {
           id
           name
+          organization {
+            uniqueId
+          }
+        }
+        myTeams(organizationId: $organizationId) {
+          id
+          name
+          organization {
+            uniqueId
+          }
         }
       }
     `,
@@ -197,10 +207,11 @@ const BookingDetailsSelector = ({
     return rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.edges.map(({ node }) => node);
   }, [rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers]);
 
-  const locations = useMemo<LocationDetails[]>(
-    () => (rootData.myLocations ? rootData.myLocations.map((location) => location) : []),
-    [rootData.myLocations],
-  );
+  const locations = useMemo<LocationDetails[]>(() => {
+    const myLocations = rootData.myLocations ? rootData.myLocations.map((location) => location) : [];
+
+    return organizationId ? myLocations.filter((location) => location.organization?.uniqueId === organizationId) : myLocations;
+  }, [rootData.myLocations, organizationId]);
 
   const desks = useMemo<DeskDetails[]>(() => {
     if (!rootDataAvailableLocationDesks.availableLocationDesks) {
