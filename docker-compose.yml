@@ -3,6 +3,7 @@ networks:
 
 volumes:
   unityhubio_postgres_data:
+  unityhubio_redis_data:
   unityhubio_kafka1_data:
 
 services:
@@ -25,6 +26,42 @@ services:
       unityhubio_network:
         aliases:
           - postgres.localhost
+
+  redis:
+    image: redis:latest
+    profiles:
+      - core
+      - all
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - unityhubio_redis_data:/data
+    command: ["redis-server", "--loglevel", "debug"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 100
+    networks:
+      unityhubio_network:
+        aliases:
+          - redis.localhost
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    profiles:
+      - core
+      - all
+    restart: unless-stopped
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    networks:
+      unityhubio_network:
+        aliases:
+          - redisinsight.localhost
 
   kafka1:
     image: confluentinc/cp-server:latest

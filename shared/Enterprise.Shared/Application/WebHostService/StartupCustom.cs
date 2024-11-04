@@ -1,6 +1,7 @@
 ﻿using Confluent.SchemaRegistry;
 using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Telemetry;
 using Microsoft.AspNetCore.Builder;
@@ -67,6 +68,7 @@ public abstract class StartupCustom(IConfiguration configuration, IWebHostEnviro
         services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         services
+            .AddRedis(Configuration)
             .AddMemoryCache()
             .AddSecurity()
             .AddContext()

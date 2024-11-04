@@ -10,5 +10,5 @@ public static class DbContextExtensions
         this IConfigurationRoot configuration) where TDbContext : DbContext =>
         new DbContextOptionsBuilder<TDbContext>()
             .UseLazyLoadingProxies()
-            .UseNpgsql(configuration.GetConnectionString(ConnectionStringKeys.Default));
+            .UseNpgsql(configuration.GetConnectionString(ConnectionStringKeys.DefaultPostgresConnection));
 }

@@ -2,5 +2,6 @@
 
 public static class ConnectionStringKeys
 {
-    public const string Default = "DefaultConnection";
+    public const string DefaultPostgresConnection = "DefaultConnection";
+    public const string DefaultRedisConnection = "RedisConnection";
 }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
 using Quartz.Impl.AdoJobStore.Common;
+using StackExchange.Redis;
 
 namespace Enterprise.Shared.Database;
 
@@ -19,7 +20,7 @@ public static class ServiceExtensions
         this IServiceCollection services,
         IConfiguration configuration,
         bool isPooled,
-        string name = ConnectionStringKeys.Default)
+        string name = ConnectionStringKeys.DefaultPostgresConnection)
     {
         services
             .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled })
@@ -130,5 +131,18 @@ public static class ServiceExtensions
             new QuartzNpgsqlDbProvider(databaseSetup.NpgsqlDataSource));
 
         return databaseSetup;
+    }
+
+    public static IServiceCollection AddRedis(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string name = ConnectionStringKeys.DefaultRedisConnection)
+    {
+        var connectionString = configuration.GetConnectionString(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+        return services
+            .AddSingleton(_ => ConnectionMultiplexer.Connect(connectionString))
+            .AddScoped<IDatabase>(sp => sp.GetRequiredService<ConnectionMultiplexer>().GetDatabase());
     }
 }

@@ -3,6 +3,7 @@ networks:
 
 volumes:
   unityhubio_postgres_data:
+  unityhubio_redis_data:
   unityhubio_kafka1_data:
 
 services:
@@ -21,6 +22,21 @@ services:
       unityhubio_network:
         aliases:
           - postgres.localhost
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    volumes:
+      - unityhubio_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 100
+    networks:
+      unityhubio_network:
+        aliases:
+          - redis.localhost
 
   kafka1:
     image: confluentinc/cp-kafka:latest
@@ -69,6 +85,8 @@ services:
     image: ghcr.io/unityhubio/allapis:latest
     restart: unless-stopped
     depends_on:
+      redis:
+        condition: service_healthy
       staging-infra-provision:
         condition: service_completed_successfully
     ports:
@@ -147,6 +165,8 @@ services:
     image: ghcr.io/unityhubio/allprocessors:latest
     restart: unless-stopped
     depends_on:
+      redis:
+        condition: service_healthy
       staging-infra-provision:
         condition: service_completed_successfully
       staging-apis-01:
@@ -227,6 +247,8 @@ services:
     image: ghcr.io/unityhubio/alljobs:latest
     restart: unless-stopped
     depends_on:
+      redis:
+        condition: service_healthy
       staging-infra-provision:
         condition: service_completed_successfully
       staging-processors-01:
@@ -320,6 +342,8 @@ services:
     image: ghcr.io/unityhubio/allapis:latest
     restart: unless-stopped
     depends_on:
+      redis:
+        condition: service_healthy
       prod-infra-provision:
         condition: service_completed_successfully
       staging-apis-01:
@@ -400,6 +424,8 @@ services:
     image: ghcr.io/unityhubio/allprocessors:latest
     restart: unless-stopped
     depends_on:
+      redis:
+        condition: service_healthy
       prod-infra-provision:
         condition: service_completed_successfully
       prod-apis-01:
@@ -480,6 +506,8 @@ services:
     image: ghcr.io/unityhubio/alljobs:latest
     restart: unless-stopped
     depends_on:
+      redis:
+        condition: service_healthy
       prod-infra-provision:
         condition: service_completed_successfully
       prod-processors-01:
