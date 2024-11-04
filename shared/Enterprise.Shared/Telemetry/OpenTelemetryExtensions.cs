@@ -43,10 +43,7 @@ public static class OpenTelemetryExtensions
             .AddOpenTelemetry()
             .WithMetrics(builder =>
                 {
-                    if (openTelemetrySettings is
-                        {
-                            MetricsIngestEnabled: true
-                        })
+                    if (openTelemetrySettings is not null && openTelemetrySettings.MetricsIngestEnabled)
                     {
                         builder.AddMeter(
                             MeterProviderNaming.UnityHubMeterProviderName,

@@ -22,8 +22,8 @@ public interface IOutboxEventPublisher<in TKey, in TEvent> where TEvent : IMetad
 }
 
 public class OutboxEventPublisher<TKey, TEvent>(
-    IAsyncSerializer<TKey> keySerializer,
-    IAsyncSerializer<TEvent> payloadSerializer,
+    ISerializer<TKey> keySerializer,
+    ISerializer<TEvent> payloadSerializer,
     IActivityAccessor activityAccessor,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     KafkaConfiguration kafkaConfiguration,
@@ -41,10 +41,9 @@ public class OutboxEventPublisher<TKey, TEvent>(
         ArgumentNullException.ThrowIfNull(@event);
 
         var topic = @event.GetTopicName(kafkaConfiguration.OutgoingTopicPrefix);
-        var serializedKey =
-            await keySerializer.SerializeAsync(key, new SerializationContext(MessageComponentType.Key, topic));
+        var serializedKey = keySerializer.Serialize(key, new SerializationContext(MessageComponentType.Key, topic));
         var serializedEvent =
-            await payloadSerializer.SerializeAsync(@event, new SerializationContext(MessageComponentType.Value, topic));
+            payloadSerializer.Serialize(@event, new SerializationContext(MessageComponentType.Value, topic));
         var dbContext = (IOutboxStore)unitOfWork;
         var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.ActivitySourceName);
 

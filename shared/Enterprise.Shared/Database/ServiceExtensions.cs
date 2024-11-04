@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Enterprise.Shared.Cache;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.Interceptors;
 using Microsoft.EntityFrameworkCore;
@@ -143,6 +144,6 @@ public static class ServiceExtensions
 
         return services
             .AddSingleton(_ => ConnectionMultiplexer.Connect(connectionString))
-            .AddScoped<IDatabase>(sp => sp.GetRequiredService<ConnectionMultiplexer>().GetDatabase());
+            .AddScoped<IDistributedCache, DistributedCache>();
     }
 }

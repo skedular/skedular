@@ -25,7 +25,7 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddSingleton(typeof(IKafkaPublisher<,>), typeof(KafkaPublisher<,>))
-            .AddSingleton(typeof(IAsyncSerializer<>), typeof(CustomProtobufSerializer<>))
+            .AddSingleton(typeof(ISerializer<>), typeof(CustomProtobufSerializer<>))
             .AddSingleton(typeof(IDeserializer<>), typeof(CustomProtobufDeserializer<>))
             .AddSingleton<IConsumerFactory, ConsumerFactory>()
             .AddTransient<IProducerFactory, ProducerFactory>()

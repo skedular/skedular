@@ -40,24 +40,25 @@ public class ProducerFactory(
 
         if (!KafkaSerialization.CanSerializeNatively<TKey>())
         {
-            var serializer = serviceProvider.GetRequiredService<IAsyncSerializer<TKey>>();
+            var serializer = serviceProvider.GetRequiredService<ISerializer<TKey>>();
 
-            logger.LogTrace("Setting serializer for {KeyType}: {SerializerType}", typeof(TKey),
+            logger.LogTrace(
+                "Setting serializer for {KeyType}: {SerializerType}", typeof(TKey),
                 serializer.GetType().Name);
             builder.SetKeySerializer(serializer);
         }
 
         if (!KafkaSerialization.CanSerializeNatively<TValue>())
         {
-            var serializer = serviceProvider.GetRequiredService<IAsyncSerializer<TValue>>();
+            var serializer = serviceProvider.GetRequiredService<ISerializer<TValue>>();
 
-            logger.LogTrace("Setting serializer for {KeyType}: {SerializerType}", typeof(TKey),
+            logger.LogTrace(
+                "Setting serializer for {KeyType}: {SerializerType}", typeof(TKey),
                 serializer.GetType().Name);
             builder.SetValueSerializer(serializer);
         }
 
-        logger.LogTrace("Building producer of type <{TKey},{TValue}>", typeof(TKey),
-            typeof(TValue));
+        logger.LogTrace("Building producer of type <{TKey},{TValue}>", typeof(TKey), typeof(TValue));
 
         kafkaLogger.SetLogHandler(builder);
         var producer = builder.Build();
