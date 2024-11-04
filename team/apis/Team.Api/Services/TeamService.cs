@@ -61,7 +61,7 @@ public class TeamService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetNullableCustomerAsync(cancellationToken);
+        var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
         Organization? organization = null;
         if (team.Organization is not null)
         {
@@ -218,7 +218,7 @@ public class TeamService(
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+            (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
@@ -237,7 +237,7 @@ public class TeamService(
             ICollection<TeamOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         // Ensure we do not return other customer team by forcing CustomerId as search criteria
         searchCriteria.CustomerId = customer.Id;
 
@@ -264,7 +264,7 @@ public class TeamService(
         string? organizationId,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(organizationId))
         {

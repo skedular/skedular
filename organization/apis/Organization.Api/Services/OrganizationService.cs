@@ -73,7 +73,7 @@ public class OrganizationService(
         Shared.Database.Entities.Customer? customerEntity = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, customerEntity) = await customerService.GetNullableCustomerAsync(cancellationToken);
+            (customer, customerEntity) = await customerService.GetNullableAsync(cancellationToken);
         }
 
         if (!string.IsNullOrWhiteSpace(organization.Id))
@@ -238,7 +238,7 @@ public class OrganizationService(
             return null;
         }
 
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         return await EnrichOrganizationAsync(customer, organization, cancellationToken);
     }
 
@@ -254,14 +254,14 @@ public class OrganizationService(
             return null;
         }
 
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         return await EnrichOrganizationAsync(customer, organization, cancellationToken);
     }
 
     public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(
             customer.Id,
             cancellationToken);
@@ -282,7 +282,7 @@ public class OrganizationService(
             ICollection<OrganizationOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         // Ensure we do not return other customer organization by forcing CustomerId as search criteria
         searchCriteria.CustomerId = customer.Id;
 

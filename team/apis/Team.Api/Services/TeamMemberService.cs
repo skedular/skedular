@@ -48,7 +48,7 @@ public class TeamMemberService(
             ICollection<TeamMemberOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(searchCriteria.TeamId, cancellationToken);
         if (team is null)
         {

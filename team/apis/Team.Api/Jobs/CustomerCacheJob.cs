@@ -5,9 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Team.Api.Jobs;
 
-public class CustomerCacheJob(
-    IServiceProvider serviceProvider,
-    ILogger<CustomerCacheJob> logger) : BackgroundService
+public class CustomerCacheJob(IServiceProvider serviceProvider, ILogger<CustomerCacheJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -27,13 +25,13 @@ public class CustomerCacheJob(
                 foreach (var identity in customers.SelectMany(customer => customer.Identities))
                 {
                     logger.LogTrace("Caching customer by token {id}", identity.Id);
-                    _ = await cachedCustomerService.GetCustomerByVerifiableTokenAsync(identity.Id, cancellationToken);
+                    _ = await cachedCustomerService.GetByVerifiableTokenAsync(identity.Id, cancellationToken);
                 }
 
                 foreach (var customer in customers)
                 {
                     logger.LogTrace("Caching customer by id {id}", customer.Id);
-                    _ = await cachedCustomerService.GetCustomerByIdAsync(customer.Id, cancellationToken);
+                    _ = await cachedCustomerService.GetByIdAsync(customer.Id, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);

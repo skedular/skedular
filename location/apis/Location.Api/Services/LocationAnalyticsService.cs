@@ -34,7 +34,7 @@ public class LocationAnalyticsService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var location =
             await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
         if (location is null)

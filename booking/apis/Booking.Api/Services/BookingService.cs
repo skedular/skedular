@@ -237,7 +237,7 @@ public class BookingService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingId);
 
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var booking =
             await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);
         if (booking is null)
@@ -259,7 +259,7 @@ public class BookingService(
         Shared.Models.Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+            (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
         List<string>? organizationIds = null;

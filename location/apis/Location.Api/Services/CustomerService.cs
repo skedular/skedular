@@ -9,7 +9,7 @@ namespace Location.Api.Services;
 public interface ICustomerService
 {
     Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
-    Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(CancellationToken cancellationToken);
+    Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
 
     Task<(Customer, Shared.Database.Entities.Customer)>
         GetCustomerAsync(string id, CancellationToken cancellationToken);
@@ -37,7 +37,7 @@ public class CustomerService(
         return (mapper.MapTo(customer)!, customer);
     }
 
-    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(
+    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(context.PropertyBag.VerifiableToken))

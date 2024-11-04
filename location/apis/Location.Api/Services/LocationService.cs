@@ -62,7 +62,7 @@ public class LocationService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var (customer, customerEntity) = await customerService.GetNullableCustomerAsync(cancellationToken);
+        var (customer, customerEntity) = await customerService.GetNullableAsync(cancellationToken);
         Organization? organization = null;
         if (location.Organization is not null)
         {
@@ -225,7 +225,7 @@ public class LocationService(
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+            (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
@@ -248,7 +248,7 @@ public class LocationService(
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+            (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
             // Ensure we do not return other customer location by forcing CustomerId as search criteria
             searchCriteria.CustomerId = customer.Id;
         }
@@ -276,7 +276,7 @@ public class LocationService(
         string? organizationId,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(organizationId))
         {

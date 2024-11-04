@@ -78,7 +78,7 @@ public class CustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
 
-        var (_, customer) = await cachedCustomerService.GetNullableCustomerAsync(cancellationToken);
+        var (_, customer) = await cachedCustomerService.GetNullableAsync(cancellationToken);
         if (customer is not null)
         {
             return mapper.MapTo(customer);

@@ -1,8 +1,5 @@
 using Api.Shared.Models;
 using Booking.Shared.Models;
-using Booking.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
-using Microsoft.Extensions.Caching.Memory;
 using Customer = Booking.Shared.Models.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 
@@ -24,8 +21,7 @@ public interface ILocationAuthorizationService
 public class LocationAuthorizationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     ICachedCustomerService cachedCustomerService,
-    IRepositoryFactory repositoryFactory,
-    IMemoryCache memoryCache)
+    ICachedLocationService cachedLocationService)
     : ILocationAuthorizationService
 {
     public bool CanViewLocationDetails(Location location, Customer customer)
@@ -130,27 +126,8 @@ public class LocationAuthorizationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
-        var location = await memoryCache.GetOrCreateAsync<Location>($"location-{locationId}",
-            async cacheEntry =>
-            {
-                cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(1);
-
-                var location = await repositoryFactory.LocationRepository.GetByIdAsync(
-                    locationId,
-                    cancellationToken);
-                if (location is null)
-                {
-                    throw new LocationNotFound();
-                }
-
-                return location;
-            });
-
-        if (location is null)
-        {
-            throw new LocationNotFound();
-        }
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var location = await cachedLocationService.GetByIdAsync(locationId, cancellationToken);
 
         return new LocationPermissions
         {

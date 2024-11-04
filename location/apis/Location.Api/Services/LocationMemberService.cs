@@ -47,7 +47,7 @@ public class LocationMemberService(
             ICollection<LocationMemberOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var location =
             await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId,
                 cancellationToken);

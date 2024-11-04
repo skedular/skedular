@@ -42,7 +42,7 @@ public class DeskService(
             return [];
         }
 
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)
@@ -102,7 +102,7 @@ public class DeskService(
             return [];
         }
 
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var location =
             await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAsync(
                 locationId,

@@ -97,7 +97,7 @@ public class LocationAuthorizationService(
 
     public async Task<Permissions> GetPermissionsAsync(string locationId, CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(
             locationId,
             cancellationToken);

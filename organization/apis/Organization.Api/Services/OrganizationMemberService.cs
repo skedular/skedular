@@ -51,7 +51,7 @@ public class OrganizationMemberService(
             ICollection<OrganizationMemberOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId,
                 cancellationToken);

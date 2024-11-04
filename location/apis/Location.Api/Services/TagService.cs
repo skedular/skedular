@@ -46,7 +46,7 @@ public class TagService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var tag =
             await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken);
         if (tag is null)
@@ -222,7 +222,7 @@ public class TagService(
             ICollection<TagOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var location =
             await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId,
                 cancellationToken);

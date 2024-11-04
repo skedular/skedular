@@ -27,7 +27,7 @@ public class NotificationService(
             ICollection<NotificationOrder> orderByFields,
             CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         // Ensure we do not return other customer notification by forcing CustomerId as search criteria
         searchCriteria.InviteeId = customer.Id;
 

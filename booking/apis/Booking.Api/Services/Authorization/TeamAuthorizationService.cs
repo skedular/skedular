@@ -1,8 +1,5 @@
 using Api.Shared.Models;
 using Booking.Shared.Models;
-using Booking.Shared.Repositories;
-using Enterprise.Shared.Exceptions;
-using Microsoft.Extensions.Caching.Memory;
 using Customer = Booking.Shared.Models.Customer;
 using Team = Booking.Shared.Database.Entities.Team;
 
@@ -23,8 +20,7 @@ public interface ITeamAuthorizationService
 public class TeamAuthorizationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     ICachedCustomerService cachedCustomerService,
-    IRepositoryFactory repositoryFactory,
-    IMemoryCache memoryCache)
+    ICachedTeamService cachedTeamService)
     : ITeamAuthorizationService
 {
     public bool CanViewBookings(Team team, Customer customer)
@@ -110,27 +106,8 @@ public class TeamAuthorizationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
-        var team = await memoryCache.GetOrCreateAsync<Team>($"team-{teamId}",
-            async cacheEntry =>
-            {
-                cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(1);
-
-                var team = await repositoryFactory.TeamRepository.GetByIdAsync(
-                    teamId,
-                    cancellationToken);
-                if (team is null)
-                {
-                    throw new TeamNotFound();
-                }
-
-                return team;
-            });
-
-        if (team is null)
-        {
-            throw new TeamNotFound();
-        }
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken);
 
         return new TeamPermissions
         {

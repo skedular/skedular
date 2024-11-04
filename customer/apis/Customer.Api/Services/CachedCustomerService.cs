@@ -1,9 +1,7 @@
 using Customer.Api.Mappers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Customer.Api.Services;
@@ -11,18 +9,16 @@ namespace Customer.Api.Services;
 public interface ICachedCustomerService
 {
     Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
+    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
 
-    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
+    Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
         CancellationToken cancellationToken);
 
-    Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(
-        CancellationToken cancellationToken);
-
-    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerByIdAsync(
+    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByIdAsync(
         string id,
         CancellationToken cancellationToken);
 
-    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerByVerifiableTokenAsync(
+    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(
         string verifiableToken,
         CancellationToken cancellationToken);
 
@@ -42,7 +38,7 @@ public class CachedCustomerService(
 
         try
         {
-            _ = await GetCustomerByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
+            _ = await GetByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
             return true;
         }
         catch (CustomerNotFound)
@@ -51,15 +47,15 @@ public class CachedCustomerService(
         }
     }
 
-    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
+    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetAsync(
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
 
-        return await GetCustomerByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
+        return await GetByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
     }
 
-    public async Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(
+    public async Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(context.PropertyBag.VerifiableToken))
@@ -69,7 +65,7 @@ public class CachedCustomerService(
 
         try
         {
-            return await GetCustomerByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
+            return await GetByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
         }
         catch (CustomerNotFound)
         {
@@ -77,7 +73,7 @@ public class CachedCustomerService(
         }
     }
 
-    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerByIdAsync(
+    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByIdAsync(
         string id,
         CancellationToken cancellationToken)
     {
@@ -99,7 +95,7 @@ public class CachedCustomerService(
             });
     }
 
-    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetCustomerByVerifiableTokenAsync(
+    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(
         string verifiableToken,
         CancellationToken cancellationToken)
     {

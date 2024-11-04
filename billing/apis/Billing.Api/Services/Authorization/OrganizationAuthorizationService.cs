@@ -40,7 +40,7 @@ public class OrganizationAuthorizationService(
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             organizationId,
             cancellationToken);
