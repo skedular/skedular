@@ -1,11 +1,9 @@
+using Enterprise.Shared.Context;
+using Enterprise.Shared.Exceptions;
+using Microsoft.Extensions.Caching.Memory;
 using Payment.Api.Mappers;
 using Payment.Shared.Models;
 using Payment.Shared.Repositories;
-using Enterprise.Shared.Context;
-using Enterprise.Shared.Database;
-using Enterprise.Shared.Exceptions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Payment.Api.Services;
 

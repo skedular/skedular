@@ -55,10 +55,12 @@ public static class UnityHubWebHostExtensions
         // UseAuthorization must appear between UseRouting and UseEndpoints
         app.UseAuthorization();
 
-        app.UseHealthChecks(LivenessPath,
+        app.UseHealthChecks(
+            LivenessPath,
             new HealthCheckOptions { Predicate = r => r.Name.Contains("self"), ResponseWriter = WriteResponseAsync });
 
-        app.UseHealthChecks(ReadinessPath,
+        app.UseHealthChecks(
+            ReadinessPath,
             new HealthCheckOptions
             {
                 Predicate = r => r.Tags.Contains("services"), ResponseWriter = WriteResponseAsync

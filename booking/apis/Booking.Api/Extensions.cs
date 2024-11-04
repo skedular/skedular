@@ -1,4 +1,3 @@
-using Booking.Api.Jobs;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
@@ -26,9 +25,5 @@ public static class Extensions
             .AddScoped<IWorkaroundService, WorkaroundService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<CustomerCacheJob>()
-            .AddHostedService<OrganizationCacheJob>()
-            .AddHostedService<LocationCacheJob>()
-            .AddHostedService<TeamCacheJob>();
+        services;
 }

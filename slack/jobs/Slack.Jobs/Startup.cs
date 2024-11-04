@@ -1,10 +1,10 @@
-using Slack.Shared;
-using Slack.Shared.Database;
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Outbox;
+using Slack.Shared;
+using Slack.Shared.Database;
 
 namespace Slack.Jobs;
 

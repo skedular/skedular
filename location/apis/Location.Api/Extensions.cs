@@ -1,4 +1,3 @@
-using Location.Api.Jobs;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
@@ -24,8 +23,7 @@ public static class Extensions
             .AddScoped<ILocationAnalyticsService, LocationAnalyticsService>()
             .AddScoped<ILocationInvitationService, LocationInvitationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
-    
+
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<CustomerCacheJob>();
+        services;
 }

@@ -1,10 +1,10 @@
-using Notification.Shared;
-using Notification.Shared.Database;
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Outbox;
+using Notification.Shared;
+using Notification.Shared.Database;
 
 namespace Notification.Jobs;
 

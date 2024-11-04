@@ -1,4 +1,3 @@
-using MsTeams.Api.Jobs;
 using MsTeams.Api.Mappers;
 using MsTeams.Api.Services;
 
@@ -13,8 +12,7 @@ public static class Extensions
 
     public static IServiceCollection AddMappers(this IServiceCollection services) =>
         services.AddSingleton<IMapper, Mapper>();
-    
+
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<CustomerCacheJob>();
+        services;
 }

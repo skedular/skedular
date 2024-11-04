@@ -1,4 +1,3 @@
-using Notification.Api.Jobs;
 using Notification.Api.Mappers;
 using Notification.Api.Services;
 
@@ -14,8 +13,7 @@ public static class Extensions
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<INotificationService, NotificationService>();
-    
+
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<CustomerCacheJob>();
+        services;
 }

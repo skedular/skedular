@@ -1,4 +1,3 @@
-using Customer.Api.Jobs;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Api.Services.Authorization;
@@ -27,8 +26,7 @@ public static class Extensions
             .AddScoped<ILocationAuthorizationService, LocationAuthorizationService>()
             .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
-    
+
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<CustomerCacheJob>();
+        services;
 }
