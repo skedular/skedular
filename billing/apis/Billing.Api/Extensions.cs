@@ -1,3 +1,4 @@
+using Billing.Api.Jobs;
 using Billing.Api.Mappers;
 using Billing.Api.Services;
 using Billing.Api.Services.Authorization;
@@ -16,4 +17,8 @@ public static class Extensions
             .AddScoped<IOrganizationBillingService, OrganizationBillingService>()
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
+    
+    public static IServiceCollection AddJobs(this IServiceCollection services) =>
+        services
+            .AddHostedService<CustomerCacheJob>();
 }

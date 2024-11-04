@@ -1,3 +1,4 @@
+using Team.Api.Jobs;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Api.Services.Authorization;
@@ -20,4 +21,8 @@ public static class Extensions
             .AddScoped<ITeamMemberService, TeamMemberService>()
             .AddScoped<ITeamInvitationService, TeamInvitationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
+    
+    public static IServiceCollection AddJobs(this IServiceCollection services) =>
+        services
+            .AddHostedService<CustomerCacheJob>();
 }

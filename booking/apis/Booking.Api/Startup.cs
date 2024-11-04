@@ -40,6 +40,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddOutboxPublishers()
             .AddServices()
             .AddMappers()
+            .AddJobs()
             .AddUnityHubGrpcServices(Configuration);
     }
 

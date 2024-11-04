@@ -2,9 +2,7 @@ using Billing.Api.Mappers;
 using Billing.Shared.Models;
 using Billing.Shared.Repositories;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Billing.Api.Services;
@@ -14,8 +12,19 @@ public interface ICachedCustomerService
     Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
 
-    Task<(Customer, Shared.Database.Entities.Customer)>
-        GetCustomerAsync(string id, CancellationToken cancellationToken);
+    Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(
+        CancellationToken cancellationToken);
+
+    Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerByIdAsync(
+        string id,
+        CancellationToken cancellationToken);
+
+    Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerByVerifiableTokenAsync(
+        string verifiableToken,
+        CancellationToken cancellationToken);
+
+    void CleanCache();
+    void CleanCache(string id);
 }
 
 public class CachedCustomerService(
@@ -28,30 +37,15 @@ public class CachedCustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
 
-        var key = $"customer-exists-{context.PropertyBag.VerifiableToken}";
-        if (memoryCache.TryGetValue<bool>(key, out var entry))
+        try
         {
-            if (entry)
-            {
-                return true;
-            }
+            _ = await GetCustomerByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
+            return true;
         }
-
-        memoryCache.Remove(key);
-        return await memoryCache.GetOrCreateAsync(
-            key,
-            async cacheEntry =>
-            {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-
-                return await repositoryFactory.CustomerRepository.Query(
-                    new Specification<Shared.Database.Entities.Customer>
-                    {
-                        Criteria = query => !query.DeletedAt.HasValue && query.Identities
-                            .Select(identity => identity.Id)
-                            .Contains(context.PropertyBag.VerifiableToken)
-                    }).AsNoTracking().AnyAsync(cancellationToken);
-            });
+        catch (CustomerNotFound)
+        {
+            return false;
+        }
     }
 
     public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
@@ -59,26 +53,28 @@ public class CachedCustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
 
-        return await memoryCache.GetOrCreateAsync(
-            $"customer-verifiabletoken-{context.PropertyBag.VerifiableToken}",
-            async cacheEntry =>
-            {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-
-                var customer =
-                    await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                        context.PropertyBag.VerifiableToken,
-                        cancellationToken);
-                if (customer is null)
-                {
-                    throw new CustomerNotFound();
-                }
-
-                return (mapper.MapTo(customer)!, customer);
-            });
+        return await GetCustomerByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
     }
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
+    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableCustomerAsync(
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(context.PropertyBag.VerifiableToken))
+        {
+            return (null, null);
+        }
+
+        try
+        {
+            return await GetCustomerByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
+        }
+        catch (CustomerNotFound)
+        {
+            return (null, null);
+        }
+    }
+
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerByIdAsync(
         string id,
         CancellationToken cancellationToken)
     {
@@ -98,5 +94,44 @@ public class CachedCustomerService(
 
                 return (mapper.MapTo(customer)!, customer);
             });
+    }
+
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerByVerifiableTokenAsync(
+        string verifiableToken,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        return await memoryCache.GetOrCreateAsync(
+            $"customer-verifiabletoken-{context.PropertyBag.VerifiableToken}",
+            async cacheEntry =>
+            {
+                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
+
+                var customer =
+                    await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
+                        verifiableToken,
+                        cancellationToken);
+                if (customer is null)
+                {
+                    throw new CustomerNotFound();
+                }
+
+                return (mapper.MapTo(customer)!, customer);
+            });
+    }
+
+    public void CleanCache()
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
+
+        memoryCache.Remove($"customer-verifiabletoken-{context.PropertyBag.VerifiableToken}");
+    }
+
+    public void CleanCache(string id)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        memoryCache.Remove($"customer-id-{id}");
     }
 }

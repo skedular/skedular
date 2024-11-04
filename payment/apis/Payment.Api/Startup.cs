@@ -39,6 +39,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
+            .AddJobs()
             .AddStripe(Configuration);
     }
 

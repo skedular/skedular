@@ -60,6 +60,7 @@ public static class Extensions
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services
             .AddHostedService<ConnectionKeepAliveJob>()
+            .AddHostedService<CustomerCacheJob>()
             .AddSingleton<AsyncPageRenderingService>()
             .AddHostedService(sp => sp.GetRequiredService<AsyncPageRenderingService>());
 }

@@ -1,3 +1,4 @@
+using Payment.Api.Jobs;
 using Payment.Api.Mappers;
 using Payment.Api.Services;
 using Payment.Api.Services.Authorization;
@@ -16,4 +17,8 @@ public static class Extensions
             .AddScoped<IOrganizationService, OrganizationService>()
             .AddScoped<IPaymentService, PaymentService>()
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>();
+    
+    public static IServiceCollection AddJobs(this IServiceCollection services) =>
+        services
+            .AddHostedService<CustomerCacheJob>();
 }
