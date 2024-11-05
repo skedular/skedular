@@ -44,8 +44,6 @@ public class KafkaMessageHandler<TKey, TEvent>(
                 false,
                 SerializationContext.Empty);
 
-            ConsumeResultContext.Current.Value = consumeResult;
-
             try
             {
                 // Call the subscriber and process the message

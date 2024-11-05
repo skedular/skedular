@@ -5,24 +5,32 @@ using Enterprise.Shared.Random;
 using Enterprise.Shared.Security.Jobs;
 using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Time;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Enterprise.Shared;
 
 public static class Extensions
 {
-    public static IServiceCollection AddSecurity(this IServiceCollection services) =>
-        services
-            .AddHostedService<SecurityDependenciesRefresherJob>()
+    public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
+    {
+        var applicationConfiguration =
+            configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+        ArgumentNullException.ThrowIfNull(applicationConfiguration);
+
+        if (applicationConfiguration.IdentityProviders.Cognito?.JwksUri is not null)
+        {
+            services
+                .AddHostedService<SecurityDependenciesRefresherJob>();
+        }
+
+        return services
             .AddScoped<IGrpcAuthenticator, GrpcAuthenticator>()
             .AddSingleton<ICognitoTokenService, CognitoTokenService>()
             .AddSingleton<IGoogleTokenService, GoogleTokenService>()
             .AddSingleton<IAzureEntraTokenService, AzureEntraTokenService>()
             .AddSingleton<IEnumerable<ITokenService>>(sp =>
             {
-                var applicationConfiguration = sp.GetRequiredService<ApplicationConfiguration>();
-                ArgumentNullException.ThrowIfNull(applicationConfiguration);
-
                 var tokenServices = new List<ITokenService>();
 
                 if (applicationConfiguration.IdentityProviders.Cognito is not null &&
@@ -47,6 +55,7 @@ public static class Extensions
 
                 return tokenServices;
             });
+    }
 
     public static IServiceCollection AddContext(this IServiceCollection services) =>
         services.AddScoped<IContext, Context.Context>();

@@ -70,7 +70,7 @@ public abstract class StartupCustom(IConfiguration configuration, IWebHostEnviro
         services
             .AddRedis(Configuration)
             .AddMemoryCache()
-            .AddSecurity()
+            .AddSecurity(Configuration)
             .AddContext()
             .AddRandomHelper()
             .AddTimeHelper();
