@@ -133,7 +133,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
     field: 'from',
   });
   const [page, setPage] = useState(0);
-  const [startWeek, setStartWeek] = useState(startOfWeek);
+  const [startWeek, setStartWeek] = useState(startOfWeek());
   const [pageSize, setPageSize] = useState(50);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
