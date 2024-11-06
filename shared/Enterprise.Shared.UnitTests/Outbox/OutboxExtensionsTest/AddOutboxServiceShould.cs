@@ -7,7 +7,6 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Npgsql;
 using Xunit;
 
@@ -31,12 +30,6 @@ public class AddOutboxServiceShould
                 .ContainSingle(descriptor =>
                     descriptor.ServiceType == typeof(IOutboxEventPublisher<,>) &&
                     descriptor.ImplementationType == typeof(OutboxEventPublisher<,>));
-
-            collection.Should()
-                .ContainSingle(descriptor =>
-                    descriptor.ServiceType == typeof(IHostedService) &&
-                    descriptor.ImplementationType ==
-                    typeof(OutboxBackgroundService<DummyDbContext>));
         }
     }
 

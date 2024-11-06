@@ -17,7 +17,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
     {
         services
             .AddDatabase(Configuration, true, "PaymentPostgresConnection")
-            .WithPooledDbContextFactory<PaymentDbContext>(Migration.SetAssembly, Environment)
+            .WithPooledDbContextFactory<PaymentDbContext>(Configuration, Migration.SetAssembly, Environment)
             .AddOutboxService()
             .AddDatabaseHealthCheck();
 

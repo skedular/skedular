@@ -17,7 +17,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
     {
         services
             .AddDatabase(Configuration, true, "NotificationPostgresConnection")
-            .WithPooledDbContextFactory<NotificationDbContext>(Migration.SetAssembly, Environment)
+            .WithPooledDbContextFactory<NotificationDbContext>(Configuration, Migration.SetAssembly, Environment)
             .AddOutboxService()
             .AddDatabaseHealthCheck();
 

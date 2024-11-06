@@ -2,10 +2,4 @@
 
 namespace Enterprise.Shared.UnitTests.Database.ServiceExtensionsTests;
 
-public class DummyDbContext : DbContext
-{
-    public DummyDbContext(
-        DbContextOptions<DummyDbContext> options) : base(options)
-    {
-    }
-}
+public class DummyDbContext(DbContextOptions<DummyDbContext> options) : DbContext(options);

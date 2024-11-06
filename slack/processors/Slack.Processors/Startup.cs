@@ -17,7 +17,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
     {
         services
             .AddDatabase(Configuration, true, "SlackPostgresConnection")
-            .WithPooledDbContextFactory<SlackDbContext>(Migration.SetAssembly, Environment)
+            .WithPooledDbContextFactory<SlackDbContext>(Configuration, Migration.SetAssembly, Environment)
             .AddDatabaseHealthCheck();
 
         var kafkaConfiguration = Configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();

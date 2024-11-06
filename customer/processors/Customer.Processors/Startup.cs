@@ -17,7 +17,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
     {
         services
             .AddDatabase(Configuration, true, "CustomerPostgresConnection")
-            .WithPooledDbContextFactory<CustomerDbContext>(Migration.SetAssembly, Environment)
+            .WithPooledDbContextFactory<CustomerDbContext>(Configuration, Migration.SetAssembly, Environment)
             .AddDatabaseHealthCheck();
 
         var kafkaConfiguration = Configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();

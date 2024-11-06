@@ -22,6 +22,9 @@ public class Program
             {
                 services
                     .AddDatabase(host.Configuration, false, "BookingPostgresConnection")
-                    .WithDbContextFactory<BookingDbContext>(Migration.SetAssembly, host.HostingEnvironment);
+                    .WithDbContextFactory<BookingDbContext>(
+                        host.Configuration,
+                        Migration.SetAssembly,
+                        host.HostingEnvironment);
             });
 }

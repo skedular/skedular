@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Enterprise.Shared.Configurations;
 
 public class ApplicationConfiguration
@@ -12,6 +14,7 @@ public class ApplicationConfiguration
     public string ApiBaseDomain { get; set; } = string.Empty;
     public bool EnableSchemaRegistry { get; set; }
     public IdentityProviders IdentityProviders { get; set; } = new();
+    public QuerySplittingBehavior? QuerySplittingBehavior { get; set; }
     public string GetSource() => $"{DomainSource}::{AppSource}";
 }
 

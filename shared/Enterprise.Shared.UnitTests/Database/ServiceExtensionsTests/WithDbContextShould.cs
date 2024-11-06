@@ -1,5 +1,7 @@
 ﻿using Enterprise.Shared.Database;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Testing.Shared;
@@ -11,48 +13,52 @@ public class WithDbContextShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void Register_DbContext_Scoped_ServiceLifetime_By_Default(IHostEnvironment hostEnvironment)
+    public void Register_DbContext_Scoped_ServiceLifetime_By_Default(
+        IHostEnvironment hostEnvironment,
+        IConfiguration configuration)
     {
         var serviceCollection = new ServiceCollection();
         var dbSetupContext = new DatabaseSetupStub(serviceCollection, null!);
 
-        dbSetupContext.WithPooledDbContextFactory<DummyDbContext>(Migration.None, hostEnvironment);
+        dbSetupContext.WithPooledDbContextFactory<DummyDbContext>(configuration, Migration.None, hostEnvironment);
 
         var descriptor =
-            serviceCollection.First(x => x.ServiceType == typeof(DummyDbContext));
+            serviceCollection.First(x => x.ServiceType == typeof(IDbContextFactory<DummyDbContext>));
 
-        descriptor.Lifetime.Should().Be(ServiceLifetime.Scoped);
+        descriptor.Lifetime.Should().Be(ServiceLifetime.Singleton);
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Register_DbContext_ServiceLifetime_SingleTon(IHostEnvironment hostEnvironment)
+    public void Register_DbContext_ServiceLifetime_SingleTon(
+        IHostEnvironment hostEnvironment,
+        IConfiguration configuration)
     {
-        const ServiceLifetime ServiceLifetime = ServiceLifetime.Singleton;
         var serviceCollection = new ServiceCollection();
         var dbSetupContext = new DatabaseSetupStub(serviceCollection, null!);
 
-        dbSetupContext.WithPooledDbContextFactory<DummyDbContext>(Migration.None, hostEnvironment);
+        dbSetupContext.WithPooledDbContextFactory<DummyDbContext>(configuration, Migration.None, hostEnvironment);
 
         var descriptor =
-            serviceCollection.First(x => x.ServiceType == typeof(DummyDbContext));
+            serviceCollection.First(x => x.ServiceType == typeof(IDbContextFactory<DummyDbContext>));
 
-        descriptor.Lifetime.Should().Be(ServiceLifetime);
+        descriptor.Lifetime.Should().Be(ServiceLifetime.Singleton);
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Register_DbContext_ServiceLifetime_Transient(IHostEnvironment hostEnvironment)
+    public void Register_DbContext_ServiceLifetime_Transient(
+        IHostEnvironment hostEnvironment,
+        IConfiguration configuration)
     {
-        const ServiceLifetime ServiceLifetime = ServiceLifetime.Transient;
         var serviceCollection = new ServiceCollection();
         var dbSetupContext = new DatabaseSetupStub(serviceCollection, null!);
 
-        dbSetupContext.WithPooledDbContextFactory<DummyDbContext>(Migration.None, hostEnvironment);
+        dbSetupContext.WithPooledDbContextFactory<DummyDbContext>(configuration, Migration.None, hostEnvironment);
 
         var descriptor =
-            serviceCollection.First(x => x.ServiceType == typeof(DummyDbContext));
+            serviceCollection.First(x => x.ServiceType == typeof(IDbContextFactory<DummyDbContext>));
 
-        descriptor.Lifetime.Should().Be(ServiceLifetime);
+        descriptor.Lifetime.Should().Be(ServiceLifetime.Singleton);
     }
 }

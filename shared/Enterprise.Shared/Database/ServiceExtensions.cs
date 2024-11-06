@@ -66,10 +66,14 @@ public static class ServiceExtensions
 
     public static DatabaseSetupContext<TDbContext> WithPooledDbContextFactory<TDbContext>(
         this DatabaseSetup databaseSetup,
+        IConfiguration configuration,
         Migration option,
         IHostEnvironment environment)
         where TDbContext : DbContext
     {
+        var applicationConfiguration =
+            configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+
         databaseSetup.ServiceCollection
             .AddPooledDbContextFactory<TDbContext>(options =>
             {
@@ -82,7 +86,8 @@ public static class ServiceExtensions
 
                 options.UseNpgsql(databaseSetup.NpgsqlDataSource, sqlOptions =>
                 {
-                    sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                    sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                         QuerySplittingBehavior.SplitQuery);
 
                     if (option != Migration.SetAssembly)
                     {
@@ -98,10 +103,14 @@ public static class ServiceExtensions
 
     public static DatabaseSetupContext<TDbContext> WithDbContextFactory<TDbContext>(
         this DatabaseSetup databaseSetup,
+        IConfiguration configuration,
         Migration option,
         IHostEnvironment environment)
         where TDbContext : DbContext
     {
+        var applicationConfiguration =
+            configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+
         databaseSetup.ServiceCollection
             .AddDbContextFactory<TDbContext>(options =>
             {
@@ -112,7 +121,8 @@ public static class ServiceExtensions
 
                 options.UseNpgsql(databaseSetup.NpgsqlDataSource, sqlOptions =>
                 {
-                    sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                    sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                         QuerySplittingBehavior.SplitQuery);
 
                     if (option != Migration.SetAssembly)
                     {

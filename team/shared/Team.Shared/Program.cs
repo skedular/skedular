@@ -22,6 +22,9 @@ public class Program
             {
                 services
                     .AddDatabase(host.Configuration, false, "TeamPostgresConnection")
-                    .WithDbContextFactory<TeamDbContext>(Migration.SetAssembly, host.HostingEnvironment);
+                    .WithDbContextFactory<TeamDbContext>(
+                        host.Configuration,
+                        Migration.SetAssembly,
+                        host.HostingEnvironment);
             });
 }

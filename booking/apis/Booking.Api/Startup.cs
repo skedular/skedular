@@ -17,7 +17,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
     {
         services
             .AddDatabase(Configuration, true, "BookingPostgresConnection")
-            .WithPooledDbContextFactory<BookingDbContext>(Migration.SetAssembly, Environment)
+            .WithPooledDbContextFactory<BookingDbContext>(Configuration, Migration.SetAssembly, Environment)
             .AddOutboxService()
             .AddDatabaseHealthCheck();
 

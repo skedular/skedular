@@ -22,6 +22,9 @@ public class Program
             {
                 services
                     .AddDatabase(host.Configuration, false, "PaymentPostgresConnection")
-                    .WithDbContextFactory<PaymentDbContext>(Migration.SetAssembly, host.HostingEnvironment);
+                    .WithDbContextFactory<PaymentDbContext>(
+                        host.Configuration,
+                        Migration.SetAssembly,
+                        host.HostingEnvironment);
             });
 }

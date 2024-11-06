@@ -20,7 +20,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 
         services
             .AddDatabase(Configuration, true, "TeamPostgresConnection")
-            .WithPooledDbContextFactory<TeamDbContext>(Migration.SetAssembly, Environment)
+            .WithPooledDbContextFactory<TeamDbContext>(Configuration, Migration.SetAssembly, Environment)
             .AddOutboxBackgroundService()
             .AddOutboxService()
             .AddDatabaseHealthCheck();
