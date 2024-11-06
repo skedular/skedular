@@ -2,7 +2,6 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
-using Enterprise.Shared.Security.Jobs;
 using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Time;
 using Microsoft.Extensions.Configuration;
@@ -17,12 +16,6 @@ public static class Extensions
         var applicationConfiguration =
             configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         ArgumentNullException.ThrowIfNull(applicationConfiguration);
-
-        if (applicationConfiguration.IdentityProviders.Cognito?.JwksUri is not null)
-        {
-            services
-                .AddHostedService<SecurityDependenciesRefresherJob>();
-        }
 
         return services
             .AddScoped<IGrpcAuthenticator, GrpcAuthenticator>()
