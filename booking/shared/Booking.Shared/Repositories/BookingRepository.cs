@@ -126,7 +126,7 @@ internal static class BookingExtensions
     {
         if (orderByFields.Count == 0)
         {
-            return originalQuery.OrderBy(query => query.CreatedAt);
+            return originalQuery.OrderBy(query => query.From).ThenBy(query => query.Id);
         }
 
         var orderByField = orderByFields.First();
@@ -197,200 +197,8 @@ internal static class BookingExtensions
                     ? query.ThenBy(x => x.Team.Name)
                     : query.ThenByDescending(x => x.Team.Name),
                 _ => throw new ArgumentOutOfRangeException()
-            });
+            }).ThenBy(query => query.Id);
     }
-
-    public static IQueryable<Database.Entities.Booking> ApplyPaginationFilters(
-        this IQueryable<Database.Entities.Booking> query,
-        PaginationInputParam paginationInputParam,
-        ICollection<BookingOrder> orderByFields)
-    {
-        var orderByField = orderByFields.FirstOrDefault();
-        if (!string.IsNullOrWhiteSpace(paginationInputParam.After))
-        {
-            query = orderByField?.Field switch
-            {
-                BookingOrderField.From => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.From.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
-                    : query.Where(item =>
-                        item.From.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
-                BookingOrderField.To => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.To.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
-                    : query.Where(item =>
-                        item.To.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
-                BookingOrderField.Notes => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Notes == null || item.Notes.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Notes == null || item.Notes.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                BookingOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.Name == null ||
-                        item.Customer.Name.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Customer.Name == null ||
-                        item.Customer.Name.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                BookingOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.GivenName == null ||
-                        item.Customer.GivenName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Customer.GivenName == null ||
-                        item.Customer.GivenName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                BookingOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.MiddleName == null ||
-                        item.Customer.MiddleName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Customer.MiddleName == null ||
-                        item.Customer.MiddleName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                BookingOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.FamilyName == null ||
-                        item.Customer.FamilyName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Customer.FamilyName == null ||
-                        item.Customer.FamilyName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                BookingOrderField.OrganizationName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Organization == null || item.Organization.Name == null ||
-                        item.Organization.Name.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Organization == null || item.Organization.Name == null ||
-                        item.Organization.Name.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                BookingOrderField.LocationName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Location == null || item.Location.Name == null ||
-                        item.Location.Name.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Location == null || item.Location.Name == null ||
-                        item.Location.Name.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                BookingOrderField.TeamName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Team == null || item.Team.Name == null ||
-                        item.Team.Name.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Team == null || item.Team.Name == null ||
-                        item.Team.Name.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
-            };
-        }
-        else if (!string.IsNullOrWhiteSpace(paginationInputParam.Before))
-        {
-            query = orderByField?.Field switch
-            {
-                BookingOrderField.From => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.From.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
-                    : query.Where(item =>
-                        item.From.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
-                BookingOrderField.To => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.To.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
-                    : query.Where(item =>
-                        item.To.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
-                BookingOrderField.Notes => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Notes == null || item.Notes.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Notes == null || item.Notes.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                BookingOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.Name == null ||
-                        item.Customer.Name.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Customer.Name == null ||
-                        item.Customer.Name.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                BookingOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.GivenName == null ||
-                        item.Customer.GivenName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Customer.GivenName == null ||
-                        item.Customer.GivenName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                BookingOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.MiddleName == null ||
-                        item.Customer.MiddleName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Customer.MiddleName == null ||
-                        item.Customer.MiddleName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                BookingOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.FamilyName == null ||
-                        item.Customer.FamilyName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Customer.FamilyName == null ||
-                        item.Customer.FamilyName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                BookingOrderField.OrganizationName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Organization == null || item.Organization.Name == null ||
-                        item.Organization.Name.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Organization == null || item.Organization.Name == null ||
-                        item.Organization.Name.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                BookingOrderField.LocationName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Location == null || item.Location.Name == null ||
-                        item.Location.Name.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Location == null || item.Location.Name == null ||
-                        item.Location.Name.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                BookingOrderField.TeamName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Team == null || item.Team.Name == null ||
-                        item.Team.Name.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Team == null || item.Team.Name == null ||
-                        item.Team.Name.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
-            };
-        }
-
-        if (paginationInputParam.First is not null)
-        {
-            query = query.Take(paginationInputParam.First.Value + 1);
-        }
-        else if (paginationInputParam.Last is not null)
-        {
-            query = query.Take(paginationInputParam.Last.Value + 1);
-        }
-
-        return query;
-    }
-
-    public static ICollection<Edge<Database.Entities.Booking>> ToEdges(
-        this ICollection<Database.Entities.Booking> items,
-        ICollection<BookingOrder> orderByFields) =>
-        items.Select(item => orderByFields.FirstOrDefault()?.Field switch
-        {
-            BookingOrderField.From => new Edge<Database.Entities.Booking>(item.From.ToCursor(), item),
-            BookingOrderField.To => new Edge<Database.Entities.Booking>(item.To.ToCursor(), item),
-            BookingOrderField.Notes => new Edge<Database.Entities.Booking>(item.Notes.ToCursor(), item),
-            BookingOrderField.Name => new Edge<Database.Entities.Booking>(item.Customer.Name.ToCursor(), item),
-            BookingOrderField.GivenName =>
-                new Edge<Database.Entities.Booking>(item.Customer.GivenName.ToCursor(), item),
-            BookingOrderField.MiddleName => new Edge<Database.Entities.Booking>(item.Customer.MiddleName.ToCursor(),
-                item),
-            BookingOrderField.FamilyName => new Edge<Database.Entities.Booking>(item.Customer.FamilyName.ToCursor(),
-                item),
-            BookingOrderField.OrganizationName => new Edge<Database.Entities.Booking>(
-                item.Organization is null ? string.Empty : item.Organization.Name.ToCursor(), item),
-            BookingOrderField.LocationName => new Edge<Database.Entities.Booking>(
-                item.Location is null ? string.Empty : item.Location.Name.ToCursor(), item),
-            BookingOrderField.TeamName => new Edge<Database.Entities.Booking>(
-                item.Team is null ? string.Empty : item.Team.Name.ToCursor(), item),
-            null => new Edge<Database.Entities.Booking>(item.CreatedAt.ToCursor(), item),
-            _ => new Edge<Database.Entities.Booking>(item.CreatedAt.ToCursor(), item)
-        }).ToList();
 }
 
 public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -436,22 +244,41 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         ICollection<BookingOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var totalCount = await DbContext.Booking.AsQueryable().AddSearchCriteria(searchCriteria)
-            .CountAsync(cancellationToken);
+        var items = await DbContext.Booking
+            .AsQueryable()
+            .AddSearchCriteria(searchCriteria)
+            .AddSortingOrders(orderByFields)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
+        var totalCount = items.Count;
         if (totalCount == 0)
         {
             return (new PaginatedInfo(false, false, null, null), [], totalCount);
         }
 
-        var (paginatedInfo, edges) = (await DbContext.Booking
-                .AsQueryable()
-                .AddSearchCriteria(searchCriteria)
-                .AddSortingOrders(orderByFields)
-                .ApplyPaginationFilters(paginationInputParam, orderByFields)
-                .AddDependentObjects()
-                .ToListAsync(cancellationToken))
-            .ToEdges(orderByFields)
-            .GetPaginatedInfo(paginationInputParam);
+        IEnumerable<Database.Entities.Booking> finalItems = items;
+
+        if (!string.IsNullOrWhiteSpace(paginationInputParam.After))
+        {
+            var cursor = paginationInputParam.After.FromCursor();
+            finalItems = finalItems.SkipWhile(booking => booking.Id != cursor).Skip(1);
+        }
+        else if (!string.IsNullOrWhiteSpace(paginationInputParam.Before))
+        {
+            var cursor = paginationInputParam.Before.FromCursor();
+            finalItems = finalItems.TakeWhile(booking => booking.Id != cursor);
+        }
+
+        if (paginationInputParam.First is not null)
+        {
+            finalItems = finalItems.Take(paginationInputParam.First.Value).ToList();
+        }
+        else if (paginationInputParam.Last is not null)
+        {
+            finalItems = finalItems.Reverse().Take(paginationInputParam.Last.Value).Reverse().ToList();
+        }
+
+        var (paginatedInfo, edges) = finalItems.ToEdges().GetPaginatedInfo(paginationInputParam);
         return (paginatedInfo, edges, totalCount);
     }
 }

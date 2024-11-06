@@ -67,4 +67,7 @@ public static class PaginationExtensions
 
         return (new PaginatedInfo(hasNextPage, hasPreviousPage, startCursor, endCursor), edges);
     }
+
+    public static ICollection<Edge<T>> ToEdges<T>(this IEnumerable<T> items) where T : EntityBase =>
+        items.Select(item => new Edge<T>(item.Id.ToCursor(), item)).ToList();
 }
