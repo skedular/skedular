@@ -94,7 +94,7 @@ internal static class TeamExtensions
     {
         if (orderByFields.Count == 0)
         {
-            return originalQuery.OrderBy(query => query.CreatedAt);
+            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
         }
 
         var orderByField = orderByFields.First();
@@ -111,67 +111,8 @@ internal static class TeamExtensions
                     ? query.ThenBy(x => x.Name)
                     : query.ThenByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()
-            });
+            }).ThenBy(query => query.Id);
     }
-
-    public static IQueryable<Database.Entities.Team> ApplyPaginationFilters(
-        this IQueryable<Database.Entities.Team> query,
-        PaginationInputParam paginationInputParam,
-        ICollection<TeamOrder> orderByFields)
-    {
-        var orderByField = orderByFields.FirstOrDefault();
-        if (!string.IsNullOrWhiteSpace(paginationInputParam.After))
-        {
-            query = orderByField?.Field switch
-            {
-                TeamOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Name.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Name.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
-            };
-        }
-        else if (!string.IsNullOrWhiteSpace(paginationInputParam.Before))
-        {
-            query = orderByField?.Field switch
-            {
-                TeamOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Name.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Name.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
-            };
-        }
-
-        if (paginationInputParam.First is not null)
-        {
-            query = query.Take(paginationInputParam.First.Value + 1);
-        }
-        else if (paginationInputParam.Last is not null)
-        {
-            query = query.Take(paginationInputParam.Last.Value + 1);
-        }
-
-        return query;
-    }
-
-    public static ICollection<Edge<Database.Entities.Team>> ToEdges(
-        this ICollection<Database.Entities.Team> items,
-        ICollection<TeamOrder> orderByFields) =>
-        items.Select(item => orderByFields.FirstOrDefault()?.Field switch
-        {
-            TeamOrderField.Name => new Edge<Database.Entities.Team>(item.Name.ToCursor(), item),
-            null => new Edge<Database.Entities.Team>(item.CreatedAt.ToCursor(), item),
-            _ => new Edge<Database.Entities.Team>(item.CreatedAt.ToCursor(), item)
-        }).ToList();
 }
 
 public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
@@ -247,24 +188,12 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
         PaginationInputParam paginationInputParam,
         TeamSearchCriteria searchCriteria,
         ICollection<TeamOrder> orderByFields,
-        CancellationToken cancellationToken)
-    {
-        var totalCount = await DbContext.Team.AsQueryable().AddSearchCriteria(searchCriteria)
-            .CountAsync(cancellationToken);
-        if (totalCount == 0)
-        {
-            return (new PaginatedInfo(false, false, null, null), [], totalCount);
-        }
-
-        var (paginatedInfo, edges) = (await DbContext.Team
-                .AsQueryable()
-                .AddSearchCriteria(searchCriteria)
-                .AddSortingOrders(orderByFields)
-                .ApplyPaginationFilters(paginationInputParam, orderByFields)
-                .AddDependentObjects()
-                .ToListAsync(cancellationToken))
-            .ToEdges(orderByFields)
-            .GetPaginatedInfo(paginationInputParam);
-        return (paginatedInfo, edges, totalCount);
-    }
+        CancellationToken cancellationToken) =>
+        (await DbContext.Team
+            .AsQueryable()
+            .AddSearchCriteria(searchCriteria)
+            .AddSortingOrders(orderByFields)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken))
+        .ToPaginated(paginationInputParam);
 }

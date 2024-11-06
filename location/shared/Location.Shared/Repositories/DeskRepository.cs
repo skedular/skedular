@@ -56,7 +56,7 @@ internal static class DeskExtensions
     {
         if (orderByFields.Count == 0)
         {
-            return originalQuery.OrderBy(query => query.CreatedAt);
+            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
         }
 
         var orderByField = orderByFields.First();
@@ -73,63 +73,8 @@ internal static class DeskExtensions
                     ? query.ThenBy(x => x.Name)
                     : query.ThenByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()
-            });
+            }).ThenBy(query => query.Id);
     }
-
-    public static IQueryable<Desk> ApplyPaginationFilters(
-        this IQueryable<Desk> query,
-        PaginationInputParam paginationInputParam,
-        ICollection<DeskOrder> orderByFields)
-    {
-        var orderByField = orderByFields.FirstOrDefault();
-        if (!string.IsNullOrWhiteSpace(paginationInputParam.After))
-        {
-            query = orderByField?.Field switch
-            {
-                DeskOrderField.Name => query.Where(item =>
-                    orderByField.Direction == OrderDirection.Ascending
-                        ? item.Name.CompareTo(paginationInputParam.After.FromCursor()) > 0
-                        : item.Name.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
-            };
-        }
-        else if (!string.IsNullOrWhiteSpace(paginationInputParam.Before))
-        {
-            query = orderByField?.Field switch
-            {
-                DeskOrderField.Name => query.Where(item =>
-                    orderByField.Direction == OrderDirection.Ascending
-                        ? item.Name.CompareTo(paginationInputParam.Before.FromCursor()) < 0
-                        : item.Name.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
-            };
-        }
-
-        if (paginationInputParam.First is not null)
-        {
-            query = query.Take(paginationInputParam.First.Value + 1);
-        }
-        else if (paginationInputParam.Last is not null)
-        {
-            query = query.Take(paginationInputParam.Last.Value + 1);
-        }
-
-        return query;
-    }
-
-    public static ICollection<Edge<Desk>> ToEdges(this ICollection<Desk> items, ICollection<DeskOrder> orderByFields) =>
-        items.Select(item => orderByFields.FirstOrDefault()?.Field switch
-        {
-            DeskOrderField.Name => new Edge<Desk>(item.Name.ToCursor(), item),
-            null => new Edge<Desk>(item.CreatedAt.ToCursor(), item),
-            _ => new Edge<Desk>(item.CreatedAt.ToCursor(), item)
-        }).ToList();
 }
 
 public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvider)
@@ -174,26 +119,12 @@ public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvid
         PaginationInputParam paginationInputParam,
         DeskSearchCriteria searchCriteria,
         ICollection<DeskOrder> orderByFields,
-        CancellationToken cancellationToken)
-    {
-        var totalCount = await DbContext.Desk
+        CancellationToken cancellationToken) =>
+        (await DbContext.Desk
             .AsQueryable()
             .AddSearchCriteria(searchCriteria)
-            .CountAsync(cancellationToken);
-        if (totalCount == 0)
-        {
-            return (new PaginatedInfo(false, false, null, null), [], totalCount);
-        }
-
-        var (paginatedInfo, edges) = (await DbContext.Desk
-                .AsQueryable()
-                .AddSearchCriteria(searchCriteria)
-                .AddSortingOrders(orderByFields)
-                .ApplyPaginationFilters(paginationInputParam, orderByFields)
-                .AddDependentObjects()
-                .ToListAsync(cancellationToken))
-            .ToEdges(orderByFields)
-            .GetPaginatedInfo(paginationInputParam);
-        return (paginatedInfo, edges, totalCount);
-    }
+            .AddSortingOrders(orderByFields)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken))
+        .ToPaginated(paginationInputParam);
 }

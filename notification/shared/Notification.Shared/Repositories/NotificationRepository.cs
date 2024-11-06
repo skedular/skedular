@@ -60,7 +60,7 @@ internal static class NotificationExtensions
     {
         if (orderByFields.Count == 0)
         {
-            return originalQuery.OrderBy(query => query.CreatedAt);
+            return originalQuery.OrderBy(query => query.EventRaisedAt).ThenBy(query => query.Id);
         }
 
         var orderByField = orderByFields.First();
@@ -83,83 +83,8 @@ internal static class NotificationExtensions
                     ? query.ThenBy(x => x.Type)
                     : query.ThenByDescending(x => x.Type),
                 _ => throw new ArgumentOutOfRangeException()
-            });
+            }).ThenBy(query => query.Id);
     }
-
-    public static IQueryable<Database.Entities.Notification> ApplyPaginationFilters(
-        this IQueryable<Database.Entities.Notification> query,
-        PaginationInputParam paginationInputParam,
-        ICollection<NotificationOrder> orderByFields)
-    {
-        var orderByField = orderByFields.FirstOrDefault();
-        if (!string.IsNullOrWhiteSpace(paginationInputParam.After))
-        {
-            query = orderByField?.Field switch
-            {
-                NotificationOrderField.EventRaisedAt => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.EventRaisedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
-                    : query.Where(item =>
-                        item.EventRaisedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) < 0),
-                NotificationOrderField.Type => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Type.CompareTo(
-                            paginationInputParam.After.FromCursorToEnum<NotificationType>()) > 0)
-                    : query.Where(item =>
-                        item.Type.CompareTo(
-                            paginationInputParam.After.FromCursorToEnum<NotificationType>()) < 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
-            };
-        }
-        else if (!string.IsNullOrWhiteSpace(paginationInputParam.Before))
-        {
-            query = orderByField?.Field switch
-            {
-                NotificationOrderField.EventRaisedAt => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.EventRaisedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
-                    : query.Where(item =>
-                        item.EventRaisedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) > 0),
-                NotificationOrderField.Type => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Type.CompareTo(
-                            paginationInputParam.Before.FromCursorToEnum<NotificationType>()) < 0)
-                    : query.Where(item =>
-                        item.Type.CompareTo(
-                            paginationInputParam.Before.FromCursorToEnum<NotificationType>()) > 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
-            };
-        }
-
-        if (paginationInputParam.First is not null)
-        {
-            query = query.Take(paginationInputParam.First.Value + 1);
-        }
-        else if (paginationInputParam.Last is not null)
-        {
-            query = query.Take(paginationInputParam.Last.Value + 1);
-        }
-
-        return query;
-    }
-
-    public static ICollection<Edge<Database.Entities.Notification>> ToEdges(
-        this ICollection<Database.Entities.Notification> items,
-        ICollection<NotificationOrder> orderByFields) =>
-        items.Select(item => orderByFields.FirstOrDefault()?.Field switch
-        {
-            NotificationOrderField.EventRaisedAt => new Edge<Database.Entities.Notification>(
-                item.EventRaisedAt.ToCursor(), item),
-            NotificationOrderField.Type => new Edge<Database.Entities.Notification>(item.Type.ToCursor(), item),
-            null => new Edge<Database.Entities.Notification>(item.CreatedAt.ToCursor(), item),
-            _ => new Edge<Database.Entities.Notification>(item.CreatedAt.ToCursor(), item)
-        }).ToList();
 }
 
 public class NotificationRepository(NotificationDbContext dbContext, TimeProvider timeProvider)
@@ -199,24 +124,12 @@ public class NotificationRepository(NotificationDbContext dbContext, TimeProvide
             PaginationInputParam paginationInputParam,
             NotificationSearchCriteria searchCriteria,
             ICollection<NotificationOrder> orderByFields,
-            CancellationToken cancellationToken)
-    {
-        var totalCount = await DbContext.Notification.AsQueryable().AddSearchCriteria(searchCriteria)
-            .CountAsync(cancellationToken);
-        if (totalCount == 0)
-        {
-            return (new PaginatedInfo(false, false, null, null), [], totalCount);
-        }
-
-        var (paginatedInfo, edges) = (await DbContext.Notification
-                .AsQueryable()
-                .AddSearchCriteria(searchCriteria)
-                .AddSortingOrders(orderByFields)
-                .ApplyPaginationFilters(paginationInputParam, orderByFields)
-                .AddDependentObjects()
-                .ToListAsync(cancellationToken))
-            .ToEdges(orderByFields)
-            .GetPaginatedInfo(paginationInputParam);
-        return (paginatedInfo, edges, totalCount);
-    }
+            CancellationToken cancellationToken) =>
+        (await DbContext.Notification
+            .AsQueryable()
+            .AddSearchCriteria(searchCriteria)
+            .AddSortingOrders(orderByFields)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken))
+        .ToPaginated(paginationInputParam);
 }

@@ -242,43 +242,12 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
         ICollection<BookingOrder> orderByFields,
-        CancellationToken cancellationToken)
-    {
-        var items = await DbContext.Booking
+        CancellationToken cancellationToken) =>
+        (await DbContext.Booking
             .AsQueryable()
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()
-            .ToListAsync(cancellationToken);
-        var totalCount = items.Count;
-        if (totalCount == 0)
-        {
-            return (new PaginatedInfo(false, false, null, null), [], totalCount);
-        }
-
-        IEnumerable<Database.Entities.Booking> finalItems = items;
-
-        if (!string.IsNullOrWhiteSpace(paginationInputParam.After))
-        {
-            var cursor = paginationInputParam.After.FromCursor();
-            finalItems = finalItems.SkipWhile(booking => booking.Id != cursor).Skip(1);
-        }
-        else if (!string.IsNullOrWhiteSpace(paginationInputParam.Before))
-        {
-            var cursor = paginationInputParam.Before.FromCursor();
-            finalItems = finalItems.TakeWhile(booking => booking.Id != cursor);
-        }
-
-        if (paginationInputParam.First is not null)
-        {
-            finalItems = finalItems.Take(paginationInputParam.First.Value).ToList();
-        }
-        else if (paginationInputParam.Last is not null)
-        {
-            finalItems = finalItems.Reverse().Take(paginationInputParam.Last.Value).Reverse().ToList();
-        }
-
-        var (paginatedInfo, edges) = finalItems.ToEdges().GetPaginatedInfo(paginationInputParam);
-        return (paginatedInfo, edges, totalCount);
-    }
+            .ToListAsync(cancellationToken))
+        .ToPaginated(paginationInputParam);
 }

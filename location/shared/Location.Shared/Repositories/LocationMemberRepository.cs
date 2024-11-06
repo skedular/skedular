@@ -1,4 +1,3 @@
-using Api.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
@@ -63,7 +62,7 @@ internal static class LocationMemberExtensions
     {
         if (orderByFields.Count == 0)
         {
-            return originalQuery.OrderBy(query => query.CreatedAt);
+            return originalQuery.OrderBy(query => query.Customer.Name).ThenBy(query => query.Id);
         }
 
         var orderByField = orderByFields.First();
@@ -104,131 +103,8 @@ internal static class LocationMemberExtensions
                     ? query.ThenBy(x => x.Customer.FamilyName)
                     : query.ThenByDescending(x => x.Customer.FamilyName),
                 _ => throw new ArgumentOutOfRangeException()
-            });
+            }).ThenBy(query => query.Id);
     }
-
-    public static IQueryable<LocationMember> ApplyPaginationFilters(
-        this IQueryable<LocationMember> query,
-        PaginationInputParam paginationInputParam,
-        ICollection<LocationMemberOrder> orderByFields)
-    {
-        var orderByField = orderByFields.FirstOrDefault();
-        if (!string.IsNullOrWhiteSpace(paginationInputParam.After))
-        {
-            query = orderByField?.Field switch
-            {
-                LocationMemberOrderField.MembershipType => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.MembershipType.CompareTo(paginationInputParam.After
-                            .FromCursorToEnum<LocationMembershipType>()) > 0)
-                    : query.Where(item =>
-                        item.MembershipType.CompareTo(paginationInputParam.After
-                            .FromCursorToEnum<LocationMembershipType>()) < 0),
-                LocationMemberOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.Name != null &&
-                        item.Customer.Name.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Customer.Name != null &&
-                        item.Customer.Name.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                LocationMemberOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.GivenName != null &&
-                        item.Customer.GivenName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Customer.GivenName != null &&
-                        item.Customer.GivenName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                LocationMemberOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.MiddleName != null &&
-                        item.Customer.MiddleName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Customer.MiddleName != null &&
-                        item.Customer.MiddleName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                LocationMemberOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.FamilyName != null &&
-                        item.Customer.FamilyName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Customer.FamilyName != null &&
-                        item.Customer.FamilyName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
-            };
-        }
-        else if (!string.IsNullOrWhiteSpace(paginationInputParam.Before))
-        {
-            query = orderByField?.Field switch
-            {
-                LocationMemberOrderField.MembershipType => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.MembershipType.CompareTo(
-                            paginationInputParam.Before.FromCursorToEnum<LocationMembershipType>()) < 0)
-                    : query.Where(item =>
-                        item.MembershipType.CompareTo(
-                            paginationInputParam.Before.FromCursorToEnum<LocationMembershipType>()) > 0),
-                LocationMemberOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.Name != null &&
-                        item.Customer.Name.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Customer.Name != null &&
-                        item.Customer.Name.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                LocationMemberOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.GivenName != null &&
-                        item.Customer.GivenName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Customer.GivenName != null &&
-                        item.Customer.GivenName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                LocationMemberOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.MiddleName != null &&
-                        item.Customer.MiddleName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Customer.MiddleName != null &&
-                        item.Customer.MiddleName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                LocationMemberOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Customer.FamilyName != null &&
-                        item.Customer.FamilyName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Customer.FamilyName != null &&
-                        item.Customer.FamilyName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
-            };
-        }
-
-        if (paginationInputParam.First is not null)
-        {
-            query = query.Take(paginationInputParam.First.Value + 1);
-        }
-        else if (paginationInputParam.Last is not null)
-        {
-            query = query.Take(paginationInputParam.Last.Value + 1);
-        }
-
-        return query;
-    }
-
-    public static ICollection<Edge<LocationMember>> ToEdges(
-        this ICollection<LocationMember> items,
-        ICollection<LocationMemberOrder> orderByFields) =>
-        items.Select(item => orderByFields.FirstOrDefault()?.Field switch
-        {
-            LocationMemberOrderField.MembershipType => new Edge<LocationMember>(item.MembershipType.ToCursor(), item),
-            LocationMemberOrderField.Name => new Edge<LocationMember>(item.Customer.Name.ToCursor(), item),
-            LocationMemberOrderField.GivenName => new Edge<LocationMember>(item.Customer.GivenName.ToCursor(), item),
-            LocationMemberOrderField.MiddleName => new Edge<LocationMember>(item.Customer.MiddleName.ToCursor(), item),
-            LocationMemberOrderField.FamilyName => new Edge<LocationMember>(item.Customer.FamilyName.ToCursor(), item),
-            null => new Edge<LocationMember>(item.CreatedAt.ToCursor(), item),
-            _ => new Edge<LocationMember>(item.CreatedAt.ToCursor(), item)
-        }).ToList();
 }
 
 public class LocationMemberRepository(LocationDbContext dbContext, TimeProvider timeProvider)
@@ -273,24 +149,12 @@ public class LocationMemberRepository(LocationDbContext dbContext, TimeProvider 
         PaginationInputParam paginationInputParam,
         LocationMemberSearchCriteria searchCriteria,
         ICollection<LocationMemberOrder> orderByFields,
-        CancellationToken cancellationToken)
-    {
-        var totalCount = await DbContext.LocationMember.AsQueryable().AddSearchCriteria(searchCriteria)
-            .CountAsync(cancellationToken);
-        if (totalCount == 0)
-        {
-            return (new PaginatedInfo(false, false, null, null), [], totalCount);
-        }
-
-        var (paginatedInfo, edges) = (await DbContext.LocationMember
-                .AsQueryable()
-                .AddSearchCriteria(searchCriteria)
-                .AddSortingOrders(orderByFields)
-                .ApplyPaginationFilters(paginationInputParam, orderByFields)
-                .AddDependentObjects()
-                .ToListAsync(cancellationToken))
-            .ToEdges(orderByFields)
-            .GetPaginatedInfo(paginationInputParam);
-        return (paginatedInfo, edges, totalCount);
-    }
+        CancellationToken cancellationToken) =>
+        (await DbContext.LocationMember
+            .AsQueryable()
+            .AddSearchCriteria(searchCriteria)
+            .AddSortingOrders(orderByFields)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken))
+        .ToPaginated(paginationInputParam);
 }

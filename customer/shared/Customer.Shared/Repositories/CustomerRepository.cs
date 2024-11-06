@@ -82,7 +82,7 @@ internal static class CustomerExtensions
     {
         if (orderByFields.Count == 0)
         {
-            return originalQuery.OrderBy(query => query.CreatedAt);
+            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
         }
 
         var orderByField = orderByFields.First();
@@ -141,176 +141,8 @@ internal static class CustomerExtensions
                     ? query.ThenBy(x => x.Locale)
                     : query.ThenByDescending(x => x.Locale),
                 _ => throw new ArgumentOutOfRangeException()
-            });
+            }).ThenBy(query => query.Id);
     }
-
-    public static IQueryable<Database.Entities.Customer> ApplyPaginationFilters(
-        this IQueryable<Database.Entities.Customer> query,
-        PaginationInputParam paginationInputParam,
-        ICollection<CustomerOrder> orderByFields)
-    {
-        var orderByField = orderByFields.FirstOrDefault();
-        if (!string.IsNullOrWhiteSpace(paginationInputParam.After))
-        {
-            query = orderByField?.Field switch
-            {
-                CustomerOrderField.Designation => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Designation == null ||
-                        item.Designation.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Designation == null ||
-                        item.Designation.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                CustomerOrderField.Title => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Title == null ||
-                        item.Title.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Title == null ||
-                        item.Title.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                CustomerOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Name == null ||
-                        item.Name.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Name == null ||
-                        item.Name.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                CustomerOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.GivenName == null ||
-                        item.GivenName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.GivenName == null ||
-                        item.GivenName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                CustomerOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.MiddleName == null ||
-                        item.MiddleName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.MiddleName == null ||
-                        item.MiddleName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                CustomerOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.FamilyName == null ||
-                        item.FamilyName.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.FamilyName == null ||
-                        item.FamilyName.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                CustomerOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Timezone == null ||
-                        item.Timezone.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Timezone == null ||
-                        item.Timezone.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                CustomerOrderField.Locale => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Locale == null ||
-                        item.Locale.CompareTo(paginationInputParam.After.FromCursor()) > 0)
-                    : query.Where(item =>
-                        item.Locale == null ||
-                        item.Locale.CompareTo(paginationInputParam.After.FromCursor()) < 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.After.FromCursorToDateTimeOffset()) > 0)
-            };
-        }
-        else if (!string.IsNullOrWhiteSpace(paginationInputParam.Before))
-        {
-            query = orderByField?.Field switch
-            {
-                CustomerOrderField.Designation => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Designation == null ||
-                        item.Designation.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Designation == null ||
-                        item.Designation.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                CustomerOrderField.Title => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Title == null ||
-                        item.Title.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Title == null ||
-                        item.Title.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                CustomerOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Name == null ||
-                        item.Name.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Name == null ||
-                        item.Name.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                CustomerOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.GivenName == null ||
-                        item.GivenName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.GivenName == null ||
-                        item.GivenName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                CustomerOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.MiddleName == null ||
-                        item.MiddleName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.MiddleName == null ||
-                        item.MiddleName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                CustomerOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.FamilyName == null ||
-                        item.FamilyName.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.FamilyName == null ||
-                        item.FamilyName.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                CustomerOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Timezone == null ||
-                        item.Timezone.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Timezone == null ||
-                        item.Timezone.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                CustomerOrderField.Locale => orderByField.Direction == OrderDirection.Ascending
-                    ? query.Where(item =>
-                        item.Locale == null ||
-                        item.Locale.CompareTo(paginationInputParam.Before.FromCursor()) < 0)
-                    : query.Where(item =>
-                        item.Locale == null ||
-                        item.Locale.CompareTo(paginationInputParam.Before.FromCursor()) > 0),
-                null => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0),
-                _ => query.Where(item =>
-                    item.CreatedAt.CompareTo(paginationInputParam.Before.FromCursorToDateTimeOffset()) < 0)
-            };
-        }
-
-        if (paginationInputParam.First is not null)
-        {
-            query = query.Take(paginationInputParam.First.Value + 1);
-        }
-        else if (paginationInputParam.Last is not null)
-        {
-            query = query.Take(paginationInputParam.Last.Value + 1);
-        }
-
-        return query;
-    }
-
-    public static ICollection<Edge<Database.Entities.Customer>> ToEdges(
-        this ICollection<Database.Entities.Customer> items,
-        ICollection<CustomerOrder> orderByFields) =>
-        items.Select(item => orderByFields.FirstOrDefault()?.Field switch
-        {
-            CustomerOrderField.Designation => new Edge<Database.Entities.Customer>(item.Designation.ToCursor(), item),
-            CustomerOrderField.Title => new Edge<Database.Entities.Customer>(item.Title.ToCursor(), item),
-            CustomerOrderField.Name => new Edge<Database.Entities.Customer>(item.Name.ToCursor(), item),
-            CustomerOrderField.GivenName => new Edge<Database.Entities.Customer>(item.GivenName.ToCursor(), item),
-            CustomerOrderField.MiddleName => new Edge<Database.Entities.Customer>(item.MiddleName.ToCursor(), item),
-            CustomerOrderField.FamilyName => new Edge<Database.Entities.Customer>(item.FamilyName.ToCursor(), item),
-            CustomerOrderField.Timezone => new Edge<Database.Entities.Customer>(item.Timezone.ToCursor(), item),
-            CustomerOrderField.Locale => new Edge<Database.Entities.Customer>(item.Locale.ToCursor(), item),
-            null => new Edge<Database.Entities.Customer>(item.CreatedAt.ToCursor(), item),
-            _ => new Edge<Database.Entities.Customer>(item.CreatedAt.ToCursor(), item)
-        }).ToList();
 }
 
 public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
@@ -385,24 +217,12 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
             PaginationInputParam paginationInputParam,
             CustomerSearchCriteria searchCriteria,
             ICollection<CustomerOrder> orderByFields,
-            CancellationToken cancellationToken)
-    {
-        var totalCount = await DbContext.Customer.AsQueryable().AddSearchCriteria(searchCriteria)
-            .CountAsync(cancellationToken);
-        if (totalCount == 0)
-        {
-            return (new PaginatedInfo(false, false, null, null), [], totalCount);
-        }
-
-        var (paginatedInfo, edges) = (await DbContext.Customer
-                .AsQueryable()
-                .AddSearchCriteria(searchCriteria)
-                .AddSortingOrders(orderByFields)
-                .ApplyPaginationFilters(paginationInputParam, orderByFields)
-                .AddDependentObjects()
-                .ToListAsync(cancellationToken))
-            .ToEdges(orderByFields)
-            .GetPaginatedInfo(paginationInputParam);
-        return (paginatedInfo, edges, totalCount);
-    }
+            CancellationToken cancellationToken) =>
+        (await DbContext.Customer
+            .AsQueryable()
+            .AddSearchCriteria(searchCriteria)
+            .AddSortingOrders(orderByFields)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken))
+        .ToPaginated(paginationInputParam);
 }
