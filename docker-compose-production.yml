@@ -103,6 +103,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
       Application__WebAppBaseDomain: https://app.staging.unityhub.io
       Application__ApiBaseDomain: https://apistaging.unityhub.io
+      Application__QuerySplittingBehavior: SingleQuery
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
       Kafka__IncomingTopicPrefix: staging
@@ -182,6 +183,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
       Application__WebAppBaseDomain: https://app.staging.unityhub.io
       Application__ApiBaseDomain: https://apistaging.unityhub.io
+      Application__QuerySplittingBehavior: SingleQuery
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
       Kafka__IncomingTopicPrefix: staging
@@ -264,6 +266,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
       Application__WebAppBaseDomain: https://app.staging.unityhub.io
       Application__ApiBaseDomain: https://apistaging.unityhub.io
+      Application__QuerySplittingBehavior: SingleQuery
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
       Kafka__IncomingTopicPrefix: staging
@@ -362,6 +365,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://unityhub.io
       Application__WebAppBaseDomain: https://app.unityhub.io
       Application__ApiBaseDomain: https://api.unityhub.io
+      Application__QuerySplittingBehavior: SingleQuery
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
       Kafka__IncomingTopicPrefix: prod
@@ -441,6 +445,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://unityhub.io
       Application__WebAppBaseDomain: https://app.unityhub.io
       Application__ApiBaseDomain: https://api.unityhub.io
+      Application__QuerySplittingBehavior: SingleQuery
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
       Kafka__IncomingTopicPrefix: prod
@@ -523,6 +528,7 @@ services:
       Application__PublicWebSiteBaseDomain: https://unityhub.io
       Application__WebAppBaseDomain: https://app.unityhub.io
       Application__ApiBaseDomain: https://api.unityhub.io
+      Application__QuerySplittingBehavior: SingleQuery
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
       Kafka__IncomingTopicPrefix: prod
