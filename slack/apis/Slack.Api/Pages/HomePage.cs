@@ -578,17 +578,19 @@ public class HomePage(
 
         var from = commonPageContext.PageContext.HomePage.SelectedDate.StartOfWeek();
         var until = from.AddDays(6);
-        var response = await Task.WhenAll(GetPaginatedBookingsAsync(
-            workspace,
-            workspaceMember,
-            after,
-            first,
-            before,
-            last,
-            from,
-            until,
-            commonPageContext.PageContext.HomePage.IncludeMyBookingsOnly,
-            cancellationToken), GetMyBookingsAsync(workspace, workspaceMember, from, until, cancellationToken));
+        var response = await Task.WhenAll(
+            GetPaginatedBookingsAsync(
+                workspace,
+                workspaceMember,
+                after,
+                first,
+                before,
+                last,
+                from,
+                until,
+                commonPageContext.PageContext.HomePage.IncludeMyBookingsOnly,
+                cancellationToken),
+            GetMyBookingsAsync(workspace, workspaceMember, from, until, cancellationToken));
         var bookingConnection = response.First();
         var bookings = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var myBookings = response.Last().Edges.Select(item => mapper.MapTo(item.Node)).ToList();
