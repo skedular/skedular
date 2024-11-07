@@ -20,11 +20,7 @@ const RelayProvider = ({ children, token }: Props) => {
     return <></>;
   }
 
-  return (
-    <RelayEnvironmentProvider environment={environment}>
-      <>{children}</>
-    </RelayEnvironmentProvider>
-  );
+  return <RelayEnvironmentProvider environment={environment}>{children}</RelayEnvironmentProvider>;
 };
 
 export default RelayProvider;

@@ -128,11 +128,9 @@ const App = () => {
             <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
               <CssBaseline />
               <DatePickerLocalizationProvider>
-                <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!}>
-                  <RelayProvider token={token}>
-                    <RouterProvider router={router} />
-                  </RelayProvider>
-                </LogRocketProvider>
+                <RelayProvider token={token}>
+                  <RouterProvider router={router} />
+                </RelayProvider>
               </DatePickerLocalizationProvider>
             </ThemeProvider>
           </BreadcrumpsProvider>
@@ -141,6 +139,7 @@ const App = () => {
       <Analytics />
       <SpeedInsights />
       <MuiXLicense />
+      <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!} />
       <ToastContainer position="top-right" pauseOnFocusLoss pauseOnHover hideProgressBar={false} draggable rtl={false} />
     </>
   );

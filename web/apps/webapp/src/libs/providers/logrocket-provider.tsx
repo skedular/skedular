@@ -7,13 +7,12 @@ import setupLogRocketReact from 'logrocket-react';
 import { useEffect, useState } from 'react';
 
 type Props = {
-  children?: React.ReactNode;
   ignoreOptOutCookie: boolean;
   forceOverride: boolean;
   logRocketAppId: string | undefined;
 };
 
-const LogRocketProvider = ({ children, ignoreOptOutCookie, forceOverride, logRocketAppId }: Props) => {
+const LogRocketProvider = ({ ignoreOptOutCookie, forceOverride, logRocketAppId }: Props) => {
   const [shouldUseAnalytics, setShouldUseAnalytics] = useState(false);
 
   useEffect(() => {
@@ -44,7 +43,7 @@ const LogRocketProvider = ({ children, ignoreOptOutCookie, forceOverride, logRoc
     }
   }, [shouldUseAnalytics, logRocketAppId]);
 
-  return <>{children}</>;
+  return <></>;
 };
 
 export default LogRocketProvider;

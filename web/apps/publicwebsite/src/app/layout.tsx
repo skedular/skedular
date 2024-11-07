@@ -13,7 +13,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <AppRouterCacheProvider>
       <ThemeProvider mode={paletteMode}>
-        <DatePickerLocalizationProvider>{children}</DatePickerLocalizationProvider>
+        <DatePickerLocalizationProvider>
+          <>{children}</>
+        </DatePickerLocalizationProvider>
       </ThemeProvider>
     </AppRouterCacheProvider>
   );

@@ -3,11 +3,10 @@ import setupLogRocketReact from 'logrocket-react';
 import { useEffect } from 'react';
 
 type Props = {
-  children?: React.ReactNode;
   logRocketAppId: string | undefined;
 };
 
-const LogRocketProvider = ({ children, logRocketAppId }: Props) => {
+const LogRocketProvider = ({ logRocketAppId }: Props) => {
   useEffect(() => {
     // only initialize when in the browser
     if (typeof window !== 'undefined' && logRocketAppId) {
@@ -16,7 +15,7 @@ const LogRocketProvider = ({ children, logRocketAppId }: Props) => {
     }
   }, [logRocketAppId]);
 
-  return <>{children}</>;
+  return <></>;
 };
 
 export default LogRocketProvider;

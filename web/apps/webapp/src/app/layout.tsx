@@ -31,17 +31,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             <CssBaseline />
             <DatePickerLocalizationProvider>
               <NextAuthProvider>
-                <LogRocketProvider ignoreOptOutCookie={true} forceOverride={false} logRocketAppId={process.env.NEXT_PUBLIC_LOGROCKET_APP_ID}>
-                  <RelayProvider>
-                    <GoogleAnalyticsProvider
-                      ignoreOptOutCookie={true}
-                      forceOverride={false}
-                      googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
-                    >
-                      {children}
-                    </GoogleAnalyticsProvider>
-                  </RelayProvider>
-                </LogRocketProvider>
+                <RelayProvider>{children}</RelayProvider>
               </NextAuthProvider>
             </DatePickerLocalizationProvider>
           </ThemeProvider>
@@ -78,6 +68,12 @@ const ThemedRootLayout = ({ children }: { children: React.ReactNode }) => (
     </body>
     <GoogleAnalytics ignoreOptOutCookie={true} forceOverride={false} />
     <GoogleTagManager ignoreOptOutCookie={true} forceOverride={false} />
+    <LogRocketProvider ignoreOptOutCookie={true} forceOverride={false} logRocketAppId={process.env.NEXT_PUBLIC_LOGROCKET_APP_ID} />
+    <GoogleAnalyticsProvider
+      ignoreOptOutCookie={true}
+      forceOverride={false}
+      googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
+    />
   </html>
 );
 

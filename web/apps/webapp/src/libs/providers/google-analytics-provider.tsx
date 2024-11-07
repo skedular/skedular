@@ -7,13 +7,12 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 type Props = {
-  children?: React.ReactNode;
   ignoreOptOutCookie: boolean;
   forceOverride: boolean;
   googleTagManagerContainerId: string;
 };
 
-const GoogleAnalyticsProvider = ({ children, ignoreOptOutCookie, forceOverride, googleTagManagerContainerId }: Props) => {
+const GoogleAnalyticsProvider = ({ ignoreOptOutCookie, forceOverride, googleTagManagerContainerId }: Props) => {
   const [shouldUseAnalytics, setShouldUseAnalytics] = useState(false);
   const pathname = usePathname();
 
@@ -46,7 +45,7 @@ const GoogleAnalyticsProvider = ({ children, ignoreOptOutCookie, forceOverride, 
     }
   }, [shouldUseAnalytics, pathname, googleTagManagerContainerId]);
 
-  return <>{children}</>;
+  return <></>;
 };
 
 export default GoogleAnalyticsProvider;
