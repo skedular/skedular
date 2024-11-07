@@ -41,7 +41,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const ThemedRootLayout = ({ children }: { children: React.ReactNode }) => (
+const ThemedRootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
   <html lang="en">
     <title>UnityHub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
