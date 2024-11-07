@@ -15,9 +15,9 @@
     "@eventcatalog/core": "latest"
   },
   "devDependencies": {
-    "@parcel/watcher": "2.4.1",
+    "@parcel/watcher": "2.5.0",
     "@types/lodash.merge": "4.6.9",
-    "concurrently": "9.0.1",
+    "concurrently": "9.1.0",
     "cross-env": "7.0.3"
   }
 }
