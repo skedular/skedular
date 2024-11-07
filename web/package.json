@@ -40,7 +40,7 @@
     "@types/relay-runtime": "^18.1.1",
     "eslint": "9.14.0",
     "eslint-plugin-turbo": "^2.2.3",
-    "next": "14.2.15",
+    "next": "15.0.2",
     "global": "^4.4.0",
     "turbo": "^2.2.3"
   }
