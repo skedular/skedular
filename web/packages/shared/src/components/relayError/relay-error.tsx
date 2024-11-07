@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { RefreshIcon } from '@repo/shared/components/icons';
 import { memo } from 'react';
+import { RefreshIcon } from '../icons';
 
 export interface Error {
   message: string;

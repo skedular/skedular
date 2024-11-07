@@ -1,6 +1,5 @@
 import { StaticDatePickerSlotProps } from '@mui/x-date-pickers/StaticDatePicker';
 import type { Dayjs } from 'dayjs';
-import { memo } from 'react';
 
 export const SimpleCalendarSlotProps: StaticDatePickerSlotProps<Dayjs> = {
   leftArrowIcon: { fontSize: 'medium' },
@@ -20,4 +19,4 @@ const EmptyCalendarToolbar = () => {
   return <></>;
 };
 
-export default memo(EmptyCalendarToolbar);
+export default EmptyCalendarToolbar;

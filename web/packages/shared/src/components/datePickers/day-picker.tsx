@@ -3,11 +3,11 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '@repo/shared/components/generics';
-import { ArrowDownIcon } from '@repo/shared/components/icons';
-import { startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
+import { startOfDay, toShortDate } from '../../libs/utils';
+import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '../generics';
+import { ArrowDownIcon } from '../icons';
 
 type Props = {
   defaultDate?: Dayjs;
