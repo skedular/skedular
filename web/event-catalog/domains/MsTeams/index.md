@@ -30,7 +30,7 @@ The MsTeam Domain encompasses all services and components related to handling Mi
 
 <NodeGraph />
 
-### Team example (sequence diagram)
+### MsTeam example (sequence diagram)
 
 ```mermaid
 sequenceDiagram      
@@ -38,12 +38,3 @@ sequenceDiagram
 ```
 
 ## Flows
-
-### Add Team flow
-<Flow id="AddTeamFlow" version="latest" includeKey={false} />
-
-### Update Team flow
-<Flow id="UpdatedTeamFlow" version="latest" includeKey={false} />
-
-### Delete Team flow
-<Flow id="DeleteTeamFlow" version="latest" includeKey={false} />
