@@ -1,7 +1,6 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Box from '@mui/material/Box';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grow from '@mui/material/Grow';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
@@ -86,20 +85,18 @@ const NavigationRootLinkWithSubItems = ({ navigation: { subItems }, children }: 
             }}
           >
             <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList id="split-button-menu" autoFocusItem>
-                  {subItems &&
-                    subItems.map((navigation, index) => (
-                      <MenuItem key={index}>
-                        <NavigationRootLinkWithoutSubItems navigation={navigation}>
-                          <Typography variant="body1" component="h1">
-                            {navigation.label}
-                          </Typography>
-                        </NavigationRootLinkWithoutSubItems>
-                      </MenuItem>
-                    ))}
-                </MenuList>
-              </ClickAwayListener>
+              <MenuList id="split-button-menu" autoFocusItem>
+                {subItems &&
+                  subItems.map((navigation, index) => (
+                    <MenuItem key={index}>
+                      <NavigationRootLinkWithoutSubItems navigation={navigation}>
+                        <Typography variant="body1" component="h1">
+                          {navigation.label}
+                        </Typography>
+                      </NavigationRootLinkWithoutSubItems>
+                    </MenuItem>
+                  ))}
+              </MenuList>
             </Paper>
           </Grow>
         )}

@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
 import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
@@ -129,46 +128,44 @@ const WeekPicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
   }
 
   return (
-    <ClickAwayListener onClickAway={handleClose}>
-      <>
-        <Button variant="outlined" color="inherit" onClick={handleTodayClick} startIcon={<TodayIcon />}>
-          Today
-        </Button>
-        <IconButton color="inherit" onClick={handlePreviousWeekClick}>
-          <ArrowLeftIcon />
-        </IconButton>
-        <IconButton color="inherit" onClick={handleNextWeekClick}>
-          <ArrowRightIcon />
-        </IconButton>
-        <Button variant="text" color="inherit" onClick={handleClick} endIcon={<ArrowDownIcon />}>
-          <Typography variant="h6">{buttonTitle}</Typography>
-        </Button>
-        <Popover
-          open={Boolean(anchorEl)}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
+    <>
+      <Button variant="outlined" color="inherit" onClick={handleTodayClick} startIcon={<TodayIcon />}>
+        Today
+      </Button>
+      <IconButton color="inherit" onClick={handlePreviousWeekClick}>
+        <ArrowLeftIcon />
+      </IconButton>
+      <IconButton color="inherit" onClick={handleNextWeekClick}>
+        <ArrowRightIcon />
+      </IconButton>
+      <Button variant="text" color="inherit" onClick={handleClick} endIcon={<ArrowDownIcon />}>
+        <Typography variant="h6">{buttonTitle}</Typography>
+      </Button>
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <DateCalendar
+          value={start}
+          onChange={(newValue) => handleChange(newValue)}
+          showDaysOutsideCurrentMonth
+          slots={{ day: Day }}
+          slotProps={{
+            day: (ownerState) => ({
+              selectedDay: start,
+              hoveredDay,
+              onPointerEnter: () => setHoveredDay(ownerState.day),
+              onPointerLeave: () => setHoveredDay(null),
+            }),
           }}
-        >
-          <DateCalendar
-            value={start}
-            onChange={(newValue) => handleChange(newValue)}
-            showDaysOutsideCurrentMonth
-            slots={{ day: Day }}
-            slotProps={{
-              day: (ownerState) => ({
-                selectedDay: start,
-                hoveredDay,
-                onPointerEnter: () => setHoveredDay(ownerState.day),
-                onPointerLeave: () => setHoveredDay(null),
-              }),
-            }}
-          />
-        </Popover>
-      </>
-    </ClickAwayListener>
+        />
+      </Popover>
+    </>
   );
 };
 

@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
@@ -36,31 +35,29 @@ const DayPicker = ({ defaultDate, onDateChanged }: Props) => {
   };
 
   return (
-    <ClickAwayListener onClickAway={handleClose}>
-      <>
-        <Button variant="text" color="inherit" onClick={handleClick} endIcon={<ArrowDownIcon />}>
-          <Typography variant="h6">{toShortDate(date)}</Typography>
-        </Button>
-        <Popover
-          open={Boolean(anchorEl)}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
+    <>
+      <Button variant="text" color="inherit" onClick={handleClick} endIcon={<ArrowDownIcon />}>
+        <Typography variant="h6">{toShortDate(date)}</Typography>
+      </Button>
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <StaticDatePicker
+          slots={{
+            toolbar: EmptyCalendarToolbar,
           }}
-        >
-          <StaticDatePicker
-            slots={{
-              toolbar: EmptyCalendarToolbar,
-            }}
-            slotProps={SimpleCalendarSlotProps}
-            defaultValue={date}
-            onChange={handleChange}
-          />
-        </Popover>
-      </>
-    </ClickAwayListener>
+          slotProps={SimpleCalendarSlotProps}
+          defaultValue={date}
+          onChange={handleChange}
+        />
+      </Popover>
+    </>
   );
 };
 

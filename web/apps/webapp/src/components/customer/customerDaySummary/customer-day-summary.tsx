@@ -8,7 +8,6 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Popover from '@mui/material/Popover';
@@ -370,46 +369,44 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
   };
 
   return (
-    <ClickAwayListener onClickAway={handleClose}>
-      <>
-        <Card sx={{ maxWidth: 500, minWidth }}>
-          <CardHeader
-            title={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <Typography variant="body1">{title}</Typography>
-              </Stack>
-            }
-            subheader={getMyBookingsComponents(myBookings)}
-          />
-          <CardContent>
-            {summerizedRows.length !== 0 && (
-              <>
-                {summerizedRows.slice(0, summerizedRows.length - 1).map((row, index) => (
-                  <Stack key={index} direction="column" spacing={1}>
-                    {row}
-                    <Divider />
-                  </Stack>
-                ))}
-                {summerizedRows[summerizedRows.length - 1]}
-              </>
-            )}
-          </CardContent>
-        </Card>
-        <Popover
-          open={Boolean(bookingPopperAnchorEl)}
-          anchorEl={bookingPopperAnchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-        >
-          <Paper sx={{ border: 1, p: 1 }}>
-            <Typography variant="body1">{bookingPopperMessage}</Typography>
-          </Paper>
-        </Popover>
-      </>
-    </ClickAwayListener>
+    <>
+      <Card sx={{ maxWidth: 500, minWidth }}>
+        <CardHeader
+          title={
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Typography variant="body1">{title}</Typography>
+            </Stack>
+          }
+          subheader={getMyBookingsComponents(myBookings)}
+        />
+        <CardContent>
+          {summerizedRows.length !== 0 && (
+            <>
+              {summerizedRows.slice(0, summerizedRows.length - 1).map((row, index) => (
+                <Stack key={index} direction="column" spacing={1}>
+                  {row}
+                  <Divider />
+                </Stack>
+              ))}
+              {summerizedRows[summerizedRows.length - 1]}
+            </>
+          )}
+        </CardContent>
+      </Card>
+      <Popover
+        open={Boolean(bookingPopperAnchorEl)}
+        anchorEl={bookingPopperAnchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Paper sx={{ border: 1, p: 1 }}>
+          <Typography variant="body1">{bookingPopperMessage}</Typography>
+        </Paper>
+      </Popover>
+    </>
   );
 };
 
