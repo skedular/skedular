@@ -1,0 +1,8 @@
+Authentication:
+https://app.unityhub.io/api/auth/callback/azure-ad
+https://msteams.unityhub.io/auth-end.html?clientId=b01f91d9-c9dd-4ca3-b470-685da411ddc2
+https://api.unityhub.io/organization/api/v1/onboard-azure-tenant
+
+Expose an API:
+api://msteams.unityhub.io/67709351-7927-48d3-b17a-d129dcda5e25
+api://msteams.unityhub.io/67709351-7927-48d3-b17a-d129dcda5e25/access_as_user
