@@ -17,7 +17,6 @@ module "common_resources" {
   environment                                = local.environment
   gcp_unityhub_web_credentials_client_id     = var.gcp_unityhub_web_credentials_client_id
   gcp_unityhub_web_credentials_client_secret = var.gcp_unityhub_web_credentials_client_secret
-  slack_client_secret                        = var.slack_client_secret
   google_analytics_measurement_id            = "G-F9FYTVMKRC"
   google_tag_manager_container_id            = "GTM-5H8MKJPK"
 }

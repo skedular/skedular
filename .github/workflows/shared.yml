@@ -48,13 +48,6 @@ jobs:
           workload_identity_provider: ${{ vars.STAGING_GCP_GITHUB_ACTIONS_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.STAGING_GCP_GITHUB_ACTIONS_SERVICE_ACCOUNT }}
 
-      - name: Configure Azure credentials - staging
-        uses: azure/login@v2
-        with:
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
-          allow-no-subscriptions: true
-
       - name: Lint, Validate and Plan - staging
         uses: "./.github/actions/lint-validate-infrastructure"
         env:
@@ -80,13 +73,6 @@ jobs:
         with:
           workload_identity_provider: ${{ vars.PRODUCTION_GCP_GITHUB_ACTIONS_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.PRODUCTION_GCP_GITHUB_ACTIONS_SERVICE_ACCOUNT }}
-
-      - name: Configure Azure credentials - production
-        uses: azure/login@v2
-        with:
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
-          allow-no-subscriptions: true
 
       - name: Lint, Validate and Plan - production
         uses: "./.github/actions/lint-validate-infrastructure"
@@ -130,13 +116,6 @@ jobs:
           workload_identity_provider: ${{ vars.STAGING_GCP_GITHUB_ACTIONS_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.STAGING_GCP_GITHUB_ACTIONS_SERVICE_ACCOUNT }}
 
-      - name: Configure Azure credentials
-        uses: azure/login@v2
-        with:
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
-          allow-no-subscriptions: true
-
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"
         env:
@@ -175,13 +154,6 @@ jobs:
         with:
           workload_identity_provider: ${{ vars.PRODUCTION_GCP_GITHUB_ACTIONS_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.PRODUCTION_GCP_GITHUB_ACTIONS_SERVICE_ACCOUNT }}
-
-      - name: Configure Azure credentials
-        uses: azure/login@v2
-        with:
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
-          allow-no-subscriptions: true
 
       - name: Deploy Infrastructure
         uses: "./.github/actions/deploy-infrastructure"

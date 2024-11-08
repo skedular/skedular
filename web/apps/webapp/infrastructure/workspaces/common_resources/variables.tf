@@ -15,11 +15,6 @@ variable "gcp_unityhub_web_credentials_client_secret" {
   default     = ""
 }
 
-variable "slack_client_secret" {
-  type        = string
-  description = "slack client secret"
-}
-
 variable "google_analytics_measurement_id" {
   type        = string
   description = "Google Analytics measurement id"

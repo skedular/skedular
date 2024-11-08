@@ -95,9 +95,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: staging
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp
-      Application__IdentityProviders__Cognito__Audiences: 7369u947e21plbor9hc4n1r15n,b7lr0dm0454j4df2g6u6l2al
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC
+      Application__IdentityProviders__Cognito__Audiences: 3tnq0lamc2gbgp8dmu404mj0us
       Application__IdentityProviders__Google__ApplicationId: 661765198440-lgar8febodjaudbn3ij5tgngqiv0qioi.apps.googleusercontent.com
       Application__IdentityProviders__Google__Issuer: https://accounts.google.com
       Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
@@ -174,9 +174,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: staging
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp
-      Application__IdentityProviders__Cognito__Audiences: 7369u947e21plbor9hc4n1r15n,b7lr0dm0454j4df2g6u6l2al
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC
+      Application__IdentityProviders__Cognito__Audiences: 3tnq0lamc2gbgp8dmu404mj0us
       Application__IdentityProviders__Google__ApplicationId: 661765198440-lgar8febodjaudbn3ij5tgngqiv0qioi.apps.googleusercontent.com
       Application__IdentityProviders__Google__Issuer: https://accounts.google.com
       Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
@@ -256,9 +256,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: staging
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_D80U3krzp
-      Application__IdentityProviders__Cognito__Audiences: 7369u947e21plbor9hc4n1r15n,b7lr0dm0454j4df2g6u6l2al
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_4Dtk1H0LC
+      Application__IdentityProviders__Cognito__Audiences: 3tnq0lamc2gbgp8dmu404mj0us
       Application__IdentityProviders__Google__ApplicationId: 661765198440-lgar8febodjaudbn3ij5tgngqiv0qioi.apps.googleusercontent.com
       Application__IdentityProviders__Google__Issuer: https://accounts.google.com
       Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
@@ -354,9 +354,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: prod
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF
-      Application__IdentityProviders__Cognito__Audiences: 275ohbeul0cra95kbmpqr6d4o,5kiq7l4sclaloiqgnelj7mcd5g
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd
+      Application__IdentityProviders__Cognito__Audiences: 4lfik3fdpunv0tj94h5gp1ugd3
       Application__IdentityProviders__Google__ApplicationId: 874220940328-a7o1801134uepnlijk69sue6fs1nl8gr.apps.googleusercontent.com
       Application__IdentityProviders__Google__Issuer: https://accounts.google.com
       Application__PublicWebSiteBaseDomain: https://unityhub.io
@@ -433,9 +433,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: prod
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF
-      Application__IdentityProviders__Cognito__Audiences: 275ohbeul0cra95kbmpqr6d4o,5kiq7l4sclaloiqgnelj7mcd5g
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd
+      Application__IdentityProviders__Cognito__Audiences: 4lfik3fdpunv0tj94h5gp1ugd3
       Application__IdentityProviders__Google__ApplicationId: 874220940328-a7o1801134uepnlijk69sue6fs1nl8gr.apps.googleusercontent.com
       Application__IdentityProviders__Google__Issuer: https://accounts.google.com
       Application__PublicWebSiteBaseDomain: https://unityhub.io
@@ -515,9 +515,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: prod
-      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF/.well-known/jwks.json
-      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_r3lSnXyzF
-      Application__IdentityProviders__Cognito__Audiences: 275ohbeul0cra95kbmpqr6d4o,5kiq7l4sclaloiqgnelj7mcd5g
+      Application__IdentityProviders__Cognito__JwksUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd/.well-known/jwks.json
+      Application__IdentityProviders__Cognito__Issuer: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XBe135wsd
+      Application__IdentityProviders__Cognito__Audiences: 4lfik3fdpunv0tj94h5gp1ugd3
       Application__IdentityProviders__Google__ApplicationId: 874220940328-a7o1801134uepnlijk69sue6fs1nl8gr.apps.googleusercontent.com
       Application__IdentityProviders__Google__Issuer: https://accounts.google.com
       Application__PublicWebSiteBaseDomain: https://unityhub.io

@@ -25,8 +25,3 @@ variable "gcp_unityhub_web_credentials_client_secret" {
   description = "GCP UnityHub web credentials client Secret"
   default     = ""
 }
-
-variable "slack_client_secret" {
-  type        = string
-  description = "slack client secret"
-}

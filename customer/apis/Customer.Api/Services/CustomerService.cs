@@ -57,7 +57,8 @@ public class CustomerService(
     IContext context,
     IRandomHelper randomHelper,
     INotificationOutboxPublisher notificationOutboxPublisher,
-    ICachedCustomerService cachedCustomerService) : ICustomerService
+    ICachedCustomerService cachedCustomerService,
+    TimeProvider timeProvider) : ICustomerService
 {
     public async Task<Shared.Models.Customer> GetByIdAsync(string customerId, CancellationToken cancellationToken)
     {
@@ -263,8 +264,9 @@ public class CustomerService(
         }
         else
         {
-            existingCustomer.Identities =
-                existingCustomer.Identities.Concat([mapper.MapToIdentity(context.PropertyBag)]).ToList();
+            var identity = mapper.MapToIdentity(context.PropertyBag);
+            identity.CreatedAt = timeProvider.GetUtcNow();
+            existingCustomer.Identities = existingCustomer.Identities.Concat([identity]).ToList();
             customer = mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer));
         }
 
@@ -272,7 +274,6 @@ public class CustomerService(
             [customer],
             repositoryFactory.CustomerRepository.UnitOfWork,
             cancellationToken);
-
 
         if (sendNewCustomerJoinedEmail)
         {
