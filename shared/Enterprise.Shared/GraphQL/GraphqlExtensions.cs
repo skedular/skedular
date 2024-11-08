@@ -32,7 +32,6 @@ public static class GraphqlExtensions
             .AddGraphQLServer()
             .RegisterDbContext<TDbContext>(DbContextKind.Pooled)
             .InitializeOnStartup()
-            .RegisterService<IServiceProvider>()
             .AllowIntrospection(graphqlConfig.IntrospectionEnabled)
             .AddCustomGraphqlInstrumentation();
 
