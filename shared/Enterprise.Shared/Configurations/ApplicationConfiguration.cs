@@ -15,7 +15,7 @@ public class ApplicationConfiguration
     public bool EnableSchemaRegistry { get; set; }
     public IdentityProviders IdentityProviders { get; set; } = new();
     public QuerySplittingBehavior? QuerySplittingBehavior { get; set; }
-    public string GetSource() => $"{DomainSource}::{AppSource}";
+    public string GetSource() => $"{Environment}::{DomainSource}::{AppSource}";
 }
 
 public class IdentityProviders
