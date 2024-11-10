@@ -61,38 +61,27 @@ resource "azuread_application" "azure_application" {
     # }
 
     resource_access {
-      # User.ReadBasic.All
-      id   = "97235f07-e226-4f63-ace3-39588e11d3a1"
+      id   = "97235f07-e226-4f63-ace3-39588e11d3a1" # User.ReadBasic.All
       type = "Role"
     }
-
     resource_access {
-      # ProfilePhoto.Read.All
-      id   = "e24d31aa-e1ab-4c80-85fe-23018690335d"
+      id   = "e24d31aa-e1ab-4c80-85fe-23018690335d" # ProfilePhoto.Read.All
       type = "Role"
     }
-
     resource_access {
-      # ChannelSettings.ReadWrite.All
-      id   = "243cded2-bd16-4fd6-a953-ff8177894c3d"
+      id   = "243cded2-bd16-4fd6-a953-ff8177894c3d" # ChannelSettings.ReadWrite.All
       type = "Role"
     }
-
     resource_access {
-      # Group.ReadWrite.All
-      id   = "62a82d76-70ea-41e2-9197-370581804d09"
+      id   = "62a82d76-70ea-41e2-9197-370581804d09" # Group.ReadWrite.All
       type = "Role"
     }
-
     resource_access {
-      # Team.ReadBasic.All
-      id   = "2280dda6-0bfd-44ee-a2f4-cb867cfc4c1e"
+      id   = "2280dda6-0bfd-44ee-a2f4-cb867cfc4c1e" # Team.ReadBasic.All
       type = "Role"
     }
-
     resource_access {
-      # Teamwork.Migrate.All
-      id   = "dfb0dd15-61de-45b2-be36-d6a69fba3c79"
+      id   = "dfb0dd15-61de-45b2-be36-d6a69fba3c79" # Teamwork.Migrate.All
       type = "Role"
     }
   }
