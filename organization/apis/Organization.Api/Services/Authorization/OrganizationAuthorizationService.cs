@@ -16,7 +16,9 @@ public interface IOrganizationAuthorizationService
     Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
-public class OrganizationAuthorizationService(ICachedCustomerService cachedCustomerService, IRepositoryFactory repositoryFactory)
+public class OrganizationAuthorizationService(
+    ICachedCustomerService cachedCustomerService,
+    IRepositoryFactory repositoryFactory)
     : IOrganizationAuthorizationService
 {
     public bool CanView(Shared.Database.Entities.Organization organization, Customer customer) =>

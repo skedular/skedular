@@ -1,7 +1,5 @@
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Notification.Api.Mappers;
 using Notification.Shared.Models;
@@ -14,7 +12,8 @@ public interface ICachedCustomerService
     Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     Task<(Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
     Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
-    Task<(Customer, Shared.Database.Entities.Customer)> GetByIdAsync(string id,CancellationToken cancellationToken);
+    Task<(Customer, Shared.Database.Entities.Customer)> GetByIdAsync(string id, CancellationToken cancellationToken);
+
     Task<(Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(
         string verifiableToken,
         CancellationToken cancellationToken);

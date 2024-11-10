@@ -1,11 +1,11 @@
-using Location.Shared;
-using Location.Shared.Database;
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Outbox;
+using Location.Shared;
 using Location.Shared.Configurations;
+using Location.Shared.Database;
 
 namespace Location.Jobs;
 

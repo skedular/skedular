@@ -19,7 +19,7 @@ public class Mapper : IMapper
             Id = src.Id,
             EventRaisedAt = src.EventRaisedAt
         };
-    
+
     public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
         src is null
             ? null
@@ -30,6 +30,6 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Timezone = src.Timezone,
+                Timezone = src.Timezone
             };
 }

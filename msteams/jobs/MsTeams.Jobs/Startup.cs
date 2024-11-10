@@ -1,10 +1,10 @@
-using MsTeams.Shared;
-using MsTeams.Shared.Database;
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Outbox;
+using MsTeams.Shared;
+using MsTeams.Shared.Database;
 
 namespace MsTeams.Jobs;
 
