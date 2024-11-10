@@ -68,17 +68,6 @@ public class CustomerRepository(MsTeamsDbContext dbContext, TimeProvider timePro
                     .OrderBy(query => query.Id)
                     .FirstOrDefault());
 
-    private static readonly Func<MsTeamsDbContext, CancellationToken, Task<ICollection<Customer>>>
-        s_getAllQueryAsync =
-            EF.CompileAsyncQuery<MsTeamsDbContext, CancellationToken, ICollection<Customer>>((
-                    dbContext,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .Where(query => !query.DeletedAt.HasValue)
-                    .OrderBy(query => query.Id)
-                    .ToList());
-
     public async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         var existing = await GetByIdAsync(id, cancellationToken);
@@ -102,7 +91,11 @@ public class CustomerRepository(MsTeamsDbContext dbContext, TimeProvider timePro
         await s_getByEmailQueryAsync(DbContext, email, cancellationToken);
 
     public async Task<ICollection<Customer>> GetAllAsync(CancellationToken cancellationToken) =>
-        await s_getAllQueryAsync(DbContext, cancellationToken);
+        await DbContext.Customer
+            .AddDependentObjects()
+            .Where(query => !query.DeletedAt.HasValue)
+            .OrderBy(query => query.Id)
+            .ToListAsync(cancellationToken);
 
     public Customer Add(Customer customer)
     {

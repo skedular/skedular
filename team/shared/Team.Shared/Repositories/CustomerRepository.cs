@@ -75,17 +75,6 @@ public class CustomerRepository(TeamDbContext dbContext, TimeProvider timeProvid
                     .OrderBy(query => query.Id)
                     .FirstOrDefault());
 
-    private static readonly Func<TeamDbContext, CancellationToken, Task<ICollection<Customer>>>
-        s_getAllQueryAsync =
-            EF.CompileAsyncQuery<TeamDbContext, CancellationToken, ICollection<Customer>>((
-                    dbContext,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .Where(query => !query.DeletedAt.HasValue)
-                    .OrderBy(query => query.Id)
-                    .ToList());
-
     private static readonly Func<TeamDbContext, ICollection<string>, CancellationToken, Task<ICollection<Customer>>>
         s_getByIdsQueryAsync =
             EF.CompileAsyncQuery<TeamDbContext, ICollection<string>, CancellationToken, ICollection<Customer>>((
@@ -121,7 +110,11 @@ public class CustomerRepository(TeamDbContext dbContext, TimeProvider timeProvid
         await s_getByEmailQueryAsync(DbContext, email, cancellationToken);
 
     public async Task<ICollection<Customer>> GetAllAsync(CancellationToken cancellationToken) =>
-        await s_getAllQueryAsync(DbContext, cancellationToken);
+        await DbContext.Customer
+            .AddDependentObjects()
+            .Where(query => !query.DeletedAt.HasValue)
+            .OrderBy(query => query.Id)
+            .ToListAsync(cancellationToken);
 
     public async Task<ICollection<Customer>>
         GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
