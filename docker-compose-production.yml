@@ -68,6 +68,18 @@ services:
         aliases:
           - kafka1.localhost
 
+  kowl:
+    image: docker.redpanda.com/redpandadata/console:latest
+    restart: unless-stopped
+    depends_on:
+      - kafka1
+    environment:
+      KAFKA_BROKERS: "kafka1.localhost:19092"
+    ports:
+      - 8888:8080
+    networks:
+      - unityhubio_network
+
   staging-infra-provision:
     image: ghcr.io/unityhubio/allinfra:latest
     restart: on-failure
