@@ -152,7 +152,6 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
             ICollection<OrganizationMemberOrder> orderByFields,
             CancellationToken cancellationToken) =>
         (await DbContext.OrganizationMember
-            .AsQueryable()
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()

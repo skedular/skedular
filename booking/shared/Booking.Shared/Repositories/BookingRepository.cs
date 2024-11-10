@@ -244,7 +244,6 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         ICollection<BookingOrder> orderByFields,
         CancellationToken cancellationToken) =>
         (await DbContext.Booking
-            .AsQueryable()
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()

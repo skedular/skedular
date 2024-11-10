@@ -156,7 +156,6 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
             ICollection<TeamMemberOrder> orderByFields,
             CancellationToken cancellationToken) =>
         (await DbContext.TeamMember
-            .AsQueryable()
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()

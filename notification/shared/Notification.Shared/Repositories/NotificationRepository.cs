@@ -126,7 +126,6 @@ public class NotificationRepository(NotificationDbContext dbContext, TimeProvide
             ICollection<NotificationOrder> orderByFields,
             CancellationToken cancellationToken) =>
         (await DbContext.Notification
-            .AsQueryable()
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()

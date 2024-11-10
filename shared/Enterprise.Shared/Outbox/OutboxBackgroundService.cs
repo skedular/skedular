@@ -28,12 +28,14 @@ public class OutboxBackgroundService<TDbContext>(
     private static readonly Func<TDbContext, DateTimeOffset, CancellationToken, Task<Database.Entities.Outbox?>>
         s_getOutboxItemQueryAsync =
             EF.CompileAsyncQuery<TDbContext, DateTimeOffset, Database.Entities.Outbox?>((
-                context,
-                thresholdRetryTime,
-                token) => context.Outbox.TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
-                .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdRetryTime)
-                .OrderBy(query => query.RetryCount)
-                .FirstOrDefault());
+                    dbContext,
+                    thresholdRetryTime,
+                    cancellationToken) =>
+                dbContext.Outbox
+                    .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
+                    .Where(query => query.RetryCount == 0 || query.LastRetry < thresholdRetryTime)
+                    .OrderBy(query => query.RetryCount)
+                    .FirstOrDefault());
 
     /// <summary>
     ///     Signals to poll the database. Triggered either by the <see cref="OutboxEvents.ItemAdded" /> or the
@@ -79,10 +81,7 @@ public class OutboxBackgroundService<TDbContext>(
 
             await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
             await using var transaction =
-                await dbContext.Database.BeginTransactionAsync(
-                    IsolationLevel.ReadCommitted,
-                    cancellationToken);
-
+                await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
             var retryTime = TimeSpan.FromSeconds(OutboxParameters.RetryTime.TotalSeconds);
             var thresholdTime = DateTimeOffset.UtcNow - retryTime;
             var outboxEvent = await s_getOutboxItemQueryAsync(dbContext, thresholdTime, cancellationToken);

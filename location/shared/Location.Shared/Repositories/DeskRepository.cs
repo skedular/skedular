@@ -121,7 +121,6 @@ public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvid
         ICollection<DeskOrder> orderByFields,
         CancellationToken cancellationToken) =>
         (await DbContext.Desk
-            .AsQueryable()
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()

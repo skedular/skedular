@@ -189,7 +189,6 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         ICollection<LocationOrder> orderByFields,
         CancellationToken cancellationToken) =>
         (await DbContext.Location
-            .AsQueryable()
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()

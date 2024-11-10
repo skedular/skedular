@@ -151,7 +151,6 @@ public class LocationMemberRepository(LocationDbContext dbContext, TimeProvider 
         ICollection<LocationMemberOrder> orderByFields,
         CancellationToken cancellationToken) =>
         (await DbContext.LocationMember
-            .AsQueryable()
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()

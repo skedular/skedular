@@ -13,13 +13,13 @@ public interface ICustomerRepository : IRepository<Database.Entities.Customer>
 {
     Task<Database.Entities.Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Customer>> GetAllAsync(CancellationToken cancellationToken);
 
     Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(
         string verifiableToken,
         CancellationToken cancellationToken);
 
     Task<Database.Entities.Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Customer>> GetAllAsync(CancellationToken cancellationToken);
     Database.Entities.Customer Add(Database.Entities.Customer customer);
     Database.Entities.Customer Update(Database.Entities.Customer customer);
     Database.Entities.Customer Remove(Database.Entities.Customer customer);
@@ -148,6 +148,56 @@ internal static class CustomerExtensions
 public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<CustomerDbContext, Database.Entities.Customer>(dbContext), ICustomerRepository
 {
+    private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
+        s_getByIdQueryAsync =
+            EF.CompileAsyncQuery<CustomerDbContext, string, CancellationToken, Database.Entities.Customer?>((
+                    dbContext,
+                    id,
+                    cancellationToken) =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .Where(query => query.Id == id)
+                    .OrderBy(query => query.Id)
+                    .FirstOrDefault());
+
+    private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
+        s_getByVerifiableTokenQueryAsync =
+            EF.CompileAsyncQuery<CustomerDbContext, string, CancellationToken, Database.Entities.Customer?>((
+                    dbContext,
+                    verifiableToken,
+                    cancellationToken) =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .Where(query => !query.DeletedAt.HasValue &&
+                                    query.Identities.Select(identity => identity.Id).Contains(verifiableToken))
+                    .OrderBy(query => query.Id)
+                    .FirstOrDefault());
+
+    private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
+        s_getByEmailQueryAsync =
+            EF.CompileAsyncQuery<CustomerDbContext, string, CancellationToken, Database.Entities.Customer?>((
+                    dbContext,
+                    email,
+                    cancellationToken) =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .Where(query => !query.DeletedAt.HasValue &&
+                                    query.Identities.Any(identity =>
+                                        identity.Email != null && EF.Functions.ILike(identity.Email, email)))
+                    .OrderBy(query => query.Id)
+                    .FirstOrDefault());
+
+    private static readonly Func<CustomerDbContext, CancellationToken, Task<ICollection<Database.Entities.Customer>>>
+        s_getAllQueryAsync =
+            EF.CompileAsyncQuery<CustomerDbContext, CancellationToken, ICollection<Database.Entities.Customer>>((
+                    dbContext,
+                    cancellationToken) =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .Where(query => !query.DeletedAt.HasValue)
+                    .OrderBy(query => query.Id)
+                    .ToList());
+
     public async Task<Database.Entities.Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         var existing = await GetByIdAsync(id, cancellationToken);
@@ -161,35 +211,18 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
     }
 
     public async Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Customer
-            .AddDependentObjects()
-            .Where(query => query.Id == id)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
-
-    public async Task<ICollection<Database.Entities.Customer>> GetAllAsync(CancellationToken cancellationToken) =>
-        await DbContext.Customer.AddDependentObjects().Where(query => !query.DeletedAt.HasValue)
-            .ToListAsync(cancellationToken);
+        await s_getByIdQueryAsync(DbContext, id, cancellationToken);
 
     public async Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(
         string verifiableToken,
         CancellationToken cancellationToken) =>
-        await DbContext.Customer.AddDependentObjects()
-            .Where(query => !query.DeletedAt.HasValue &&
-                            query.Identities.Select(identity => identity.Id).Contains(verifiableToken))
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        await s_getByVerifiableTokenQueryAsync(DbContext, verifiableToken, cancellationToken);
 
-    public async Task<Database.Entities.Customer?> GetByEmailAsync(
-        string email,
-        CancellationToken cancellationToken) =>
-        await DbContext.Customer.AddDependentObjects()
-            .Where(query => !query.DeletedAt.HasValue &&
-                            query.Identities.Any(identity =>
-                                identity.Email != null && EF.Functions.ILike(identity.Email, email)))
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+    public async Task<Database.Entities.Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>
+        await s_getByEmailQueryAsync(DbContext, email, cancellationToken);
 
+    public async Task<ICollection<Database.Entities.Customer>> GetAllAsync(CancellationToken cancellationToken) =>
+        await s_getAllQueryAsync(DbContext, cancellationToken);
 
     public Database.Entities.Customer Add(Database.Entities.Customer customer)
     {
@@ -219,7 +252,6 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
             ICollection<CustomerOrder> orderByFields,
             CancellationToken cancellationToken) =>
         (await DbContext.Customer
-            .AsQueryable()
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()

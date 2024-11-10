@@ -122,7 +122,6 @@ public class TagRepository(LocationDbContext dbContext, TimeProvider timeProvide
         ICollection<TagOrder> orderByFields,
         CancellationToken cancellationToken) =>
         (await DbContext.Tag
-            .AsQueryable()
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()
