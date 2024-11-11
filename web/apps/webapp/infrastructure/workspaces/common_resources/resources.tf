@@ -248,20 +248,3 @@ resource "cloudflare_record" "default_1" {
     vercel_project_domain.default,
   ]
 }
-
-data "cloudflare_zone" "default_2" {
-  name = module.shared_common.cloudflare_webapp_domain_name_2
-}
-
-resource "cloudflare_record" "default_2" {
-  zone_id = data.cloudflare_zone.default_2.id
-  name    = module.shared_common.webapp_domain_name_2
-  content = "cname.vercel-dns.com."
-  type    = "CNAME"
-  proxied = false
-  ttl     = 600
-
-  depends_on = [
-    vercel_project_domain.default,
-  ]
-}
