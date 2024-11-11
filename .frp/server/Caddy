@@ -65,3 +65,43 @@ mweb.unityhub.io {
 mmsteams.unityhub.io {
 	reverse_proxy localhost:7000
 }
+
+staging.getskedular.com {
+	reverse_proxy localhost:8080
+}
+
+getskedular.com {
+	reverse_proxy localhost:8081
+}
+
+dev1.getskedular.com {
+	reverse_proxy localhost:8082
+}
+
+apistaging.skedular.app {
+	reverse_proxy localhost:9000
+}
+
+api.skedular.app {
+	reverse_proxy localhost:9001
+}
+
+slackapistaging.skedular.app {
+	reverse_proxy localhost:10000
+}
+
+slackapi.skedular.app {
+	reverse_proxy localhost:10001
+}
+
+mapp.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+mweb.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+mmsteams.skedular.app {
+	reverse_proxy localhost:7000
+}
