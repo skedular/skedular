@@ -41,7 +41,7 @@ module "common" {
 }
 
 data "aws_ses_domain_identity" "default" {
-  domain = module.shared_common.simple_email_service_domain
+  domain = module.shared_common.simple_email_service_domain_1
 }
 
 data "aws_ssm_parameter" "parameter_store_name_new_customer_feedback_through_web_email_template_arn" {

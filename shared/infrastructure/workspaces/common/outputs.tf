@@ -1,5 +1,22 @@
-output "cloudflare_domain_name" {
-  value = local.domain
+locals {
+  is_production = var.environment == "production"
+
+  public_website_domain_root_1 = "unityhub.io"
+  webapp_domain_root_1         = "unityhub.io"
+  public_website_domain_1      = local.is_production ? local.public_website_domain_root_1 : "${var.environment}.${local.public_website_domain_root_1}"
+  webapp_domain_1              = local.is_production ? "app.${local.webapp_domain_root_1}" : "app.${var.environment}.${local.webapp_domain_root_1}"
+  api_domain_1                 = local.is_production ? "api.${local.webapp_domain_root_1}" : "api${var.environment}.${local.webapp_domain_root_1}"
+  slack_api_domain_1           = local.is_production ? "slackapi.${local.webapp_domain_root_1}" : "slackapi${var.environment}.${local.webapp_domain_root_1}"
+  msteams_webapp_domain_1      = local.is_production ? "msteams.${local.webapp_domain_root_1}" : "msteams.${var.environment}.${local.webapp_domain_root_1}"
+  eventcatalog_webapp_domain_1 = local.is_production ? "eventcatalog.${local.webapp_domain_root_1}" : "eventcatalog.${var.environment}.${local.webapp_domain_root_1}"
+}
+
+output "cloudflare_public_website_domain_name_1" {
+  value = local.public_website_domain_root_1
+}
+
+output "cloudflare_webapp_domain_name_1" {
+  value = local.webapp_domain_root_1
 }
 
 output "aws_region" {
@@ -19,19 +36,19 @@ output "cognito_user_pool_name" {
 }
 
 output "cognito_user_pool_domain" {
-  value = var.environment == "production" ? "unityhub" : "${var.environment}unityhub"
+  value = local.is_production ? "unityhub" : "${var.environment}unityhub"
 }
 
-output "simple_email_service_domain" {
-  value = var.environment == "production" ? local.domain : "${var.environment}.${local.domain}"
+output "simple_email_service_domain_1" {
+  value = local.public_website_domain_1
 }
 
-output "from_email_address" {
-  value = var.environment == "production" ? "no-reply@${local.domain}" : "no-reply@${var.environment}.${local.domain}"
+output "from_email_address_1" {
+  value = "no-reply@${local.public_website_domain_1}"
 }
 
-output "reply_to_email_address" {
-  value = var.environment == "production" ? "no-reply@${local.domain}" : "no-reply@${var.environment}.${local.domain}"
+output "reply_to_email_address_1" {
+  value = "no-reply@${local.public_website_domain_1}"
 }
 
 output "gcp_project_id" {
@@ -66,24 +83,20 @@ output "parameter_store_name_aws_github_actions_unityhubio_unityhubioassume_role
   value = "github_actions_unityhubio_unityhubio_assume_role_arn"
 }
 
-output "domain_name" {
-  value = var.environment == "production" ? local.domain : "${var.environment}.${local.domain}"
-}
-
 output "api_domain_name" {
-  value = var.environment == "production" ? "api.${local.domain}" : "api${var.environment}.${local.domain}"
+  value = local.api_domain_1
 }
 
-output "webapp_domain_name" {
-  value = var.environment == "production" ? "app.${local.domain}" : "app.${var.environment}.${local.domain}"
+output "webapp_domain_name_1" {
+  value = local.webapp_domain_1
 }
 
-output "msteams_webapp_domain_name" {
-  value = var.environment == "production" ? "msteams.${local.domain}" : "msteams.${var.environment}.${local.domain}"
+output "msteams_webapp_domain_name_1" {
+  value = local.msteams_webapp_domain_1
 }
 
-output "eventcatalog_webapp_domain_name" {
-  value = var.environment == "production" ? "eventcatalog.${local.domain}" : "eventcatalog.${var.environment}.${local.domain}"
+output "eventcatalog_webapp_domain_name_1" {
+  value = local.eventcatalog_webapp_domain_1
 }
 
 output "logrocket_publicwebsite_app_id" {
@@ -99,11 +112,11 @@ output "logrocket_msteams_webapp_app_id" {
 }
 
 output "microanalytics_publicwebsite_app_id" {
-  value = var.environment == "production" ? "ZwSg9rf6GA" : "ZwSg9rf6GA"
+  value = local.is_production ? "ZwSg9rf6GA" : "ZwSg9rf6GA"
 }
 
 output "microanalytics_webapp_app_id" {
-  value = var.environment == "production" ? "ZwSg9rf6GA" : "ZwSg9rf6GA"
+  value = local.is_production ? "ZwSg9rf6GA" : "ZwSg9rf6GA"
 }
 
 output "parameter_store_name_stripe_pay_as_you_go_v1_product_id" {
@@ -115,11 +128,11 @@ output "parameter_store_name_stripe_pay_as_you_go_v1_product_unit_amount" {
 }
 
 output "slack_app_id" {
-  value = var.environment == "production" ? "A05H015F9QE" : "A05H0126U7Q"
+  value = local.is_production ? "A05H015F9QE" : "A05H0126U7Q"
 }
 
 output "slack_client_id" {
-  value = var.environment == "production" ? "118234978193.5578039519830" : "118234978193.5578036232262"
+  value = local.is_production ? "118234978193.5578039519830" : "118234978193.5578036232262"
 }
 
 output "api_gateway_name" {

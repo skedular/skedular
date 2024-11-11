@@ -24,17 +24,13 @@ locals {
   user_pool_id = tolist(data.aws_cognito_user_pools.user_pool.ids)[0]
 }
 
-data "cloudflare_zone" "default" {
-  name = module.shared_common.cloudflare_domain_name
-}
-
 resource "aws_cognito_user_pool_client" "default" {
   name         = module.common.cognito_user_pool_client_name
   user_pool_id = local.user_pool_id
 
   callback_urls = [
     "http://localhost:15000/api/auth/callback/cognito",
-    "https://${module.shared_common.webapp_domain_name}/api/auth/callback/cognito",
+    "https://${module.shared_common.webapp_domain_name_1}/api/auth/callback/cognito",
     "https://mweb.unityhub.io/api/auth/callback/cognito",
   ]
 
@@ -87,12 +83,12 @@ resource "vercel_project" "default" {
     },
     {
       key    = "NEXTAUTH_URL"
-      value  = "https://${module.shared_common.webapp_domain_name}"
+      value  = "https://${module.shared_common.webapp_domain_name_1}"
       target = ["development", "preview", "production"]
     },
     {
       key    = "NEXT_PUBLIC_SITE_URL"
-      value  = "https://${module.shared_common.webapp_domain_name}"
+      value  = "https://${module.shared_common.webapp_domain_name_1}"
       target = ["development", "preview", "production"]
     },
     {
@@ -221,7 +217,7 @@ resource "vercel_project" "default" {
 resource "vercel_project_domain" "default" {
   project_id = vercel_project.default.id
   team_id    = local.team_id
-  domain     = module.shared_common.webapp_domain_name
+  domain     = module.shared_common.webapp_domain_name_1
 }
 
 data "vercel_project_directory" "default" {
@@ -236,9 +232,13 @@ resource "vercel_deployment" "default" {
   team_id     = local.team_id
 }
 
-resource "cloudflare_record" "default" {
-  zone_id = data.cloudflare_zone.default.id
-  name    = module.shared_common.webapp_domain_name
+data "cloudflare_zone" "default_1" {
+  name = module.shared_common.cloudflare_webapp_domain_name_1
+}
+
+resource "cloudflare_record" "default_1" {
+  zone_id = data.cloudflare_zone.default_1.id
+  name    = module.shared_common.webapp_domain_name_1
   content = "cname.vercel-dns.com."
   type    = "CNAME"
   proxied = false

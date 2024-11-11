@@ -16,10 +16,6 @@ module "shared_common" {
   environment = var.environment
 }
 
-data "cloudflare_zone" "default" {
-  name = module.shared_common.cloudflare_domain_name
-}
-
 data "aws_ssm_parameter" "parameter_store_name_azure_application_id" {
   name = module.shared_common.parameter_store_name_azure_application_id
 }
@@ -38,7 +34,7 @@ resource "vercel_project" "default" {
   environment = [
     {
       key    = "REACT_APP_BASE_URL"
-      value  = "https://${module.shared_common.msteams_webapp_domain_name}"
+      value  = "https://${module.shared_common.msteams_webapp_domain_name_1}"
       target = ["development", "preview", "production"]
     },
     {
@@ -112,7 +108,7 @@ resource "vercel_project" "default" {
 resource "vercel_project_domain" "default" {
   project_id = vercel_project.default.id
   team_id    = local.team_id
-  domain     = module.shared_common.msteams_webapp_domain_name
+  domain     = module.shared_common.msteams_webapp_domain_name_1
 }
 
 data "vercel_project_directory" "default" {
@@ -127,9 +123,13 @@ resource "vercel_deployment" "default" {
   team_id     = local.team_id
 }
 
-resource "cloudflare_record" "default" {
-  zone_id = data.cloudflare_zone.default.id
-  name    = module.shared_common.msteams_webapp_domain_name
+data "cloudflare_zone" "default_1" {
+  name = module.shared_common.cloudflare_webapp_domain_name_1
+}
+
+resource "cloudflare_record" "default_1" {
+  zone_id = data.cloudflare_zone.default_1.id
+  name    = module.shared_common.msteams_webapp_domain_name_1
   content = "cname.vercel-dns.com."
   type    = "CNAME"
   proxied = false

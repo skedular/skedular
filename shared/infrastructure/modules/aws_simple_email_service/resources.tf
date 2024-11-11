@@ -6,10 +6,6 @@ resource "aws_ses_domain_dkim" "default" {
   domain = aws_ses_domain_identity.default.domain
 }
 
-data "cloudflare_zone" "default" {
-  name = var.cloudflare_domain
-}
-
 resource "cloudflare_record" "dkim" {
   count   = 3
   zone_id = data.cloudflare_zone.default.id
@@ -18,6 +14,10 @@ resource "cloudflare_record" "dkim" {
   type    = "CNAME"
   proxied = false
   ttl     = 600
+}
+
+data "cloudflare_zone" "default" {
+  name = var.cloudflare_domain
 }
 
 resource "cloudflare_record" "dmarc" {
