@@ -16,10 +16,6 @@ module "shared_common" {
   environment = var.environment
 }
 
-data "aws_ssm_parameter" "parameter_store_name_azure_application_id" {
-  name = module.shared_common.parameter_store_name_azure_application_id
-}
-
 resource "vercel_project" "default" {
   name             = module.common.project_name
   team_id          = local.team_id
