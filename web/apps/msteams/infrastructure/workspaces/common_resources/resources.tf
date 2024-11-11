@@ -34,7 +34,7 @@ resource "vercel_project" "default" {
   environment = [
     {
       key    = "REACT_APP_BASE_URL"
-      value  = "https://${module.shared_common.msteams_webapp_domain_name_1}"
+      value  = "https://${module.shared_common.msteams_webapp_domain_name_2}"
       target = ["development", "preview", "production"]
     },
     {
@@ -49,57 +49,57 @@ resource "vercel_project" "default" {
     },
     {
       key    = "REACT_APP_GATEWAY_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/gateway/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/gateway/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_CUSTOMER_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/customer/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/customer/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_ORGANIZATION_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/organization/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/organization/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_BOOKING_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/booking/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/booking/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_NOTIFICATION_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/notification/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/notification/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_TEAM_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/team/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/team/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_LOCATION_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/location/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/location/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_SLACK_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/slack/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/slack/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_PAYMENT_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/payment/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/payment/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_BILLING_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/billing/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/billing/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_MSTEAMS_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/msteams/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/msteams/api/"
       target = ["development", "preview", "production"]
     }
   ]
@@ -108,7 +108,7 @@ resource "vercel_project" "default" {
 resource "vercel_project_domain" "default" {
   project_id = vercel_project.default.id
   team_id    = local.team_id
-  domain     = module.shared_common.msteams_webapp_domain_name_1
+  domain     = module.shared_common.msteams_webapp_domain_name_2
 }
 
 data "vercel_project_directory" "default" {
@@ -124,12 +124,12 @@ resource "vercel_deployment" "default" {
 }
 
 data "cloudflare_zone" "default_1" {
-  name = module.shared_common.cloudflare_webapp_domain_name_1
+  name = module.shared_common.cloudflare_webapp_domain_name_2
 }
 
 resource "cloudflare_record" "default_1" {
   zone_id = data.cloudflare_zone.default_1.id
-  name    = module.shared_common.msteams_webapp_domain_name_1
+  name    = module.shared_common.msteams_webapp_domain_name_2
   content = "cname.vercel-dns.com."
   type    = "CNAME"
   proxied = false
