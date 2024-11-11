@@ -30,7 +30,19 @@ module "simple_email_service_1" {
 
   tags              = local.tags
   domain            = module.common.simple_email_service_domain_1
-  cloudflare_domain = module.common.cloudflare_webapp_domain_name_1
+  cloudflare_domain = module.common.cloudflare_public_website_domain_name_1
+}
+
+module "simple_email_service_2" {
+  source = "../../modules/aws_simple_email_service"
+  providers = {
+    aws        = aws
+    cloudflare = cloudflare
+  }
+
+  tags              = local.tags
+  domain            = module.common.simple_email_service_domain_2
+  cloudflare_domain = module.common.cloudflare_public_website_domain_name_2
 }
 
 module "cognito_user_pool" {
