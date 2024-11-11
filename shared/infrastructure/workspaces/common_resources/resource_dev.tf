@@ -4,9 +4,19 @@ locals {
   dns_records_dev            = ["contabo", "mweb", "mapp", "dev1"]
 }
 
-resource "cloudflare_record" "cloudflare_dns_records_dev" {
+resource "cloudflare_record" "cloudflare_dns_records_dev_1" {
   count   = local.is_staging ? length(local.dns_records_dev) : 0
   zone_id = data.cloudflare_zone.webapp_1.id
+  name    = element(local.dns_records_dev, count.index)
+  content = "31.220.100.177"
+  type    = "A"
+  proxied = false
+  ttl     = 600
+}
+
+resource "cloudflare_record" "cloudflare_dns_records_dev_2" {
+  count   = local.is_staging ? length(local.dns_records_dev) : 0
+  zone_id = data.cloudflare_zone.webapp_2.id
   name    = element(local.dns_records_dev, count.index)
   content = "31.220.100.177"
   type    = "A"

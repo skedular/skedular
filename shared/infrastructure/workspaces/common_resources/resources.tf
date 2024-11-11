@@ -120,3 +120,41 @@ resource "cloudflare_record" "cloudflare_dns_records_production_1" {
   proxied = false
   ttl     = 600
 }
+
+data "cloudflare_zone" "public_website_2" {
+  name = module.common.cloudflare_public_website_domain_name_2
+}
+
+resource "cloudflare_record" "cloudflare_dns_record_production_2" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.public_website_2.id
+  name    = "@"
+  content = "31.220.100.177"
+  type    = "A"
+  proxied = false
+  ttl     = 600
+}
+
+data "cloudflare_zone" "webapp_2" {
+  name = module.common.cloudflare_webapp_domain_name_2
+}
+
+resource "cloudflare_record" "cloudflare_dns_records_staging_2" {
+  count   = local.is_staging ? length(local.dns_records_staging) : 0
+  zone_id = data.cloudflare_zone.webapp_2.id
+  name    = element(local.dns_records_staging, count.index)
+  content = "31.220.100.177"
+  type    = "A"
+  proxied = false
+  ttl     = 600
+}
+
+resource "cloudflare_record" "cloudflare_dns_records_production_2" {
+  count   = local.is_staging ? 0 : length(local.dns_records_production)
+  zone_id = data.cloudflare_zone.webapp_2.id
+  name    = element(local.dns_records_production, count.index)
+  content = "31.220.100.177"
+  type    = "A"
+  proxied = false
+  ttl     = 600
+}

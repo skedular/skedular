@@ -9,6 +9,15 @@ locals {
   slack_api_domain_1           = local.is_production ? "slackapi.${local.webapp_domain_root_1}" : "slackapi${var.environment}.${local.webapp_domain_root_1}"
   msteams_webapp_domain_1      = local.is_production ? "msteams.${local.webapp_domain_root_1}" : "msteams.${var.environment}.${local.webapp_domain_root_1}"
   eventcatalog_webapp_domain_1 = local.is_production ? "eventcatalog.${local.webapp_domain_root_1}" : "eventcatalog.${var.environment}.${local.webapp_domain_root_1}"
+
+  public_website_domain_root_2 = "getskedular.com"
+  webapp_domain_root_2         = "skedular.app"
+  public_website_domain_2      = local.is_production ? local.public_website_domain_root_2 : "${var.environment}.${local.public_website_domain_root_2}"
+  webapp_domain_2              = local.is_production ? "${local.webapp_domain_root_2}" : "${var.environment}.${local.webapp_domain_root_2}"
+  api_domain_2                 = local.is_production ? "api.${local.webapp_domain_root_2}" : "api${var.environment}.${local.webapp_domain_root_2}"
+  slack_api_domain_2           = local.is_production ? "slackapi.${local.webapp_domain_root_2}" : "slackapi${var.environment}.${local.webapp_domain_root_2}"
+  msteams_webapp_domain_2      = local.is_production ? "msteams.${local.webapp_domain_root_2}" : "msteams.${var.environment}.${local.webapp_domain_root_2}"
+  eventcatalog_webapp_domain_2 = local.is_production ? "eventcatalog.${local.webapp_domain_root_2}" : "eventcatalog.${var.environment}.${local.webapp_domain_root_2}"
 }
 
 output "cloudflare_public_website_domain_name_1" {
@@ -17,6 +26,14 @@ output "cloudflare_public_website_domain_name_1" {
 
 output "cloudflare_webapp_domain_name_1" {
   value = local.webapp_domain_root_1
+}
+
+output "cloudflare_public_website_domain_name_2" {
+  value = local.public_website_domain_root_2
+}
+
+output "cloudflare_webapp_domain_name_2" {
+  value = local.webapp_domain_root_2
 }
 
 output "aws_region" {
@@ -51,6 +68,50 @@ output "reply_to_email_address_1" {
   value = "no-reply@${local.public_website_domain_1}"
 }
 
+output "api_domain_name_1" {
+  value = local.api_domain_1
+}
+
+output "webapp_domain_name_1" {
+  value = local.webapp_domain_1
+}
+
+output "msteams_webapp_domain_name_1" {
+  value = local.msteams_webapp_domain_1
+}
+
+output "eventcatalog_webapp_domain_name_1" {
+  value = local.eventcatalog_webapp_domain_1
+}
+
+output "simple_email_service_domain_2" {
+  value = local.public_website_domain_2
+}
+
+output "from_email_address_2" {
+  value = "no-reply@${local.public_website_domain_2}"
+}
+
+output "reply_to_email_address_2" {
+  value = "no-reply@${local.public_website_domain_2}"
+}
+
+output "api_domain_name_2" {
+  value = local.api_domain_2
+}
+
+output "webapp_domain_name_2" {
+  value = local.webapp_domain_2
+}
+
+output "msteams_webapp_domain_name_2" {
+  value = local.msteams_webapp_domain_2
+}
+
+output "eventcatalog_webapp_domain_name_2" {
+  value = local.eventcatalog_webapp_domain_2
+}
+
 output "gcp_project_id" {
   value = "unityhub-${var.environment}"
 }
@@ -81,22 +142,6 @@ output "parameter_store_name_aws_github_actions_assume_role_arn" {
 
 output "parameter_store_name_aws_github_actions_unityhubio_unityhubioassume_role_arn" {
   value = "github_actions_unityhubio_unityhubio_assume_role_arn"
-}
-
-output "api_domain_name" {
-  value = local.api_domain_1
-}
-
-output "webapp_domain_name_1" {
-  value = local.webapp_domain_1
-}
-
-output "msteams_webapp_domain_name_1" {
-  value = local.msteams_webapp_domain_1
-}
-
-output "eventcatalog_webapp_domain_name_1" {
-  value = local.eventcatalog_webapp_domain_1
 }
 
 output "logrocket_publicwebsite_app_id" {

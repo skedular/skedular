@@ -49,57 +49,57 @@ resource "vercel_project" "default" {
     },
     {
       key    = "REACT_APP_GATEWAY_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/gateway/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/gateway/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_CUSTOMER_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/customer/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/customer/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_ORGANIZATION_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/organization/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/organization/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_BOOKING_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/booking/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/booking/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_NOTIFICATION_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/notification/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/notification/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_TEAM_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/team/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/team/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_LOCATION_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/location/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/location/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_SLACK_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/slack/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/slack/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_PAYMENT_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/payment/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/payment/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_BILLING_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/billing/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/billing/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "REACT_APP_MSTEAMS_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name}/msteams/api/"
+      value  = "https://${module.shared_common.api_domain_name_1}/msteams/api/"
       target = ["development", "preview", "production"]
     }
   ]
