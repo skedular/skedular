@@ -23,9 +23,4 @@
         <ProjectReference Include="..\Api.Shared\Api.Shared.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Events\UnityHub\Organization\"/>
-        <Folder Include="OpenApi\"/>
-    </ItemGroup>
-
 </Project>
