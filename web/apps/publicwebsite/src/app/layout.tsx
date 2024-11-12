@@ -23,7 +23,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
 const ThemedRootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
   <html lang="en">
-    <title>UnityHub</title>
+    <title>Skedular</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Always know who will be in the office" />
     <link rel="icon" href="/favicon.ico" />

@@ -26,60 +26,60 @@ const LeftSideNavigationMenu = () => {
 
   return (
     <List>
-      <Link href={`/organizations/${finalOrganizationId}`}>
-        <ListItem disablePadding>
+      <ListItem disablePadding>
+        <Link href={`/organizations/${finalOrganizationId}`}>
           <ListItemButton>
             <ListItemIcon>
               <BookingIcon excludeTooltip />
             </ListItemIcon>
             <ListItemText>Dashboard</ListItemText>
           </ListItemButton>
-        </ListItem>
-      </Link>
+        </Link>
+      </ListItem>
 
-      <Link href={`/organizations/${finalOrganizationId}/locations`}>
-        <ListItem disablePadding>
+      <ListItem disablePadding>
+        <Link href={`/organizations/${finalOrganizationId}/locations`}>
           <ListItemButton>
             <ListItemIcon>
               <LocationIcon excludeTooltip />
             </ListItemIcon>
             <ListItemText>Locations</ListItemText>
           </ListItemButton>
-        </ListItem>
-      </Link>
+        </Link>
+      </ListItem>
 
-      <Link href={`/organizations/${finalOrganizationId}/teams`}>
-        <ListItem disablePadding>
+      <ListItem disablePadding>
+        <Link href={`/organizations/${finalOrganizationId}/teams`}>
           <ListItemButton>
             <ListItemIcon>
               <TeamIcon excludeTooltip />
             </ListItemIcon>
             <ListItemText>Teams</ListItemText>
           </ListItemButton>
-        </ListItem>
-      </Link>
+        </Link>
+      </ListItem>
 
-      <Link href={`/${finalOrganizationId}/notifications`}>
-        <ListItem disablePadding>
+      <ListItem disablePadding>
+        <Link href={`/${finalOrganizationId}/notifications`}>
           <ListItemButton>
             <ListItemIcon>
               <NotificationsIcon excludeTooltip />
             </ListItemIcon>
             <ListItemText>Notifications</ListItemText>
           </ListItemButton>
-        </ListItem>
-      </Link>
+        </Link>
+      </ListItem>
 
-      <Link href={`/${finalOrganizationId}/settings`}>
-        <ListItem disablePadding>
+      <ListItem disablePadding>
+        <Link href={`/${finalOrganizationId}/settings`}>
           <ListItemButton>
             <ListItemIcon>
               <SettingsIcon excludeTooltip />
             </ListItemIcon>
             <ListItemText>Settings</ListItemText>
           </ListItemButton>
-        </ListItem>
-      </Link>
+        </Link>
+      </ListItem>
     </List>
   );
 };

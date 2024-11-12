@@ -132,11 +132,11 @@ const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrum
           variant="persistent"
           open={true}
         >
-          <LeftSideNavigationMenu />
+          <LeftSideNavigationMenu maxWidth={drawerWidth} />
         </Drawer>
         <Grid container>
           <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, display: { xs: 'block', sm: 'none' } }}>
-            <LeftSideNavigationMenu />
+            <LeftSideNavigationMenu maxWidth={drawerWidth} />
           </Grid>
           <Stack direction="column" sx={{ width: '100vw' }}>
             <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} breadcrumbs={appBarBreadcrumbs} />

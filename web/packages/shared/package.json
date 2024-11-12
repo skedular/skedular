@@ -32,9 +32,6 @@
     "./components/loading": {
       "default": "./dist/components/loading/index.js"
     },
-    "./components/logo": {
-      "default": "./dist/components/logo/index.js"
-    },
     "./components/notification": {
       "default": "./dist/components/notification/index.js"
     },
