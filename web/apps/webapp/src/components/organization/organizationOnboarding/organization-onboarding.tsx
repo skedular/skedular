@@ -1,44 +1,19 @@
-import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from '@/components/organization';
-import type { organizationOnboarding_addOrganizationMutation } from '@/queries/__generated__/organizationOnboarding_addOrganizationMutation.graphql';
-import type { organizationOnboarding_completeOrganizationOnboardingMutation } from '@/queries/__generated__/organizationOnboarding_completeOrganizationOnboardingMutation.graphql';
+import { AddOrganization } from '@/components/organization/addOrganization';
 import type { organizationOnboarding_rootQuery } from '@/queries/__generated__/organizationOnboarding_rootQuery.graphql';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import { Loading } from '@repo/shared/components/loading';
-import {
-  NotificationContent,
-  errorNotificationOptions,
-  infoNotificationOptions,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { joinErrors } from '@repo/shared/libs/utils';
-import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Form } from 'react-final-form';
-import { PreloadedQuery, graphql, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { toast } from 'react-toastify';
-import { array, boolean, object, string } from 'yup';
+import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
   queryReference: PreloadedQuery<organizationOnboarding_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-};
-
-type OrganizationDetails = {
-  name: string;
-  about: string | null;
-  website: string | null;
-  industrySubCategoryIds: string[] | null;
-  agreedToTermsOfUse: boolean;
 };
 
 const RootQuery = graphql`
@@ -46,255 +21,30 @@ const RootQuery = graphql`
     me {
       id
       isOrganizationOnboardingDone
-      isLocationOnboardingDone
     }
-    activeOrganizationTermsOfUse {
-      id
-    }
-    organizationIndustryMainCategoriesReferences {
-      subCategories {
-        id
-        name
-      }
-    }
-    ...organizationMultipleChoicesIndustries_query
-    ...organizationTermsOfUse_query
   }
 `;
 
-const organizationSchema = object({
-  name: string().min(3, 'Organization name must be at least three charcters long.').required('Organization name is required'),
-  about: string().nullable(),
-  website: string().nullable(),
-  industrySubCategoryIds: array().of(string()).nullable(),
-  agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
-});
-
 const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<organizationOnboarding_rootQuery>(RootQuery, queryReference);
-  const [commitAddOrganization] = useMutation<organizationOnboarding_addOrganizationMutation>(graphql`
-    mutation organizationOnboarding_addOrganizationMutation($input: AddOrganizationInput!) @raw_response_type {
-      addOrganization(input: $input) {
-        organization {
-          id
-          name
-          about
-          website
-          industrySubCategories {
-            id
-            name
-          }
-        }
-      }
-    }
-  `);
-
-  const [commitCompleteOrganizationOnboarding] = useMutation<organizationOnboarding_completeOrganizationOnboardingMutation>(graphql`
-    mutation organizationOnboarding_completeOrganizationOnboardingMutation($input: CompleteOrganizationOnboardingInput!) @raw_response_type {
-      completeOrganizationOnboarding(input: $input) {
-        customer {
-          id
-          isOrganizationOnboardingDone
-          isLocationOnboardingDone
-        }
-      }
-    }
-  `);
-
-  const paletteMode = useContext(PaletteModeContext);
-  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [activeStep] = useState(0);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(!rootData.me?.isOrganizationOnboardingDone);
-  const validate = makeValidate(organizationSchema);
-  const requiredFields = makeRequired(organizationSchema);
-  const handleOrganizationCreateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
-    const id = nanoid();
-    const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
-    const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
-    commitAddOrganization({
-      variables: {
-        input: {
-          clientMutationId: nanoid(),
-          id,
-          name,
-          about,
-          website,
-          agreedToTermsOfUse: true,
-          termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
-          industrySubCategoryIds: selectedIndustrySubCategoryIds,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        if (!rootData.me) {
-          return;
-        }
-
-        commitCompleteOrganizationOnboarding({
-          variables: {
-            input: {
-              clientMutationId: nanoid(),
-            },
-          },
-          onCompleted: (_, errors) => {
-            if (errors && errors.length > 0) {
-              toast.update(toastId, {
-                ...errorNotificationOptions,
-                render: <NotificationContent content={`Failed to complete organization onboarding. Error: ${joinErrors(errors)}.`} />,
-              });
-            } else {
-              toast.update(toastId, {
-                ...successNotificationOptions,
-                render: <NotificationContent content={`Organization ${name} added.`} />,
-              });
-
-              setIsOnboardingOpen(false);
-            }
-          },
-          onError: (error) => {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to complete organization onboarding. Error: ${error.message}.`} />,
-            });
-          },
-          optimisticResponse: {
-            completeOrganizationOnboarding: {
-              customer: {
-                id: rootData.me.id,
-                isOrganizationOnboardingDone: true,
-                isLocationOnboardingDone: rootData.me ? rootData.me.isLocationOnboardingDone : false,
-              },
-            },
-          },
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        addOrganization: {
-          organization: {
-            id,
-            name,
-            about,
-            website,
-            industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
-              .flatMap((mainCategory) => mainCategory.subCategories)
-              .filter(({ id }) => selectedIndustrySubCategoryIds.find((selectedIndustrySubCategoryId) => selectedIndustrySubCategoryId === id))
-              .map(({ id, name }) => ({ id, name })),
-          },
-        },
-      },
-    });
-  };
-
-  const handleDismissClick = () => {
-    if (!rootData.me) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Dismissing organization onboarding...`} />, infoNotificationOptions);
-
-    commitCompleteOrganizationOnboarding({
-      variables: {
-        input: {
-          clientMutationId: nanoid(),
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to dismiss organization onboarding. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization onboarding dismissed.`} />,
-        });
-
-        setIsOnboardingOpen(false);
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to dismiss organization onboarding. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        completeOrganizationOnboarding: {
-          customer: {
-            id: rootData.me.id,
-            isOrganizationOnboardingDone: true,
-            isLocationOnboardingDone: rootData.me ? rootData.me.isLocationOnboardingDone : false,
-          },
-        },
-      },
-    });
+  const handleAdded = () => {
+    setIsOnboardingOpen(false);
   };
 
   return (
     <>
       {isOnboardingOpen && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
+        <>
           <Stepper activeStep={activeStep}>
             <Step>
               <StepLabel>Create Organization</StepLabel>
             </Step>
           </Stepper>
-          {activeStep === 0 && (
-            <Form
-              onSubmit={handleOrganizationCreateClick}
-              initialValues={{
-                name: '',
-                about: null,
-                website: null,
-                agreedToTermsOfUse: false,
-                industrySubCategoryIds: [],
-                offeringFlexibilityIds: [],
-                companyValueIds: [],
-              }}
-              validate={validate}
-              render={({ handleSubmit }) => (
-                <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
-                  <TextField label="Name" name="name" required={requiredFields.name} />
-                  <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-                  <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />
-                  <OrganizationMultipleChoicesIndustries
-                    rootDataRelay={rootData}
-                    name="industrySubCategoryIds"
-                    required={requiredFields.industrySubCategoryIds}
-                  />
-                  <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
-
-                  <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-                    <Button color="secondary" variant="contained" onClick={handleDismissClick}>
-                      Dismiss
-                    </Button>
-                    <Button color="primary" variant="contained" type="submit">
-                      Create
-                    </Button>
-                  </Stack>
-                </Stack>
-              )}
-            />
-          )}
-        </Paper>
+          {activeStep === 0 && <AddOrganization showCancel={false} onAdded={handleAdded} onReloadRequired={onReloadRequired} />}
+        </>
       )}
     </>
   );
@@ -302,7 +52,11 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
 
 const MemoOrganizationOnboarding = memo(OrganizationOnboarding);
 
-const OrganizationOnboardingWithRelay = () => {
+type RelayProps = {
+  onReloadRequired: () => void;
+};
+
+const OrganizationOnboardingWithRelay = ({ onReloadRequired }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationOnboarding_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -319,6 +73,8 @@ const OrganizationOnboardingWithRelay = () => {
   const handleReloadRequired = () => {
     startTransition(() => {
       setTriggerReloadId(nanoid());
+
+      onReloadRequired();
     });
   };
 

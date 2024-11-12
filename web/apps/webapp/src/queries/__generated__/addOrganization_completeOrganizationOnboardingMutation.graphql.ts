@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ffb292bc39e2635df474f303c9892aa4>>
+ * @generated SignedSource<<f71ebecd6dc3b4ba6d8ded23b002a103>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,31 +12,29 @@ import { ConcreteRequest } from 'relay-runtime';
 export type CompleteOrganizationOnboardingInput = {
   clientMutationId?: string | null | undefined;
 };
-export type organizationOnboarding_completeOrganizationOnboardingMutation$variables = {
+export type addOrganization_completeOrganizationOnboardingMutation$variables = {
   input: CompleteOrganizationOnboardingInput;
 };
-export type organizationOnboarding_completeOrganizationOnboardingMutation$data = {
+export type addOrganization_completeOrganizationOnboardingMutation$data = {
   readonly completeOrganizationOnboarding: {
     readonly customer: {
       readonly id: string;
-      readonly isLocationOnboardingDone: boolean;
       readonly isOrganizationOnboardingDone: boolean;
     };
   } | null | undefined;
 };
-export type organizationOnboarding_completeOrganizationOnboardingMutation$rawResponse = {
+export type addOrganization_completeOrganizationOnboardingMutation$rawResponse = {
   readonly completeOrganizationOnboarding: {
     readonly customer: {
       readonly id: string;
-      readonly isLocationOnboardingDone: boolean;
       readonly isOrganizationOnboardingDone: boolean;
     };
   } | null | undefined;
 };
-export type organizationOnboarding_completeOrganizationOnboardingMutation = {
-  rawResponse: organizationOnboarding_completeOrganizationOnboardingMutation$rawResponse;
-  response: organizationOnboarding_completeOrganizationOnboardingMutation$data;
-  variables: organizationOnboarding_completeOrganizationOnboardingMutation$variables;
+export type addOrganization_completeOrganizationOnboardingMutation = {
+  rawResponse: addOrganization_completeOrganizationOnboardingMutation$rawResponse;
+  response: addOrganization_completeOrganizationOnboardingMutation$data;
+  variables: addOrganization_completeOrganizationOnboardingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -83,13 +81,6 @@ v1 = [
             "kind": "ScalarField",
             "name": "isOrganizationOnboardingDone",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "isLocationOnboardingDone",
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -103,7 +94,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationOnboarding_completeOrganizationOnboardingMutation",
+    "name": "addOrganization_completeOrganizationOnboardingMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -112,20 +103,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationOnboarding_completeOrganizationOnboardingMutation",
+    "name": "addOrganization_completeOrganizationOnboardingMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "32d0db889160c931f53829fc00d4a979",
+    "cacheID": "1ca924e4a2e06687cd18de0bc298ab1f",
     "id": null,
     "metadata": {},
-    "name": "organizationOnboarding_completeOrganizationOnboardingMutation",
+    "name": "addOrganization_completeOrganizationOnboardingMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationOnboarding_completeOrganizationOnboardingMutation(\n  $input: CompleteOrganizationOnboardingInput!\n) {\n  completeOrganizationOnboarding(input: $input) {\n    customer {\n      id\n      isOrganizationOnboardingDone\n      isLocationOnboardingDone\n    }\n  }\n}\n"
+    "text": "mutation addOrganization_completeOrganizationOnboardingMutation(\n  $input: CompleteOrganizationOnboardingInput!\n) {\n  completeOrganizationOnboarding(input: $input) {\n    customer {\n      id\n      isOrganizationOnboardingDone\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6dfeb828ae140ff2d1778aeee4301c1c";
+(node as any).hash = "6dc31966ad524fa3de86a272c7dbfab3";
 
 export default node;

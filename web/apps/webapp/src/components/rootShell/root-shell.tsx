@@ -33,7 +33,9 @@ const RootQuery = graphql`
   query rootShell_rootQuery {
     me {
       id
-      isOrganizationOnboardingDone
+    }
+    myOrganizations {
+      id
     }
     billingCustomerRecordSynced
     bookingCustomerRecordSynced
@@ -141,12 +143,13 @@ const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrum
           <Stack direction="column" sx={{ width: '100vw' }}>
             <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} breadcrumbs={appBarBreadcrumbs} />
           </Stack>
-          {!rootData.me.isOrganizationOnboardingDone && (
-            <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>
-              <OrganizationOnboarding />
-            </Grid>
-          )}
-          {rootData.me.isOrganizationOnboardingDone && (
+          {!rootData.myOrganizations ||
+            (rootData.myOrganizations.length === 0 && (
+              <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>
+                <OrganizationOnboarding onReloadRequired={onReloadRequired} />
+              </Grid>
+            ))}
+          {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && (
             <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>{children}</Grid>
           )}
         </Grid>

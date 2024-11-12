@@ -1,5 +1,6 @@
 import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from '@/components/organization';
 import type { addOrganization_addOrganizationMutation } from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
+import type { addOrganization_completeOrganizationOnboardingMutation } from '@/queries/__generated__/addOrganization_completeOrganizationOnboardingMutation.graphql';
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -17,7 +18,6 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
@@ -28,10 +28,18 @@ import { array, boolean, object, string } from 'yup';
 type Props = {
   queryReference: PreloadedQuery<addOrganization_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
+  showCancel: boolean;
+  onAdded: (id: string) => void;
+  onCancelled?: () => void;
 };
 
 const RootQuery = graphql`
   query addOrganization_rootQuery {
+    me {
+      id
+      isOrganizationOnboardingDone
+      isLocationOnboardingDone
+    }
     activeOrganizationTermsOfUse {
       id
     }
@@ -56,7 +64,7 @@ const organizationSchema = object({
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
-const AddOrganization = ({ queryReference }: Props) => {
+const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded, onCancelled }: Props) => {
   const rootData = usePreloadedQuery<addOrganization_rootQuery>(RootQuery, queryReference);
   const [commitAddOrganization] = useMutation<addOrganization_addOrganizationMutation>(graphql`
     mutation addOrganization_addOrganizationMutation($input: AddOrganizationInput!) @raw_response_type {
@@ -71,15 +79,21 @@ const AddOrganization = ({ queryReference }: Props) => {
     }
   `);
 
+  const [commitCompleteOrganizationOnboarding] = useMutation<addOrganization_completeOrganizationOnboardingMutation>(graphql`
+    mutation addOrganization_completeOrganizationOnboardingMutation($input: CompleteOrganizationOnboardingInput!) @raw_response_type {
+      completeOrganizationOnboarding(input: $input) {
+        customer {
+          id
+          isOrganizationOnboardingDone
+        }
+      }
+    }
+  `);
+
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const router = useRouter();
   const validate = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
-
-  const handleCancelClick = () => {
-    router.back();
-  };
 
   const handleOrganizationCreateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
     const id = nanoid();
@@ -108,12 +122,47 @@ const AddOrganization = ({ queryReference }: Props) => {
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${name} added.`} />,
-        });
+        if (!rootData.me) {
+          return;
+        }
 
-        router.back();
+        commitCompleteOrganizationOnboarding({
+          variables: {
+            input: {
+              clientMutationId: nanoid(),
+            },
+          },
+          onCompleted: (_, errors) => {
+            if (errors && errors.length > 0) {
+              toast.update(toastId, {
+                ...errorNotificationOptions,
+                render: <NotificationContent content={`Failed to complete organization onboarding. Error: ${joinErrors(errors)}.`} />,
+              });
+            } else {
+              toast.update(toastId, {
+                ...successNotificationOptions,
+                render: <NotificationContent content={`Organization ${name} added.`} />,
+              });
+
+              onAdded(id);
+              onReloadRequired();
+            }
+          },
+          onError: (error) => {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to complete organization onboarding. Error: ${error.message}.`} />,
+            });
+          },
+          optimisticResponse: {
+            completeOrganizationOnboarding: {
+              customer: {
+                id: rootData.me.id,
+                isOrganizationOnboardingDone: true,
+              },
+            },
+          },
+        });
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -157,9 +206,11 @@ const AddOrganization = ({ queryReference }: Props) => {
             <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
 
             <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
-              <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                Cancel
-              </Button>
+              {showCancel && (
+                <Button color="secondary" variant="contained" onClick={onCancelled}>
+                  Cancel
+                </Button>
+              )}
               <Button color="primary" variant="contained" type="submit">
                 Create
               </Button>
@@ -173,7 +224,14 @@ const AddOrganization = ({ queryReference }: Props) => {
 
 const MemoAddOrganization = memo(AddOrganization);
 
-const AddOrganizationWithRelay = () => {
+type RelayProps = {
+  onReloadRequired: () => void;
+  showCancel: boolean;
+  onAdded: (id: string) => void;
+  onCancelled?: () => void;
+};
+
+const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCancelled }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addOrganization_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -190,6 +248,8 @@ const AddOrganizationWithRelay = () => {
   const handleReloadRequired = () => {
     startTransition(() => {
       setTriggerReloadId(nanoid());
+
+      onReloadRequired();
     });
   };
 
@@ -199,7 +259,13 @@ const AddOrganizationWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAddOrganization queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+      <MemoAddOrganization
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        showCancel={showCancel}
+        onAdded={onAdded}
+        onCancelled={onCancelled}
+      />
     </ErrorBoundary>
   );
 };

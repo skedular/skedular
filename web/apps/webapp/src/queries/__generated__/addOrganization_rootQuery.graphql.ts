@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2412fade0cb6632f715897fd69eee611>>
+ * @generated SignedSource<<70edcdae04c6d13cf046501b8a5032f8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,11 @@ export type addOrganization_rootQuery$data = {
   readonly activeOrganizationTermsOfUse: {
     readonly id: string;
   };
+  readonly me: {
+    readonly id: string;
+    readonly isLocationOnboardingDone: boolean;
+    readonly isOrganizationOnboardingDone: boolean;
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query" | "organizationTermsOfUse_query">;
 };
 export type addOrganization_rootQuery = {
@@ -33,6 +38,32 @@ var v0 = {
 v1 = {
   "alias": null,
   "args": null,
+  "concreteType": "CustomerDetails",
+  "kind": "LinkedField",
+  "name": "me",
+  "plural": false,
+  "selections": [
+    (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isOrganizationOnboardingDone",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isLocationOnboardingDone",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
@@ -44,6 +75,7 @@ return {
     "metadata": null,
     "name": "addOrganization_rootQuery",
     "selections": [
+      (v1/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -76,6 +108,7 @@ return {
     "kind": "Operation",
     "name": "addOrganization_rootQuery",
     "selections": [
+      (v1/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -104,7 +137,7 @@ return {
         "plural": true,
         "selections": [
           (v0/*: any*/),
-          (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -114,7 +147,7 @@ return {
             "plural": true,
             "selections": [
               (v0/*: any*/),
-              (v1/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
           }
@@ -124,16 +157,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e8267dbbfcde3dd9d620b22774be86f6",
+    "cacheID": "75b7735445f10f01b44acbb93979951a",
     "id": null,
     "metadata": {},
     "name": "addOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query addOrganization_rootQuery {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n"
+    "text": "query addOrganization_rootQuery {\n  me {\n    id\n    isOrganizationOnboardingDone\n    isLocationOnboardingDone\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e8d9f63d4f96df780a033664179721dd";
+(node as any).hash = "dd309398ae89f7f7421c5a3096699a13";
 
 export default node;
