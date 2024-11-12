@@ -5,10 +5,11 @@ import { AddLocation } from '@/components/location/addLocation';
 import { getOrganizationBaseLink, getOrganizationLocationsBaseLink } from '@/components/organization';
 import { RootShell } from '@/components/rootShell';
 import { HomeIcon } from '@repo/shared/components/icons';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { memo } from 'react';
 
 const AddLocationPage = () => {
+  const router = useRouter();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -47,9 +48,19 @@ const AddLocationPage = () => {
     lastItemLabel: 'Add new location',
   };
 
+  const handleAdded = () => {
+    router.back();
+  };
+
+  const handleCancelled = () => {
+    router.back();
+  };
+
+  const handleReloadRequired = () => {};
+
   return (
     <RootShell appBarBreadcrumbs={breadcrumps}>
-      <AddLocation organizationId={finalOrganizationId} />
+      <AddLocation organizationId={finalOrganizationId} onAdded={handleAdded} onCancelled={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );
 };

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3461268fea9d9e826b3fa7ab50dfeeaa>>
+ * @generated SignedSource<<54a084b29ad032e37e747da55b32fb74>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,20 +9,20 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type CompleteOrganizationOnboardingInput = {
+export type CompleteLocationOnboardingInput = {
   clientMutationId?: string | null | undefined;
 };
-export type addOrganization_completeOrganizationOnboardingMutation$variables = {
-  input: CompleteOrganizationOnboardingInput;
+export type addLocation_completeLocationOnboardingMutation$variables = {
+  input: CompleteLocationOnboardingInput;
 };
-export type addOrganization_completeOrganizationOnboardingMutation$data = {
-  readonly completeOrganizationOnboarding: {
+export type addLocation_completeLocationOnboardingMutation$data = {
+  readonly completeLocationOnboarding: {
     readonly clientMutationId: string | null | undefined;
   } | null | undefined;
 };
-export type addOrganization_completeOrganizationOnboardingMutation = {
-  response: addOrganization_completeOrganizationOnboardingMutation$data;
-  variables: addOrganization_completeOrganizationOnboardingMutation$variables;
+export type addLocation_completeLocationOnboardingMutation = {
+  response: addLocation_completeLocationOnboardingMutation$data;
+  variables: addLocation_completeLocationOnboardingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -45,7 +45,7 @@ v1 = [
     ],
     "concreteType": "CustomerPayload",
     "kind": "LinkedField",
-    "name": "completeOrganizationOnboarding",
+    "name": "completeLocationOnboarding",
     "plural": false,
     "selections": [
       {
@@ -64,7 +64,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "addOrganization_completeOrganizationOnboardingMutation",
+    "name": "addLocation_completeLocationOnboardingMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -73,20 +73,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "addOrganization_completeOrganizationOnboardingMutation",
+    "name": "addLocation_completeLocationOnboardingMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "341b8a22857a7cf6af49b857c12ab80a",
+    "cacheID": "62151c97157095ac9ff385e35cdbec3a",
     "id": null,
     "metadata": {},
-    "name": "addOrganization_completeOrganizationOnboardingMutation",
+    "name": "addLocation_completeLocationOnboardingMutation",
     "operationKind": "mutation",
-    "text": "mutation addOrganization_completeOrganizationOnboardingMutation(\n  $input: CompleteOrganizationOnboardingInput!\n) {\n  completeOrganizationOnboarding(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation addLocation_completeLocationOnboardingMutation(\n  $input: CompleteLocationOnboardingInput!\n) {\n  completeLocationOnboarding(input: $input) {\n    clientMutationId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2ef11ffc9b410736e401d60773cdda79";
+(node as any).hash = "3e878291a772b95ac510134f81676f33";
 
 export default node;

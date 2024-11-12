@@ -12,7 +12,6 @@ import Stack from '@mui/material/Stack';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { MenuIcon } from '@repo/shared/components/icons';
-import { Logo } from '@repo/shared/components/logo';
 import { SlackIconButton } from '@repo/shared/components/slackButtons';
 import NextLink from 'next/link';
 import { memo, useState } from 'react';
@@ -40,7 +39,6 @@ const Header = () => {
             justifyContent: 'space-between',
           }}
         >
-          <Logo />
           <Box sx={{ ml: 'auto', display: { xs: 'inline-flex', md: 'none' } }}>
             <IconButton onClick={() => setVisibleMenu(!visibleMenu)}>
               <MenuIcon />

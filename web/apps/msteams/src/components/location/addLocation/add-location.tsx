@@ -21,21 +21,23 @@ import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import type { addLocation_addLocationMutation } from './__generated__/addLocation_addLocationMutation.graphql';
+import type { addLocation_completeLocationOnboardingMutation } from './__generated__/addLocation_completeLocationOnboardingMutation.graphql';
 import type { addLocation_rootQuery } from './__generated__/addLocation_rootQuery.graphql';
 
 type Props = {
   queryReference: PreloadedQuery<addLocation_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
+  onAdded: (id: string) => void;
+  onCancelled: () => void;
 };
 
 const RootQuery = graphql`
-  query addLocation_rootQuery($organizationId: String!, $organizationExists: Boolean!) {
-    organization(id: $organizationId) @include(if: $organizationExists) {
+  query addLocation_rootQuery($organizationId: String!) {
+    organization(id: $organizationId) {
       id
       name
     }
@@ -54,7 +56,7 @@ const locationSchema = object({
   timezone: string().nullable(),
 });
 
-const AddLocation = ({ queryReference, organizationId }: Props) => {
+const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancelled }: Props) => {
   const rootData = usePreloadedQuery<addLocation_rootQuery>(RootQuery, queryReference);
   const [commitAddLocation] = useMutation<addLocation_addLocationMutation>(graphql`
     mutation addLocation_addLocationMutation($input: AddLocationInput!) @raw_response_type {
@@ -69,9 +71,16 @@ const AddLocation = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
+  const [commitCompleteLocationOnboarding] = useMutation<addLocation_completeLocationOnboardingMutation>(graphql`
+    mutation addLocation_completeLocationOnboardingMutation($input: CompleteLocationOnboardingInput!) {
+      completeLocationOnboarding(input: $input) {
+        clientMutationId
+      }
+    }
+  `);
+
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const navigate = useNavigate();
   const validate = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
   const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
@@ -88,7 +97,21 @@ const AddLocation = ({ queryReference, organizationId }: Props) => {
   }, [rootData.organization]);
 
   const handleCancelClick = () => {
-    navigate(-1);
+    commitCompleteLocationOnboarding({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+        },
+      },
+      onCompleted: () => {
+        onCancelled();
+        onReloadRequired();
+      },
+      onError: (_) => {
+        onCancelled();
+        onReloadRequired();
+      },
+    });
   };
 
   const handleLocationCreateClick = ({ name, about, timezone }: LocationDetails) => {
@@ -116,12 +139,35 @@ const AddLocation = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location ${name} added.`} />,
-        });
+        commitCompleteLocationOnboarding({
+          variables: {
+            input: {
+              clientMutationId: nanoid(),
+            },
+          },
+          onCompleted: (_, errors) => {
+            if (errors && errors.length > 0) {
+              toast.update(toastId, {
+                ...errorNotificationOptions,
+                render: <NotificationContent content={`Failed to complete location onboarding. Error: ${joinErrors(errors)}.`} />,
+              });
+            } else {
+              toast.update(toastId, {
+                ...successNotificationOptions,
+                render: <NotificationContent content={`Location ${name} added.`} />,
+              });
 
-        navigate(-1);
+              onAdded(id);
+              onReloadRequired();
+            }
+          },
+          onError: (error) => {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to complete location onboarding. Error: ${error.message}.`} />,
+            });
+          },
+        });
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -176,10 +222,13 @@ const AddLocation = ({ queryReference, organizationId }: Props) => {
 const MemoAddLocation = memo(AddLocation);
 
 type RelayProps = {
-  organizationId?: string;
+  organizationId: string;
+  onReloadRequired: () => void;
+  onAdded: (id: string) => void;
+  onCancelled: () => void;
 };
 
-const AddLocationWithRelay = ({ organizationId }: RelayProps) => {
+const AddLocationWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancelled }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addLocation_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -187,8 +236,7 @@ const AddLocationWithRelay = ({ organizationId }: RelayProps) => {
   useEffect(() => {
     loadQuery(
       {
-        organizationId: organizationId ?? '',
-        organizationExists: !!organizationId,
+        organizationId,
       },
       {
         fetchPolicy: 'store-and-network',
@@ -199,6 +247,8 @@ const AddLocationWithRelay = ({ organizationId }: RelayProps) => {
   const handleReloadRequired = () => {
     startTransition(() => {
       setTriggerReloadId(nanoid());
+
+      onReloadRequired();
     });
   };
 
@@ -208,7 +258,13 @@ const AddLocationWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAddLocation queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoAddLocation
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
+        onAdded={onAdded}
+        onCancelled={onCancelled}
+      />
     </ErrorBoundary>
   );
 };

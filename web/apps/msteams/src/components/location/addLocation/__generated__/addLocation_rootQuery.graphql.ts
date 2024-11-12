@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<90da998a9c8553c1b866dfd23109a7c7>>
+ * @generated SignedSource<<dfd4ccb40f0105fd7e36c3218898ac7b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,11 +10,10 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type addLocation_rootQuery$variables = {
-  organizationExists: boolean;
   organizationId: string;
 };
 export type addLocation_rootQuery$data = {
-  readonly organization?: {
+  readonly organization: {
     readonly id: string;
     readonly name: string;
   } | null | undefined;
@@ -25,90 +24,74 @@ export type addLocation_rootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationExists"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationId"
-},
-v2 = [
+var v0 = [
   {
-    "condition": "organizationExists",
-    "kind": "Condition",
-    "passingValue": true,
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationId"
+  }
+],
+v1 = [
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "id",
+        "variableName": "organizationId"
+      }
+    ],
+    "concreteType": "OrganizationDetails",
+    "kind": "LinkedField",
+    "name": "organization",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "organizationId"
-          }
-        ],
-        "concreteType": "OrganizationDetails",
-        "kind": "LinkedField",
-        "name": "organization",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          }
-        ],
+        "args": null,
+        "kind": "ScalarField",
+        "name": "id",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "name",
         "storageKey": null
       }
-    ]
+    ],
+    "storageKey": null
   }
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "addLocation_rootQuery",
-    "selections": (v2/*: any*/),
+    "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addLocation_rootQuery",
-    "selections": (v2/*: any*/)
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "594e70d984adc75e2eb6338e8e56c36f",
+    "cacheID": "132c4b827d2713c43977fd18956f14f7",
     "id": null,
     "metadata": {},
     "name": "addLocation_rootQuery",
     "operationKind": "query",
-    "text": "query addLocation_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    name\n  }\n}\n"
+    "text": "query addLocation_rootQuery(\n  $organizationId: String!\n) {\n  organization(id: $organizationId) {\n    id\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ef79f0dd3ab1fa498decbdbb183b2cc6";
+(node as any).hash = "cb5ead54c88153835e25925bedca3bcc";
 
 export default node;

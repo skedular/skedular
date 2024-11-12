@@ -3,9 +3,10 @@ import type { AppBarBreadcrumbs } from 'components/appBar';
 import { AddLocation } from 'components/location/addLocation';
 import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const AddLocationPage = () => {
+  const navigate = useNavigate();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -36,9 +37,19 @@ const AddLocationPage = () => {
     lastItemLabel: 'Add new location',
   };
 
+  const handleAdded = () => {
+    navigate(-1);
+  };
+
+  const handleCancelled = () => {
+    navigate(-1);
+  };
+
+  const handleReloadRequired = () => {};
+
   return (
     <RootShell appBarBreadcrumbs={breadcrumps}>
-      <AddLocation organizationId={finalOrganizationId} />
+      <AddLocation organizationId={finalOrganizationId} onAdded={handleAdded} onCancelled={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );
 };

@@ -35,11 +35,6 @@ type Props = {
 
 const RootQuery = graphql`
   query addOrganization_rootQuery {
-    me {
-      id
-      isOrganizationOnboardingDone
-      isLocationOnboardingDone
-    }
     activeOrganizationTermsOfUse {
       id
     }
@@ -80,12 +75,9 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   `);
 
   const [commitCompleteOrganizationOnboarding] = useMutation<addOrganization_completeOrganizationOnboardingMutation>(graphql`
-    mutation addOrganization_completeOrganizationOnboardingMutation($input: CompleteOrganizationOnboardingInput!) @raw_response_type {
+    mutation addOrganization_completeOrganizationOnboardingMutation($input: CompleteOrganizationOnboardingInput!) {
       completeOrganizationOnboarding(input: $input) {
-        customer {
-          id
-          isOrganizationOnboardingDone
-        }
+        clientMutationId
       }
     }
   `);
@@ -122,10 +114,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           return;
         }
 
-        if (!rootData.me) {
-          return;
-        }
-
         commitCompleteOrganizationOnboarding({
           variables: {
             input: {
@@ -153,14 +141,6 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               ...errorNotificationOptions,
               render: <NotificationContent content={`Failed to complete organization onboarding. Error: ${error.message}.`} />,
             });
-          },
-          optimisticResponse: {
-            completeOrganizationOnboarding: {
-              customer: {
-                id: rootData.me.id,
-                isOrganizationOnboardingDone: true,
-              },
-            },
           },
         });
       },
