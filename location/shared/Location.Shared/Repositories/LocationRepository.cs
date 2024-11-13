@@ -161,12 +161,13 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
                                                   location.Organization.OrganizationMembers.Any(organizationMember =>
                                                       organizationMember.Customer.Id == customerId))));
 
-        if (!string.IsNullOrWhiteSpace(organizationId))
-        {
-            query = query.Where(item =>
-                item.Organization != null && !item.Organization.DeletedAt.HasValue &&
-                item.Organization.Id == organizationId);
-        }
+        query = string.IsNullOrWhiteSpace(organizationId)
+            ? query.Where(team =>
+                team.Organization == null || (team.Organization != null && !team.Organization.DeletedAt.HasValue))
+            : query.Where(team =>
+                team.Organization != null &&
+                !team.Organization.DeletedAt.HasValue &&
+                team.Organization.Id == organizationId);
 
         return await query
             .AddDependentObjects()

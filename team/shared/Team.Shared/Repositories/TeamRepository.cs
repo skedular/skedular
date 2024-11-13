@@ -162,13 +162,13 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
             .Where(team =>
                 !team.DeletedAt.HasValue && team.TeamMembers.Any(item => item.Customer.Id == customerId));
 
-        if (!string.IsNullOrWhiteSpace(organizationId))
-        {
-            query = query.Where(team =>
+        query = string.IsNullOrWhiteSpace(organizationId)
+            ? query.Where(team =>
+                team.Organization == null || (team.Organization != null && !team.Organization.DeletedAt.HasValue))
+            : query.Where(team =>
                 team.Organization != null &&
                 !team.Organization.DeletedAt.HasValue &&
                 team.Organization.Id == organizationId);
-        }
 
         return await query
             .AddDependentObjects()
