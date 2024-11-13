@@ -26,6 +26,7 @@ public class Customer : EntityBaseWithDeleted
     public string? Locale { get; set; }
     public bool? IsOrganizationOnboardingDone { get; set; }
     public bool? IsLocationOnboardingDone { get; set; }
+    public bool? IsTeamOnboardingDone { get; set; }
     public bool? IsDefaultOrganizationOnboardingDone { get; set; }
     public bool? IsDefaultLocationOnboardingDone { get; set; }
     public bool? IsPreferredZoneOnboardingDone { get; set; }

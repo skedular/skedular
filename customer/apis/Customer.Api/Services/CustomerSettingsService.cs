@@ -4,6 +4,7 @@ public interface ICustomerSettingsService
 {
     Task<Shared.Models.Customer> CompleteOrganizationOnboardingAsync(CancellationToken cancellationToken);
     Task<Shared.Models.Customer> CompleteLocationOnboardingAsync(CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> CompleteTeamOnboardingAsync(CancellationToken cancellationToken);
     Task<Shared.Models.Customer> CompleteDefaultOrganizationOnboardingAsync(CancellationToken cancellationToken);
     Task<Shared.Models.Customer> CompleteDefaultLocationOnboardingAsync(CancellationToken cancellationToken);
     Task<Shared.Models.Customer> CompletePreferredZoneOnboardingAsync(CancellationToken cancellationToken);
@@ -23,6 +24,13 @@ public class CustomerSettingsService(ICustomerHelperService customerHelperServic
     {
         var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
         customer.IsLocationOnboardingDone = true;
+        return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
+    }
+
+    public async Task<Shared.Models.Customer> CompleteTeamOnboardingAsync(CancellationToken cancellationToken)
+    {
+        var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
+        customer.IsTeamOnboardingDone = true;
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 

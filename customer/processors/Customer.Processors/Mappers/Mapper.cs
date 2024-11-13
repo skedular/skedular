@@ -149,6 +149,7 @@ public class Mapper : IMapper
             Locale = customer.Locale,
             IsOrganizationOnboardingDone = customer.Settings.IsOrganizationOnboardingDone,
             IsLocationOnboardingDone = customer.Settings.IsLocationOnboardingDone,
+            IsTeamOnboardingDone = customer.Settings.IsTeamOnboardingDone,
             IsDefaultOrganizationOnboardingDone = customer.Settings.IsDefaultOrganizationOnboardingDone,
             IsDefaultLocationOnboardingDone = customer.Settings.IsDefaultLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = customer.Settings.IsPreferredZoneOnboardingDone,
@@ -357,6 +358,7 @@ public class Mapper : IMapper
                 Locale = src.Locale,
                 IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
                 IsLocationOnboardingDone = src.IsLocationOnboardingDone,
+                IsTeamOnboardingDone = src.IsTeamOnboardingDone,
                 IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
                 IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
                 IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
@@ -408,6 +410,7 @@ public class Mapper : IMapper
         dest.Locale = src.Locale;
         dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
         dest.IsLocationOnboardingDone = src.IsLocationOnboardingDone;
+        dest.IsTeamOnboardingDone = src.IsTeamOnboardingDone;
         dest.IsDefaultOrganizationOnboardingDone =
             src.IsDefaultOrganizationOnboardingDone;
         dest.IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone;

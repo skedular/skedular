@@ -57,6 +57,10 @@ type Mutation {
         input: CompleteLocationOnboardingInput!
     ): CustomerPayload
 
+    completeTeamOnboarding(
+        input: CompleteTeamOnboardingInput!
+    ): CustomerPayload
+
     completeDefaultOrganizationOnboarding(
         input: CompleteDefaultOrganizationOnboardingInput!
     ): CustomerPayload
@@ -137,6 +141,7 @@ type CustomerDetails implements Node {
     locale: String
     isOrganizationOnboardingDone: Boolean!
     isLocationOnboardingDone: Boolean!
+    isTeamOnboardingDone: Boolean!
     isDefaultOrganizationOnboardingDone: Boolean!
     isDefaultLocationOnboardingDone: Boolean!
     isPreferredZoneOnboardingDone: Boolean!
@@ -177,6 +182,10 @@ input CompleteOrganizationOnboardingInput {
 }
 
 input CompleteLocationOnboardingInput {
+    clientMutationId: String
+}
+
+input CompleteTeamOnboardingInput {
     clientMutationId: String
 }
 

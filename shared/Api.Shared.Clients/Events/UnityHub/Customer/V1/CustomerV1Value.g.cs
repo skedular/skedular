@@ -47,19 +47,20 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
             "Mg4uY3VzdG9tZXIuRGVzaxIkCghzZXR0aW5ncxgXIAEoCzISLmN1c3RvbWVy",
             "LlNldHRpbmdzEiQKDGRlZmF1bHRUZWFtcxgYIAMoCzIOLmN1c3RvbWVyLlRl",
             "YW0iPAoISWRlbnRpdHkSCgoCaWQYASABKAkSDQoFZW1haWwYAiABKAkSFQoN",
-            "ZW1haWxWZXJpZmllZBgDIAEoCCKCAgoIU2V0dGluZ3MSCgoCaWQYASABKAkS",
+            "ZW1haWxWZXJpZmllZBgDIAEoCCKgAgoIU2V0dGluZ3MSCgoCaWQYASABKAkS",
             "JAocaXNPcmdhbml6YXRpb25PbmJvYXJkaW5nRG9uZRgCIAEoCBIgChhpc0xv",
-            "Y2F0aW9uT25ib2FyZGluZ0RvbmUYAyABKAgSKwojaXNEZWZhdWx0T3JnYW5p",
-            "emF0aW9uT25ib2FyZGluZ0RvbmUYBCABKAgSJwofaXNEZWZhdWx0TG9jYXRp",
-            "b25PbmJvYXJkaW5nRG9uZRgFIAEoCBIlCh1pc1ByZWZlcnJlZFpvbmVPbmJv",
-            "YXJkaW5nRG9uZRgGIAEoCBIlCh1pc1ByZWZlcnJlZERlc2tPbmJvYXJkaW5n",
-            "RG9uZRgHIAEoCCIuCghMb2NhdGlvbhIKCgJpZBgBIAEoCRIWCg5vcmdhbml6",
-            "YXRpb25JZBgCIAEoCSIqCgRUZWFtEgoKAmlkGAEgASgJEhYKDm9yZ2FuaXph",
-            "dGlvbklkGAIgASgJIi0KC0xvY2F0aW9uVGFnEgoKAmlkGAEgASgJEhIKCmxv",
-            "Y2F0aW9uSWQYAiABKAkiJgoERGVzaxIKCgJpZBgBIAEoCRISCgpsb2NhdGlv",
-            "bklkGAIgASgJKjEKBFR5cGUSFAoQQ3VzdG9tZXJVcHNlcnRlZBAAEhMKD0N1",
-            "c3RvbWVyRGVsZXRlZBABQjeqAjRBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRz",
-            "LlVuaXR5SHViLkN1c3RvbWVyLlYxLlZhbHVlYgZwcm90bzM="));
+            "Y2F0aW9uT25ib2FyZGluZ0RvbmUYAyABKAgSHAoUaXNUZWFtT25ib2FyZGlu",
+            "Z0RvbmUYBCABKAgSKwojaXNEZWZhdWx0T3JnYW5pemF0aW9uT25ib2FyZGlu",
+            "Z0RvbmUYBSABKAgSJwofaXNEZWZhdWx0TG9jYXRpb25PbmJvYXJkaW5nRG9u",
+            "ZRgGIAEoCBIlCh1pc1ByZWZlcnJlZFpvbmVPbmJvYXJkaW5nRG9uZRgHIAEo",
+            "CBIlCh1pc1ByZWZlcnJlZERlc2tPbmJvYXJkaW5nRG9uZRgIIAEoCCIuCghM",
+            "b2NhdGlvbhIKCgJpZBgBIAEoCRIWCg5vcmdhbml6YXRpb25JZBgCIAEoCSIq",
+            "CgRUZWFtEgoKAmlkGAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIgASgJIi0K",
+            "C0xvY2F0aW9uVGFnEgoKAmlkGAEgASgJEhIKCmxvY2F0aW9uSWQYAiABKAki",
+            "JgoERGVzaxIKCgJpZBgBIAEoCRISCgpsb2NhdGlvbklkGAIgASgJKjEKBFR5",
+            "cGUSFAoQQ3VzdG9tZXJVcHNlcnRlZBAAEhMKD0N1c3RvbWVyRGVsZXRlZBAB",
+            "QjeqAjRBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlVuaXR5SHViLkN1c3Rv",
+            "bWVyLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -68,7 +69,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Data), global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Data.Parser, new[]{ "AfterState" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Customer), global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Customer.Parser, new[]{ "Id", "DeletedAt", "Identities", "Designation", "Title", "Name", "GivenName", "MiddleName", "FamilyName", "PhotoUrl", "PhotoUrl24", "PhotoUrl32", "PhotoUrl48", "PhotoUrl72", "PhotoUrl192", "PhotoUrl512", "Timezone", "Locale", "DefaultLocations", "DefaultOrganizationId", "DefaultLocationTags", "DefaultDesks", "Settings", "DefaultTeams" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Identity), global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Identity.Parser, new[]{ "Id", "Email", "EmailVerified" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Settings), global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Settings.Parser, new[]{ "Id", "IsOrganizationOnboardingDone", "IsLocationOnboardingDone", "IsDefaultOrganizationOnboardingDone", "IsDefaultLocationOnboardingDone", "IsPreferredZoneOnboardingDone", "IsPreferredDeskOnboardingDone" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Settings), global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Settings.Parser, new[]{ "Id", "IsOrganizationOnboardingDone", "IsLocationOnboardingDone", "IsTeamOnboardingDone", "IsDefaultOrganizationOnboardingDone", "IsDefaultLocationOnboardingDone", "IsPreferredZoneOnboardingDone", "IsPreferredDeskOnboardingDone" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Location), global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Location.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Team), global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Team.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.LocationTag), global::Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.LocationTag.Parser, new[]{ "Id", "LocationId" }, null, null, null, null),
@@ -2261,6 +2262,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
       id_ = other.id_;
       isOrganizationOnboardingDone_ = other.isOrganizationOnboardingDone_;
       isLocationOnboardingDone_ = other.isLocationOnboardingDone_;
+      isTeamOnboardingDone_ = other.isTeamOnboardingDone_;
       isDefaultOrganizationOnboardingDone_ = other.isDefaultOrganizationOnboardingDone_;
       isDefaultLocationOnboardingDone_ = other.isDefaultLocationOnboardingDone_;
       isPreferredZoneOnboardingDone_ = other.isPreferredZoneOnboardingDone_;
@@ -2310,8 +2312,20 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "isTeamOnboardingDone" field.</summary>
+    public const int IsTeamOnboardingDoneFieldNumber = 4;
+    private bool isTeamOnboardingDone_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsTeamOnboardingDone {
+      get { return isTeamOnboardingDone_; }
+      set {
+        isTeamOnboardingDone_ = value;
+      }
+    }
+
     /// <summary>Field number for the "isDefaultOrganizationOnboardingDone" field.</summary>
-    public const int IsDefaultOrganizationOnboardingDoneFieldNumber = 4;
+    public const int IsDefaultOrganizationOnboardingDoneFieldNumber = 5;
     private bool isDefaultOrganizationOnboardingDone_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2323,7 +2337,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
     }
 
     /// <summary>Field number for the "isDefaultLocationOnboardingDone" field.</summary>
-    public const int IsDefaultLocationOnboardingDoneFieldNumber = 5;
+    public const int IsDefaultLocationOnboardingDoneFieldNumber = 6;
     private bool isDefaultLocationOnboardingDone_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2335,7 +2349,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
     }
 
     /// <summary>Field number for the "isPreferredZoneOnboardingDone" field.</summary>
-    public const int IsPreferredZoneOnboardingDoneFieldNumber = 6;
+    public const int IsPreferredZoneOnboardingDoneFieldNumber = 7;
     private bool isPreferredZoneOnboardingDone_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2347,7 +2361,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
     }
 
     /// <summary>Field number for the "isPreferredDeskOnboardingDone" field.</summary>
-    public const int IsPreferredDeskOnboardingDoneFieldNumber = 7;
+    public const int IsPreferredDeskOnboardingDoneFieldNumber = 8;
     private bool isPreferredDeskOnboardingDone_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2376,6 +2390,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
       if (Id != other.Id) return false;
       if (IsOrganizationOnboardingDone != other.IsOrganizationOnboardingDone) return false;
       if (IsLocationOnboardingDone != other.IsLocationOnboardingDone) return false;
+      if (IsTeamOnboardingDone != other.IsTeamOnboardingDone) return false;
       if (IsDefaultOrganizationOnboardingDone != other.IsDefaultOrganizationOnboardingDone) return false;
       if (IsDefaultLocationOnboardingDone != other.IsDefaultLocationOnboardingDone) return false;
       if (IsPreferredZoneOnboardingDone != other.IsPreferredZoneOnboardingDone) return false;
@@ -2390,6 +2405,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (IsOrganizationOnboardingDone != false) hash ^= IsOrganizationOnboardingDone.GetHashCode();
       if (IsLocationOnboardingDone != false) hash ^= IsLocationOnboardingDone.GetHashCode();
+      if (IsTeamOnboardingDone != false) hash ^= IsTeamOnboardingDone.GetHashCode();
       if (IsDefaultOrganizationOnboardingDone != false) hash ^= IsDefaultOrganizationOnboardingDone.GetHashCode();
       if (IsDefaultLocationOnboardingDone != false) hash ^= IsDefaultLocationOnboardingDone.GetHashCode();
       if (IsPreferredZoneOnboardingDone != false) hash ^= IsPreferredZoneOnboardingDone.GetHashCode();
@@ -2424,20 +2440,24 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
         output.WriteRawTag(24);
         output.WriteBool(IsLocationOnboardingDone);
       }
-      if (IsDefaultOrganizationOnboardingDone != false) {
+      if (IsTeamOnboardingDone != false) {
         output.WriteRawTag(32);
+        output.WriteBool(IsTeamOnboardingDone);
+      }
+      if (IsDefaultOrganizationOnboardingDone != false) {
+        output.WriteRawTag(40);
         output.WriteBool(IsDefaultOrganizationOnboardingDone);
       }
       if (IsDefaultLocationOnboardingDone != false) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(48);
         output.WriteBool(IsDefaultLocationOnboardingDone);
       }
       if (IsPreferredZoneOnboardingDone != false) {
-        output.WriteRawTag(48);
+        output.WriteRawTag(56);
         output.WriteBool(IsPreferredZoneOnboardingDone);
       }
       if (IsPreferredDeskOnboardingDone != false) {
-        output.WriteRawTag(56);
+        output.WriteRawTag(64);
         output.WriteBool(IsPreferredDeskOnboardingDone);
       }
       if (_unknownFields != null) {
@@ -2462,20 +2482,24 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
         output.WriteRawTag(24);
         output.WriteBool(IsLocationOnboardingDone);
       }
-      if (IsDefaultOrganizationOnboardingDone != false) {
+      if (IsTeamOnboardingDone != false) {
         output.WriteRawTag(32);
+        output.WriteBool(IsTeamOnboardingDone);
+      }
+      if (IsDefaultOrganizationOnboardingDone != false) {
+        output.WriteRawTag(40);
         output.WriteBool(IsDefaultOrganizationOnboardingDone);
       }
       if (IsDefaultLocationOnboardingDone != false) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(48);
         output.WriteBool(IsDefaultLocationOnboardingDone);
       }
       if (IsPreferredZoneOnboardingDone != false) {
-        output.WriteRawTag(48);
+        output.WriteRawTag(56);
         output.WriteBool(IsPreferredZoneOnboardingDone);
       }
       if (IsPreferredDeskOnboardingDone != false) {
-        output.WriteRawTag(56);
+        output.WriteRawTag(64);
         output.WriteBool(IsPreferredDeskOnboardingDone);
       }
       if (_unknownFields != null) {
@@ -2495,6 +2519,9 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
         size += 1 + 1;
       }
       if (IsLocationOnboardingDone != false) {
+        size += 1 + 1;
+      }
+      if (IsTeamOnboardingDone != false) {
         size += 1 + 1;
       }
       if (IsDefaultOrganizationOnboardingDone != false) {
@@ -2529,6 +2556,9 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
       }
       if (other.IsLocationOnboardingDone != false) {
         IsLocationOnboardingDone = other.IsLocationOnboardingDone;
+      }
+      if (other.IsTeamOnboardingDone != false) {
+        IsTeamOnboardingDone = other.IsTeamOnboardingDone;
       }
       if (other.IsDefaultOrganizationOnboardingDone != false) {
         IsDefaultOrganizationOnboardingDone = other.IsDefaultOrganizationOnboardingDone;
@@ -2574,18 +2604,22 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
             break;
           }
           case 32: {
-            IsDefaultOrganizationOnboardingDone = input.ReadBool();
+            IsTeamOnboardingDone = input.ReadBool();
             break;
           }
           case 40: {
-            IsDefaultLocationOnboardingDone = input.ReadBool();
+            IsDefaultOrganizationOnboardingDone = input.ReadBool();
             break;
           }
           case 48: {
-            IsPreferredZoneOnboardingDone = input.ReadBool();
+            IsDefaultLocationOnboardingDone = input.ReadBool();
             break;
           }
           case 56: {
+            IsPreferredZoneOnboardingDone = input.ReadBool();
+            break;
+          }
+          case 64: {
             IsPreferredDeskOnboardingDone = input.ReadBool();
             break;
           }
@@ -2621,18 +2655,22 @@ namespace Api.Shared.Clients.Events.UnityHub.Customer.V1.Value {
             break;
           }
           case 32: {
-            IsDefaultOrganizationOnboardingDone = input.ReadBool();
+            IsTeamOnboardingDone = input.ReadBool();
             break;
           }
           case 40: {
-            IsDefaultLocationOnboardingDone = input.ReadBool();
+            IsDefaultOrganizationOnboardingDone = input.ReadBool();
             break;
           }
           case 48: {
-            IsPreferredZoneOnboardingDone = input.ReadBool();
+            IsDefaultLocationOnboardingDone = input.ReadBool();
             break;
           }
           case 56: {
+            IsPreferredZoneOnboardingDone = input.ReadBool();
+            break;
+          }
+          case 64: {
             IsPreferredDeskOnboardingDone = input.ReadBool();
             break;
           }

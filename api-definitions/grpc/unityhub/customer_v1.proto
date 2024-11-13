@@ -87,15 +87,16 @@ message Admin_AddInput {
     string locale = 17;
     bool isOrganizationOnboardingDone = 18;
     bool isLocationOnboardingDone = 19;
-    bool isDefaultOrganizationOnboardingDone = 20;
-    bool isDefaultLocationOnboardingDone = 21;
-    bool isPreferredZoneOnboardingDone = 22;
-    bool isPreferredDeskOnboardingDone = 23;
-    Organization defaultOrganization = 24;
-    repeated Location defaultLocations = 25;
-    repeated LocationTag preferredLocationTags = 26;
-    repeated Desk preferredDesks = 27;
-    repeated Team defaultTeams = 28;
+    bool isTeamOnboardingDone = 20;
+    bool isDefaultOrganizationOnboardingDone = 21;
+    bool isDefaultLocationOnboardingDone = 22;
+    bool isPreferredZoneOnboardingDone = 23;
+    bool isPreferredDeskOnboardingDone = 24;
+    Organization defaultOrganization = 25;
+    repeated Location defaultLocations = 26;
+    repeated LocationTag preferredLocationTags = 27;
+    repeated Desk preferredDesks = 28;
+    repeated Team defaultTeams = 29;
 }
 
 message Customer {
@@ -118,15 +119,16 @@ message Customer {
     string locale = 17;
     bool isOrganizationOnboardingDone = 18;
     bool isLocationOnboardingDone = 19;
-    bool isDefaultOrganizationOnboardingDone = 20;
-    bool isDefaultLocationOnboardingDone = 21;
-    bool isPreferredZoneOnboardingDone = 22;
-    bool isPreferredDeskOnboardingDone = 23;
-    Organization defaultOrganization = 24;
-    repeated Location defaultLocations = 25;
-    repeated LocationTag preferredLocationTags = 26;
-    repeated Desk preferredDesks = 27;
-    repeated Team defaultTeams = 28;
+    bool isTeamOnboardingDone = 20;
+    bool isDefaultOrganizationOnboardingDone = 21;
+    bool isDefaultLocationOnboardingDone = 22;
+    bool isPreferredZoneOnboardingDone = 23;
+    bool isPreferredDeskOnboardingDone = 24;
+    Organization defaultOrganization = 25;
+    repeated Location defaultLocations = 26;
+    repeated LocationTag preferredLocationTags = 27;
+    repeated Desk preferredDesks = 28;
+    repeated Team defaultTeams = 29;
 }
 
 message Identity {

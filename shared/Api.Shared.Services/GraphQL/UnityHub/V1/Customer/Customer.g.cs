@@ -138,6 +138,16 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
         
 
         
+        [HotChocolate.GraphQLName("CompleteTeamOnboardingInput")]
+        public class CompleteTeamOnboardingInput
+        {
+            [HotChocolate.GraphQLName("clientMutationId")]
+            public string? ClientMutationId { get; set; }
+
+        }
+        
+
+        
         [HotChocolate.GraphQLName("CustomerConnection")]
         public class CustomerConnection
         {
@@ -229,6 +239,9 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
 
             [HotChocolate.GraphQLName("isLocationOnboardingDone")]
             public bool IsLocationOnboardingDone { get; set; }
+
+            [HotChocolate.GraphQLName("isTeamOnboardingDone")]
+            public bool IsTeamOnboardingDone { get; set; }
 
             [HotChocolate.GraphQLName("isDefaultOrganizationOnboardingDone")]
             public bool IsDefaultOrganizationOnboardingDone { get; set; }
@@ -422,6 +435,10 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
             
 
                 
+                public abstract Task<CustomerPayload?> CompleteTeamOnboardingAsync([HotChocolate.GraphQLName("input")] CompleteTeamOnboardingInput input, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
+            
+
+                
                 public abstract Task<CustomerPayload?> CompleteDefaultOrganizationOnboardingAsync([HotChocolate.GraphQLName("input")] CompleteDefaultOrganizationOnboardingInput input, [HotChocolate.Service] IServiceProvider serviceProvider, CancellationToken cancellationToken);
             
 
@@ -592,6 +609,16 @@ namespace Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
         {
             [HotChocolate.GraphQLName("input")]
             public CompletePreferredZoneOnboardingInput Input { get; set; }
+
+        }
+        
+
+        
+        [HotChocolate.GraphQLName("Mutation_CompleteTeamOnboarding_Arguments")]
+        public class Mutation_CompleteTeamOnboarding_Arguments
+        {
+            [HotChocolate.GraphQLName("input")]
+            public CompleteTeamOnboardingInput Input { get; set; }
 
         }
         

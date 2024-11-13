@@ -34,6 +34,7 @@ public class Mapper : IMapper
             {
                 IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
                 IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
+                IsTeamOnboardingDone = src.IsTeamOnboardingDone ?? false,
                 IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
                 IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone ?? false,
                 IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,

@@ -29,6 +29,17 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    public override async Task<CustomerPayload?> CompleteTeamOnboardingAsync(
+        CompleteTeamOnboardingInput input,
+        IServiceProvider serviceProvider,
+        CancellationToken cancellationToken)
+    {
+        await using var scope = serviceProvider.CreateScopeAndSetContent();
+        var service = scope.ServiceProvider.GetRequiredService<ICustomerSettingsService>();
+        var customer = await service.CompleteTeamOnboardingAsync(cancellationToken);
+        return mapper.MapTo(customer, input.ClientMutationId);
+    }
+
     public override async Task<CustomerPayload?> CompleteDefaultOrganizationOnboardingAsync(
         CompleteDefaultOrganizationOnboardingInput input,
         IServiceProvider serviceProvider,
