@@ -10,20 +10,10 @@ namespace Slack.Jobs.Jobs;
 public class LocationDailyUpdateJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<LocationDailyUpdateJob> logger,
-    ITimeHelper timeHelper) : BackgroundService
+    ILogger<LocationDailyUpdateJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            await timeHelper.RandomSleepWhileStartingUpAsync(cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-
         do
         {
             try

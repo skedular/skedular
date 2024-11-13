@@ -10,20 +10,10 @@ namespace Slack.Jobs.Jobs;
 public class TeamDailyUpdateJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<TeamDailyUpdateJob> logger,
-    ITimeHelper timeHelper) : BackgroundService
+    ILogger<TeamDailyUpdateJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            await timeHelper.RandomSleepWhileStartingUpAsync(cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-
         do
         {
             try

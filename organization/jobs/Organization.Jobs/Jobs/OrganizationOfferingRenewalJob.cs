@@ -1,5 +1,4 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
@@ -9,20 +8,10 @@ namespace Organization.Jobs.Jobs;
 public class OrganizationOfferingRenewalJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<OrganizationOfferingRenewalJob> logger,
-    ITimeHelper timeHelper) : BackgroundService
+    ILogger<OrganizationOfferingRenewalJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            await timeHelper.RandomSleepWhileStartingUpAsync(cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-
         do
         {
             try

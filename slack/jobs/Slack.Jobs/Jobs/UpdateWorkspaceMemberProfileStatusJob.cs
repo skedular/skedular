@@ -11,20 +11,10 @@ namespace Slack.Jobs.Jobs;
 public class UpdateWorkspaceMemberProfileStatusJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<UpdateWorkspaceMemberProfileStatusJob> logger,
-    ITimeHelper timeHelper) : BackgroundService
+    ILogger<UpdateWorkspaceMemberProfileStatusJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            await timeHelper.RandomSleepWhileStartingUpAsync(cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-
         do
         {
             try

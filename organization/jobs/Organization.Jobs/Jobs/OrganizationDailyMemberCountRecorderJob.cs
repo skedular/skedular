@@ -9,20 +9,10 @@ namespace Organization.Jobs.Jobs;
 public class OrganizationDailyMemberCountRecorderJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<OrganizationDailyMemberCountRecorderJob> logger,
-    ITimeHelper timeHelper) : BackgroundService
+    ILogger<OrganizationDailyMemberCountRecorderJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            await timeHelper.RandomSleepWhileStartingUpAsync(cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-
         do
         {
             try

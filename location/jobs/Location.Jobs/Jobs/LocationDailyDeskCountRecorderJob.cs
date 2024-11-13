@@ -9,20 +9,10 @@ namespace Location.Jobs.Jobs;
 public class LocationDailyDeskCountRecorderJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<LocationDailyDeskCountRecorderJob> logger,
-    ITimeHelper timeHelper) : BackgroundService
+    ILogger<LocationDailyDeskCountRecorderJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            await timeHelper.RandomSleepWhileStartingUpAsync(cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-
         do
         {
             try

@@ -1,5 +1,4 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore;
 using Slack.Shared.Database.Entities;
 using Slack.Shared.Publishers;
@@ -10,20 +9,10 @@ namespace Slack.Jobs.Jobs;
 public class RefreshWorkspaceMembersJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<RefreshWorkspaceMembersJob> logger,
-    ITimeHelper timeHelper) : BackgroundService
+    ILogger<RefreshWorkspaceMembersJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            await timeHelper.RandomSleepWhileStartingUpAsync(cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-
         do
         {
             try

@@ -72,8 +72,7 @@ public abstract class StartupCustom(IConfiguration configuration, IWebHostEnviro
             .AddMemoryCache()
             .AddSecurity(Configuration)
             .AddContext()
-            .AddRandomHelper()
-            .AddTimeHelper();
+            .AddRandomHelper();
     }
 
     protected abstract void ConfigureCustomServices(IServiceCollection services);

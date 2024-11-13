@@ -1,5 +1,4 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
@@ -10,20 +9,10 @@ namespace Organization.Jobs.Jobs;
 public class RefreshAzureTenantMembersJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<RefreshAzureTenantMembersJob> logger,
-    ITimeHelper timeHelper) : BackgroundService
+    ILogger<RefreshAzureTenantMembersJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            await timeHelper.RandomSleepWhileStartingUpAsync(cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-
         do
         {
             try

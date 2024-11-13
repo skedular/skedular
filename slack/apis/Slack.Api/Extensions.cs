@@ -1,5 +1,4 @@
 using Slack.Api.Components;
-using Slack.Api.Jobs;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
@@ -59,7 +58,6 @@ public static class Extensions
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services
-            .AddHostedService<ConnectionKeepAliveJob>()
             .AddSingleton<AsyncPageRenderingService>()
             .AddHostedService(sp => sp.GetRequiredService<AsyncPageRenderingService>());
 }

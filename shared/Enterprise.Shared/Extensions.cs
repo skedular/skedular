@@ -53,10 +53,6 @@ public static class Extensions
     public static IServiceCollection AddContext(this IServiceCollection services) =>
         services.AddScoped<IContext, Context.Context>();
 
-    public static IServiceCollection AddTimeHelper(this IServiceCollection services) =>
-        services
-            .AddSingleton<ITimeHelper, TimeHelper>();
-
     public static IServiceCollection AddRandomHelper(this IServiceCollection services) =>
         services
             .AddSingleton(new System.Random())
