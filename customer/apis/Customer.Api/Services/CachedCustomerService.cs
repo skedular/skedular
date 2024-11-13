@@ -1,5 +1,6 @@
 using Customer.Api.Mappers;
 using Customer.Shared.Repositories;
+using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Exceptions;
 using Microsoft.Extensions.Caching.Memory;
@@ -24,6 +25,7 @@ public interface ICachedCustomerService
 
     void CleanCache();
     void CleanCache(string id);
+    void CleanCache(Shared.Database.Entities.Customer customer);
 }
 
 public class CachedCustomerService(
@@ -132,5 +134,14 @@ public class CachedCustomerService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         memoryCache.Remove($"customer-id-{id}");
+    }
+
+    public void CleanCache(Shared.Database.Entities.Customer customer)
+    {
+        memoryCache.Remove($"customer-id-{customer.Id}");
+        customer.Identities.ForEach(identity =>
+        {
+            memoryCache.Remove($"customer-verifiabletoken-{identity.Id}");
+        });
     }
 }

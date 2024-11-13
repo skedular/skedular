@@ -70,11 +70,11 @@ internal static class TeamExtensions
         {
             query = string.IsNullOrWhiteSpace(searchCriteria.CustomerId)
                 ? query.Where(item =>
-                    item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId &&
+                    item.Organization != null && !item.Organization.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId &&
                     item.Organization.OrganizationMembers.Any(organizationMember =>
                         !organizationMember.DeletedAt.HasValue))
                 : query.Where(item =>
-                    item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId &&
+                    item.Organization != null && !item.Organization.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId &&
                     item.Organization.OrganizationMembers.Any(organizationMember =>
                         !organizationMember.DeletedAt.HasValue &&
                         organizationMember.Customer.Id == searchCriteria.CustomerId));
@@ -163,7 +163,9 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             query = query.Where(team =>
-                team.Organization != null && team.Organization.Id == organizationId);
+                team.Organization != null &&
+                !team.Organization.DeletedAt.HasValue &&
+                team.Organization.Id == organizationId);
         }
 
         return await query

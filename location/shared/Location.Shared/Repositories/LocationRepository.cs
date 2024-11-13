@@ -58,7 +58,7 @@ internal static class LocationExtensions
                 (item.Organization == null && item.LocationMembers.Any(locationMember =>
                     !locationMember.DeletedAt.HasValue && (searchCriteria.CustomerId == null ||
                                                            locationMember.Customer.Id == searchCriteria.CustomerId))) ||
-                (item.Organization != null &&
+                (item.Organization != null && !item.Organization.DeletedAt.HasValue &&
                  (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
                      !organizationMember.DeletedAt.HasValue &&
                      organizationMember.Customer.Id ==
@@ -67,7 +67,8 @@ internal static class LocationExtensions
         else
         {
             query = query.Where(item =>
-                item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId &&
+                item.Organization != null && !item.Organization.DeletedAt.HasValue &&
+                item.Organization.Id == searchCriteria.OrganizationId &&
                 (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
                     !organizationMember.DeletedAt.HasValue &&
                     organizationMember.Customer.Id ==
@@ -156,13 +157,15 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
                                                   location.LocationMembers.Any(item =>
                                                       item.Customer.Id == customerId)) ||
                                                  (location.Organization != null &&
+                                                  !location.Organization.DeletedAt.HasValue &&
                                                   location.Organization.OrganizationMembers.Any(organizationMember =>
                                                       organizationMember.Customer.Id == customerId))));
 
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            query = query.Where(location =>
-                location.Organization != null && location.Organization.Id == organizationId);
+            query = query.Where(item =>
+                item.Organization != null && !item.Organization.DeletedAt.HasValue &&
+                item.Organization.Id == organizationId);
         }
 
         return await query

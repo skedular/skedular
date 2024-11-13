@@ -22,7 +22,8 @@ public class CustomerHelperService(
     IRepositoryFactory repositoryFactory,
     ICustomerOutboxPublisher customerOutboxPublisher,
     IMapper mapper,
-    IContext context) : ICustomerHelperService
+    IContext context,
+    ICachedCustomerService cachedCustomerService) : ICustomerHelperService
 {
     public async Task<Shared.Database.Entities.Customer> GetCustomerAsync(string customerId,
         CancellationToken cancellationToken)
@@ -70,6 +71,8 @@ public class CustomerHelperService(
 
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+        
+        cachedCustomerService.CleanCache(existingCustomer);
 
         return customer;
     }

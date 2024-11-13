@@ -72,9 +72,10 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
             .Where(query => !query.DeletedAt.HasValue &&
                             ((query.Organization == null && query.TeamMembers.Any(teamMember =>
                                  !teamMember.DeletedAt.HasValue && teamMember.Customer.Id == customerId)) ||
-                             (query.Organization != null && query.Organization.OrganizationMembers.Any(
-                                 organizationMember =>
-                                     !organizationMember.DeletedAt.HasValue &&
-                                     organizationMember.Customer.Id == customerId))))
+                             (query.Organization != null && !query.Organization.DeletedAt.HasValue &&
+                              query.Organization.OrganizationMembers.Any(
+                                  organizationMember =>
+                                      !organizationMember.DeletedAt.HasValue &&
+                                      organizationMember.Customer.Id == customerId))))
             .ToListAsync(cancellationToken);
 }

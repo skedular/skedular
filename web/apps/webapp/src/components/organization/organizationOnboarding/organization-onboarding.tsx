@@ -1,5 +1,7 @@
+import { AddLocation } from '@/components/location/addLocation';
 import { AddOrganization } from '@/components/organization/addOrganization';
 import type { organizationOnboarding_rootQuery } from '@/queries/__generated__/organizationOnboarding_rootQuery.graphql';
+import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
@@ -20,33 +22,58 @@ const RootQuery = graphql`
   query organizationOnboarding_rootQuery {
     me {
       id
-      isOrganizationOnboardingDone
+      isLocationOnboardingDone
     }
   }
 `;
 
 const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<organizationOnboarding_rootQuery>(RootQuery, queryReference);
-  const [activeStep] = useState(0);
-  const [isOnboardingOpen, setIsOnboardingOpen] = useState(!rootData.me?.isOrganizationOnboardingDone);
+  const [activeStep, setActiveStep] = useState(0);
+  const [organizationId, setOrganizationId] = useState<string | null>(null);
 
-  const handleAdded = () => {
-    setIsOnboardingOpen(false);
+  const handleOrganizationAdded = (id: string) => {
+    if (rootData.me?.isLocationOnboardingDone) {
+      onReloadRequired();
+
+      return;
+    }
+
+    setOrganizationId(id);
+    setActiveStep(1);
+  };
+
+  const handleLocationAdded = () => {
+    onReloadRequired();
+  };
+
+  const handleLocationDismissed = () => {
+    onReloadRequired();
   };
 
   return (
-    <>
-      {isOnboardingOpen && (
-        <>
-          <Stepper activeStep={activeStep}>
-            <Step>
-              <StepLabel>Create Organization</StepLabel>
-            </Step>
-          </Stepper>
-          {activeStep === 0 && <AddOrganization showCancel={false} onAdded={handleAdded} onReloadRequired={onReloadRequired} />}
-        </>
+    <Stack spacing={1}>
+      <Stepper activeStep={activeStep}>
+        <Step>
+          <StepLabel>Create Organization</StepLabel>
+        </Step>
+        {!rootData.me?.isLocationOnboardingDone && (
+          <Step>
+            <StepLabel>Create Location</StepLabel>
+          </Step>
+        )}
+      </Stepper>
+      {activeStep === 0 && <AddOrganization onReloadRequired={() => {}} showCancel={false} onAdded={handleOrganizationAdded} />}
+      {activeStep === 1 && organizationId && !rootData.me?.isLocationOnboardingDone && (
+        <AddLocation
+          organizationId={organizationId}
+          onReloadRequired={() => {}}
+          onAdded={handleLocationAdded}
+          onCancelled={handleLocationDismissed}
+          cancelButtonText="Dismiss"
+        />
       )}
-    </>
+    </Stack>
   );
 };
 

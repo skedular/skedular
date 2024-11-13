@@ -96,9 +96,10 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
             .Where(query => !query.DeletedAt.HasValue &&
                             ((query.Organization == null && query.LocationMembers.Any(locationMember =>
                                  !locationMember.DeletedAt.HasValue && locationMember.Customer.Id == customerId)) ||
-                             (query.Organization != null && query.Organization.OrganizationMembers.Any(
-                                 organizationMember =>
-                                     !organizationMember.DeletedAt.HasValue &&
-                                     organizationMember.Customer.Id == customerId))))
+                             (query.Organization != null && !query.Organization.DeletedAt.HasValue &&
+                              query.Organization.OrganizationMembers.Any(
+                                  organizationMember =>
+                                      !organizationMember.DeletedAt.HasValue &&
+                                      organizationMember.Customer.Id == customerId))))
             .ToListAsync(cancellationToken);
 }

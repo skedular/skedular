@@ -92,9 +92,12 @@ internal static class BookingExtensions
             searchCriteria.TeamIds.Count != 0)
         {
             query = query.Where(item =>
-                (item.Organization != null && searchCriteria.OrganizationIds.Contains(item.Organization.Id)) ||
-                (item.Location != null && searchCriteria.LocationIds.Contains(item.Location.Id)) ||
-                (item.Team != null && searchCriteria.TeamIds.Contains(item.Team.Id)));
+                (item.Organization != null && !item.Organization.DeletedAt.HasValue &&
+                 searchCriteria.OrganizationIds.Contains(item.Organization.Id)) ||
+                (item.Location != null && !item.Location.DeletedAt.HasValue &&
+                 searchCriteria.LocationIds.Contains(item.Location.Id)) ||
+                (item.Team != null && !item.Team.DeletedAt.HasValue &&
+                 searchCriteria.TeamIds.Contains(item.Team.Id)));
         }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NotesContains))

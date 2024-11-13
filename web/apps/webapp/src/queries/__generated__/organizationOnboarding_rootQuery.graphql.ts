@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e6c1fe99d17792c9b113e2f154dd2ab>>
+ * @generated SignedSource<<f8e2d4a9f86d0838d0820598f06bba97>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ export type organizationOnboarding_rootQuery$variables = Record<PropertyKey, nev
 export type organizationOnboarding_rootQuery$data = {
   readonly me: {
     readonly id: string;
-    readonly isOrganizationOnboardingDone: boolean;
+    readonly isLocationOnboardingDone: boolean;
   } | null | undefined;
 };
 export type organizationOnboarding_rootQuery = {
@@ -42,7 +42,7 @@ var v0 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "isOrganizationOnboardingDone",
+        "name": "isLocationOnboardingDone",
         "storageKey": null
       }
     ],
@@ -67,16 +67,16 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "cacheID": "2777a887ef80a168db71140897f81189",
+    "cacheID": "e01bcf4b69c41d510a7c24b0cd7858ee",
     "id": null,
     "metadata": {},
     "name": "organizationOnboarding_rootQuery",
     "operationKind": "query",
-    "text": "query organizationOnboarding_rootQuery {\n  me {\n    id\n    isOrganizationOnboardingDone\n  }\n}\n"
+    "text": "query organizationOnboarding_rootQuery {\n  me {\n    id\n    isLocationOnboardingDone\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "cd5bc38b66981f02f98d6775de21f736";
+(node as any).hash = "cc2760fbbc97513d86bdd8aa80193dec";
 
 export default node;

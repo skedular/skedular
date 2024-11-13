@@ -33,6 +33,7 @@ type Props = {
   organizationId: string;
   onAdded: (id: string) => void;
   onCancelled: () => void;
+  cancelButtonText?: string;
 };
 
 const RootQuery = graphql`
@@ -56,7 +57,7 @@ const locationSchema = object({
   timezone: string().nullable(),
 });
 
-const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancelled }: Props) => {
+const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancelled, cancelButtonText }: Props) => {
   const rootData = usePreloadedQuery<addLocation_rootQuery>(RootQuery, queryReference);
   const [commitAddLocation] = useMutation<addLocation_addLocationMutation>(graphql`
     mutation addLocation_addLocationMutation($input: AddLocationInput!) @raw_response_type {
@@ -206,7 +207,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
 
             <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
               <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                Cancel
+                {cancelButtonText ?? 'Cancel'}
               </Button>
               <Button color="primary" variant="contained" type="submit">
                 Create
@@ -226,9 +227,10 @@ type RelayProps = {
   onReloadRequired: () => void;
   onAdded: (id: string) => void;
   onCancelled: () => void;
+  cancelButtonText?: string;
 };
 
-const AddLocationWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancelled }: RelayProps) => {
+const AddLocationWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancelled, cancelButtonText }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addLocation_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -264,6 +266,7 @@ const AddLocationWithRelay = ({ organizationId, onReloadRequired, onAdded, onCan
         organizationId={organizationId}
         onAdded={onAdded}
         onCancelled={onCancelled}
+        cancelButtonText={cancelButtonText}
       />
     </ErrorBoundary>
   );
