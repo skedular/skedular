@@ -59,11 +59,15 @@ public class DeskService(
             ? await repositoryFactory.DeskRepository.Query(new Specification<Shared.Database.Entities.Desk>
                     {
                         Criteria = query =>
-                            !query.DeletedAt.HasValue && !query.Deactivated && query.Location.Organization != null &&
+                            !query.DeletedAt.HasValue &&
+                            !query.Deactivated &&
+                            query.Location != null &&
+                            query.Location.Organization != null &&
                             query.Location.Organization.Id == organizationId &&
                             !query.Bookings.Any(booking =>
                                 !booking.DeletedAt.HasValue && booking.From >= date && booking.To < date.Tomorrow() &&
-                                booking.Location != null && booking.Location.Organization.Id == organizationId)
+                                booking.Location != null && booking.Location.Organization != null &&
+                                booking.Location.Organization.Id == organizationId)
                     }
                     .AddInclude(query => query.Location)
                     .AddInclude(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue)))
@@ -71,11 +75,17 @@ public class DeskService(
             : await repositoryFactory.DeskRepository.Query(new Specification<Shared.Database.Entities.Desk>
                     {
                         Criteria = query =>
-                            (!query.DeletedAt.HasValue && !query.Deactivated && query.Location.Organization != null &&
+                            (!query.DeletedAt.HasValue && !query.Deactivated &&
+                             query.Location != null &&
+                             query.Location.Organization != null &&
                              query.Location.Organization.Id == organizationId &&
                              !query.Bookings.Any(booking =>
-                                 !booking.DeletedAt.HasValue && booking.From >= date && booking.To < date.Tomorrow() &&
-                                 booking.Location != null && booking.Location.Organization.Id == organizationId)) ||
+                                 !booking.DeletedAt.HasValue &&
+                                 booking.From >= date &&
+                                 booking.To < date.Tomorrow() &&
+                                 booking.Location != null &&
+                                 booking.Location.Organization != null &&
+                                 booking.Location.Organization.Id == organizationId)) ||
                             deskIdsToInclude.Contains(query.Id)
                     }
                     .AddInclude(query => query.Location)

@@ -415,6 +415,7 @@ public class BookingService(
                     Criteria = query => !query.DeletedAt.HasValue &&
                                         !query.Deactivated &&
                                         query.Location != null &&
+                                        !query.Location.DeletedAt.HasValue &&
                                         deskIds.Contains(query.Id)
                 }
                 .AddInclude(query => query.Location))
@@ -916,7 +917,8 @@ public class BookingService(
 
         if (location is not null)
         {
-            desks = desks.Where(item => item.Location != null && item.Location.Id == location.Id).ToList();
+            desks = desks.Where(item => item.Location is { DeletedAt: null } && item.Location.Id == location.Id)
+                .ToList();
 
             if (desks.Count == 0)
             {
