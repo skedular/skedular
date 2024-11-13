@@ -1,5 +1,6 @@
 import { AddLocation } from '@/components/location/addLocation';
 import { AddOrganization } from '@/components/organization/addOrganization';
+import { AddTeam } from '@/components/team/addTeam';
 import type { organizationOnboarding_rootQuery } from '@/queries/__generated__/organizationOnboarding_rootQuery.graphql';
 import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
@@ -22,7 +23,6 @@ const RootQuery = graphql`
   query organizationOnboarding_rootQuery {
     me {
       id
-      isLocationOnboardingDone
     }
   }
 `;
@@ -33,21 +33,23 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
   const [organizationId, setOrganizationId] = useState<string | null>(null);
 
   const handleOrganizationAdded = (id: string) => {
-    if (rootData.me?.isLocationOnboardingDone) {
-      onReloadRequired();
-
-      return;
-    }
-
     setOrganizationId(id);
     setActiveStep(1);
   };
 
   const handleLocationAdded = () => {
-    onReloadRequired();
+    setActiveStep(2);
   };
 
   const handleLocationDismissed = () => {
+    setActiveStep(2);
+  };
+
+  const handleTeamAdded = () => {
+    onReloadRequired();
+  };
+
+  const handleTeamDismissed = () => {
     onReloadRequired();
   };
 
@@ -57,19 +59,29 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
         <Step>
           <StepLabel>Create Organization</StepLabel>
         </Step>
-        {!rootData.me?.isLocationOnboardingDone && (
-          <Step>
-            <StepLabel>Create Location</StepLabel>
-          </Step>
-        )}
+        <Step>
+          <StepLabel>Create Location</StepLabel>
+        </Step>
+        <Step>
+          <StepLabel>Create Team</StepLabel>
+        </Step>
       </Stepper>
       {activeStep === 0 && <AddOrganization onReloadRequired={() => {}} showCancel={false} onAdded={handleOrganizationAdded} />}
-      {activeStep === 1 && organizationId && !rootData.me?.isLocationOnboardingDone && (
+      {activeStep === 1 && organizationId && (
         <AddLocation
           organizationId={organizationId}
           onReloadRequired={() => {}}
           onAdded={handleLocationAdded}
           onCancelled={handleLocationDismissed}
+          cancelButtonText="Dismiss"
+        />
+      )}
+      {activeStep === 2 && organizationId && (
+        <AddTeam
+          organizationId={organizationId}
+          onReloadRequired={() => {}}
+          onAdded={handleTeamAdded}
+          onCancelled={handleTeamDismissed}
           cancelButtonText="Dismiss"
         />
       )}

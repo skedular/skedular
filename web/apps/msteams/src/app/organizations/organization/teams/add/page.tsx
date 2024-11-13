@@ -3,9 +3,10 @@ import type { AppBarBreadcrumbs } from 'components/appBar';
 import { RootShell } from 'components/rootShell';
 import { AddTeam } from 'components/team/addTeam';
 import { memo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const AddTeamPage = () => {
+  const navigate = useNavigate();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -36,9 +37,19 @@ const AddTeamPage = () => {
     lastItemLabel: 'Add new team',
   };
 
+  const handleAdded = () => {
+    navigate(-1);
+  };
+
+  const handleCancelled = () => {
+    navigate(-1);
+  };
+
+  const handleReloadRequired = () => {};
+
   return (
     <RootShell appBarBreadcrumbs={breadcrumps}>
-      <AddTeam organizationId={finalOrganizationId} />
+      <AddTeam organizationId={finalOrganizationId} onAdded={handleAdded} onCancelled={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );
 };

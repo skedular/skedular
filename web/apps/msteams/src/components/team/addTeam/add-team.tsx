@@ -21,16 +21,19 @@ import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 import type { addTeam_addTeamMutation } from './__generated__/addTeam_addTeamMutation.graphql';
+import type { addTeam_completeTeamOnboardingMutation } from './__generated__/addTeam_completeTeamOnboardingMutation.graphql';
 import type { addTeam_rootQuery } from './__generated__/addTeam_rootQuery.graphql';
 
 type Props = {
   queryReference: PreloadedQuery<addTeam_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
+  onAdded: (id: string) => void;
+  onCancelled: () => void;
+  cancelButtonText?: string;
 };
 
 const RootQuery = graphql`
@@ -65,7 +68,7 @@ const teamSchema = object({
   organizationMemberIds: array().nullable(),
 });
 
-const AddTeam = ({ queryReference, organizationId }: Props) => {
+const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancelled, cancelButtonText }: Props) => {
   const rootData = usePreloadedQuery<addTeam_rootQuery>(RootQuery, queryReference);
   const [commitAddTeam] = useMutation<addTeam_addTeamMutation>(graphql`
     mutation addTeam_addTeamMutation($input: AddTeamInput!) @raw_response_type {
@@ -80,9 +83,16 @@ const AddTeam = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
+  const [commitCompleteTeamOnboarding] = useMutation<addTeam_completeTeamOnboardingMutation>(graphql`
+    mutation addTeam_completeTeamOnboardingMutation($input: CompleteTeamOnboardingInput!) {
+      completeTeamOnboarding(input: $input) {
+        clientMutationId
+      }
+    }
+  `);
+
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const navigate = useNavigate();
   const validate = makeValidate(teamSchema);
   const requiredFields = makeRequired(teamSchema);
   const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
@@ -99,7 +109,21 @@ const AddTeam = ({ queryReference, organizationId }: Props) => {
   }, [rootData.organization]);
 
   const handleCancelClick = () => {
-    navigate(-1);
+    commitCompleteTeamOnboarding({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+        },
+      },
+      onCompleted: () => {
+        onCancelled();
+        onReloadRequired();
+      },
+      onError: (_) => {
+        onCancelled();
+        onReloadRequired();
+      },
+    });
   };
 
   const handleTeamCreateClick = ({ name, about, timezone, organizationMemberIds }: TeamDetails) => {
@@ -134,12 +158,35 @@ const AddTeam = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Team ${name} added.`} />,
-        });
+        commitCompleteTeamOnboarding({
+          variables: {
+            input: {
+              clientMutationId: nanoid(),
+            },
+          },
+          onCompleted: (_, errors) => {
+            if (errors && errors.length > 0) {
+              toast.update(toastId, {
+                ...errorNotificationOptions,
+                render: <NotificationContent content={`Failed to complete team onboarding. Error: ${joinErrors(errors)}.`} />,
+              });
+            } else {
+              toast.update(toastId, {
+                ...successNotificationOptions,
+                render: <NotificationContent content={`Team ${name} added.`} />,
+              });
 
-        navigate(-1);
+              onAdded(id);
+              onReloadRequired();
+            }
+          },
+          onError: (error) => {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to complete team onboarding. Error: ${error.message}.`} />,
+            });
+          },
+        });
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -193,7 +240,7 @@ const AddTeam = ({ queryReference, organizationId }: Props) => {
 
             <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
               <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                Cancel
+                {cancelButtonText ?? 'Cancel'}
               </Button>
               <Button color="primary" variant="contained" type="submit">
                 Create
@@ -210,9 +257,13 @@ const MemoAddTeam = memo(AddTeam);
 
 type RelayProps = {
   organizationId: string;
+  onReloadRequired: () => void;
+  onAdded: (id: string) => void;
+  onCancelled: () => void;
+  cancelButtonText?: string;
 };
 
-const AddTeamWithRelay = ({ organizationId }: RelayProps) => {
+const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancelled, cancelButtonText }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addTeam_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -247,7 +298,14 @@ const AddTeamWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAddTeam queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoAddTeam
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
+        onAdded={onAdded}
+        onCancelled={onCancelled}
+        cancelButtonText={cancelButtonText}
+      />
     </ErrorBoundary>
   );
 };
