@@ -3,28 +3,32 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2024.2.6",
+      "version": "2024.2.7",
       "commands": [
         "jb"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-ef": {
-      "version": "8.0.10",
+      "version": "9.0.0",
       "commands": [
         "dotnet-ef"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-stryker": {
-      "version": "4.3.0",
+      "version": "4.4.1",
       "commands": [
         "dotnet-stryker"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-outdated-tool": {
       "version": "4.6.4",
       "commands": [
         "dotnet-outdated"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }

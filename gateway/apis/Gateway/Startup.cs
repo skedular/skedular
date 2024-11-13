@@ -123,9 +123,9 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                 nameof(subgraphsConfigurations.Team),
                 Api.Shared.Services.GraphQL.UnityHub.V1.Team.Metadata.Schema);
 
-        services
-            .AddReverseProxy()
-            .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
+        // services
+        //     .AddReverseProxy()
+        //     .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
 
         services.AddHealthChecks();
     }
@@ -136,7 +136,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             Configuration,
             configureEndpointRouteBuilder: endpointRouteBuilder =>
             {
-                endpointRouteBuilder.MapReverseProxy();
+              //  endpointRouteBuilder.MapReverseProxy();
             }
         );
 }
