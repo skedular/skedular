@@ -71,7 +71,7 @@ public class CustomerHelperService(
 
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        
+
         cachedCustomerService.CleanCache(existingCustomer);
 
         return customer;

@@ -13,7 +13,7 @@ public interface IOpenTelemetryInstrumentation
         Func<Measurement<T>> measurement) where T : struct;
 }
 
-public partial class OpenTelemetryInstrumentation : IOpenTelemetryInstrumentation
+public class OpenTelemetryInstrumentation : IOpenTelemetryInstrumentation
 {
     private readonly ConcurrentDictionary<string, Instrument> _instruments = new();
 
@@ -55,13 +55,10 @@ public partial class OpenTelemetryInstrumentation : IOpenTelemetryInstrumentatio
 
     private static void CheckIsInstrumentNameValid(string instrumentName)
     {
-        var regex = InstrumentNameValidationRegex();
+        var regex = new Regex("((([A-z]+)([\\.])([A-z]+))+)$");
         if (!regex.IsMatch(instrumentName))
         {
             throw new ArgumentException(nameof(instrumentName));
         }
     }
-
-    [GeneratedRegex("((([A-z]+)([\\.])([A-z]+))+)$")]
-    private static partial Regex InstrumentNameValidationRegex();
 }

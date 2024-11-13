@@ -70,11 +70,13 @@ internal static class TeamExtensions
         {
             query = string.IsNullOrWhiteSpace(searchCriteria.CustomerId)
                 ? query.Where(item =>
-                    item.Organization != null && !item.Organization.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId &&
+                    item.Organization != null && !item.Organization.DeletedAt.HasValue &&
+                    item.Organization.Id == searchCriteria.OrganizationId &&
                     item.Organization.OrganizationMembers.Any(organizationMember =>
                         !organizationMember.DeletedAt.HasValue))
                 : query.Where(item =>
-                    item.Organization != null && !item.Organization.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId &&
+                    item.Organization != null && !item.Organization.DeletedAt.HasValue &&
+                    item.Organization.Id == searchCriteria.OrganizationId &&
                     item.Organization.OrganizationMembers.Any(organizationMember =>
                         !organizationMember.DeletedAt.HasValue &&
                         organizationMember.Customer.Id == searchCriteria.CustomerId));

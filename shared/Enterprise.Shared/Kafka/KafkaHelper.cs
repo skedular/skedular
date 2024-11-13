@@ -73,16 +73,25 @@ public class KafkaHelper : IKafkaHelper
             .Select(idx => @event.GetRetryTopicName(_kafkaConfiguration.OutgoingTopicPrefix, idx)).ToArray();
         var deadLetterTopic = @event.GetDeadLetterTopicName(_kafkaConfiguration.OutgoingTopicPrefix);
 
-        await Task.WhenAll([
-            _schemaRegistryClient.RegisterSchemaAsync(SubjectNameStrategy.Topic.ConstructKeySubjectName(topic),
-                new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf)),
-            ..retryTopics.Select(topicName => _schemaRegistryClient.RegisterSchemaAsync(
-                SubjectNameStrategy.Topic.ConstructKeySubjectName(topicName),
-                new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf))).ToArray(),
+        var tasks = new List<Task>
+        {
+            _schemaRegistryClient.RegisterSchemaAsync(
+                SubjectNameStrategy.Topic.ConstructKeySubjectName(topic),
+                new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf))
+        };
+
+        tasks.AddRange(
+            retryTopics.Select(topicName => _schemaRegistryClient.RegisterSchemaAsync(
+                    SubjectNameStrategy.Topic.ConstructKeySubjectName(topicName),
+                    new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf)))
+                .ToArray());
+
+        tasks.Add(
             _schemaRegistryClient.RegisterSchemaAsync(
                 SubjectNameStrategy.Topic.ConstructKeySubjectName(deadLetterTopic),
-                new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf))
-        ]);
+                new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf)));
+
+        await Task.WhenAll(tasks);
     }
 
     public async Task RegisterValueProtobufSchemaAsync<TEvent>() where TEvent : IEvent, new()
@@ -94,15 +103,24 @@ public class KafkaHelper : IKafkaHelper
             .Select(idx => @event.GetRetryTopicName(_kafkaConfiguration.OutgoingTopicPrefix, idx)).ToArray();
         var deadLetterTopic = @event.GetDeadLetterTopicName(_kafkaConfiguration.OutgoingTopicPrefix);
 
-        await Task.WhenAll([
-            _schemaRegistryClient.RegisterSchemaAsync(SubjectNameStrategy.Topic.ConstructValueSubjectName(topic),
-                new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf)),
-            ..retryTopics.Select(topicName => _schemaRegistryClient.RegisterSchemaAsync(
-                SubjectNameStrategy.Topic.ConstructValueSubjectName(topicName),
-                new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf))).ToArray(),
+        var tasks = new List<Task>
+        {
+            _schemaRegistryClient.RegisterSchemaAsync(
+                SubjectNameStrategy.Topic.ConstructValueSubjectName(topic),
+                new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf))
+        };
+
+        tasks.AddRange(
+            retryTopics.Select(topicName => _schemaRegistryClient.RegisterSchemaAsync(
+                    SubjectNameStrategy.Topic.ConstructValueSubjectName(topicName),
+                    new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf)))
+                .ToArray());
+
+        tasks.Add(
             _schemaRegistryClient.RegisterSchemaAsync(
                 SubjectNameStrategy.Topic.ConstructValueSubjectName(deadLetterTopic),
-                new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf))
-        ]);
+                new Schema(kafkaTopicInfo.ProtobufSchema, SchemaType.Protobuf)));
+
+        await Task.WhenAll(tasks);
     }
 }
