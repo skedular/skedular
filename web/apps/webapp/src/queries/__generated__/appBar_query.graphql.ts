@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cd7729ada8e29852112425de6d60218e>>
+ * @generated SignedSource<<389cea51639060f0b25092b80df463a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,6 +21,13 @@ export type appBar_query$data = {
     readonly middleName: string | null | undefined;
     readonly photoUrl: string | null | undefined;
   } | null | undefined;
+  readonly myOrganizations: ReadonlyArray<{
+    readonly canModify: boolean;
+    readonly canViewAnalytics: boolean;
+    readonly id: string;
+    readonly logoUrl: string | null | undefined;
+    readonly name: string;
+  }> | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"newFeedbackDialog_query">;
   readonly " $fragmentType": "appBar_query";
 };
@@ -100,6 +107,52 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "OrganizationDetails",
+      "kind": "LinkedField",
+      "name": "myOrganizations",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "logoUrl",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canModify",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canViewAnalytics",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "newFeedbackDialog_query"
@@ -109,6 +162,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f9126c8fb1b1594c6de54f92d139f9ed";
+(node as any).hash = "336d127ec0f49242c88c8103a5ce3a5a";
 
 export default node;

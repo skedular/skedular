@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e11c072be67b078cd3898a20a9c9a47f>>
+ * @generated SignedSource<<478b2284984364f43269b1497782df3c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -48,74 +48,71 @@ v1 = [
 v2 = {
   "alias": null,
   "args": null,
-  "concreteType": "OrganizationDetails",
-  "kind": "LinkedField",
-  "name": "myOrganizations",
-  "plural": true,
-  "selections": (v1/*: any*/),
+  "kind": "ScalarField",
+  "name": "billingCustomerRecordSynced",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "billingCustomerRecordSynced",
+  "name": "bookingCustomerRecordSynced",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "bookingCustomerRecordSynced",
+  "name": "locationCustomerRecordSynced",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "locationCustomerRecordSynced",
+  "name": "msTeamsCustomerRecordSynced",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "msTeamsCustomerRecordSynced",
+  "name": "notificationCustomerRecordSynced",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "notificationCustomerRecordSynced",
+  "name": "organizationCustomerRecordSynced",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "organizationCustomerRecordSynced",
+  "name": "paymentCustomerRecordSynced",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "paymentCustomerRecordSynced",
+  "name": "slackCustomerRecordSynced",
   "storageKey": null
 },
 v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slackCustomerRecordSynced",
+  "name": "teamCustomerRecordSynced",
   "storageKey": null
 },
 v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "teamCustomerRecordSynced",
+  "name": "name",
   "storageKey": null
 };
 return {
@@ -135,6 +132,16 @@ return {
         "selections": (v1/*: any*/),
         "storageKey": null
       },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "myOrganizations",
+        "plural": true,
+        "selections": (v1/*: any*/),
+        "storageKey": null
+      },
       (v2/*: any*/),
       (v3/*: any*/),
       (v4/*: any*/),
@@ -144,7 +151,6 @@ return {
       (v8/*: any*/),
       (v9/*: any*/),
       (v10/*: any*/),
-      (v11/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -223,11 +229,39 @@ return {
             "name": "photoUrl",
             "storageKey": null
           },
+          (v11/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "myOrganizations",
+        "plural": true,
+        "selections": [
+          (v0/*: any*/),
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "name",
+            "name": "logoUrl",
+            "storageKey": null
+          },
+          (v11/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canModify",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canViewAnalytics",
             "storageKey": null
           }
         ],
@@ -241,17 +275,16 @@ return {
       (v7/*: any*/),
       (v8/*: any*/),
       (v9/*: any*/),
-      (v10/*: any*/),
-      (v11/*: any*/)
+      (v10/*: any*/)
     ]
   },
   "params": {
-    "cacheID": "8c3bbca1ef43de08855fe4130a4e875f",
+    "cacheID": "82e4ab02b798af27f78912e4b05b3e7f",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...appBar_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
+    "text": "query rootShell_rootQuery {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...appBar_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
   }
 };
 })();
