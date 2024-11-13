@@ -29,6 +29,10 @@ const convertCalendarDayToStartOfDay = (date: Dayjs) => {
   return startOfDay(dayjs().utc().set('year', date.year()).set('month', date.month()).set('date', date.date()));
 };
 
+const localNow = () => {
+  return dayjs();
+};
+
 const now = () => {
   const date = new Date();
   return dayjs().utc().set('year', date.getUTCFullYear()).set('month', date.getMonth()).set('date', date.getDate());
@@ -108,8 +112,8 @@ const toShortDate = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('dddd, Do MMM YYYY') : '';
 };
 
-const toShortDateTime = (date?: Dayjs | string | null | undefined) => {
-  return date ? dayjs(date).format('dddd, Do MMM YYYY, HH:mm') : '';
+const toLongDateTime = (date?: Dayjs | string | null | undefined) => {
+  return date ? dayjs(date).format('dddd, Do MMMM YYYY, HH:mm') : '';
 };
 
 const toShortWeekDay = (date?: Dayjs | string | null | undefined) => {
@@ -117,7 +121,7 @@ const toShortWeekDay = (date?: Dayjs | string | null | undefined) => {
 };
 
 const toShortDateTimeInUtc = (date?: Dayjs | string | null | undefined) => {
-  return date ? toShortDateTime(dayjs(date).utc()) : '';
+  return date ? toLongDateTime(dayjs(date).utc()) : '';
 };
 
 const toDayAndMonthDate = (date?: Dayjs | string | null | undefined) => {
@@ -248,14 +252,16 @@ export {
   isTomorrowDate,
   isYesterdayDate,
   joinErrors,
+  localNow,
+  now,
   startOfDay,
   startOfMonth,
   startOfWeek,
   toDayAndMonthDate,
   toFixed,
   toHourAndMinute,
+  toLongDateTime,
   toShortDate,
-  toShortDateTime,
   toShortDateTimeInUtc,
   toShortDateWithDayAndMonthOnly,
   toShortWeekDay,

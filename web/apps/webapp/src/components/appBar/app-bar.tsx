@@ -3,7 +3,6 @@ import { getOrganizationBaseLink } from '@/components/organization/organization-
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
@@ -16,13 +15,14 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
 import { FeedbackIcon, LogoutIcon, SettingsIcon } from '@repo/shared/components/icons';
-import { BreadcrumpsContext, PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
-import { getCustomerFullName } from '@repo/shared/libs/utils';
+import { PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
+import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
+import { useInterval } from 'usehooks-ts';
 
 type Props = {
   rootDataRelay: appBar_query$key;
@@ -42,7 +42,7 @@ export type AppBarBreadcrumbs = {
   lastItemIcon?: React.ReactNode;
 };
 
-const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
+const AppBar = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<appBar_query$key>(
     graphql`
       fragment appBar_query on Query {
@@ -71,11 +71,11 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
 
   const router = useRouter();
   const { organizationId } = useParams();
+  const [currentTime, setCurrentTime] = useState(localNow());
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(
     rootData.myOrganizations && rootData.myOrganizations.length > 0 ? rootData.myOrganizations[0]?.id : undefined,
   );
   const paletteMode = useContext(PaletteModeContext);
-  const breadcrumpsContext = useContext(BreadcrumpsContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
@@ -88,6 +88,10 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
       finalOrganizationId = organizationId[0];
     }
   }
+
+  useInterval(() => {
+    setCurrentTime(localNow());
+  }, 1000);
 
   useEffect(() => {
     if (!rootData.myOrganizations) {
@@ -133,42 +137,22 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
     setSubmitFeedbackDialogOpen(false);
   };
 
-  const breadcrumpsLinks = useMemo(() => {
-    if (!breadcrumbs?.items) {
-      return [];
-    }
-
-    return breadcrumbs.items.map((item) => {
-      return breadcrumpsContext.has(item.href)
-        ? {
-            icon: item.icon,
-            href: item.href,
-            label: breadcrumpsContext.get(item.href)!,
-          }
-        : item;
-    });
-  }, [breadcrumbs?.items, breadcrumpsContext]);
-
-  const lastBreadcrumps = useMemo(() => {
-    if (!breadcrumbs?.lastItemLabel) {
-      return undefined;
-    }
-
-    const label = breadcrumpsContext.has(breadcrumbs?.lastItemLabel) ? breadcrumpsContext.get(breadcrumbs?.lastItemLabel) : breadcrumbs.lastItemLabel;
-    const icon = breadcrumbs?.lastItemIcon;
-
-    return [icon, label];
-  }, [breadcrumbs?.lastItemLabel, breadcrumbs?.lastItemIcon, breadcrumpsContext]);
-
   if (!rootData.myOrganizations) {
     return <></>;
   }
+
+  const customerName = getCustomerFullName({
+    name: null,
+    givenName: rootData.me?.givenName,
+    middleName: rootData.me?.middleName,
+    familyName: rootData.me?.familyName,
+  });
 
   return (
     <>
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1 }}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <FormControl sx={{ width: { xs: '100%', sm: 250 } }}>
+          <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
             <Select
               value={selectedOrganizationId}
               onChange={handleSelectedOrganizationChange}
@@ -186,7 +170,7 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
                   <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                     <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
                     <Stack direction="column">
-                      <Typography variant="h6">{organization.name}</Typography>
+                      <Typography variant="h5">{organization.name}</Typography>
                       <Typography variant="body2">Organization</Typography>
                     </Stack>
                   </Stack>
@@ -195,19 +179,12 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
             </Select>
           </FormControl>
 
-          <Breadcrumbs maxItems={5}>
-            {breadcrumpsLinks?.map(({ href, icon, label }, index) => (
-              <Link component={NextLink} key={index} underline="hover" href={href}>
-                {icon && <>{icon}</>}
-                {!icon && label && <Typography>{label}</Typography>}
-              </Link>
-            ))}
-            {lastBreadcrumps && lastBreadcrumps[0] && lastBreadcrumps[0]}
-            {lastBreadcrumps && !lastBreadcrumps[0] && lastBreadcrumps[1] && <Typography>{lastBreadcrumps[1]}</Typography>}
-          </Breadcrumbs>
+          <Typography variant="h6">{`Welcome ${customerName}`}</Typography>
         </Stack>
 
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Typography variant="h6">{`${toLongDateTime(currentTime)}`}</Typography>
+          <Divider orientation="vertical" flexItem />
           <Tooltip title="Send us feedback">
             <IconButton sx={{ ml: 1 }} onClick={() => setSubmitFeedbackDialogOpen(true)}>
               <FeedbackIcon />
@@ -259,14 +236,7 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
               <Stack direction="column">
                 <Stack direction="column">
                   <Typography variant="body1">Signed in as</Typography>
-                  <Typography variant="body1">
-                    {getCustomerFullName({
-                      name: null,
-                      givenName: rootData.me?.givenName,
-                      middleName: rootData.me?.middleName,
-                      familyName: rootData.me?.familyName,
-                    })}
-                  </Typography>
+                  <Typography variant="body1">{customerName}</Typography>
                   {rootData.me?.email && <Typography variant="body1">{rootData.me?.email.email}</Typography>}
                 </Stack>
               </Stack>
