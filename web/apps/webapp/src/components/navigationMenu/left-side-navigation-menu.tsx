@@ -4,7 +4,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { DashboardIcon, LocationIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
+import { HomeIcon, LocationIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import Image from 'next/image';
 import NextLink from 'next/link';
@@ -33,9 +33,9 @@ const LeftSideNavigationMenu = ({ maxWidth }: Props) => {
         <Link component={NextLink} href="/">
           <ListItemButton>
             <ListItemIcon>
-              <DashboardIcon />
+              <HomeIcon excludeTooltip />
             </ListItemIcon>
-            <ListItemText>Dashboard</ListItemText>
+            <ListItemText>Home</ListItemText>
           </ListItemButton>
         </Link>
       </ListItem>
