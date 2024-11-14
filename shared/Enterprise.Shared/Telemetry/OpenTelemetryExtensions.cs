@@ -1,9 +1,12 @@
-﻿using System.Data.Common;
+﻿using System.Data;
+using System.Data.Common;
+using System.Diagnostics;
 using Confluent.Kafka;
 using Enterprise.Shared.Kafka.Telemetry;
 using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Telemetry.Configurations;
 using Enterprise.Shared.Telemetry.PropagatorFunctions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Context.Propagation;
@@ -63,7 +66,7 @@ public static class OpenTelemetryExtensions
                 // Instrumentation
                 builder.AddAspNetCoreInstrumentation(options =>
                 {
-                    options.Filter = httpContext =>
+                    options.Filter = delegate(HttpContext httpContext)
                     {
                         var pathString = httpContext.Request.Path.ToString();
 
@@ -81,7 +84,7 @@ public static class OpenTelemetryExtensions
                     {
                         builder.AddEntityFrameworkCoreInstrumentation(options =>
                         {
-                            options.EnrichWithIDbCommand = (activity, command) =>
+                            options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
                             {
                                 activity.DisplayName = $"{command.CommandType} main";
                                 activity.SetTag("db.type", command.CommandType);
