@@ -152,32 +152,36 @@ const AppBar = ({ rootDataRelay }: Props) => {
     <>
       <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1 }}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
-            <Select
-              value={selectedOrganizationId}
-              onChange={handleSelectedOrganizationChange}
-              sx={{
-                '& fieldset': {
-                  border: 0,
-                  borderRight: 1,
-                  borderColor: 'divider',
-                  borderRadius: 0,
-                },
-              }}
-            >
-              {rootData.myOrganizations.map((organization) => (
-                <MenuItem key={organization.id} value={organization.id}>
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                    <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
-                    <Stack direction="column">
-                      <Typography variant="h5">{organization.name}</Typography>
-                      <Typography variant="body2">Organization</Typography>
-                    </Stack>
-                  </Stack>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <>
+            {rootData.myOrganizations.length > 0 && (
+              <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
+                <Select
+                  value={selectedOrganizationId}
+                  onChange={handleSelectedOrganizationChange}
+                  sx={{
+                    '& fieldset': {
+                      border: 0,
+                      borderRight: 1,
+                      borderColor: 'divider',
+                      borderRadius: 0,
+                    },
+                  }}
+                >
+                  {rootData.myOrganizations.map((organization) => (
+                    <MenuItem key={organization.id} value={organization.id}>
+                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                        <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
+                        <Stack direction="column">
+                          <Typography variant="h5">{organization.name}</Typography>
+                          <Typography variant="body2">Organization</Typography>
+                        </Stack>
+                      </Stack>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          </>
 
           <Typography variant="h6">{`Welcome ${customerName}`}</Typography>
         </Stack>
