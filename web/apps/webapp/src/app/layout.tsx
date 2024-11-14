@@ -1,7 +1,7 @@
 'use client';
 
 import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
-import { GoogleAnalyticsProvider, LogRocketProvider, NextAuthProvider, RelayProvider } from '@/libs/providers';
+import { GoogleAnalyticsProvider, LogRocketProvider, NextAuthProvider, RelayProvider, SelectedOrganizationProvider } from '@/libs/providers';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
@@ -25,18 +25,20 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <GlobalReloadIdProvider>
-      <BreadcrumpsProvider>
-        <AppRouterCacheProvider>
-          <ThemeProvider mode={paletteMode}>
-            <CssBaseline />
-            <DatePickerLocalizationProvider>
-              <NextAuthProvider>
-                <RelayProvider>{children}</RelayProvider>
-              </NextAuthProvider>
-            </DatePickerLocalizationProvider>
-          </ThemeProvider>
-        </AppRouterCacheProvider>
-      </BreadcrumpsProvider>
+      <SelectedOrganizationProvider>
+        <BreadcrumpsProvider>
+          <AppRouterCacheProvider>
+            <ThemeProvider mode={paletteMode}>
+              <CssBaseline />
+              <DatePickerLocalizationProvider>
+                <NextAuthProvider>
+                  <RelayProvider>{children}</RelayProvider>
+                </NextAuthProvider>
+              </DatePickerLocalizationProvider>
+            </ThemeProvider>
+          </AppRouterCacheProvider>
+        </BreadcrumpsProvider>
+      </SelectedOrganizationProvider>
     </GlobalReloadIdProvider>
   );
 };

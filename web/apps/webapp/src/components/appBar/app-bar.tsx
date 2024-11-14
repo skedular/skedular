@@ -1,5 +1,6 @@
 import { NewFeedbackDialog } from '@/components/feedback';
 import { getOrganizationBaseLink } from '@/components/organization/organization-link';
+import { SelectedOrganizationContext, UpdateSelectedOrganizationContext } from '@/libs/providers';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -72,9 +73,15 @@ const AppBar = ({ rootDataRelay }: Props) => {
   const router = useRouter();
   const { organizationId } = useParams();
   const [currentTime, setCurrentTime] = useState(localNow());
-  const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(
-    rootData.myOrganizations && rootData.myOrganizations.length > 0 ? rootData.myOrganizations[0]?.id : undefined,
-  );
+  const selectedOrganization = useContext(SelectedOrganizationContext);
+  const updateSelectedOrganization = useContext(UpdateSelectedOrganizationContext);
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(() => {
+    if (selectedOrganization && rootData.myOrganizations && rootData.myOrganizations.some((item) => item.id === selectedOrganization)) {
+      return selectedOrganization;
+    }
+
+    return rootData.myOrganizations && rootData.myOrganizations.length > 0 ? rootData.myOrganizations[0]?.id : undefined;
+  });
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
@@ -112,6 +119,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
     const id = event.target.value as string;
 
     setSelectedOrganizationId(id);
+    updateSelectedOrganization(id);
 
     router.push(getOrganizationBaseLink(id));
   };
