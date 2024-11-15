@@ -1,5 +1,4 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Booking;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
@@ -7,18 +6,12 @@ using Booking.Shared.Models;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Sanitization;
-using BookingOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Booking.BookingOrderInput;
-using BookingOrderField = Api.Shared.Services.GraphQL.UnityHub.V1.Booking.BookingOrderField;
-using OrderDirection = Api.Shared.Services.GraphQL.UnityHub.V1.Booking.OrderDirection;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Booking.Version;
 
 namespace Booking.Api.GraphQL;
 
-public class BookingQuery(IMapper mapper) : Query
+public class BookingQuery(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override Task<Version> BookingVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public Task<Version> BookingVersionAsync(CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
@@ -31,19 +24,14 @@ public class BookingQuery(IMapper mapper) : Query
         });
     }
 
-    public override async Task<bool> BookingCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<bool> BookingCustomerRecordSyncedAsync(CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override async Task<BookingDetails?> BookingAsync(
-        string id,
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<BookingDetails?> BookingAsync(string id, CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<IBookingService>();
@@ -51,14 +39,13 @@ public class BookingQuery(IMapper mapper) : Query
         return mapper.MapTo(booking);
     }
 
-    public override async Task<BookingConnection?> BookingsAsync(
+    public async Task<BookingConnection?> BookingsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         BookingWhereInput where,
         BookingOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
@@ -132,20 +119,17 @@ public class BookingQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<BookingDetails[]?> AllBookingsAsync(
-        BookingWhereInput where,
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<BookingDetails[]?> AllBookingsAsync(BookingWhereInput where, CancellationToken cancellationToken)
     {
-        var result = await BookingsAsync(null, null, null, null, where, [], serviceProvider, cancellationToken);
+        var result = await BookingsAsync(null, null, null, null, where, [], cancellationToken);
         return result?.Edges.Select(item => item.Node).ToArray();
     }
 
-    public override async Task<BookingDeskDetails[]?> AvailableLocationDesksAsync(
+    public async Task<BookingDeskDetails[]?> AvailableLocationDesksAsync(
         string locationId,
         DateTimeOffset date,
         string[] deskIdsToInclude,
-        IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
@@ -159,9 +143,8 @@ public class BookingQuery(IMapper mapper) : Query
         return mapper.MapTo(desks).ToArray();
     }
 
-    public override async Task<OrganizationBookingPermissions?> OrganizationBookingPermissionsAsync(
+    public async Task<OrganizationBookingPermissions?> OrganizationBookingPermissionsAsync(
         string organizationId,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
@@ -188,9 +171,8 @@ public class BookingQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<LocationBookingPermissions?> LocationBookingPermissionsAsync(
+    public async Task<LocationBookingPermissions?> LocationBookingPermissionsAsync(
         string locationId,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -215,9 +197,8 @@ public class BookingQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<TeamBookingPermissions?> TeamBookingPermissionsAsync(
+    public async Task<TeamBookingPermissions?> TeamBookingPermissionsAsync(
         string teamId,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

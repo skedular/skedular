@@ -1,16 +1,12 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Slack;
 using Enterprise.Shared.Context;
 using Slack.Api.Services;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Slack.Version;
 
 namespace Slack.Api.GraphQL;
 
-public class SlackQuery : Query
+public class SlackQuery(IServiceProvider serviceProvider)
 {
-    public override Task<Version> SlackVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public Task<Version> SlackVersionAsync(CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
@@ -23,9 +19,7 @@ public class SlackQuery : Query
         });
     }
 
-    public override async Task<bool> SlackCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<bool> SlackCustomerRecordSyncedAsync(CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();

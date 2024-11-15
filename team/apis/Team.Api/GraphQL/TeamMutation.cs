@@ -1,17 +1,13 @@
 using Api.Shared.Models;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Team;
 using Enterprise.Shared.Context;
 using Team.Api.Mappers;
 using Team.Api.Services;
 
 namespace Team.Api.GraphQL;
 
-public class TeamMutation(IMapper mapper) : Mutation
+public class TeamMutation(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override async Task<TeamPayload?> AddTeamAsync(
-        AddTeamInput input,
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<TeamPayload?> AddTeamAsync(AddTeamInput input, CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ITeamService>();
@@ -19,10 +15,7 @@ public class TeamMutation(IMapper mapper) : Mutation
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
-    public override async Task<TeamPayload?> UpdateTeamAsync(
-        UpdateTeamInput input,
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<TeamPayload?> UpdateTeamAsync(UpdateTeamInput input, CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ITeamService>();
@@ -30,10 +23,7 @@ public class TeamMutation(IMapper mapper) : Mutation
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
-    public override async Task<TeamPayload?> DeleteTeamAsync(
-        DeleteTeamInput input,
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<TeamPayload?> DeleteTeamAsync(DeleteTeamInput input, CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ITeamService>();
@@ -41,9 +31,8 @@ public class TeamMutation(IMapper mapper) : Mutation
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
-    public override async Task<TeamMemberDetailsPayload?> ChangeTeamMemberOwnershipTypeAsync(
+    public async Task<TeamMemberDetailsPayload?> ChangeTeamMemberOwnershipTypeAsync(
         ChangeTeamMemberOwnershipTypeInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -65,9 +54,8 @@ public class TeamMutation(IMapper mapper) : Mutation
         };
     }
 
-    public override async Task<InviteCustomersToJoinTeamPayload?> InviteCustomersToJoinTeamAsync(
+    public async Task<InviteCustomersToJoinTeamPayload?> InviteCustomersToJoinTeamAsync(
         InviteCustomersToJoinTeamInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -76,9 +64,8 @@ public class TeamMutation(IMapper mapper) : Mutation
         return new InviteCustomersToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<AcceptInvitationToJoinTeamPayload?> AcceptInvitationToJoinTeamAsync(
+    public async Task<AcceptInvitationToJoinTeamPayload?> AcceptInvitationToJoinTeamAsync(
         AcceptInvitationToJoinTeamInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -87,9 +74,8 @@ public class TeamMutation(IMapper mapper) : Mutation
         return new AcceptInvitationToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<RejectInvitationToJoinTeamPayload?> RejectInvitationToJoinTeamAsync(
+    public async Task<RejectInvitationToJoinTeamPayload?> RejectInvitationToJoinTeamAsync(
         RejectInvitationToJoinTeamInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -98,9 +84,8 @@ public class TeamMutation(IMapper mapper) : Mutation
         return new RejectInvitationToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<CancelInvitationToJoinTeamPayload?> CancelInvitationToJoinTeamAsync(
+    public async Task<CancelInvitationToJoinTeamPayload?> CancelInvitationToJoinTeamAsync(
         CancelInvitationToJoinTeamInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

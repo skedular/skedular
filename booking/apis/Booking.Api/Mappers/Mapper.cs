@@ -1,9 +1,9 @@
-using Api.Shared.Services.GraphQL.UnityHub.V1.Booking;
+using Booking.Api.GraphQL;
 using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
-using BookingEdge = Api.Shared.Services.GraphQL.UnityHub.V1.Booking.BookingEdge;
+using BookingEdge = Booking.Api.GraphQL.BookingEdge;
 using Customer = Booking.Shared.Models.Customer;
 using Desk = Booking.Shared.Database.Entities.Desk;
 using Identity = Booking.Shared.Models.Identity;

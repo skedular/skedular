@@ -1,22 +1,15 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Shared.Models;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
-using CustomerOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderInput;
-using CustomerOrderField = Customer.Shared.Models.CustomerOrderField;
-using OrderDirection = Api.Shared.Services.GraphQL.UnityHub.V1.Customer.OrderDirection;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Customer.Version;
 
 namespace Customer.Api.GraphQL;
 
-public class CustomerQuery(IMapper mapper) : Query
+public class CustomerQuery(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override Task<Version> CustomerVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public Task<Version> CustomerVersionAsync(CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
@@ -29,9 +22,7 @@ public class CustomerQuery(IMapper mapper) : Query
         });
     }
 
-    public override async Task<CustomerDetails?> MeAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<CustomerDetails?> MeAsync(CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
@@ -39,14 +30,13 @@ public class CustomerQuery(IMapper mapper) : Query
         return mapper.MapTo(customer);
     }
 
-    public override async Task<CustomerConnection?> PaginatedCustomersByDefaultLocationAsync(
+    public async Task<CustomerConnection?> PaginatedCustomersByDefaultLocationAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         CustomerWhereInput where,
         CustomerOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
@@ -66,22 +56,22 @@ public class CustomerQuery(IMapper mapper) : Query
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.designation =>
-                                CustomerOrderField.Designation,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.title =>
-                                CustomerOrderField.Title,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.name =>
-                                CustomerOrderField.Name,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.givenName =>
-                                CustomerOrderField.GivenName,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.middleName =>
-                                CustomerOrderField.MiddleName,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.familyName =>
-                                CustomerOrderField.FamilyName,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.timezone =>
-                                CustomerOrderField.Timezone,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.locale =>
-                                CustomerOrderField.Locale,
+                            CustomerOrderField.designation =>
+                                Shared.Models.CustomerOrderField.Designation,
+                            CustomerOrderField.title =>
+                                Shared.Models.CustomerOrderField.Title,
+                            CustomerOrderField.name =>
+                                Shared.Models.CustomerOrderField.Name,
+                            CustomerOrderField.givenName =>
+                                Shared.Models.CustomerOrderField.GivenName,
+                            CustomerOrderField.middleName =>
+                                Shared.Models.CustomerOrderField.MiddleName,
+                            CustomerOrderField.familyName =>
+                                Shared.Models.CustomerOrderField.FamilyName,
+                            CustomerOrderField.timezone =>
+                                Shared.Models.CustomerOrderField.Timezone,
+                            CustomerOrderField.locale =>
+                                Shared.Models.CustomerOrderField.Locale,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 
@@ -103,10 +93,9 @@ public class CustomerQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<CustomerDetails[]?> CustomersByDefaultLocationAsync(
+    public async Task<CustomerDetails[]?> CustomersByDefaultLocationAsync(
         CustomerWhereInput where,
         CustomerOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         var result = await PaginatedCustomersByDefaultLocationAsync(
@@ -115,8 +104,7 @@ public class CustomerQuery(IMapper mapper) : Query
             null,
             null,
             where,
-            [],
-            serviceProvider,
+            orderBy,
             cancellationToken);
         return result?.Edges.Select(item => item.Node).ToArray();
     }

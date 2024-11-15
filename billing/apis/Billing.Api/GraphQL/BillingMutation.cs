@@ -1,15 +1,13 @@
-﻿using Api.Shared.Services.GraphQL.UnityHub.V1.Billing;
-using Billing.Api.Mappers;
+﻿using Billing.Api.Mappers;
 using Billing.Api.Services;
 using Enterprise.Shared.Context;
 
 namespace Billing.Api.GraphQL;
 
-public class BillingMutation(IMapper mapper) : Mutation
+public class BillingMutation(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override async Task<OrganizationBillingInfoPayload?> SetOrganizationBillingInfoAsync(
+    public async Task<OrganizationBillingInfoPayload?> SetOrganizationBillingInfoAsync(
         SetOrganizationBillingInfoInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

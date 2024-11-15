@@ -1,22 +1,22 @@
 using Api.Shared.Models;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Location;
 using Api.Shared.Services.Grpc.UnityHub.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
+using Location.Api.GraphQL;
 using Location.Shared.Models;
-using AddDeskInput = Api.Shared.Services.GraphQL.UnityHub.V1.Location.AddDeskInput;
+using AddDeskInput = Location.Api.GraphQL.AddDeskInput;
 using Customer = Location.Shared.Models.Customer;
 using Desk = Location.Shared.Database.Entities.Desk;
-using DeskEdge = Api.Shared.Services.GraphQL.UnityHub.V1.Location.DeskEdge;
+using DeskEdge = Location.Api.GraphQL.DeskEdge;
 using Identity = Location.Shared.Models.Identity;
-using LocationTagEdge = Api.Shared.Services.GraphQL.UnityHub.V1.Location.LocationTagEdge;
-using LocationEdge = Api.Shared.Services.GraphQL.UnityHub.V1.Location.LocationEdge;
+using LocationTagEdge = Location.Api.GraphQL.LocationTagEdge;
+using LocationEdge = Location.Api.GraphQL.LocationEdge;
 using LocationDailyBookingsTotal = Location.Shared.Models.LocationDailyBookingsTotal;
 using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOccupancyPercentage;
 using Organization = Location.Shared.Database.Entities.Organization;
 using Permissions = Api.Shared.Services.Grpc.UnityHub.Location.V1.Permissions;
 using Tag = Location.Shared.Database.Entities.Tag;
-using UpdateDeskInput = Api.Shared.Services.GraphQL.UnityHub.V1.Location.UpdateDeskInput;
+using UpdateDeskInput = Location.Api.GraphQL.UpdateDeskInput;
 
 namespace Location.Api.Mappers;
 
@@ -345,16 +345,10 @@ public class Mapper : IMapper
         new()
         {
             DesksOccupancyPercentage = locationDesksOccupancyPercentage.Select(item =>
-                    new global::Api.Shared.Services.GraphQL.UnityHub.V1.Location.LocationDesksOccupancyPercentage
-                    {
-                        Date = item.Date, Percentage = item.Percentage
-                    })
+                    new GraphQL.LocationDesksOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
                 .ToArray(),
             DailyBookingsTotals = locationDailyBookingsTotal.Select(item =>
-                    new global::Api.Shared.Services.GraphQL.UnityHub.V1.Location.LocationDailyBookingsTotal
-                    {
-                        Date = item.Date, Total = item.Total
-                    })
+                    new GraphQL.LocationDailyBookingsTotal { Date = item.Date, Total = item.Total })
                 .ToArray()
         };
 

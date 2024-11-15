@@ -1,22 +1,15 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Notification;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
 using Notification.Api.Mappers;
 using Notification.Api.Services;
 using Notification.Shared.Models;
-using NotificationOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Notification.NotificationOrderInput;
-using NotificationOrderField = Api.Shared.Services.GraphQL.UnityHub.V1.Notification.NotificationOrderField;
-using OrderDirection = Api.Shared.Services.GraphQL.UnityHub.V1.Notification.OrderDirection;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Notification.Version;
 
 namespace Notification.Api.GraphQL;
 
-public class NotificationQuery(IMapper mapper) : Query
+public class NotificationQuery(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override Task<Version> NotificationVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public Task<Version> NotificationVersionAsync(CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
@@ -29,22 +22,19 @@ public class NotificationQuery(IMapper mapper) : Query
         });
     }
 
-    public override async Task<bool> NotificationCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<bool> NotificationCustomerRecordSyncedAsync(CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override async Task<NotificationConnection?> MyNotificationsAsync(
+    public async Task<NotificationConnection?> MyNotificationsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         NotificationOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

@@ -1,5 +1,4 @@
 using Api.Shared.Models;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Context;
 using Organization.Api.Mappers;
@@ -7,11 +6,10 @@ using Organization.Api.Services;
 
 namespace Organization.Api.GraphQL;
 
-public class OrganizationMutation(IMapper mapper) : Mutation
+public class OrganizationMutation(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override async Task<OrganizationPayload?> AddOrganizationAsync(
+    public async Task<OrganizationPayload?> AddOrganizationAsync(
         AddOrganizationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -23,9 +21,8 @@ public class OrganizationMutation(IMapper mapper) : Mutation
         };
     }
 
-    public override async Task<OrganizationPayload?> UpdateOrganizationAsync(
+    public async Task<OrganizationPayload?> UpdateOrganizationAsync(
         UpdateOrganizationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -37,9 +34,8 @@ public class OrganizationMutation(IMapper mapper) : Mutation
         };
     }
 
-    public override async Task<OrganizationPayload?> DeleteOrganizationAsync(
+    public async Task<OrganizationPayload?> DeleteOrganizationAsync(
         DeleteOrganizationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -51,9 +47,8 @@ public class OrganizationMutation(IMapper mapper) : Mutation
         };
     }
 
-    public override async Task<UpdateOrganizationOfferingPayload?> UpdateOrganizationOfferingAsync(
+    public async Task<UpdateOrganizationOfferingPayload?> UpdateOrganizationOfferingAsync(
         UpdateOrganizationOfferingInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -65,9 +60,8 @@ public class OrganizationMutation(IMapper mapper) : Mutation
         return new UpdateOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<CancelOrganizationOfferingPayload?> CancelOrganizationOfferingAsync(
+    public async Task<CancelOrganizationOfferingPayload?> CancelOrganizationOfferingAsync(
         CancelOrganizationOfferingInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -76,9 +70,8 @@ public class OrganizationMutation(IMapper mapper) : Mutation
         return new CancelOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<OrganizationMemberDetailsPayload?> ChangeOrganizationMemberOwnershipTypeAsync(
+    public async Task<OrganizationMemberDetailsPayload?> ChangeOrganizationMemberOwnershipTypeAsync(
         ChangeOrganizationMemberOwnershipTypeInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -100,9 +93,8 @@ public class OrganizationMutation(IMapper mapper) : Mutation
         };
     }
 
-    public override async Task<InviteCustomersToJoinOrganizationPayload?> InviteCustomersToJoinOrganizationAsync(
+    public async Task<InviteCustomersToJoinOrganizationPayload?> InviteCustomersToJoinOrganizationAsync(
         InviteCustomersToJoinOrganizationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -111,9 +103,8 @@ public class OrganizationMutation(IMapper mapper) : Mutation
         return new InviteCustomersToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<AcceptInvitationToJoinOrganizationPayload?> AcceptInvitationToJoinOrganizationAsync(
+    public async Task<AcceptInvitationToJoinOrganizationPayload?> AcceptInvitationToJoinOrganizationAsync(
         AcceptInvitationToJoinOrganizationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -122,9 +113,8 @@ public class OrganizationMutation(IMapper mapper) : Mutation
         return new AcceptInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<RejectInvitationToJoinOrganizationPayload?> RejectInvitationToJoinOrganizationAsync(
+    public async Task<RejectInvitationToJoinOrganizationPayload?> RejectInvitationToJoinOrganizationAsync(
         RejectInvitationToJoinOrganizationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -133,9 +123,8 @@ public class OrganizationMutation(IMapper mapper) : Mutation
         return new RejectInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<CancelInvitationToJoinOrganizationPayload?> CancelInvitationToJoinOrganizationAsync(
+    public async Task<CancelInvitationToJoinOrganizationPayload?> CancelInvitationToJoinOrganizationAsync(
         CancelInvitationToJoinOrganizationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

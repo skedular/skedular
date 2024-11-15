@@ -1,16 +1,12 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams;
 using Enterprise.Shared.Context;
 using MsTeams.Api.Services;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams.Version;
 
 namespace MsTeams.Api.GraphQL;
 
-public class MsTeamsQuery : Query
+public class MsTeamsQuery(IServiceProvider serviceProvider)
 {
-    public override Task<Version> MsTeamsVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public Task<Version> MsTeamsVersionAsync(CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
@@ -23,9 +19,7 @@ public class MsTeamsQuery : Query
         });
     }
 
-    public override async Task<bool> MsTeamsCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<bool> MsTeamsCustomerRecordSyncedAsync(CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();

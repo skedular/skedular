@@ -1,26 +1,15 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Location;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Shared.Models;
-using DeskOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Location.DeskOrderInput;
-using DeskOrderField = Api.Shared.Services.GraphQL.UnityHub.V1.Location.DeskOrderField;
-using LocationMemberOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Location.LocationMemberOrderInput;
-using LocationMemberOrderField = Api.Shared.Services.GraphQL.UnityHub.V1.Location.LocationMemberOrderField;
-using LocationOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Location.LocationOrderInput;
-using LocationOrderField = Api.Shared.Services.GraphQL.UnityHub.V1.Location.LocationOrderField;
-using OrderDirection = Api.Shared.Services.GraphQL.UnityHub.V1.Location.OrderDirection;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Location.Version;
 
 namespace Location.Api.GraphQL;
 
-public class LocationQuery(IMapper mapper) : Query
+public class LocationQuery(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override Task<Version> LocationVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public Task<Version> LocationVersionAsync(CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
@@ -33,27 +22,21 @@ public class LocationQuery(IMapper mapper) : Query
         });
     }
 
-    public override async Task<bool> LocationCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<bool> LocationCustomerRecordSyncedAsync(CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override Task<LocationMemberMembershipType[]> LocationMemberMembershipTypesAsync(
-        IServiceProvider serviceProvider,
+    public Task<LocationMemberMembershipType[]> LocationMemberMembershipTypesAsync(
         CancellationToken cancellationToken) => Task.FromResult(new[]
     {
         LocationMemberMembershipType.OWNER, LocationMemberMembershipType.ADMINISTRATOR,
         LocationMemberMembershipType.MEMBER
     });
 
-    public override async Task<LocationDetails?> LocationAsync(
-        string id,
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<LocationDetails?> LocationAsync(string id, CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ILocationService>();
@@ -61,14 +44,13 @@ public class LocationQuery(IMapper mapper) : Query
         return mapper.MapTo(location);
     }
 
-    public override async Task<LocationConnection?> LocationsAsync(
+    public async Task<LocationConnection?> LocationsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         LocationWhereInput where,
         LocationOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -116,9 +98,8 @@ public class LocationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<LocationDetails[]?> MyLocationsAsync(
+    public async Task<LocationDetails[]?> MyLocationsAsync(
         string? organizationId,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -133,14 +114,13 @@ public class LocationQuery(IMapper mapper) : Query
         return mapper.MapTo(locations).ToArray();
     }
 
-    public override async Task<LocationMemberConnection?> PaginatedLocationMembersAsync(
+    public async Task<LocationMemberConnection?> PaginatedLocationMembersAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         LocationMemberWhereInput where,
         LocationMemberOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
@@ -193,10 +173,9 @@ public class LocationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<LocationMemberDetails[]?> LocationMembersAsync(
+    public async Task<LocationMemberDetails[]?> LocationMembersAsync(
         LocationMemberWhereInput where,
         LocationMemberOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         var result = await PaginatedLocationMembersAsync(
@@ -205,20 +184,18 @@ public class LocationQuery(IMapper mapper) : Query
             null,
             null,
             where,
-            [],
-            serviceProvider,
+            orderBy,
             cancellationToken);
         return result?.Edges.Select(item => item.Node).ToArray();
     }
 
-    public override async Task<LocationTagConnection?> PaginatedLocationTagsAsync(
+    public async Task<LocationTagConnection?> PaginatedLocationTagsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         LocationTagWhereInput where,
         LocationTagOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -264,14 +241,13 @@ public class LocationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<DeskConnection?> PaginatedLocationDesksAsync(
+    public async Task<DeskConnection?> PaginatedLocationDesksAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         DeskWhereInput where,
         DeskOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -317,11 +293,10 @@ public class LocationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<LocationAnalytics?> LocationAnalyticsAsync(
+    public async Task<LocationAnalytics?> LocationAnalyticsAsync(
         string locationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

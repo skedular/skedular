@@ -1,17 +1,13 @@
 ﻿using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Payment;
 using Enterprise.Shared.Context;
 using Payment.Api.Mappers;
 using Payment.Api.Services;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Payment.Version;
 
 namespace Payment.Api.GraphQL;
 
-public class PaymentQuery(IMapper mapper) : Query
+public class PaymentQuery(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override Task<Version> PaymentVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public Task<Version> PaymentVersionAsync(CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
@@ -24,18 +20,15 @@ public class PaymentQuery(IMapper mapper) : Query
         });
     }
 
-    public override async Task<bool> PaymentCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<bool> PaymentCustomerRecordSyncedAsync(CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override async Task<OrganizationPaymentMethod[]?> OrganizationPaymentMethodsDetailsAsync(
+    public async Task<OrganizationPaymentMethod[]?> OrganizationPaymentMethodsDetailsAsync(
         string organizationId,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -46,8 +39,7 @@ public class PaymentQuery(IMapper mapper) : Query
         }
 
         var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
-        return mapper
-            .MapTo(await service.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken))
-            .ToArray();
+        var paymentMethods = await service.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken);
+        return mapper.MapTo(paymentMethods).ToArray();
     }
 }

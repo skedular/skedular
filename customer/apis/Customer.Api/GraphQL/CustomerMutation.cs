@@ -1,15 +1,13 @@
-using Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Enterprise.Shared.Context;
 
 namespace Customer.Api.GraphQL;
 
-public class CustomerMutation(IMapper mapper) : Mutation
+public class CustomerMutation(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override async Task<CustomerPayload?> CompleteOrganizationOnboardingAsync(
+    public async Task<CustomerPayload?> CompleteOrganizationOnboardingAsync(
         CompleteOrganizationOnboardingInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -18,9 +16,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompleteLocationOnboardingAsync(
+    public async Task<CustomerPayload?> CompleteLocationOnboardingAsync(
         CompleteLocationOnboardingInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -29,9 +26,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompleteTeamOnboardingAsync(
+    public async Task<CustomerPayload?> CompleteTeamOnboardingAsync(
         CompleteTeamOnboardingInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -40,9 +36,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompleteDefaultOrganizationOnboardingAsync(
+    public async Task<CustomerPayload?> CompleteDefaultOrganizationOnboardingAsync(
         CompleteDefaultOrganizationOnboardingInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -51,9 +46,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompleteDefaultLocationOnboardingAsync(
+    public async Task<CustomerPayload?> CompleteDefaultLocationOnboardingAsync(
         CompleteDefaultLocationOnboardingInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -62,9 +56,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompletePreferredZoneOnboardingAsync(
+    public async Task<CustomerPayload?> CompletePreferredZoneOnboardingAsync(
         CompletePreferredZoneOnboardingInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -73,9 +66,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompletePreferredDeskOnboardingAsync(
+    public async Task<CustomerPayload?> CompletePreferredDeskOnboardingAsync(
         CompletePreferredDeskOnboardingInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -84,9 +76,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> AddCustomerDefaultLocationAsync(
+    public async Task<CustomerPayload?> AddCustomerDefaultLocationAsync(
         AddCustomerDefaultLocationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -95,9 +86,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> RemoveCustomerDefaultLocationAsync(
+    public async Task<CustomerPayload?> RemoveCustomerDefaultLocationAsync(
         RemoveCustomerDefaultLocationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -106,9 +96,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> AddCustomerDefaultTeamAsync(
+    public async Task<CustomerPayload?> AddCustomerDefaultTeamAsync(
         AddCustomerDefaultTeamInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -117,9 +106,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> RemoveCustomerDefaultTeamAsync(
+    public async Task<CustomerPayload?> RemoveCustomerDefaultTeamAsync(
         RemoveCustomerDefaultTeamInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -128,9 +116,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> SetCustomerDefaultOrganizationAsync(
+    public async Task<CustomerPayload?> SetCustomerDefaultOrganizationAsync(
         SetCustomerDefaultOrganizationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -140,9 +127,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> ClearCustomerDefaultOrganizationAsync(
+    public async Task<CustomerPayload?> ClearCustomerDefaultOrganizationAsync(
         ClearCustomerDefaultOrganizationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -151,9 +137,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> AddCustomerDefaultLocationTagAsync(
+    public async Task<CustomerPayload?> AddCustomerDefaultLocationTagAsync(
         AddCustomerDefaultLocationTagInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -162,9 +147,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> RemoveCustomerDefaultLocationTagAsync(
+    public async Task<CustomerPayload?> RemoveCustomerDefaultLocationTagAsync(
         RemoveCustomerDefaultLocationTagInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -174,9 +158,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> AddCustomerDefaultDeskAsync(
+    public async Task<CustomerPayload?> AddCustomerDefaultDeskAsync(
         AddCustomerDefaultDeskInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -185,9 +168,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> RemoveCustomerDefaultDeskAsync(
+    public async Task<CustomerPayload?> RemoveCustomerDefaultDeskAsync(
         RemoveCustomerDefaultDeskInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -196,9 +178,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<SubmitCustomerFeedbackPayload?> SubmitCustomerFeedbackAsync(
+    public async Task<SubmitCustomerFeedbackPayload?> SubmitCustomerFeedbackAsync(
         SubmitCustomerFeedbackInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -207,9 +188,8 @@ public class CustomerMutation(IMapper mapper) : Mutation
         return mapper.MapTo(customerFeedback, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> UpdateMyCustomerDetailsAsync(
+    public async Task<CustomerPayload?> UpdateMyCustomerDetailsAsync(
         UpdateMyCustomerDetailsInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

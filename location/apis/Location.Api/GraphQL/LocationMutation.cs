@@ -1,17 +1,14 @@
 using Api.Shared.Models;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Location;
 using Enterprise.Shared.Context;
 using Location.Api.Mappers;
 using Location.Api.Services;
-using Mutation = Api.Shared.Services.GraphQL.UnityHub.V1.Location.Mutation;
 
 namespace Location.Api.GraphQL;
 
-public class LocationMutation(IMapper mapper) : Mutation
+public class LocationMutation(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override async Task<LocationPayload?> AddLocationAsync(
+    public async Task<LocationPayload?> AddLocationAsync(
         AddLocationInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -20,8 +17,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
     }
 
-    public override async Task<LocationPayload?> UpdateLocationAsync(UpdateLocationInput input,
-        IServiceProvider serviceProvider,
+    public async Task<LocationPayload?> UpdateLocationAsync(
+        UpdateLocationInput input,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -30,8 +27,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
     }
 
-    public override async Task<LocationPayload?> DeleteLocationAsync(DeleteLocationInput input,
-        IServiceProvider serviceProvider,
+    public async Task<LocationPayload?> DeleteLocationAsync(
+        DeleteLocationInput input,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -40,9 +37,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
     }
 
-    public override async Task<DeskPayload?> AddDeskAsync(
+    public async Task<DeskPayload?> AddDeskAsync(
         AddDeskInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -51,9 +47,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
     }
 
-    public override async Task<BulkDeskPayload?> BulkAddDeskAsync(
+    public async Task<BulkDeskPayload?> BulkAddDeskAsync(
         BulkAddDeskInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -72,9 +67,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         };
     }
 
-    public override async Task<DeskPayload?> UpdateDeskAsync(
+    public async Task<DeskPayload?> UpdateDeskAsync(
         UpdateDeskInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -83,9 +77,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
     }
 
-    public override async Task<DeskPayload?> DeleteDeskAsync(
+    public async Task<DeskPayload?> DeleteDeskAsync(
         DeleteDeskInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -94,9 +87,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
     }
 
-    public override async Task<LocationTagPayload?> AddLocationTagAsync(
+    public async Task<LocationTagPayload?> AddLocationTagAsync(
         AddLocationTagInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -105,9 +97,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
     }
 
-    public override async Task<LocationTagPayload?> UpdateLocationTagAsync(
+    public async Task<LocationTagPayload?> UpdateLocationTagAsync(
         UpdateLocationTagInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -116,9 +107,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
     }
 
-    public override async Task<LocationTagPayload?> DeleteLocationTagAsync(
+    public async Task<LocationTagPayload?> DeleteLocationTagAsync(
         DeleteLocationTagInput input,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -127,9 +117,9 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
     }
 
-    public override async Task<LocationMemberDetailsPayload?> ChangeLocationMemberOwnershipTypeAsync(
+    public async Task<LocationMemberDetailsPayload?> ChangeLocationMemberOwnershipTypeAsync(
         ChangeLocationMemberOwnershipTypeInput input,
-        IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ILocationMemberService>();
@@ -150,8 +140,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         };
     }
 
-    public override async Task<InviteCustomersToJoinLocationPayload?> InviteCustomersToJoinLocationAsync(
-        InviteCustomersToJoinLocationInput input, IServiceProvider serviceProvider,
+    public async Task<InviteCustomersToJoinLocationPayload?> InviteCustomersToJoinLocationAsync(
+        InviteCustomersToJoinLocationInput input,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -160,8 +150,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new InviteCustomersToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<AcceptInvitationToJoinLocationPayload?> AcceptInvitationToJoinLocationAsync(
-        AcceptInvitationToJoinLocationInput input, IServiceProvider serviceProvider,
+    public async Task<AcceptInvitationToJoinLocationPayload?> AcceptInvitationToJoinLocationAsync(
+        AcceptInvitationToJoinLocationInput input,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -170,8 +160,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new AcceptInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<RejectInvitationToJoinLocationPayload?> RejectInvitationToJoinLocationAsync(
-        RejectInvitationToJoinLocationInput input, IServiceProvider serviceProvider,
+    public async Task<RejectInvitationToJoinLocationPayload?> RejectInvitationToJoinLocationAsync(
+        RejectInvitationToJoinLocationInput input,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -180,8 +170,8 @@ public class LocationMutation(IMapper mapper) : Mutation
         return new RejectInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<CancelInvitationToJoinLocationPayload?> CancelInvitationToJoinLocationAsync(
-        CancelInvitationToJoinLocationInput input, IServiceProvider serviceProvider,
+    public async Task<CancelInvitationToJoinLocationPayload?> CancelInvitationToJoinLocationAsync(
+        CancelInvitationToJoinLocationInput input,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

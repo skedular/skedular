@@ -1,17 +1,13 @@
 ﻿using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Billing;
 using Billing.Api.Mappers;
 using Billing.Api.Services;
 using Enterprise.Shared.Context;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Billing.Version;
 
 namespace Billing.Api.GraphQL;
 
-public class BillingQuery(IMapper mapper) : Query
+public class BillingQuery(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override Task<Version> BillingVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public Task<Version> BillingVersionAsync(CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
@@ -24,23 +20,20 @@ public class BillingQuery(IMapper mapper) : Query
         });
     }
 
-    public override async Task<bool> BillingCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<bool> BillingCustomerRecordSyncedAsync(CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override Task<OrganizationCurrentOfferingChargesDetails[]?> OrganizationCurrentOfferingChargesAsync(
-        string organizationId, IServiceProvider serviceProvider,
+    public Task<OrganizationCurrentOfferingChargesDetails[]?> OrganizationCurrentOfferingChargesAsync(
+        string organizationId,
         CancellationToken cancellationToken) =>
         throw new NotImplementedException();
 
-    public override async Task<OrganizationBillingInfo?> OrganizationBillingInfoAsync(
+    public async Task<OrganizationBillingInfo?> OrganizationBillingInfoAsync(
         string organizationId,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

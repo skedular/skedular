@@ -1,15 +1,14 @@
-﻿using Api.Shared.Services.GraphQL.UnityHub.V1.Payment;
-using Enterprise.Shared.Context;
+﻿using Enterprise.Shared.Context;
 using Payment.Api.Services;
 using Payment.Shared.Configurations;
 
 namespace Payment.Api.GraphQL;
 
-public class PaymentMutation : Mutation
+public class PaymentMutation(IServiceProvider serviceProvider)
 {
-    public override async Task<AddOrganizationPaymentMethodIntentResponse?> AddOrganizationPaymentMethodIntentAsync(
+    public async Task<AddOrganizationPaymentMethodIntentResponse?> AddOrganizationPaymentMethodIntentAsync(
         AddOrganizationPaymentMethodIntentInput input,
-        IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var stripeConfiguration = scope.ServiceProvider.GetRequiredService<StripeConfiguration>();
@@ -24,8 +23,8 @@ public class PaymentMutation : Mutation
         };
     }
 
-    public override async Task<RemoveOrganizationPaymentMethodResponse?> RemoveOrganizationPaymentMethodAsync(
-        RemoveOrganizationPaymentMethodInput input, IServiceProvider serviceProvider,
+    public async Task<RemoveOrganizationPaymentMethodResponse?> RemoveOrganizationPaymentMethodAsync(
+        RemoveOrganizationPaymentMethodInput input,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();

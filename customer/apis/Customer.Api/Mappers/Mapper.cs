@@ -1,12 +1,12 @@
-using Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Customer.Api.GraphQL;
 using Customer.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Models;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
 using Desk = Customer.Shared.Models.Desk;
-using FeedbackChannel = Api.Shared.Services.GraphQL.UnityHub.V1.Customer.FeedbackChannel;
+using FeedbackChannel = Customer.Api.GraphQL.FeedbackChannel;
 using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
 using LocationTag = Customer.Shared.Models.LocationTag;

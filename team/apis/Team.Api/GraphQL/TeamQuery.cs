@@ -1,26 +1,15 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Team;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Shared.Models;
-using OrderDirection = Api.Shared.Services.GraphQL.UnityHub.V1.Team.OrderDirection;
-using PageInfo = Api.Shared.Services.GraphQL.UnityHub.V1.Team.PageInfo;
-using Query = Api.Shared.Services.GraphQL.UnityHub.V1.Team.Query;
-using TeamMemberOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Team.TeamMemberOrderInput;
-using TeamOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Team.TeamOrderInput;
-using TeamOrderField = Api.Shared.Services.GraphQL.UnityHub.V1.Team.TeamOrderField;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Team.Version;
-using TeamMemberOrderField = Api.Shared.Services.GraphQL.UnityHub.V1.Team.TeamMemberOrderField;
 
 namespace Team.Api.GraphQL;
 
-public class TeamQuery(IMapper mapper) : Query
+public class TeamQuery(IServiceProvider serviceProvider, IMapper mapper)
 {
-    public override Task<Version> TeamVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public Task<Version> TeamVersionAsync(CancellationToken cancellationToken)
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
@@ -33,26 +22,20 @@ public class TeamQuery(IMapper mapper) : Query
         });
     }
 
-    public override async Task<bool> TeamCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<bool> TeamCustomerRecordSyncedAsync(CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         return await service.DoesCustomerExistAsync(cancellationToken);
     }
 
-    public override Task<TeamMemberMembershipType[]> TeamMemberMembershipTypesAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken) => Task.FromResult(new[]
-    {
-        TeamMemberMembershipType.OWNER, TeamMemberMembershipType.ADMINISTRATOR, TeamMemberMembershipType.MEMBER
-    });
+    public Task<TeamMemberMembershipType[]> TeamMemberMembershipTypesAsync(CancellationToken cancellationToken) =>
+        Task.FromResult(new[]
+        {
+            TeamMemberMembershipType.OWNER, TeamMemberMembershipType.ADMINISTRATOR, TeamMemberMembershipType.MEMBER
+        });
 
-    public override async Task<TeamDetails?> TeamAsync(
-        string id,
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<TeamDetails?> TeamAsync(string id, CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var service = scope.ServiceProvider.GetRequiredService<ITeamService>();
@@ -60,14 +43,13 @@ public class TeamQuery(IMapper mapper) : Query
         return mapper.MapTo(team);
     }
 
-    public override async Task<TeamConnection?> TeamsAsync(
+    public async Task<TeamConnection?> TeamsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         TeamWhereInput where,
         TeamOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
@@ -114,10 +96,7 @@ public class TeamQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<TeamDetails[]?> MyTeamsAsync(
-        string? organizationId,
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    public async Task<TeamDetails[]?> MyTeamsAsync(string? organizationId, CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateScopeAndSetContent();
         var customerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
@@ -131,14 +110,13 @@ public class TeamQuery(IMapper mapper) : Query
         return mapper.MapTo(teams).ToArray();
     }
 
-    public override async Task<TeamMemberConnection?> PaginatedTeamMembersAsync(
+    public async Task<TeamMemberConnection?> PaginatedTeamMembersAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         TeamMemberWhereInput where,
         TeamMemberOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.TeamId);
@@ -191,10 +169,9 @@ public class TeamQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<TeamMemberDetails[]?> TeamMembersAsync(
+    public async Task<TeamMemberDetails[]?> TeamMembersAsync(
         TeamMemberWhereInput where,
         TeamMemberOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
         CancellationToken cancellationToken)
     {
         var result = await PaginatedTeamMembersAsync(
@@ -203,8 +180,7 @@ public class TeamQuery(IMapper mapper) : Query
             null,
             null,
             where,
-            [],
-            serviceProvider,
+            orderBy,
             cancellationToken);
         return result?.Edges.Select(item => item.Node).ToArray();
     }
