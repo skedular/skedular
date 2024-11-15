@@ -66,6 +66,18 @@ mmsteams.unityhub.io {
 	reverse_proxy localhost:7000
 }
 
+yapp.unityhub.io {
+	reverse_proxy localhost:7000
+}
+
+yweb.unityhub.io {
+	reverse_proxy localhost:7000
+}
+
+ymsteams.unityhub.io {
+	reverse_proxy localhost:7000
+}
+
 staging.getskedular.com {
 	reverse_proxy localhost:8080
 }
@@ -103,5 +115,17 @@ mweb.skedular.app {
 }
 
 mmsteams.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+yapp.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+yweb.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+ymsteams.skedular.app {
 	reverse_proxy localhost:7000
 }
