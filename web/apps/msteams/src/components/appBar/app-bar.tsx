@@ -1,4 +1,3 @@
-import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
@@ -9,12 +8,12 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { FeedbackIcon, SettingsIcon } from '@repo/shared/components/icons';
-import { BreadcrumpsContext } from '@repo/shared/libs/providers';
-import { getCustomerFullName } from '@repo/shared/libs/utils';
+import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewFeedbackDialog } from 'components/feedback';
-import { memo, useContext, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 import { useFragment } from 'react-relay';
+import { useInterval } from 'usehooks-ts';
 import type { appBar_query$key } from './__generated__/appBar_query.graphql';
 
 type Props = {
@@ -35,7 +34,7 @@ export type AppBarBreadcrumbs = {
   lastItemIcon?: React.ReactNode;
 };
 
-const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
+const AppBar = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<appBar_query$key>(
     graphql`
       fragment appBar_query on Query {
@@ -55,9 +54,13 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
     rootDataRelay,
   );
 
-  const breadcrumpsContext = useContext(BreadcrumpsContext);
+  const [currentTime, setCurrentTime] = useState(localNow());
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
+
+  useInterval(() => {
+    setCurrentTime(localNow());
+  }, 1000);
 
   const handleProfileMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
     setProfileOpenAnchorEl(event.currentTarget);
@@ -75,48 +78,26 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
     setSubmitFeedbackDialogOpen(false);
   };
 
-  const breadcrumpsLinks = useMemo(() => {
-    if (!breadcrumbs?.items) {
-      return [];
-    }
-
-    return breadcrumbs.items.map((item) => {
-      return breadcrumpsContext.has(item.href)
-        ? {
-            icon: item.icon,
-            href: item.href,
-            label: breadcrumpsContext.get(item.href)!,
-          }
-        : item;
-    });
-  }, [breadcrumbs?.items, breadcrumpsContext]);
-
-  const lastBreadcrumps = useMemo(() => {
-    if (!breadcrumbs?.lastItemLabel) {
-      return undefined;
-    }
-
-    const label = breadcrumpsContext.has(breadcrumbs?.lastItemLabel) ? breadcrumpsContext.get(breadcrumbs?.lastItemLabel) : breadcrumbs.lastItemLabel;
-    const icon = breadcrumbs?.lastItemIcon;
-
-    return [icon, label];
-  }, [breadcrumbs?.lastItemLabel, breadcrumbs?.lastItemIcon, breadcrumpsContext]);
+  const customerName = getCustomerFullName({
+    name: null,
+    givenName: rootData.me?.givenName,
+    middleName: rootData.me?.middleName,
+    familyName: rootData.me?.familyName,
+  });
 
   return (
     <>
-      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1 }}>
-        <Breadcrumbs maxItems={5}>
-          {breadcrumpsLinks?.map(({ href, icon, label }, index) => (
-            <Link key={index} underline="hover" href={href}>
-              {icon && <Typography>{icon}</Typography>}
-              {!icon && label && <Typography>{label}</Typography>}
-            </Link>
-          ))}
-          {lastBreadcrumps && lastBreadcrumps[0] && lastBreadcrumps[0]}
-          {lastBreadcrumps && !lastBreadcrumps[0] && lastBreadcrumps[1] && <Typography>{lastBreadcrumps[1]}</Typography>}
-        </Breadcrumbs>
+      <Stack
+        direction="row"
+        sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1, flexWrap: 'wrap' }}
+      >
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <Typography variant="h6">{`Welcome ${customerName}`}</Typography>
+        </Stack>
 
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <Typography variant="h6">{`${toLongDateTime(currentTime)}`}</Typography>
+          <Divider orientation="vertical" flexItem />
           <Tooltip title="Send us feedback">
             <IconButton sx={{ ml: 1 }} onClick={() => setSubmitFeedbackDialogOpen(true)}>
               <FeedbackIcon />
@@ -156,14 +137,7 @@ const AppBar = ({ rootDataRelay, breadcrumbs }: Props) => {
               <Stack direction="column">
                 <Stack direction="column">
                   <Typography variant="body1">Signed in as</Typography>
-                  <Typography variant="body1">
-                    {getCustomerFullName({
-                      name: null,
-                      givenName: rootData.me?.givenName,
-                      middleName: rootData.me?.middleName,
-                      familyName: rootData.me?.familyName,
-                    })}
-                  </Typography>
+                  <Typography variant="body1">{customerName}</Typography>
                   {rootData.me?.email && <Typography variant="body1">{rootData.me?.email.email}</Typography>}
                 </Stack>
               </Stack>

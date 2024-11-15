@@ -158,7 +158,10 @@ const AppBar = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1 }}>
+      <Stack
+        direction="row"
+        sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1, flexWrap: 'wrap' }}
+      >
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <>
             {rootData.myOrganizations.length > 0 && (
@@ -194,7 +197,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
           <Typography variant="h6">{`Welcome ${customerName}`}</Typography>
         </Stack>
 
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <Typography variant="h6">{`${toLongDateTime(currentTime)}`}</Typography>
           <Divider orientation="vertical" flexItem />
           <Tooltip title="Send us feedback">
