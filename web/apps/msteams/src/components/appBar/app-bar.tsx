@@ -92,11 +92,11 @@ const AppBar = ({ rootDataRelay }: Props) => {
         sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1, flexWrap: 'wrap' }}
       >
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Typography variant="h6">{`Welcome ${customerName}`}</Typography>
+          <Typography variant="h6" sx={{ display: { xs: 'none', sm: 'block' } }}>{`Welcome ${customerName}`}</Typography>
         </Stack>
 
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Typography variant="h6">{`${toLongDateTime(currentTime)}`}</Typography>
+          <Typography variant="h6" sx={{ display: { xs: 'none', sm: 'block' } }}>{`${toLongDateTime(currentTime)}`}</Typography>
           <Divider orientation="vertical" flexItem />
           <Tooltip title="Send us feedback">
             <IconButton sx={{ ml: 1 }} onClick={() => setSubmitFeedbackDialogOpen(true)}>
