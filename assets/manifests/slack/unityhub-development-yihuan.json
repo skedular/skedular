@@ -1,6 +1,6 @@
 {
   "display_information": {
-    "name": "UnityHub Development",
+    "name": "UnityHub Yihuan",
     "description": "UnityHub shows you and your team who will be in and what’s happening in the office",
     "background_color": "#323336"
   },
@@ -11,16 +11,16 @@
       "messages_tab_read_only_enabled": false
     },
     "bot_user": {
-      "display_name": "UnityHub Development",
+      "display_name": "UnityHub Yihuan",
       "always_online": false
     }
   },
   "oauth_config": {
     "redirect_urls": [
-      "https://mapp.skedular.app/api/slack/v1/callback",
-      "https://mapp.skedular.app/api/auth/callback/slack",
-      "https://mweb.skedular.app/api/slack/v1/callback",
-      "https://mweb.skedular.app/api/auth/callback/slack"
+      "https://yapp.skedular.app/api/slack/v1/callback",
+      "https://yapp.skedular.app/api/auth/callback/slack",
+      "https://yweb.skedular.app/api/slack/v1/callback",
+      "https://yweb.skedular.app/api/auth/callback/slack"
     ],
     "scopes": {
       "user": ["users.profile:write", "users.profile:read"],
@@ -39,13 +39,13 @@
   },
   "settings": {
     "event_subscriptions": {
-      "request_url": "https://mweb.skedular.app/api/slack/v1/event",
+      "request_url": "https://yweb.skedular.app/api/slack/v1/event",
       "bot_events": ["app_home_opened", "app_mention"]
     },
     "interactivity": {
       "is_enabled": true,
-      "request_url": "https://mweb.skedular.app/api/slack/v1/action",
-      "message_menu_options_url": "https://mweb.skedular.app/api/slack/v1/options"
+      "request_url": "https://yweb.skedular.app/api/slack/v1/action",
+      "message_menu_options_url": "https://yweb.skedular.app/api/slack/v1/options"
     },
     "org_deploy_enabled": false,
     "socket_mode_enabled": false,
