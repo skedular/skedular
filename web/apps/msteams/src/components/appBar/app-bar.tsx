@@ -57,9 +57,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
 
-  useInterval(() => {
-    setCurrentTime(localNow());
-  }, 1000);
+  useInterval(() => setCurrentTime(localNow()), 1000);
 
   const handleProfileMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
     setProfileOpenAnchorEl(event.currentTarget);
@@ -67,6 +65,11 @@ const AppBar = ({ rootDataRelay }: Props) => {
 
   const handleProfileMenuCloseClick = () => {
     setProfileOpenAnchorEl(null);
+  };
+
+  const handleSubmitFeedbackClicked = () => {
+    setProfileOpenAnchorEl(null);
+    setSubmitFeedbackDialogOpen(true);
   };
 
   const handleSubmitFeedbackSendClick = () => {
@@ -149,12 +152,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
 
             <Divider />
 
-            <MenuItem
-              onClick={() => {
-                setProfileOpenAnchorEl(null);
-                return setSubmitFeedbackDialogOpen(true);
-              }}
-            >
+            <MenuItem onClick={handleSubmitFeedbackClicked}>
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <FeedbackIcon fontSize="medium" />
                 <Typography textAlign="center">Send us feedback</Typography>

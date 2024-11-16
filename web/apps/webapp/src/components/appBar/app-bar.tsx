@@ -97,9 +97,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
     }
   }
 
-  useInterval(() => {
-    setCurrentTime(localNow());
-  }, 1000);
+  useInterval(() => setCurrentTime(localNow()), 1000);
 
   useEffect(() => {
     if (!rootData.myOrganizations) {
@@ -141,12 +139,25 @@ const AppBar = ({ rootDataRelay }: Props) => {
     signOut();
   };
 
+  const handleSubmitFeedbackClicked = () => {
+    setProfileOpenAnchorEl(null);
+    setSubmitFeedbackDialogOpen(true);
+  };
+
   const handleSubmitFeedbackSendClick = () => {
     setSubmitFeedbackDialogOpen(false);
   };
 
   const handleSubmitFeedbackCancelClick = () => {
     setSubmitFeedbackDialogOpen(false);
+  };
+
+  const handleDarkThemeClicked = () => {
+    updatePaletteMode('dark');
+  };
+
+  const handleLightThemeClicked = () => {
+    updatePaletteMode('light');
   };
 
   if (!rootData.myOrganizations) {
@@ -272,7 +283,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
             </MenuItem>
 
             {paletteMode === 'dark' && (
-              <MenuItem onClick={() => updatePaletteMode('light')}>
+              <MenuItem onClick={handleLightThemeClicked}>
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <LightModeIcon fontSize="medium" />
                   <Typography textAlign="center">Dark Mode</Typography>
@@ -281,7 +292,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
             )}
 
             {paletteMode === 'light' && (
-              <MenuItem onClick={() => updatePaletteMode('dark')}>
+              <MenuItem onClick={handleDarkThemeClicked}>
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <DarkModeIcon fontSize="medium" />
                   <Typography textAlign="center">Light Mode</Typography>
@@ -291,7 +302,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
 
             <Divider />
 
-            <MenuItem onClick={() => setSubmitFeedbackDialogOpen(true)}>
+            <MenuItem onClick={handleSubmitFeedbackClicked}>
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <FeedbackIcon fontSize="medium" />
                 <Typography textAlign="center">Send us feedback</Typography>
