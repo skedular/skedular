@@ -35,11 +35,11 @@ public class CachedCustomerService(
 {
     public async Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
         try
         {
-            _ = await GetByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
+            _ = await GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
             return true;
         }
         catch (CustomerNotFound)
@@ -51,22 +51,22 @@ public class CachedCustomerService(
     public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
-        return await GetByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
+        return await GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
     }
 
     public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(context.PropertyBag.VerifiableToken))
+        if (string.IsNullOrWhiteSpace(context.GetVerifiableToken()))
         {
             return (null, null);
         }
 
         try
         {
-            return await GetByVerifiableTokenAsync(context.PropertyBag.VerifiableToken, cancellationToken);
+            return await GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
         }
         catch (CustomerNotFound)
         {
@@ -103,7 +103,7 @@ public class CachedCustomerService(
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
 
         return await memoryCache.GetOrCreateAsync(
-            $"customer-verifiabletoken-{context.PropertyBag.VerifiableToken}",
+            $"customer-verifiabletoken-{context.GetVerifiableToken()}",
             async cacheEntry =>
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
@@ -123,9 +123,9 @@ public class CachedCustomerService(
 
     public void CleanCache()
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
-        memoryCache.Remove($"customer-verifiabletoken-{context.PropertyBag.VerifiableToken}");
+        memoryCache.Remove($"customer-verifiabletoken-{context.GetVerifiableToken()}");
     }
 
     public void CleanCache(string id)

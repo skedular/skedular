@@ -32,7 +32,7 @@ public class BillingInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.GenerateOrganizationOfferingInvoice,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 OrganizationOfferingId = organizationOfferingId
             };
 

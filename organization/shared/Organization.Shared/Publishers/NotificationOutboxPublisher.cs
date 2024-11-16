@@ -82,7 +82,7 @@ public class NotificationOutboxPublisher(
                 applicationConfiguration.DomainSource,
                 applicationConfiguration.AppSource,
                 Type.NotificationUpserted,
-                context.PropertyBag.CorrelationId),
+                context.GetCorrelationId()),
             Data = new Data
             {
                 AfterState = new Notification
@@ -130,7 +130,7 @@ public class NotificationOutboxPublisher(
                 applicationConfiguration.DomainSource,
                 applicationConfiguration.AppSource,
                 Type.NotificationUpserted,
-                context.PropertyBag.CorrelationId),
+                context.GetCorrelationId()),
             Data = new Data
             {
                 AfterState = new Notification

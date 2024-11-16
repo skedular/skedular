@@ -35,7 +35,7 @@ public class OrganizationInternalOutboxPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RefreshAzureTenantMembers,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 AzureTenantId = azureTenantId
             };
 

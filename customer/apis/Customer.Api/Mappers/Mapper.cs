@@ -17,8 +17,8 @@ namespace Customer.Api.Mappers;
 
 public interface IMapper
 {
-    Shared.Models.Customer MapTo(PropertyBag src);
-    Identity MapToIdentity(PropertyBag src);
+    Shared.Models.Customer MapTo();
+    Identity MapToIdentity();
     CustomerDetails MapTo(Shared.Models.Customer src);
     CustomerPayload MapTo(Shared.Models.Customer src, string? clientMutationId);
     CustomerFeedback MapTo(SubmitCustomerFeedbackInput src);
@@ -47,34 +47,34 @@ public interface IMapper
     CustomerEdge MapTo(Edge<Shared.Models.Customer> src);
 }
 
-public class Mapper : IMapper
+public class Mapper(IContext context) : IMapper
 {
-    public Shared.Models.Customer MapTo(PropertyBag src) =>
+    public Shared.Models.Customer MapTo() =>
         new()
         {
-            Designation = src.Designation,
-            Title = src.Title,
-            Name = src.Name,
-            GivenName = src.GivenName,
-            MiddleName = src.MiddleName,
-            FamilyName = src.FamilyName,
-            PhotoUrl = src.PhotoUrl,
-            PhotoUrl24 = src.PhotoUrl24,
-            PhotoUrl32 = src.PhotoUrl32,
-            PhotoUrl48 = src.PhotoUrl48,
-            PhotoUrl72 = src.PhotoUrl72,
-            PhotoUrl192 = src.PhotoUrl192,
-            PhotoUrl512 = src.PhotoUrl512,
-            Timezone = src.Timezone,
-            Locale = src.Locale,
+            Designation = context.GetDesignation(),
+            Title = context.GetTitle(),
+            Name = context.GetName(),
+            GivenName = context.GetGivenName(),
+            MiddleName = context.GetMiddleName(),
+            FamilyName = context.GetFamilyName(),
+            PhotoUrl = context.GetPhotoUrl(),
+            PhotoUrl24 = context.GetPhotoUrl24(),
+            PhotoUrl32 = context.GetPhotoUrl32(),
+            PhotoUrl48 = context.GetPhotoUrl48(),
+            PhotoUrl72 = context.GetPhotoUrl72(),
+            PhotoUrl192 = context.GetPhotoUrl192(),
+            PhotoUrl512 = context.GetPhotoUrl512(),
+            Timezone = context.GetTimezone(),
+            Locale = context.GetLocale(),
             Identities =
                 new List<Shared.Models.Identity>
                 {
                     new()
                     {
-                        Id = src.VerifiableToken.ToSafeString(),
-                        Email = src.Email,
-                        EmailVerified = src.EmailVerified
+                        Id = context.GetVerifiableToken().ToSafeString(),
+                        Email = context.GetEmail(),
+                        EmailVerified = context.GetEmailVerified()
                     }
                 },
             IsOrganizationOnboardingDone = false,
@@ -91,8 +91,13 @@ public class Mapper : IMapper
             PreferredDesks = []
         };
 
-    public Identity MapToIdentity(PropertyBag src) =>
-        new() { Id = src.VerifiableToken.ToSafeString(), Email = src.Email, EmailVerified = src.EmailVerified };
+    public Identity MapToIdentity() =>
+        new()
+        {
+            Id = context.GetVerifiableToken().ToSafeString(),
+            Email = context.GetEmail(),
+            EmailVerified = context.GetEmailVerified()
+        };
 
     public CustomerDetails MapTo(Shared.Models.Customer src)
     {

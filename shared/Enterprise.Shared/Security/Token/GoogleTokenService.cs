@@ -9,15 +9,17 @@ public interface IGoogleTokenService : ITokenService;
 
 public class GoogleTokenService : IGoogleTokenService
 {
+    private readonly IContext _context;
     private readonly Configurations.Google _googleConfiguration;
 
-    public GoogleTokenService(ApplicationConfiguration applicationConfiguration)
+    public GoogleTokenService(ApplicationConfiguration applicationConfiguration, IContext context)
     {
         ArgumentNullException.ThrowIfNull(applicationConfiguration.IdentityProviders.Google);
         _googleConfiguration = applicationConfiguration.IdentityProviders.Google;
+        _context = context;
     }
 
-    public async Task<PropertyBag?> VerifyTokenAsync(string token, CancellationToken cancellationToken)
+    public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
     {
         try
         {
@@ -25,34 +27,33 @@ public class GoogleTokenService : IGoogleTokenService
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
             if (issuer is not null && _googleConfiguration.Issuer != issuer)
             {
-                return null;
+                return;
             }
 
             var payload = await GoogleJsonWebSignature.ValidateAsync(token);
             if (payload.AudienceAsList.All(audience => audience != _googleConfiguration.ApplicationId))
             {
-                return null;
+                return;
             }
 
-            return new PropertyBag()
-                .AddVerifiableToken(payload.Subject)
-                .AddName(payload.Name)
-                .AddGivenName(payload.GivenName)
-                .AddFamilyName(payload.FamilyName)
-                .AddPhotoUrl(payload.Picture)
-                .AddPhotoUrl24(payload.Picture)
-                .AddPhotoUrl32(payload.Picture)
-                .AddPhotoUrl48(payload.Picture)
-                .AddPhotoUrl72(payload.Picture)
-                .AddPhotoUrl192(payload.Picture)
-                .AddPhotoUrl512(payload.Picture)
-                .AddLocale(payload.Locale)
-                .AddEmail(payload.Email)
-                .AddEmailVerified(payload.EmailVerified);
+            _context.SetVerifiableToken(payload.Subject);
+            _context.SetName(payload.Name);
+            _context.SetGivenName(payload.GivenName);
+            _context.SetFamilyName(payload.FamilyName);
+            _context.SetPhotoUrl(payload.Picture);
+            _context.SetPhotoUrl24(payload.Picture);
+            _context.SetPhotoUrl32(payload.Picture);
+            _context.SetPhotoUrl48(payload.Picture);
+            _context.SetPhotoUrl72(payload.Picture);
+            _context.SetPhotoUrl192(payload.Picture);
+            _context.SetPhotoUrl512(payload.Picture);
+            _context.SetLocale(payload.Locale);
+            _context.SetEmail(payload.Email);
+            _context.SetEmailVerified(payload.EmailVerified);
         }
         catch
         {
-            return null;
+            // ignored
         }
     }
 }

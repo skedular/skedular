@@ -38,7 +38,7 @@ public class OrganizationInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RenewOrganizationOffering,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 OrganizationId = organizationId
             };
 
@@ -57,7 +57,7 @@ public class OrganizationInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RecordDailyMemberCount,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 OrganizationId = organizationId
             };
 
@@ -76,7 +76,7 @@ public class OrganizationInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RefreshAzureTenantMembers,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 AzureTenantId = azureTenantId
             };
             await publisher.PublishAsync(key, @event, cancellationToken);

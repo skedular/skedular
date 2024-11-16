@@ -55,9 +55,9 @@ public class AzureTenantService(
 
     public async Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken)
     {
-        Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
+        Guard.Against.NullOrEmpty(context.GetAzureTenantId());
 
-        var tenantId = context.PropertyBag.AzureTenantId;
+        var tenantId = context.GetAzureTenantId();
         var key = $"tenant-exists-{tenantId}";
         if (memoryCache.TryGetValue<bool>(key, out var entry))
         {
@@ -84,8 +84,8 @@ public class AzureTenantService(
 
     public async Task<string> GenerateAdminConsentUrlAsync(CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
-        Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
+        Guard.Against.NullOrEmpty(context.GetAzureTenantId());
         ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
 
         var currentUri = string.IsNullOrWhiteSpace(applicationConfiguration.ApiBaseDomain)
@@ -98,10 +98,10 @@ public class AzureTenantService(
         var installStateUserIdLookup = repositoryFactory.AzureInstallStateUserIdLookupRepository.Add(
             new AzureInstallStateUserIdLookup
             {
-                Id = randomHelper.Generate(), InstalledByUserId = context.PropertyBag.VerifiableToken
+                Id = randomHelper.Generate(), InstalledByUserId = context.GetVerifiableToken()
             });
 
-        var tenantId = context.PropertyBag.AzureTenantId;
+        var tenantId = context.GetAzureTenantId();
         var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(new Uri(new Uri(currentUri), "organization/api/v1/onboard-azure-tenant")
             .OriginalString);
@@ -157,9 +157,9 @@ public class AzureTenantService(
 
     public async Task<Shared.Models.Organization?> GetAttachedOrganizationAsync(CancellationToken cancellationToken)
     {
-        Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
+        Guard.Against.NullOrEmpty(context.GetAzureTenantId());
 
-        var tenantId = context.PropertyBag.AzureTenantId;
+        var tenantId = context.GetAzureTenantId();
         var tenant = await repositoryFactory.AzureTenantRepository.Query(
             new Specification<AzureTenant>
             {

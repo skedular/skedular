@@ -33,7 +33,7 @@ public class BookingPublisher(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
                         booking.IsNotDeleted() ? Type.BookingUpserted : Type.BookingDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data { AfterState = mapper.MapTo(booking) }
                 },
                 cancellationToken)));

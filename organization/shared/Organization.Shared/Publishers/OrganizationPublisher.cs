@@ -39,7 +39,7 @@ public class OrganizationPublisher(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
                         organization.IsNotDeleted() ? Type.OrganizationUpserted : Type.OrganizationDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data { OrganizationAfterState = mapper.MapTo(organization) }
                 },
                 cancellationToken)));
@@ -59,7 +59,7 @@ public class OrganizationPublisher(
                         joinInvitation.IsNotDeleted()
                             ? Type.InvitationToJoinOrganizationUpserted
                             : Type.InvitationToJoinOrganizationDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data
                     {
                         InvitationToJoinOrganizationAfterState = mapper.MapTo(joinInvitation, inviteeIdToOverride)

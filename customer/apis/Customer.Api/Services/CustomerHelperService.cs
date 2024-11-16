@@ -42,11 +42,11 @@ public class CustomerHelperService(
 
     public async Task<Shared.Database.Entities.Customer> GetCustomerAsync(CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
         var customer =
             await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                context.PropertyBag.VerifiableToken,
+                context.GetVerifiableToken(),
                 cancellationToken);
         if (customer is null)
         {

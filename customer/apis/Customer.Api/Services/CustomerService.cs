@@ -77,7 +77,7 @@ public class CustomerService(
         bool addCustomerIfNotExist,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
         var (_, customer) = await cachedCustomerService.GetNullableAsync(cancellationToken);
         if (customer is not null)
@@ -90,7 +90,7 @@ public class CustomerService(
             throw new CustomerNotFound();
         }
 
-        return await AddAsync(mapper.MapTo(context.PropertyBag), true, cancellationToken);
+        return await AddAsync(mapper.MapTo(), true, cancellationToken);
     }
 
     public async Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(
@@ -264,7 +264,7 @@ public class CustomerService(
         }
         else
         {
-            var identity = mapper.MapToIdentity(context.PropertyBag);
+            var identity = mapper.MapToIdentity();
             identity.CreatedAt = timeProvider.GetUtcNow();
             existingCustomer.Identities = existingCustomer.Identities.Concat([identity]).ToList();
             customer = mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer));
