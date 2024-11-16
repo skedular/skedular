@@ -76,9 +76,11 @@ public class Context(IHttpContextAccessor httpContextAccessor) : IContext
     public void SetCorrelationId(string value) => GetHttpContext().Items[CorrelationIdKey] = value;
 
     public string GetCorrelationId() =>
-        GetHttpContext().Items.TryGetValue(CorrelationIdKey, out var value)
-            ? value as string ?? string.Empty
-            : string.Empty;
+        httpContextAccessor.HttpContext is null
+            ? string.Empty
+            : GetHttpContext().Items.TryGetValue(CorrelationIdKey, out var value)
+                ? value as string ?? string.Empty
+                : string.Empty;
 
     public void SetVerifiableToken(string value) => GetHttpContext().Items[VerifiableTokenKey] = value;
 
