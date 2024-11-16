@@ -1,11 +1,13 @@
 ﻿using Billing.Api.Mappers;
 using Billing.Api.Services;
 using HotChocolate;
+using HotChocolate.Types;
 
 namespace Billing.Api.GraphQL;
 
 public class BillingMutation
 {
+    [UseServiceScope]
     public async Task<OrganizationBillingInfoPayload?> SetOrganizationBillingInfoAsync(
         SetOrganizationBillingInfoInput input,
         [Service] IOrganizationBillingService organizationBillingService,

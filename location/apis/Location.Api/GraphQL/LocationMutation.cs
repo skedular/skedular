@@ -1,5 +1,6 @@
 using Api.Shared.Models;
 using HotChocolate;
+using HotChocolate.Types;
 using Location.Api.Mappers;
 using Location.Api.Services;
 
@@ -7,6 +8,7 @@ namespace Location.Api.GraphQL;
 
 public class LocationMutation
 {
+    [UseServiceScope]
     public async Task<LocationPayload?> AddLocationAsync(
         AddLocationInput input,
         [Service] ILocationService locationService,
@@ -17,6 +19,7 @@ public class LocationMutation
         return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
     }
 
+    [UseServiceScope]
     public async Task<LocationPayload?> UpdateLocationAsync(
         UpdateLocationInput input,
         [Service] ILocationService locationService,
@@ -27,6 +30,7 @@ public class LocationMutation
         return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
     }
 
+    [UseServiceScope]
     public async Task<LocationPayload?> DeleteLocationAsync(
         DeleteLocationInput input,
         [Service] ILocationService locationService,
@@ -37,6 +41,7 @@ public class LocationMutation
         return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
     }
 
+    [UseServiceScope]
     public async Task<DeskPayload?> AddDeskAsync(
         AddDeskInput input,
         [Service] IDeskService deskService,
@@ -47,6 +52,7 @@ public class LocationMutation
         return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
     }
 
+    [UseServiceScope]
     public async Task<BulkDeskPayload?> BulkAddDeskAsync(
         BulkAddDeskInput input,
         [Service] IDeskService deskService,
@@ -67,6 +73,7 @@ public class LocationMutation
         };
     }
 
+    [UseServiceScope]
     public async Task<DeskPayload?> UpdateDeskAsync(
         UpdateDeskInput input,
         [Service] IDeskService deskService,
@@ -77,6 +84,7 @@ public class LocationMutation
         return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
     }
 
+    [UseServiceScope]
     public async Task<DeskPayload?> DeleteDeskAsync(
         DeleteDeskInput input,
         [Service] IDeskService deskService,
@@ -87,6 +95,7 @@ public class LocationMutation
         return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
     }
 
+    [UseServiceScope]
     public async Task<LocationTagPayload?> AddLocationTagAsync(
         AddLocationTagInput input,
         [Service] ITagService tagService,
@@ -97,6 +106,7 @@ public class LocationMutation
         return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
     }
 
+    [UseServiceScope]
     public async Task<LocationTagPayload?> UpdateLocationTagAsync(
         UpdateLocationTagInput input,
         [Service] ITagService tagService,
@@ -107,6 +117,7 @@ public class LocationMutation
         return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
     }
 
+    [UseServiceScope]
     public async Task<LocationTagPayload?> DeleteLocationTagAsync(
         DeleteLocationTagInput input,
         [Service] ITagService tagService,
@@ -117,6 +128,7 @@ public class LocationMutation
         return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
     }
 
+    [UseServiceScope]
     public async Task<LocationMemberDetailsPayload?> ChangeLocationMemberOwnershipTypeAsync(
         ChangeLocationMemberOwnershipTypeInput input,
         [Service] ILocationMemberService locationMemberService,
@@ -140,6 +152,7 @@ public class LocationMutation
         };
     }
 
+    [UseServiceScope]
     public async Task<InviteCustomersToJoinLocationPayload?> InviteCustomersToJoinLocationAsync(
         InviteCustomersToJoinLocationInput input,
         [Service] ILocationInvitationService locationInvitationService,
@@ -149,6 +162,7 @@ public class LocationMutation
         return new InviteCustomersToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<AcceptInvitationToJoinLocationPayload?> AcceptInvitationToJoinLocationAsync(
         AcceptInvitationToJoinLocationInput input,
         [Service] ILocationInvitationService locationInvitationService,
@@ -158,6 +172,7 @@ public class LocationMutation
         return new AcceptInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<RejectInvitationToJoinLocationPayload?> RejectInvitationToJoinLocationAsync(
         RejectInvitationToJoinLocationInput input,
         [Service] ILocationInvitationService locationInvitationService,
@@ -167,6 +182,7 @@ public class LocationMutation
         return new RejectInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<CancelInvitationToJoinLocationPayload?> CancelInvitationToJoinLocationAsync(
         CancelInvitationToJoinLocationInput input,
         [Service] ILocationInvitationService locationInvitationService,

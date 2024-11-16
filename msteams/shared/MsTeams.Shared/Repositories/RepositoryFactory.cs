@@ -16,9 +16,10 @@ public interface IRepositoryFactory
     ITeamRepository TeamRepository { get; }
 }
 
-public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
+public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
     private readonly MsTeamsDbContext _dbContext;
+    private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<MsTeamsDbContext> dbContextFactory, TimeProvider timeProvider)
     {
@@ -35,9 +36,9 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
         TeamRepository = new TeamRepository(_dbContext, timeProvider);
     }
 
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
-        await DisposeAsyncCore().ConfigureAwait(false);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
@@ -51,5 +52,20 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public ITeamRepository TeamRepository { get; }
 
-    protected virtual async ValueTask DisposeAsyncCore() => await _dbContext.DisposeAsync();
+    ~RepositoryFactory() => Dispose(false);
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _dbContext.Dispose();
+        }
+
+        _disposed = true;
+    }
 }

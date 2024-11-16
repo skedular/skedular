@@ -1,11 +1,13 @@
 using System.Reflection;
 using HotChocolate;
+using HotChocolate.Types;
 using MsTeams.Api.Services;
 
 namespace MsTeams.Api.GraphQL;
 
 public class MsTeamsQuery
 {
+    [UseServiceScope]
     public Version MsTeamsVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -19,6 +21,7 @@ public class MsTeamsQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<bool> MsTeamsCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>

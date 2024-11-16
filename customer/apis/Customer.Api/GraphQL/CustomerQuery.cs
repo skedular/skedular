@@ -4,11 +4,13 @@ using Customer.Api.Services;
 using Customer.Shared.Models;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types;
 
 namespace Customer.Api.GraphQL;
 
 public class CustomerQuery
 {
+    [UseServiceScope]
     public Version CustomerVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -22,12 +24,14 @@ public class CustomerQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<CustomerDetails?> MeAsync(
         [Service] ICustomerService customerService,
         [Service] IMapper mapper,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
+    [UseServiceScope]
     public async Task<CustomerConnection?> PaginatedCustomersByDefaultLocationAsync(
         string? after,
         int? first,
@@ -91,6 +95,7 @@ public class CustomerQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<CustomerDetails[]?> CustomersByDefaultLocationAsync(
         CustomerWhereInput where,
         CustomerOrderInput[]? orderBy,

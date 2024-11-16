@@ -1,6 +1,7 @@
 using Api.Shared.Models;
 using Api.Shared.Services.Offering;
 using HotChocolate;
+using HotChocolate.Types;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 
@@ -8,6 +9,7 @@ namespace Organization.Api.GraphQL;
 
 public class OrganizationMutation
 {
+    [UseServiceScope]
     public async Task<OrganizationPayload?> AddOrganizationAsync(
         AddOrganizationInput input,
         [Service] IOrganizationService organizationService,
@@ -21,6 +23,7 @@ public class OrganizationMutation
         };
     }
 
+    [UseServiceScope]
     public async Task<OrganizationPayload?> UpdateOrganizationAsync(
         UpdateOrganizationInput input,
         [Service] IOrganizationService organizationService,
@@ -34,6 +37,7 @@ public class OrganizationMutation
         };
     }
 
+    [UseServiceScope]
     public async Task<OrganizationPayload?> DeleteOrganizationAsync(
         DeleteOrganizationInput input,
         [Service] IOrganizationService organizationService,
@@ -47,6 +51,7 @@ public class OrganizationMutation
         };
     }
 
+    [UseServiceScope]
     public async Task<UpdateOrganizationOfferingPayload?> UpdateOrganizationOfferingAsync(
         UpdateOrganizationOfferingInput input,
         [Service] IOrganizationOfferingService organizationOfferingService,
@@ -59,6 +64,7 @@ public class OrganizationMutation
         return new UpdateOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<CancelOrganizationOfferingPayload?> CancelOrganizationOfferingAsync(
         CancelOrganizationOfferingInput input,
         [Service] IOrganizationOfferingService organizationOfferingService,
@@ -68,6 +74,7 @@ public class OrganizationMutation
         return new CancelOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<OrganizationMemberDetailsPayload?> ChangeOrganizationMemberOwnershipTypeAsync(
         ChangeOrganizationMemberOwnershipTypeInput input,
         [Service] IOrganizationMemberService organizationMemberService,
@@ -91,6 +98,7 @@ public class OrganizationMutation
         };
     }
 
+    [UseServiceScope]
     public async Task<InviteCustomersToJoinOrganizationPayload?> InviteCustomersToJoinOrganizationAsync(
         InviteCustomersToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
@@ -101,6 +109,7 @@ public class OrganizationMutation
         return new InviteCustomersToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<AcceptInvitationToJoinOrganizationPayload?> AcceptInvitationToJoinOrganizationAsync(
         AcceptInvitationToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
@@ -110,6 +119,7 @@ public class OrganizationMutation
         return new AcceptInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<RejectInvitationToJoinOrganizationPayload?> RejectInvitationToJoinOrganizationAsync(
         RejectInvitationToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,
@@ -119,6 +129,7 @@ public class OrganizationMutation
         return new RejectInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<CancelInvitationToJoinOrganizationPayload?> CancelInvitationToJoinOrganizationAsync(
         CancelInvitationToJoinOrganizationInput input,
         [Service] IOrganizationInvitationService organizationInvitationService,

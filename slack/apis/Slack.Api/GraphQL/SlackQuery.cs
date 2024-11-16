@@ -1,11 +1,13 @@
 using System.Reflection;
 using HotChocolate;
+using HotChocolate.Types;
 using Slack.Api.Services;
 
 namespace Slack.Api.GraphQL;
 
 public class SlackQuery
 {
+    [UseServiceScope]
     public Version SlackVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -19,6 +21,7 @@ public class SlackQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<bool> SlackCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>

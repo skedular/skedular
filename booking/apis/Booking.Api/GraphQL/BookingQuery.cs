@@ -6,11 +6,13 @@ using Booking.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Sanitization;
 using HotChocolate;
+using HotChocolate.Types;
 
 namespace Booking.Api.GraphQL;
 
 public class BookingQuery
 {
+    [UseServiceScope]
     public Version BookingVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -24,12 +26,14 @@ public class BookingQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<bool> BookingCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IMapper mapper,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
+    [UseServiceScope]
     public async Task<BookingDetails?> BookingAsync(
         string id,
         [Service] IBookingService bookingService,
@@ -40,6 +44,7 @@ public class BookingQuery
         return mapper.MapTo(booking);
     }
 
+    [UseServiceScope]
     public async Task<BookingConnection?> BookingsAsync(
         string? after,
         int? first,
@@ -120,6 +125,7 @@ public class BookingQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<BookingDetails[]?> AllBookingsAsync(
         BookingWhereInput where,
         [Service] ICachedCustomerService cachedCustomerService,
@@ -141,6 +147,7 @@ public class BookingQuery
         return result?.Edges.Select(item => item.Node).ToArray();
     }
 
+    [UseServiceScope]
     public async Task<BookingDeskDetails[]?> AvailableLocationDesksAsync(
         string locationId,
         DateTimeOffset date,
@@ -159,6 +166,7 @@ public class BookingQuery
         return mapper.MapTo(desks).ToArray();
     }
 
+    [UseServiceScope]
     public async Task<OrganizationBookingPermissions?> OrganizationBookingPermissionsAsync(
         string organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
@@ -185,6 +193,7 @@ public class BookingQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<LocationBookingPermissions?> LocationBookingPermissionsAsync(
         string locationId,
         [Service] ICachedCustomerService cachedCustomerService,
@@ -209,6 +218,7 @@ public class BookingQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<TeamBookingPermissions?> TeamBookingPermissionsAsync(
         string teamId,
         [Service] ICachedCustomerService cachedCustomerService,

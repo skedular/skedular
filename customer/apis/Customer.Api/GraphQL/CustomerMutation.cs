@@ -1,11 +1,13 @@
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using HotChocolate;
+using HotChocolate.Types;
 
 namespace Customer.Api.GraphQL;
 
 public class CustomerMutation
 {
+    [UseServiceScope]
     public async Task<CustomerPayload?> CompleteOrganizationOnboardingAsync(
         CompleteOrganizationOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
@@ -16,6 +18,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> CompleteLocationOnboardingAsync(
         CompleteLocationOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
@@ -26,6 +29,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> CompleteTeamOnboardingAsync(
         CompleteTeamOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
@@ -36,6 +40,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> CompleteDefaultOrganizationOnboardingAsync(
         CompleteDefaultOrganizationOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
@@ -46,6 +51,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> CompleteDefaultLocationOnboardingAsync(
         CompleteDefaultLocationOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
@@ -56,6 +62,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> CompletePreferredZoneOnboardingAsync(
         CompletePreferredZoneOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
@@ -66,6 +73,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> CompletePreferredDeskOnboardingAsync(
         CompletePreferredDeskOnboardingInput input,
         [Service] ICustomerSettingsService customerSettingsService,
@@ -76,6 +84,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> AddCustomerDefaultLocationAsync(
         AddCustomerDefaultLocationInput input,
         [Service] ICustomerLocationSettingsService customerLocationSettingsService,
@@ -90,6 +99,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> RemoveCustomerDefaultLocationAsync(
         RemoveCustomerDefaultLocationInput input,
         [Service] ICustomerLocationSettingsService customerLocationSettingsService,
@@ -103,6 +113,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> AddCustomerDefaultTeamAsync(
         AddCustomerDefaultTeamInput input,
         [Service] ICustomerTeamSettingsService customerTeamSettingsService,
@@ -117,6 +128,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> RemoveCustomerDefaultTeamAsync(
         RemoveCustomerDefaultTeamInput input,
         [Service] ICustomerTeamSettingsService customerTeamSettingsService,
@@ -130,6 +142,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> SetCustomerDefaultOrganizationAsync(
         SetCustomerDefaultOrganizationInput input,
         [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,
@@ -145,6 +158,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> ClearCustomerDefaultOrganizationAsync(
         ClearCustomerDefaultOrganizationInput input,
         [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,
@@ -157,6 +171,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> AddCustomerDefaultLocationTagAsync(
         AddCustomerDefaultLocationTagInput input,
         [Service] ICustomerLocationTagSettingsService customerLocationTagSettingsService,
@@ -170,6 +185,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> RemoveCustomerDefaultLocationTagAsync(
         RemoveCustomerDefaultLocationTagInput input,
         [Service] ICustomerLocationTagSettingsService customerLocationTagSettingsService,
@@ -184,6 +200,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> AddCustomerDefaultDeskAsync(
         AddCustomerDefaultDeskInput input,
         [Service] ICustomerDeskSettingsService customerDeskSettingsService,
@@ -197,6 +214,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> RemoveCustomerDefaultDeskAsync(
         RemoveCustomerDefaultDeskInput input,
         [Service] ICustomerDeskSettingsService customerDeskSettingsService,
@@ -210,6 +228,7 @@ public class CustomerMutation
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<SubmitCustomerFeedbackPayload?> SubmitCustomerFeedbackAsync(
         SubmitCustomerFeedbackInput input,
         [Service] ICustomerFeedbackService customerFeedbackService,
@@ -222,6 +241,7 @@ public class CustomerMutation
         return mapper.MapTo(customerFeedback, input.ClientMutationId);
     }
 
+    [UseServiceScope]
     public async Task<CustomerPayload?> UpdateMyCustomerDetailsAsync(
         UpdateMyCustomerDetailsInput input,
         [Service] ICustomerDetailsService customerDetailsService,

@@ -1,11 +1,13 @@
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using HotChocolate;
+using HotChocolate.Types;
 
 namespace Booking.Api.GraphQL;
 
 public class BookingMutation
 {
+    [UseServiceScope]
     public async Task<BookingPayload?> AddBookingAsync(
         AddBookingInput input,
         [Service] IBookingService bookingService,
@@ -16,6 +18,7 @@ public class BookingMutation
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
 
+    [UseServiceScope]
     public async Task<BookingPayload?> UpdateBookingAsync(
         UpdateBookingInput input,
         [Service] IBookingService bookingService,
@@ -26,6 +29,7 @@ public class BookingMutation
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
 
+    [UseServiceScope]
     public async Task<BookingPayload?> DeleteBookingAsync(
         DeleteBookingInput input,
         [Service] IBookingService bookingService,

@@ -25,9 +25,10 @@ public interface IRepositoryFactory
     IJoinInvitationRepository JoinInvitationRepository { get; }
 }
 
-public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
+public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
     private readonly OrganizationDbContext _dbContext;
+    private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<OrganizationDbContext> dbContextFactory, TimeProvider timeProvider)
     {
@@ -53,9 +54,9 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
         JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
     }
 
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
-        await DisposeAsyncCore().ConfigureAwait(false);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
@@ -77,5 +78,20 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
     public ITermsOfUseRepository TermsOfUseRepository { get; }
     public IJoinInvitationRepository JoinInvitationRepository { get; }
 
-    protected virtual async ValueTask DisposeAsyncCore() => await _dbContext.DisposeAsync();
+    ~RepositoryFactory() => Dispose(false);
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _dbContext.Dispose();
+        }
+
+        _disposed = true;
+    }
 }

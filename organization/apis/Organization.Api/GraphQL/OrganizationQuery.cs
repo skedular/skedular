@@ -1,6 +1,7 @@
 using System.Reflection;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Shared.Models;
@@ -9,6 +10,7 @@ namespace Organization.Api.GraphQL;
 
 public class OrganizationQuery
 {
+    [UseServiceScope]
     public Version OrganizationVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -22,11 +24,13 @@ public class OrganizationQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<bool> OrganizationCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
+    [UseServiceScope]
     public async Task<OrganizationTermsOfUse> ActiveOrganizationTermsOfUseAsync(
         [Service] IOrganizationTermsOfUseService organizationTermsOfUseService,
         [Service] IMapper mapper,
@@ -36,6 +40,7 @@ public class OrganizationQuery
         return mapper.MapTo(termsOfUse)!;
     }
 
+    [UseServiceScope]
     public OrganizationMemberMembershipType[] OrganizationMemberMembershipTypes() =>
     [
         OrganizationMemberMembershipType.OWNER,
@@ -43,6 +48,7 @@ public class OrganizationQuery
         OrganizationMemberMembershipType.MEMBER
     ];
 
+    [UseServiceScope]
     public async Task<OrganizationIndustryMainCategoryReferenceDetails[]>
         OrganizationIndustryMainCategoriesReferencesAsync(
             [Service] IIndustryMainCategoryService industryMainCategoryService,
@@ -53,6 +59,7 @@ public class OrganizationQuery
         return mapper.MapTo(industryMainCategories).ToArray();
     }
 
+    [UseServiceScope]
     public async Task<OrganizationDetails?> OrganizationAsync(
         string id,
         [Service] IOrganizationService organizationService,
@@ -63,6 +70,7 @@ public class OrganizationQuery
         return mapper.MapTo(organization);
     }
 
+    [UseServiceScope]
     public async Task<OrganizationConnection?> OrganizationsAsync(
         string? after,
         int? first,
@@ -115,6 +123,7 @@ public class OrganizationQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<OrganizationDetails[]?> MyOrganizationsAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
@@ -130,6 +139,7 @@ public class OrganizationQuery
         return mapper.MapTo(organizations).ToArray();
     }
 
+    [UseServiceScope]
     public async Task<OrganizationMemberConnection?> PaginatedOrganizationMembersAsync(
         string? after,
         int? first,
@@ -192,6 +202,7 @@ public class OrganizationQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<OrganizationMemberDetails[]?> OrganizationMembersAsync(
         OrganizationMemberWhereInput where,
         OrganizationMemberOrderInput[]? orderBy,
@@ -214,6 +225,7 @@ public class OrganizationQuery
         return result?.Edges.Select(item => item.Node).ToArray();
     }
 
+    [UseServiceScope]
     public async Task<OrganizationAnalytics?> OrganizationAnalyticsAsync(
         string organizationId,
         DateTimeOffset from,
@@ -227,16 +239,19 @@ public class OrganizationQuery
         return mapper.MapTo(organizationMemberAttendancePercentages, organizationDailyBookingsTotals);
     }
 
+    [UseServiceScope]
     public async Task<bool> IsAzureTenantInstalledAsync(
         [Service] IAzureTenantService azureTenantService,
         CancellationToken cancellationToken) =>
         await azureTenantService.DoesTenantExistAsync(cancellationToken);
 
+    [UseServiceScope]
     public async Task<string> AzureTenantAdminConsentUrlAsync(
         [Service] IAzureTenantService azureTenantService,
         CancellationToken cancellationToken) =>
         await azureTenantService.GenerateAdminConsentUrlAsync(cancellationToken);
 
+    [UseServiceScope]
     public async Task<OrganizationDetails?> AzureTenantOrganizationAsync(
         [Service] IOrganizationService organizationService,
         [Service] IMapper mapper,

@@ -19,9 +19,10 @@ public interface IRepositoryFactory
     ITagRepository TagRepository { get; }
 }
 
-public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
+public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
     private readonly LocationDbContext _dbContext;
+    private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<LocationDbContext> dbContextFactory, TimeProvider timeProvider)
     {
@@ -40,9 +41,9 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
         TagRepository = new TagRepository(_dbContext, timeProvider);
     }
 
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
-        await DisposeAsyncCore().ConfigureAwait(false);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
@@ -58,5 +59,20 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
     public IOrganizationRepository OrganizationRepository { get; }
     public ITagRepository TagRepository { get; }
 
-    protected virtual async ValueTask DisposeAsyncCore() => await _dbContext.DisposeAsync();
+    ~RepositoryFactory() => Dispose(false);
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _dbContext.Dispose();
+        }
+
+        _disposed = true;
+    }
 }

@@ -2,11 +2,13 @@
 using Billing.Api.Mappers;
 using Billing.Api.Services;
 using HotChocolate;
+using HotChocolate.Types;
 
 namespace Billing.Api.GraphQL;
 
 public class BillingQuery
 {
+    [UseServiceScope]
     public Version BillingVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -20,15 +22,18 @@ public class BillingQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<bool> BillingCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) => await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
+    [UseServiceScope]
     public Task<OrganizationCurrentOfferingChargesDetails[]?> OrganizationCurrentOfferingChargesAsync(
         string organizationId,
         CancellationToken cancellationToken) =>
         throw new NotImplementedException();
 
+    [UseServiceScope]
     public async Task<OrganizationBillingInfo?> OrganizationBillingInfoAsync(
         string organizationId,
         [Service] ICachedCustomerService cachedCustomerService,

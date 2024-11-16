@@ -1,5 +1,6 @@
 using Api.Shared.Models;
 using HotChocolate;
+using HotChocolate.Types;
 using Team.Api.Mappers;
 using Team.Api.Services;
 
@@ -7,6 +8,7 @@ namespace Team.Api.GraphQL;
 
 public class TeamMutation
 {
+    [UseServiceScope]
     public async Task<TeamPayload?> AddTeamAsync(
         AddTeamInput input,
         [Service] ITeamService teamService,
@@ -17,6 +19,7 @@ public class TeamMutation
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
+    [UseServiceScope]
     public async Task<TeamPayload?> UpdateTeamAsync(
         UpdateTeamInput input,
         [Service] ITeamService teamService,
@@ -27,6 +30,7 @@ public class TeamMutation
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
+    [UseServiceScope]
     public async Task<TeamPayload?> DeleteTeamAsync(
         DeleteTeamInput input,
         [Service] ITeamService teamService,
@@ -37,6 +41,7 @@ public class TeamMutation
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
+    [UseServiceScope]
     public async Task<TeamMemberDetailsPayload?> ChangeTeamMemberOwnershipTypeAsync(
         ChangeTeamMemberOwnershipTypeInput input,
         [Service] ITeamMemberService teamMemberService,
@@ -60,6 +65,7 @@ public class TeamMutation
         };
     }
 
+    [UseServiceScope]
     public async Task<InviteCustomersToJoinTeamPayload?> InviteCustomersToJoinTeamAsync(
         InviteCustomersToJoinTeamInput input,
         [Service] ITeamInvitationService teamInvitationService,
@@ -69,6 +75,7 @@ public class TeamMutation
         return new InviteCustomersToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<AcceptInvitationToJoinTeamPayload?> AcceptInvitationToJoinTeamAsync(
         AcceptInvitationToJoinTeamInput input,
         [Service] ITeamInvitationService teamInvitationService,
@@ -78,6 +85,7 @@ public class TeamMutation
         return new AcceptInvitationToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<RejectInvitationToJoinTeamPayload?> RejectInvitationToJoinTeamAsync(
         RejectInvitationToJoinTeamInput input,
         [Service] ITeamInvitationService teamInvitationService,
@@ -87,6 +95,7 @@ public class TeamMutation
         return new RejectInvitationToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 
+    [UseServiceScope]
     public async Task<CancelInvitationToJoinTeamPayload?> CancelInvitationToJoinTeamAsync(
         CancelInvitationToJoinTeamInput input,
         [Service] ITeamInvitationService teamInvitationService,

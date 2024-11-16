@@ -1,6 +1,7 @@
 using System.Reflection;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types;
 using Notification.Api.Mappers;
 using Notification.Api.Services;
 using Notification.Shared.Models;
@@ -9,6 +10,7 @@ namespace Notification.Api.GraphQL;
 
 public class NotificationQuery
 {
+    [UseServiceScope]
     public Version NotificationVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -22,11 +24,13 @@ public class NotificationQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<bool> NotificationCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
+    [UseServiceScope]
     public async Task<NotificationConnection?> MyNotificationsAsync(
         string? after,
         int? first,

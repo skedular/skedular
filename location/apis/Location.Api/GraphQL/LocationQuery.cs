@@ -1,6 +1,7 @@
 using System.Reflection;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Shared.Models;
@@ -9,6 +10,7 @@ namespace Location.Api.GraphQL;
 
 public class LocationQuery
 {
+    [UseServiceScope]
     public Version LocationVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -22,18 +24,22 @@ public class LocationQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<bool> LocationCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
+    [UseServiceScope]
     public LocationMemberMembershipType[] LocationMemberMembershipTypes(
         CancellationToken cancellationToken) =>
     [
-        LocationMemberMembershipType.OWNER, LocationMemberMembershipType.ADMINISTRATOR,
+        LocationMemberMembershipType.OWNER,
+        LocationMemberMembershipType.ADMINISTRATOR,
         LocationMemberMembershipType.MEMBER
     ];
 
+    [UseServiceScope]
     public async Task<LocationDetails?> LocationAsync(
         string id,
         [Service] ILocationService locationService,
@@ -44,6 +50,7 @@ public class LocationQuery
         return mapper.MapTo(location);
     }
 
+    [UseServiceScope]
     public async Task<LocationConnection?> LocationsAsync(
         string? after,
         int? first,
@@ -98,6 +105,7 @@ public class LocationQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<LocationDetails[]?> MyLocationsAsync(
         string? organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
@@ -114,6 +122,7 @@ public class LocationQuery
         return mapper.MapTo(locations).ToArray();
     }
 
+    [UseServiceScope]
     public async Task<LocationMemberConnection?> PaginatedLocationMembersAsync(
         string? after,
         int? first,
@@ -173,6 +182,7 @@ public class LocationQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<LocationMemberDetails[]?> LocationMembersAsync(
         LocationMemberWhereInput where,
         LocationMemberOrderInput[]? orderBy,
@@ -195,6 +205,7 @@ public class LocationQuery
         return result?.Edges.Select(item => item.Node).ToArray();
     }
 
+    [UseServiceScope]
     public async Task<LocationTagConnection?> PaginatedLocationTagsAsync(
         string? after,
         int? first,
@@ -247,6 +258,7 @@ public class LocationQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<DeskConnection?> PaginatedLocationDesksAsync(
         string? after,
         int? first,
@@ -299,6 +311,7 @@ public class LocationQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<LocationAnalytics?> LocationAnalyticsAsync(
         string locationId,
         DateTimeOffset from,

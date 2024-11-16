@@ -17,7 +17,7 @@ public class SecurityContextEnricherMiddleware(RequestDelegate next, IEnumerable
             // TODO: 20240601 - Morteza: Always copy to property bag, never change the existing instance  
             if (propertyBag is not null)
             {
-                context.PropertyBag = propertyBag;
+                context.SetPropertyBag(propertyBag);
             }
         }
 

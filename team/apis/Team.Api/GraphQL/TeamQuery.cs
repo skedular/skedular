@@ -1,6 +1,7 @@
 using System.Reflection;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Shared.Models;
@@ -9,6 +10,7 @@ namespace Team.Api.GraphQL;
 
 public class TeamQuery
 {
+    [UseServiceScope]
     public Version TeamVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -22,16 +24,19 @@ public class TeamQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<bool> TeamCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
+    [UseServiceScope]
     public TeamMemberMembershipType[] TeamMemberMembershipTypes() =>
     [
         TeamMemberMembershipType.OWNER, TeamMemberMembershipType.ADMINISTRATOR, TeamMemberMembershipType.MEMBER
     ];
 
+    [UseServiceScope]
     public async Task<TeamDetails?> TeamAsync(
         string id,
         [Service] ITeamService teamService,
@@ -42,6 +47,7 @@ public class TeamQuery
         return mapper.MapTo(team);
     }
 
+    [UseServiceScope]
     public async Task<TeamConnection?> TeamsAsync(
         string? after,
         int? first,
@@ -95,6 +101,7 @@ public class TeamQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<TeamDetails[]?> MyTeamsAsync(
         string? organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
@@ -111,6 +118,7 @@ public class TeamQuery
         return mapper.MapTo(teams).ToArray();
     }
 
+    [UseServiceScope]
     public async Task<TeamMemberConnection?> PaginatedTeamMembersAsync(
         string? after,
         int? first,
@@ -170,6 +178,7 @@ public class TeamQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<TeamMemberDetails[]?> TeamMembersAsync(
         TeamMemberWhereInput where,
         TeamMemberOrderInput[]? orderBy,

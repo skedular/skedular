@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using HotChocolate;
+using HotChocolate.Types;
 using Payment.Api.Mappers;
 using Payment.Api.Services;
 
@@ -7,6 +8,7 @@ namespace Payment.Api.GraphQL;
 
 public class PaymentQuery
 {
+    [UseServiceScope]
     public Version PaymentVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
@@ -20,11 +22,13 @@ public class PaymentQuery
         };
     }
 
+    [UseServiceScope]
     public async Task<bool> PaymentCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
+    [UseServiceScope]
     public async Task<OrganizationPaymentMethod[]?> OrganizationPaymentMethodsDetailsAsync(
         string organizationId,
         [Service] ICachedCustomerService cachedCustomerService,

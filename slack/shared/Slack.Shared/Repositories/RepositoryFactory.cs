@@ -16,9 +16,10 @@ public interface IRepositoryFactory
     IWorkspaceRepository WorkspaceRepository { get; }
 }
 
-public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
+public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
     private readonly SlackDbContext _dbContext;
+    private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<SlackDbContext> dbContextFactory, TimeProvider timeProvider)
     {
@@ -35,9 +36,9 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
         WorkspaceRepository = new WorkspaceRepository(_dbContext, timeProvider);
     }
 
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
-        await DisposeAsyncCore().ConfigureAwait(false);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
@@ -51,5 +52,21 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
     public IWorkspaceMemberRepository WorkspaceMemberRepository { get; }
     public IWorkspaceRepository WorkspaceRepository { get; }
 
-    protected virtual async ValueTask DisposeAsyncCore() => await _dbContext.DisposeAsync();
+
+    ~RepositoryFactory() => Dispose(false);
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _dbContext.Dispose();
+        }
+
+        _disposed = true;
+    }
 }

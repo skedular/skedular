@@ -12,9 +12,10 @@ public interface IRepositoryFactory
     IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
 }
 
-public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
+public class RepositoryFactory : IRepositoryFactory, IDisposable
 {
     private readonly BillingDbContext _dbContext;
+    private bool _disposed;
 
     public RepositoryFactory(IDbContextFactory<BillingDbContext> dbContextFactory, TimeProvider timeProvider)
     {
@@ -27,9 +28,9 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
         OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
     }
 
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
-        await DisposeAsyncCore().ConfigureAwait(false);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
@@ -39,5 +40,20 @@ public class RepositoryFactory : IRepositoryFactory, IAsyncDisposable
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
 
-    protected virtual async ValueTask DisposeAsyncCore() => await _dbContext.DisposeAsync();
+    ~RepositoryFactory() => Dispose(false);
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _dbContext.Dispose();
+        }
+
+        _disposed = true;
+    }
 }
