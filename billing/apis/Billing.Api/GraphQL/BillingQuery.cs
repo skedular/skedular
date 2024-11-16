@@ -1,31 +1,28 @@
 ﻿using System.Reflection;
 using Billing.Api.Mappers;
 using Billing.Api.Services;
-using Enterprise.Shared.Context;
+using HotChocolate;
 
 namespace Billing.Api.GraphQL;
 
-public class BillingQuery(IServiceProvider serviceProvider, IMapper mapper)
+public class BillingQuery
 {
-    public Task<Version> BillingVersionAsync(CancellationToken cancellationToken)
+    public Version BillingVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public async Task<bool> BillingCustomerRecordSyncedAsync(CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
-        return await service.DoesCustomerExistAsync(cancellationToken);
-    }
+    public async Task<bool> BillingCustomerRecordSyncedAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        CancellationToken cancellationToken) => await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     public Task<OrganizationCurrentOfferingChargesDetails[]?> OrganizationCurrentOfferingChargesAsync(
         string organizationId,
@@ -34,17 +31,17 @@ public class BillingQuery(IServiceProvider serviceProvider, IMapper mapper)
 
     public async Task<OrganizationBillingInfo?> OrganizationBillingInfoAsync(
         string organizationId,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IOrganizationBillingService organizationBillingService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var customerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
-        var customerExist = await customerService.DoesCustomerExistAsync(cancellationToken);
+        var customerExist = await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
         if (!customerExist)
         {
             return null;
         }
 
-        var organizationBillingService = scope.ServiceProvider.GetRequiredService<IOrganizationBillingService>();
         var organization = await organizationBillingService.GetBillingInfoById(organizationId, cancellationToken);
         return mapper.MapTo(organization);
     }

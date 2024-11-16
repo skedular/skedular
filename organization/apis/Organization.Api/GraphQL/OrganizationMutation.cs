@@ -1,20 +1,20 @@
 using Api.Shared.Models;
 using Api.Shared.Services.Offering;
-using Enterprise.Shared.Context;
+using HotChocolate;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 
 namespace Organization.Api.GraphQL;
 
-public class OrganizationMutation(IServiceProvider serviceProvider, IMapper mapper)
+public class OrganizationMutation
 {
     public async Task<OrganizationPayload?> AddOrganizationAsync(
         AddOrganizationInput input,
+        [Service] IOrganizationService organizationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
-        var organization = await service.AddAsync(mapper.MapTo(input), null, false, cancellationToken);
+        var organization = await organizationService.AddAsync(mapper.MapTo(input), null, false, cancellationToken);
         return new OrganizationPayload
         {
             ClientMutationId = input.ClientMutationId, Organization = mapper.MapTo(organization)!
@@ -23,11 +23,11 @@ public class OrganizationMutation(IServiceProvider serviceProvider, IMapper mapp
 
     public async Task<OrganizationPayload?> UpdateOrganizationAsync(
         UpdateOrganizationInput input,
+        [Service] IOrganizationService organizationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
-        var organization = await service.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        var organization = await organizationService.UpdateAsync(mapper.MapTo(input), cancellationToken);
         return new OrganizationPayload
         {
             ClientMutationId = input.ClientMutationId, Organization = mapper.MapTo(organization)!
@@ -36,11 +36,11 @@ public class OrganizationMutation(IServiceProvider serviceProvider, IMapper mapp
 
     public async Task<OrganizationPayload?> DeleteOrganizationAsync(
         DeleteOrganizationInput input,
+        [Service] IOrganizationService organizationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
-        var organization = await service.DeleteAsync(input.Id, cancellationToken);
+        var organization = await organizationService.DeleteAsync(input.Id, cancellationToken);
         return new OrganizationPayload
         {
             ClientMutationId = input.ClientMutationId, Organization = mapper.MapTo(organization)!
@@ -49,11 +49,10 @@ public class OrganizationMutation(IServiceProvider serviceProvider, IMapper mapp
 
     public async Task<UpdateOrganizationOfferingPayload?> UpdateOrganizationOfferingAsync(
         UpdateOrganizationOfferingInput input,
+        [Service] IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationOfferingService>();
-        await service.UpdateOfferingAsync(
+        await organizationOfferingService.UpdateOfferingAsync(
             input.Id,
             input.OfferingCode.ToOfferingCode(),
             cancellationToken);
@@ -62,22 +61,21 @@ public class OrganizationMutation(IServiceProvider serviceProvider, IMapper mapp
 
     public async Task<CancelOrganizationOfferingPayload?> CancelOrganizationOfferingAsync(
         CancelOrganizationOfferingInput input,
+        [Service] IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationOfferingService>();
-        await service.CancelOfferingAsync(input.Id, cancellationToken);
+        await organizationOfferingService.CancelOfferingAsync(input.Id, cancellationToken);
         return new CancelOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
     }
 
     public async Task<OrganizationMemberDetailsPayload?> ChangeOrganizationMemberOwnershipTypeAsync(
         ChangeOrganizationMemberOwnershipTypeInput input,
+        [Service] IOrganizationMemberService organizationMemberService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationMemberService>();
         var organizationMember =
-            await service.ChangeMembershipTypeAsync(
+            await organizationMemberService.ChangeMembershipTypeAsync(
                 input.Id,
                 input.MembershipType switch
                 {
@@ -95,41 +93,38 @@ public class OrganizationMutation(IServiceProvider serviceProvider, IMapper mapp
 
     public async Task<InviteCustomersToJoinOrganizationPayload?> InviteCustomersToJoinOrganizationAsync(
         InviteCustomersToJoinOrganizationInput input,
+        [Service] IOrganizationInvitationService organizationInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationInvitationService>();
-        await service.InviteMembersByEmailsAsync(input.OrganizationId, input.Emails, cancellationToken);
+        await organizationInvitationService.InviteMembersByEmailsAsync(input.OrganizationId, input.Emails,
+            cancellationToken);
         return new InviteCustomersToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
     public async Task<AcceptInvitationToJoinOrganizationPayload?> AcceptInvitationToJoinOrganizationAsync(
         AcceptInvitationToJoinOrganizationInput input,
+        [Service] IOrganizationInvitationService organizationInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationInvitationService>();
-        await service.AcceptInvitationToJoinAsync(input.Id, cancellationToken);
+        await organizationInvitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken);
         return new AcceptInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
     public async Task<RejectInvitationToJoinOrganizationPayload?> RejectInvitationToJoinOrganizationAsync(
         RejectInvitationToJoinOrganizationInput input,
+        [Service] IOrganizationInvitationService organizationInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationInvitationService>();
-        await service.RejectInvitationToJoinAsync(input.Id, cancellationToken);
+        await organizationInvitationService.RejectInvitationToJoinAsync(input.Id, cancellationToken);
         return new RejectInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
     public async Task<CancelInvitationToJoinOrganizationPayload?> CancelInvitationToJoinOrganizationAsync(
         CancelInvitationToJoinOrganizationInput input,
+        [Service] IOrganizationInvitationService organizationInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationInvitationService>();
-        await service.CancelInvitationToJoinAsync(input.Id, cancellationToken);
+        await organizationInvitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken);
         return new CancelInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 }

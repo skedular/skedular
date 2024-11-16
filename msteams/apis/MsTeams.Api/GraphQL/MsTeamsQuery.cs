@@ -1,28 +1,26 @@
 using System.Reflection;
-using Enterprise.Shared.Context;
+using HotChocolate;
 using MsTeams.Api.Services;
 
 namespace MsTeams.Api.GraphQL;
 
-public class MsTeamsQuery(IServiceProvider serviceProvider)
+public class MsTeamsQuery
 {
-    public Task<Version> MsTeamsVersionAsync(CancellationToken cancellationToken)
+    public Version MsTeamsVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public async Task<bool> MsTeamsCustomerRecordSyncedAsync(CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
-        return await service.DoesCustomerExistAsync(cancellationToken);
-    }
+    public async Task<bool> MsTeamsCustomerRecordSyncedAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        CancellationToken cancellationToken) =>
+        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 }

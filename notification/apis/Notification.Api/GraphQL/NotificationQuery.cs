@@ -1,33 +1,31 @@
 using System.Reflection;
-using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
+using HotChocolate;
 using Notification.Api.Mappers;
 using Notification.Api.Services;
 using Notification.Shared.Models;
 
 namespace Notification.Api.GraphQL;
 
-public class NotificationQuery(IServiceProvider serviceProvider, IMapper mapper)
+public class NotificationQuery
 {
-    public Task<Version> NotificationVersionAsync(CancellationToken cancellationToken)
+    public Version NotificationVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public async Task<bool> NotificationCustomerRecordSyncedAsync(CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
-        return await service.DoesCustomerExistAsync(cancellationToken);
-    }
+    public async Task<bool> NotificationCustomerRecordSyncedAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        CancellationToken cancellationToken) =>
+        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     public async Task<NotificationConnection?> MyNotificationsAsync(
         string? after,
@@ -35,18 +33,18 @@ public class NotificationQuery(IServiceProvider serviceProvider, IMapper mapper)
         string? before,
         int? last,
         NotificationOrderInput[]? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] INotificationService notificationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var service = scope.ServiceProvider.GetRequiredService<INotificationService>();
         var (paginatedInfo, edges, totalCount) =
-            await service.GetMyPaginatedNotificationsAsync(
+            await notificationService.GetMyPaginatedNotificationsAsync(
                 new PaginationInputParam(after, first, before, last),
                 new NotificationSearchCriteria(),
                 orderBy is null

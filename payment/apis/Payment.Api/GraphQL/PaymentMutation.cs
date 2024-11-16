@@ -1,20 +1,18 @@
-﻿using Enterprise.Shared.Context;
+﻿using HotChocolate;
 using Payment.Api.Services;
 using Payment.Shared.Configurations;
 
 namespace Payment.Api.GraphQL;
 
-public class PaymentMutation(IServiceProvider serviceProvider)
+public class PaymentMutation(StripeConfiguration stripeConfiguration)
 {
     public async Task<AddOrganizationPaymentMethodIntentResponse?> AddOrganizationPaymentMethodIntentAsync(
         AddOrganizationPaymentMethodIntentInput input,
+        [Service] IPaymentService paymentService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var stripeConfiguration = scope.ServiceProvider.GetRequiredService<StripeConfiguration>();
-        var service = scope.ServiceProvider.GetRequiredService<IPaymentService>();
         var clientSecret =
-            await service.AddOrganizationPaymentMethodIntentAsync(input.OrganizationId, cancellationToken);
+            await paymentService.AddOrganizationPaymentMethodIntentAsync(input.OrganizationId, cancellationToken);
         return new AddOrganizationPaymentMethodIntentResponse
         {
             ClientMutationId = input.ClientMutationId,
@@ -25,11 +23,10 @@ public class PaymentMutation(IServiceProvider serviceProvider)
 
     public async Task<RemoveOrganizationPaymentMethodResponse?> RemoveOrganizationPaymentMethodAsync(
         RemoveOrganizationPaymentMethodInput input,
+        [Service] IPaymentService paymentService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IPaymentService>();
-        await service.RemoveOrganizationPaymentMethodAsync(input.Id, cancellationToken);
+        await paymentService.RemoveOrganizationPaymentMethodAsync(input.Id, cancellationToken);
         return new RemoveOrganizationPaymentMethodResponse { ClientMutationId = input.ClientMutationId };
     }
 }

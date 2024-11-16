@@ -1,44 +1,50 @@
 using Api.Shared.Models;
-using Enterprise.Shared.Context;
+using HotChocolate;
 using Team.Api.Mappers;
 using Team.Api.Services;
 
 namespace Team.Api.GraphQL;
 
-public class TeamMutation(IServiceProvider serviceProvider, IMapper mapper)
+public class TeamMutation
 {
-    public async Task<TeamPayload?> AddTeamAsync(AddTeamInput input, CancellationToken cancellationToken)
+    public async Task<TeamPayload?> AddTeamAsync(
+        AddTeamInput input,
+        [Service] ITeamService teamService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITeamService>();
-        var team = await service.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        var team = await teamService.AddAsync(mapper.MapTo(input), false, cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
-    public async Task<TeamPayload?> UpdateTeamAsync(UpdateTeamInput input, CancellationToken cancellationToken)
+    public async Task<TeamPayload?> UpdateTeamAsync(
+        UpdateTeamInput input,
+        [Service] ITeamService teamService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITeamService>();
-        var team = await service.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        var team = await teamService.UpdateAsync(mapper.MapTo(input), cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
-    public async Task<TeamPayload?> DeleteTeamAsync(DeleteTeamInput input, CancellationToken cancellationToken)
+    public async Task<TeamPayload?> DeleteTeamAsync(
+        DeleteTeamInput input,
+        [Service] ITeamService teamService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITeamService>();
-        var team = await service.DeleteAsync(input.Id, cancellationToken);
+        var team = await teamService.DeleteAsync(input.Id, cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
     public async Task<TeamMemberDetailsPayload?> ChangeTeamMemberOwnershipTypeAsync(
         ChangeTeamMemberOwnershipTypeInput input,
+        [Service] ITeamMemberService teamMemberService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITeamMemberService>();
         var teamMember =
-            await service.ChangeMembershipTypeAsync(
+            await teamMemberService.ChangeMembershipTypeAsync(
                 input.Id,
                 input.MembershipType switch
                 {
@@ -56,41 +62,37 @@ public class TeamMutation(IServiceProvider serviceProvider, IMapper mapper)
 
     public async Task<InviteCustomersToJoinTeamPayload?> InviteCustomersToJoinTeamAsync(
         InviteCustomersToJoinTeamInput input,
+        [Service] ITeamInvitationService teamInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITeamInvitationService>();
-        await service.InviteMembersByEmailsAsync(input.TeamId, input.Emails, cancellationToken);
+        await teamInvitationService.InviteMembersByEmailsAsync(input.TeamId, input.Emails, cancellationToken);
         return new InviteCustomersToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 
     public async Task<AcceptInvitationToJoinTeamPayload?> AcceptInvitationToJoinTeamAsync(
         AcceptInvitationToJoinTeamInput input,
+        [Service] ITeamInvitationService teamInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITeamInvitationService>();
-        await service.AcceptInvitationToJoinAsync(input.Id, cancellationToken);
+        await teamInvitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken);
         return new AcceptInvitationToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 
     public async Task<RejectInvitationToJoinTeamPayload?> RejectInvitationToJoinTeamAsync(
         RejectInvitationToJoinTeamInput input,
+        [Service] ITeamInvitationService teamInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITeamInvitationService>();
-        await service.RejectInvitationToJoinAsync(input.Id, cancellationToken);
+        await teamInvitationService.RejectInvitationToJoinAsync(input.Id, cancellationToken);
         return new RejectInvitationToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 
     public async Task<CancelInvitationToJoinTeamPayload?> CancelInvitationToJoinTeamAsync(
         CancelInvitationToJoinTeamInput input,
+        [Service] ITeamInvitationService teamInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITeamInvitationService>();
-        await service.CancelInvitationToJoinAsync(input.Id, cancellationToken);
+        await teamInvitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken);
         return new CancelInvitationToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 }

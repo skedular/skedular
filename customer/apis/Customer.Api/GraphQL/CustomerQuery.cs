@@ -2,33 +2,31 @@ using System.Reflection;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Shared.Models;
-using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
+using HotChocolate;
 
 namespace Customer.Api.GraphQL;
 
-public class CustomerQuery(IServiceProvider serviceProvider, IMapper mapper)
+public class CustomerQuery
 {
-    public Task<Version> CustomerVersionAsync(CancellationToken cancellationToken)
+    public Version CustomerVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public async Task<CustomerDetails?> MeAsync(CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
-        var customer = await service.GetMeAsync(true, cancellationToken);
-        return mapper.MapTo(customer);
-    }
+    public async Task<CustomerDetails?> MeAsync(
+        [Service] ICustomerService customerService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
     public async Task<CustomerConnection?> PaginatedCustomersByDefaultLocationAsync(
         string? after,
@@ -37,14 +35,14 @@ public class CustomerQuery(IServiceProvider serviceProvider, IMapper mapper)
         int? last,
         CustomerWhereInput where,
         CustomerOrderInput[]? orderBy,
+        [Service] ICustomerService customerService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
 
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         var (paginatedInfo, edges, totalCount) =
-            await service.GetPaginatedCustomersAsync(
+            await customerService.GetPaginatedCustomersAsync(
                 new PaginationInputParam(after, first, before, last),
                 new CustomerSearchCriteria(where.NameContains, where.LocationId),
                 orderBy is null
@@ -96,6 +94,8 @@ public class CustomerQuery(IServiceProvider serviceProvider, IMapper mapper)
     public async Task<CustomerDetails[]?> CustomersByDefaultLocationAsync(
         CustomerWhereInput where,
         CustomerOrderInput[]? orderBy,
+        [Service] ICustomerService customerService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var result = await PaginatedCustomersByDefaultLocationAsync(
@@ -105,6 +105,8 @@ public class CustomerQuery(IServiceProvider serviceProvider, IMapper mapper)
             null,
             where,
             orderBy,
+            customerService,
+            mapper,
             cancellationToken);
         return result?.Edges.Select(item => item.Node).ToArray();
     }

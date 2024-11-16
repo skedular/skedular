@@ -1,18 +1,18 @@
 ﻿using Billing.Api.Mappers;
 using Billing.Api.Services;
-using Enterprise.Shared.Context;
+using HotChocolate;
 
 namespace Billing.Api.GraphQL;
 
-public class BillingMutation(IServiceProvider serviceProvider, IMapper mapper)
+public class BillingMutation
 {
     public async Task<OrganizationBillingInfoPayload?> SetOrganizationBillingInfoAsync(
         SetOrganizationBillingInfoInput input,
+        [Service] IOrganizationBillingService organizationBillingService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationBillingService>();
-        var organization = await service.SetBillingInfoAsync(
+        var organization = await organizationBillingService.SetBillingInfoAsync(
             input.OrganizationId,
             input.Email,
             input.AddressLine1,

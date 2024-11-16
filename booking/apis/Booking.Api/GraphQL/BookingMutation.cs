@@ -1,32 +1,38 @@
 using Booking.Api.Mappers;
 using Booking.Api.Services;
-using Enterprise.Shared.Context;
+using HotChocolate;
 
 namespace Booking.Api.GraphQL;
 
-public class BookingMutation(IServiceProvider serviceProvider, IMapper mapper)
+public class BookingMutation
 {
-    public async Task<BookingPayload?> AddBookingAsync(AddBookingInput input, CancellationToken cancellationToken)
+    public async Task<BookingPayload?> AddBookingAsync(
+        AddBookingInput input,
+        [Service] IBookingService bookingService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IBookingService>();
-        var booking = await service.AddAsync(mapper.MapTo(input), false, false, cancellationToken);
+        var booking = await bookingService.AddAsync(mapper.MapTo(input), false, false, cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
 
-    public async Task<BookingPayload?> UpdateBookingAsync(UpdateBookingInput input, CancellationToken cancellationToken)
+    public async Task<BookingPayload?> UpdateBookingAsync(
+        UpdateBookingInput input,
+        [Service] IBookingService bookingService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IBookingService>();
-        var booking = await service.UpdateAsync(mapper.MapTo(input), false, cancellationToken);
+        var booking = await bookingService.UpdateAsync(mapper.MapTo(input), false, cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
 
-    public async Task<BookingPayload?> DeleteBookingAsync(DeleteBookingInput input, CancellationToken cancellationToken)
+    public async Task<BookingPayload?> DeleteBookingAsync(
+        DeleteBookingInput input,
+        [Service] IBookingService bookingService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IBookingService>();
-        var booking = await service.DeleteAsync(input.Id, cancellationToken);
+        var booking = await bookingService.DeleteAsync(input.Id, cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
 }

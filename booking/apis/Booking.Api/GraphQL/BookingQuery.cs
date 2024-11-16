@@ -3,39 +3,40 @@ using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
-using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Sanitization;
+using HotChocolate;
 
 namespace Booking.Api.GraphQL;
 
-public class BookingQuery(IServiceProvider serviceProvider, IMapper mapper)
+public class BookingQuery
 {
-    public Task<Version> BookingVersionAsync(CancellationToken cancellationToken)
+    public Version BookingVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public async Task<bool> BookingCustomerRecordSyncedAsync(CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
-        return await service.DoesCustomerExistAsync(cancellationToken);
-    }
+    public async Task<bool> BookingCustomerRecordSyncedAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
-    public async Task<BookingDetails?> BookingAsync(string id, CancellationToken cancellationToken)
+    public async Task<BookingDetails?> BookingAsync(
+        string id,
+        [Service] IBookingService bookingService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IBookingService>();
-        var booking = await service.GetByIdAsync(id, cancellationToken);
+        var booking = await bookingService.GetByIdAsync(id, cancellationToken);
         return mapper.MapTo(booking);
     }
 
@@ -46,22 +47,22 @@ public class BookingQuery(IServiceProvider serviceProvider, IMapper mapper)
         int? last,
         BookingWhereInput where,
         BookingOrderInput[]? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IBookingService bookingService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
         where.LocationIds = where.LocationIds.RemoveInvalidIds();
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
 
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var service = scope.ServiceProvider.GetRequiredService<IBookingService>();
         var (paginatedInfo, edges, totalCount) =
-            await service.GetPaginatedBookingsAsync(
+            await bookingService.GetPaginatedBookingsAsync(
                 new PaginationInputParam(after, first, before, last),
                 new BookingSearchCriteria(
                     where.FromGT,
@@ -119,9 +120,24 @@ public class BookingQuery(IServiceProvider serviceProvider, IMapper mapper)
         };
     }
 
-    public async Task<BookingDetails[]?> AllBookingsAsync(BookingWhereInput where, CancellationToken cancellationToken)
+    public async Task<BookingDetails[]?> AllBookingsAsync(
+        BookingWhereInput where,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IBookingService bookingService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
     {
-        var result = await BookingsAsync(null, null, null, null, where, [], cancellationToken);
+        var result = await BookingsAsync(
+            null,
+            null,
+            null,
+            null,
+            where,
+            [],
+            cachedCustomerService,
+            bookingService,
+            mapper,
+            cancellationToken);
         return result?.Edges.Select(item => item.Node).ToArray();
     }
 
@@ -129,35 +145,33 @@ public class BookingQuery(IServiceProvider serviceProvider, IMapper mapper)
         string locationId,
         DateTimeOffset date,
         string[] deskIdsToInclude,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IDeskService deskService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var service = scope.ServiceProvider.GetRequiredService<IDeskService>();
-        var desks = await service.GetAvailableDesksAsync(locationId, date, deskIdsToInclude, cancellationToken);
+        var desks = await deskService.GetAvailableDesksAsync(locationId, date, deskIdsToInclude, cancellationToken);
         return mapper.MapTo(desks).ToArray();
     }
 
     public async Task<OrganizationBookingPermissions?> OrganizationBookingPermissionsAsync(
         string organizationId,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IOrganizationAuthorizationService organizationAuthorizationService,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var organizationAuthorizationService =
-            scope.ServiceProvider.GetRequiredService<IOrganizationAuthorizationService>();
         var permissions = await organizationAuthorizationService.GetPermissionsAsync(organizationId, cancellationToken);
 
         return new OrganizationBookingPermissions
@@ -173,17 +187,15 @@ public class BookingQuery(IServiceProvider serviceProvider, IMapper mapper)
 
     public async Task<LocationBookingPermissions?> LocationBookingPermissionsAsync(
         string locationId,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] ILocationAuthorizationService locationAuthorizationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var locationAuthorizationService =
-            scope.ServiceProvider.GetRequiredService<ILocationAuthorizationService>();
         var permissions = await locationAuthorizationService.GetPermissionsAsync(locationId, cancellationToken);
 
         return new LocationBookingPermissions
@@ -199,17 +211,15 @@ public class BookingQuery(IServiceProvider serviceProvider, IMapper mapper)
 
     public async Task<TeamBookingPermissions?> TeamBookingPermissionsAsync(
         string teamId,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] ITeamAuthorizationService teamAuthorizationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var teamAuthorizationService =
-            scope.ServiceProvider.GetRequiredService<ITeamAuthorizationService>();
         var permissions = await teamAuthorizationService.GetPermissionsAsync(teamId, cancellationToken);
 
         return new TeamBookingPermissions
