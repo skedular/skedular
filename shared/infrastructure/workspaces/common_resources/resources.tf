@@ -1,17 +1,31 @@
 locals {
-  is_staging             = var.environment == "staging"
-  dns_records_staging    = ["staging", "apistaging", "slackapistaging"]
-  dns_records_production = ["api", "slackapi"]
-
-  pre_authorized_client_ids = [
-    "1fec8e78-bce4-4aaf-ab1b-5451cc387264", # team_desktop_mobile_client
-    "5e3ce6c0-2b1f-4285-8d4b-75ee78787346", # team_web_client
-    "d3590ed6-52b3-4102-aeff-aad2292ab01c", # outlook_desktop_client
-    "00000002-0000-0ff1-ce00-000000000000", # outlook_web_client_1
-    "bc59ab01-8403-45c6-8796-ac3ef710b3e3", # outlook_web_client_2
-    "0ec893e0-5785-4de6-99da-4ed124e5296c", # ms365_app_desktop_client
-    "4345a7b9-9a63-4910-a426-35363201d503", # ms365_app_client_1
-    "4765445b-32c6-49b0-83e6-1d93765276ca", # ms365_app_client_2
+  is_staging = var.environment == "staging"
+  dns_records_staging = [
+    "staging",
+    "apistaging",
+    "billingapistaging",
+    "bookingapistaging",
+    "customerapistaging",
+    "locationapistaging",
+    "msteamsapistaging",
+    "notificationapistaging",
+    "organizationapistaging",
+    "paymentapistaging",
+    "slackapistaging",
+    "teamapistaging"
+  ]
+  dns_records_production = [
+    "api",
+    "billingapi",
+    "bookingapi",
+    "customerapi",
+    "locationapi",
+    "msteamsapi",
+    "notificationapi",
+    "organizationapi",
+    "paymentapi",
+    "slackapi",
+    "teamapi"
   ]
 }
 
