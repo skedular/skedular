@@ -1,7 +1,6 @@
 locals {
   is_staging = var.environment == "staging"
   dns_records_staging = [
-    "staging",
     "apistaging",
     "billingapistaging",
     "bookingapistaging",
@@ -123,6 +122,16 @@ resource "cloudflare_record" "cloudflare_dns_record_production_1" {
   ttl     = 600
 }
 
+resource "cloudflare_record" "cloudflare_dns_record_production_1_staging" {
+  count   = local.is_staging ? 1 : 0
+  zone_id = data.cloudflare_zone.public_website_1.id
+  name    = "staging"
+  content = "31.220.100.177"
+  type    = "A"
+  proxied = false
+  ttl     = 600
+}
+
 data "cloudflare_zone" "webapp_1" {
   name = module.common.cloudflare_webapp_domain_name_1
 }
@@ -155,6 +164,16 @@ resource "cloudflare_record" "cloudflare_dns_record_production_2" {
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.public_website_2.id
   name    = "@"
+  content = "31.220.100.177"
+  type    = "A"
+  proxied = false
+  ttl     = 600
+}
+
+resource "cloudflare_record" "cloudflare_dns_record_production_2_staging" {
+  count   = local.is_staging ? 1 : 0
+  zone_id = data.cloudflare_zone.public_website_2.id
+  name    = "staging"
   content = "31.220.100.177"
   type    = "A"
   proxied = false
