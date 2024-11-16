@@ -23,13 +23,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 
         services.AddKafka();
 
-        services
-            .AddGraphql<PaymentDbContext>(Configuration, builder =>
-            {
-                builder
-                    .AddQueryType<PaymentQuery>()
-                    .AddMutationType<PaymentMutation>();
-            });
+        services.AddGraphql<PaymentDbContext>(Configuration, builder => builder.AddTypes());
 
         services
             .AddDomainSharedServices()

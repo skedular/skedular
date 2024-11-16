@@ -23,13 +23,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 
         services.AddKafka();
 
-        services
-            .AddGraphql<BillingDbContext>(Configuration, builder =>
-            {
-                builder
-                    .AddQueryType<BillingQuery>()
-                    .AddMutationType<BillingMutation>();
-            });
+        services.AddGraphql<BillingDbContext>(Configuration, builder => builder.AddTypes());
 
         services
             .AddDomainSharedServices()

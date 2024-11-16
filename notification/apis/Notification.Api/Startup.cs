@@ -23,12 +23,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 
         services.AddKafka();
 
-        services
-            .AddGraphql<NotificationDbContext>(Configuration, builder =>
-            {
-                builder
-                    .AddQueryType<NotificationQuery>();
-            });
+        services.AddGraphql<NotificationDbContext>(Configuration, builder => builder.AddTypes());
 
         services
             .AddDomainSharedServices()

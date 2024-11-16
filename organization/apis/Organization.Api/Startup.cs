@@ -28,13 +28,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 
         services.AddKafka();
 
-        services
-            .AddGraphql<OrganizationDbContext>(Configuration, builder =>
-            {
-                builder
-                    .AddQueryType<OrganizationQuery>()
-                    .AddMutationType<OrganizationMutation>();
-            });
+        services.AddGraphql<OrganizationDbContext>(Configuration, builder => builder.AddTypes());
 
         services
             .AddDomainSharedServices()
