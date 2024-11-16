@@ -27,14 +27,9 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddDatabaseHealthCheck();
 
         services.AddKafka();
+        services.AddRedis(Configuration);
 
-        services
-            .AddGraphql<LocationDbContext>(Configuration, builder =>
-            {
-                builder
-                    .AddQueryType<LocationQuery>()
-                    .AddMutationType<LocationMutation>();
-            });
+        services.AddGraphql<LocationDbContext>(Configuration, builder => builder.AddTypes());
 
         services
             .AddDomainSharedServices()

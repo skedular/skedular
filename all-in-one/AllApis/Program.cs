@@ -23,7 +23,6 @@ public class Program : WebHostServiceBase<Program>
             cancellationToken);
 
         await Task.WhenAll(
-            Gateway.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Billing.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Booking.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Customer.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
@@ -33,7 +32,8 @@ public class Program : WebHostServiceBase<Program>
             Notification.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Payment.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Slack.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Team.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken)
+            Team.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
+            Gateway.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken)
         );
     }
 }

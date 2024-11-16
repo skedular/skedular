@@ -1,4 +1,4 @@
-using Api.Shared.Services.GraphQL.UnityHub.V1.Payment;
+using Payment.Api.GraphQL;
 using Payment.Shared.Models;
 using Stripe;
 using Customer = Payment.Shared.Models.Customer;

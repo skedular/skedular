@@ -1,14 +1,14 @@
 using Api.Shared.Models;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Team;
 using Api.Shared.Services.Grpc.UnityHub.Team.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
+using Team.Api.GraphQL;
 using Team.Shared.Models;
 using Customer = Team.Shared.Models.Customer;
 using Organization = Team.Shared.Database.Entities.Organization;
 using OrganizationMember = Team.Shared.Models.OrganizationMember;
 using Permissions = Api.Shared.Services.Grpc.UnityHub.Team.V1.Permissions;
-using TeamEdge = Api.Shared.Services.GraphQL.UnityHub.V1.Team.TeamEdge;
+using TeamEdge = Team.Api.GraphQL.TeamEdge;
 
 namespace Team.Api.Mappers;
 

@@ -1,8 +1,10 @@
-using Api.Shared.Services.GraphQL.UnityHub.V1.Billing;
 using Enterprise.Shared.Application.WebHostService;
+using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Gateway.Configurations;
 using Gateway.Handlers;
+using StackExchange.Redis;
 
 namespace Gateway;
 
@@ -85,43 +87,20 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                 .AddHttpMessageHandler<ApiAuthenticationHttpClientHandler>();
         }
 
-        services
-            .AddHttpContextAccessor()
-            .AddScoped<ApiAuthenticationHttpClientHandler>();
+        services.AddRedis(Configuration);
+
+        services.AddScoped<ApiAuthenticationHttpClientHandler>();
+
+        var applicationConfiguration =
+            Configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+        ArgumentNullException.ThrowIfNull(applicationConfiguration);
 
         services
             .AddGraphQLServer()
             .AddCustomGraphqlInstrumentation()
-            .AddRemoteSchemaFromString(
-                nameof(subgraphsConfigurations.Billing),
-                Metadata.Schema)
-            .AddRemoteSchemaFromString(
-                nameof(subgraphsConfigurations.Booking),
-                Api.Shared.Services.GraphQL.UnityHub.V1.Booking.Metadata.Schema)
-            .AddRemoteSchemaFromString(
-                nameof(subgraphsConfigurations.Customer),
-                Api.Shared.Services.GraphQL.UnityHub.V1.Customer.Metadata.Schema)
-            .AddRemoteSchemaFromString(
-                nameof(subgraphsConfigurations.Location),
-                Api.Shared.Services.GraphQL.UnityHub.V1.Location.Metadata.Schema)
-            .AddRemoteSchemaFromString(
-                nameof(subgraphsConfigurations.MsTeams),
-                Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams.Metadata.Schema)
-            .AddRemoteSchemaFromString(
-                nameof(subgraphsConfigurations.Notification),
-                Api.Shared.Services.GraphQL.UnityHub.V1.Notification.Metadata.Schema)
-            .AddRemoteSchemaFromString(
-                nameof(subgraphsConfigurations.Organization),
-                Api.Shared.Services.GraphQL.UnityHub.V1.Organization.Metadata.Schema)
-            .AddRemoteSchemaFromString(
-                nameof(subgraphsConfigurations.Payment),
-                Api.Shared.Services.GraphQL.UnityHub.V1.Payment.Metadata.Schema)
-            .AddRemoteSchemaFromString(
-                nameof(subgraphsConfigurations.Slack),
-                Api.Shared.Services.GraphQL.UnityHub.V1.Slack.Metadata.Schema)
-            .AddRemoteSchemaFromString(
-                nameof(subgraphsConfigurations.Team),
-                Api.Shared.Services.GraphQL.UnityHub.V1.Team.Metadata.Schema);
+            .AddRemoteSchemasFromRedis(
+                applicationConfiguration.Environment,
+                sp => sp.GetRequiredService<ConnectionMultiplexer>());
 
         // services
         //     .AddReverseProxy()

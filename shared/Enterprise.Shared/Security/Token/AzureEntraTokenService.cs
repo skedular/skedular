@@ -13,10 +13,11 @@ public interface IAzureEntraTokenService : ITokenService;
 
 public class AzureEntraTokenService(
     AzureEntraConfiguration azureEntraConfiguration,
-    IMemoryCache memoryCache)
+    IMemoryCache memoryCache,
+    IContext context)
     : IAzureEntraTokenService
 {
-    public async Task<PropertyBag?> VerifyTokenAsync(string token, CancellationToken cancellationToken)
+    public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
     {
         try
         {
@@ -24,7 +25,7 @@ public class AzureEntraTokenService(
             var tenantId = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "tid")?.Value;
             if (tenantId is null)
             {
-                return null;
+                return;
             }
 
             var authority = $"https://login.microsoftonline.com/{tenantId}";
@@ -59,44 +60,41 @@ public class AzureEntraTokenService(
                     ValidateLifetime = true
                 });
 
-            var propertyBag = new PropertyBag();
             if (!Guid.TryParse(tenantId, out var tenant))
             {
-                return null;
+                return;
             }
 
-            propertyBag.AddAzureTenantId(tenant);
+            context.SetAzureTenantId(tenant);
 
             var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "oid")?.Value;
             if (value is not null)
             {
-                propertyBag.AddVerifiableToken(value);
+                context.SetVerifiableToken(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "name")?.Value;
             if (value is not null)
             {
-                propertyBag.AddName(value);
+                context.SetName(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
             if (value is not null)
             {
-                propertyBag.AddEmail(value);
-                propertyBag.AddEmailVerified(true);
+                context.SetEmail(value);
+                context.SetEmailVerified(true);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "aud")?.Value;
             if (value is not null)
             {
-                propertyBag.AddAzureTenantAudience(value);
+                context.SetAzureTenantAudience(value);
             }
-
-            return propertyBag;
         }
-        catch (Exception)
+        catch
         {
-            return null;
+            // ignored
         }
     }
 }

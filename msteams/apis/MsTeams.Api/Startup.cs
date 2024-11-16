@@ -22,13 +22,9 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddDatabaseHealthCheck();
 
         services.AddKafka();
+        services.AddRedis(Configuration);
 
-        services
-            .AddGraphql<MsTeamsDbContext>(Configuration, builder =>
-            {
-                builder
-                    .AddQueryType<MsTeamsQuery>();
-            });
+        services.AddGraphql<MsTeamsDbContext>(Configuration, builder => builder.AddTypes());
 
         services
             .AddDomainSharedServices()

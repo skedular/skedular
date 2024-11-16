@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<08e527a0b037ba54b8b529074f68a7e5>>
+ * @generated SignedSource<<55a78ecc466477448fb73726c1c52a1d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,9 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type rootShell_rootQuery$variables = Record<PropertyKey, never>;
+export type rootShell_rootQuery$variables = {
+  organizationId: string;
+};
 export type rootShell_rootQuery$data = {
   readonly billingCustomerRecordSynced: boolean;
   readonly bookingCustomerRecordSynced: boolean;
@@ -24,7 +26,7 @@ export type rootShell_rootQuery$data = {
   readonly paymentCustomerRecordSynced: boolean;
   readonly slackCustomerRecordSynced: boolean;
   readonly teamCustomerRecordSynced: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"appBar_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"appBar_query" | "leftSideNavigationMenu_query">;
 };
 export type rootShell_rootQuery = {
   response: rootShell_rootQuery$data;
@@ -32,70 +34,77 @@ export type rootShell_rootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationId"
+  }
+],
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "billingCustomerRecordSynced",
   "storageKey": null
 },
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "bookingCustomerRecordSynced",
   "storageKey": null
 },
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "locationCustomerRecordSynced",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "msTeamsCustomerRecordSynced",
   "storageKey": null
 },
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "notificationCustomerRecordSynced",
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "organizationCustomerRecordSynced",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "paymentCustomerRecordSynced",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slackCustomerRecordSynced",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -104,7 +113,7 @@ v9 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "rootShell_rootQuery",
@@ -117,11 +126,10 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/)
+          (v1/*: any*/)
         ],
         "storageKey": null
       },
-      (v1/*: any*/),
       (v2/*: any*/),
       (v3/*: any*/),
       (v4/*: any*/),
@@ -130,10 +138,16 @@ return {
       (v7/*: any*/),
       (v8/*: any*/),
       (v9/*: any*/),
+      (v10/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
         "name": "appBar_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "leftSideNavigationMenu_query"
       }
     ],
     "type": "Query",
@@ -141,7 +155,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "rootShell_rootQuery",
     "selections": [
@@ -153,7 +167,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -176,7 +190,7 @@ return {
                 "name": "verified",
                 "storageKey": null
               },
-              (v0/*: any*/)
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
@@ -218,7 +232,6 @@ return {
         ],
         "storageKey": null
       },
-      (v1/*: any*/),
       (v2/*: any*/),
       (v3/*: any*/),
       (v4/*: any*/),
@@ -226,20 +239,46 @@ return {
       (v6/*: any*/),
       (v7/*: any*/),
       (v8/*: any*/),
-      (v9/*: any*/)
+      (v9/*: any*/),
+      (v10/*: any*/),
+      {
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "id",
+            "variableName": "organizationId"
+          }
+        ],
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "organization",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canModify",
+            "storageKey": null
+          },
+          (v1/*: any*/)
+        ],
+        "storageKey": null
+      }
     ]
   },
   "params": {
-    "cacheID": "3c26aeb4f77d01cb0dd9727314b63170",
+    "cacheID": "4f7a9f045d4661a00080eacbc075ffc9",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery {\n  me {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...appBar_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
+    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n) {\n  me {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3882bcab1b8fda3e0cd6734e83f3470f";
+(node as any).hash = "2c8c6718264dd360edd366e27921e94e";
 
 export default node;

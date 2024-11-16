@@ -1,5 +1,5 @@
 import { NewFeedbackDialog } from '@/components/feedback';
-import { getOrganizationBaseLink } from '@/components/organization/organization-link';
+import { getOrganizationAddLink, getOrganizationBaseLink } from '@/components/organization/organization-link';
 import { SelectedOrganizationContext, UpdateSelectedOrganizationContext } from '@/libs/providers';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -12,16 +12,15 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
-import { FeedbackIcon, LogoutIcon, SettingsIcon } from '@repo/shared/components/icons';
+import { AddIcon, FeedbackIcon, LogoutIcon, NotificationsIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
 
@@ -42,6 +41,8 @@ export type AppBarBreadcrumbs = {
   lastItemLabel?: string;
   lastItemIcon?: React.ReactNode;
 };
+
+const createOrganizationId = '76eZvntIX6YA5FboBJlRk';
 
 const AppBar = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<appBar_query$key>(
@@ -96,32 +97,18 @@ const AppBar = ({ rootDataRelay }: Props) => {
     }
   }
 
-  useInterval(() => {
-    setCurrentTime(localNow());
-  }, 1000);
-
-  useEffect(() => {
-    if (!rootData.myOrganizations) {
-      return;
-    }
-
-    if (finalOrganizationId) {
-      const matchedOrgnization = rootData.myOrganizations.find((organization) => organization.id === finalOrganizationId);
-      if (matchedOrgnization) {
-        setSelectedOrganizationId(matchedOrgnization.id);
-
-        return;
-      }
-    }
-  }, [finalOrganizationId, rootData.me, rootData.myOrganizations]);
+  useInterval(() => setCurrentTime(localNow()), 1000);
 
   const handleSelectedOrganizationChange = (event: SelectChangeEvent) => {
     const id = event.target.value as string;
 
-    setSelectedOrganizationId(id);
-    updateSelectedOrganization(id);
-
-    router.push(getOrganizationBaseLink(id));
+    if (id === createOrganizationId) {
+      router.push(getOrganizationAddLink());
+    } else {
+      setSelectedOrganizationId(id);
+      updateSelectedOrganization(id);
+      router.push(getOrganizationBaseLink(id));
+    }
   };
 
   const handleProfileMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -137,12 +124,25 @@ const AppBar = ({ rootDataRelay }: Props) => {
     signOut();
   };
 
+  const handleSubmitFeedbackClicked = () => {
+    setProfileOpenAnchorEl(null);
+    setSubmitFeedbackDialogOpen(true);
+  };
+
   const handleSubmitFeedbackSendClick = () => {
     setSubmitFeedbackDialogOpen(false);
   };
 
   const handleSubmitFeedbackCancelClick = () => {
     setSubmitFeedbackDialogOpen(false);
+  };
+
+  const handleDarkThemeClicked = () => {
+    updatePaletteMode('dark');
+  };
+
+  const handleLightThemeClicked = () => {
+    updatePaletteMode('light');
   };
 
   if (!rootData.myOrganizations) {
@@ -189,6 +189,17 @@ const AppBar = ({ rootDataRelay }: Props) => {
                       </Stack>
                     </MenuItem>
                   ))}
+
+                  <Divider />
+
+                  <MenuItem value={createOrganizationId}>
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                      <AddIcon fontSize="large" />
+                      <Stack direction="column">
+                        <Typography variant="h6">Create Organization</Typography>
+                      </Stack>
+                    </Stack>
+                  </MenuItem>
                 </Select>
               </FormControl>
             )}
@@ -202,23 +213,10 @@ const AppBar = ({ rootDataRelay }: Props) => {
             {`${toLongDateTime(currentTime)}`}
           </Typography>
           <Divider orientation="vertical" flexItem />
-          <Tooltip title="Send us feedback">
-            <IconButton sx={{ ml: 1 }} onClick={() => setSubmitFeedbackDialogOpen(true)}>
-              <FeedbackIcon />
-            </IconButton>
-          </Tooltip>
 
-          {paletteMode === 'dark' && (
-            <IconButton sx={{ ml: 1 }} onClick={() => updatePaletteMode('light')}>
-              <LightModeIcon />
-            </IconButton>
-          )}
-
-          {paletteMode === 'light' && (
-            <IconButton sx={{ ml: 1 }} onClick={() => updatePaletteMode('dark')}>
-              <DarkModeIcon />
-            </IconButton>
-          )}
+          <IconButton sx={{ ml: 1 }}>
+            <NotificationsIcon />
+          </IconButton>
 
           <IconButton onClick={handleProfileMenuOpenClick}>
             <CustomerAvatar
@@ -252,8 +250,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
             <MenuItem>
               <Stack direction="column">
                 <Stack direction="column">
-                  <Typography variant="body1">Signed in as</Typography>
-                  <Typography variant="body1">{customerName}</Typography>
+                  <Typography variant="h6">{customerName}</Typography>
                   {rootData.me?.email && <Typography variant="body1">{rootData.me?.email.email}</Typography>}
                 </Stack>
               </Stack>
@@ -264,17 +261,44 @@ const AppBar = ({ rootDataRelay }: Props) => {
             <MenuItem>
               <Link component={NextLink} href="/settings" color="inherit">
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <SettingsIcon fontSize="small" />
+                  <SettingsIcon fontSize="medium" />
                   <Typography textAlign="center">Settings</Typography>
                 </Stack>
               </Link>
+            </MenuItem>
+
+            {paletteMode === 'dark' && (
+              <MenuItem onClick={handleLightThemeClicked}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <LightModeIcon fontSize="medium" />
+                  <Typography textAlign="center">Dark Mode</Typography>
+                </Stack>
+              </MenuItem>
+            )}
+
+            {paletteMode === 'light' && (
+              <MenuItem onClick={handleDarkThemeClicked}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <DarkModeIcon fontSize="medium" />
+                  <Typography textAlign="center">Light Mode</Typography>
+                </Stack>
+              </MenuItem>
+            )}
+
+            <Divider />
+
+            <MenuItem onClick={handleSubmitFeedbackClicked}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <FeedbackIcon fontSize="medium" />
+                <Typography textAlign="center">Send us feedback</Typography>
+              </Stack>
             </MenuItem>
 
             <Divider />
 
             <MenuItem onClick={handleSignOutClick}>
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <LogoutIcon fontSize="small" />
+                <LogoutIcon fontSize="medium" />
                 <Typography textAlign="center">Sign out</Typography>
               </Stack>
             </MenuItem>

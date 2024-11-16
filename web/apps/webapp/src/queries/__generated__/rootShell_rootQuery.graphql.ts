@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<478b2284984364f43269b1497782df3c>>
+ * @generated SignedSource<<3f4bcc5f984fb6e0208807623523a0d1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,10 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type rootShell_rootQuery$variables = Record<PropertyKey, never>;
+export type rootShell_rootQuery$variables = {
+  organizationExists: boolean;
+  organizationId: string;
+};
 export type rootShell_rootQuery$data = {
   readonly billingCustomerRecordSynced: boolean;
   readonly bookingCustomerRecordSynced: boolean;
@@ -27,7 +30,7 @@ export type rootShell_rootQuery$data = {
   readonly paymentCustomerRecordSynced: boolean;
   readonly slackCustomerRecordSynced: boolean;
   readonly teamCustomerRecordSynced: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"appBar_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"appBar_query" | "leftSideNavigationMenu_query">;
 };
 export type rootShell_rootQuery = {
   response: rootShell_rootQuery$data;
@@ -36,88 +39,108 @@ export type rootShell_rootQuery = {
 
 const node: ConcreteRequest = (function(){
 var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationExists"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationId"
+},
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v1 = [
-  (v0/*: any*/)
+v3 = [
+  (v2/*: any*/)
 ],
-v2 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "billingCustomerRecordSynced",
   "storageKey": null
 },
-v3 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "bookingCustomerRecordSynced",
   "storageKey": null
 },
-v4 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "locationCustomerRecordSynced",
   "storageKey": null
 },
-v5 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "msTeamsCustomerRecordSynced",
   "storageKey": null
 },
-v6 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "notificationCustomerRecordSynced",
   "storageKey": null
 },
-v7 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "organizationCustomerRecordSynced",
   "storageKey": null
 },
-v8 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "paymentCustomerRecordSynced",
   "storageKey": null
 },
-v9 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slackCustomerRecordSynced",
   "storageKey": null
 },
-v10 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "teamCustomerRecordSynced",
   "storageKey": null
 },
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
+},
+v14 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "canModify",
+  "storageKey": null
 };
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "rootShell_rootQuery",
@@ -129,7 +152,7 @@ return {
         "kind": "LinkedField",
         "name": "me",
         "plural": false,
-        "selections": (v1/*: any*/),
+        "selections": (v3/*: any*/),
         "storageKey": null
       },
       {
@@ -139,11 +162,9 @@ return {
         "kind": "LinkedField",
         "name": "myOrganizations",
         "plural": true,
-        "selections": (v1/*: any*/),
+        "selections": (v3/*: any*/),
         "storageKey": null
       },
-      (v2/*: any*/),
-      (v3/*: any*/),
       (v4/*: any*/),
       (v5/*: any*/),
       (v6/*: any*/),
@@ -151,10 +172,17 @@ return {
       (v8/*: any*/),
       (v9/*: any*/),
       (v10/*: any*/),
+      (v11/*: any*/),
+      (v12/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
         "name": "appBar_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "leftSideNavigationMenu_query"
       }
     ],
     "type": "Query",
@@ -162,7 +190,10 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
     "name": "rootShell_rootQuery",
     "selections": [
@@ -174,7 +205,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -197,7 +228,7 @@ return {
                 "name": "verified",
                 "storageKey": null
               },
-              (v0/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -229,7 +260,7 @@ return {
             "name": "photoUrl",
             "storageKey": null
           },
-          (v11/*: any*/)
+          (v13/*: any*/)
         ],
         "storageKey": null
       },
@@ -241,7 +272,7 @@ return {
         "name": "myOrganizations",
         "plural": true,
         "selections": [
-          (v0/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -249,14 +280,8 @@ return {
             "name": "logoUrl",
             "storageKey": null
           },
-          (v11/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "canModify",
-            "storageKey": null
-          },
+          (v13/*: any*/),
+          (v14/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -267,28 +292,54 @@ return {
         ],
         "storageKey": null
       },
-      (v2/*: any*/),
-      (v3/*: any*/),
       (v4/*: any*/),
       (v5/*: any*/),
       (v6/*: any*/),
       (v7/*: any*/),
       (v8/*: any*/),
       (v9/*: any*/),
-      (v10/*: any*/)
+      (v10/*: any*/),
+      (v11/*: any*/),
+      (v12/*: any*/),
+      {
+        "condition": "organizationExists",
+        "kind": "Condition",
+        "passingValue": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "id",
+                "variableName": "organizationId"
+              }
+            ],
+            "concreteType": "OrganizationDetails",
+            "kind": "LinkedField",
+            "name": "organization",
+            "plural": false,
+            "selections": [
+              (v14/*: any*/),
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ]
+      }
     ]
   },
   "params": {
-    "cacheID": "82e4ab02b798af27f78912e4b05b3e7f",
+    "cacheID": "f022b0628290bec214b1fbaed8e74e51",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...appBar_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
+    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    canModify\n    id\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9b04fd6ba85ea9419fef41ddd4ec94e6";
+(node as any).hash = "38455c1282bafac1b426853317674d72";
 
 export default node;

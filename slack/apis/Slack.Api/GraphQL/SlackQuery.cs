@@ -1,34 +1,29 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Slack;
-using Enterprise.Shared.Context;
+using HotChocolate;
+using HotChocolate.Types;
 using Slack.Api.Services;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Slack.Version;
 
 namespace Slack.Api.GraphQL;
 
-public class SlackQuery : Query
+public class SlackQuery
 {
-    public override Task<Version> SlackVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    [UseServiceScope]
+    public Version SlackVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public override async Task<bool> SlackCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
-        return await service.DoesCustomerExistAsync(cancellationToken);
-    }
+    [UseServiceScope]
+    public async Task<bool> SlackCustomerRecordSyncedAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        CancellationToken cancellationToken) =>
+        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 }

@@ -45,7 +45,7 @@ public class LocationOutboxPublisher(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
                         location.IsNotDeleted() ? Type.LocationUpserted : Type.LocationDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data { LocationAfterState = mapper.MapTo(location) }
                 }, unitOfWork, cancellationToken)));
 
@@ -64,7 +64,7 @@ public class LocationOutboxPublisher(
                         joinInvitation.IsNotDeleted()
                             ? Type.InvitationToJoinLocationUpserted
                             : Type.InvitationToJoinLocationDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data { InvitationToJoinLocationAfterState = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,

@@ -22,14 +22,9 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddDatabaseHealthCheck();
 
         services.AddKafka();
+        services.AddRedis(Configuration);
 
-        services
-            .AddGraphql<BillingDbContext>(Configuration, builder =>
-            {
-                builder
-                    .AddQueryType<BillingQuery>()
-                    .AddMutationType<BillingMutation>();
-            });
+        services.AddGraphql<BillingDbContext>(Configuration, builder => builder.AddTypes());
 
         services
             .AddDomainSharedServices()

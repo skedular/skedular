@@ -45,7 +45,7 @@ public class BillingOutboxPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.BillingOrganizationOfferingUpserted,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 Data = new Data { OrganizationOfferingBillingAfterState = mapper.MapTo(organizationOffering) }
             };
 
@@ -65,7 +65,7 @@ public class BillingOutboxPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.OrganizationBillingInfoUpdated,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 Data = new Data { OrganizationBillingInfoAfterState = mapper.MapTo(organization) }
             };
 

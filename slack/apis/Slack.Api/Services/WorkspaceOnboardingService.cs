@@ -44,7 +44,13 @@ public class WorkspaceOnboardingService(
         var organization =
             await repositoryFactory.OrganizationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
 
-        var workspace = repositoryFactory.WorkspaceRepository.Add(mapper.MapTo(oauthV2AccessResponse, organization));
+        var exitingWorkspace =
+            await repositoryFactory.WorkspaceRepository.GetByIdAsync(oauthV2AccessResponse.Team!.Id, cancellationToken);
+
+        var workspace = exitingWorkspace is null
+            ? repositoryFactory.WorkspaceRepository.Add(mapper.MapTo(oauthV2AccessResponse, organization))
+            : repositoryFactory.WorkspaceRepository.Update(mapper.MergeTo(oauthV2AccessResponse, exitingWorkspace,
+                organization));
 
         await CreateOrganizationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
         await CreateLocationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);

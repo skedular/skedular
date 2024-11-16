@@ -32,7 +32,7 @@ public class MsTeamsInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RefreshAzureTenantTeamsAndChannels,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 AzureTenantId = azureTenantId
             };
 

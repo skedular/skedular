@@ -45,7 +45,7 @@ public class TeamOutboxPublisher(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
                         team.IsNotDeleted() ? Type.TeamUpserted : Type.TeamDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data { TeamAfterState = mapper.MapTo(team) }
                 }, unitOfWork, cancellationToken)));
 
@@ -64,7 +64,7 @@ public class TeamOutboxPublisher(
                         joinInvitation.IsNotDeleted()
                             ? Type.InvitationToJoinTeamUpserted
                             : Type.InvitationToJoinTeamDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data { InvitationToJoinTeamAfterState = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,

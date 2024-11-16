@@ -1,5 +1,5 @@
-using Api.Shared.Services.GraphQL.UnityHub.V1.Notification;
 using Enterprise.Shared.Models;
+using Notification.Api.GraphQL;
 using Notification.Shared.Models;
 
 namespace Notification.Api.Mappers;
@@ -7,7 +7,7 @@ namespace Notification.Api.Mappers;
 public interface IMapper
 {
     Customer? MapTo(Shared.Database.Entities.Customer? src);
-    global::Api.Shared.Services.GraphQL.UnityHub.V1.Notification.Notification MapTo(Shared.Models.Notification src);
+    GraphQL.Notification MapTo(Shared.Models.Notification src);
     Edge<Shared.Models.Notification> MapTo(Edge<Shared.Database.Entities.Notification> src);
     NotificationEdge MapTo(Edge<Shared.Models.Notification> src);
 }
@@ -38,8 +38,7 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList()
             };
 
-    public global::Api.Shared.Services.GraphQL.UnityHub.V1.Notification.Notification MapTo(
-        Shared.Models.Notification src) =>
+    public GraphQL.Notification MapTo(Shared.Models.Notification src) =>
         new()
         {
             Id = src.Id,

@@ -39,7 +39,7 @@ public class LocationPublisher(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
                         location.IsNotDeleted() ? Type.LocationUpserted : Type.LocationDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data { LocationAfterState = mapper.MapTo(location) }
                 },
                 cancellationToken)));
@@ -59,7 +59,7 @@ public class LocationPublisher(
                         joinInvitation.IsNotDeleted()
                             ? Type.InvitationToJoinLocationUpserted
                             : Type.InvitationToJoinLocationDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data
                     {
                         InvitationToJoinLocationAfterState = mapper.MapTo(joinInvitation, inviteeIdToOverride)

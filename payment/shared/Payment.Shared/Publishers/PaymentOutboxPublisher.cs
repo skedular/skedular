@@ -37,7 +37,7 @@ public class PaymentOutboxPublisher(
                 applicationConfiguration.DomainSource,
                 applicationConfiguration.AppSource,
                 Type.OrganizationPaymentMethodsUpdated,
-                context.PropertyBag.CorrelationId),
+                context.GetCorrelationId()),
             Data = new Data
             {
                 OrganizationPaymentMethodAfterState = new OrganizationPaymentMethod

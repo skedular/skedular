@@ -4,7 +4,6 @@ import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { FeedbackIcon, SettingsIcon } from '@repo/shared/components/icons';
@@ -58,9 +57,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
 
-  useInterval(() => {
-    setCurrentTime(localNow());
-  }, 1000);
+  useInterval(() => setCurrentTime(localNow()), 1000);
 
   const handleProfileMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
     setProfileOpenAnchorEl(event.currentTarget);
@@ -68,6 +65,11 @@ const AppBar = ({ rootDataRelay }: Props) => {
 
   const handleProfileMenuCloseClick = () => {
     setProfileOpenAnchorEl(null);
+  };
+
+  const handleSubmitFeedbackClicked = () => {
+    setProfileOpenAnchorEl(null);
+    setSubmitFeedbackDialogOpen(true);
   };
 
   const handleSubmitFeedbackSendClick = () => {
@@ -98,11 +100,6 @@ const AppBar = ({ rootDataRelay }: Props) => {
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <Typography variant="h6" sx={{ display: { xs: 'none', sm: 'block' } }}>{`${toLongDateTime(currentTime)}`}</Typography>
           <Divider orientation="vertical" flexItem />
-          <Tooltip title="Send us feedback">
-            <IconButton sx={{ ml: 1 }} onClick={() => setSubmitFeedbackDialogOpen(true)}>
-              <FeedbackIcon />
-            </IconButton>
-          </Tooltip>
 
           <IconButton onClick={handleProfileMenuOpenClick}>
             <CustomerAvatar
@@ -136,8 +133,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
             <MenuItem>
               <Stack direction="column">
                 <Stack direction="column">
-                  <Typography variant="body1">Signed in as</Typography>
-                  <Typography variant="body1">{customerName}</Typography>
+                  <Typography variant="h6">{customerName}</Typography>
                   {rootData.me?.email && <Typography variant="body1">{rootData.me?.email.email}</Typography>}
                 </Stack>
               </Stack>
@@ -148,10 +144,19 @@ const AppBar = ({ rootDataRelay }: Props) => {
             <MenuItem>
               <Link href="/settings" color="inherit">
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <SettingsIcon fontSize="small" />
+                  <SettingsIcon fontSize="medium" />
                   <Typography textAlign="center">Settings</Typography>
                 </Stack>
               </Link>
+            </MenuItem>
+
+            <Divider />
+
+            <MenuItem onClick={handleSubmitFeedbackClicked}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <FeedbackIcon fontSize="medium" />
+                <Typography textAlign="center">Send us feedback</Typography>
+              </Stack>
             </MenuItem>
           </Menu>
         </Stack>

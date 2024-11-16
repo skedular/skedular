@@ -39,11 +39,11 @@ public class CustomerService(
     public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(context.PropertyBag.VerifiableToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
         var customer =
             await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                context.PropertyBag.VerifiableToken,
+                context.GetVerifiableToken(),
                 cancellationToken);
         if (customer is null)
         {
@@ -56,14 +56,14 @@ public class CustomerService(
     public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(context.PropertyBag.VerifiableToken))
+        if (string.IsNullOrWhiteSpace(context.GetVerifiableToken()))
         {
             return (null, null);
         }
 
         var customer =
             await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                context.PropertyBag.VerifiableToken,
+                context.GetVerifiableToken(),
                 cancellationToken);
         return customer is null ? (null, null) : (mapper.MapTo(customer)!, customer);
     }

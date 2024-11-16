@@ -1,53 +1,48 @@
 ﻿using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Payment;
-using Enterprise.Shared.Context;
+using HotChocolate;
+using HotChocolate.Types;
 using Payment.Api.Mappers;
 using Payment.Api.Services;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Payment.Version;
 
 namespace Payment.Api.GraphQL;
 
-public class PaymentQuery(IMapper mapper) : Query
+public class PaymentQuery
 {
-    public override Task<Version> PaymentVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    [UseServiceScope]
+    public Version PaymentVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public override async Task<bool> PaymentCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
-        return await service.DoesCustomerExistAsync(cancellationToken);
-    }
+    [UseServiceScope]
+    public async Task<bool> PaymentCustomerRecordSyncedAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        CancellationToken cancellationToken) =>
+        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
-    public override async Task<OrganizationPaymentMethod[]?> OrganizationPaymentMethodsDetailsAsync(
+    [UseServiceScope]
+    public async Task<OrganizationPaymentMethod[]?> OrganizationPaymentMethodsDetailsAsync(
         string organizationId,
-        IServiceProvider serviceProvider,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IOrganizationService organizationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
-        return mapper
-            .MapTo(await service.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken))
-            .ToArray();
+        var paymentMethods =
+            await organizationService.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken);
+        return mapper.MapTo(paymentMethods).ToArray();
     }
 }

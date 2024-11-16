@@ -1,103 +1,95 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
-using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
+using HotChocolate;
+using HotChocolate.Types;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Shared.Models;
-using OrderDirection = Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrderDirection;
-using OrganizationOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationOrderInput;
-using OrganizationMemberOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationMemberOrderInput;
-using OrganizationOrderField = Organization.Shared.Models.OrganizationOrderField;
-using OrganizationMemberOrderField = Organization.Shared.Models.OrganizationMemberOrderField;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Organization.Version;
 
 namespace Organization.Api.GraphQL;
 
-public class OrganizationQuery(IMapper mapper) : Query
+public class OrganizationQuery
 {
-    public override Task<Version> OrganizationVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    [UseServiceScope]
+    public Version OrganizationVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public override async Task<bool> OrganizationCustomerRecordSyncedAsync(IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
-        return await service.DoesCustomerExistAsync(cancellationToken);
-    }
+    [UseServiceScope]
+    public async Task<bool> OrganizationCustomerRecordSyncedAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        CancellationToken cancellationToken) =>
+        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
-    public override async Task<OrganizationTermsOfUse> ActiveOrganizationTermsOfUseAsync(
-        IServiceProvider serviceProvider,
+    [UseServiceScope]
+    public async Task<OrganizationTermsOfUse> ActiveOrganizationTermsOfUseAsync(
+        [Service] IOrganizationTermsOfUseService organizationTermsOfUseService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationTermsOfUseService>();
-        var termsOfUse = await service.GetActiveTermsOfUseAsync(cancellationToken);
+        var termsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken);
         return mapper.MapTo(termsOfUse)!;
     }
 
-    public override Task<OrganizationMemberMembershipType[]> OrganizationMemberMembershipTypesAsync(
-        IServiceProvider serviceProvider, CancellationToken cancellationToken) =>
-        Task.FromResult(new[]
-        {
-            OrganizationMemberMembershipType.OWNER, OrganizationMemberMembershipType.ADMINISTRATOR,
-            OrganizationMemberMembershipType.MEMBER
-        });
+    [UseServiceScope]
+    public OrganizationMemberMembershipType[] OrganizationMemberMembershipTypes() =>
+    [
+        OrganizationMemberMembershipType.OWNER,
+        OrganizationMemberMembershipType.ADMINISTRATOR,
+        OrganizationMemberMembershipType.MEMBER
+    ];
 
-    public override async Task<OrganizationIndustryMainCategoryReferenceDetails[]>
-        OrganizationIndustryMainCategoriesReferencesAsync(IServiceProvider serviceProvider,
+    [UseServiceScope]
+    public async Task<OrganizationIndustryMainCategoryReferenceDetails[]>
+        OrganizationIndustryMainCategoriesReferencesAsync(
+            [Service] IIndustryMainCategoryService industryMainCategoryService,
+            [Service] IMapper mapper,
             CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IIndustryMainCategoryService>();
-        var industryMainCategories = await service.GetAllAsync(cancellationToken);
+        var industryMainCategories = await industryMainCategoryService.GetAllAsync(cancellationToken);
         return mapper.MapTo(industryMainCategories).ToArray();
     }
 
-    public override async Task<OrganizationDetails?> OrganizationAsync(
+    [UseServiceScope]
+    public async Task<OrganizationDetails?> OrganizationAsync(
         string id,
-        IServiceProvider serviceProvider,
+        [Service] IOrganizationService organizationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
-        var organization = await service.GetByIdAsync(id, cancellationToken);
+        var organization = await organizationService.GetByIdAsync(id, cancellationToken);
         return mapper.MapTo(organization);
     }
 
-    public override async Task<OrganizationConnection?> OrganizationsAsync(
+    [UseServiceScope]
+    public async Task<OrganizationConnection?> OrganizationsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         OrganizationWhereInput where,
         OrganizationOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IOrganizationService organizationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
         var (paginatedInfo, edges, totalCount) =
-            await service.GetPaginatedOrganizationsAsync(
+            await organizationService.GetPaginatedOrganizationsAsync(
                 new PaginationInputParam(after, first, before, last),
                 new OrganizationSearchCriteria(where.NameContains),
                 orderBy is null
@@ -109,8 +101,7 @@ public class OrganizationQuery(IMapper mapper) : Query
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationOrderField.name =>
-                                OrganizationOrderField.Name,
+                            OrganizationOrderField.name => Shared.Models.OrganizationOrderField.Name,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 
@@ -132,44 +123,43 @@ public class OrganizationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<OrganizationDetails[]?> MyOrganizationsAsync(
-        IServiceProvider serviceProvider,
+    [UseServiceScope]
+    public async Task<OrganizationDetails[]?> MyOrganizationsAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IOrganizationService organizationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
-        var organizations = await service.GetMyOrganizationsAsync(cancellationToken);
+        var organizations = await organizationService.GetMyOrganizationsAsync(cancellationToken);
         return mapper.MapTo(organizations).ToArray();
     }
 
-    public override async Task<OrganizationMemberConnection?> PaginatedOrganizationMembersAsync(
+    [UseServiceScope]
+    public async Task<OrganizationMemberConnection?> PaginatedOrganizationMembersAsync(
         string? after,
         int? first,
         string? before, int? last,
         OrganizationMemberWhereInput where,
         OrganizationMemberOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IOrganizationMemberService organizationMemberService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.OrganizationId);
 
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationMemberService>();
         var (paginatedInfo, edges, totalCount) =
-            await service.GetPaginatedOrganizationMembersAsync(
+            await organizationMemberService.GetPaginatedOrganizationMembersAsync(
                 new PaginationInputParam(after, first, before, last),
                 new OrganizationMemberSearchCriteria(where.OrganizationId, where.NameContains),
                 orderBy is null
@@ -181,21 +171,16 @@ public class OrganizationQuery(IMapper mapper) : Query
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationMemberOrderField
-                                    .membershipType =>
-                                OrganizationMemberOrderField.MembershipType,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationMemberOrderField
-                                    .name =>
-                                OrganizationMemberOrderField.Name,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationMemberOrderField
-                                    .givenName =>
-                                OrganizationMemberOrderField.GivenName,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationMemberOrderField
-                                    .middleName =>
-                                OrganizationMemberOrderField.MiddleName,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationMemberOrderField
-                                    .familyName =>
-                                OrganizationMemberOrderField.FamilyName,
+                            OrganizationMemberOrderField.membershipType =>
+                                Shared.Models.OrganizationMemberOrderField.MembershipType,
+                            OrganizationMemberOrderField.name =>
+                                Shared.Models.OrganizationMemberOrderField.Name,
+                            OrganizationMemberOrderField.givenName =>
+                                Shared.Models.OrganizationMemberOrderField.GivenName,
+                            OrganizationMemberOrderField.middleName =>
+                                Shared.Models.OrganizationMemberOrderField.MiddleName,
+                            OrganizationMemberOrderField.familyName =>
+                                Shared.Models.OrganizationMemberOrderField.FamilyName,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 
@@ -217,10 +202,13 @@ public class OrganizationQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<OrganizationMemberDetails[]?> OrganizationMembersAsync(
+    [UseServiceScope]
+    public async Task<OrganizationMemberDetails[]?> OrganizationMembersAsync(
         OrganizationMemberWhereInput where,
         OrganizationMemberOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IOrganizationMemberService organizationMemberService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var result = await PaginatedOrganizationMembersAsync(
@@ -229,50 +217,44 @@ public class OrganizationQuery(IMapper mapper) : Query
             null,
             null,
             where,
-            [],
-            serviceProvider,
+            orderBy,
+            cachedCustomerService,
+            organizationMemberService,
+            mapper,
             cancellationToken);
         return result?.Edges.Select(item => item.Node).ToArray();
     }
 
-    public override async Task<OrganizationAnalytics?> OrganizationAnalyticsAsync(
+    [UseServiceScope]
+    public async Task<OrganizationAnalytics?> OrganizationAnalyticsAsync(
         string organizationId,
         DateTimeOffset from,
         DateTimeOffset until,
-        IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        [Service] IOrganizationAnalyticsService organizationAnalyticsService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationAnalyticsService>();
         var (organizationMemberAttendancePercentages, organizationDailyBookingsTotals) =
-            await service.GetAnalyticsAsync(organizationId, from, until, cancellationToken);
+            await organizationAnalyticsService.GetAnalyticsAsync(organizationId, from, until, cancellationToken);
         return mapper.MapTo(organizationMemberAttendancePercentages, organizationDailyBookingsTotals);
     }
 
-    public override async Task<bool> IsAzureTenantInstalledAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IAzureTenantService>();
-        return await service.DoesTenantExistAsync(cancellationToken);
-    }
+    [UseServiceScope]
+    public async Task<bool> IsAzureTenantInstalledAsync(
+        [Service] IAzureTenantService azureTenantService,
+        CancellationToken cancellationToken) =>
+        await azureTenantService.DoesTenantExistAsync(cancellationToken);
 
-    public override async Task<string> AzureTenantAdminConsentUrlAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IAzureTenantService>();
-        return await service.GenerateAdminConsentUrlAsync(cancellationToken);
-    }
+    [UseServiceScope]
+    public async Task<string> AzureTenantAdminConsentUrlAsync(
+        [Service] IAzureTenantService azureTenantService,
+        CancellationToken cancellationToken) =>
+        await azureTenantService.GenerateAdminConsentUrlAsync(cancellationToken);
 
-    public override async Task<OrganizationDetails?> AzureTenantOrganizationAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IOrganizationService>();
-        var organization = await service.GetByAzureTenantAsync(cancellationToken);
-        return mapper.MapTo(organization);
-    }
+    [UseServiceScope]
+    public async Task<OrganizationDetails?> AzureTenantOrganizationAsync(
+        [Service] IOrganizationService organizationService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
 }

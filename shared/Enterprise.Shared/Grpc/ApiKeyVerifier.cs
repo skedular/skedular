@@ -24,7 +24,6 @@ public class GrpcAuthenticator(IHttpContextAccessor httpContextAccessor, IContex
         var verifiableTokens = httpContextAccessor.HttpContext?.Request.Headers[Constants.VerifiableTokenKey];
         if (verifiableTokens is not null && !string.IsNullOrWhiteSpace(verifiableTokens.Value.FirstOrDefault()))
         {
-            context.PropertyBag = new PropertyBag();
             var splitVerifiableTokens = verifiableTokens.Value
                 .First()!
                 .Split(",")
@@ -33,7 +32,7 @@ public class GrpcAuthenticator(IHttpContextAccessor httpContextAccessor, IContex
                 .ToList();
             if (splitVerifiableTokens.Count != 0)
             {
-                context.PropertyBag.AddVerifiableToken(splitVerifiableTokens.First());
+                context.SetVerifiableToken(splitVerifiableTokens.First());
             }
         }
     }

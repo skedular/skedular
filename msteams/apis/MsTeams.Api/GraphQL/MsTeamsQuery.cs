@@ -1,34 +1,29 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams;
-using Enterprise.Shared.Context;
+using HotChocolate;
+using HotChocolate.Types;
 using MsTeams.Api.Services;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.MsTeams.Version;
 
 namespace MsTeams.Api.GraphQL;
 
-public class MsTeamsQuery : Query
+public class MsTeamsQuery
 {
-    public override Task<Version> MsTeamsVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    [UseServiceScope]
+    public Version MsTeamsVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public override async Task<bool> MsTeamsCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
-        return await service.DoesCustomerExistAsync(cancellationToken);
-    }
+    [UseServiceScope]
+    public async Task<bool> MsTeamsCustomerRecordSyncedAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        CancellationToken cancellationToken) =>
+        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 }

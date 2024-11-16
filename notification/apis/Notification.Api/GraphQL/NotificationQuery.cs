@@ -1,62 +1,54 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Notification;
-using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
+using HotChocolate;
+using HotChocolate.Types;
 using Notification.Api.Mappers;
 using Notification.Api.Services;
 using Notification.Shared.Models;
-using NotificationOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Notification.NotificationOrderInput;
-using NotificationOrderField = Api.Shared.Services.GraphQL.UnityHub.V1.Notification.NotificationOrderField;
-using OrderDirection = Api.Shared.Services.GraphQL.UnityHub.V1.Notification.OrderDirection;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Notification.Version;
 
 namespace Notification.Api.GraphQL;
 
-public class NotificationQuery(IMapper mapper) : Query
+public class NotificationQuery
 {
-    public override Task<Version> NotificationVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    [UseServiceScope]
+    public Version NotificationVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public override async Task<bool> NotificationCustomerRecordSyncedAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
-        return await service.DoesCustomerExistAsync(cancellationToken);
-    }
+    [UseServiceScope]
+    public async Task<bool> NotificationCustomerRecordSyncedAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        CancellationToken cancellationToken) =>
+        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
-    public override async Task<NotificationConnection?> MyNotificationsAsync(
+    [UseServiceScope]
+    public async Task<NotificationConnection?> MyNotificationsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         NotificationOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] INotificationService notificationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var service = scope.ServiceProvider.GetRequiredService<INotificationService>();
         var (paginatedInfo, edges, totalCount) =
-            await service.GetMyPaginatedNotificationsAsync(
+            await notificationService.GetMyPaginatedNotificationsAsync(
                 new PaginationInputParam(after, first, before, last),
                 new NotificationSearchCriteria(),
                 orderBy is null

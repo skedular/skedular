@@ -40,7 +40,7 @@ public class SlackInternalOutboxPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RefreshWorkspaceMembers,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 WorkspaceId = workspaceId
             };
 
@@ -60,7 +60,7 @@ public class SlackInternalOutboxPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RefreshWorkspaceChannels,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 WorkspaceId = workspaceId
             };
 

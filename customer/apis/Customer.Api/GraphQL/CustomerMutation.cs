@@ -1,220 +1,254 @@
-using Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
-using Enterprise.Shared.Context;
+using HotChocolate;
+using HotChocolate.Types;
 
 namespace Customer.Api.GraphQL;
 
-public class CustomerMutation(IMapper mapper) : Mutation
+public class CustomerMutation
 {
-    public override async Task<CustomerPayload?> CompleteOrganizationOnboardingAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> CompleteOrganizationOnboardingAsync(
         CompleteOrganizationOnboardingInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerSettingsService customerSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerSettingsService>();
-        var customer = await service.CompleteOrganizationOnboardingAsync(cancellationToken);
+        var customer = await customerSettingsService.CompleteOrganizationOnboardingAsync(cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompleteLocationOnboardingAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> CompleteLocationOnboardingAsync(
         CompleteLocationOnboardingInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerSettingsService customerSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerSettingsService>();
-        var customer = await service.CompleteLocationOnboardingAsync(cancellationToken);
+        var customer = await customerSettingsService.CompleteLocationOnboardingAsync(cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompleteTeamOnboardingAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> CompleteTeamOnboardingAsync(
         CompleteTeamOnboardingInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerSettingsService customerSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerSettingsService>();
-        var customer = await service.CompleteTeamOnboardingAsync(cancellationToken);
+        var customer = await customerSettingsService.CompleteTeamOnboardingAsync(cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompleteDefaultOrganizationOnboardingAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> CompleteDefaultOrganizationOnboardingAsync(
         CompleteDefaultOrganizationOnboardingInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerSettingsService customerSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerSettingsService>();
-        var customer = await service.CompleteDefaultOrganizationOnboardingAsync(cancellationToken);
+        var customer = await customerSettingsService.CompleteDefaultOrganizationOnboardingAsync(cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompleteDefaultLocationOnboardingAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> CompleteDefaultLocationOnboardingAsync(
         CompleteDefaultLocationOnboardingInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerSettingsService customerSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerSettingsService>();
-        var customer = await service.CompleteDefaultLocationOnboardingAsync(cancellationToken);
+        var customer = await customerSettingsService.CompleteDefaultLocationOnboardingAsync(cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompletePreferredZoneOnboardingAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> CompletePreferredZoneOnboardingAsync(
         CompletePreferredZoneOnboardingInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerSettingsService customerSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerSettingsService>();
-        var customer = await service.CompletePreferredZoneOnboardingAsync(cancellationToken);
+        var customer = await customerSettingsService.CompletePreferredZoneOnboardingAsync(cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> CompletePreferredDeskOnboardingAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> CompletePreferredDeskOnboardingAsync(
         CompletePreferredDeskOnboardingInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerSettingsService customerSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerSettingsService>();
-        var customer = await service.CompletePreferredDeskOnboardingAsync(cancellationToken);
+        var customer = await customerSettingsService.CompletePreferredDeskOnboardingAsync(cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> AddCustomerDefaultLocationAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> AddCustomerDefaultLocationAsync(
         AddCustomerDefaultLocationInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerLocationSettingsService customerLocationSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerLocationSettingsService>();
-        var customer = await service.AddCustomerDefaultLocationAsync(input.LocationId, null, false, cancellationToken);
+        var customer = await customerLocationSettingsService.AddCustomerDefaultLocationAsync(
+            input.LocationId,
+            null,
+            false,
+            cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> RemoveCustomerDefaultLocationAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> RemoveCustomerDefaultLocationAsync(
         RemoveCustomerDefaultLocationInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerLocationSettingsService customerLocationSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerLocationSettingsService>();
-        var customer = await service.RemoveCustomerDefaultLocationAsync(input.LocationId, null, cancellationToken);
+        var customer = await customerLocationSettingsService.RemoveCustomerDefaultLocationAsync(
+            input.LocationId,
+            null,
+            cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> AddCustomerDefaultTeamAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> AddCustomerDefaultTeamAsync(
         AddCustomerDefaultTeamInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerTeamSettingsService customerTeamSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerTeamSettingsService>();
-        var customer = await service.AddCustomerDefaultTeamAsync(input.TeamId, null, false, cancellationToken);
+        var customer = await customerTeamSettingsService.AddCustomerDefaultTeamAsync(
+            input.TeamId,
+            null,
+            false,
+            cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> RemoveCustomerDefaultTeamAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> RemoveCustomerDefaultTeamAsync(
         RemoveCustomerDefaultTeamInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerTeamSettingsService customerTeamSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerTeamSettingsService>();
-        var customer = await service.RemoveCustomerDefaultTeamAsync(input.TeamId, null, cancellationToken);
+        var customer = await customerTeamSettingsService.RemoveCustomerDefaultTeamAsync(
+            input.TeamId,
+            null,
+            cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> SetCustomerDefaultOrganizationAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> SetCustomerDefaultOrganizationAsync(
         SetCustomerDefaultOrganizationInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerOrganizationSettingsService>();
         var customer =
-            await service.SetCustomerDefaultOrganizationAsync(input.OrganizationId, null, false, cancellationToken);
+            await customerOrganizationSettingsService.SetCustomerDefaultOrganizationAsync(
+                input.OrganizationId,
+                null,
+                false,
+                cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> ClearCustomerDefaultOrganizationAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> ClearCustomerDefaultOrganizationAsync(
         ClearCustomerDefaultOrganizationInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerOrganizationSettingsService>();
-        var customer = await service.ClearCustomerDefaultOrganizationAsync(null, cancellationToken);
+        var customer = await customerOrganizationSettingsService.ClearCustomerDefaultOrganizationAsync(
+            null,
+            cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> AddCustomerDefaultLocationTagAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> AddCustomerDefaultLocationTagAsync(
         AddCustomerDefaultLocationTagInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerLocationTagSettingsService customerLocationTagSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerLocationTagSettingsService>();
-        var customer = await service.AddCustomerDefaultLocationTagAsync(input.LocationTagId, null, cancellationToken);
+        var customer = await customerLocationTagSettingsService.AddCustomerDefaultLocationTagAsync(
+            input.LocationTagId,
+            null,
+            cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> RemoveCustomerDefaultLocationTagAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> RemoveCustomerDefaultLocationTagAsync(
         RemoveCustomerDefaultLocationTagInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerLocationTagSettingsService customerLocationTagSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerLocationTagSettingsService>();
         var customer =
-            await service.RemoveCustomerDefaultLocationTagAsync(input.LocationTagId, null, cancellationToken);
+            await customerLocationTagSettingsService.RemoveCustomerDefaultLocationTagAsync(
+                input.LocationTagId,
+                null,
+                cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> AddCustomerDefaultDeskAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> AddCustomerDefaultDeskAsync(
         AddCustomerDefaultDeskInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerDeskSettingsService customerDeskSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerDeskSettingsService>();
-        var customer = await service.AddCustomerDefaultDeskAsync(input.DeskId, null, cancellationToken);
+        var customer = await customerDeskSettingsService.AddCustomerDefaultDeskAsync(
+            input.DeskId,
+            null,
+            cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> RemoveCustomerDefaultDeskAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> RemoveCustomerDefaultDeskAsync(
         RemoveCustomerDefaultDeskInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerDeskSettingsService customerDeskSettingsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerDeskSettingsService>();
-        var customer = await service.RemoveCustomerDefaultDeskAsync(input.DeskId, null, cancellationToken);
+        var customer = await customerDeskSettingsService.RemoveCustomerDefaultDeskAsync(
+            input.DeskId,
+            null,
+            cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    public override async Task<SubmitCustomerFeedbackPayload?> SubmitCustomerFeedbackAsync(
+    [UseServiceScope]
+    public async Task<SubmitCustomerFeedbackPayload?> SubmitCustomerFeedbackAsync(
         SubmitCustomerFeedbackInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerFeedbackService customerFeedbackService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerFeedbackService>();
-        var customerFeedback = await service.SubmitFeedbackAsync(mapper.MapTo(input), cancellationToken);
+        var customerFeedback = await customerFeedbackService.SubmitFeedbackAsync(
+            mapper.MapTo(input),
+            cancellationToken);
         return mapper.MapTo(customerFeedback, input.ClientMutationId);
     }
 
-    public override async Task<CustomerPayload?> UpdateMyCustomerDetailsAsync(
+    [UseServiceScope]
+    public async Task<CustomerPayload?> UpdateMyCustomerDetailsAsync(
         UpdateMyCustomerDetailsInput input,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerDetailsService customerDetailsService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerDetailsService>();
-        var customerFeedback = await service.UpdateMyCustomerDetailsAsync(
+        var customerFeedback = await customerDetailsService.UpdateMyCustomerDetailsAsync(
             input.Timezone,
             input.Designation,
             input.Title,

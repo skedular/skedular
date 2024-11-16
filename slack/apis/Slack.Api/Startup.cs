@@ -36,13 +36,9 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddDatabaseHealthCheck();
 
         services.AddKafka();
+        services.AddRedis(Configuration);
 
-        services
-            .AddGraphql<SlackDbContext>(Configuration, builder =>
-            {
-                builder
-                    .AddQueryType<SlackQuery>();
-            });
+        services.AddGraphql<SlackDbContext>(Configuration, builder => builder.AddTypes());
 
         services
             .AddDomainSharedServices()

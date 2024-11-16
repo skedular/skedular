@@ -51,7 +51,7 @@ public static class Extensions
     }
 
     public static IServiceCollection AddContext(this IServiceCollection services) =>
-        services.AddScoped<IContext, Context.Context>();
+        services.AddSingleton<IContext, Context.Context>();
 
     public static IServiceCollection AddRandomHelper(this IServiceCollection services) =>
         services

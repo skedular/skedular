@@ -32,7 +32,7 @@ public class LocationInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RecordDailyDeskCount,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 LocationId = locationId
             };
 

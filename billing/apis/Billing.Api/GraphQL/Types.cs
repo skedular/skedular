@@ -1,0 +1,106 @@
+using HotChocolate;
+using HotChocolate.Types.Relay;
+
+namespace Billing.Api.GraphQL;
+
+[GraphQLName("Mutation_SetOrganizationBillingInfo_Arguments")]
+public class Mutation_SetOrganizationBillingInfo_Arguments
+{
+    [GraphQLName("input")] public SetOrganizationBillingInfoInput Input { get; set; }
+}
+
+[GraphQLName("OrganizationBillingInfo")]
+public class OrganizationBillingInfo
+{
+    [GraphQLName("organizationId")] [ID] public string OrganizationId { get; set; }
+
+    [GraphQLName("email")] public string? Email { get; set; }
+
+    [GraphQLName("addressLine1")] public string? AddressLine1 { get; set; }
+
+    [GraphQLName("addressLine2")] public string? AddressLine2 { get; set; }
+
+    [GraphQLName("suburb")] public string? Suburb { get; set; }
+
+    [GraphQLName("city")] public string? City { get; set; }
+
+    [GraphQLName("province")] public string? Province { get; set; }
+
+    [GraphQLName("zipcode")] public string? Zipcode { get; set; }
+
+    [GraphQLName("country")] public string? Country { get; set; }
+}
+
+[GraphQLName("OrganizationBillingInfoPayload")]
+public class OrganizationBillingInfoPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("organizationBillingInfo")]
+    public OrganizationBillingInfo OrganizationBillingInfo { get; set; }
+}
+
+[GraphQLName("OrganizationCurrentOfferingChargesDetails")]
+public class OrganizationCurrentOfferingChargesDetails
+{
+    [GraphQLName("offeringName")] public string OfferingName { get; set; }
+
+    [GraphQLName("start")] public DateTimeOffset Start { get; set; }
+
+    [GraphQLName("end")] public DateTimeOffset End { get; set; }
+
+    [GraphQLName("totalNumberOfActiveCustomers")]
+    public int TotalNumberOfActiveCustomers { get; set; }
+
+    [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
+
+    [GraphQLName("totalCost")] public int TotalCost { get; set; }
+}
+
+[GraphQLName("Query_OrganizationBillingInfo_Arguments")]
+public class Query_OrganizationBillingInfo_Arguments
+{
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
+}
+
+[GraphQLName("Query_OrganizationCurrentOfferingCharges_Arguments")]
+public class Query_OrganizationCurrentOfferingCharges_Arguments
+{
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
+}
+
+[GraphQLName("SetOrganizationBillingInfoInput")]
+public class SetOrganizationBillingInfoInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
+
+    [GraphQLName("email")] public string? Email { get; set; }
+
+    [GraphQLName("addressLine1")] public string? AddressLine1 { get; set; }
+
+    [GraphQLName("addressLine2")] public string? AddressLine2 { get; set; }
+
+    [GraphQLName("suburb")] public string? Suburb { get; set; }
+
+    [GraphQLName("city")] public string? City { get; set; }
+
+    [GraphQLName("province")] public string? Province { get; set; }
+
+    [GraphQLName("zipcode")] public string? Zipcode { get; set; }
+
+    [GraphQLName("country")] public string? Country { get; set; }
+}
+
+[GraphQLName("Version")]
+public class Version
+{
+    [GraphQLName("major")] public int Major { get; set; }
+
+    [GraphQLName("minor")] public int Minor { get; set; }
+
+    [GraphQLName("build")] public int Build { get; set; }
+
+    [GraphQLName("revision")] public int Revision { get; set; }
+}

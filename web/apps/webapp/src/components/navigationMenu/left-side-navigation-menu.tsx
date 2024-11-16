@@ -1,3 +1,4 @@
+import type { leftSideNavigationMenu_query$key } from '@/queries/__generated__/leftSideNavigationMenu_query.graphql';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -9,12 +10,26 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { memo, useContext } from 'react';
+import { graphql, useFragment } from 'react-relay';
 
 type Props = {
+  rootDataRelay: leftSideNavigationMenu_query$key;
+  onReloadRequired: () => void;
   maxWidth: number;
 };
 
-const LeftSideNavigationMenu = ({ maxWidth }: Props) => {
+const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
+  const rootData = useFragment<leftSideNavigationMenu_query$key>(
+    graphql`
+      fragment leftSideNavigationMenu_query on Query {
+        organization(id: $organizationId) @include(if: $organizationExists) {
+          canModify
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
   const paletteMode = useContext(PaletteModeContext);
   const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
   const originalWidth = 779;

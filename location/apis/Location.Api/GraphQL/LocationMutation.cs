@@ -1,64 +1,65 @@
 using Api.Shared.Models;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Location;
-using Enterprise.Shared.Context;
+using HotChocolate;
+using HotChocolate.Types;
 using Location.Api.Mappers;
 using Location.Api.Services;
-using Mutation = Api.Shared.Services.GraphQL.UnityHub.V1.Location.Mutation;
 
 namespace Location.Api.GraphQL;
 
-public class LocationMutation(IMapper mapper) : Mutation
+public class LocationMutation
 {
-    public override async Task<LocationPayload?> AddLocationAsync(
+    [UseServiceScope]
+    public async Task<LocationPayload?> AddLocationAsync(
         AddLocationInput input,
-        IServiceProvider serviceProvider,
+        [Service] ILocationService locationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ILocationService>();
-        var location = await service.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        var location = await locationService.AddAsync(mapper.MapTo(input), false, cancellationToken);
         return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
     }
 
-    public override async Task<LocationPayload?> UpdateLocationAsync(UpdateLocationInput input,
-        IServiceProvider serviceProvider,
+    [UseServiceScope]
+    public async Task<LocationPayload?> UpdateLocationAsync(
+        UpdateLocationInput input,
+        [Service] ILocationService locationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ILocationService>();
-        var location = await service.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        var location = await locationService.UpdateAsync(mapper.MapTo(input), cancellationToken);
         return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
     }
 
-    public override async Task<LocationPayload?> DeleteLocationAsync(DeleteLocationInput input,
-        IServiceProvider serviceProvider,
+    [UseServiceScope]
+    public async Task<LocationPayload?> DeleteLocationAsync(
+        DeleteLocationInput input,
+        [Service] ILocationService locationService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ILocationService>();
-        var location = await service.DeleteAsync(input.Id, cancellationToken);
+        var location = await locationService.DeleteAsync(input.Id, cancellationToken);
         return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
     }
 
-    public override async Task<DeskPayload?> AddDeskAsync(
+    [UseServiceScope]
+    public async Task<DeskPayload?> AddDeskAsync(
         AddDeskInput input,
-        IServiceProvider serviceProvider,
+        [Service] IDeskService deskService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IDeskService>();
-        var desk = await service.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        var desk = await deskService.AddAsync(mapper.MapTo(input), false, cancellationToken);
         return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
     }
 
-    public override async Task<BulkDeskPayload?> BulkAddDeskAsync(
+    [UseServiceScope]
+    public async Task<BulkDeskPayload?> BulkAddDeskAsync(
         BulkAddDeskInput input,
-        IServiceProvider serviceProvider,
+        [Service] IDeskService deskService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IDeskService>();
-        var desks = await service.BulkAddAsync(
+        var desks = await deskService.BulkAddAsync(
             input.LocationId,
             input.NamePrefix,
             input.Count,
@@ -72,69 +73,70 @@ public class LocationMutation(IMapper mapper) : Mutation
         };
     }
 
-    public override async Task<DeskPayload?> UpdateDeskAsync(
+    [UseServiceScope]
+    public async Task<DeskPayload?> UpdateDeskAsync(
         UpdateDeskInput input,
-        IServiceProvider serviceProvider,
+        [Service] IDeskService deskService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IDeskService>();
-        var desk = await service.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        var desk = await deskService.UpdateAsync(mapper.MapTo(input), cancellationToken);
         return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
     }
 
-    public override async Task<DeskPayload?> DeleteDeskAsync(
+    [UseServiceScope]
+    public async Task<DeskPayload?> DeleteDeskAsync(
         DeleteDeskInput input,
-        IServiceProvider serviceProvider,
+        [Service] IDeskService deskService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<IDeskService>();
-        var desk = await service.DeleteAsync(input.Id, cancellationToken);
+        var desk = await deskService.DeleteAsync(input.Id, cancellationToken);
         return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
     }
 
-    public override async Task<LocationTagPayload?> AddLocationTagAsync(
+    [UseServiceScope]
+    public async Task<LocationTagPayload?> AddLocationTagAsync(
         AddLocationTagInput input,
-        IServiceProvider serviceProvider,
+        [Service] ITagService tagService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITagService>();
-        var tag = await service.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        var tag = await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken);
         return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
     }
 
-    public override async Task<LocationTagPayload?> UpdateLocationTagAsync(
+    [UseServiceScope]
+    public async Task<LocationTagPayload?> UpdateLocationTagAsync(
         UpdateLocationTagInput input,
-        IServiceProvider serviceProvider,
+        [Service] ITagService tagService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITagService>();
-        var tag = await service.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        var tag = await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken);
         return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
     }
 
-    public override async Task<LocationTagPayload?> DeleteLocationTagAsync(
+    [UseServiceScope]
+    public async Task<LocationTagPayload?> DeleteLocationTagAsync(
         DeleteLocationTagInput input,
-        IServiceProvider serviceProvider,
+        [Service] ITagService tagService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ITagService>();
-        var tag = await service.DeleteAsync(input.Id, cancellationToken);
+        var tag = await tagService.DeleteAsync(input.Id, cancellationToken);
         return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
     }
 
-    public override async Task<LocationMemberDetailsPayload?> ChangeLocationMemberOwnershipTypeAsync(
+    [UseServiceScope]
+    public async Task<LocationMemberDetailsPayload?> ChangeLocationMemberOwnershipTypeAsync(
         ChangeLocationMemberOwnershipTypeInput input,
-        IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        [Service] ILocationMemberService locationMemberService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ILocationMemberService>();
         var locationMember =
-            await service.ChangeMembershipTypeAsync(
+            await locationMemberService.ChangeMembershipTypeAsync(
                 input.Id,
                 input.MembershipType switch
                 {
@@ -150,43 +152,43 @@ public class LocationMutation(IMapper mapper) : Mutation
         };
     }
 
-    public override async Task<InviteCustomersToJoinLocationPayload?> InviteCustomersToJoinLocationAsync(
-        InviteCustomersToJoinLocationInput input, IServiceProvider serviceProvider,
+    [UseServiceScope]
+    public async Task<InviteCustomersToJoinLocationPayload?> InviteCustomersToJoinLocationAsync(
+        InviteCustomersToJoinLocationInput input,
+        [Service] ILocationInvitationService locationInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ILocationInvitationService>();
-        await service.InviteMembersByEmailsAsync(input.LocationId, input.Emails, cancellationToken);
+        await locationInvitationService.InviteMembersByEmailsAsync(input.LocationId, input.Emails, cancellationToken);
         return new InviteCustomersToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<AcceptInvitationToJoinLocationPayload?> AcceptInvitationToJoinLocationAsync(
-        AcceptInvitationToJoinLocationInput input, IServiceProvider serviceProvider,
+    [UseServiceScope]
+    public async Task<AcceptInvitationToJoinLocationPayload?> AcceptInvitationToJoinLocationAsync(
+        AcceptInvitationToJoinLocationInput input,
+        [Service] ILocationInvitationService locationInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ILocationInvitationService>();
-        await service.AcceptInvitationToJoinAsync(input.Id, cancellationToken);
+        await locationInvitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken);
         return new AcceptInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<RejectInvitationToJoinLocationPayload?> RejectInvitationToJoinLocationAsync(
-        RejectInvitationToJoinLocationInput input, IServiceProvider serviceProvider,
+    [UseServiceScope]
+    public async Task<RejectInvitationToJoinLocationPayload?> RejectInvitationToJoinLocationAsync(
+        RejectInvitationToJoinLocationInput input,
+        [Service] ILocationInvitationService locationInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ILocationInvitationService>();
-        await service.RejectInvitationToJoinAsync(input.Id, cancellationToken);
+        await locationInvitationService.RejectInvitationToJoinAsync(input.Id, cancellationToken);
         return new RejectInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 
-    public override async Task<CancelInvitationToJoinLocationPayload?> CancelInvitationToJoinLocationAsync(
-        CancelInvitationToJoinLocationInput input, IServiceProvider serviceProvider,
+    [UseServiceScope]
+    public async Task<CancelInvitationToJoinLocationPayload?> CancelInvitationToJoinLocationAsync(
+        CancelInvitationToJoinLocationInput input,
+        [Service] ILocationInvitationService locationInvitationService,
         CancellationToken cancellationToken)
     {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ILocationInvitationService>();
-        await service.CancelInvitationToJoinAsync(input.Id, cancellationToken);
+        await locationInvitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken);
         return new CancelInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 }

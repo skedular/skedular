@@ -45,7 +45,7 @@ public class OrganizationOutboxPublisher(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
                         organization.IsNotDeleted() ? Type.OrganizationUpserted : Type.OrganizationDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data { OrganizationAfterState = mapper.MapTo(organization) }
                 }, unitOfWork, cancellationToken)));
 
@@ -64,7 +64,7 @@ public class OrganizationOutboxPublisher(
                         joinInvitation.IsNotDeleted()
                             ? Type.InvitationToJoinOrganizationUpserted
                             : Type.InvitationToJoinOrganizationDeleted,
-                        context.PropertyBag.CorrelationId),
+                        context.GetCorrelationId()),
                     Data = new Data { InvitationToJoinOrganizationAfterState = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,

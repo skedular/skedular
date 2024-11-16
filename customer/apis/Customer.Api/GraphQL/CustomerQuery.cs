@@ -1,60 +1,52 @@
 using System.Reflection;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Customer;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Shared.Models;
-using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
-using CustomerOrderInput = Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderInput;
-using CustomerOrderField = Customer.Shared.Models.CustomerOrderField;
-using OrderDirection = Api.Shared.Services.GraphQL.UnityHub.V1.Customer.OrderDirection;
-using Version = Api.Shared.Services.GraphQL.UnityHub.V1.Customer.Version;
+using HotChocolate;
+using HotChocolate.Types;
 
 namespace Customer.Api.GraphQL;
 
-public class CustomerQuery(IMapper mapper) : Query
+public class CustomerQuery
 {
-    public override Task<Version> CustomerVersionAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
+    [UseServiceScope]
+    public Version CustomerVersion()
     {
         var assembly = Assembly.GetEntryAssembly();
         ArgumentNullException.ThrowIfNull(assembly);
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
+        return new Version
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        };
     }
 
-    public override async Task<CustomerDetails?> MeAsync(
-        IServiceProvider serviceProvider,
-        CancellationToken cancellationToken)
-    {
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
-        var customer = await service.GetMeAsync(true, cancellationToken);
-        return mapper.MapTo(customer);
-    }
+    [UseServiceScope]
+    public async Task<CustomerDetails?> MeAsync(
+        [Service] ICustomerService customerService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
-    public override async Task<CustomerConnection?> PaginatedCustomersByDefaultLocationAsync(
+    [UseServiceScope]
+    public async Task<CustomerConnection?> PaginatedCustomersByDefaultLocationAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         CustomerWhereInput where,
         CustomerOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerService customerService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
 
-        await using var scope = serviceProvider.CreateScopeAndSetContent();
-        var service = scope.ServiceProvider.GetRequiredService<ICustomerService>();
         var (paginatedInfo, edges, totalCount) =
-            await service.GetPaginatedCustomersAsync(
+            await customerService.GetPaginatedCustomersAsync(
                 new PaginationInputParam(after, first, before, last),
                 new CustomerSearchCriteria(where.NameContains, where.LocationId),
                 orderBy is null
@@ -66,22 +58,22 @@ public class CustomerQuery(IMapper mapper) : Query
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.designation =>
-                                CustomerOrderField.Designation,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.title =>
-                                CustomerOrderField.Title,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.name =>
-                                CustomerOrderField.Name,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.givenName =>
-                                CustomerOrderField.GivenName,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.middleName =>
-                                CustomerOrderField.MiddleName,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.familyName =>
-                                CustomerOrderField.FamilyName,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.timezone =>
-                                CustomerOrderField.Timezone,
-                            global::Api.Shared.Services.GraphQL.UnityHub.V1.Customer.CustomerOrderField.locale =>
-                                CustomerOrderField.Locale,
+                            CustomerOrderField.designation =>
+                                Shared.Models.CustomerOrderField.Designation,
+                            CustomerOrderField.title =>
+                                Shared.Models.CustomerOrderField.Title,
+                            CustomerOrderField.name =>
+                                Shared.Models.CustomerOrderField.Name,
+                            CustomerOrderField.givenName =>
+                                Shared.Models.CustomerOrderField.GivenName,
+                            CustomerOrderField.middleName =>
+                                Shared.Models.CustomerOrderField.MiddleName,
+                            CustomerOrderField.familyName =>
+                                Shared.Models.CustomerOrderField.FamilyName,
+                            CustomerOrderField.timezone =>
+                                Shared.Models.CustomerOrderField.Timezone,
+                            CustomerOrderField.locale =>
+                                Shared.Models.CustomerOrderField.Locale,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 
@@ -103,10 +95,12 @@ public class CustomerQuery(IMapper mapper) : Query
         };
     }
 
-    public override async Task<CustomerDetails[]?> CustomersByDefaultLocationAsync(
+    [UseServiceScope]
+    public async Task<CustomerDetails[]?> CustomersByDefaultLocationAsync(
         CustomerWhereInput where,
         CustomerOrderInput[]? orderBy,
-        IServiceProvider serviceProvider,
+        [Service] ICustomerService customerService,
+        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var result = await PaginatedCustomersByDefaultLocationAsync(
@@ -115,8 +109,9 @@ public class CustomerQuery(IMapper mapper) : Query
             null,
             null,
             where,
-            [],
-            serviceProvider,
+            orderBy,
+            customerService,
+            mapper,
             cancellationToken);
         return result?.Edges.Select(item => item.Node).ToArray();
     }

@@ -1,12 +1,11 @@
 using Api.Shared.Models;
-using Api.Shared.Services.GraphQL.UnityHub.V1.Organization;
 using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
+using Organization.Api.GraphQL;
 using Organization.Shared.Models;
-using AddOrganizationInput = Api.Shared.Services.GraphQL.UnityHub.V1.Organization.AddOrganizationInput;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using DailyMemberCountRecording = Organization.Shared.Models.DailyMemberCountRecording;
@@ -22,7 +21,6 @@ using OrganizationMemberAttendancePercentage = Organization.Shared.Models.Organi
 using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
 using Team = Organization.Shared.Models.Team;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
-using OrganizationEdge = Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationEdge;
 
 namespace Organization.Api.Mappers;
 
@@ -308,14 +306,13 @@ public class Mapper : IMapper
         new()
         {
             MemberAttendancePercentage = organizationMemberAttendancePercentages.Select(item =>
-                    new global::Api.Shared.Services.GraphQL.UnityHub.V1.Organization.
-                        OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = item.Percentage })
+                    new GraphQL.OrganizationMemberAttendancePercentage
+                    {
+                        Date = item.Date, Percentage = item.Percentage
+                    })
                 .ToArray(),
             DailyBookingsTotals = organizationDailyBookingsTotals.Select(item =>
-                    new global::Api.Shared.Services.GraphQL.UnityHub.V1.Organization.OrganizationDailyBookingsTotal
-                    {
-                        Date = item.Date, Total = item.Total
-                    })
+                    new GraphQL.OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Total })
                 .ToArray()
         };
 

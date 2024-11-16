@@ -6,11 +6,7 @@ public class ContextEnricherMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(HttpContext httpContext, IContext context)
     {
-        var correlationId = httpContext.Request.Headers["X-Correlation-Id"];
-        if (!string.IsNullOrWhiteSpace(correlationId))
-        {
-            context.PropertyBag.AddCorrelationId(correlationId!);
-        }
+        context.SetCorrelationId(httpContext.Request.Headers["X-Correlation-Id"]!);
 
         await next(httpContext);
     }

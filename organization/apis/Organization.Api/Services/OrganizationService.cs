@@ -244,8 +244,8 @@ public class OrganizationService(
 
     public async Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken)
     {
-        Guard.Against.NullOrEmpty(context.PropertyBag.AzureTenantId);
-        var azureTenantId = context.PropertyBag.AzureTenantId.ToString();
+        Guard.Against.NullOrEmpty(context.GetAzureTenantId());
+        var azureTenantId = context.GetAzureTenantId().ToString();
 
         var organization =
             await repositoryFactory.OrganizationRepository.GetByAzureTenantIdAsync(azureTenantId, cancellationToken);

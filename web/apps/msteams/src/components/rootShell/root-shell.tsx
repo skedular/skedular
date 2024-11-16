@@ -16,6 +16,7 @@ import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useParams } from 'react-router-dom';
 import type { rootShell_rootQuery } from './__generated__/rootShell_rootQuery.graphql';
 
 type Props = {
@@ -27,7 +28,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query rootShell_rootQuery {
+  query rootShell_rootQuery($organizationId: String!) {
     me {
       id
     }
@@ -41,6 +42,7 @@ const RootQuery = graphql`
     slackCustomerRecordSynced
     teamCustomerRecordSynced
     ...appBar_query
+    ...leftSideNavigationMenu_query
   }
 `;
 
@@ -119,11 +121,11 @@ const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrum
           variant="persistent"
           open={true}
         >
-          <LeftSideNavigationMenu />
+          <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
         </Drawer>
         <Grid container>
           <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, display: { xs: 'block', sm: 'none' } }}>
-            <LeftSideNavigationMenu />
+            <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
           </Grid>
           <Stack direction="column" sx={{ width: '100vw' }}>
             <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} breadcrumbs={appBarBreadcrumbs} />
@@ -143,19 +145,35 @@ type RelayProps = {
   appBarBreadcrumbs?: AppBarBreadcrumbs;
 };
 
-const RootShellWithRelay = ({ title, children, appBarBreadcrumbs }: RelayProps) => {
+const RootShellWithRelay = ({ children, title, appBarBreadcrumbs }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
+  const { organizationId } = useParams();
+  let finalOrganizationId = '';
+
+  if (typeof organizationId === 'string') {
+    finalOrganizationId = organizationId;
+  } else if (Array.isArray(organizationId)) {
+    if (typeof organizationId[0] === 'undefined') {
+      throw new Error('organizationId is required');
+    }
+
+    finalOrganizationId = organizationId[0];
+  } else {
+    throw new Error('organizationId is required');
+  }
 
   useEffect(() => {
     loadQuery(
-      {},
+      {
+        organizationId: finalOrganizationId,
+      },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

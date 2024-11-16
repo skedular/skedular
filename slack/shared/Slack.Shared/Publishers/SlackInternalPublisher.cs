@@ -48,7 +48,7 @@ public class SlackInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RefreshWorkspaceMembers,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 WorkspaceId = workspaceId
             };
 
@@ -67,7 +67,7 @@ public class SlackInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RefreshWorkspaceChannels,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 WorkspaceId = workspaceId
             };
 
@@ -86,7 +86,7 @@ public class SlackInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.SendWorkspaceLocationDailyUpdateMessage,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 LocationId = locationId
             };
 
@@ -105,7 +105,7 @@ public class SlackInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.SendWorkspaceTeamDailyUpdateMessage,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 TeamId = teamId
             };
 
@@ -124,7 +124,7 @@ public class SlackInternalPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.UpdateWorkspaceMemberProfileStatus,
-                    context.PropertyBag.CorrelationId),
+                    context.GetCorrelationId()),
                 WorkspaceMemberId = workspaceMemberId
             };
 

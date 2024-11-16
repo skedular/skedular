@@ -1,4 +1,4 @@
-using Api.Shared.Services.GraphQL.UnityHub.V1.Billing;
+using Billing.Api.GraphQL;
 using Billing.Shared.Models;
 using Enterprise.Shared;
 

@@ -14,9 +14,13 @@ public class CognitoTokenService : ICognitoTokenService
 {
     private readonly IReadOnlyCollection<string> _audiences;
     private readonly Cognito _cognitoConfiguration;
+    private readonly IContext _context;
     private readonly IMemoryCache _memoryCache;
 
-    public CognitoTokenService(ApplicationConfiguration applicationConfiguration, IMemoryCache memoryCache)
+    public CognitoTokenService(
+        ApplicationConfiguration applicationConfiguration,
+        IContext context,
+        IMemoryCache memoryCache)
     {
         ArgumentNullException.ThrowIfNull(applicationConfiguration.IdentityProviders.Cognito);
         _cognitoConfiguration = applicationConfiguration.IdentityProviders.Cognito;
@@ -26,10 +30,11 @@ public class CognitoTokenService : ICognitoTokenService
             : _cognitoConfiguration.Audiences.Split(",").Select(audience => audience.Trim())
                 .Where(audience => !string.IsNullOrWhiteSpace(audience)).ToList();
 
+        _context = context;
         _memoryCache = memoryCache;
     }
 
-    public async Task<PropertyBag?> VerifyTokenAsync(string token, CancellationToken cancellationToken)
+    public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
     {
         try
         {
@@ -46,7 +51,7 @@ public class CognitoTokenService : ICognitoTokenService
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
             if (issuer is not null && _cognitoConfiguration.Issuer != issuer)
             {
-                return null;
+                return;
             }
 
             await new JsonWebTokenHandler().ValidateTokenAsync(
@@ -62,61 +67,57 @@ public class CognitoTokenService : ICognitoTokenService
                     ValidateLifetime = true
                 });
 
-            var propertyBag = new PropertyBag();
             var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
             if (value is not null)
             {
-                propertyBag.AddVerifiableToken(value);
+                _context.SetVerifiableToken(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "name")?.Value;
             if (value is not null)
             {
-                propertyBag.AddName(value);
+                _context.SetName(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "given_name")?.Value;
             if (value is not null)
             {
-                propertyBag.AddGivenName(value);
+                _context.SetGivenName(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "family_name")?.Value;
             if (value is not null)
             {
-                propertyBag.AddFamilyName(value);
+                _context.SetFamilyName(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "picture")?.Value;
             if (value is not null)
             {
-                propertyBag
-                    .AddPhotoUrl(value)
-                    .AddPhotoUrl24(value)
-                    .AddPhotoUrl32(value)
-                    .AddPhotoUrl48(value)
-                    .AddPhotoUrl72(value)
-                    .AddPhotoUrl192(value)
-                    .AddPhotoUrl512(value);
+                _context.SetPhotoUrl(value);
+                _context.SetPhotoUrl24(value);
+                _context.SetPhotoUrl32(value);
+                _context.SetPhotoUrl48(value);
+                _context.SetPhotoUrl72(value);
+                _context.SetPhotoUrl192(value);
+                _context.SetPhotoUrl512(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
             if (value is not null)
             {
-                propertyBag.AddEmail(value);
+                _context.SetEmail(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email_verified")?.Value;
             if (value is not null)
             {
-                propertyBag.AddEmailVerified(bool.Parse(value));
+                _context.SetEmailVerified(bool.Parse(value));
             }
-
-            return propertyBag;
         }
-        catch (Exception)
+        catch
         {
-            return null;
+            // ignored
         }
     }
 }

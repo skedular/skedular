@@ -11,14 +11,8 @@ public class SecurityContextEnricherMiddleware(RequestDelegate next, IEnumerable
         if (splitToken is ["Bearer", _])
         {
             var token = splitToken[1];
-            var propertyBag = (await Task.WhenAll(tokenServices.Select(tokenService =>
-                    tokenService.VerifyTokenAsync(token, httpContext?.RequestAborted ?? CancellationToken.None))))
-                .FirstOrDefault(item => item is not null);
-            // TODO: 20240601 - Morteza: Always copy to property bag, never change the existing instance  
-            if (propertyBag is not null)
-            {
-                context.PropertyBag = propertyBag;
-            }
+            await Task.WhenAll(tokenServices.Select(tokenService =>
+                tokenService.VerifyTokenAsync(token, httpContext?.RequestAborted ?? CancellationToken.None)));
         }
 
         await next(httpContext);
