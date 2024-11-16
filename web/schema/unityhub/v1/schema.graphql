@@ -35,9 +35,6 @@ type Query {
   locationAnalytics(locationId: String!, from: DateTime!, until: DateTime!): LocationAnalytics
   msTeamsVersion: Version!
   msTeamsCustomerRecordSynced: Boolean!
-  notificationVersion: Version!
-  notificationCustomerRecordSynced: Boolean!
-  myNotifications(after: String, first: Int, before: String, last: Int, orderBy: [NotificationOrderInput!]): NotificationConnection
   organizationVersion: Version!
   organizationCustomerRecordSynced: Boolean!
   activeOrganizationTermsOfUse: OrganizationTermsOfUse!
@@ -52,6 +49,9 @@ type Query {
   isAzureTenantInstalled: Boolean!
   azureTenantAdminConsentUrl: String!
   azureTenantOrganization: OrganizationDetails
+  notificationVersion: Version!
+  notificationCustomerRecordSynced: Boolean!
+  myNotifications(after: String, first: Int, before: String, last: Int, orderBy: [NotificationOrderInput!]): NotificationConnection
   paymentVersion: Version!
   paymentCustomerRecordSynced: Boolean!
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!]
@@ -181,8 +181,7 @@ type BookingDeskDetails {
   requireBookingApproval: Boolean!
   locationTags: [BookingLocationTagDetails!]!
 }
-type BookingDetails implements Node {
-  id: ID!
+type BookingDetails {
   from: DateTime!
   to: DateTime!
   notes: String
@@ -191,6 +190,7 @@ type BookingDetails implements Node {
   location: BookingLocationDetails
   desks: [BookingDeskDetails!]!
   team: BookingTeamDetails
+  id: ID!
 }
 type BookingEdge {
   node: BookingDetails!
@@ -256,8 +256,7 @@ type CustomerDeskDetails {
   uniqueId: ID!
   name: String
 }
-type CustomerDetails implements Node {
-  id: ID!
+type CustomerDetails {
   createdAt: DateTime!
   email: CustomerEmail
   designation: String
@@ -287,15 +286,16 @@ type CustomerDetails implements Node {
   defaultOrganization: CustomerOrganizationDetails
   preferredZones: [CustomerLocationTagDetails!]!
   preferredDesks: [CustomerDeskDetails!]!
+  id: ID!
 }
 type CustomerEdge {
   node: CustomerDetails!
   cursor: String!
 }
-type CustomerEmail implements Node {
-  id: ID!
+type CustomerEmail {
   email: String!
   verified: Boolean!
+  id: ID!
 }
 type CustomerLocationDetails {
   uniqueId: ID!
@@ -339,12 +339,12 @@ type DeskConnection {
   edges: [DeskEdge!]!
   totalCount: Int
 }
-type DeskDetails implements Node {
-  id: ID!
+type DeskDetails {
   name: String!
   deactivated: Boolean!
   requireBookingApproval: Boolean!
   locationTags: [LocationTagDetails!]!
+  id: ID!
 }
 type DeskEdge {
   node: DeskDetails!
@@ -388,8 +388,7 @@ type LocationDesksOccupancyPercentage {
   date: DateTime!
   percentage: Float!
 }
-type LocationDetails implements Node {
-  id: ID!
+type LocationDetails {
   name: String!
   about: String
   organization: LocationOrganizationDetails
@@ -400,6 +399,7 @@ type LocationDetails implements Node {
   canDelete: Boolean!
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
+  id: ID!
 }
 type LocationEdge {
   node: LocationDetails!
@@ -410,10 +410,10 @@ type LocationMemberConnection {
   edges: [LocationMemberEdge!]!
   totalCount: Int
 }
-type LocationMemberDetails implements Node {
-  id: ID!
+type LocationMemberDetails {
   membershipType: LocationMemberMembershipType
   customer: LocationCustomerDetails!
+  id: ID!
 }
 type LocationMemberDetailsPayload {
   clientMutationId: String
@@ -437,11 +437,11 @@ type LocationTagConnection {
   edges: [LocationTagEdge!]!
   totalCount: Int
 }
-type LocationTagDetails implements Node {
-  id: ID!
+type LocationTagDetails {
   name: String!
   description: String
   tagType: String!
+  id: ID!
 }
 type LocationTagEdge {
   node: LocationTagDetails!
@@ -453,54 +453,6 @@ type LocationTagPayload {
 }
 type RejectInvitationToJoinLocationPayload {
   clientMutationId: String
-}
-type Notification implements Node {
-  id: ID!
-  sourceId: ID!
-  eventRaisedAt: DateTime!
-  notificationType: NotificationNotificationType!
-  invitedBy: NotificationCustomerDetails
-  invitee: NotificationCustomerDetails
-  organization: NotificationOrganizationDetails
-  location: NotificationLocationDetails
-  team: NotificationTeamDetails
-}
-type NotificationConnection {
-  pageInfo: PageInfo!
-  edges: [NotificationEdge!]!
-  totalCount: Int
-}
-type NotificationCustomerDetails {
-  uniqueId: ID!
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  emails: [String!]!
-}
-type NotificationEdge {
-  node: Notification!
-  cursor: String!
-}
-type NotificationLocationDetails {
-  uniqueId: ID!
-  name: String!
-}
-type NotificationOrganizationDetails {
-  uniqueId: ID!
-  name: String!
-  logoUrl: String
-}
-type NotificationTeamDetails {
-  uniqueId: ID!
-  name: String!
 }
 type AcceptInvitationToJoinOrganizationPayload {
   clientMutationId: String
@@ -548,8 +500,7 @@ type OrganizationDailyBookingsTotal {
   date: DateTime!
   total: Int!
 }
-type OrganizationDetails implements Node {
-  id: ID!
+type OrganizationDetails {
   name: String!
   about: String
   website: String
@@ -567,6 +518,7 @@ type OrganizationDetails implements Node {
   canDelete: Boolean!
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
+  id: ID!
 }
 type OrganizationEdge {
   node: OrganizationDetails!
@@ -576,15 +528,15 @@ type OrganizationFeatureSetDetails {
   name: String!
   description: String!
 }
-type OrganizationIndustryMainCategoryReferenceDetails implements Node {
-  id: ID!
+type OrganizationIndustryMainCategoryReferenceDetails {
   name: String!
   subCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
-}
-type OrganizationIndustrySubCategoryReferenceDetails implements Node {
   id: ID!
+}
+type OrganizationIndustrySubCategoryReferenceDetails {
   name: String!
   mainCategoryName: String!
+  id: ID!
 }
 type OrganizationMemberAttendancePercentage {
   date: DateTime!
@@ -595,10 +547,10 @@ type OrganizationMemberConnection {
   edges: [OrganizationMemberEdge!]!
   totalCount: Int
 }
-type OrganizationMemberDetails implements Node {
-  id: ID!
+type OrganizationMemberDetails {
   membershipType: OrganizationMemberMembershipType
   customer: OrganizationCustomerDetails!
+  id: ID!
 }
 type OrganizationMemberDetailsPayload {
   clientMutationId: String
@@ -608,8 +560,7 @@ type OrganizationMemberEdge {
   node: OrganizationMemberDetails!
   cursor: String!
 }
-type OrganizationOfferingDetails implements Node {
-  id: ID!
+type OrganizationOfferingDetails {
   code: String!
   name: String!
   start: DateTime!
@@ -617,14 +568,15 @@ type OrganizationOfferingDetails implements Node {
   unitPrice: Int!
   featureSet: [OrganizationFeatureSetDetails!]!
   free: Boolean!
+  id: ID!
 }
 type OrganizationPayload {
   clientMutationId: String
   organization: OrganizationDetails!
 }
-type OrganizationTermsOfUse implements Node {
-  id: ID!
+type OrganizationTermsOfUse {
   terms: String!
+  id: ID!
 }
 type RejectInvitationToJoinOrganizationPayload {
   clientMutationId: String
@@ -632,13 +584,60 @@ type RejectInvitationToJoinOrganizationPayload {
 type UpdateOrganizationOfferingPayload {
   clientMutationId: String
 }
+type Notification {
+  sourceId: ID!
+  eventRaisedAt: DateTime!
+  notificationType: NotificationNotificationType!
+  invitedBy: NotificationCustomerDetails
+  invitee: NotificationCustomerDetails
+  organization: NotificationOrganizationDetails
+  location: NotificationLocationDetails
+  team: NotificationTeamDetails
+  id: ID!
+}
+type NotificationConnection {
+  pageInfo: PageInfo!
+  edges: [NotificationEdge!]!
+  totalCount: Int
+}
+type NotificationCustomerDetails {
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+  emails: [String!]!
+}
+type NotificationEdge {
+  node: Notification!
+  cursor: String!
+}
+type NotificationLocationDetails {
+  uniqueId: ID!
+  name: String!
+}
+type NotificationOrganizationDetails {
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
+}
+type NotificationTeamDetails {
+  uniqueId: ID!
+  name: String!
+}
 type AddOrganizationPaymentMethodIntentResponse {
   clientMutationId: String
   publishedKeys: String!
   clientSecret: String!
 }
-type OrganizationPaymentMethod implements Node {
-  id: ID!
+type OrganizationPaymentMethod {
   cardBrand: String
   cardCountry: String
   cardDescription: String
@@ -648,6 +647,7 @@ type OrganizationPaymentMethod implements Node {
   cardFunding: String
   cardIssuer: String
   cardLastFourDigit: String
+  id: ID!
 }
 type RemoveOrganizationPaymentMethodResponse {
   clientMutationId: String
@@ -683,8 +683,7 @@ type TeamCustomerDetails {
   photoUrl192: String
   photoUrl512: String
 }
-type TeamDetails implements Node {
-  id: ID!
+type TeamDetails {
   name: String!
   about: String
   members: [TeamMemberDetails!]!
@@ -694,6 +693,7 @@ type TeamDetails implements Node {
   canModify: Boolean!
   canDelete: Boolean!
   canInvitePeople: Boolean!
+  id: ID!
 }
 type TeamEdge {
   node: TeamDetails!
@@ -704,11 +704,11 @@ type TeamMemberConnection {
   edges: [TeamMemberEdge!]!
   totalCount: Int
 }
-type TeamMemberDetails implements Node {
-  id: ID!
+type TeamMemberDetails {
   membershipType: TeamMemberMembershipType
   customer: TeamCustomerDetails!
   organizationMember: TeamOrganizationMemberDetails
+  id: ID!
 }
 type TeamMemberDetailsPayload {
   clientMutationId: String
@@ -730,14 +730,6 @@ type TeamOrganizationMemberDetails {
 type TeamPayload {
   clientMutationId: String
   team: TeamDetails!
-}
-interface Node {
-  id: ID!
-}
-enum BookingDeskBookingDetailBookingStatus {
-  AWAIT_ACCEPTANCE
-  ACCEPTED
-  DECLINED
 }
 enum BookingOrderField {
   from
@@ -770,18 +762,8 @@ enum FeedbackChannel {
   Slack
   MsTeams
 }
-enum DeskBookingDetailBookingStatus {
-  AWAIT_ACCEPTANCE
-  ACCEPTED
-  DECLINED
-}
 enum DeskOrderField {
   name
-}
-enum LocationJoinInvitationStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
 }
 enum LocationMemberMembershipType {
   OWNER
@@ -803,20 +785,6 @@ enum LocationTagOrderField {
   description
   tagType
 }
-enum NotificationNotificationType {
-  INVITATION_TO_JOIN_ORGANIZATION
-  INVITATION_TO_JOIN_LOCATION
-  INVITATION_TO_JOIN_TEAM
-}
-enum NotificationOrderField {
-  eventRaisedAt
-  notificationType
-}
-enum OrganizationJoinInvitationStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
-}
 enum OrganizationMemberMembershipType {
   OWNER
   ADMINISTRATOR
@@ -832,20 +800,14 @@ enum OrganizationMemberOrderField {
 enum OrganizationOrderField {
   name
 }
-enum PaymentOrganizationStripePaymentMethodStatus {
-  PENDING
-  CANCELLED
-  CONFIRMED
+enum NotificationNotificationType {
+  INVITATION_TO_JOIN_ORGANIZATION
+  INVITATION_TO_JOIN_LOCATION
+  INVITATION_TO_JOIN_TEAM
 }
-enum SlackDeskBookingDetailBookingStatus {
-  AWAIT_ACCEPTANCE
-  ACCEPTED
-  DECLINED
-}
-enum TeamJoinInvitationStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
+enum NotificationOrderField {
+  eventRaisedAt
+  notificationType
 }
 enum TeamMemberMembershipType {
   OWNER
@@ -1131,10 +1093,6 @@ input UpdateLocationTagInput {
   description: String
   tagType: String!
 }
-input NotificationOrderInput {
-  direction: OrderDirection!
-  field: NotificationOrderField!
-}
 input AcceptInvitationToJoinOrganizationInput {
   clientMutationId: String
   id: String!
@@ -1202,6 +1160,10 @@ input UpdateOrganizationOfferingInput {
   clientMutationId: String
   id: String!
   offeringCode: String!
+}
+input NotificationOrderInput {
+  direction: OrderDirection!
+  field: NotificationOrderField!
 }
 input AddOrganizationPaymentMethodIntentInput {
   clientMutationId: String

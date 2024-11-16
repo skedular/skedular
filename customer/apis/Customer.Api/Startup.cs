@@ -27,6 +27,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddDatabaseHealthCheck();
 
         services.AddKafka();
+        services.AddRedis(Configuration);
 
         services.AddGraphql<CustomerDbContext>(Configuration, builder => builder.AddTypes());
 

@@ -22,6 +22,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddDatabaseHealthCheck();
 
         services.AddKafka();
+        services.AddRedis(Configuration);
 
         services.AddGraphql<BookingDbContext>(Configuration, builder => builder.AddTypes());
 

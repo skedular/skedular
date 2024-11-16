@@ -126,7 +126,6 @@ public class Program : WebHostServiceBase<Program>
         );
 
         await Task.WhenAll(
-            Gateway.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Billing.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Billing.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Billing.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
@@ -156,7 +155,8 @@ public class Program : WebHostServiceBase<Program>
             Slack.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Team.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Team.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
-            Team.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken)
+            Team.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
+            Gateway.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken)
         );
     }
 }

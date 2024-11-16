@@ -65,7 +65,7 @@ public abstract class StartupCustom(IConfiguration configuration, IWebHostEnviro
         services.AddSingleton<IGraphServiceClientFactory, GraphServiceClientFactory>();
 
         services.TryAddSingleton(TimeProvider.System);
-        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddHttpContextAccessor();
 
         services
             .AddRedis(Configuration)
