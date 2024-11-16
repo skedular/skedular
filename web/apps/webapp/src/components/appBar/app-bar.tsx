@@ -20,7 +20,7 @@ import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
 
@@ -98,21 +98,6 @@ const AppBar = ({ rootDataRelay }: Props) => {
   }
 
   useInterval(() => setCurrentTime(localNow()), 1000);
-
-  useEffect(() => {
-    if (!rootData.myOrganizations) {
-      return;
-    }
-
-    if (finalOrganizationId) {
-      const matchedOrgnization = rootData.myOrganizations.find((organization) => organization.id === finalOrganizationId);
-      if (matchedOrgnization) {
-        setSelectedOrganizationId(matchedOrgnization.id);
-
-        return;
-      }
-    }
-  }, [finalOrganizationId, rootData.me, rootData.myOrganizations]);
 
   const handleSelectedOrganizationChange = (event: SelectChangeEvent) => {
     const id = event.target.value as string;
