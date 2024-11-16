@@ -6,9 +6,27 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { memo } from 'react';
+import { graphql, useFragment } from 'react-relay';
 import { useParams } from 'react-router-dom';
+import type { leftSideNavigationMenu_query$key } from './__generated__/leftSideNavigationMenu_query.graphql';
 
-const LeftSideNavigationMenu = () => {
+type Props = {
+  rootDataRelay: leftSideNavigationMenu_query$key;
+  onReloadRequired: () => void;
+};
+
+const LeftSideNavigationMenu = ({ rootDataRelay }: Props) => {
+  const rootData = useFragment<leftSideNavigationMenu_query$key>(
+    graphql`
+      fragment leftSideNavigationMenu_query on Query {
+        organization(id: $organizationId) {
+          canModify
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
