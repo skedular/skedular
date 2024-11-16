@@ -158,57 +158,57 @@ resource "vercel_project" "default" {
     },
     {
       key    = "GATEWAY_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/gateway/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/gateway/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "CUSTOMER_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/customer/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/customer/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "ORGANIZATION_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/organization/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/organization/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "BOOKING_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/booking/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/booking/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "NOTIFICATION_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/notification/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/notification/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "TEAM_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/team/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/team/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "LOCATION_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/location/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/location/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "SLACK_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/slack/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/slack/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "PAYMENT_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/payment/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/payment/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "BILLING_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/billing/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/billing/api/"
       target = ["development", "preview", "production"]
     },
     {
       key    = "MSTEAMS_ENDPOINT"
-      value  = "https://${module.shared_common.api_domain_name_1}/msteams/api/"
+      value  = "https://${module.shared_common.api_domain_name_2}/msteams/api/"
       target = ["development", "preview", "production"]
     }
   ]
