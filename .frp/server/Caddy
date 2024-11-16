@@ -8,24 +8,6 @@
 # this machine's public IP, then replace ":80" below with your
 # domain name.
 
-:80 {
-	# Set this path to your site's directory.
-	root * /usr/share/caddy
-
-	# Enable the static file server.
-	file_server
-
-	# Another common task is to set up a reverse proxy:
-	# reverse_proxy localhost:8080
-
-	# Or serve a PHP site through php-fpm:
-	# php_fastcgi localhost:9000
-}
-
-# Refer to the Caddy docs for more information:
-# https://caddyserver.com/docs/caddyfile
-
-
 staging.unityhub.io {
 	reverse_proxy localhost:8080
 }
@@ -49,10 +31,6 @@ api.unityhub.io {
 slackapi.unityhub.io {
 	reverse_proxy localhost:10700
 }
-
-
-
-
 
 mapp.skedular.app {
 	reverse_proxy localhost:7000
@@ -78,8 +56,6 @@ ymsteams.skedular.app {
 	reverse_proxy localhost:7000
 }
 
-
-
 staging.getskedular.com {
 	reverse_proxy localhost:8080
 }
@@ -87,10 +63,6 @@ staging.getskedular.com {
 getskedular.com {
 	reverse_proxy localhost:8081
 }
-
-
-
-
 
 apistaging.skedular.app {
 	reverse_proxy localhost:49000
@@ -136,13 +108,6 @@ msteamsapistaging.skedular.app {
 	reverse_proxy localhost:40900
 }
 
-
-
-
-
-
-
-
 api.skedular.app {
 	reverse_proxy localhost:9000
 }
@@ -186,3 +151,4 @@ billingapi.skedular.app {
 msteamsapi.skedular.app {
 	reverse_proxy localhost:10900
 }
+

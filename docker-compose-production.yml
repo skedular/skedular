@@ -102,17 +102,17 @@ services:
       staging-infra-provision:
         condition: service_completed_successfully
     ports:
-      - 49000:49000
-      - 40000:40000
-      - 40100:40100
-      - 40200:40200
-      - 40300:40300
-      - 40400:40400
-      - 40500:40500
-      - 40600:40600
-      - 40700:40700
-      - 40800:40800
-      - 40900:40900
+      - 49000:9000
+      - 40000:10000
+      - 40100:10100
+      - 40200:10200
+      - 40300:10300
+      - 40400:10400
+      - 40500:10500
+      - 40600:10600
+      - 40700:10700
+      - 40800:10800
+      - 40900:10900
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: staging
