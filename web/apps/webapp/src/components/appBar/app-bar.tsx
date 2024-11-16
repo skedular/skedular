@@ -12,10 +12,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
-import { AddIcon, FeedbackIcon, LogoutIcon, SettingsIcon } from '@repo/shared/components/icons';
+import { AddIcon, FeedbackIcon, LogoutIcon, NotificationsIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import { signOut } from 'next-auth/react';
@@ -218,23 +217,10 @@ const AppBar = ({ rootDataRelay }: Props) => {
             {`${toLongDateTime(currentTime)}`}
           </Typography>
           <Divider orientation="vertical" flexItem />
-          <Tooltip title="Send us feedback">
-            <IconButton sx={{ ml: 1 }} onClick={() => setSubmitFeedbackDialogOpen(true)}>
-              <FeedbackIcon />
-            </IconButton>
-          </Tooltip>
 
-          {paletteMode === 'dark' && (
-            <IconButton sx={{ ml: 1 }} onClick={() => updatePaletteMode('light')}>
-              <LightModeIcon />
-            </IconButton>
-          )}
-
-          {paletteMode === 'light' && (
-            <IconButton sx={{ ml: 1 }} onClick={() => updatePaletteMode('dark')}>
-              <DarkModeIcon />
-            </IconButton>
-          )}
+          <IconButton sx={{ ml: 1 }}>
+            <NotificationsIcon />
+          </IconButton>
 
           <IconButton onClick={handleProfileMenuOpenClick}>
             <CustomerAvatar
@@ -268,8 +254,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
             <MenuItem>
               <Stack direction="column">
                 <Stack direction="column">
-                  <Typography variant="body1">Signed in as</Typography>
-                  <Typography variant="body1">{customerName}</Typography>
+                  <Typography variant="h6">{customerName}</Typography>
                   {rootData.me?.email && <Typography variant="body1">{rootData.me?.email.email}</Typography>}
                 </Stack>
               </Stack>
@@ -280,17 +265,44 @@ const AppBar = ({ rootDataRelay }: Props) => {
             <MenuItem>
               <Link component={NextLink} href="/settings" color="inherit">
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <SettingsIcon fontSize="small" />
+                  <SettingsIcon fontSize="medium" />
                   <Typography textAlign="center">Settings</Typography>
                 </Stack>
               </Link>
+            </MenuItem>
+
+            {paletteMode === 'dark' && (
+              <MenuItem onClick={() => updatePaletteMode('light')}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <LightModeIcon fontSize="medium" />
+                  <Typography textAlign="center">Dark Mode</Typography>
+                </Stack>
+              </MenuItem>
+            )}
+
+            {paletteMode === 'light' && (
+              <MenuItem onClick={() => updatePaletteMode('dark')}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <DarkModeIcon fontSize="medium" />
+                  <Typography textAlign="center">Light Mode</Typography>
+                </Stack>
+              </MenuItem>
+            )}
+
+            <Divider />
+
+            <MenuItem onClick={() => setSubmitFeedbackDialogOpen(true)}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <FeedbackIcon fontSize="medium" />
+                <Typography textAlign="center">Send us feedback</Typography>
+              </Stack>
             </MenuItem>
 
             <Divider />
 
             <MenuItem onClick={handleSignOutClick}>
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <LogoutIcon fontSize="small" />
+                <LogoutIcon fontSize="medium" />
                 <Typography textAlign="center">Sign out</Typography>
               </Stack>
             </MenuItem>
