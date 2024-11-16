@@ -1,5 +1,5 @@
 import { NewFeedbackDialog } from '@/components/feedback';
-import { getOrganizationBaseLink } from '@/components/organization/organization-link';
+import { getOrganizationAddLink, getOrganizationBaseLink } from '@/components/organization/organization-link';
 import { SelectedOrganizationContext, UpdateSelectedOrganizationContext } from '@/libs/providers';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -15,7 +15,7 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
-import { FeedbackIcon, LogoutIcon, SettingsIcon } from '@repo/shared/components/icons';
+import { AddIcon, FeedbackIcon, LogoutIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import { signOut } from 'next-auth/react';
@@ -42,6 +42,8 @@ export type AppBarBreadcrumbs = {
   lastItemLabel?: string;
   lastItemIcon?: React.ReactNode;
 };
+
+const createOrganizationId = '76eZvntIX6YA5FboBJlRk';
 
 const AppBar = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<appBar_query$key>(
@@ -118,10 +120,13 @@ const AppBar = ({ rootDataRelay }: Props) => {
   const handleSelectedOrganizationChange = (event: SelectChangeEvent) => {
     const id = event.target.value as string;
 
-    setSelectedOrganizationId(id);
-    updateSelectedOrganization(id);
-
-    router.push(getOrganizationBaseLink(id));
+    if (id === createOrganizationId) {
+      router.push(getOrganizationAddLink());
+    } else {
+      setSelectedOrganizationId(id);
+      updateSelectedOrganization(id);
+      router.push(getOrganizationBaseLink(id));
+    }
   };
 
   const handleProfileMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -189,6 +194,17 @@ const AppBar = ({ rootDataRelay }: Props) => {
                       </Stack>
                     </MenuItem>
                   ))}
+
+                  <Divider />
+
+                  <MenuItem value={createOrganizationId}>
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                      <AddIcon fontSize="large" />
+                      <Stack direction="column">
+                        <Typography variant="h6">Create Organization</Typography>
+                      </Stack>
+                    </Stack>
+                  </MenuItem>
                 </Select>
               </FormControl>
             )}
