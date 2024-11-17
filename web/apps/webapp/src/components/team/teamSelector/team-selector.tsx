@@ -56,6 +56,10 @@ const TeamSelector = ({ rootDataRelay, onTeamChanged }: Props) => {
         '& .MuiOutlinedInput-notchedOutline': {
           borderRadius: 4,
         },
+        width: {
+          xs: '100%',
+          sm: 'min(100%, 300px)',
+        },
       }}
       size="small"
       renderValue={(selectedId) => {

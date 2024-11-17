@@ -107,6 +107,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
     } else {
       setSelectedOrganizationId(id);
       updateSelectedOrganization(id);
+
       router.push(getOrganizationBaseLink(id));
     }
   };

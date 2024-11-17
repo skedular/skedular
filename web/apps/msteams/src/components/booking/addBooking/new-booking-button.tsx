@@ -1,4 +1,6 @@
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
 import { NewIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -72,17 +74,13 @@ const NewBookingButton = ({
   };
 
   return (
-    <>
-      <Button
-        variant="contained"
-        startIcon={<NewIcon />}
-        size="small"
-        sx={{ alignSelf: 'flex-start' }}
-        onClick={handleAddBookingClick}
-        fullWidth={fullWidth}
-      >
-        Make a booking
+    <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+      <Button variant="text" size="large" onClick={handleAddBookingClick} fullWidth={fullWidth}>
+        Add Booking
       </Button>
+      <IconButton color="inherit" onClick={handleAddBookingClick}>
+        <NewIcon fontSize="large" />
+      </IconButton>
       <NewBookingDialog
         rootDataRelay={rootData}
         connectionIds={connectionIds ?? []}
@@ -96,7 +94,7 @@ const NewBookingButton = ({
         hideLocationControl={hideLocationControl}
         defaultDate={defaultDate}
       />
-    </>
+    </Stack>
   );
 };
 
