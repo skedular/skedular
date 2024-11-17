@@ -5,7 +5,7 @@ import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
 
 const NotificationsPage = () => {
-    const breadcrumps: AppBarBreadcrumbs = {
+  const breadcrumps: AppBarBreadcrumbs = {
     items: [
       {
         icon: <HomeIcon />,
