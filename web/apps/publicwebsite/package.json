@@ -4,9 +4,9 @@
   "description": "UnityHub Public Website",
   "private": true,
   "scripts": {
-    "dev": "PORT=15001 next dev --turbopack",
+    "dev": "cross-env PORT=15001 next dev --turbopack",
     "build": "next build",
-    "start": "PORT=15001 next start",
+    "start": "cross-env PORT=15001 next start",
     "lint": "next lint",
     "lint-fix": "next lint --fix",
     "format": "prettier --write --single-quote true --trailing-comma all --print-width 150 ./src && pnpm lint-fix"
@@ -71,6 +71,7 @@
     "@types/react-relay": "^16.0.6",
     "@types/relay-runtime": "^18.1.1",
     "@types/uuid": "^10.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "8.57.0",
     "eslint-config-next": "^15.0.3",
     "graphql": "^16.9.0",
