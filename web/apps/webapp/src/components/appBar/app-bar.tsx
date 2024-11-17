@@ -76,13 +76,6 @@ const AppBar = ({ rootDataRelay }: Props) => {
   const [currentTime, setCurrentTime] = useState(localNow());
   const selectedOrganization = useContext(SelectedOrganizationContext);
   const updateSelectedOrganization = useContext(UpdateSelectedOrganizationContext);
-  const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(() => {
-    if (selectedOrganization && rootData.myOrganizations && rootData.myOrganizations.some((item) => item.id === selectedOrganization)) {
-      return selectedOrganization;
-    }
-
-    return rootData.myOrganizations && rootData.myOrganizations.length > 0 ? rootData.myOrganizations[0]?.id : undefined;
-  });
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
@@ -96,6 +89,18 @@ const AppBar = ({ rootDataRelay }: Props) => {
       finalOrganizationId = organizationId[0];
     }
   }
+
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(() => {
+    if (finalOrganizationId && rootData.myOrganizations && rootData.myOrganizations.some((item) => item.id === finalOrganizationId)) {
+      return finalOrganizationId;
+    }
+
+    if (selectedOrganization && rootData.myOrganizations && rootData.myOrganizations.some((item) => item.id === selectedOrganization)) {
+      return selectedOrganization;
+    }
+
+    return rootData.myOrganizations && rootData.myOrganizations.length > 0 ? rootData.myOrganizations[0]?.id : undefined;
+  });
 
   useInterval(() => setCurrentTime(localNow()), 1000);
 
