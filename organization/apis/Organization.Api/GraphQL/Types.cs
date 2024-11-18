@@ -468,3 +468,17 @@ public class Version
 
     [GraphQLName("revision")] public int Revision { get; set; }
 }
+
+[GraphQLName("CompleteOrganizationMemberOnboardingInput")]
+public class CompleteOrganizationMemberOnboardingInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+}
+
+[GraphQLName("OrganizationMemberPayload")]
+public class OrganizationMemberPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+}

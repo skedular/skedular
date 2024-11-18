@@ -138,4 +138,17 @@ public class OrganizationMutation
         await organizationInvitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken);
         return new CancelInvitationToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
+
+    [UseServiceScope]
+    public async Task<OrganizationMemberPayload?> CompleteOrganizationMemberOnboardingAsync(
+        CompleteOrganizationMemberOnboardingInput input,
+        [Service] IOrganizationMemberService organizationMemberService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
+    {
+        await organizationMemberService.CompleteOrganizationMemberOnboardingAsync(
+            input.OrganizationId,
+            cancellationToken);
+        return new OrganizationMemberPayload { ClientMutationId = input.ClientMutationId };
+    }
 }

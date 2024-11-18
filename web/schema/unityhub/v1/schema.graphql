@@ -115,6 +115,7 @@ type Mutation {
   acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): AcceptInvitationToJoinOrganizationPayload
   rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): RejectInvitationToJoinOrganizationPayload
   cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): CancelInvitationToJoinOrganizationPayload
+  completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodResponse
   addTeam(input: AddTeamInput!): TeamPayload
@@ -560,6 +561,10 @@ type OrganizationMemberDetailsPayload {
 type OrganizationMemberEdge {
   node: OrganizationMemberDetails!
   cursor: String!
+}
+type OrganizationMemberPayload {
+  clientMutationId: String
+  organizationMember: OrganizationMemberDetails!
 }
 type OrganizationOfferingDetails {
   code: String!
@@ -1120,6 +1125,10 @@ input ChangeOrganizationMemberOwnershipTypeInput {
   clientMutationId: String
   id: String!
   membershipType: OrganizationMemberMembershipType!
+}
+input CompleteOrganizationMemberOnboardingInput {
+  clientMutationId: String
+  organizationId: String!
 }
 input DeleteOrganizationInput {
   clientMutationId: String

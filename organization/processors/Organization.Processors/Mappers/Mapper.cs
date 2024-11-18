@@ -175,7 +175,7 @@ public class Mapper : IMapper
                     MembershipType.Member => OrganizationMembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
-                IsOrganizationOnboardingDone = item.IsOrganizationOnboardingDone,
+                IsOrganizationOnboardingDone = true,
                 Customer = new Customer { Id = item.CustomerId },
                 Organization = organization
             };

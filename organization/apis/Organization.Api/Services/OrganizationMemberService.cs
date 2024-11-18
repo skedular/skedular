@@ -33,6 +33,10 @@ public interface IOrganizationMemberService
         string organizationId,
         OrganizationMember member,
         CancellationToken cancellationToken);
+
+    Task CompleteOrganizationMemberOnboardingAsync(
+        string organizationId,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationMemberService(
@@ -122,7 +126,8 @@ public class OrganizationMemberService(
         }
 
         await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
                 cancellationToken);
 
         organizationMember.MembershipType = membershipType;
@@ -151,7 +156,8 @@ public class OrganizationMemberService(
         }
 
         await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
                 cancellationToken);
 
         var updatedItems = new List<Shared.Database.Entities.OrganizationMember>();
@@ -214,7 +220,8 @@ public class OrganizationMemberService(
         }
 
         await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
                 cancellationToken);
 
         var customer =
@@ -236,5 +243,37 @@ public class OrganizationMemberService(
         await transaction.CommitAsync(cancellationToken);
 
         return mapper.MapTo(organization);
+    }
+
+    public async Task CompleteOrganizationMemberOnboardingAsync(
+        string organizationId,
+        CancellationToken cancellationToken)
+    {
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var organization =
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        if (organization is null)
+        {
+            throw new OrganizationNotFound();
+        }
+
+        await using var transaction =
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+                cancellationToken);
+
+        var matchingOrganizationMember =
+            organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customer.Id);
+
+        if (matchingOrganizationMember is null)
+        {
+            throw new Unauthorized();
+        }
+
+        matchingOrganizationMember.IsOrganizationOnboardingDone = true;
+
+        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
     }
 }

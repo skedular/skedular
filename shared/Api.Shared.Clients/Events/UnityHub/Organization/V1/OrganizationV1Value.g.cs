@@ -41,27 +41,26 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
             "bXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEoCRIPCgdsb2dvVXJsGAUg",
             "ASgJEg8KB3dlYnNpdGUYBiABKAkSJQoHbWVtYmVycxgHIAMoCzIULm9yZ2Fu",
             "aXphdGlvbi5NZW1iZXISKAoIT2ZmZXJpbmcYCCABKAsyFi5vcmdhbml6YXRp",
-            "b24uT2ZmZXJpbmcSFgoOYXp1cmVUZW5hbnRJZHMYCSADKAkihAEKBk1lbWJl",
-            "chIKCgJpZBgBIAEoCRISCgpjdXN0b21lcklkGAIgASgJEjQKDm1lbWJlcnNo",
-            "aXBUeXBlGAMgASgOMhwub3JnYW5pemF0aW9uLk1lbWJlcnNoaXBUeXBlEiQK",
-            "HGlzT3JnYW5pemF0aW9uT25ib2FyZGluZ0RvbmUYBCABKAgi0QEKCE9mZmVy",
-            "aW5nEgoKAmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoFc3RhcnQYAyABKAsy",
-            "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEoCzIaLmdv",
-            "b2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1JlbmV3GAUgASgIEhEK",
-            "CXVuaXRQcmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21lcklkcxgHIAMoCRIW",
-            "Cg5vcmdhbml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlvbhIKCgJpZBgBIAEo",
-            "CSKZAQocSW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbhIKCgJpZBgBIAEo",
-            "CRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
-            "YW1wEhYKDm9yZ2FuaXphdGlvbklkGAMgASgJEhMKC2ludml0ZWRCeUlkGAQg",
-            "ASgJEhEKCWludml0ZWVJZBgFIAEoCSqtAQoEVHlwZRIYChRPcmdhbml6YXRp",
-            "b25VcHNlcnRlZBAAEhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQARIoCiRJbnZp",
-            "dGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhInCiNJbnZpdGF0",
-            "aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVsZXRlZBADEh8KG09yZ2FuaXphdGlv",
-            "bk9mZmVyaW5nVXBkYXRlZBAEKmQKDk1lbWJlcnNoaXBUeXBlEhcKE01lbWJl",
-            "cnNoaXBUeXBlT3duZXIQABIfChtNZW1iZXJzaGlwVHlwZUFkbWluaXN0cmF0",
-            "b3IQARIYChRNZW1iZXJzaGlwVHlwZU1lbWJlchACQjuqAjhBcGkuU2hhcmVk",
-            "LkNsaWVudHMuRXZlbnRzLlVuaXR5SHViLk9yZ2FuaXphdGlvbi5WMS5WYWx1",
-            "ZWIGcHJvdG8z"));
+            "b24uT2ZmZXJpbmcSFgoOYXp1cmVUZW5hbnRJZHMYCSADKAkiXgoGTWVtYmVy",
+            "EgoKAmlkGAEgASgJEhIKCmN1c3RvbWVySWQYAiABKAkSNAoObWVtYmVyc2hp",
+            "cFR5cGUYAyABKA4yHC5vcmdhbml6YXRpb24uTWVtYmVyc2hpcFR5cGUi0QEK",
+            "CE9mZmVyaW5nEgoKAmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoFc3RhcnQY",
+            "AyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEo",
+            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1JlbmV3GAUg",
+            "ASgIEhEKCXVuaXRQcmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21lcklkcxgH",
+            "IAMoCRIWCg5vcmdhbml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlvbhIKCgJp",
+            "ZBgBIAEoCSKZAQocSW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbhIKCgJp",
+            "ZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYu",
+            "VGltZXN0YW1wEhYKDm9yZ2FuaXphdGlvbklkGAMgASgJEhMKC2ludml0ZWRC",
+            "eUlkGAQgASgJEhEKCWludml0ZWVJZBgFIAEoCSqtAQoEVHlwZRIYChRPcmdh",
+            "bml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQARIo",
+            "CiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhInCiNJ",
+            "bnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVsZXRlZBADEh8KG09yZ2Fu",
+            "aXphdGlvbk9mZmVyaW5nVXBkYXRlZBAEKmQKDk1lbWJlcnNoaXBUeXBlEhcK",
+            "E01lbWJlcnNoaXBUeXBlT3duZXIQABIfChtNZW1iZXJzaGlwVHlwZUFkbWlu",
+            "aXN0cmF0b3IQARIYChRNZW1iZXJzaGlwVHlwZU1lbWJlchACQjuqAjhBcGku",
+            "U2hhcmVkLkNsaWVudHMuRXZlbnRzLlVuaXR5SHViLk9yZ2FuaXphdGlvbi5W",
+            "MS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -69,7 +68,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Data.Parser, new[]{ "OrganizationAfterState", "InvitationToJoinOrganizationAfterState", "OfferingAfterState" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Member), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Member.Parser, new[]{ "Id", "CustomerId", "MembershipType", "IsOrganizationOnboardingDone" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Member), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Member.Parser, new[]{ "Id", "CustomerId", "MembershipType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.InvitationToJoinOrganization), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.InvitationToJoinOrganization.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "InvitedById", "InviteeId" }, null, null, null, null)
@@ -1616,7 +1615,6 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       id_ = other.id_;
       customerId_ = other.customerId_;
       membershipType_ = other.membershipType_;
-      isOrganizationOnboardingDone_ = other.isOrganizationOnboardingDone_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1662,18 +1660,6 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "isOrganizationOnboardingDone" field.</summary>
-    public const int IsOrganizationOnboardingDoneFieldNumber = 4;
-    private bool isOrganizationOnboardingDone_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool IsOrganizationOnboardingDone {
-      get { return isOrganizationOnboardingDone_; }
-      set {
-        isOrganizationOnboardingDone_ = value;
-      }
-    }
-
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1692,7 +1678,6 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       if (Id != other.Id) return false;
       if (CustomerId != other.CustomerId) return false;
       if (MembershipType != other.MembershipType) return false;
-      if (IsOrganizationOnboardingDone != other.IsOrganizationOnboardingDone) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1703,7 +1688,6 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (CustomerId.Length != 0) hash ^= CustomerId.GetHashCode();
       if (MembershipType != global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.MembershipType.Owner) hash ^= MembershipType.GetHashCode();
-      if (IsOrganizationOnboardingDone != false) hash ^= IsOrganizationOnboardingDone.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1734,10 +1718,6 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
         output.WriteRawTag(24);
         output.WriteEnum((int) MembershipType);
       }
-      if (IsOrganizationOnboardingDone != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(IsOrganizationOnboardingDone);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1760,10 +1740,6 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
         output.WriteRawTag(24);
         output.WriteEnum((int) MembershipType);
       }
-      if (IsOrganizationOnboardingDone != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(IsOrganizationOnboardingDone);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1782,9 +1758,6 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       }
       if (MembershipType != global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.MembershipType.Owner) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MembershipType);
-      }
-      if (IsOrganizationOnboardingDone != false) {
-        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1806,9 +1779,6 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       }
       if (other.MembershipType != global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.MembershipType.Owner) {
         MembershipType = other.MembershipType;
-      }
-      if (other.IsOrganizationOnboardingDone != false) {
-        IsOrganizationOnboardingDone = other.IsOrganizationOnboardingDone;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1841,10 +1811,6 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
             MembershipType = (global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.MembershipType) input.ReadEnum();
             break;
           }
-          case 32: {
-            IsOrganizationOnboardingDone = input.ReadBool();
-            break;
-          }
         }
       }
     #endif
@@ -1874,10 +1840,6 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
           }
           case 24: {
             MembershipType = (global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.MembershipType) input.ReadEnum();
-            break;
-          }
-          case 32: {
-            IsOrganizationOnboardingDone = input.ReadBool();
             break;
           }
         }
