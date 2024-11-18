@@ -29,6 +29,9 @@
     "./components/icons": {
       "default": "./dist/components/icons/index.js"
     },
+    "./components/listGridToggle": {
+      "default": "./dist/components/listGridToggle/index.js"
+    },
     "./components/loading": {
       "default": "./dist/components/loading/index.js"
     },
