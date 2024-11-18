@@ -31,4 +31,6 @@ public class Organization : ModelBaseWithDeleted
     public bool CanDelete { get; set; }
     public bool CanInvitePeople { get; set; }
     public bool CanViewAnalytics { get; set; }
+
+    public bool IsMyOnboardingDone { get; set; }
 }

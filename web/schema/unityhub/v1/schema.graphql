@@ -519,6 +519,7 @@ type OrganizationDetails {
   canDelete: Boolean!
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
+  isMyOnboardingDone: Boolean!
   id: ID!
 }
 type OrganizationEdge {
@@ -564,7 +565,6 @@ type OrganizationMemberEdge {
 }
 type OrganizationMemberPayload {
   clientMutationId: String
-  organizationMember: OrganizationMemberDetails!
 }
 type OrganizationOfferingDetails {
   code: String!

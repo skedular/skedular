@@ -8,6 +8,7 @@ using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
@@ -56,7 +57,8 @@ public class OrganizationService(
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IMapper mapper,
     TimeProvider timeProvider,
-    IContext context) : IOrganizationService
+    IContext context,
+    IMemoryCache memoryCache) : IOrganizationService
 {
     public async Task<Shared.Models.Organization> AddAsync(
         Shared.Models.Organization organization,
@@ -373,6 +375,29 @@ public class OrganizationService(
                     !query.DeletedAt.HasValue && query.Organization.Id == organization.Id && query.From >= now
             })
             .AnyAsync(cancellationToken);
+
+
+        var organizationMember = await memoryCache.GetOrCreateAsync(
+            $"organization-{organization.Id}-customer-{customer.Id}-member",
+            async cacheEntry =>
+            {
+                cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(1);
+
+                return await repositoryFactory.OrganizationMemberRepository
+                    .Query(new Specification<OrganizationMember>
+                    {
+                        Criteria = query =>
+                            !query.DeletedAt.HasValue && query.Organization.Id == organization.Id &&
+                            query.CustomerId == customer.Id
+                    })
+                    .FirstOrDefaultAsync(cancellationToken);
+            });
+
+        if (organizationMember is not null)
+        {
+            mappedOrganization.IsMyOnboardingDone =
+                organizationMember.IsOrganizationOnboardingDone ?? false;
+        }
 
         return mappedOrganization;
     }

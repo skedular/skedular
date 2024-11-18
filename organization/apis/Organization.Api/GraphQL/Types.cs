@@ -224,6 +224,9 @@ public class OrganizationDetails : Node
 
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
 
+    [GraphQLName("isMyOnboardingDone")]
+    public bool IsMyOnboardingDone { get; set; }
+
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 

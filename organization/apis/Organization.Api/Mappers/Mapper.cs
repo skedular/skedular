@@ -283,7 +283,8 @@ public class Mapper : IMapper
             CanViewAnalytics = src.CanViewAnalytics,
             HasLocation = src.HasLocation,
             HasTeam = src.HasTeam,
-            HasFutureBooking = src.HasFutureBooking
+            HasFutureBooking = src.HasFutureBooking,
+            IsMyOnboardingDone = src.IsMyOnboardingDone
         };
     }
 
