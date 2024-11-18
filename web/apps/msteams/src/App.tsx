@@ -5,7 +5,7 @@ import { MuiXLicense } from '@repo/shared/libs/mui';
 import { BreadcrumpsProvider, DatePickerLocalizationProvider, GlobalReloadIdProvider, ThemeProvider } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { Home } from 'app';
+import { Home } from 'app/';
 import { Install } from 'app/install';
 import { Locations } from 'app/locations';
 import { Notifications } from 'app/notifications';
