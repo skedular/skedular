@@ -334,7 +334,8 @@ public class OrganizationInternalSubscriber(
                     Customer = new Customer { Id = customerId },
                     MembershipType = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
                         ? OrganizationMembershipType.Owner
-                        : OrganizationMembershipType.Member
+                        : OrganizationMembershipType.Member,
+                    IsOrganizationOnboardingDone = true
                 };
             }
 
@@ -344,7 +345,8 @@ public class OrganizationInternalSubscriber(
                 Customer = new Customer { Id = customerId },
                 MembershipType = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
                     ? OrganizationMembershipType.Owner
-                    : OrganizationMembershipType.Member
+                    : OrganizationMembershipType.Member,
+                IsOrganizationOnboardingDone = true
             };
         }).ToList();
 

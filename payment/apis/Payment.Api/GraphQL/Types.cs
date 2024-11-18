@@ -21,18 +21,6 @@ public class AddOrganizationPaymentMethodIntentResponse
     [GraphQLName("clientSecret")] public string ClientSecret { get; set; }
 }
 
-[GraphQLName("Mutation_AddOrganizationPaymentMethodIntent_Arguments")]
-public class Mutation_AddOrganizationPaymentMethodIntent_Arguments
-{
-    [GraphQLName("input")] public AddOrganizationPaymentMethodIntentInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_RemoveOrganizationPaymentMethod_Arguments")]
-public class Mutation_RemoveOrganizationPaymentMethod_Arguments
-{
-    [GraphQLName("input")] public RemoveOrganizationPaymentMethodInput Input { get; set; }
-}
-
 [GraphQLName("Node")]
 public interface Node
 {
@@ -61,19 +49,6 @@ public class OrganizationPaymentMethod : Node
     [GraphQLName("cardLastFourDigit")] public string? CardLastFourDigit { get; set; }
 
     [GraphQLName("id")] [ID] public string Id { get; set; }
-}
-
-public enum PaymentOrganizationStripePaymentMethodStatus
-{
-    PENDING,
-    CANCELLED,
-    CONFIRMED
-}
-
-[GraphQLName("Query_OrganizationPaymentMethodsDetails_Arguments")]
-public class Query_OrganizationPaymentMethodsDetails_Arguments
-{
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
 }
 
 [GraphQLName("RemoveOrganizationPaymentMethodInput")]

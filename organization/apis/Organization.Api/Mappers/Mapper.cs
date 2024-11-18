@@ -135,6 +135,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             MembershipType = src.MembershipType,
+            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = MapTo(src.Customer)!,
             Organization = organization
         };
@@ -292,11 +293,12 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                OrganizationMembershipType.Owner => OrganizationMemberMembershipType.OWNER,
-                OrganizationMembershipType.Administrator => OrganizationMemberMembershipType.ADMINISTRATOR,
-                OrganizationMembershipType.Member => OrganizationMemberMembershipType.MEMBER,
+                OrganizationMembershipType.Owner => OrganizationMemberMembershipType.Owner,
+                OrganizationMembershipType.Administrator => OrganizationMemberMembershipType.Administrator,
+                OrganizationMembershipType.Member => OrganizationMemberMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             Customer = MapTo(src.Customer)
         };
 
@@ -416,6 +418,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.MembershipType = src.MembershipType;
+        dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;
@@ -438,6 +441,7 @@ public class Mapper : IMapper
                 OrganizationMembershipType.Member => MembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             Customer = MapToGrpcResponse(src.Customer)
         };
 
@@ -500,6 +504,7 @@ public class Mapper : IMapper
                 MembershipType.Member => OrganizationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = new Customer { Id = src.Customer.Id },
             Organization = organization
         };

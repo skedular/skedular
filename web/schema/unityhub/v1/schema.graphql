@@ -549,6 +549,7 @@ type OrganizationMemberConnection {
 }
 type OrganizationMemberDetails {
   membershipType: OrganizationMemberMembershipType
+  isOrganizationOnboardingDone: Boolean!
   customer: OrganizationCustomerDetails!
   id: ID!
 }
@@ -732,30 +733,30 @@ type TeamPayload {
   team: TeamDetails!
 }
 enum BookingOrderField {
-  from
-  to
-  notes
-  name
-  givenName
-  middleName
-  familyName
-  organizationName
-  locationName
-  teamName
+  From
+  To
+  Notes
+  Name
+  GivenName
+  MiddleName
+  FamilyName
+  OrganizationName
+  LocationName
+  TeamName
 }
 enum OrderDirection {
   Ascending
   Descending
 }
 enum CustomerOrderField {
-  designation
-  title
-  name
-  givenName
-  middleName
-  familyName
-  timezone
-  locale
+  Designation
+  Title
+  Name
+  GivenName
+  MiddleName
+  FamilyName
+  Timezone
+  Locale
 }
 enum FeedbackChannel {
   Web
@@ -763,68 +764,68 @@ enum FeedbackChannel {
   MsTeams
 }
 enum DeskOrderField {
-  name
+  Name
 }
 enum LocationMemberMembershipType {
-  OWNER
-  ADMINISTRATOR
-  MEMBER
+  Owner
+  Administrator
+  Member
 }
 enum LocationMemberOrderField {
-  membershipType
-  name
-  givenName
-  middleName
-  familyName
+  MembershipType
+  Name
+  GivenName
+  MiddleName
+  FamilyName
 }
 enum LocationOrderField {
-  name
+  Name
 }
 enum LocationTagOrderField {
-  name
-  description
-  tagType
+  Name
+  Description
+  TagType
 }
 enum OrganizationMemberMembershipType {
-  OWNER
-  ADMINISTRATOR
-  MEMBER
+  Owner
+  Administrator
+  Member
 }
 enum OrganizationMemberOrderField {
-  membershipType
-  name
-  givenName
-  middleName
-  familyName
+  MembershipType
+  Name
+  GivenName
+  MiddleName
+  FamilyName
 }
 enum OrganizationOrderField {
-  name
+  Name
 }
 enum NotificationNotificationType {
-  INVITATION_TO_JOIN_ORGANIZATION
-  INVITATION_TO_JOIN_LOCATION
-  INVITATION_TO_JOIN_TEAM
+  InvitationToJoinOrganization
+  InvitationToJoinLocation
+  InvitationToJoinTeam
 }
 enum NotificationOrderField {
-  eventRaisedAt
-  notificationType
+  EventRaisedAt
+  NotificationType
 }
 enum TeamMemberMembershipType {
-  OWNER
-  ADMINISTRATOR
-  MEMBER
+  Owner
+  Administrator
+  Member
 }
 enum TeamMemberOrderField {
-  membershipType
-  name
-  givenName
-  middleName
-  familyName
+  MembershipType
+  Name
+  GivenName
+  MiddleName
+  FamilyName
 }
 enum TeamOrderField {
-  name
-  about
-  website
+  Name
+  About
+  Website
 }
 input SetOrganizationBillingInfoInput {
   clientMutationId: String

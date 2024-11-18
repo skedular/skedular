@@ -60,8 +60,8 @@ public class NotificationQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            NotificationOrderField.eventRaisedAt => Shared.Models.NotificationOrderField.EventRaisedAt,
-                            NotificationOrderField.notificationType => Shared.Models.NotificationOrderField.Type,
+                            NotificationOrderField.EventRaisedAt => Shared.Models.NotificationOrderField.EventRaisedAt,
+                            NotificationOrderField.NotificationType => Shared.Models.NotificationOrderField.Type,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<890569b35570353a8a411cad9022be38>>
+ * @generated SignedSource<<84e04a9a97a8bf4ad30ff9debe477bb8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type LocationMemberMembershipType = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
+export type LocationMemberMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
 export type ChangeLocationMemberOwnershipTypeInput = {
   clientMutationId?: string | null | undefined;
   id: string;

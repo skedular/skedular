@@ -187,7 +187,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
   const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<TeamMemberOrderInput>({
     direction: 'Ascending',
-    field: 'name',
+    field: 'Name',
   });
   const [editingOrganizationMembers, setEditingOrganizationMembers] = useState(false);
   const validateTeam = makeValidate(teamSchema);
@@ -439,11 +439,10 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
               />
               <Sorting
                 options={[
-                  { id: 'createdAt', label: 'Join date' },
-                  { id: 'name', label: 'Name' },
-                  { id: 'givenName', label: 'Given name' },
-                  { id: 'middleName', label: 'Middle name' },
-                  { id: 'familyName', label: 'Family Name' },
+                  { id: 'Name', label: 'Name' },
+                  { id: 'GivenName', label: 'Given name' },
+                  { id: 'MiddleName', label: 'Middle name' },
+                  { id: 'FamilyName', label: 'Family Name' },
                 ]}
                 defaultOption={sortingOrder.field}
                 defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
@@ -563,13 +562,13 @@ const TeamMembersTabWithRelay = ({ onReloadRequired, organizationId, teamId }: R
         teamMembersSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
         organizationMemberSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
       },

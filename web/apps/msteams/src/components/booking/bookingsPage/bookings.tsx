@@ -131,7 +131,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
   const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<BookingOrderInput>({
     direction: 'Ascending',
-    field: 'from',
+    field: 'From',
   });
   const [page, setPage] = useState(0);
   const [startWeek, setStartWeek] = useState(startOfWeek());
@@ -279,13 +279,13 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
           />
           <Sorting
             options={[
-              { id: 'from', label: 'Booking date' },
-              { id: 'name', label: 'Name' },
-              { id: 'givenName', label: 'Given Name' },
-              { id: 'middleName', label: 'Middle Name' },
-              { id: 'familyName', label: 'Family Name' },
-              { id: 'organizationName', label: 'Organization' },
-              { id: 'teamName', label: 'Team' },
+              { id: 'From', label: 'Booking date' },
+              { id: 'Name', label: 'Name' },
+              { id: 'GivenName', label: 'Given Name' },
+              { id: 'MiddleName', label: 'Middle Name' },
+              { id: 'FamilyName', label: 'Family Name' },
+              { id: 'OrganizationName', label: 'Organization' },
+              { id: 'TeamName', label: 'Team' },
             ]}
             defaultOption={sortingOrder.field}
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
@@ -356,13 +356,13 @@ const BookingsWithRelay = ({ onReloadRequired, organizationId, locationId, teamI
         bookingSortingValues: [
           {
             direction: 'Ascending',
-            field: 'from',
+            field: 'From',
           },
         ],
         bookingDetailsSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
         bookingsSearchCriteriaFrom: from.toISOString(),

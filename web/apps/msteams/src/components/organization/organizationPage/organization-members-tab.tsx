@@ -138,7 +138,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
   const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<OrganizationMemberOrderInput>({
     direction: 'Ascending',
-    field: 'name',
+    field: 'Name',
   });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
@@ -328,12 +328,11 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
           />
           <Sorting
             options={[
-              { id: 'name', label: 'Name' },
-              { id: 'givenName', label: 'Given name' },
-              { id: 'middleName', label: 'Middle name' },
-              { id: 'familyName', label: 'Family Name' },
-              { id: 'membershipType', label: 'Membership type' },
-              { id: 'createdAt', label: 'Join date' },
+              { id: 'Name', label: 'Name' },
+              { id: 'GivenName', label: 'Given name' },
+              { id: 'MiddleName', label: 'Middle name' },
+              { id: 'FamilyName', label: 'Family Name' },
+              { id: 'MembershipType', label: 'Membership type' },
             ]}
             defaultOption={sortingOrder.field}
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
@@ -408,7 +407,7 @@ const OrganizationMembersTabWithRelay = ({ onReloadRequired, organizationId }: R
         organizationMembersSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
       },

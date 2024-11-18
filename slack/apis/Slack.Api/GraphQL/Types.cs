@@ -2,13 +2,6 @@ using HotChocolate;
 
 namespace Slack.Api.GraphQL;
 
-public enum SlackDeskBookingDetailBookingStatus
-{
-    AWAIT_ACCEPTANCE,
-    ACCEPTED,
-    DECLINED
-}
-
 [GraphQLName("Version")]
 public class Version
 {

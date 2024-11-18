@@ -176,11 +176,11 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
 
   const [sortingLocationMemberOrder, setSortingLocationMemberOrder] = useState<LocationMemberOrderInput>({
     direction: 'Ascending',
-    field: 'name',
+    field: 'Name',
   });
   const [sortingCustomerOrder, setSortingCustomerOrder] = useState<CustomerOrderInput>({
     direction: 'Ascending',
-    field: 'name',
+    field: 'Name',
   });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
@@ -424,12 +424,11 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
           />
           <Sorting
             options={[
-              { id: 'name', label: 'Name' },
-              { id: 'givenName', label: 'Given name' },
-              { id: 'middleName', label: 'Middle name' },
-              { id: 'familyName', label: 'Family Name' },
-              { id: 'membershipType', label: 'Membership type' },
-              { id: 'createdAt', label: 'Join date' },
+              { id: 'Name', label: 'Name' },
+              { id: 'GivenName', label: 'Given name' },
+              { id: 'MiddleName', label: 'Middle name' },
+              { id: 'FamilyName', label: 'Family Name' },
+              { id: 'MembershipType', label: 'Membership type' },
             ]}
             defaultOption={organizationId ? sortingCustomerOrder.field : sortingLocationMemberOrder.field}
             defaultSortingDirectionValue={
@@ -516,13 +515,13 @@ const LocationMembersTabWithRelay = ({ onReloadRequired, organizationId, locatio
         locationMembersSortingValues: [
           {
             direction: 'Descending',
-            field: 'name',
+            field: 'Name',
           },
         ],
         locationOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
       },

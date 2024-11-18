@@ -34,9 +34,9 @@ public class LocationQuery
     public LocationMemberMembershipType[] LocationMemberMembershipTypes(
         CancellationToken cancellationToken) =>
     [
-        LocationMemberMembershipType.OWNER,
-        LocationMemberMembershipType.ADMINISTRATOR,
-        LocationMemberMembershipType.MEMBER
+        LocationMemberMembershipType.Owner,
+        LocationMemberMembershipType.Administrator,
+        LocationMemberMembershipType.Member
     ];
 
     [UseServiceScope]
@@ -81,7 +81,7 @@ public class LocationQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            LocationOrderField.name =>
+                            LocationOrderField.Name =>
                                 Shared.Models.LocationOrderField.Name,
                             _ => throw new ArgumentOutOfRangeException()
                         };
@@ -155,12 +155,12 @@ public class LocationQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            LocationMemberOrderField.membershipType => Shared.Models.LocationMemberOrderField
+                            LocationMemberOrderField.MembershipType => Shared.Models.LocationMemberOrderField
                                 .MembershipType,
-                            LocationMemberOrderField.name => Shared.Models.LocationMemberOrderField.Name,
-                            LocationMemberOrderField.givenName => Shared.Models.LocationMemberOrderField.GivenName,
-                            LocationMemberOrderField.middleName => Shared.Models.LocationMemberOrderField.MiddleName,
-                            LocationMemberOrderField.familyName => Shared.Models.LocationMemberOrderField.FamilyName,
+                            LocationMemberOrderField.Name => Shared.Models.LocationMemberOrderField.Name,
+                            LocationMemberOrderField.GivenName => Shared.Models.LocationMemberOrderField.GivenName,
+                            LocationMemberOrderField.MiddleName => Shared.Models.LocationMemberOrderField.MiddleName,
+                            LocationMemberOrderField.FamilyName => Shared.Models.LocationMemberOrderField.FamilyName,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 
@@ -236,7 +236,7 @@ public class LocationQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            LocationTagOrderField.name => TagOrderField.Name,
+                            LocationTagOrderField.Name => TagOrderField.Name,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 
@@ -289,7 +289,7 @@ public class LocationQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            DeskOrderField.name => Shared.Models.DeskOrderField.Name,
+                            DeskOrderField.Name => Shared.Models.DeskOrderField.Name,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

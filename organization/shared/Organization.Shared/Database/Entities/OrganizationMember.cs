@@ -10,6 +10,7 @@ namespace Organization.Shared.Database.Entities;
 public class OrganizationMember : EntityBaseWithDeleted
 {
     public OrganizationMembershipType MembershipType { get; set; } = OrganizationMembershipType.Member;
+    public bool? IsOrganizationOnboardingDone { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; } = string.Empty;

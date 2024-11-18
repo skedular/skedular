@@ -110,6 +110,7 @@ message Member {
     string id = 1;
     Customer customer = 2;
     MembershipType membershipType = 3;
+    bool isOrganizationOnboardingDone = 4;
 }
 
 message Admin_AddMemberInput {

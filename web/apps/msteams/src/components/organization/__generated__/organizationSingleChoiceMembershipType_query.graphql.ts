@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ae36a20a58a96c3c98bc3f706ca2aad4>>
+ * @generated SignedSource<<dace581f4b0c4a11fcc8fe9dad45d627>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationMemberMembershipType = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
+export type OrganizationMemberMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationSingleChoiceMembershipType_query$data = {
   readonly organizationMemberMembershipTypes: ReadonlyArray<OrganizationMemberMembershipType>;

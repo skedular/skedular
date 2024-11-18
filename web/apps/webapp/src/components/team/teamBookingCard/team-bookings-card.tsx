@@ -77,7 +77,7 @@ const TeamBookingsWithRelay = ({ organizationId, organizationName, teamId, teamN
         peopleSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
         organizationId: organizationId ?? '',

@@ -85,54 +85,6 @@ public class InviteCustomersToJoinTeamPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("Mutation_AcceptInvitationToJoinTeam_Arguments")]
-public class Mutation_AcceptInvitationToJoinTeam_Arguments
-{
-    [GraphQLName("input")] public AcceptInvitationToJoinTeamInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_AddTeam_Arguments")]
-public class Mutation_AddTeam_Arguments
-{
-    [GraphQLName("input")] public AddTeamInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CancelInvitationToJoinTeam_Arguments")]
-public class Mutation_CancelInvitationToJoinTeam_Arguments
-{
-    [GraphQLName("input")] public CancelInvitationToJoinTeamInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_ChangeTeamMemberOwnershipType_Arguments")]
-public class Mutation_ChangeTeamMemberOwnershipType_Arguments
-{
-    [GraphQLName("input")] public ChangeTeamMemberOwnershipTypeInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_DeleteTeam_Arguments")]
-public class Mutation_DeleteTeam_Arguments
-{
-    [GraphQLName("input")] public DeleteTeamInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_InviteCustomersToJoinTeam_Arguments")]
-public class Mutation_InviteCustomersToJoinTeam_Arguments
-{
-    [GraphQLName("input")] public InviteCustomersToJoinTeamInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_RejectInvitationToJoinTeam_Arguments")]
-public class Mutation_RejectInvitationToJoinTeam_Arguments
-{
-    [GraphQLName("input")] public RejectInvitationToJoinTeamInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_UpdateTeam_Arguments")]
-public class Mutation_UpdateTeam_Arguments
-{
-    [GraphQLName("input")] public UpdateTeamInput Input { get; set; }
-}
-
 [GraphQLName("Node")]
 public interface Node
 {
@@ -155,58 +107,6 @@ public class PageInfo
     [GraphQLName("startCursor")] public string? StartCursor { get; set; }
 
     [GraphQLName("endCursor")] public string? EndCursor { get; set; }
-}
-
-[GraphQLName("Query_MyTeams_Arguments")]
-public class Query_MyTeams_Arguments
-{
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
-}
-
-[GraphQLName("Query_PaginatedTeamMembers_Arguments")]
-public class Query_PaginatedTeamMembers_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("where")] public TeamMemberWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public TeamMemberOrderInput[]? OrderBy { get; set; }
-}
-
-[GraphQLName("Query_Team_Arguments")]
-public class Query_Team_Arguments
-{
-    [GraphQLName("id")] public string Id { get; set; }
-}
-
-[GraphQLName("Query_TeamMembers_Arguments")]
-public class Query_TeamMembers_Arguments
-{
-    [GraphQLName("where")] public TeamMemberWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public TeamMemberOrderInput[]? OrderBy { get; set; }
-}
-
-[GraphQLName("Query_Teams_Arguments")]
-public class Query_Teams_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("where")] public TeamWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public TeamOrderInput[]? OrderBy { get; set; }
 }
 
 [GraphQLName("RejectInvitationToJoinTeamInput")]
@@ -293,13 +193,6 @@ public class TeamEdge
     [GraphQLName("cursor")] public string Cursor { get; set; }
 }
 
-public enum TeamJoinInvitationStatus
-{
-    PENDING,
-    ACCEPTED,
-    REJECTED
-}
-
 [GraphQLName("TeamMemberConnection")]
 public class TeamMemberConnection
 {
@@ -340,18 +233,18 @@ public class TeamMemberEdge
 
 public enum TeamMemberMembershipType
 {
-    OWNER,
-    ADMINISTRATOR,
-    MEMBER
+    Owner,
+    Administrator,
+    Member
 }
 
 public enum TeamMemberOrderField
 {
-    membershipType,
-    name,
-    givenName,
-    middleName,
-    familyName
+    MembershipType,
+    Name,
+    GivenName,
+    MiddleName,
+    FamilyName
 }
 
 [GraphQLName("TeamMemberOrderInput")]
@@ -372,9 +265,9 @@ public class TeamMemberWhereInput
 
 public enum TeamOrderField
 {
-    name,
-    about,
-    website
+    Name,
+    About,
+    Website
 }
 
 [GraphQLName("TeamOrderInput")]

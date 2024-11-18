@@ -332,7 +332,8 @@ public class SlackInternalSubscriber(
                 {
                     Id = randomHelper.Generate(),
                     Customer = new Customer { Id = customerId },
-                    MembershipType = membershipType
+                    MembershipType = membershipType,
+                    IsOrganizationOnboardingDone = true
                 };
             }
 
@@ -346,7 +347,8 @@ public class SlackInternalSubscriber(
                     OrganizationMembershipType.Administrator => MembershipType.Administrator,
                     OrganizationMembershipType.Member => MembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
-                }
+                },
+                IsOrganizationOnboardingDone = true
             };
         }).ForEachAsync(async (member, ct) =>
         {

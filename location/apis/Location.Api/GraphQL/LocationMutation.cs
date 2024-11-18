@@ -140,9 +140,9 @@ public class LocationMutation
                 input.Id,
                 input.MembershipType switch
                 {
-                    LocationMemberMembershipType.OWNER => LocationMembershipType.Owner,
-                    LocationMemberMembershipType.ADMINISTRATOR => LocationMembershipType.Administrator,
-                    LocationMemberMembershipType.MEMBER => LocationMembershipType.Member,
+                    LocationMemberMembershipType.Owner => LocationMembershipType.Owner,
+                    LocationMemberMembershipType.Administrator => LocationMembershipType.Administrator,
+                    LocationMemberMembershipType.Member => LocationMembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 cancellationToken);

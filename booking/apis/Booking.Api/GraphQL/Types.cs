@@ -65,13 +65,6 @@ public class BookingCustomerDetails
     [GraphQLName("photoUrl512")] public string? PhotoUrl512 { get; set; }
 }
 
-public enum BookingDeskBookingDetailBookingStatus
-{
-    AWAIT_ACCEPTANCE,
-    ACCEPTED,
-    DECLINED
-}
-
 [GraphQLName("BookingDeskDetails")]
 public class BookingDeskDetails
 {
@@ -137,16 +130,16 @@ public class BookingLocationTagDetails
 
 public enum BookingOrderField
 {
-    from,
-    to,
-    notes,
-    name,
-    givenName,
-    middleName,
-    familyName,
-    organizationName,
-    locationName,
-    teamName
+    From,
+    To,
+    Notes,
+    Name,
+    GivenName,
+    MiddleName,
+    FamilyName,
+    OrganizationName,
+    LocationName,
+    TeamName
 }
 
 [GraphQLName("BookingOrderInput")]
@@ -239,24 +232,6 @@ public class LocationBookingPermissions
     public bool CanDeleteBookingOnBehalf { get; set; }
 }
 
-[GraphQLName("Mutation_AddBooking_Arguments")]
-public class Mutation_AddBooking_Arguments
-{
-    [GraphQLName("input")] public AddBookingInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_DeleteBooking_Arguments")]
-public class Mutation_DeleteBooking_Arguments
-{
-    [GraphQLName("input")] public DeleteBookingInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_UpdateBooking_Arguments")]
-public class Mutation_UpdateBooking_Arguments
-{
-    [GraphQLName("input")] public UpdateBookingInput Input { get; set; }
-}
-
 [GraphQLName("Node")]
 public interface Node
 {
@@ -297,62 +272,6 @@ public class PageInfo
     [GraphQLName("startCursor")] public string? StartCursor { get; set; }
 
     [GraphQLName("endCursor")] public string? EndCursor { get; set; }
-}
-
-[GraphQLName("Query_AllBookings_Arguments")]
-public class Query_AllBookings_Arguments
-{
-    [GraphQLName("where")] public BookingWhereInput Where { get; set; }
-}
-
-[GraphQLName("Query_AvailableLocationDesks_Arguments")]
-public class Query_AvailableLocationDesks_Arguments
-{
-    [GraphQLName("locationId")] public string LocationId { get; set; }
-
-    [GraphQLName("date")] public DateTimeOffset Date { get; set; }
-
-    [GraphQLName("deskIdsToInclude")] public string[] DeskIdsToInclude { get; set; }
-}
-
-[GraphQLName("Query_Booking_Arguments")]
-public class Query_Booking_Arguments
-{
-    [GraphQLName("id")] public string Id { get; set; }
-}
-
-[GraphQLName("Query_Bookings_Arguments")]
-public class Query_Bookings_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("where")] public BookingWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public BookingOrderInput[]? OrderBy { get; set; }
-}
-
-[GraphQLName("Query_LocationBookingPermissions_Arguments")]
-public class Query_LocationBookingPermissions_Arguments
-{
-    [GraphQLName("locationId")] public string LocationId { get; set; }
-}
-
-[GraphQLName("Query_OrganizationBookingPermissions_Arguments")]
-public class Query_OrganizationBookingPermissions_Arguments
-{
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
-}
-
-[GraphQLName("Query_TeamBookingPermissions_Arguments")]
-public class Query_TeamBookingPermissions_Arguments
-{
-    [GraphQLName("teamId")] public string TeamId { get; set; }
 }
 
 [GraphQLName("TeamBookingPermissions")]

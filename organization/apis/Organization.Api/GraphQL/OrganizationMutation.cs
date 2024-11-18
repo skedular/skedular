@@ -86,9 +86,9 @@ public class OrganizationMutation
                 input.Id,
                 input.MembershipType switch
                 {
-                    OrganizationMemberMembershipType.OWNER => OrganizationMembershipType.Owner,
-                    OrganizationMemberMembershipType.ADMINISTRATOR => OrganizationMembershipType.Administrator,
-                    OrganizationMemberMembershipType.MEMBER => OrganizationMembershipType.Member,
+                    OrganizationMemberMembershipType.Owner => OrganizationMembershipType.Owner,
+                    OrganizationMemberMembershipType.Administrator => OrganizationMembershipType.Administrator,
+                    OrganizationMemberMembershipType.Member => OrganizationMembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 cancellationToken);

@@ -123,7 +123,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
   const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<DeskOrderInput>({
     direction: 'Ascending',
-    field: 'name',
+    field: 'Name',
   });
 
   const [page, setPage] = useState(0);
@@ -304,7 +304,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
             onRowsPerPageChange={handlePageSizeChange}
           />
           <Sorting
-            options={[{ id: 'name', label: 'Name' }]}
+            options={[{ id: 'Name', label: 'Name' }]}
             defaultOption={sortingOrder.field}
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
@@ -379,13 +379,13 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
         deskSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
         deskMultipleChoicesZonesSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
       },

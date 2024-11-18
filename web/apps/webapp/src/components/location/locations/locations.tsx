@@ -70,7 +70,7 @@ const Locations = ({ queryReference }: Props) => {
   const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<LocationOrderInput>({
     direction: 'Ascending',
-    field: 'name',
+    field: 'Name',
   });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
@@ -171,7 +171,7 @@ const Locations = ({ queryReference }: Props) => {
             onRowsPerPageChange={handlePageSizeChange}
           />
           <Sorting
-            options={[{ id: 'name', label: 'Name' }]}
+            options={[{ id: 'Name', label: 'Name' }]}
             defaultOption={sortingOrder.field}
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
@@ -209,7 +209,7 @@ const LocationsWithRelay = () => {
         locationsSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
       },

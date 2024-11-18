@@ -137,7 +137,7 @@ const NewBookingButtonWithRelay = ({
         bookingDetailsSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
         dateToGetAvailableDesks: date,

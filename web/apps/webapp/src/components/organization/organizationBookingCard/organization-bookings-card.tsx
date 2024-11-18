@@ -82,7 +82,7 @@ const OrganizationBookingsWithRelay = ({
         peopleSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
         organizationId,

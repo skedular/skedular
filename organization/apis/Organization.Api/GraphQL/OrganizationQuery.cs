@@ -43,9 +43,9 @@ public class OrganizationQuery
     [UseServiceScope]
     public OrganizationMemberMembershipType[] OrganizationMemberMembershipTypes() =>
     [
-        OrganizationMemberMembershipType.OWNER,
-        OrganizationMemberMembershipType.ADMINISTRATOR,
-        OrganizationMemberMembershipType.MEMBER
+        OrganizationMemberMembershipType.Owner,
+        OrganizationMemberMembershipType.Administrator,
+        OrganizationMemberMembershipType.Member
     ];
 
     [UseServiceScope]
@@ -101,7 +101,7 @@ public class OrganizationQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            OrganizationOrderField.name => Shared.Models.OrganizationOrderField.Name,
+                            OrganizationOrderField.Name => Shared.Models.OrganizationOrderField.Name,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 
@@ -171,15 +171,15 @@ public class OrganizationQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            OrganizationMemberOrderField.membershipType =>
+                            OrganizationMemberOrderField.MembershipType =>
                                 Shared.Models.OrganizationMemberOrderField.MembershipType,
-                            OrganizationMemberOrderField.name =>
+                            OrganizationMemberOrderField.Name =>
                                 Shared.Models.OrganizationMemberOrderField.Name,
-                            OrganizationMemberOrderField.givenName =>
+                            OrganizationMemberOrderField.GivenName =>
                                 Shared.Models.OrganizationMemberOrderField.GivenName,
-                            OrganizationMemberOrderField.middleName =>
+                            OrganizationMemberOrderField.MiddleName =>
                                 Shared.Models.OrganizationMemberOrderField.MiddleName,
-                            OrganizationMemberOrderField.familyName =>
+                            OrganizationMemberOrderField.FamilyName =>
                                 Shared.Models.OrganizationMemberOrderField.FamilyName,
                             _ => throw new ArgumentOutOfRangeException()
                         };

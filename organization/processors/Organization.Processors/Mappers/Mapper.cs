@@ -175,6 +175,7 @@ public class Mapper : IMapper
                     MembershipType.Member => OrganizationMembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
+                IsOrganizationOnboardingDone = item.IsOrganizationOnboardingDone,
                 Customer = new Customer { Id = item.CustomerId },
                 Organization = organization
             };
@@ -318,6 +319,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.MembershipType = src.MembershipType;
+        dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;
@@ -536,6 +538,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             MembershipType = src.MembershipType,
+            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = MapTo(src.Customer)!,
             Organization = organization
         };

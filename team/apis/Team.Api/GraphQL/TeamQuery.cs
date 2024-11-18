@@ -33,7 +33,7 @@ public class TeamQuery
     [UseServiceScope]
     public TeamMemberMembershipType[] TeamMemberMembershipTypes() =>
     [
-        TeamMemberMembershipType.OWNER, TeamMemberMembershipType.ADMINISTRATOR, TeamMemberMembershipType.MEMBER
+        TeamMemberMembershipType.Owner, TeamMemberMembershipType.Administrator, TeamMemberMembershipType.Member
     ];
 
     [UseServiceScope]
@@ -78,7 +78,7 @@ public class TeamQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            TeamOrderField.name =>
+                            TeamOrderField.Name =>
                                 Shared.Models.TeamOrderField.Name,
                             _ => throw new ArgumentOutOfRangeException()
                         };
@@ -151,12 +151,12 @@ public class TeamQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            TeamMemberOrderField.membershipType => Shared.Models.TeamMemberOrderField
+                            TeamMemberOrderField.MembershipType => Shared.Models.TeamMemberOrderField
                                 .MembershipType,
-                            TeamMemberOrderField.name => Shared.Models.TeamMemberOrderField.Name,
-                            TeamMemberOrderField.givenName => Shared.Models.TeamMemberOrderField.GivenName,
-                            TeamMemberOrderField.middleName => Shared.Models.TeamMemberOrderField.MiddleName,
-                            TeamMemberOrderField.familyName => Shared.Models.TeamMemberOrderField.FamilyName,
+                            TeamMemberOrderField.Name => Shared.Models.TeamMemberOrderField.Name,
+                            TeamMemberOrderField.GivenName => Shared.Models.TeamMemberOrderField.GivenName,
+                            TeamMemberOrderField.MiddleName => Shared.Models.TeamMemberOrderField.MiddleName,
+                            TeamMemberOrderField.FamilyName => Shared.Models.TeamMemberOrderField.FamilyName,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

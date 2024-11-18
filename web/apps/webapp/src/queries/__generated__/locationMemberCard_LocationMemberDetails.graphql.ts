@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d33647b13bfc2c1acd415e9a65381d7a>>
+ * @generated SignedSource<<4a1899a00492c406432fdb4a8ad1aa75>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type LocationMemberMembershipType = "ADMINISTRATOR" | "MEMBER" | "OWNER" | "%future added value";
+export type LocationMemberMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type locationMemberCard_LocationMemberDetails$data = {
   readonly customer: {

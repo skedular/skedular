@@ -140,13 +140,6 @@ public class DeleteLocationTagInput
     [GraphQLName("id")] public string Id { get; set; }
 }
 
-public enum DeskBookingDetailBookingStatus
-{
-    AWAIT_ACCEPTANCE,
-    ACCEPTED,
-    DECLINED
-}
-
 [GraphQLName("DeskConnection")]
 public class DeskConnection
 {
@@ -182,7 +175,7 @@ public class DeskEdge
 
 public enum DeskOrderField
 {
-    name
+    Name
 }
 
 [GraphQLName("DeskOrderInput")]
@@ -322,13 +315,6 @@ public class LocationEdge
     [GraphQLName("cursor")] public string Cursor { get; set; }
 }
 
-public enum LocationJoinInvitationStatus
-{
-    PENDING,
-    ACCEPTED,
-    REJECTED
-}
-
 [GraphQLName("LocationMemberConnection")]
 public class LocationMemberConnection
 {
@@ -367,18 +353,18 @@ public class LocationMemberEdge
 
 public enum LocationMemberMembershipType
 {
-    OWNER,
-    ADMINISTRATOR,
-    MEMBER
+    Owner,
+    Administrator,
+    Member
 }
 
 public enum LocationMemberOrderField
 {
-    membershipType,
-    name,
-    givenName,
-    middleName,
-    familyName
+    MembershipType,
+    Name,
+    GivenName,
+    MiddleName,
+    FamilyName
 }
 
 [GraphQLName("LocationMemberOrderInput")]
@@ -399,7 +385,7 @@ public class LocationMemberWhereInput
 
 public enum LocationOrderField
 {
-    name
+    Name
 }
 
 [GraphQLName("LocationOrderInput")]
@@ -460,9 +446,9 @@ public class LocationTagEdge
 
 public enum LocationTagOrderField
 {
-    name,
-    description,
-    tagType
+    Name,
+    Description,
+    TagType
 }
 
 [GraphQLName("LocationTagOrderInput")]
@@ -499,96 +485,6 @@ public class LocationWhereInput
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
 
-[GraphQLName("Mutation_AcceptInvitationToJoinLocation_Arguments")]
-public class Mutation_AcceptInvitationToJoinLocation_Arguments
-{
-    [GraphQLName("input")] public AcceptInvitationToJoinLocationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_AddDesk_Arguments")]
-public class Mutation_AddDesk_Arguments
-{
-    [GraphQLName("input")] public AddDeskInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_AddLocation_Arguments")]
-public class Mutation_AddLocation_Arguments
-{
-    [GraphQLName("input")] public AddLocationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_AddLocationTag_Arguments")]
-public class Mutation_AddLocationTag_Arguments
-{
-    [GraphQLName("input")] public AddLocationTagInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_BulkAddDesk_Arguments")]
-public class Mutation_BulkAddDesk_Arguments
-{
-    [GraphQLName("input")] public BulkAddDeskInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CancelInvitationToJoinLocation_Arguments")]
-public class Mutation_CancelInvitationToJoinLocation_Arguments
-{
-    [GraphQLName("input")] public CancelInvitationToJoinLocationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_ChangeLocationMemberOwnershipType_Arguments")]
-public class Mutation_ChangeLocationMemberOwnershipType_Arguments
-{
-    [GraphQLName("input")] public ChangeLocationMemberOwnershipTypeInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_DeleteDesk_Arguments")]
-public class Mutation_DeleteDesk_Arguments
-{
-    [GraphQLName("input")] public DeleteDeskInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_DeleteLocation_Arguments")]
-public class Mutation_DeleteLocation_Arguments
-{
-    [GraphQLName("input")] public DeleteLocationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_DeleteLocationTag_Arguments")]
-public class Mutation_DeleteLocationTag_Arguments
-{
-    [GraphQLName("input")] public DeleteLocationTagInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_InviteCustomersToJoinLocation_Arguments")]
-public class Mutation_InviteCustomersToJoinLocation_Arguments
-{
-    [GraphQLName("input")] public InviteCustomersToJoinLocationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_RejectInvitationToJoinLocation_Arguments")]
-public class Mutation_RejectInvitationToJoinLocation_Arguments
-{
-    [GraphQLName("input")] public RejectInvitationToJoinLocationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_UpdateDesk_Arguments")]
-public class Mutation_UpdateDesk_Arguments
-{
-    [GraphQLName("input")] public UpdateDeskInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_UpdateLocation_Arguments")]
-public class Mutation_UpdateLocation_Arguments
-{
-    [GraphQLName("input")] public UpdateLocationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_UpdateLocationTag_Arguments")]
-public class Mutation_UpdateLocationTag_Arguments
-{
-    [GraphQLName("input")] public UpdateLocationTagInput Input { get; set; }
-}
-
 [GraphQLName("Node")]
 public interface Node
 {
@@ -611,100 +507,6 @@ public class PageInfo
     [GraphQLName("startCursor")] public string? StartCursor { get; set; }
 
     [GraphQLName("endCursor")] public string? EndCursor { get; set; }
-}
-
-[GraphQLName("Query_Location_Arguments")]
-public class Query_Location_Arguments
-{
-    [GraphQLName("id")] public string Id { get; set; }
-}
-
-[GraphQLName("Query_LocationAnalytics_Arguments")]
-public class Query_LocationAnalytics_Arguments
-{
-    [GraphQLName("locationId")] public string LocationId { get; set; }
-
-    [GraphQLName("from")] public DateTimeOffset From { get; set; }
-
-    [GraphQLName("until")] public DateTimeOffset Until { get; set; }
-}
-
-[GraphQLName("Query_LocationMembers_Arguments")]
-public class Query_LocationMembers_Arguments
-{
-    [GraphQLName("where")] public LocationMemberWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public LocationMemberOrderInput[]? OrderBy { get; set; }
-}
-
-[GraphQLName("Query_Locations_Arguments")]
-public class Query_Locations_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("where")] public LocationWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public LocationOrderInput[]? OrderBy { get; set; }
-}
-
-[GraphQLName("Query_MyLocations_Arguments")]
-public class Query_MyLocations_Arguments
-{
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
-}
-
-[GraphQLName("Query_PaginatedLocationDesks_Arguments")]
-public class Query_PaginatedLocationDesks_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("where")] public DeskWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public DeskOrderInput[]? OrderBy { get; set; }
-}
-
-[GraphQLName("Query_PaginatedLocationMembers_Arguments")]
-public class Query_PaginatedLocationMembers_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("where")] public LocationMemberWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public LocationMemberOrderInput[]? OrderBy { get; set; }
-}
-
-[GraphQLName("Query_PaginatedLocationTags_Arguments")]
-public class Query_PaginatedLocationTags_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("where")] public LocationTagWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public LocationTagOrderInput[]? OrderBy { get; set; }
 }
 
 [GraphQLName("RejectInvitationToJoinLocationInput")]

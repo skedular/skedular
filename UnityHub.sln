@@ -127,26 +127,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing.Shared.IntegrationT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.Api.IntegrationTests", "customer\apis\Customer.Api.IntegrationTests\Customer.Api.IntegrationTests.csproj", "{B761B9A6-A870-4F3F-A8A1-36BB70F70D20}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "graphql", "graphql", "{6C2C2117-E685-4BD8-85F8-485B0821306C}"
-	ProjectSection(SolutionItems) = preProject
-		api-definitions\graphql\generate.sh = api-definitions\graphql\generate.sh
-		api-definitions\graphql\services.Dockerfile = api-definitions\graphql\services.Dockerfile
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unityhub", "unityhub", "{04ADFDF8-E8F4-4E50-851F-2BAB9D97E28A}"
-	ProjectSection(SolutionItems) = preProject
-		api-definitions\graphql\unityhub\billing_v1.graphql = api-definitions\graphql\unityhub\billing_v1.graphql
-		api-definitions\graphql\unityhub\booking_v1.graphql = api-definitions\graphql\unityhub\booking_v1.graphql
-		api-definitions\graphql\unityhub\customer_v1.graphql = api-definitions\graphql\unityhub\customer_v1.graphql
-		api-definitions\graphql\unityhub\location_v1.graphql = api-definitions\graphql\unityhub\location_v1.graphql
-		api-definitions\graphql\unityhub\msteams_v1.graphql = api-definitions\graphql\unityhub\msteams_v1.graphql
-		api-definitions\graphql\unityhub\notification_v1.graphql = api-definitions\graphql\unityhub\notification_v1.graphql
-		api-definitions\graphql\unityhub\organization_v1.graphql = api-definitions\graphql\unityhub\organization_v1.graphql
-		api-definitions\graphql\unityhub\payment_v1.graphql = api-definitions\graphql\unityhub\payment_v1.graphql
-		api-definitions\graphql\unityhub\slack_v1.graphql = api-definitions\graphql\unityhub\slack_v1.graphql
-		api-definitions\graphql\unityhub\team_v1.graphql = api-definitions\graphql\unityhub\team_v1.graphql
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "all-in-one", "all-in-one", "{3C37F231-E3BF-4C6C-90ED-6EDA6C0CAF64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllInOne", "all-in-one\AllInOne\AllInOne.csproj", "{D24E0B14-3C5E-4F29-9025-D6E155C1BA86}"
@@ -1025,8 +1005,6 @@ Global
 		{1D84F636-5216-4378-BB02-C2C98B4CA10C} = {81B83E72-C2EE-40FF-869C-0B6D0862BFB2}
 		{9A69F364-CA9E-4430-963F-D5237D4039DD} = {0916AC00-8FE9-4B38-A135-EF9CE225C84B}
 		{B761B9A6-A870-4F3F-A8A1-36BB70F70D20} = {81B83E72-C2EE-40FF-869C-0B6D0862BFB2}
-		{6C2C2117-E685-4BD8-85F8-485B0821306C} = {4C78A2E7-4ECF-4A16-B218-3BF56F839C3C}
-		{04ADFDF8-E8F4-4E50-851F-2BAB9D97E28A} = {6C2C2117-E685-4BD8-85F8-485B0821306C}
 		{D24E0B14-3C5E-4F29-9025-D6E155C1BA86} = {3C37F231-E3BF-4C6C-90ED-6EDA6C0CAF64}
 		{46629528-FA0F-46ED-B5AC-4C9803B3C8DF} = {AC1BBA2E-A1F7-41BF-828E-175BED47719B}
 		{FBA5AB71-1A67-4696-9169-0793284E3109} = {879BE31C-FF36-4B2D-9A11-B515E3D6C099}

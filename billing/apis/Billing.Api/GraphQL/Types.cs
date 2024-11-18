@@ -3,12 +3,6 @@ using HotChocolate.Types.Relay;
 
 namespace Billing.Api.GraphQL;
 
-[GraphQLName("Mutation_SetOrganizationBillingInfo_Arguments")]
-public class Mutation_SetOrganizationBillingInfo_Arguments
-{
-    [GraphQLName("input")] public SetOrganizationBillingInfoInput Input { get; set; }
-}
-
 [GraphQLName("OrganizationBillingInfo")]
 public class OrganizationBillingInfo
 {
@@ -55,18 +49,6 @@ public class OrganizationCurrentOfferingChargesDetails
     [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
 
     [GraphQLName("totalCost")] public int TotalCost { get; set; }
-}
-
-[GraphQLName("Query_OrganizationBillingInfo_Arguments")]
-public class Query_OrganizationBillingInfo_Arguments
-{
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
-}
-
-[GraphQLName("Query_OrganizationCurrentOfferingCharges_Arguments")]
-public class Query_OrganizationCurrentOfferingCharges_Arguments
-{
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
 }
 
 [GraphQLName("SetOrganizationBillingInfoInput")]

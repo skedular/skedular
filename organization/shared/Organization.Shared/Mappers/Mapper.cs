@@ -55,7 +55,13 @@ public class Mapper : IMapper
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-            return new Member { Id = item.Id, CustomerId = item.Customer.Id, MembershipType = membershipType };
+            return new Member
+            {
+                Id = item.Id,
+                CustomerId = item.Customer.Id,
+                MembershipType = membershipType,
+                IsOrganizationOnboardingDone = item.IsOrganizationOnboardingDone ?? false
+            };
         }));
 
         return organization;

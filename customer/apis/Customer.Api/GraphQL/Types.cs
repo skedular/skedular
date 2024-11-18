@@ -209,14 +209,14 @@ public class CustomerLocationTagDetails
 
 public enum CustomerOrderField
 {
-    designation,
-    title,
-    name,
-    givenName,
-    middleName,
-    familyName,
-    timezone,
-    locale
+    Designation,
+    Title,
+    Name,
+    GivenName,
+    MiddleName,
+    FamilyName,
+    Timezone,
+    Locale
 }
 
 [GraphQLName("CustomerOrderInput")]
@@ -270,120 +270,6 @@ public enum FeedbackChannel
     MsTeams
 }
 
-[GraphQLName("Mutation_AddCustomerDefaultDesk_Arguments")]
-public class Mutation_AddCustomerDefaultDesk_Arguments
-{
-    [GraphQLName("input")] public AddCustomerDefaultDeskInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_AddCustomerDefaultLocation_Arguments")]
-public class Mutation_AddCustomerDefaultLocation_Arguments
-{
-    [GraphQLName("input")] public AddCustomerDefaultLocationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_AddCustomerDefaultLocationTag_Arguments")]
-public class Mutation_AddCustomerDefaultLocationTag_Arguments
-{
-    [GraphQLName("input")] public AddCustomerDefaultLocationTagInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_AddCustomerDefaultTeam_Arguments")]
-public class Mutation_AddCustomerDefaultTeam_Arguments
-{
-    [GraphQLName("input")] public AddCustomerDefaultTeamInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_ClearCustomerDefaultOrganization_Arguments")]
-public class Mutation_ClearCustomerDefaultOrganization_Arguments
-{
-    [GraphQLName("input")] public ClearCustomerDefaultOrganizationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CompleteDefaultLocationOnboarding_Arguments")]
-public class Mutation_CompleteDefaultLocationOnboarding_Arguments
-{
-    [GraphQLName("input")] public CompleteDefaultLocationOnboardingInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CompleteDefaultOrganizationOnboarding_Arguments")]
-public class Mutation_CompleteDefaultOrganizationOnboarding_Arguments
-{
-    [GraphQLName("input")] public CompleteDefaultOrganizationOnboardingInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CompleteLocationOnboarding_Arguments")]
-public class Mutation_CompleteLocationOnboarding_Arguments
-{
-    [GraphQLName("input")] public CompleteLocationOnboardingInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CompleteOrganizationOnboarding_Arguments")]
-public class Mutation_CompleteOrganizationOnboarding_Arguments
-{
-    [GraphQLName("input")] public CompleteOrganizationOnboardingInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CompletePreferredDeskOnboarding_Arguments")]
-public class Mutation_CompletePreferredDeskOnboarding_Arguments
-{
-    [GraphQLName("input")] public CompletePreferredDeskOnboardingInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CompletePreferredZoneOnboarding_Arguments")]
-public class Mutation_CompletePreferredZoneOnboarding_Arguments
-{
-    [GraphQLName("input")] public CompletePreferredZoneOnboardingInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CompleteTeamOnboarding_Arguments")]
-public class Mutation_CompleteTeamOnboarding_Arguments
-{
-    [GraphQLName("input")] public CompleteTeamOnboardingInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_RemoveCustomerDefaultDesk_Arguments")]
-public class Mutation_RemoveCustomerDefaultDesk_Arguments
-{
-    [GraphQLName("input")] public RemoveCustomerDefaultDeskInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_RemoveCustomerDefaultLocation_Arguments")]
-public class Mutation_RemoveCustomerDefaultLocation_Arguments
-{
-    [GraphQLName("input")] public RemoveCustomerDefaultLocationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_RemoveCustomerDefaultLocationTag_Arguments")]
-public class Mutation_RemoveCustomerDefaultLocationTag_Arguments
-{
-    [GraphQLName("input")] public RemoveCustomerDefaultLocationTagInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_RemoveCustomerDefaultTeam_Arguments")]
-public class Mutation_RemoveCustomerDefaultTeam_Arguments
-{
-    [GraphQLName("input")] public RemoveCustomerDefaultTeamInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_SetCustomerDefaultOrganization_Arguments")]
-public class Mutation_SetCustomerDefaultOrganization_Arguments
-{
-    [GraphQLName("input")] public SetCustomerDefaultOrganizationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_SubmitCustomerFeedback_Arguments")]
-public class Mutation_SubmitCustomerFeedback_Arguments
-{
-    [GraphQLName("input")] public SubmitCustomerFeedbackInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_UpdateMyCustomerDetails_Arguments")]
-public class Mutation_UpdateMyCustomerDetails_Arguments
-{
-    [GraphQLName("input")] public UpdateMyCustomerDetailsInput Input { get; set; }
-}
-
 [GraphQLName("Node")]
 public interface Node
 {
@@ -406,30 +292,6 @@ public class PageInfo
     [GraphQLName("startCursor")] public string? StartCursor { get; set; }
 
     [GraphQLName("endCursor")] public string? EndCursor { get; set; }
-}
-
-[GraphQLName("Query_CustomersByDefaultLocation_Arguments")]
-public class Query_CustomersByDefaultLocation_Arguments
-{
-    [GraphQLName("where")] public CustomerWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public CustomerOrderInput[]? OrderBy { get; set; }
-}
-
-[GraphQLName("Query_PaginatedCustomersByDefaultLocation_Arguments")]
-public class Query_PaginatedCustomersByDefaultLocation_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("where")] public CustomerWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public CustomerOrderInput[]? OrderBy { get; set; }
 }
 
 [GraphQLName("RemoveCustomerDefaultDeskInput")]

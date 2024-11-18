@@ -91,7 +91,7 @@ const LocationBookingsWithRelay = ({
         peopleSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
         organizationId: organizationId ?? '',

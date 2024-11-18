@@ -53,9 +53,9 @@ public class TeamMutation
                 input.Id,
                 input.MembershipType switch
                 {
-                    TeamMemberMembershipType.OWNER => TeamMembershipType.Owner,
-                    TeamMemberMembershipType.ADMINISTRATOR => TeamMembershipType.Administrator,
-                    TeamMemberMembershipType.MEMBER => TeamMembershipType.Member,
+                    TeamMemberMembershipType.Owner => TeamMembershipType.Owner,
+                    TeamMemberMembershipType.Administrator => TeamMembershipType.Administrator,
+                    TeamMemberMembershipType.Member => TeamMembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 cancellationToken);

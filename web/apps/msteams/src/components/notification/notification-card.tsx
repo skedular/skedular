@@ -27,13 +27,13 @@ const NotificationCard = ({ notificationDetailsRelay }: Props) => {
   const notificationType = useMemo(() => notificationDetails?.notificationType, [notificationDetails?.notificationType]);
 
   switch (notificationType) {
-    case 'INVITATION_TO_JOIN_ORGANIZATION':
+    case 'InvitationToJoinOrganization':
       return <InvitationToJoinOrganizationNotificationCard notificationDetailsRelay={notificationDetails} />;
 
-    case 'INVITATION_TO_JOIN_LOCATION':
+    case 'InvitationToJoinLocation':
       return <InvitationToJoinLocationNotificationCard notificationDetailsRelay={notificationDetails} />;
 
-    case 'INVITATION_TO_JOIN_TEAM':
+    case 'InvitationToJoinTeam':
       return <InvitationToJoinTeamNotificationCard notificationDetailsRelay={notificationDetails} />;
 
     default:

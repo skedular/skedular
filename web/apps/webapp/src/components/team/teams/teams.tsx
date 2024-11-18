@@ -66,7 +66,7 @@ const Teams = ({ queryReference }: Props) => {
   const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<TeamOrderInput>({
     direction: 'Ascending',
-    field: 'name',
+    field: 'Name',
   });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
@@ -167,7 +167,7 @@ const Teams = ({ queryReference }: Props) => {
             onRowsPerPageChange={handlePageSizeChange}
           />
           <Sorting
-            options={[{ id: 'name', label: 'Name' }]}
+            options={[{ id: 'Name', label: 'Name' }]}
             defaultOption={sortingOrder.field}
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
@@ -205,7 +205,7 @@ const TeamsWithRelay = () => {
         teamsSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
       },

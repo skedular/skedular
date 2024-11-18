@@ -89,15 +89,15 @@ public class NotificationLocationDetails
 
 public enum NotificationNotificationType
 {
-    INVITATION_TO_JOIN_ORGANIZATION,
-    INVITATION_TO_JOIN_LOCATION,
-    INVITATION_TO_JOIN_TEAM
+    InvitationToJoinOrganization,
+    InvitationToJoinLocation,
+    InvitationToJoinTeam
 }
 
 public enum NotificationOrderField
 {
-    eventRaisedAt,
-    notificationType
+    EventRaisedAt,
+    NotificationType
 }
 
 [GraphQLName("NotificationOrderInput")]
@@ -142,20 +142,6 @@ public class PageInfo
     [GraphQLName("startCursor")] public string? StartCursor { get; set; }
 
     [GraphQLName("endCursor")] public string? EndCursor { get; set; }
-}
-
-[GraphQLName("Query_MyNotifications_Arguments")]
-public class Query_MyNotifications_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("orderBy")] public NotificationOrderInput[]? OrderBy { get; set; }
 }
 
 [GraphQLName("Version")]

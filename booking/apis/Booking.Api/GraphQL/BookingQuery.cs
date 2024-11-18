@@ -93,16 +93,16 @@ public class BookingQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            BookingOrderField.from => Shared.Models.BookingOrderField.From,
-                            BookingOrderField.to => Shared.Models.BookingOrderField.To,
-                            BookingOrderField.notes => Shared.Models.BookingOrderField.Notes,
-                            BookingOrderField.name => Shared.Models.BookingOrderField.Name,
-                            BookingOrderField.givenName => Shared.Models.BookingOrderField.GivenName,
-                            BookingOrderField.middleName => Shared.Models.BookingOrderField.MiddleName,
-                            BookingOrderField.familyName => Shared.Models.BookingOrderField.FamilyName,
-                            BookingOrderField.organizationName => Shared.Models.BookingOrderField.OrganizationName,
-                            BookingOrderField.locationName => Shared.Models.BookingOrderField.LocationName,
-                            BookingOrderField.teamName => Shared.Models.BookingOrderField.TeamName,
+                            BookingOrderField.From => Shared.Models.BookingOrderField.From,
+                            BookingOrderField.To => Shared.Models.BookingOrderField.To,
+                            BookingOrderField.Notes => Shared.Models.BookingOrderField.Notes,
+                            BookingOrderField.Name => Shared.Models.BookingOrderField.Name,
+                            BookingOrderField.GivenName => Shared.Models.BookingOrderField.GivenName,
+                            BookingOrderField.MiddleName => Shared.Models.BookingOrderField.MiddleName,
+                            BookingOrderField.FamilyName => Shared.Models.BookingOrderField.FamilyName,
+                            BookingOrderField.OrganizationName => Shared.Models.BookingOrderField.OrganizationName,
+                            BookingOrderField.LocationName => Shared.Models.BookingOrderField.LocationName,
+                            BookingOrderField.TeamName => Shared.Models.BookingOrderField.TeamName,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

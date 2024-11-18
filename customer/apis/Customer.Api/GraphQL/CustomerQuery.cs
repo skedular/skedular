@@ -58,21 +58,21 @@ public class CustomerQuery
                             : Enterprise.Shared.Pagination.OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            CustomerOrderField.designation =>
+                            CustomerOrderField.Designation =>
                                 Shared.Models.CustomerOrderField.Designation,
-                            CustomerOrderField.title =>
+                            CustomerOrderField.Title =>
                                 Shared.Models.CustomerOrderField.Title,
-                            CustomerOrderField.name =>
+                            CustomerOrderField.Name =>
                                 Shared.Models.CustomerOrderField.Name,
-                            CustomerOrderField.givenName =>
+                            CustomerOrderField.GivenName =>
                                 Shared.Models.CustomerOrderField.GivenName,
-                            CustomerOrderField.middleName =>
+                            CustomerOrderField.MiddleName =>
                                 Shared.Models.CustomerOrderField.MiddleName,
-                            CustomerOrderField.familyName =>
+                            CustomerOrderField.FamilyName =>
                                 Shared.Models.CustomerOrderField.FamilyName,
-                            CustomerOrderField.timezone =>
+                            CustomerOrderField.Timezone =>
                                 Shared.Models.CustomerOrderField.Timezone,
-                            CustomerOrderField.locale =>
+                            CustomerOrderField.Locale =>
                                 Shared.Models.CustomerOrderField.Locale,
                             _ => throw new ArgumentOutOfRangeException()
                         };

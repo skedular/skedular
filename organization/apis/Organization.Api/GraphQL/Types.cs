@@ -1,6 +1,9 @@
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace Organization.Api.GraphQL;
 
 [GraphQLName("AcceptInvitationToJoinOrganizationInput")]
@@ -8,7 +11,7 @@ public class AcceptInvitationToJoinOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("AcceptInvitationToJoinOrganizationPayload")]
@@ -24,7 +27,7 @@ public class AddOrganizationInput
 
     [GraphQLName("id")] public string? Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("about")] public string? About { get; set; }
 
@@ -32,10 +35,10 @@ public class AddOrganizationInput
 
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
 
-    [GraphQLName("termsOfUseId")] public string TermsOfUseId { get; set; }
+    [GraphQLName("termsOfUseId")] public string TermsOfUseId { get; set; } = string.Empty;
 
     [GraphQLName("industrySubCategoryIds")]
-    public string[] IndustrySubCategoryIds { get; set; }
+    public string[] IndustrySubCategoryIds { get; set; } = [];
 }
 
 [GraphQLName("CancelInvitationToJoinOrganizationInput")]
@@ -43,7 +46,7 @@ public class CancelInvitationToJoinOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("CancelInvitationToJoinOrganizationPayload")]
@@ -57,7 +60,7 @@ public class CancelOrganizationOfferingInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("CancelOrganizationOfferingPayload")]
@@ -71,7 +74,7 @@ public class ChangeOrganizationMemberOwnershipTypeInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 
     [GraphQLName("membershipType")] public OrganizationMemberMembershipType MembershipType { get; set; }
 }
@@ -81,7 +84,7 @@ public class DeleteOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("InviteCustomersToJoinOrganizationInput")]
@@ -89,75 +92,15 @@ public class InviteCustomersToJoinOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
 
-    [GraphQLName("emails")] public string[] Emails { get; set; }
+    [GraphQLName("emails")] public string[] Emails { get; set; } = [];
 }
 
 [GraphQLName("InviteCustomersToJoinOrganizationPayload")]
 public class InviteCustomersToJoinOrganizationPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-}
-
-[GraphQLName("Mutation_AcceptInvitationToJoinOrganization_Arguments")]
-public class Mutation_AcceptInvitationToJoinOrganization_Arguments
-{
-    [GraphQLName("input")] public AcceptInvitationToJoinOrganizationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_AddOrganization_Arguments")]
-public class Mutation_AddOrganization_Arguments
-{
-    [GraphQLName("input")] public AddOrganizationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CancelInvitationToJoinOrganization_Arguments")]
-public class Mutation_CancelInvitationToJoinOrganization_Arguments
-{
-    [GraphQLName("input")] public CancelInvitationToJoinOrganizationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_CancelOrganizationOffering_Arguments")]
-public class Mutation_CancelOrganizationOffering_Arguments
-{
-    [GraphQLName("input")] public CancelOrganizationOfferingInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_ChangeOrganizationMemberOwnershipType_Arguments")]
-public class Mutation_ChangeOrganizationMemberOwnershipType_Arguments
-{
-    [GraphQLName("input")] public ChangeOrganizationMemberOwnershipTypeInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_DeleteOrganization_Arguments")]
-public class Mutation_DeleteOrganization_Arguments
-{
-    [GraphQLName("input")] public DeleteOrganizationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_InviteCustomersToJoinOrganization_Arguments")]
-public class Mutation_InviteCustomersToJoinOrganization_Arguments
-{
-    [GraphQLName("input")] public InviteCustomersToJoinOrganizationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_RejectInvitationToJoinOrganization_Arguments")]
-public class Mutation_RejectInvitationToJoinOrganization_Arguments
-{
-    [GraphQLName("input")] public RejectInvitationToJoinOrganizationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_UpdateOrganization_Arguments")]
-public class Mutation_UpdateOrganization_Arguments
-{
-    [GraphQLName("input")] public UpdateOrganizationInput Input { get; set; }
-}
-
-[GraphQLName("Mutation_UpdateOrganizationOffering_Arguments")]
-public class Mutation_UpdateOrganizationOffering_Arguments
-{
-    [GraphQLName("input")] public UpdateOrganizationOfferingInput Input { get; set; }
 }
 
 [GraphQLName("Node")]
@@ -176,21 +119,21 @@ public enum OrderDirection
 public class OrganizationAnalytics
 {
     [GraphQLName("memberAttendancePercentage")]
-    public OrganizationMemberAttendancePercentage[] MemberAttendancePercentage { get; set; }
+    public OrganizationMemberAttendancePercentage[] MemberAttendancePercentage { get; set; } = [];
 
-    [GraphQLName("dailyBookingsTotals")] public OrganizationDailyBookingsTotal[] DailyBookingsTotals { get; set; }
+    [GraphQLName("dailyBookingsTotals")] public OrganizationDailyBookingsTotal[] DailyBookingsTotals { get; set; } = [];
 }
 
 [GraphQLName("OrganizationAvailableOfferingDetails")]
 public class OrganizationAvailableOfferingDetails
 {
-    [GraphQLName("code")] public string Code { get; set; }
+    [GraphQLName("code")] public string Code { get; set; } = string.Empty;
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
 
-    [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; }
+    [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
 
     [GraphQLName("free")] public bool Free { get; set; }
 }
@@ -198,9 +141,9 @@ public class OrganizationAvailableOfferingDetails
 [GraphQLName("OrganizationConnection")]
 public class OrganizationConnection
 {
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; }
+    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; } = new();
 
-    [GraphQLName("edges")] public OrganizationEdge[] Edges { get; set; }
+    [GraphQLName("edges")] public OrganizationEdge[] Edges { get; set; } = [];
 
     [GraphQLName("totalCount")] public int? TotalCount { get; set; }
 }
@@ -208,7 +151,7 @@ public class OrganizationConnection
 [GraphQLName("OrganizationCustomerDetails")]
 public class OrganizationCustomerDetails
 {
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
 
     [GraphQLName("name")] public string? Name { get; set; }
 
@@ -244,7 +187,7 @@ public class OrganizationDailyBookingsTotal
 [GraphQLName("OrganizationDetails")]
 public class OrganizationDetails : Node
 {
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("about")] public string? About { get; set; }
 
@@ -257,9 +200,10 @@ public class OrganizationDetails : Node
     [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }
 
     [GraphQLName("industrySubCategories")]
-    public OrganizationIndustrySubCategoryReferenceDetails[] IndustrySubCategories { get; set; }
+    public OrganizationIndustrySubCategoryReferenceDetails[] IndustrySubCategories { get; set; } = [];
 
-    [GraphQLName("availableOfferings")] public OrganizationAvailableOfferingDetails[] AvailableOfferings { get; set; }
+    [GraphQLName("availableOfferings")]
+    public OrganizationAvailableOfferingDetails[] AvailableOfferings { get; set; } = [];
 
     [GraphQLName("offering")] public OrganizationOfferingDetails Offering { get; set; }
 
@@ -280,7 +224,7 @@ public class OrganizationDetails : Node
 
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
 
-    [GraphQLName("id")] [ID] public string Id { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("OrganizationEdge")]
@@ -288,42 +232,36 @@ public class OrganizationEdge
 {
     [GraphQLName("node")] public OrganizationDetails Node { get; set; }
 
-    [GraphQLName("cursor")] public string Cursor { get; set; }
+    [GraphQLName("cursor")] public string Cursor { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationFeatureSetDetails")]
 public class OrganizationFeatureSetDetails
 {
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
-    [GraphQLName("description")] public string Description { get; set; }
+    [GraphQLName("description")] public string Description { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationIndustryMainCategoryReferenceDetails")]
 public class OrganizationIndustryMainCategoryReferenceDetails : Node
 {
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
-    [GraphQLName("subCategories")] public OrganizationIndustrySubCategoryReferenceDetails[] SubCategories { get; set; }
+    [GraphQLName("subCategories")]
+    public OrganizationIndustrySubCategoryReferenceDetails[] SubCategories { get; set; } = [];
 
-    [GraphQLName("id")] [ID] public string Id { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("OrganizationIndustrySubCategoryReferenceDetails")]
 public class OrganizationIndustrySubCategoryReferenceDetails : Node
 {
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
-    [GraphQLName("mainCategoryName")] public string MainCategoryName { get; set; }
+    [GraphQLName("mainCategoryName")] public string MainCategoryName { get; set; } = string.Empty;
 
-    [GraphQLName("id")] [ID] public string Id { get; set; }
-}
-
-public enum OrganizationJoinInvitationStatus
-{
-    PENDING,
-    ACCEPTED,
-    REJECTED
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("OrganizationMemberAttendancePercentage")]
@@ -337,9 +275,9 @@ public class OrganizationMemberAttendancePercentage
 [GraphQLName("OrganizationMemberConnection")]
 public class OrganizationMemberConnection
 {
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; }
+    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; } = new();
 
-    [GraphQLName("edges")] public OrganizationMemberEdge[] Edges { get; set; }
+    [GraphQLName("edges")] public OrganizationMemberEdge[] Edges { get; set; } = [];
 
     [GraphQLName("totalCount")] public int? TotalCount { get; set; }
 }
@@ -349,9 +287,12 @@ public class OrganizationMemberDetails : Node
 {
     [GraphQLName("membershipType")] public OrganizationMemberMembershipType? MembershipType { get; set; }
 
+    [GraphQLName("isOrganizationOnboardingDone")]
+    public bool IsOrganizationOnboardingDone { get; set; }
+
     [GraphQLName("customer")] public OrganizationCustomerDetails Customer { get; set; }
 
-    [GraphQLName("id")] [ID] public string Id { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("OrganizationMemberDetailsPayload")]
@@ -367,23 +308,23 @@ public class OrganizationMemberEdge
 {
     [GraphQLName("node")] public OrganizationMemberDetails Node { get; set; }
 
-    [GraphQLName("cursor")] public string Cursor { get; set; }
+    [GraphQLName("cursor")] public string Cursor { get; set; } = string.Empty;
 }
 
 public enum OrganizationMemberMembershipType
 {
-    OWNER,
-    ADMINISTRATOR,
-    MEMBER
+    Owner,
+    Administrator,
+    Member
 }
 
 public enum OrganizationMemberOrderField
 {
-    membershipType,
-    name,
-    givenName,
-    middleName,
-    familyName
+    MembershipType,
+    Name,
+    GivenName,
+    MiddleName,
+    FamilyName
 }
 
 [GraphQLName("OrganizationMemberOrderInput")]
@@ -397,7 +338,7 @@ public class OrganizationMemberOrderInput
 [GraphQLName("OrganizationMemberWhereInput")]
 public class OrganizationMemberWhereInput
 {
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
 
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
@@ -405,9 +346,9 @@ public class OrganizationMemberWhereInput
 [GraphQLName("OrganizationOfferingDetails")]
 public class OrganizationOfferingDetails : Node
 {
-    [GraphQLName("code")] public string Code { get; set; }
+    [GraphQLName("code")] public string Code { get; set; } = string.Empty;
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("start")] public DateTimeOffset Start { get; set; }
 
@@ -415,16 +356,16 @@ public class OrganizationOfferingDetails : Node
 
     [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
 
-    [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; }
+    [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
 
     [GraphQLName("free")] public bool Free { get; set; }
 
-    [GraphQLName("id")] [ID] public string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 public enum OrganizationOrderField
 {
-    name
+    Name
 }
 
 [GraphQLName("OrganizationOrderInput")]
@@ -446,9 +387,9 @@ public class OrganizationPayload
 [GraphQLName("OrganizationTermsOfUse")]
 public class OrganizationTermsOfUse : Node
 {
-    [GraphQLName("terms")] public string Terms { get; set; }
+    [GraphQLName("terms")] public string Terms { get; set; } = string.Empty;
 
-    [GraphQLName("id")] [ID] public string Id { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("OrganizationWhereInput")]
@@ -469,68 +410,12 @@ public class PageInfo
     [GraphQLName("endCursor")] public string? EndCursor { get; set; }
 }
 
-[GraphQLName("Query_Organization_Arguments")]
-public class Query_Organization_Arguments
-{
-    [GraphQLName("id")] public string Id { get; set; }
-}
-
-[GraphQLName("Query_OrganizationAnalytics_Arguments")]
-public class Query_OrganizationAnalytics_Arguments
-{
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; }
-
-    [GraphQLName("from")] public DateTimeOffset From { get; set; }
-
-    [GraphQLName("until")] public DateTimeOffset Until { get; set; }
-}
-
-[GraphQLName("Query_OrganizationMembers_Arguments")]
-public class Query_OrganizationMembers_Arguments
-{
-    [GraphQLName("where")] public OrganizationMemberWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public OrganizationMemberOrderInput[]? OrderBy { get; set; }
-}
-
-[GraphQLName("Query_Organizations_Arguments")]
-public class Query_Organizations_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("where")] public OrganizationWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public OrganizationOrderInput[]? OrderBy { get; set; }
-}
-
-[GraphQLName("Query_PaginatedOrganizationMembers_Arguments")]
-public class Query_PaginatedOrganizationMembers_Arguments
-{
-    [GraphQLName("after")] public string? After { get; set; }
-
-    [GraphQLName("first")] public int? First { get; set; }
-
-    [GraphQLName("before")] public string? Before { get; set; }
-
-    [GraphQLName("last")] public int? Last { get; set; }
-
-    [GraphQLName("where")] public OrganizationMemberWhereInput Where { get; set; }
-
-    [GraphQLName("orderBy")] public OrganizationMemberOrderInput[]? OrderBy { get; set; }
-}
-
 [GraphQLName("RejectInvitationToJoinOrganizationInput")]
 public class RejectInvitationToJoinOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("RejectInvitationToJoinOrganizationPayload")]
@@ -544,16 +429,16 @@ public class UpdateOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("about")] public string? About { get; set; }
 
     [GraphQLName("website")] public string? Website { get; set; }
 
     [GraphQLName("industrySubCategoryIds")]
-    public string[] IndustrySubCategoryIds { get; set; }
+    public string[] IndustrySubCategoryIds { get; set; } = [];
 }
 
 [GraphQLName("UpdateOrganizationOfferingInput")]
@@ -561,9 +446,9 @@ public class UpdateOrganizationOfferingInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 
-    [GraphQLName("offeringCode")] public string OfferingCode { get; set; }
+    [GraphQLName("offeringCode")] public string OfferingCode { get; set; } = string.Empty;
 }
 
 [GraphQLName("UpdateOrganizationOfferingPayload")]

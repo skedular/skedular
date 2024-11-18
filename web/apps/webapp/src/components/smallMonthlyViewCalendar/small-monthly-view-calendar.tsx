@@ -311,13 +311,13 @@ const SmallMonthlyViewCalendarWithRelay = () => {
         bookingDetailsSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',
-            field: 'name',
+            field: 'Name',
           },
         ],
         smallMonthlyViewCalendarBookingsSortingValues: [
           {
             direction: 'Ascending',
-            field: 'from',
+            field: 'From',
           },
         ],
         dateToGetAvailableDesks: startOfDay().toISOString(),

@@ -59,7 +59,7 @@ const Notifications = ({ queryReference }: Props) => {
   const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<NotificationOrderInput>({
     direction: 'Descending',
-    field: 'eventRaisedAt',
+    field: 'EventRaisedAt',
   });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
@@ -140,7 +140,7 @@ const Notifications = ({ queryReference }: Props) => {
           onRowsPerPageChange={handlePageSizeChange}
         />
         <Sorting
-          options={[{ id: 'eventRaisedAt', label: 'Date' }]}
+          options={[{ id: 'EventRaisedAt', label: 'Date' }]}
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}
@@ -171,7 +171,7 @@ const NotificationsWithRelay = () => {
         myNotificationsSortingValues: [
           {
             direction: 'Descending',
-            field: 'eventRaisedAt',
+            field: 'EventRaisedAt',
           },
         ],
       },
