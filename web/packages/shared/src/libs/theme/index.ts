@@ -1,1 +1,1 @@
-export { default as createTheme } from './theme';
+export { default as createTheme, defaultPadding, defaultSpacing } from './theme';

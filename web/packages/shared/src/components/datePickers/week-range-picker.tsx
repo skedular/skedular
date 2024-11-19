@@ -131,6 +131,7 @@ const WeekRangePicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
             <Typography variant="body1">{buttonTitle}</Typography>
           </Stack>
         )}
+        value=""
       />
 
       <Popover

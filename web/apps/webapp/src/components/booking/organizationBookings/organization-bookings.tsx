@@ -3,6 +3,7 @@ import type { organizationBookings_bookings_refetchableFragment } from '@/querie
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { defaultPadding } from '@repo/shared/libs/theme';
 import { memo, useMemo } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';
 
@@ -10,7 +11,6 @@ type Props = {
   rootDataRelay: organizationBookings_bookings_query$key;
   onReloadRequired: () => void;
   organizationId: string;
-  topMargin: number;
 };
 
 const OrganizationBookings = ({ rootDataRelay, onReloadRequired, organizationId }: Props) => {
@@ -85,7 +85,14 @@ const OrganizationBookings = ({ rootDataRelay, onReloadRequired, organizationId 
   }
 
   return (
-    <Stack direction="column">
+    <Stack
+      direction="column"
+      sx={{
+        paddingLeft: defaultPadding,
+        paddingRight: defaultPadding,
+        paddingTop: defaultPadding,
+      }}
+    >
       <Typography variant="h5">My Bookings</Typography>
       <Divider />
     </Stack>
