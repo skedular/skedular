@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bbd9babc4f73ae9721599987eb8b3ea1>>
+ * @generated SignedSource<<e0f81cf5dc22c1c0187aeddabab88f17>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,13 +17,13 @@ export type BookingOrderInput = {
   field: BookingOrderField;
 };
 export type bookings_bookings_refetchableFragment$variables = {
+  bookingOrganizationId: string;
   bookingSortingValues?: ReadonlyArray<BookingOrderInput> | null | undefined;
   bookingsSearchCriteriaFrom?: any | null | undefined;
   bookingsSearchCriteriaTo?: any | null | undefined;
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   locationId: string;
-  organizationId: string;
   peopleNameSearchText?: string | null | undefined;
   teamId: string;
 };
@@ -37,6 +37,11 @@ export type bookings_bookings_refetchableFragment = {
 
 const node: ConcreteRequest = (function(){
 var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "bookingOrganizationId"
+  },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
@@ -66,11 +71,6 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "locationId"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "organizationId"
   },
   {
     "defaultValue": null,
@@ -137,7 +137,7 @@ v1 = [
           {
             "kind": "Variable",
             "name": "organizationIds.0",
-            "variableName": "organizationId"
+            "variableName": "bookingOrganizationId"
           }
         ],
         "kind": "ListValue",
@@ -448,16 +448,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1d042e2a13f62d8b7859e19ea6a4ad5e",
+    "cacheID": "52491ad23440888e3b2756ae8780182b",
     "id": null,
     "metadata": {},
     "name": "bookings_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookings_bookings_refetchableFragment(\n  $bookingSortingValues: [BookingOrderInput!]\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = 50\n  $cursor: String\n  $locationId: String!\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $teamId: String!\n) {\n  ...bookings_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, nameContains: $peopleNameSearchText, includeMineOnly: false}, orderBy: $bookingSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query bookings_bookings_refetchableFragment(\n  $bookingOrganizationId: String!\n  $bookingSortingValues: [BookingOrderInput!]\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = 50\n  $cursor: String\n  $locationId: String!\n  $peopleNameSearchText: String\n  $teamId: String!\n) {\n  ...bookings_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$bookingOrganizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, nameContains: $peopleNameSearchText, includeMineOnly: false}, orderBy: $bookingSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "da644d6b31ad2091b074550182b1fca8";
+(node as any).hash = "e08ac50d30c7d8997a5282cf8a2600a9";
 
 export default node;

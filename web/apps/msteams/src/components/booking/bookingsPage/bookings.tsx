@@ -40,6 +40,7 @@ type Props = {
 const RootQuery = graphql`
   query bookings_rootQuery(
     $organizationId: String!
+    $bookingOrganizationId: String!
     $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
@@ -99,7 +100,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
           first: $count
           after: $cursor
           where: {
-            organizationIds: [$organizationId]
+            organizationIds: [$bookingOrganizationId]
             locationIds: [$locationId]
             teamIds: [$teamId]
             fromGTE: $bookingsSearchCriteriaFrom
@@ -347,6 +348,7 @@ const BookingsWithRelay = ({ onReloadRequired, organizationId, locationId, teamI
     loadQuery(
       {
         organizationId: organizationId ?? '',
+        bookingOrganizationId: locationId || teamId ? '' : (organizationId ?? ''),
         organizationExists: !!organizationId,
         locationId: locationId ?? '',
         locationExists: !!locationId,
