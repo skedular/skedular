@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Enterprise.Shared.Configurations.Extensions;
+using Enterprise.Shared.HealthCheck;
 using Enterprise.Shared.Infrastructure.Filters;
 using Enterprise.Shared.Logging;
 using Microsoft.AspNetCore.Hosting;
@@ -49,8 +50,9 @@ public abstract class WebHostServiceBase<TProgram>
                             builder.AddEventSourceLogger();
                         });
 
-                        services.AddHealthChecks()
-                            .AddCheck("self", () => HealthCheckResult.Healthy());
+                        services
+                            .AddHealthChecks()
+                            .AddCheck("self", () => HealthCheckResult.Healthy(), [HealthCheckTags.Liveness]);
 
                         services.AddScoped<IGlobalHttpExceptionHandler, GlobalHttpExceptionHandler>();
 

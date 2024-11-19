@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.GraphQL;
+using Enterprise.Shared.HealthCheck;
 using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Telemetry;
 using Microsoft.AspNetCore.Builder;
@@ -57,13 +58,18 @@ public static class UnityHubWebHostExtensions
 
         app.UseHealthChecks(
             LivenessPath,
-            new HealthCheckOptions { Predicate = r => r.Name.Contains("self"), ResponseWriter = WriteResponseAsync });
+            new HealthCheckOptions
+            {
+                Predicate = r => r.Tags.Contains(HealthCheckTags.Liveness) || r.Name.Contains("self"),
+                ResponseWriter = WriteResponseAsync
+            });
 
         app.UseHealthChecks(
             ReadinessPath,
             new HealthCheckOptions
             {
-                Predicate = r => r.Tags.Contains("services"), ResponseWriter = WriteResponseAsync
+                Predicate = r => r.Tags.Contains(HealthCheckTags.Readiness) || r.Name.Contains("services"),
+                ResponseWriter = WriteResponseAsync
             });
 
         // Health checks must go before any middleware

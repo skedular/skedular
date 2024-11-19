@@ -1,4 +1,5 @@
 ﻿using Enterprise.Shared.Database;
+using Enterprise.Shared.HealthCheck;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -13,7 +14,6 @@ public class HealthCheckExtensionsTests
     [Fact]
     public void AddSqlServerHealthCheck_Should_Register_HealthCheck_with_services_tag()
     {
-        const string ExpectedTag = "services";
         const string ConnString = "host=123";
 
         var serviceCollection = new ServiceCollection();
@@ -31,6 +31,6 @@ public class HealthCheckExtensionsTests
             .Registrations
             .First();
 
-        registration.Tags.Should().Contain(ExpectedTag);
+        registration.Tags.Should().Contain(HealthCheckTags.Readiness);
     }
 }

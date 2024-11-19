@@ -3,7 +3,6 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Security.Token;
-using Enterprise.Shared.Time;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -8,7 +8,7 @@ public class GitHashEnvironmentVariableEnricher : ILogEventEnricher
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
         var hashEnv = Environment.GetEnvironmentVariable("GIT_COMMIT_HASH");
-        var hashShortened = hashEnv is null ? "[---]" : ShortenHash(hashEnv);
+        var hashShortened = string.IsNullOrWhiteSpace(hashEnv) ? "[---]" : ShortenHash(hashEnv);
 
         logEvent.AddPropertyIfAbsent(new LogEventProperty("GitHash", new ScalarValue(hashShortened)));
     }
