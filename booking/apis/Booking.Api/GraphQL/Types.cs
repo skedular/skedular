@@ -206,6 +206,8 @@ public class BookingWhereInput
     [GraphQLName("includeMineOnly")] public bool? IncludeMineOnly { get; set; }
     
     [GraphQLName("includeFutureBookingsOnly")] public bool? IncludeFutureBookingsOnly { get; set; }
+    
+    [GraphQLName("combineOrganizationsLocationsTeams")] public bool? CombineOrganizationsLocationsTeams { get; set; }
 }
 
 [GraphQLName("DeleteBookingInput")]

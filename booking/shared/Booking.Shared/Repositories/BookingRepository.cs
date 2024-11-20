@@ -95,16 +95,44 @@ internal static class BookingExtensions
             query = query.Where(item => searchCriteria.CustomerId == item.Customer.Id);
         }
 
-        if (searchCriteria.OrganizationIds.Count != 0 || searchCriteria.LocationIds.Count != 0 ||
-            searchCriteria.TeamIds.Count != 0)
+        if (searchCriteria.CombineOrganizationsLocationsTeams is not null &&
+            searchCriteria.CombineOrganizationsLocationsTeams.Value)
         {
-            query = query.Where(item =>
-                (item.Organization != null && !item.Organization.DeletedAt.HasValue &&
-                 searchCriteria.OrganizationIds.Contains(item.Organization.Id)) ||
-                (item.Location != null && !item.Location.DeletedAt.HasValue &&
-                 searchCriteria.LocationIds.Contains(item.Location.Id)) ||
-                (item.Team != null && !item.Team.DeletedAt.HasValue &&
-                 searchCriteria.TeamIds.Contains(item.Team.Id)));
+            if (searchCriteria.OrganizationIds.Count != 0)
+            {
+                query = query.Where(item =>
+                    item.Organization != null && !item.Organization.DeletedAt.HasValue &&
+                    searchCriteria.OrganizationIds.Contains(item.Organization.Id));
+            }
+
+            if (searchCriteria.LocationIds.Count != 0)
+            {
+                query = query.Where(item =>
+                    item.Location != null && !item.Location.DeletedAt.HasValue &&
+                    searchCriteria.LocationIds.Contains(item.Location.Id));
+            }
+
+
+            if (searchCriteria.TeamIds.Count != 0)
+            {
+                query = query.Where(item =>
+                    item.Team != null && !item.Team.DeletedAt.HasValue &&
+                    searchCriteria.TeamIds.Contains(item.Team.Id));
+            }
+        }
+        else
+        {
+            if (searchCriteria.OrganizationIds.Count != 0 || searchCriteria.LocationIds.Count != 0 ||
+                searchCriteria.TeamIds.Count != 0)
+            {
+                query = query.Where(item =>
+                    (item.Organization != null && !item.Organization.DeletedAt.HasValue &&
+                     searchCriteria.OrganizationIds.Contains(item.Organization.Id)) ||
+                    (item.Location != null && !item.Location.DeletedAt.HasValue &&
+                     searchCriteria.LocationIds.Contains(item.Location.Id)) ||
+                    (item.Team != null && !item.Team.DeletedAt.HasValue &&
+                     searchCriteria.TeamIds.Contains(item.Team.Id)));
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NotesContains))

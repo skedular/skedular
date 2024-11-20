@@ -82,6 +82,7 @@ public class BookingQuery
                     where.NameContains,
                     where.IncludeMineOnly,
                     where.IncludeFutureBookingsOnly,
+                    where.CombineOrganizationsLocationsTeams,
                     where.OrganizationIds ?? [],
                     where.LocationIds ?? [],
                     where.TeamIds ?? []),
