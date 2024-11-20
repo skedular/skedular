@@ -1,18 +1,22 @@
 import type { myBookings_bookings_query$key } from '@/queries/__generated__/myBookings_bookings_query.graphql';
 import type { myBookings_bookings_refetchableFragment } from '@/queries/__generated__/myBookings_bookings_refetchableFragment.graphql';
 import type { myBookings_query$key } from '@/queries/__generated__/myBookings_query.graphql';
+import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { CalendarIcon, DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { CalendarIcon, DeskIcon, LocationIcon, TeamIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { isTodayDate, isTomorrowDate, toShortDate } from '@repo/shared/libs/utils';
-import dayjs from 'dayjs';
-import { memo, useMemo } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
+import { Fragment, memo, useMemo } from 'react';
 import { graphql, useFragment, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -101,16 +105,18 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, org
     return bookings.filter((booking) => booking.customer?.uniqueId === rootData.me?.id);
   }, [bookings, rootData.me?.id]);
 
+  const convertDateToKey = (date: Dayjs) => dayjs(date).format('YYYY-MM-DD');
+
   const groupedBookingsByFromDate = useMemo(() => {
     return bookings.reduce(
       (acc, booking) => {
-        const date = dayjs(booking.from).format('YYYY-MM-DD');
+        const key = convertDateToKey(booking.from);
 
-        if (!acc[date]) {
-          acc[date] = [];
+        if (!acc[key]) {
+          acc[key] = [];
         }
 
-        acc[date].push(booking);
+        acc[key].push(booking);
 
         return acc;
       },
@@ -148,6 +154,9 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, org
             dateValue = toShortDate(date);
           }
 
+          const key = convertDateToKey(myBooking.from);
+          const otherTeammatesBookings = groupedBookingsByFromDate[key]?.filter((booking) => booking.customer?.uniqueId !== rootData.me?.id);
+
           return (
             <Grid key={myBooking.id}>
               <Card sx={{ width: 250 }}>
@@ -174,16 +183,56 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, org
 
                   <Divider />
 
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-                    <DeskIcon fontSize="medium" />
-                    <Typography variant="body1">{myBooking.desks.length > 0 ? myBooking.desks[0]?.name : 'N/A'}</Typography>
-                  </Stack>
+                  {myBooking.desks.length === 0 && (
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
+                      <DeskIcon fontSize="medium" />
+                      <Typography variant="body1">N/A</Typography>
+                    </Stack>
+                  )}
+
+                  {myBooking.desks.length > 0 && (
+                    <>
+                      {myBooking.desks.map((desk) => {
+                        const zones = desk.locationTags.filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
+
+                        return (
+                          <Fragment key={desk.uniqueId}>
+                            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
+                              <DeskIcon fontSize="medium" />
+                              <Typography variant="body1">{desk.name}</Typography>
+                            </Stack>
+
+                            <Divider />
+
+                            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', paddingTop: 1, paddingBottom: 1 }}>
+                              <ZoneIcon fontSize="medium" />
+                              {zones.map((zone) => (
+                                <Chip key={zone.uniqueId} label={zone.name} />
+                              ))}
+                            </Stack>
+                          </Fragment>
+                        );
+                      })}
+                    </>
+                  )}
 
                   <Divider />
 
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-                    <DeskIcon fontSize="medium" />
-                    <Typography variant="body1">{myBooking.desks.length > 0 ? myBooking.desks[0]?.name : 'N/A'}</Typography>
+                  <Stack direction="column" spacing={1} sx={{ paddingTop: 1, paddingBottom: 1 }}>
+                    <Typography variant="body1">Other teammates coming</Typography>
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                      <AvatarGroup max={5}>
+                        {otherTeammatesBookings?.map((booking) => (
+                          <CustomerAvatar
+                            key={booking.customer?.uniqueId}
+                            name={booking.customer}
+                            photo={{ url: booking.customer?.photoUrl }}
+                            size="medium"
+                            showFullName
+                          />
+                        ))}
+                      </AvatarGroup>
+                    </Stack>
                   </Stack>
                 </CardContent>
               </Card>
