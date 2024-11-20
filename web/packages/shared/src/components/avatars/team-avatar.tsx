@@ -2,6 +2,7 @@ import { SxProps } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import { memo } from 'react';
+import { stringToColor } from '../../libs/utils';
 
 type NameProps = {
   name?: string | null;
@@ -43,6 +44,8 @@ const TeamAvatar = ({ name, photo, size, sx, showFullName, tip, onClick }: Props
   } else if (size === 'large') {
     finalSx = { width: 40, height: 40 };
   }
+
+  finalSx = { ...finalSx, bgcolor: stringToColor(name?.name ?? "") };
 
   if (!showFullName) {
     return (

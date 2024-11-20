@@ -2,7 +2,7 @@ import { SxProps } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import { memo } from 'react';
-import { NameDetails, getCustomerAvatarLetters, getCustomerFullName } from '../../libs/utils';
+import { NameDetails, getCustomerAvatarLetters, getCustomerFullName, stringToColor } from '../../libs/utils';
 
 type PhotoDetails = {
   url?: string | null;
@@ -29,6 +29,8 @@ const CustomerAvatar = ({ name, photo, size, sx, showFullName, tip, onClick }: P
   } else if (size === 'large') {
     finalSx = { width: 48, height: 48 };
   }
+
+  finalSx = { ...finalSx, bgcolor: stringToColor(getCustomerFullName(name)) };
 
   if (!showFullName) {
     return (
