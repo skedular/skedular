@@ -3,6 +3,7 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.Interceptors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -96,6 +97,14 @@ public static class ServiceExtensions
 
                     sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
                 });
+
+                if (option == Migration.SetAssembly)
+                {
+                    options.ConfigureWarnings(warnings =>
+                    {
+                        warnings.Log(RelationalEventId.PendingModelChangesWarning);
+                    });
+                }
             });
 
         return new DatabaseSetupContext<TDbContext>(databaseSetup);
@@ -131,6 +140,14 @@ public static class ServiceExtensions
 
                     sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
                 });
+
+                if (option == Migration.SetAssembly)
+                {
+                    options.ConfigureWarnings(warnings =>
+                    {
+                        warnings.Log(RelationalEventId.PendingModelChangesWarning);
+                    });
+                }
             });
 
         return new DatabaseSetupContext<TDbContext>(databaseSetup);
