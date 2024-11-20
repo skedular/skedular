@@ -44,7 +44,7 @@ const LocationAvatar = ({ name, photo, size, sx, showFullName, tip, onClick }: P
     finalSx = { width: 40, height: 40 };
   }
 
-  finalSx = { ...finalSx, bgcolor: stringToColor(name?.name ?? "") };
+  finalSx = { ...finalSx, bgcolor: stringToColor(name?.name ?? '') };
 
   if (!showFullName) {
     return (

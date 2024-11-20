@@ -211,7 +211,7 @@ const getCustomerAvatarLetters = (nameDetails?: NameDetails | null) => {
     if (nameDetails.givenName && nameDetails.familyName) {
       avatarLetters = `${nameDetails.givenName[0]}${nameDetails.familyName[0]}`;
     } else if (nameDetails.name && typeof nameDetails.name[0] !== 'undefined') {
-      avatarLetters = nameDetails.name[0];
+      avatarLetters = nameDetails.name.split(' ').reduce((acc, val) => acc + val[0], '');
     } else {
       avatarLetters = '';
     }
