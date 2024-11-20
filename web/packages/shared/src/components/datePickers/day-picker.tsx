@@ -11,9 +11,10 @@ import { ArrowDownIcon } from '../icons';
 type Props = {
   defaultDate?: Dayjs;
   onDateChanged: (date: Dayjs) => void;
+  disablePastDaysSelection?: boolean;
 };
 
-const DayPicker = ({ defaultDate, onDateChanged }: Props) => {
+const DayPicker = ({ defaultDate, onDateChanged, disablePastDaysSelection }: Props) => {
   const [date, setDate] = useState(defaultDate ?? startOfDay());
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -27,6 +28,14 @@ const DayPicker = ({ defaultDate, onDateChanged }: Props) => {
 
   const handleChange = (date: Dayjs | null) => {
     const newDate = date ?? startOfDay();
+
+    if (disablePastDaysSelection) {
+      const today = startOfDay();
+
+      if (newDate.isBefore(today)) {
+        return;
+      }
+    }
 
     setDate(newDate);
     handleClose();
