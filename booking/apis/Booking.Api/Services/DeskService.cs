@@ -70,7 +70,7 @@ public class DeskService(
                                 booking.Location.Organization.Id == organizationId)
                     }
                     .AddInclude(query => query.Location)
-                    .AddInclude(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue)))
+                    .AddInclude(query => Enumerable.Where(query.Tags, tag => !tag.DeletedAt.HasValue)))
                 .ToListAsync(cancellationToken)
             : await repositoryFactory.DeskRepository.Query(new Specification<Shared.Database.Entities.Desk>
                     {
@@ -89,7 +89,7 @@ public class DeskService(
                             deskIdsToInclude.Contains(query.Id)
                     }
                     .AddInclude(query => query.Location)
-                    .AddInclude(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
+                    .AddInclude(query => Enumerable.Where(query.Tags, tag => !tag.DeletedAt.HasValue))
                     .ApplyOrderBy(query => query.Location.Name))
                 .ToListAsync(cancellationToken);
 
@@ -136,7 +136,7 @@ public class DeskService(
                                 !booking.DeletedAt.HasValue && booking.From >= date && booking.To < date.Tomorrow() &&
                                 booking.Location.Id == locationId)
                     }
-                    .AddInclude(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue)))
+                    .AddInclude(query => Enumerable.Where(query.Tags, tag => !tag.DeletedAt.HasValue)))
                 .ToListAsync(cancellationToken)
             : await repositoryFactory.DeskRepository.Query(new Specification<Shared.Database.Entities.Desk>
                     {
@@ -147,7 +147,7 @@ public class DeskService(
                                  booking.Location.Id == locationId)) ||
                             deskIdsToInclude.Contains(query.Id)
                     }
-                    .AddInclude(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue)))
+                    .AddInclude(query => Enumerable.Where(query.Tags, tag => !tag.DeletedAt.HasValue)))
                 .ToListAsync(cancellationToken);
 
         return mapper.MapTo(desks, mapper.MapTo(location)!).ToList();

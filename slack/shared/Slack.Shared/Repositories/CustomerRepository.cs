@@ -35,9 +35,9 @@ public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvi
                     dbContext,
                     id,
                     cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .Where(query => query.Id == id)
+                Queryable
+                    .Where<Customer>(dbContext.Customer
+                        .AddDependentObjects(), query => query.Id == id)
                     .OrderBy(query => query.Id)
                     .FirstOrDefault());
 
@@ -47,10 +47,11 @@ public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvi
                     dbContext,
                     verifiableToken,
                     cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .Where(query => !query.DeletedAt.HasValue &&
-                                    query.Identities.Select(identity => identity.Id).Contains(verifiableToken))
+                Queryable
+                    .Where<Customer>(dbContext.Customer
+                        .AddDependentObjects(), query => !query.DeletedAt.HasValue &&
+                                                         query.Identities.Select(identity => identity.Id)
+                                                             .Contains(verifiableToken))
                     .OrderBy(query => query.Id)
                     .FirstOrDefault());
 
@@ -60,11 +61,12 @@ public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvi
                     dbContext,
                     email,
                     cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .Where(query => !query.DeletedAt.HasValue &&
-                                    query.Identities.Any(identity =>
-                                        identity.Email != null && EF.Functions.ILike(identity.Email, email)))
+                Queryable
+                    .Where<Customer>(dbContext.Customer
+                        .AddDependentObjects(), query => !query.DeletedAt.HasValue &&
+                                                         query.Identities.Any(identity =>
+                                                             identity.Email != null &&
+                                                             EF.Functions.ILike(identity.Email, email)))
                     .OrderBy(query => query.Id)
                     .FirstOrDefault());
 

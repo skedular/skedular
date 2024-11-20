@@ -1,5 +1,5 @@
-using Booking.Api.GraphQL;
 using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
+using Booking.Api.GraphQL;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;

@@ -34,9 +34,9 @@ public class CustomerRepository(PaymentDbContext dbContext, TimeProvider timePro
                     dbContext,
                     id,
                     cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .Where(query => query.Id == id)
+                Queryable
+                    .Where<Customer>(dbContext.Customer
+                        .AddDependentObjects(), query => query.Id == id)
                     .OrderBy(query => query.Id)
                     .FirstOrDefault());
 
@@ -46,10 +46,11 @@ public class CustomerRepository(PaymentDbContext dbContext, TimeProvider timePro
                     dbContext,
                     verifiableToken,
                     cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .Where(query => !query.DeletedAt.HasValue &&
-                                    query.Identities.Select(identity => identity.Id).Contains(verifiableToken))
+                Queryable
+                    .Where<Customer>(dbContext.Customer
+                        .AddDependentObjects(), query => !query.DeletedAt.HasValue &&
+                                                         query.Identities.Select(identity => identity.Id)
+                                                             .Contains(verifiableToken))
                     .OrderBy(query => query.Id)
                     .FirstOrDefault());
 
