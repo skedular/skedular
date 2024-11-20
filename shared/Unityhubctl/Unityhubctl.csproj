@@ -9,8 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommandLineParser" Version="2.9.1"/>
-        <PackageReference Include="DotLiquid" Version="2.2.692"/>
+        <PackageReference Include="CommandLineParser" Version="2.9.1" />
+        <PackageReference Include="DotLiquid" Version="2.2.717" />
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.12.19">
             <PrivateAssets>all</PrivateAssets>
@@ -19,8 +19,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Events\Generator\Resources\EventMetadata.liquid"/>
-        <EmbeddedResource Include="Events\Generator\Resources\EventWithoutMetadata.liquid"/>
+        <EmbeddedResource Include="Events\Generator\Resources\EventMetadata.liquid" />
+        <EmbeddedResource Include="Events\Generator\Resources\EventWithoutMetadata.liquid" />
     </ItemGroup>
 
 </Project>
