@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f7ca7f1de156571b8cb38a5d90be71b7>>
+ * @generated SignedSource<<05b5f1483842f524591900f9bd6c67ba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -85,6 +85,11 @@ v1 = [
         "kind": "Variable",
         "name": "fromLTE",
         "variableName": "bookingsSearchCriteriaTo"
+      },
+      {
+        "kind": "Literal",
+        "name": "includeFutureBookingsOnly",
+        "value": true
       },
       {
         "items": [
@@ -381,16 +386,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b03bb4131750e3f97e24f190fc4e7a9e",
+    "cacheID": "31985dd3d4cca292985f9f3452dbbad9",
     "id": null,
     "metadata": {},
     "name": "myBookings_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query myBookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n) {\n  ...myBookings_bookings_query_1G22uz\n}\n\nfragment myBookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$organizationId], fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo}, orderBy: [{field: From, direction: Ascending}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query myBookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n) {\n  ...myBookings_bookings_query_1G22uz\n}\n\nfragment myBookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$organizationId], fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, includeFutureBookingsOnly: true}, orderBy: [{field: From, direction: Ascending}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b02e1522486f86b432a3e58c2029d296";
+(node as any).hash = "b8385088651843da218aa22dfc2924b3";
 
 export default node;

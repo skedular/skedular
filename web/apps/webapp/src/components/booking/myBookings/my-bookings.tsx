@@ -16,7 +16,7 @@ import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { isTodayDate, isTomorrowDate, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
-import { Fragment, memo, useMemo } from 'react';
+import { Fragment, memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, useFragment, usePaginationFragment } from 'react-relay';
 
 type Props = {
@@ -24,9 +24,11 @@ type Props = {
   rootDataBookingRelay: myBookings_bookings_query$key;
   onReloadRequired: () => void;
   organizationId: string;
+  from: Dayjs;
+  to: Dayjs;
 };
 
-const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, organizationId }: Props) => {
+const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, organizationId, from, to }: Props) => {
   const rootData = useFragment<myBookings_query$key>(
     graphql`
       fragment myBookings_query on Query {
@@ -49,7 +51,12 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, org
         bookings(
           first: $count
           after: $cursor
-          where: { organizationIds: [$organizationId], fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo }
+          where: {
+            organizationIds: [$organizationId]
+            fromGTE: $bookingsSearchCriteriaFrom
+            fromLTE: $bookingsSearchCriteriaTo
+            includeFutureBookingsOnly: true
+          }
           orderBy: [{ field: From, direction: Ascending }]
         ) @connection(key: "myBookings_bookings") {
           __id
@@ -123,6 +130,26 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, org
       {} as Record<string, typeof bookings>,
     );
   }, [bookings]);
+
+  const handleRefetchAllBookings = useCallback(
+    (from: Dayjs, to: Dayjs) => {
+      startTransition(() => {
+        refetchBookings(
+          {
+            organizationId,
+            bookingsSearchCriteriaFrom: from.toISOString(),
+            bookingsSearchCriteriaTo: to.toISOString(),
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchBookings, organizationId],
+  );
+
+  useEffect(() => handleRefetchAllBookings(from, to), [handleRefetchAllBookings, from, to]);
 
   if (!rootDataBookings.bookings) {
     return <></>;

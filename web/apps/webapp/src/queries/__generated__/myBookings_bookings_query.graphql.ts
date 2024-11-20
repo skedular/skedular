@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<58d47baa6a043bae789af59c4a09790b>>
+ * @generated SignedSource<<ea6dfce8abadb85c0ec139377fe771fb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -151,6 +151,11 @@ return {
               "kind": "Variable",
               "name": "fromLTE",
               "variableName": "bookingsSearchCriteriaTo"
+            },
+            {
+              "kind": "Literal",
+              "name": "includeFutureBookingsOnly",
+              "value": true
             },
             {
               "items": [
@@ -384,6 +389,6 @@ return {
 };
 })();
 
-(node as any).hash = "b02e1522486f86b432a3e58c2029d296";
+(node as any).hash = "b8385088651843da218aa22dfc2924b3";
 
 export default node;
