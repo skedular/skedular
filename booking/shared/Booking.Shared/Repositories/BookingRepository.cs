@@ -3,6 +3,7 @@ using Booking.Shared.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Team = Booking.Shared.Database.Entities.Team;
@@ -39,9 +40,15 @@ internal static class BookingExtensions
 
     internal static IQueryable<Database.Entities.Booking> AddSearchCriteria(
         this IQueryable<Database.Entities.Booking> query,
-        BookingSearchCriteria searchCriteria)
+        BookingSearchCriteria searchCriteria,
+        TimeProvider timeProvider)
     {
         query = query.Where(item => !item.DeletedAt.HasValue);
+
+        if (searchCriteria.IncludeFutureBookingsOnly is not null && searchCriteria.IncludeFutureBookingsOnly.Value)
+        {
+            query = query.Where(item => item.From >= timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc));
+        }
 
         if (searchCriteria.FromGT is not null)
         {
@@ -247,7 +254,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         ICollection<BookingOrder> orderByFields,
         CancellationToken cancellationToken) =>
         (await DbContext.Booking
-            .AddSearchCriteria(searchCriteria)
+            .AddSearchCriteria(searchCriteria, timeProvider)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()
             .ToListAsync(cancellationToken))

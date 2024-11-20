@@ -15,6 +15,7 @@ public class BookingSearchCriteria(
     string? notesContains,
     string? nameContains,
     bool? includeMineOnly,
+    bool? includeFutureBookingsOnly,
     ICollection<string> organizationIds,
     ICollection<string> locationIds,
     ICollection<string> teamIds)
@@ -30,6 +31,7 @@ public class BookingSearchCriteria(
     public string? NotesContains { get; } = notesContains;
     public string? NameContains { get; } = nameContains;
     public bool? IncludeMineOnly { get; } = includeMineOnly;
+    public bool? IncludeFutureBookingsOnly { get; } = includeFutureBookingsOnly;
     public string? CustomerId { get; set; }
     public ICollection<string> OrganizationIds { get; set; } = organizationIds;
     public ICollection<string> LocationIds { get; set; } = locationIds;

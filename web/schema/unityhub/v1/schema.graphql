@@ -875,6 +875,7 @@ input BookingWhereInput {
   locationIds: [String!]
   teamIds: [String!]
   includeMineOnly: Boolean
+  includeFutureBookingsOnly: Boolean
 }
 input DeleteBookingInput {
   clientMutationId: String
