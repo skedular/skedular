@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87ec580d7c67fa96ad2a7ae3933df309>>
+ * @generated SignedSource<<7d5454e7e55450ec418d52ec4473c767>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,10 +41,6 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "bookingOrganizationId"
-    },
-    {
-      "kind": "RootArgument",
       "name": "bookingSortingValues"
     },
     {
@@ -68,6 +64,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "locationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
     },
     {
       "kind": "RootArgument",
@@ -114,6 +114,11 @@ return {
         {
           "fields": [
             {
+              "kind": "Literal",
+              "name": "combineOrganizationsLocationsTeams",
+              "value": true
+            },
+            {
               "kind": "Variable",
               "name": "fromGTE",
               "variableName": "bookingsSearchCriteriaFrom"
@@ -149,7 +154,7 @@ return {
                 {
                   "kind": "Variable",
                   "name": "organizationIds.0",
-                  "variableName": "bookingOrganizationId"
+                  "variableName": "organizationId"
                 }
               ],
               "kind": "ListValue",
@@ -309,6 +314,6 @@ return {
 };
 })();
 
-(node as any).hash = "e08ac50d30c7d8997a5282cf8a2600a9";
+(node as any).hash = "92745546de423e1ccdf2bf55256dcf64";
 
 export default node;

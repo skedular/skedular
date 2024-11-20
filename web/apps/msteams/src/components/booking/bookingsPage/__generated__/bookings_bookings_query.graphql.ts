@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87ec580d7c67fa96ad2a7ae3933df309>>
+ * @generated SignedSource<<ab5dad2a56ccc5a5ec206265809c945a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,10 +41,6 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "bookingOrganizationId"
-    },
-    {
-      "kind": "RootArgument",
       "name": "bookingSortingValues"
     },
     {
@@ -68,6 +64,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "locationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
     },
     {
       "kind": "RootArgument",
@@ -149,7 +149,7 @@ return {
                 {
                   "kind": "Variable",
                   "name": "organizationIds.0",
-                  "variableName": "bookingOrganizationId"
+                  "variableName": "organizationId"
                 }
               ],
               "kind": "ListValue",
@@ -309,6 +309,6 @@ return {
 };
 })();
 
-(node as any).hash = "e08ac50d30c7d8997a5282cf8a2600a9";
+(node as any).hash = "da644d6b31ad2091b074550182b1fca8";
 
 export default node;
