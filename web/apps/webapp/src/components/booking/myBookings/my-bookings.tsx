@@ -23,12 +23,13 @@ type Props = {
   rootDataRelay: myBookings_query$key;
   rootDataBookingRelay: myBookings_bookings_query$key;
   onReloadRequired: () => void;
-  organizationId: string;
   from: Dayjs;
   to: Dayjs;
+  locationIds: string[];
+  teamIds: string[];
 };
 
-const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, organizationId, from, to }: Props) => {
+const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, from, to, locationIds, teamIds }: Props) => {
   const rootData = useFragment<myBookings_query$key>(
     graphql`
       fragment myBookings_query on Query {
@@ -53,9 +54,12 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, org
           after: $cursor
           where: {
             organizationIds: [$organizationId]
+            locationIds: $locationIds
+            teamIds: $teamIds
             fromGTE: $bookingsSearchCriteriaFrom
             fromLTE: $bookingsSearchCriteriaTo
             includeFutureBookingsOnly: true
+            combineOrganizationsLocationsTeams: true
           }
           orderBy: [{ field: From, direction: Ascending }]
         ) @connection(key: "myBookings_bookings") {
@@ -132,13 +136,14 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, org
   }, [bookings]);
 
   const handleRefetchAllBookings = useCallback(
-    (from: Dayjs, to: Dayjs) => {
+    (from: Dayjs, to: Dayjs, locationIds: string[], teamIds: string[]) => {
       startTransition(() => {
         refetchBookings(
           {
-            organizationId,
             bookingsSearchCriteriaFrom: from.toISOString(),
             bookingsSearchCriteriaTo: to.toISOString(),
+            locationIds,
+            teamIds,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -146,10 +151,10 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, org
         );
       });
     },
-    [refetchBookings, organizationId],
+    [refetchBookings],
   );
 
-  useEffect(() => handleRefetchAllBookings(from, to), [handleRefetchAllBookings, from, to]);
+  useEffect(() => handleRefetchAllBookings(from, to, locationIds, teamIds), [handleRefetchAllBookings, from, to, locationIds, teamIds]);
 
   if (!rootDataBookings.bookings) {
     return <></>;
@@ -182,7 +187,9 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, org
           }
 
           const key = convertDateToKey(myBooking.from);
-          const otherTeammatesBookings = groupedBookingsByFromDate[key]?.filter((booking) => booking.customer?.uniqueId !== rootData.me?.id);
+          const otherTeammatesBookings = groupedBookingsByFromDate[key]?.filter(
+            (booking) => booking.customer?.uniqueId !== rootData.me?.id && booking.location?.uniqueId === myBooking.location?.uniqueId,
+          );
 
           return (
             <Grid key={myBooking.id}>

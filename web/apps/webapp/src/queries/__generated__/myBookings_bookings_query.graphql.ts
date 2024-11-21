@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ea6dfce8abadb85c0ec139377fe771fb>>
+ * @generated SignedSource<<3028dde3634a0fd4bfb1d4f3468653c0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -99,7 +99,15 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "locationIds"
+    },
+    {
+      "kind": "RootArgument",
       "name": "organizationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "teamIds"
     }
   ],
   "kind": "Fragment",
@@ -143,6 +151,11 @@ return {
         {
           "fields": [
             {
+              "kind": "Literal",
+              "name": "combineOrganizationsLocationsTeams",
+              "value": true
+            },
+            {
               "kind": "Variable",
               "name": "fromGTE",
               "variableName": "bookingsSearchCriteriaFrom"
@@ -158,6 +171,11 @@ return {
               "value": true
             },
             {
+              "kind": "Variable",
+              "name": "locationIds",
+              "variableName": "locationIds"
+            },
+            {
               "items": [
                 {
                   "kind": "Variable",
@@ -167,6 +185,11 @@ return {
               ],
               "kind": "ListValue",
               "name": "organizationIds"
+            },
+            {
+              "kind": "Variable",
+              "name": "teamIds",
+              "variableName": "teamIds"
             }
           ],
           "kind": "ObjectValue",
@@ -389,6 +412,6 @@ return {
 };
 })();
 
-(node as any).hash = "b8385088651843da218aa22dfc2924b3";
+(node as any).hash = "57f7eb10fb29aaa8f6f7912b22ef5b86";
 
 export default node;

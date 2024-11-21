@@ -13,7 +13,7 @@ import type { locationSelector_allLocations_refetchableFragment } from './__gene
 
 type Props = {
   rootDataRelay: locationSelector_allLocations_query$key;
-  onLocationChanged: (locationId: string) => void;
+  onLocationChanged: (locationId?: string) => void;
 };
 
 const allLocationsId = 'kkigMVsUXwi2YMSSrXv7i';
@@ -46,7 +46,7 @@ const LocationSelector = ({ rootDataRelay, onLocationChanged }: Props) => {
     const id = event.target.value as string;
 
     setSelectedLocationId(id);
-    onLocationChanged(id === allLocationsId ? '' : id);
+    onLocationChanged(id === allLocationsId ? undefined : id);
   };
 
   return (

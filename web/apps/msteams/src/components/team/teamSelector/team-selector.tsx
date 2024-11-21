@@ -13,7 +13,7 @@ import type { teamSelector_allTeams_refetchableFragment } from './__generated__/
 
 type Props = {
   rootDataRelay: teamSelector_allTeams_query$key;
-  onTeamChanged: (teamId: string) => void;
+  onTeamChanged: (teamId?: string) => void;
 };
 
 const allTeamsId = 'kkigMVsUXwi2YMSSrXv7i';
@@ -46,7 +46,7 @@ const TeamSelector = ({ rootDataRelay, onTeamChanged }: Props) => {
     const id = event.target.value as string;
 
     setSelectedTeamId(id);
-    onTeamChanged(id === allTeamsId ? '' : id);
+    onTeamChanged(id === allTeamsId ? undefined : id);
   };
 
   return (
