@@ -30,19 +30,19 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 
         services
             .AddKafka()
-            .AddKafkaReliableEventConsumersV2<
+            .AddKafkaReliableEventConsumers<
                 BookingSubscriber,
                 Api.Shared.Clients.Events.UnityHub.Booking.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumersV2<
+            .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.UnityHub.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumersV2<
+            .AddKafkaReliableEventConsumers<
                 LocationInternalSubscriber,
                 Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Key.Key,
                 Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumersV2<
+            .AddKafkaReliableEventConsumers<
                 OrganizationSubscriber,
                 Key,
                 Event>(kafkaConfiguration);
