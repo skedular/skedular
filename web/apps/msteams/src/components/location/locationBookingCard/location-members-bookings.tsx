@@ -440,6 +440,7 @@ const LocationMembersBookings = ({
             organizationId={organizationId}
             startDate={startDate}
             customers={allMembers}
+            locationId={locationId}
           />
         </CardContent>
       </Card>

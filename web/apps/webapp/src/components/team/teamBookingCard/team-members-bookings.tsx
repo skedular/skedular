@@ -404,6 +404,7 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
             organizationId={organizationId}
             startDate={startDate}
             customers={rootData.teamMembers.map((member) => member.customer)}
+            teamId={teamId}
           />
         </CardContent>
       </Card>
