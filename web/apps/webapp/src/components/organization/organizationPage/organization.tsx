@@ -71,22 +71,32 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootData.organization]);
 
+  let tabCount = 0;
+  const bookingTabIndex = tabCount++;
+  const aboutTabIndex = tabCount++;
+  const membersTabIndex = tabCount++;
+  const locationTabIndex = tabCount++;
+  const teamTabIndex = tabCount++;
+  const offeringTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
+  const billingTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
+  const analyticsTabIndex = rootData.organization?.canViewAnalytics ? tabCount++ : -1;
+
   if (tab === 'bookings') {
-    initialTabIndex = 0;
+    initialTabIndex = bookingTabIndex;
   } else if (tab === 'about') {
-    initialTabIndex = 1;
+    initialTabIndex = aboutTabIndex;
   } else if (tab === 'members') {
-    initialTabIndex = 2;
+    initialTabIndex = membersTabIndex;
   } else if (tab === 'locations') {
-    initialTabIndex = 3;
+    initialTabIndex = locationTabIndex;
   } else if (tab === 'teams') {
-    initialTabIndex = 4;
+    initialTabIndex = teamTabIndex;
   } else if (tab === 'offering') {
-    initialTabIndex = 5;
+    initialTabIndex = offeringTabIndex;
   } else if (tab === 'billing') {
-    initialTabIndex = 6;
+    initialTabIndex = billingTabIndex;
   } else if (tab === 'analytics') {
-    initialTabIndex = 7;
+    initialTabIndex = analyticsTabIndex;
   }
 
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
@@ -96,21 +106,21 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
 
     let tab = '';
 
-    if (newValue === 0) {
+    if (newValue === bookingTabIndex) {
       tab = 'bookings';
-    } else if (newValue === 1) {
+    } else if (newValue === aboutTabIndex) {
       tab = 'about';
-    } else if (newValue === 2) {
+    } else if (newValue === membersTabIndex) {
       tab = 'members';
-    } else if (newValue === 3) {
+    } else if (newValue === locationTabIndex) {
       tab = 'locations';
-    } else if (newValue === 4) {
+    } else if (newValue === teamTabIndex) {
       tab = 'teams';
-    } else if (newValue === 5) {
+    } else if (newValue === offeringTabIndex) {
       tab = 'offering';
-    } else if (newValue === 6) {
+    } else if (newValue === billingTabIndex) {
       tab = 'billing';
-    } else if (newValue === 7) {
+    } else if (newValue === analyticsTabIndex) {
       tab = 'analytics';
     }
 
@@ -141,18 +151,18 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
         {rootData.organization.canViewAnalytics && <Tab label="Analytics" />}
       </Tabs>
 
-      {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === 1 && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === 2 && <OrganizationMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === 3 && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === 4 && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === 5 && rootData.organization.canModify && (
+      {tabIndex === bookingTabIndex && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === aboutTabIndex && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === membersTabIndex && <OrganizationMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === locationTabIndex && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === teamTabIndex && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === offeringTabIndex && rootData.organization.canModify && (
         <OrganizationOfferingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
       )}
-      {tabIndex === 6 && rootData.organization.canModify && (
+      {tabIndex === billingTabIndex && rootData.organization.canModify && (
         <OrganizationBillingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
       )}
-      {tabIndex === 7 && rootData.organization.canViewAnalytics && (
+      {tabIndex === analyticsTabIndex && rootData.organization.canViewAnalytics && (
         <OrganizationAnalyticsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
       )}
     </>

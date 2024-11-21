@@ -70,7 +70,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
   const aboutTabIndex = tabCount++;
   const zonesTabIndex = tabCount++;
   const desksTabIndex = tabCount++;
-  const analyticsTabIndex = rootData.location?.canViewAnalytics ? -1 : tabCount++;
+  const analyticsTabIndex = rootData.location?.canViewAnalytics ? tabCount++ : -1;
 
   if (tab === 'bookings') {
     initialTabIndex = bookingTabIndex;

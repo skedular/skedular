@@ -1,8 +1,4 @@
 import type { locationMembersTab_inviteCustomersToJoinLocationMutation } from '@/queries/__generated__/locationMembersTab_inviteCustomersToJoinLocationMutation.graphql';
-import type {
-  CustomerOrderField,
-  CustomerOrderInput,
-} from '@/queries/__generated__/locationMembersTab_organizationMembers_paginatedOrganizationMembers_refetchableFragment.graphql';
 import type { locationMembersTab_paginatedLocationMembers_query$key } from '@/queries/__generated__/locationMembersTab_paginatedLocationMembers_query.graphql';
 import type {
   LocationMemberOrderField,
@@ -139,10 +135,6 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
     direction: 'Ascending',
     field: 'Name',
   });
-  const [sortingCustomerOrder, setSortingCustomerOrder] = useState<CustomerOrderInput>({
-    direction: 'Ascending',
-    field: 'Name',
-  });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -158,11 +150,11 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
 
     setPageSize(parseInt(event.target.value, 10));
 
-    handleRefetch(pageSize, sortingLocationMemberOrder, sortingCustomerOrder, peopleNameSearchText);
+    handleRefetch(pageSize, sortingLocationMemberOrder, peopleNameSearchText);
   };
 
   const handleRefetch = useCallback(
-    (pageSize: number, locationMemberOrder: LocationMemberOrderInput, customerOrder: CustomerOrderInput, peopleNameSearchText: string) => {
+    (pageSize: number, locationMemberOrder: LocationMemberOrderInput, peopleNameSearchText: string) => {
       startTransition(() => {
         refetchLocationMembers(
           {
@@ -199,7 +191,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
   const handleSearchTextChange = (str: string) => {
     setPeopleNameSearchText(str);
 
-    handleRefetch(pageSize, sortingLocationMemberOrder, sortingCustomerOrder, str);
+    handleRefetch(pageSize, sortingLocationMemberOrder, str);
   };
 
   const connectionIds = useMemo(() => {
@@ -225,20 +217,11 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
       field: value as unknown as LocationMemberOrderField,
     });
 
-    setSortingCustomerOrder({
-      direction,
-      field: value as unknown as CustomerOrderField,
-    });
-
     handleRefetch(
       pageSize,
       {
         direction,
         field: value as unknown as LocationMemberOrderField,
-      },
-      {
-        direction,
-        field: value as unknown as CustomerOrderField,
       },
       peopleNameSearchText,
     );

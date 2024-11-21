@@ -63,12 +63,17 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootData.organization, rootData.team]);
 
+  let tabCount = 0;
+  const bookingTabIndex = tabCount++;
+  const aboutTabIndex = tabCount++;
+  const membersTabIndex = tabCount++;
+
   if (tab === 'bookings') {
-    initialTabIndex = 0;
+    initialTabIndex = bookingTabIndex;
   } else if (tab === 'about') {
-    initialTabIndex = 1;
+    initialTabIndex = aboutTabIndex;
   } else if (tab === 'members') {
-    initialTabIndex = 2;
+    initialTabIndex = membersTabIndex;
   }
 
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
@@ -78,11 +83,11 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
 
     let tab = '';
 
-    if (newValue === 0) {
+    if (newValue === bookingTabIndex) {
       tab = 'bookings';
-    } else if (newValue === 1) {
+    } else if (newValue === aboutTabIndex) {
       tab = 'about';
-    } else if (newValue === 2) {
+    } else if (newValue === membersTabIndex) {
       tab = 'members';
     }
 
@@ -105,9 +110,9 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
         <Tab label="Members" />
       </Tabs>
 
-      {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
-      {tabIndex === 1 && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
-      {tabIndex === 2 && <TeamMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+      {tabIndex === bookingTabIndex && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+      {tabIndex === aboutTabIndex && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+      {tabIndex === membersTabIndex && <TeamMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
     </>
   );
 };
