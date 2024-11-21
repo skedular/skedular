@@ -107,7 +107,7 @@ const LocationMembersBookings = ({
   const rootData = useFragment(
     graphql`
       fragment locationMembersBookings_query on Query {
-        locationMembers(where: { locationId: $locationId }, orderBy: $peopleSortingValues) {
+        locationMembers(where: { locationId: $locationId }, orderBy: $locationPeopleSortingValues) {
           id
           customer {
             uniqueId
@@ -118,13 +118,16 @@ const LocationMembersBookings = ({
             photoUrl
           }
         }
-        customersByDefaultLocation(where: { locationId: $locationId }) {
+        organizationMembers(where: { organizationId: $organizationId }, orderBy: $organizationPeopleSortingValues) @include(if: $organizationExists) {
           id
-          name
-          givenName
-          middleName
-          familyName
-          photoUrl
+          customer {
+            uniqueId
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
+          }
         }
         me {
           id
@@ -194,13 +197,17 @@ const LocationMembersBookings = ({
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [startDate, setStartDate] = useState<Dayjs>(startOfDay());
 
-  if (!rootData.me || !rootData.location || !rootData.locationMembers || !rootData.customersByDefaultLocation) {
+  if (!rootData.me || !rootData.location) {
     return <></>;
   }
 
   const allMembers = rootData.location?.organization
-    ? rootData.customersByDefaultLocation.map((customer) => ({ ...customer, uniqueId: customer.id }))
-    : rootData.locationMembers.map((member) => member.customer);
+    ? rootData.organizationMembers
+      ? rootData.organizationMembers.map((member) => member.customer)
+      : []
+    : rootData.locationMembers
+      ? rootData.locationMembers.map((member) => member.customer)
+      : [];
 
   const handleDateRangeTypeChange = (_: React.MouseEvent<HTMLElement>, value: DateRangeType) => {
     let start = startOfDay();

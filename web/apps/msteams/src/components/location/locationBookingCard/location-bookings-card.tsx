@@ -26,7 +26,7 @@ type Props = {
 
 const RootQuery = graphql`
   query locationBookingsCard_rootQuery(
-    $peopleSortingValues: [LocationMemberOrderInput!]!
+    $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]!
     $organizationId: String!
     $locationId: String!
     $locationExists: Boolean!
@@ -88,7 +88,7 @@ const LocationBookingsWithRelay = ({
 
     loadQuery(
       {
-        peopleSortingValues: [
+        organizationPeopleSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

@@ -107,7 +107,7 @@ const LocationMembersBookings = ({
   const rootData = useFragment(
     graphql`
       fragment locationMembersBookings_query on Query {
-        locationMembers(where: { locationId: $locationId }, orderBy: $peopleSortingValues) {
+        organizationMembers(where: { organizationId: $organizationId }, orderBy: $organizationPeopleSortingValues) {
           id
           customer {
             uniqueId
@@ -117,14 +117,6 @@ const LocationMembersBookings = ({
             familyName
             photoUrl
           }
-        }
-        customersByDefaultLocation(where: { locationId: $locationId }) {
-          id
-          name
-          givenName
-          middleName
-          familyName
-          photoUrl
         }
         me {
           id
@@ -138,10 +130,6 @@ const LocationMembersBookings = ({
           hasFutureBooking
           canModify
           canDelete
-          organization {
-            uniqueId
-            name
-          }
         }
         ...bookingsWeekGrid_query
         ...bookingsWeekGrid_allBookings_query
@@ -194,13 +182,11 @@ const LocationMembersBookings = ({
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [startDate, setStartDate] = useState<Dayjs>(startOfDay());
 
-  if (!rootData.me || !rootData.location || !rootData.locationMembers || !rootData.customersByDefaultLocation) {
+  if (!rootData.me || !rootData.location) {
     return <></>;
   }
 
-  const allMembers = rootData.location?.organization
-    ? rootData.customersByDefaultLocation.map((customer) => ({ ...customer, uniqueId: customer.id }))
-    : rootData.locationMembers.map((member) => member.customer);
+  const allMembers = rootData.organizationMembers ? rootData.organizationMembers.map((member) => member.customer) : [];
 
   const handleDateRangeTypeChange = (_: React.MouseEvent<HTMLElement>, value: DateRangeType) => {
     let start = startOfDay();
