@@ -67,18 +67,26 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootData.organization, rootData.location]);
 
+  let tabCount = 0;
+  const bookingTabIndex = tabCount++;
+  const aboutTabIndex = tabCount++;
+  const membersTabIndex = organizationId ? -1 : tabCount++;
+  const zonesTabIndex = tabCount++;
+  const desksTabIndex = tabCount++;
+  const analyticsTabIndex = rootData.location?.canViewAnalytics ? -1 : tabCount++;
+
   if (tab === 'bookings') {
-    initialTabIndex = 0;
+    initialTabIndex = bookingTabIndex;
   } else if (tab === 'about') {
-    initialTabIndex = 1;
+    initialTabIndex = aboutTabIndex;
   } else if (tab === 'members') {
-    initialTabIndex = 2;
+    initialTabIndex = membersTabIndex;
   } else if (tab === 'zones') {
-    initialTabIndex = 3;
+    initialTabIndex = zonesTabIndex;
   } else if (tab === 'desks') {
-    initialTabIndex = 4;
+    initialTabIndex = desksTabIndex;
   } else if (tab === 'analytics') {
-    initialTabIndex = 5;
+    initialTabIndex = analyticsTabIndex;
   }
 
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
@@ -88,17 +96,17 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
 
     let tab = '';
 
-    if (newValue === 0) {
+    if (newValue === bookingTabIndex) {
       tab = 'bookings';
-    } else if (newValue === 1) {
+    } else if (newValue === aboutTabIndex) {
       tab = 'about';
-    } else if (newValue === 2) {
+    } else if (newValue === membersTabIndex) {
       tab = 'members';
-    } else if (newValue === 3) {
+    } else if (newValue === zonesTabIndex) {
       tab = 'zones';
-    } else if (newValue === 4) {
+    } else if (newValue === desksTabIndex) {
       tab = 'desks';
-    } else if (newValue === 5) {
+    } else if (newValue === analyticsTabIndex) {
       tab = 'analytics';
     }
 
@@ -118,18 +126,18 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />
         <Tab label="About" />
-        <Tab label="Members" />
+        {!organizationId && <Tab label="Members" />}
         <Tab label="Zones" />
         <Tab label="Desks" />
         {rootData.location.canViewAnalytics && <Tab label="Analytics" />}
       </Tabs>
 
-      {tabIndex === 0 && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
-      {tabIndex === 1 && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
-      {tabIndex === 2 && <LocationMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
-      {tabIndex === 3 && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
-      {tabIndex === 4 && <LocationDesksTab onReloadRequired={onReloadRequired} locationId={locationId} />}
-      {tabIndex === 5 && rootData.location.canViewAnalytics && (
+      {tabIndex === bookingTabIndex && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+      {tabIndex === aboutTabIndex && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+      {tabIndex === membersTabIndex && !organizationId && <LocationMembersTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+      {tabIndex === zonesTabIndex && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+      {tabIndex === desksTabIndex && <LocationDesksTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+      {tabIndex === analyticsTabIndex && rootData.location.canViewAnalytics && (
         <LocationAnalyticsTab
           onReloadRequired={onReloadRequired}
           organizationId={organizationId}

@@ -1,11 +1,8 @@
-import { CustomerCard } from '@/components/customer';
 import type { locationMembersTab_inviteCustomersToJoinLocationMutation } from '@/queries/__generated__/locationMembersTab_inviteCustomersToJoinLocationMutation.graphql';
 import type {
   CustomerOrderField,
   CustomerOrderInput,
-  locationMembersTab_organizationMembers_paginatedCustomersByDefaultLocation_refetchableFragment,
-} from '@/queries/__generated__/locationMembersTab_organizationMembers_paginatedCustomersByDefaultLocation_refetchableFragment.graphql';
-import type { locationMembersTab_paginatedCustomersByDefaultLocation_query$key } from '@/queries/__generated__/locationMembersTab_paginatedCustomersByDefaultLocation_query.graphql';
+} from '@/queries/__generated__/locationMembersTab_organizationMembers_paginatedOrganizationMembers_refetchableFragment.graphql';
 import type { locationMembersTab_paginatedLocationMembers_query$key } from '@/queries/__generated__/locationMembersTab_paginatedLocationMembers_query.graphql';
 import type {
   LocationMemberOrderField,
@@ -51,7 +48,6 @@ import LocationMemberCard from './location-member-card';
 type Props = {
   queryReference: PreloadedQuery<locationMembersTab_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId?: string;
   locationId: string;
 };
 
@@ -61,11 +57,9 @@ const RootQuery = graphql`
     $locationExists: Boolean!
     $peopleNameSearchText: String
     $locationMembersSortingValues: [LocationMemberOrderInput!]
-    $locationOrganizationMembersSortingValues: [CustomerOrderInput!]
   ) {
     ...locationMembersTab_query
     ...locationMembersTab_paginatedLocationMembers_query
-    ...locationMembersTab_paginatedCustomersByDefaultLocation_query
   }
 `;
 
@@ -86,7 +80,7 @@ const membersToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
+const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<locationMembersTab_rootQuery>(RootQuery, queryReference);
   const rootData = useFragment<locationMembersTab_query$key>(
     graphql`
@@ -122,39 +116,6 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
             node {
               id
               ...locationMemberCard_LocationMemberDetails
-            }
-          }
-        }
-      }
-    `,
-    rootDataRelay,
-  );
-
-  const {
-    data: rootDataPaginatedCustomersByDefaultLocation,
-    loadNext: loadNextPaginatedCustomersByDefaultLocation,
-    isLoadingNext: isLoadingNextPaginatedCustomersByDefaultLocation,
-    refetch: refetchPaginatedCustomersByDefaultLocation,
-  } = usePaginationFragment<
-    locationMembersTab_organizationMembers_paginatedCustomersByDefaultLocation_refetchableFragment,
-    locationMembersTab_paginatedCustomersByDefaultLocation_query$key
-  >(
-    graphql`
-      fragment locationMembersTab_paginatedCustomersByDefaultLocation_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationMembersTab_organizationMembers_paginatedCustomersByDefaultLocation_refetchableFragment") {
-        paginatedCustomersByDefaultLocation(
-          first: $count
-          after: $cursor
-          where: { locationId: $locationId, nameContains: $peopleNameSearchText }
-          orderBy: $locationOrganizationMembersSortingValues
-        ) @connection(key: "locationMembersTab_paginatedCustomersByDefaultLocation") @include(if: $locationExists) {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              ...customerCard_CustomerDetails
             }
           }
         }
@@ -203,64 +164,32 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
   const handleRefetch = useCallback(
     (pageSize: number, locationMemberOrder: LocationMemberOrderInput, customerOrder: CustomerOrderInput, peopleNameSearchText: string) => {
       startTransition(() => {
-        if (organizationId) {
-          refetchPaginatedCustomersByDefaultLocation(
-            {
-              count: pageSize,
-              locationOrganizationMembersSortingValues: [customerOrder],
-              peopleNameSearchText,
-              locationExists: !!locationId,
+        refetchLocationMembers(
+          {
+            count: pageSize,
+            locationMembersSortingValues: [locationMemberOrder],
+            peopleNameSearchText,
+            locationExists: !!locationId,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
             },
-            {
-              fetchPolicy: 'store-and-network',
-              onComplete: () => {
-                setPage(0);
-              },
-            },
-          );
-        } else {
-          refetchLocationMembers(
-            {
-              count: pageSize,
-              locationMembersSortingValues: [locationMemberOrder],
-              peopleNameSearchText,
-              locationExists: !!locationId,
-            },
-            {
-              fetchPolicy: 'store-and-network',
-              onComplete: () => {
-                setPage(0);
-              },
-            },
-          );
-        }
+          },
+        );
       });
     },
-    [refetchLocationMembers, refetchPaginatedCustomersByDefaultLocation, organizationId, locationId],
+    [refetchLocationMembers, locationId],
   );
 
   const loadNextPage = useCallback(() => {
-    if (organizationId) {
-      if (isLoadingNextPaginatedCustomersByDefaultLocation) {
-        return;
-      }
-
-      loadNextPaginatedCustomersByDefaultLocation(pageSize);
-    } else {
-      if (isLoadingNextPaginatedLocationMembers) {
-        return;
-      }
-
-      loadNextPaginatedLocationMembers(pageSize);
+    if (isLoadingNextPaginatedLocationMembers) {
+      return;
     }
-  }, [
-    organizationId,
-    loadNextPaginatedLocationMembers,
-    isLoadingNextPaginatedLocationMembers,
-    loadNextPaginatedCustomersByDefaultLocation,
-    isLoadingNextPaginatedCustomersByDefaultLocation,
-    pageSize,
-  ]);
+
+    loadNextPaginatedLocationMembers(pageSize);
+  }, [loadNextPaginatedLocationMembers, isLoadingNextPaginatedLocationMembers, pageSize]);
 
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [invitePeopleDialogOpen, setInvitePeopleDialogOpen] = useState(false);
@@ -274,45 +203,20 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
   };
 
   const connectionIds = useMemo(() => {
-    if (organizationId) {
-      if (!rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation) {
-        return [];
-      }
+    return rootDataPaginatedLocationMembers.paginatedLocationMembers ? [rootDataPaginatedLocationMembers.paginatedLocationMembers.__id] : [];
+  }, [rootDataPaginatedLocationMembers.paginatedLocationMembers]);
 
-      return [rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.__id];
-    } else {
-      return rootDataPaginatedLocationMembers.paginatedLocationMembers ? [rootDataPaginatedLocationMembers.paginatedLocationMembers.__id] : [];
-    }
-  }, [
-    organizationId,
-    rootDataPaginatedLocationMembers.paginatedLocationMembers,
-    rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation,
-  ]);
-
-  if (
-    !rootData.location ||
-    !rootDataPaginatedLocationMembers.paginatedLocationMembers ||
-    !rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation
-  ) {
+  if (!rootData.location || !rootDataPaginatedLocationMembers.paginatedLocationMembers) {
     return <></>;
   }
 
   const locationMemberEdges = rootDataPaginatedLocationMembers.paginatedLocationMembers.edges;
-  const organizationMemberEdges = rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.edges;
-  const count = organizationId
-    ? rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.totalCount
-      ? rootDataPaginatedCustomersByDefaultLocation.paginatedCustomersByDefaultLocation.totalCount
-      : 0
-    : rootDataPaginatedLocationMembers.paginatedLocationMembers.totalCount
-      ? rootDataPaginatedLocationMembers.paginatedLocationMembers.totalCount
-      : 0;
+  const count = rootDataPaginatedLocationMembers.paginatedLocationMembers.totalCount
+    ? rootDataPaginatedLocationMembers.paginatedLocationMembers.totalCount
+    : 0;
   const slicedLocationMemberEdges = locationMemberEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > locationMemberEdges.length ? locationMemberEdges.length : page * pageSize + pageSize,
-  );
-  const slicedOrganizationMemberEdges = organizationMemberEdges?.slice(
-    page * pageSize,
-    page * pageSize + pageSize > organizationMemberEdges.length ? organizationMemberEdges.length : page * pageSize + pageSize,
   );
 
   const handleSortingChanged = (direction: Direction, value: string) => {
@@ -404,13 +308,11 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
 
   return (
     <>
-      {!organizationId && (
-        <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
-          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-            Invite People
-          </Button>
-        </Stack>
-      )}
+      <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
+        <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
+          Invite People
+        </Button>
+      </Stack>
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
@@ -430,31 +332,19 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, organizationId, 
               { id: 'FamilyName', label: 'Family Name' },
               { id: 'MembershipType', label: 'Membership type' },
             ]}
-            defaultOption={organizationId ? sortingCustomerOrder.field : sortingLocationMemberOrder.field}
-            defaultSortingDirectionValue={
-              organizationId
-                ? (sortingCustomerOrder.direction as unknown as Direction)
-                : (sortingLocationMemberOrder.direction as unknown as Direction)
-            }
+            defaultOption={sortingLocationMemberOrder.field}
+            defaultSortingDirectionValue={sortingLocationMemberOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
         </Stack>
       </Stack>
 
       <Grid container spacing={1}>
-        {organizationId &&
-          slicedOrganizationMemberEdges &&
-          slicedOrganizationMemberEdges.map((edge) => (
-            <Grid key={edge.node.id}>
-              <CustomerCard customerDetailsRelay={edge.node} />
-            </Grid>
-          ))}
-        {!organizationId &&
-          slicedLocationMemberEdges.map((edge) => (
-            <Grid key={edge.node.id}>
-              <LocationMemberCard data={rootData} locationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
-            </Grid>
-          ))}
+        {slicedLocationMemberEdges.map((edge) => (
+          <Grid key={edge.node.id}>
+            <LocationMemberCard data={rootData} locationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
+          </Grid>
+        ))}
       </Grid>
 
       <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
@@ -498,11 +388,10 @@ const MemoLocationMembersTab = memo(LocationMembersTab);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationId?: string;
   locationId: string;
 };
 
-const LocationMembersTabWithRelay = ({ onReloadRequired, organizationId, locationId }: RelayProps) => {
+const LocationMembersTabWithRelay = ({ onReloadRequired, locationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationMembersTab_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -518,18 +407,12 @@ const LocationMembersTabWithRelay = ({ onReloadRequired, organizationId, locatio
             field: 'Name',
           },
         ],
-        locationOrganizationMembersSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'Name',
-          },
-        ],
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationId, locationId]);
+  }, [loadQuery, triggerReloadId, locationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -545,12 +428,7 @@ const LocationMembersTabWithRelay = ({ onReloadRequired, organizationId, locatio
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationMembersTab
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
-        locationId={locationId}
-      />
+      <MemoLocationMembersTab queryReference={queryReference} onReloadRequired={handleReloadRequired} locationId={locationId} />
     </ErrorBoundary>
   );
 };
