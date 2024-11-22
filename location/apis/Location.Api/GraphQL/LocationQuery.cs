@@ -239,6 +239,8 @@ public class LocationQuery
                         var field = item.Field switch
                         {
                             LocationTagOrderField.Name => TagOrderField.Name,
+                            LocationTagOrderField.Description => TagOrderField.Description,
+                            LocationTagOrderField.TagType => TagOrderField.TagType,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

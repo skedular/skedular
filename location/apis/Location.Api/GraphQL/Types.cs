@@ -3,6 +3,9 @@ using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace Location.Api.GraphQL;
 
 [GraphQLName("AcceptInvitationToJoinLocationInput")]
@@ -26,11 +29,11 @@ public class AddDeskInput
 
     [GraphQLName("id")] public string? Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
-    [GraphQLName("locationId")] public string LocationId { get; set; }
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
 
-    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; }
+    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 }
 
 [GraphQLName("AddLocationInput")]
@@ -40,7 +43,7 @@ public class AddLocationInput
 
     [GraphQLName("id")] public string? Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("about")] public string? About { get; set; }
 
@@ -56,13 +59,13 @@ public class AddLocationTagInput
 
     [GraphQLName("id")] public string? Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("description")] public string? Description { get; set; }
 
-    [GraphQLName("tagType")] public string TagType { get; set; }
+    [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
 
-    [GraphQLName("locationId")] public string LocationId { get; set; }
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
 }
 
 [GraphQLName("BulkAddDeskInput")]
@@ -74,11 +77,11 @@ public class BulkAddDeskInput
 
     [GraphQLName("namePrefix")] public string? NamePrefix { get; set; }
 
-    [GraphQLName("locationId")] public string LocationId { get; set; }
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
 
     [GraphQLName("count")] public int Count { get; set; }
 
-    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; }
+    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 
     [GraphQLName("deactivated")] public bool Deactivated { get; set; }
 
@@ -91,7 +94,7 @@ public class BulkDeskPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("desks")] public DeskDetails[] Desks { get; set; }
+    [GraphQLName("desks")] public DeskDetails[] Desks { get; set; } = [];
 }
 
 [GraphQLName("CancelInvitationToJoinLocationInput")]
@@ -99,7 +102,7 @@ public class CancelInvitationToJoinLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("CancelInvitationToJoinLocationPayload")]
@@ -113,7 +116,7 @@ public class ChangeLocationMemberOwnershipTypeInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 
     [GraphQLName("membershipType")] public LocationMemberMembershipType MembershipType { get; set; }
 }
@@ -123,7 +126,7 @@ public class DeleteDeskInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("DeleteLocationInput")]
@@ -131,7 +134,7 @@ public class DeleteLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("DeleteLocationTagInput")]
@@ -139,7 +142,7 @@ public class DeleteLocationTagInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("DeskConnection")]
@@ -148,16 +151,16 @@ public class DeskConnection : Connection<DeskEdge>;
 [GraphQLName("DeskDetails")]
 public class DeskDetails : Node
 {
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public required string Name { get; set; }
 
     [GraphQLName("deactivated")] public bool Deactivated { get; set; }
 
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
 
-    [GraphQLName("locationTags")] public LocationTagDetails[] LocationTags { get; set; }
+    [GraphQLName("locationTags")] public LocationTagDetails[] LocationTags { get; set; } = [];
 
-    [GraphQLName("id")] [ID] public string Id { get; set; }
+    [GraphQLName("id")][ID] public required string Id { get; set; }
 }
 
 [GraphQLName("DeskEdge")]
@@ -187,7 +190,7 @@ public class DeskPayload
 [GraphQLName("DeskWhereInput")]
 public class DeskWhereInput
 {
-    [GraphQLName("locationId")] public string LocationId { get; set; }
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
 
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
@@ -197,9 +200,9 @@ public class InviteCustomersToJoinLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("locationId")] public string LocationId { get; set; }
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
 
-    [GraphQLName("emails")] public string[] Emails { get; set; }
+    [GraphQLName("emails")] public string[] Emails { get; set; } = [];
 }
 
 [GraphQLName("InviteCustomersToJoinLocationPayload")]
@@ -212,9 +215,9 @@ public class InviteCustomersToJoinLocationPayload
 public class LocationAnalytics
 {
     [GraphQLName("desksOccupancyPercentage")]
-    public LocationDesksOccupancyPercentage[] DesksOccupancyPercentage { get; set; }
+    public LocationDesksOccupancyPercentage[] DesksOccupancyPercentage { get; set; } = [];
 
-    [GraphQLName("dailyBookingsTotals")] public LocationDailyBookingsTotal[] DailyBookingsTotals { get; set; }
+    [GraphQLName("dailyBookingsTotals")] public LocationDailyBookingsTotal[] DailyBookingsTotals { get; set; } = [];
 }
 
 [GraphQLName("LocationConnection")]
@@ -223,7 +226,7 @@ public class LocationConnection : Connection<LocationEdge>;
 [GraphQLName("LocationCustomerDetails")]
 public class LocationCustomerDetails
 {
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; }
+    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
 
     [GraphQLName("name")] public string? Name { get; set; }
 
@@ -267,7 +270,7 @@ public class LocationDesksOccupancyPercentage
 [GraphQLName("LocationDetails")]
 public class LocationDetails : Node
 {
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("about")] public string? About { get; set; }
 
@@ -287,7 +290,7 @@ public class LocationDetails : Node
 
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
 
-    [GraphQLName("id")] [ID] public string Id { get; set; }
+    [GraphQLName("id")][ID] public string Id { get; set; }
 }
 
 [GraphQLName("LocationEdge")]
@@ -303,7 +306,7 @@ public class LocationMemberDetails : Node
 
     [GraphQLName("customer")] public LocationCustomerDetails Customer { get; set; }
 
-    [GraphQLName("id")] [ID] public string Id { get; set; }
+    [GraphQLName("id")][ID] public required string Id { get; set; }
 }
 
 [GraphQLName("LocationMemberDetailsPayload")]
@@ -344,7 +347,7 @@ public class LocationMemberOrderInput
 [GraphQLName("LocationMemberWhereInput")]
 public class LocationMemberWhereInput
 {
-    [GraphQLName("locationId")] public string LocationId { get; set; }
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
 
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
@@ -365,9 +368,9 @@ public class LocationOrderInput
 [GraphQLName("LocationOrganizationDetails")]
 public class LocationOrganizationDetails
 {
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; }
+    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
 }
@@ -386,13 +389,13 @@ public class LocationTagConnection : Connection<LocationTagEdge>;
 [GraphQLName("LocationTagDetails")]
 public class LocationTagDetails : Node
 {
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("description")] public string? Description { get; set; }
 
-    [GraphQLName("tagType")] public string TagType { get; set; }
+    [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
 
-    [GraphQLName("id")] [ID] public string Id { get; set; }
+    [GraphQLName("id")][ID] public required string Id { get; set; }
 }
 
 [GraphQLName("LocationTagEdge")]
@@ -424,7 +427,7 @@ public class LocationTagPayload
 [GraphQLName("LocationTagWhereInput")]
 public class LocationTagWhereInput
 {
-    [GraphQLName("locationId")] public string LocationId { get; set; }
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
 
     [GraphQLName("tagType")] public string? TagType { get; set; }
 
@@ -458,16 +461,16 @@ public class UpdateDeskInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; }= string.Empty;
 
     [GraphQLName("deactivated")] public bool Deactivated { get; set; }
 
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
 
-    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; }
+    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 }
 
 [GraphQLName("UpdateLocationInput")]
@@ -475,9 +478,9 @@ public class UpdateLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; }= string.Empty;
 
     [GraphQLName("about")] public string? About { get; set; }
 
@@ -491,11 +494,11 @@ public class UpdateLocationTagInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }
+    [GraphQLName("name")] public string Name { get; set; }= string.Empty;
 
     [GraphQLName("description")] public string? Description { get; set; }
 
-    [GraphQLName("tagType")] public string TagType { get; set; }
+    [GraphQLName("tagType")] public string TagType { get; set; }= string.Empty;
 }

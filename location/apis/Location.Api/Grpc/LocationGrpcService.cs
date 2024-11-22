@@ -256,8 +256,9 @@ public class LocationGrpcService(
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    TagOrderField.TagName => Shared.Models.TagOrderField
-                        .Name,
+                    TagOrderField.TagName => Shared.Models.TagOrderField.Name,
+                    TagOrderField.TagDescription => Shared.Models.TagOrderField.Description,
+                    TagOrderField.TagTagType => Shared.Models.TagOrderField.TagType,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
