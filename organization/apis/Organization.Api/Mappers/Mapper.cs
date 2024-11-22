@@ -106,6 +106,7 @@ public interface IMapper
     Tag MapTo(AddOrganizationTagInput src);
     Tag MapTo(UpdateOrganizationTagInput src);
     OrganizationTagDetails MapTo(Tag src);
+    OrganizationTagEdge MapTo(Edge<Tag> src);
 }
 
 public class Mapper : IMapper
@@ -524,6 +525,8 @@ public class Mapper : IMapper
 
     public OrganizationTagDetails MapTo(Tag src) =>
         new() { Id = src.Id, Name = src.Name, Description = src.Description, TagType = src.Type };
+
+    public OrganizationTagEdge MapTo(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
     private IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
 

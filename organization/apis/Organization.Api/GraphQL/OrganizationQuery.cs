@@ -236,4 +236,59 @@ public class OrganizationQuery
         [Service] IMapper mapper,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
+    
+    [UseServiceScope]
+    public async Task<OrganizationTagConnection?> OrganizationTagsAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        OrganizationTagWhereInput where,
+        OrganizationTagOrderInput[]? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] ITagService tagService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
+    {
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        var (paginatedInfo, edges, totalCount) =
+            await tagService.GetPaginatedTagsAsync(
+                new PaginationInputParam(after, first, before, last),
+                new TagSearchCriteria(where.OrganizationId, where.TagType, where.NameContains),
+                orderBy is null
+                    ? []
+                    : orderBy.Select(item =>
+                    {
+                        var direction = item.Direction == OrderDirection.Ascending
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
+                        var field = item.Field switch
+                        {
+                            OrganizationTagOrderField.Name => TagOrderField.Name,
+                            OrganizationTagOrderField.Description => TagOrderField.Description,
+                            OrganizationTagOrderField.TagType => TagOrderField.TagType,
+                            _ => throw new ArgumentOutOfRangeException()
+                        };
+
+                        return new TagOrder(direction, field);
+                    }).ToList(),
+                cancellationToken);
+
+        return new OrganizationTagConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor,
+                EndCursor = paginatedInfo.EndCursor
+            },
+            Edges = edges.Select(mapper.MapTo).ToArray(),
+            TotalCount = totalCount
+        };
+    }
 }

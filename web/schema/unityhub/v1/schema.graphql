@@ -46,6 +46,7 @@ type Query {
   isAzureTenantInstalled: Boolean!
   azureTenantAdminConsentUrl: String!
   azureTenantOrganization: OrganizationDetails
+  organizationTags(after: String, first: Int, before: String, last: Int, where: OrganizationTagWhereInput!, orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection
   notificationVersion: Version!
   notificationCustomerRecordSynced: Boolean!
   myNotifications(after: String, first: Int, before: String, last: Int, orderBy: [NotificationOrderInput!]): NotificationConnection
@@ -579,11 +580,20 @@ type OrganizationPayload {
   clientMutationId: String
   organization: OrganizationDetails!
 }
+type OrganizationTagConnection {
+  pageInfo: PageInfo!
+  edges: [OrganizationTagEdge!]!
+  totalCount: Int
+}
 type OrganizationTagDetails {
   name: String!
   description: String
   tagType: String!
   id: ID!
+}
+type OrganizationTagEdge {
+  node: OrganizationTagDetails!
+  cursor: String!
 }
 type OrganizationTagPayload {
   clientMutationId: String
@@ -816,6 +826,11 @@ enum OrganizationMemberOrderField {
 }
 enum OrganizationOrderField {
   Name
+}
+enum OrganizationTagOrderField {
+  Name
+  Description
+  TagType
 }
 enum NotificationNotificationType {
   InvitationToJoinOrganization
@@ -1174,6 +1189,15 @@ input OrganizationMemberWhereInput {
 input OrganizationOrderInput {
   direction: OrderDirection!
   field: OrganizationOrderField!
+}
+input OrganizationTagOrderInput {
+  direction: OrderDirection!
+  field: OrganizationTagOrderField!
+}
+input OrganizationTagWhereInput {
+  organizationId: String!
+  tagType: String
+  nameContains: String
 }
 input OrganizationWhereInput {
   nameContains: String
