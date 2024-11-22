@@ -5,7 +5,6 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
@@ -14,9 +13,9 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { CalendarIcon, DeskIcon, LocationIcon, TeamIcon, ZoneIcon } from '@repo/shared/components/icons';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE, Zones } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
-import { stringToColor, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
+import { toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
@@ -255,15 +254,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       renderCell: (params) => (
         <>
           {params.value.length === 0 && 'N/A'}
-          {params.value.length !== 0 && (
-            <Grid container spacing={1}>
-              {params.value.map((zone: LocationTagDetails) => (
-                <Grid key={zone.uniqueId}>
-                  <Chip label={zone.name} sx={{ bgcolor: stringToColor(zone.uniqueId) }} />
-                </Grid>
-              ))}
-            </Grid>
-          )}
+          {params.value.length !== 0 && <Zones zones={params.value.map((zone: LocationTagDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
         </>
       ),
       display: 'flex',
@@ -370,15 +361,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
                     <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
                       <ZoneIcon fontSize="medium" />
                       {zones.length === 0 && <Typography variant="body1">{desks.length === 0 ? 'N/A' : desks}</Typography>}
-                      {zones.length !== 0 && (
-                        <Grid container spacing={1}>
-                          {zones.map((zone) => (
-                            <Grid key={zone.uniqueId}>
-                              <Chip key={zone.uniqueId} label={zone.name} sx={{ bgcolor: stringToColor(zone.uniqueId) }} />
-                            </Grid>
-                          ))}
-                        </Grid>
-                      )}
+                      {zones.length !== 0 && <Zones zones={zones.map((zone: LocationTagDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
                     </Stack>
 
                     <Divider />
