@@ -121,7 +121,7 @@ public class TeamQuery
     }
 
     [UseServiceScope]
-    public async Task<TeamMemberConnection?> PaginatedTeamMembersAsync(
+    public async Task<TeamMemberConnection?> TeamMembersAsync(
         string? after,
         int? first,
         string? before,
@@ -178,28 +178,5 @@ public class TeamQuery
             Edges = edges.Select(mapper.MapTo).ToArray(),
             TotalCount = totalCount
         };
-    }
-
-    [UseServiceScope]
-    public async Task<TeamMemberDetails[]?> TeamMembersAsync(
-        TeamMemberWhereInput where,
-        TeamMemberOrderInput[]? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] ITeamMemberService teamMemberService,
-        [Service] IMapper mapper,
-        CancellationToken cancellationToken)
-    {
-        var result = await PaginatedTeamMembersAsync(
-            null,
-            null,
-            null,
-            null,
-            where,
-            orderBy,
-            cachedCustomerService,
-            teamMemberService,
-            mapper,
-            cancellationToken);
-        return result?.Edges.Select(item => item.Node).ToArray();
     }
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ca8beeccd09a9e358054a60a4748e79e>>
+ * @generated SignedSource<<0b441b1de8bd4f0fbb9b3a0932612aaa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,7 @@ export type locationDesksTab_rootQuery$variables = {
   zoneTagType: string;
 };
 export type locationDesksTab_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_allBookings_query" | "locationDesksTab_paginatedLocationDesks_query" | "locationDesksTab_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_allBookings_query" | "locationDesksTab_locationDesks_query" | "locationDesksTab_query">;
 };
 export type locationDesksTab_rootQuery = {
   response: locationDesksTab_rootQuery$data;
@@ -231,7 +231,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "locationDesksTab_paginatedLocationDesks_query"
+        "name": "locationDesksTab_locationDesks_query"
       },
       {
         "args": null,
@@ -308,7 +308,7 @@ return {
         "args": (v11/*: any*/),
         "concreteType": "LocationTagConnection",
         "kind": "LinkedField",
-        "name": "paginatedLocationTags",
+        "name": "locationTags",
         "plural": false,
         "selections": [
           (v12/*: any*/),
@@ -348,16 +348,16 @@ return {
         "args": (v11/*: any*/),
         "filters": (v18/*: any*/),
         "handle": "connection",
-        "key": "locationZonesTab_paginatedLocationTags",
+        "key": "locationZonesTab_locationTags",
         "kind": "LinkedHandle",
-        "name": "paginatedLocationTags"
+        "name": "locationTags"
       },
       {
         "alias": null,
         "args": (v19/*: any*/),
         "concreteType": "DeskConnection",
         "kind": "LinkedField",
-        "name": "paginatedLocationDesks",
+        "name": "locationDesks",
         "plural": false,
         "selections": [
           (v12/*: any*/),
@@ -424,9 +424,9 @@ return {
         "args": (v19/*: any*/),
         "filters": (v18/*: any*/),
         "handle": "connection",
-        "key": "locationDesksTab_paginatedLocationDesks",
+        "key": "locationDesksTab_locationDesks",
         "kind": "LinkedHandle",
-        "name": "paginatedLocationDesks"
+        "name": "locationDesks"
       },
       {
         "alias": null,
@@ -522,16 +522,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "edef6bfb61b02689dd31c9c0f9016609",
+    "cacheID": "0746fbb74fd903b70ec934bb6e83d046",
     "id": null,
     "metadata": {},
     "name": "locationDesksTab_rootQuery",
     "operationKind": "query",
-    "text": "query locationDesksTab_rootQuery(\n  $locationId: String!\n  $zoneTagType: String!\n  $fromToGetBookings: DateTime\n  $toToGetBookings: DateTime\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]!\n  $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]\n) {\n  ...locationDesksTab_query\n  ...locationDesksTab_paginatedLocationDesks_query\n  ...locationDesksTab_allBookings_query\n}\n\nfragment bulkNewDeskDialog_query on Query {\n  ...deskMultipleChoicesZones_query\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  locationTags {\n    id\n    name\n  }\n}\n\nfragment deskCard_query on Query {\n  me {\n    id\n    preferredDesks {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    canModify\n    id\n  }\n}\n\nfragment deskMultipleChoicesZones_query on Query {\n  paginatedLocationTags(where: {locationId: $locationId, tagType: $zoneTagType}, orderBy: $deskMultipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationDesksTab_allBookings_query on Query {\n  allBookings(where: {locationIds: [$locationId], fromGTE: $fromToGetBookings, toLTE: $toToGetBookings}) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    desks {\n      uniqueId\n    }\n  }\n}\n\nfragment locationDesksTab_paginatedLocationDesks_query on Query {\n  paginatedLocationDesks(first: 50, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationDesksTab_query on Query {\n  location(id: $locationId) {\n    canModify\n    id\n  }\n  ...deskCard_query\n  ...deskMultipleChoicesZones_query\n  ...newDeskDialog_query\n  ...bulkNewDeskDialog_query\n}\n\nfragment newDeskDialog_query on Query {\n  ...deskMultipleChoicesZones_query\n}\n"
+    "text": "query locationDesksTab_rootQuery(\n  $locationId: String!\n  $zoneTagType: String!\n  $fromToGetBookings: DateTime\n  $toToGetBookings: DateTime\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]!\n  $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]\n) {\n  ...locationDesksTab_query\n  ...locationDesksTab_locationDesks_query\n  ...locationDesksTab_allBookings_query\n}\n\nfragment bulkNewDeskDialog_query on Query {\n  ...deskMultipleChoicesZones_query\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  locationTags {\n    id\n    name\n  }\n}\n\nfragment deskCard_query on Query {\n  me {\n    id\n    preferredDesks {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    canModify\n    id\n  }\n}\n\nfragment deskMultipleChoicesZones_query on Query {\n  locationTags(where: {locationId: $locationId, tagType: $zoneTagType}, orderBy: $deskMultipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationDesksTab_allBookings_query on Query {\n  allBookings(where: {locationIds: [$locationId], fromGTE: $fromToGetBookings, toLTE: $toToGetBookings}) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    desks {\n      uniqueId\n    }\n  }\n}\n\nfragment locationDesksTab_locationDesks_query on Query {\n  locationDesks(first: 50, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationDesksTab_query on Query {\n  location(id: $locationId) {\n    canModify\n    id\n  }\n  ...deskCard_query\n  ...deskMultipleChoicesZones_query\n  ...newDeskDialog_query\n  ...bulkNewDeskDialog_query\n}\n\nfragment newDeskDialog_query on Query {\n  ...deskMultipleChoicesZones_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0087e316f8c728f52dd6a91313683210";
+(node as any).hash = "c84fad8781fb7d229b2a088194b3dede";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<55a5368d7fd14ff72db5c2e55d28e99d>>
+ * @generated SignedSource<<b69e215c55524c5f2f657f9fa0ce5793>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,27 +10,27 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type teamMembersTab_paginatedTeamMembers_query$data = {
-  readonly paginatedTeamMembers?: {
+export type organizationMembersTab_organizationMembers_query$data = {
+  readonly organizationMembers?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"teamMemberCard_TeamMemberDetails">;
+        readonly " $fragmentSpreads": FragmentRefs<"organizationMemberCard_OrganizationMemberDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "teamMembersTab_paginatedTeamMembers_query";
+  readonly " $fragmentType": "organizationMembersTab_organizationMembers_query";
 };
-export type teamMembersTab_paginatedTeamMembers_query$key = {
-  readonly " $data"?: teamMembersTab_paginatedTeamMembers_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"teamMembersTab_paginatedTeamMembers_query">;
+export type organizationMembersTab_organizationMembers_query$key = {
+  readonly " $data"?: organizationMembersTab_organizationMembers_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMembersTab_organizationMembers_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "paginatedTeamMembers"
+  "organizationMembers"
 ];
 return {
   "argumentDefinitions": [
@@ -46,19 +46,19 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "organizationExists"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationMembersSortingValues"
+    },
+    {
+      "kind": "RootArgument",
       "name": "peopleNameSearchText"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "teamExists"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "teamId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "teamMembersSortingValues"
     }
   ],
   "kind": "Fragment",
@@ -81,23 +81,23 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./teamMembersTab_paginatedTeamMembers_refetchableFragment.graphql')
+      "operation": require('./organizationMembersTab_organizationMembers_refetchableFragment.graphql')
     }
   },
-  "name": "teamMembersTab_paginatedTeamMembers_query",
+  "name": "organizationMembersTab_organizationMembers_query",
   "selections": [
     {
-      "condition": "teamExists",
+      "condition": "organizationExists",
       "kind": "Condition",
       "passingValue": true,
       "selections": [
         {
-          "alias": "paginatedTeamMembers",
+          "alias": "organizationMembers",
           "args": [
             {
               "kind": "Variable",
               "name": "orderBy",
-              "variableName": "teamMembersSortingValues"
+              "variableName": "organizationMembersSortingValues"
             },
             {
               "fields": [
@@ -108,17 +108,17 @@ return {
                 },
                 {
                   "kind": "Variable",
-                  "name": "teamId",
-                  "variableName": "teamId"
+                  "name": "organizationId",
+                  "variableName": "organizationId"
                 }
               ],
               "kind": "ObjectValue",
               "name": "where"
             }
           ],
-          "concreteType": "TeamMemberConnection",
+          "concreteType": "OrganizationMemberConnection",
           "kind": "LinkedField",
-          "name": "__teamMembersTab_paginatedTeamMembers_connection",
+          "name": "__organizationMembersTab_organizationMembers_connection",
           "plural": false,
           "selections": [
             {
@@ -131,7 +131,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "TeamMemberEdge",
+              "concreteType": "OrganizationMemberEdge",
               "kind": "LinkedField",
               "name": "edges",
               "plural": true,
@@ -139,7 +139,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "TeamMemberDetails",
+                  "concreteType": "OrganizationMemberDetails",
                   "kind": "LinkedField",
                   "name": "node",
                   "plural": false,
@@ -154,7 +154,7 @@ return {
                     {
                       "args": null,
                       "kind": "FragmentSpread",
-                      "name": "teamMemberCard_TeamMemberDetails"
+                      "name": "organizationMemberCard_OrganizationMemberDetails"
                     },
                     {
                       "alias": null,
@@ -224,6 +224,6 @@ return {
 };
 })();
 
-(node as any).hash = "2c260adf1c0c2b95311a81ade4bd161b";
+(node as any).hash = "4c87ec97af08c9d70f8d075f2e7d4978";
 
 export default node;

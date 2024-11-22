@@ -34,7 +34,7 @@ public class CustomerQuery
         mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
     [UseServiceScope]
-    public async Task<CustomerConnection?> PaginatedCustomersByDefaultLocationAsync(
+    public async Task<CustomerConnection?> CustomersByDefaultLocationAsync(
         string? after,
         int? first,
         string? before,
@@ -95,26 +95,5 @@ public class CustomerQuery
             Edges = edges.Select(mapper.MapTo).ToArray(),
             TotalCount = totalCount
         };
-    }
-
-    [UseServiceScope]
-    public async Task<CustomerDetails[]?> CustomersByDefaultLocationAsync(
-        CustomerWhereInput where,
-        CustomerOrderInput[]? orderBy,
-        [Service] ICustomerService customerService,
-        [Service] IMapper mapper,
-        CancellationToken cancellationToken)
-    {
-        var result = await PaginatedCustomersByDefaultLocationAsync(
-            null,
-            null,
-            null,
-            null,
-            where,
-            orderBy,
-            customerService,
-            mapper,
-            cancellationToken);
-        return result?.Edges.Select(item => item.Node).ToArray();
     }
 }

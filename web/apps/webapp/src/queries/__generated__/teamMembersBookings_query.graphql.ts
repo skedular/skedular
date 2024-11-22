@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6cfa9b1d504d27f80428ba46c4feba94>>
+ * @generated SignedSource<<f9e0b03e0a7b16eafa8b9ffc36272adb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,17 +27,21 @@ export type teamMembersBookings_query$data = {
       readonly uniqueId: string;
     } | null | undefined;
   } | null | undefined;
-  readonly teamMembers: ReadonlyArray<{
-    readonly customer: {
-      readonly familyName: string | null | undefined;
-      readonly givenName: string | null | undefined;
-      readonly middleName: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly photoUrl: string | null | undefined;
-      readonly uniqueId: string;
-    };
-    readonly id: string;
-  }> | null | undefined;
+  readonly teamMembers: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly customer: {
+          readonly familyName: string | null | undefined;
+          readonly givenName: string | null | undefined;
+          readonly middleName: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly photoUrl: string | null | undefined;
+          readonly uniqueId: string;
+        };
+        readonly id: string;
+      };
+    }>;
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"bookingsWeekGrid_allBookings_query" | "bookingsWeekGrid_query">;
   readonly " $fragmentType": "teamMembersBookings_query";
 };
@@ -103,48 +107,70 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "TeamMemberDetails",
+      "concreteType": "TeamMemberConnection",
       "kind": "LinkedField",
       "name": "teamMembers",
-      "plural": true,
+      "plural": false,
       "selections": [
-        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
-          "concreteType": "TeamCustomerDetails",
+          "concreteType": "TeamMemberEdge",
           "kind": "LinkedField",
-          "name": "customer",
-          "plural": false,
+          "name": "edges",
+          "plural": true,
           "selections": [
-            (v1/*: any*/),
-            (v2/*: any*/),
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "givenName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "middleName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "familyName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "photoUrl",
+              "concreteType": "TeamMemberDetails",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "TeamCustomerDetails",
+                  "kind": "LinkedField",
+                  "name": "customer",
+                  "plural": false,
+                  "selections": [
+                    (v1/*: any*/),
+                    (v2/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "givenName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "middleName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "familyName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "photoUrl",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
@@ -245,6 +271,6 @@ return {
 };
 })();
 
-(node as any).hash = "7759a83f77f22823ae4ffeb688eb23a4";
+(node as any).hash = "c981f23032f6efe5b7cc1105f1826bad";
 
 export default node;

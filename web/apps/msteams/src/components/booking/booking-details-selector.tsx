@@ -12,13 +12,13 @@ import { useFragment, usePaginationFragment, useRefetchableFragment } from 'reac
 import { useDebounceCallback } from 'usehooks-ts';
 import type { bookingDetailsSelector_availableLocationDesks_query$key } from './__generated__/bookingDetailsSelector_availableLocationDesks_query.graphql';
 import type { bookingDetailsSelector_availableLocationDesks_refetchableFragment } from './__generated__/bookingDetailsSelector_availableLocationDesks_refetchableFragment.graphql';
-import type { bookingDetailsSelector_paginatedOrganizationMembers_query$key } from './__generated__/bookingDetailsSelector_paginatedOrganizationMembers_query.graphql';
-import type { bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment } from './__generated__/bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment.graphql';
+import type { bookingDetailsSelector_organizationMembers_query$key } from './__generated__/bookingDetailsSelector_organizationMembers_query.graphql';
+import type { bookingDetailsSelector_organizationMembers_refetchableFragment } from './__generated__/bookingDetailsSelector_organizationMembers_refetchableFragment.graphql';
 import type { bookingDetailsSelector_query$key } from './__generated__/bookingDetailsSelector_query.graphql';
 
 type Props = {
   rootDataRelay: bookingDetailsSelector_query$key;
-  rootDataPaginatedOrganizationMembersRelay: bookingDetailsSelector_paginatedOrganizationMembers_query$key;
+  rootDataPaginatedOrganizationMembersRelay: bookingDetailsSelector_organizationMembers_query$key;
   rootDataAvailableLocationDesksRelay: bookingDetailsSelector_availableLocationDesks_query$key;
 
   defaultOrganizationId?: string;
@@ -132,19 +132,19 @@ const BookingDetailsSelector = ({
     rootDataRelay,
   );
   const { data: rootDataPaginatedOrganizationMembers, refetch: refetchPaginatedOrganizationMembers } = usePaginationFragment<
-    bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment,
-    bookingDetailsSelector_paginatedOrganizationMembers_query$key
+    bookingDetailsSelector_organizationMembers_refetchableFragment,
+    bookingDetailsSelector_organizationMembers_query$key
   >(
     graphql`
-      fragment bookingDetailsSelector_paginatedOrganizationMembers_query on Query
+      fragment bookingDetailsSelector_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
-      @refetchable(queryName: "bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment") {
-        paginatedOrganizationMembers(
+      @refetchable(queryName: "bookingDetailsSelector_organizationMembers_refetchableFragment") {
+        organizationMembers(
           first: $count
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText }
           orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues
-        ) @connection(key: "bookingDetailsSelectorQuery_paginatedOrganizationMembers") @include(if: $organizationExists) {
+        ) @connection(key: "bookingDetailsSelectorQuery_organizationMembers") @include(if: $organizationExists) {
           __id
           totalCount
           edges {
@@ -200,12 +200,12 @@ const BookingDetailsSelector = ({
   );
 
   const customers = useMemo<OrganizationMemberDetails[]>(() => {
-    if (!rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers) {
+    if (!rootDataPaginatedOrganizationMembers.organizationMembers) {
       return [];
     }
 
-    return rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.edges.map(({ node }) => node);
-  }, [rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers]);
+    return rootDataPaginatedOrganizationMembers.organizationMembers.edges.map(({ node }) => node);
+  }, [rootDataPaginatedOrganizationMembers.organizationMembers]);
 
   const locations = useMemo<LocationDetails[]>(() => {
     const myLocations = rootData.myLocations ? rootData.myLocations.map((location) => location) : [];

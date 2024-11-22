@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2120eb477b73cd314d2317b052d411f4>>
+ * @generated SignedSource<<d0e9a14cee1a2784be3736a2295d965c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,32 +10,47 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationMembersTab_paginatedOrganizationMembers_query$data = {
-  readonly paginatedOrganizationMembers?: {
+export type bookingDetailsSelector_organizationMembers_query$data = {
+  readonly organizationMembers?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly customer: {
+          readonly familyName: string | null | undefined;
+          readonly givenName: string | null | undefined;
+          readonly middleName: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly photoUrl: string | null | undefined;
+          readonly uniqueId: string;
+        };
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"organizationMemberCard_OrganizationMemberDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "organizationMembersTab_paginatedOrganizationMembers_query";
+  readonly " $fragmentType": "bookingDetailsSelector_organizationMembers_query";
 };
-export type organizationMembersTab_paginatedOrganizationMembers_query$key = {
-  readonly " $data"?: organizationMembersTab_paginatedOrganizationMembers_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMembersTab_paginatedOrganizationMembers_query">;
+export type bookingDetailsSelector_organizationMembers_query$key = {
+  readonly " $data"?: bookingDetailsSelector_organizationMembers_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_organizationMembers_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "paginatedOrganizationMembers"
+  "organizationMembers"
 ];
 return {
   "argumentDefinitions": [
     {
-      "defaultValue": 50,
+      "kind": "RootArgument",
+      "name": "bookingDetailsSelectorOrganizationMembersSortingValues"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "bookingPeopleNameSearchText"
+    },
+    {
+      "defaultValue": 20,
       "kind": "LocalArgument",
       "name": "count"
     },
@@ -51,14 +66,6 @@ return {
     {
       "kind": "RootArgument",
       "name": "organizationId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationMembersSortingValues"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "peopleNameSearchText"
     }
   ],
   "kind": "Fragment",
@@ -81,10 +88,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationMembersTab_paginatedOrganizationMembers_refetchableFragment.graphql')
+      "operation": require('./bookingDetailsSelector_organizationMembers_refetchableFragment.graphql')
     }
   },
-  "name": "organizationMembersTab_paginatedOrganizationMembers_query",
+  "name": "bookingDetailsSelector_organizationMembers_query",
   "selections": [
     {
       "condition": "organizationExists",
@@ -92,19 +99,19 @@ return {
       "passingValue": true,
       "selections": [
         {
-          "alias": "paginatedOrganizationMembers",
+          "alias": "organizationMembers",
           "args": [
             {
               "kind": "Variable",
               "name": "orderBy",
-              "variableName": "organizationMembersSortingValues"
+              "variableName": "bookingDetailsSelectorOrganizationMembersSortingValues"
             },
             {
               "fields": [
                 {
                   "kind": "Variable",
                   "name": "nameContains",
-                  "variableName": "peopleNameSearchText"
+                  "variableName": "bookingPeopleNameSearchText"
                 },
                 {
                   "kind": "Variable",
@@ -118,7 +125,7 @@ return {
           ],
           "concreteType": "OrganizationMemberConnection",
           "kind": "LinkedField",
-          "name": "__organizationMembersTab_paginatedOrganizationMembers_connection",
+          "name": "__bookingDetailsSelectorQuery_organizationMembers_connection",
           "plural": false,
           "selections": [
             {
@@ -152,9 +159,57 @@ return {
                       "storageKey": null
                     },
                     {
+                      "alias": null,
                       "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "organizationMemberCard_OrganizationMemberDetails"
+                      "concreteType": "OrganizationCustomerDetails",
+                      "kind": "LinkedField",
+                      "name": "customer",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "uniqueId",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "name",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "givenName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "middleName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "familyName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "photoUrl",
+                          "storageKey": null
+                        }
+                      ],
+                      "storageKey": null
                     },
                     {
                       "alias": null,
@@ -224,6 +279,6 @@ return {
 };
 })();
 
-(node as any).hash = "593fc96f5dcb00ad7e8cd7325e5814b3";
+(node as any).hash = "5b3471efb8fa84424ffae3c5e3357896";
 
 export default node;

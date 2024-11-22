@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<18f1f0659b197bdc2d38ee3326cd24a7>>
+ * @generated SignedSource<<ba7d151be91bee34d927f62435d8f94c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -130,7 +130,7 @@ return {
         "args": (v1/*: any*/),
         "concreteType": "LocationTagConnection",
         "kind": "LinkedField",
-        "name": "paginatedLocationTags",
+        "name": "locationTags",
         "plural": false,
         "selections": [
           {
@@ -238,23 +238,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "locationZonesTab_paginatedLocationTags",
+        "key": "locationZonesTab_locationTags",
         "kind": "LinkedHandle",
-        "name": "paginatedLocationTags"
+        "name": "locationTags"
       }
     ]
   },
   "params": {
-    "cacheID": "283ca49c9794f1ba5c9ea98ac3555851",
+    "cacheID": "20c3df27e4cf1d4b28d98d06bbb00405",
     "id": null,
     "metadata": {},
     "name": "deskMultipleChoicesZones_refetchableFragment",
     "operationKind": "query",
-    "text": "query deskMultipleChoicesZones_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]\n  $locationId: String!\n  $zoneTagType: String\n) {\n  ...deskMultipleChoicesZones_query_1G22uz\n}\n\nfragment deskMultipleChoicesZones_query_1G22uz on Query {\n  paginatedLocationTags(first: $count, after: $cursor, where: {locationId: $locationId, tagType: $zoneTagType}, orderBy: $deskMultipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query deskMultipleChoicesZones_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]\n  $locationId: String!\n  $zoneTagType: String\n) {\n  ...deskMultipleChoicesZones_query_1G22uz\n}\n\nfragment deskMultipleChoicesZones_query_1G22uz on Query {\n  locationTags(first: $count, after: $cursor, where: {locationId: $locationId, tagType: $zoneTagType}, orderBy: $deskMultipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3a57cf6c9bb811e272dd185018921d1c";
+(node as any).hash = "a642f5d7ea5d49f82ff1b1fdb56cb3b2";
 
 export default node;

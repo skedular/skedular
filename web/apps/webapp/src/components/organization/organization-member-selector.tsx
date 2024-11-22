@@ -44,7 +44,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
       fragment organizationMemberSelector_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
       @refetchable(queryName: "organizationMemberSelector_refetchableFragment") {
-        organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(
+        organizationMemberSelectorPaginatedOrganizationMembers: organizationMembers(
           first: $count
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText }

@@ -20,18 +20,16 @@ type Query {
   teamBookingPermissions(teamId: String!): TeamBookingPermissions
   customerVersion: Version!
   me: CustomerDetails
-  paginatedCustomersByDefaultLocation(after: String, first: Int, before: String, last: Int, where: CustomerWhereInput!, orderBy: [CustomerOrderInput!]): CustomerConnection
-  customersByDefaultLocation(where: CustomerWhereInput!, orderBy: [CustomerOrderInput!]): [CustomerDetails!]
+  customersByDefaultLocation(after: String, first: Int, before: String, last: Int, where: CustomerWhereInput!, orderBy: [CustomerOrderInput!]): CustomerConnection
   locationVersion: Version!
   locationCustomerRecordSynced: Boolean!
   locationMemberMembershipTypes: [LocationMemberMembershipType!]!
   location(id: String!): LocationDetails
   locations(after: String, first: Int, before: String, last: Int, where: LocationWhereInput!, orderBy: [LocationOrderInput!]): LocationConnection
   myLocations(organizationId: String): [LocationDetails!]
-  paginatedLocationMembers(after: String, first: Int, before: String, last: Int, where: LocationMemberWhereInput!, orderBy: [LocationMemberOrderInput!]): LocationMemberConnection
-  locationMembers(where: LocationMemberWhereInput!, orderBy: [LocationMemberOrderInput!]): [LocationMemberDetails!]
-  paginatedLocationTags(after: String, first: Int, before: String, last: Int, where: LocationTagWhereInput!, orderBy: [LocationTagOrderInput!]): LocationTagConnection
-  paginatedLocationDesks(after: String, first: Int, before: String, last: Int, where: DeskWhereInput!, orderBy: [DeskOrderInput!]): DeskConnection
+  locationMembers(after: String, first: Int, before: String, last: Int, where: LocationMemberWhereInput!, orderBy: [LocationMemberOrderInput!]): LocationMemberConnection
+  locationTags(after: String, first: Int, before: String, last: Int, where: LocationTagWhereInput!, orderBy: [LocationTagOrderInput!]): LocationTagConnection
+  locationDesks(after: String, first: Int, before: String, last: Int, where: DeskWhereInput!, orderBy: [DeskOrderInput!]): DeskConnection
   locationAnalytics(locationId: String!, from: DateTime!, until: DateTime!): LocationAnalytics
   msTeamsVersion: Version!
   msTeamsCustomerRecordSynced: Boolean!
@@ -43,8 +41,7 @@ type Query {
   organization(id: String!): OrganizationDetails
   organizations(after: String, first: Int, before: String, last: Int, where: OrganizationWhereInput!, orderBy: [OrganizationOrderInput!]): OrganizationConnection
   myOrganizations: [OrganizationDetails!]
-  paginatedOrganizationMembers(after: String, first: Int, before: String, last: Int, where: OrganizationMemberWhereInput!, orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection
-  organizationMembers(where: OrganizationMemberWhereInput!, orderBy: [OrganizationMemberOrderInput!]): [OrganizationMemberDetails!]
+  organizationMembers(after: String, first: Int, before: String, last: Int, where: OrganizationMemberWhereInput!, orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection
   organizationAnalytics(organizationId: String!, from: DateTime!, until: DateTime!): OrganizationAnalytics
   isAzureTenantInstalled: Boolean!
   azureTenantAdminConsentUrl: String!
@@ -63,8 +60,7 @@ type Query {
   team(id: String!): TeamDetails
   teams(after: String, first: Int, before: String, last: Int, where: TeamWhereInput!, orderBy: [TeamOrderInput!]): TeamConnection
   myTeams(organizationId: String): [TeamDetails!]
-  paginatedTeamMembers(after: String, first: Int, before: String, last: Int, where: TeamMemberWhereInput!, orderBy: [TeamMemberOrderInput!]): TeamMemberConnection
-  teamMembers(where: TeamMemberWhereInput!, orderBy: [TeamMemberOrderInput!]): [TeamMemberDetails!]
+  teamMembers(after: String, first: Int, before: String, last: Int, where: TeamMemberWhereInput!, orderBy: [TeamMemberOrderInput!]): TeamMemberConnection
 }
 type Mutation {
   setOrganizationBillingInfo(input: SetOrganizationBillingInfoInput!): OrganizationBillingInfoPayload

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3d111d412b5df6152127d70deccd8067>>
+ * @generated SignedSource<<823152cf583f30f78ffecd6f9ec9d8bd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -141,7 +141,7 @@ return {
             "args": (v1/*: any*/),
             "concreteType": "OrganizationMemberConnection",
             "kind": "LinkedField",
-            "name": "paginatedOrganizationMembers",
+            "name": "organizationMembers",
             "plural": false,
             "selections": [
               {
@@ -297,23 +297,23 @@ return {
             "handle": "connection",
             "key": "organizationMemberSelector_organizationMemberSelectorPaginatedOrganizationMembers",
             "kind": "LinkedHandle",
-            "name": "paginatedOrganizationMembers"
+            "name": "organizationMembers"
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "9a2ee717ceab2a6f41f4f971cbc4918c",
+    "cacheID": "efb0a08a3b688aba61d0fead3bdca970",
     "id": null,
     "metadata": {},
     "name": "organizationMemberSelector_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMemberSelector_refetchableFragment(\n  $bookingPeopleNameSearchText: String\n  $count: Int = 20\n  $cursor: String\n  $organizationExists: Boolean!\n  $organizationId: String!\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMemberSelector_query_1G22uz\n}\n\nfragment organizationMemberSelector_query_1G22uz on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMemberSelector_refetchableFragment(\n  $bookingPeopleNameSearchText: String\n  $count: Int = 20\n  $cursor: String\n  $organizationExists: Boolean!\n  $organizationId: String!\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMemberSelector_query_1G22uz\n}\n\nfragment organizationMemberSelector_query_1G22uz on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d311972100579b17e70f048177388f28";
+(node as any).hash = "f1df4aef90751109db3eba2400283144";
 
 export default node;

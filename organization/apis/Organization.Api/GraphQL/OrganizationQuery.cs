@@ -142,7 +142,7 @@ public class OrganizationQuery
     }
 
     [UseServiceScope]
-    public async Task<OrganizationMemberConnection?> PaginatedOrganizationMembersAsync(
+    public async Task<OrganizationMemberConnection?> OrganizationMembersAsync(
         string? after,
         int? first,
         string? before, int? last,
@@ -202,29 +202,6 @@ public class OrganizationQuery
             Edges = edges.Select(mapper.MapTo).ToArray(),
             TotalCount = totalCount
         };
-    }
-
-    [UseServiceScope]
-    public async Task<OrganizationMemberDetails[]?> OrganizationMembersAsync(
-        OrganizationMemberWhereInput where,
-        OrganizationMemberOrderInput[]? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IOrganizationMemberService organizationMemberService,
-        [Service] IMapper mapper,
-        CancellationToken cancellationToken)
-    {
-        var result = await PaginatedOrganizationMembersAsync(
-            null,
-            null,
-            null,
-            null,
-            where,
-            orderBy,
-            cachedCustomerService,
-            organizationMemberService,
-            mapper,
-            cancellationToken);
-        return result?.Edges.Select(item => item.Node).ToArray();
     }
 
     [UseServiceScope]

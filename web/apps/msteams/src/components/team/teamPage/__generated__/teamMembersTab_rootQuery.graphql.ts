@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d8504b4c8ee700ea256b3c6566c1e49>>
+ * @generated SignedSource<<9278f48151d3b2abc72c2f5442080376>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,7 +32,7 @@ export type teamMembersTab_rootQuery$variables = {
   teamMembersSortingValues?: ReadonlyArray<TeamMemberOrderInput> | null | undefined;
 };
 export type teamMembersTab_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"teamMembersTab_paginatedTeamMembers_query" | "teamMembersTab_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"teamMembersTab_query" | "teamMembersTab_teamMembers_query">;
 };
 export type teamMembersTab_rootQuery = {
   response: teamMembersTab_rootQuery$data;
@@ -290,7 +290,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "teamMembersTab_paginatedTeamMembers_query"
+        "name": "teamMembersTab_teamMembers_query"
       }
     ],
     "type": "Query",
@@ -405,7 +405,7 @@ return {
             "args": (v12/*: any*/),
             "concreteType": "OrganizationMemberConnection",
             "kind": "LinkedField",
-            "name": "paginatedOrganizationMembers",
+            "name": "organizationMembers",
             "plural": false,
             "selections": [
               (v13/*: any*/),
@@ -463,7 +463,7 @@ return {
             "handle": "connection",
             "key": "organizationMemberSelector_organizationMemberSelectorPaginatedOrganizationMembers",
             "kind": "LinkedHandle",
-            "name": "paginatedOrganizationMembers"
+            "name": "organizationMembers"
           }
         ]
       },
@@ -477,7 +477,7 @@ return {
             "args": (v23/*: any*/),
             "concreteType": "TeamMemberConnection",
             "kind": "LinkedField",
-            "name": "paginatedTeamMembers",
+            "name": "teamMembers",
             "plural": false,
             "selections": [
               (v13/*: any*/),
@@ -529,25 +529,25 @@ return {
             "args": (v23/*: any*/),
             "filters": (v22/*: any*/),
             "handle": "connection",
-            "key": "teamMembersTab_paginatedTeamMembers",
+            "key": "teamMembersTab_teamMembers",
             "kind": "LinkedHandle",
-            "name": "paginatedTeamMembers"
+            "name": "teamMembers"
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "406a47755ba84d2f9705bd5aa1344219",
+    "cacheID": "bfabea39382f3516f5ac760046ccaaf3",
     "id": null,
     "metadata": {},
     "name": "teamMembersTab_rootQuery",
     "operationKind": "query",
-    "text": "query teamMembersTab_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $teamId: String!\n  $teamExists: Boolean!\n  $bookingPeopleNameSearchText: String\n  $teamMembersSortingValues: [TeamMemberOrderInput!]\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...teamMembersTab_query\n  ...teamMembersTab_paginatedTeamMembers_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: paginatedOrganizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamMemberCard_TeamMemberDetails on TeamMemberDetails {\n  id\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationMember {\n    customer {\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n}\n\nfragment teamMemberCard_query on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    canModify\n    members {\n      id\n      customer {\n        uniqueId\n      }\n      organizationMember {\n        uniqueId\n      }\n    }\n  }\n}\n\nfragment teamMembersTab_paginatedTeamMembers_query on Query {\n  paginatedTeamMembers(first: 50, where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $teamMembersSortingValues) @include(if: $teamExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...teamMemberCard_TeamMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamMembersTab_query on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    timezone\n    organization {\n      name\n    }\n    canModify\n    members {\n      customer {\n        uniqueId\n      }\n      organizationMember {\n        uniqueId\n      }\n      id\n    }\n  }\n  ...teamMemberCard_query\n  ...organizationMemberSelector_query\n}\n"
+    "text": "query teamMembersTab_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $teamId: String!\n  $teamExists: Boolean!\n  $bookingPeopleNameSearchText: String\n  $teamMembersSortingValues: [TeamMemberOrderInput!]\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...teamMembersTab_query\n  ...teamMembersTab_teamMembers_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: organizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamMemberCard_TeamMemberDetails on TeamMemberDetails {\n  id\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationMember {\n    customer {\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n}\n\nfragment teamMemberCard_query on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    canModify\n    members {\n      id\n      customer {\n        uniqueId\n      }\n      organizationMember {\n        uniqueId\n      }\n    }\n  }\n}\n\nfragment teamMembersTab_query on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    timezone\n    organization {\n      name\n    }\n    canModify\n    members {\n      customer {\n        uniqueId\n      }\n      organizationMember {\n        uniqueId\n      }\n      id\n    }\n  }\n  ...teamMemberCard_query\n  ...organizationMemberSelector_query\n}\n\nfragment teamMembersTab_teamMembers_query on Query {\n  teamMembers(first: 50, where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $teamMembersSortingValues) @include(if: $teamExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...teamMemberCard_TeamMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3de61683c810f77d8d2bf9e2321a2dae";
+(node as any).hash = "ad6f78817d0f2f46324a12bdc76bdede";
 
 export default node;

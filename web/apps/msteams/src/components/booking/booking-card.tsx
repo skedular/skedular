@@ -105,7 +105,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           canDeleteBookingOnBehalf
         }
         ...bookingDetailsSelector_query
-        ...bookingDetailsSelector_paginatedOrganizationMembers_query
+        ...bookingDetailsSelector_organizationMembers_query
         ...bookingDetailsSelector_availableLocationDesks_query
       }
     `,

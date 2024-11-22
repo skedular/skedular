@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7369c928a02be7af4cd0b35fcf58788f>>
+ * @generated SignedSource<<f2e87be5d93e3978f76d4f30f4a9edc9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,17 +24,21 @@ export type locationMembersBookings_query$data = {
     }>;
     readonly id: string;
   } | null | undefined;
-  readonly organizationMembers: ReadonlyArray<{
-    readonly customer: {
-      readonly familyName: string | null | undefined;
-      readonly givenName: string | null | undefined;
-      readonly middleName: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly photoUrl: string | null | undefined;
-      readonly uniqueId: string;
-    };
-    readonly id: string;
-  }> | null | undefined;
+  readonly organizationMembers: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly customer: {
+          readonly familyName: string | null | undefined;
+          readonly givenName: string | null | undefined;
+          readonly middleName: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly photoUrl: string | null | undefined;
+          readonly uniqueId: string;
+        };
+        readonly id: string;
+      };
+    }>;
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"bookingsWeekGrid_allBookings_query" | "bookingsWeekGrid_query">;
   readonly " $fragmentType": "locationMembersBookings_query";
 };
@@ -104,48 +108,70 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "OrganizationMemberDetails",
+      "concreteType": "OrganizationMemberConnection",
       "kind": "LinkedField",
       "name": "organizationMembers",
-      "plural": true,
+      "plural": false,
       "selections": [
-        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
-          "concreteType": "OrganizationCustomerDetails",
+          "concreteType": "OrganizationMemberEdge",
           "kind": "LinkedField",
-          "name": "customer",
-          "plural": false,
+          "name": "edges",
+          "plural": true,
           "selections": [
-            (v1/*: any*/),
-            (v2/*: any*/),
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "givenName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "middleName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "familyName",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "photoUrl",
+              "concreteType": "OrganizationMemberDetails",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OrganizationCustomerDetails",
+                  "kind": "LinkedField",
+                  "name": "customer",
+                  "plural": false,
+                  "selections": [
+                    (v1/*: any*/),
+                    (v2/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "givenName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "middleName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "familyName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "photoUrl",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
@@ -240,6 +266,6 @@ return {
 };
 })();
 
-(node as any).hash = "3ec990989664ad2aa4c60b03f17b324b";
+(node as any).hash = "43f1af9a7e2049c0630d8160158e248f";
 
 export default node;

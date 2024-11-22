@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b50a4817c8fbb247d04e684e6e487ee>>
+ * @generated SignedSource<<6d9d3b9359ea2fecedf28c0fda3100e9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
   field: OrganizationMemberOrderField;
 };
-export type organizationMembersTab_paginatedOrganizationMembers_refetchableFragment$variables = {
+export type organizationMembersTab_organizationMembers_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationExists: boolean;
@@ -24,12 +24,12 @@ export type organizationMembersTab_paginatedOrganizationMembers_refetchableFragm
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   peopleNameSearchText?: string | null | undefined;
 };
-export type organizationMembersTab_paginatedOrganizationMembers_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMembersTab_paginatedOrganizationMembers_query">;
+export type organizationMembersTab_organizationMembers_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMembersTab_organizationMembers_query">;
 };
-export type organizationMembersTab_paginatedOrganizationMembers_refetchableFragment = {
-  response: organizationMembersTab_paginatedOrganizationMembers_refetchableFragment$data;
-  variables: organizationMembersTab_paginatedOrganizationMembers_refetchableFragment$variables;
+export type organizationMembersTab_organizationMembers_refetchableFragment = {
+  response: organizationMembersTab_organizationMembers_refetchableFragment$data;
+  variables: organizationMembersTab_organizationMembers_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -103,7 +103,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMembersTab_paginatedOrganizationMembers_refetchableFragment",
+    "name": "organizationMembersTab_organizationMembers_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -119,7 +119,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "organizationMembersTab_paginatedOrganizationMembers_query"
+        "name": "organizationMembersTab_organizationMembers_query"
       }
     ],
     "type": "Query",
@@ -129,7 +129,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMembersTab_paginatedOrganizationMembers_refetchableFragment",
+    "name": "organizationMembersTab_organizationMembers_refetchableFragment",
     "selections": [
       {
         "condition": "organizationExists",
@@ -141,7 +141,7 @@ return {
             "args": (v1/*: any*/),
             "concreteType": "OrganizationMemberConnection",
             "kind": "LinkedField",
-            "name": "paginatedOrganizationMembers",
+            "name": "organizationMembers",
             "plural": false,
             "selections": [
               {
@@ -295,25 +295,25 @@ return {
               "orderBy"
             ],
             "handle": "connection",
-            "key": "organizationMembersTab_paginatedOrganizationMembers",
+            "key": "organizationMembersTab_organizationMembers",
             "kind": "LinkedHandle",
-            "name": "paginatedOrganizationMembers"
+            "name": "organizationMembers"
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "72b38ed608838738a382ff589d7f290d",
+    "cacheID": "a2fc31618867e5030cc6846eb10e0c36",
     "id": null,
     "metadata": {},
-    "name": "organizationMembersTab_paginatedOrganizationMembers_refetchableFragment",
+    "name": "organizationMembersTab_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMembersTab_paginatedOrganizationMembers_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $organizationExists: Boolean!\n  $organizationId: String!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...organizationMembersTab_paginatedOrganizationMembers_query_1G22uz\n}\n\nfragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment organizationMembersTab_paginatedOrganizationMembers_query_1G22uz on Query {\n  paginatedOrganizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationMemberCard_OrganizationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMembersTab_organizationMembers_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $organizationExists: Boolean!\n  $organizationId: String!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...organizationMembersTab_organizationMembers_query_1G22uz\n}\n\nfragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment organizationMembersTab_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationMemberCard_OrganizationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "593fc96f5dcb00ad7e8cd7325e5814b3";
+(node as any).hash = "4c87ec97af08c9d70f8d075f2e7d4978";
 
 export default node;

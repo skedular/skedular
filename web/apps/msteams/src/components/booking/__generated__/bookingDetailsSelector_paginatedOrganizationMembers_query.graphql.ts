@@ -8,10 +8,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
-export type bookingDetailsSelector_paginatedOrganizationMembers_query$data = {
-  readonly paginatedOrganizationMembers?: {
+import { FragmentRefs, ReaderFragment } from 'relay-runtime';
+export type bookingDetailsSelector_organizationMembers_query$data = {
+  readonly organizationMembers?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -28,16 +27,16 @@ export type bookingDetailsSelector_paginatedOrganizationMembers_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "bookingDetailsSelector_paginatedOrganizationMembers_query";
+  readonly " $fragmentType": "bookingDetailsSelector_organizationMembers_query";
 };
-export type bookingDetailsSelector_paginatedOrganizationMembers_query$key = {
-  readonly " $data"?: bookingDetailsSelector_paginatedOrganizationMembers_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_paginatedOrganizationMembers_query">;
+export type bookingDetailsSelector_organizationMembers_query$key = {
+  readonly " $data"?: bookingDetailsSelector_organizationMembers_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_organizationMembers_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "paginatedOrganizationMembers"
+  "organizationMembers"
 ];
 return {
   "argumentDefinitions": [
@@ -88,10 +87,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment.graphql')
+      "operation": require('./bookingDetailsSelector_organizationMembers_refetchableFragment.graphql')
     }
   },
-  "name": "bookingDetailsSelector_paginatedOrganizationMembers_query",
+  "name": "bookingDetailsSelector_organizationMembers_query",
   "selections": [
     {
       "condition": "organizationExists",
@@ -99,7 +98,7 @@ return {
       "passingValue": true,
       "selections": [
         {
-          "alias": "paginatedOrganizationMembers",
+          "alias": "organizationMembers",
           "args": [
             {
               "kind": "Variable",
@@ -125,7 +124,7 @@ return {
           ],
           "concreteType": "OrganizationMemberConnection",
           "kind": "LinkedField",
-          "name": "__bookingDetailsSelectorQuery_paginatedOrganizationMembers_connection",
+          "name": "__bookingDetailsSelectorQuery_organizationMembers_connection",
           "plural": false,
           "selections": [
             {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1104f9a0097d5c864d732b752e300e4>>
+ * @generated SignedSource<<5d638337be0d00a6dec4d8117a9253f4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type deskMultipleChoicesZones_query$data = {
-  readonly paginatedLocationTags: {
+  readonly locationTags: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -30,7 +30,7 @@ export type deskMultipleChoicesZones_query$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "paginatedLocationTags"
+  "locationTags"
 ];
 return {
   "argumentDefinitions": [
@@ -83,7 +83,7 @@ return {
   "name": "deskMultipleChoicesZones_query",
   "selections": [
     {
-      "alias": "paginatedLocationTags",
+      "alias": "locationTags",
       "args": [
         {
           "kind": "Variable",
@@ -109,7 +109,7 @@ return {
       ],
       "concreteType": "LocationTagConnection",
       "kind": "LinkedField",
-      "name": "__locationZonesTab_paginatedLocationTags_connection",
+      "name": "__locationZonesTab_locationTags_connection",
       "plural": false,
       "selections": [
         {
@@ -215,6 +215,6 @@ return {
 };
 })();
 
-(node as any).hash = "3a57cf6c9bb811e272dd185018921d1c";
+(node as any).hash = "a642f5d7ea5d49f82ff1b1fdb56cb3b2";
 
 export default node;

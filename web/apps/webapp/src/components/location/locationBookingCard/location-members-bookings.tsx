@@ -108,25 +108,33 @@ const LocationMembersBookings = ({
     graphql`
       fragment locationMembersBookings_query on Query {
         locationMembers(where: { locationId: $locationId }, orderBy: $locationPeopleSortingValues) {
-          id
-          customer {
-            uniqueId
-            name
-            givenName
-            middleName
-            familyName
-            photoUrl
+          edges {
+            node {
+              id
+              customer {
+                uniqueId
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+              }
+            }
           }
         }
         organizationMembers(where: { organizationId: $organizationId }, orderBy: $organizationPeopleSortingValues) @include(if: $organizationExists) {
-          id
-          customer {
-            uniqueId
-            name
-            givenName
-            middleName
-            familyName
-            photoUrl
+          edges {
+            node {
+              id
+              customer {
+                uniqueId
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+              }
+            }
           }
         }
         me {
@@ -203,10 +211,10 @@ const LocationMembersBookings = ({
 
   const allMembers = rootData.location?.organization
     ? rootData.organizationMembers
-      ? rootData.organizationMembers.map((member) => member.customer)
+      ? rootData.organizationMembers.edges.map(({ node }) => node.customer)
       : []
     : rootData.locationMembers
-      ? rootData.locationMembers.map((member) => member.customer)
+      ? rootData.locationMembers.edges.map(({ node }) => node.customer)
       : [];
 
   const handleDateRangeTypeChange = (_: React.MouseEvent<HTMLElement>, value: DateRangeType) => {

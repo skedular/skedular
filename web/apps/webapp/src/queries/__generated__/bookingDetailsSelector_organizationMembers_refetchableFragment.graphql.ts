@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<abfa28699500aeeb2b2780a7a4f04608>>
+ * @generated SignedSource<<ce787856d75564c0de533a007c53dd64>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
   field: OrganizationMemberOrderField;
 };
-export type bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment$variables = {
+export type bookingDetailsSelector_organizationMembers_refetchableFragment$variables = {
   bookingDetailsSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   bookingPeopleNameSearchText?: string | null | undefined;
   count?: number | null | undefined;
@@ -24,12 +24,12 @@ export type bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragm
   organizationExists: boolean;
   organizationId: string;
 };
-export type bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_paginatedOrganizationMembers_query">;
+export type bookingDetailsSelector_organizationMembers_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_organizationMembers_query">;
 };
-export type bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment = {
-  response: bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment$data;
-  variables: bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment$variables;
+export type bookingDetailsSelector_organizationMembers_refetchableFragment = {
+  response: bookingDetailsSelector_organizationMembers_refetchableFragment$data;
+  variables: bookingDetailsSelector_organizationMembers_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -103,7 +103,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment",
+    "name": "bookingDetailsSelector_organizationMembers_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -119,7 +119,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "bookingDetailsSelector_paginatedOrganizationMembers_query"
+        "name": "bookingDetailsSelector_organizationMembers_query"
       }
     ],
     "type": "Query",
@@ -129,7 +129,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment",
+    "name": "bookingDetailsSelector_organizationMembers_refetchableFragment",
     "selections": [
       {
         "condition": "organizationExists",
@@ -141,7 +141,7 @@ return {
             "args": (v1/*: any*/),
             "concreteType": "OrganizationMemberConnection",
             "kind": "LinkedField",
-            "name": "paginatedOrganizationMembers",
+            "name": "organizationMembers",
             "plural": false,
             "selections": [
               {
@@ -295,25 +295,25 @@ return {
               "orderBy"
             ],
             "handle": "connection",
-            "key": "bookingDetailsSelectorQuery_paginatedOrganizationMembers",
+            "key": "bookingDetailsSelectorQuery_organizationMembers",
             "kind": "LinkedHandle",
-            "name": "paginatedOrganizationMembers"
+            "name": "organizationMembers"
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "8e9275b469bc4b7f18b25f01eec70f05",
+    "cacheID": "3750ced8e97f852afc8dc517160a5ec6",
     "id": null,
     "metadata": {},
-    "name": "bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment",
+    "name": "bookingDetailsSelector_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookingDetailsSelector_paginatedOrganizationMembers_refetchableFragment(\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n  $count: Int = 20\n  $cursor: String\n  $organizationExists: Boolean!\n  $organizationId: String!\n) {\n  ...bookingDetailsSelector_paginatedOrganizationMembers_query_1G22uz\n}\n\nfragment bookingDetailsSelector_paginatedOrganizationMembers_query_1G22uz on Query {\n  paginatedOrganizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query bookingDetailsSelector_organizationMembers_refetchableFragment(\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n  $count: Int = 20\n  $cursor: String\n  $organizationExists: Boolean!\n  $organizationId: String!\n) {\n  ...bookingDetailsSelector_organizationMembers_query_1G22uz\n}\n\nfragment bookingDetailsSelector_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "dd3c0145b565cefb84b154a4c35838db";
+(node as any).hash = "5b3471efb8fa84424ffae3c5e3357896";
 
 export default node;

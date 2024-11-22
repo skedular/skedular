@@ -34,14 +34,14 @@ import { PreloadedQuery, useFragment, useMutation, usePaginationFragment, usePre
 import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 import type { teamMembersTab_inviteCustomersToJoinTeamMutation } from './__generated__/teamMembersTab_inviteCustomersToJoinTeamMutation.graphql';
-import type { teamMembersTab_paginatedTeamMembers_query$key } from './__generated__/teamMembersTab_paginatedTeamMembers_query.graphql';
+import type { teamMembersTab_query$key } from './__generated__/teamMembersTab_query.graphql';
+import type { teamMembersTab_rootQuery } from './__generated__/teamMembersTab_rootQuery.graphql';
+import type { teamMembersTab_teamMembers_query$key } from './__generated__/teamMembersTab_teamMembers_query.graphql';
 import type {
   TeamMemberOrderField,
   TeamMemberOrderInput,
-  teamMembersTab_paginatedTeamMembers_refetchableFragment,
-} from './__generated__/teamMembersTab_paginatedTeamMembers_refetchableFragment.graphql';
-import type { teamMembersTab_query$key } from './__generated__/teamMembersTab_query.graphql';
-import type { teamMembersTab_rootQuery } from './__generated__/teamMembersTab_rootQuery.graphql';
+  teamMembersTab_teamMembers_refetchableFragment,
+} from './__generated__/teamMembersTab_teamMembers_refetchableFragment.graphql';
 import type { teamMembersTab_updateTeamMutation } from './__generated__/teamMembersTab_updateTeamMutation.graphql';
 import TeamMemberCard from './team-member-card';
 
@@ -64,7 +64,7 @@ const RootQuery = graphql`
     $peopleNameSearchText: String
   ) {
     ...teamMembersTab_query
-    ...teamMembersTab_paginatedTeamMembers_query
+    ...teamMembersTab_teamMembers_query
   }
 `;
 
@@ -127,17 +127,17 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<teamMembersTab_paginatedTeamMembers_refetchableFragment, teamMembersTab_paginatedTeamMembers_query$key>(
+  } = usePaginationFragment<teamMembersTab_teamMembers_refetchableFragment, teamMembersTab_teamMembers_query$key>(
     graphql`
-      fragment teamMembersTab_paginatedTeamMembers_query on Query
+      fragment teamMembersTab_teamMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "teamMembersTab_paginatedTeamMembers_refetchableFragment") {
-        paginatedTeamMembers(
+      @refetchable(queryName: "teamMembersTab_teamMembers_refetchableFragment") {
+        teamMembers(
           first: $count
           after: $cursor
           where: { teamId: $teamId, nameContains: $peopleNameSearchText }
           orderBy: $teamMembersSortingValues
-        ) @connection(key: "teamMembersTab_paginatedTeamMembers") @include(if: $teamExists) {
+        ) @connection(key: "teamMembersTab_teamMembers") @include(if: $teamExists) {
           __id
           totalCount
           edges {
@@ -247,8 +247,8 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
   }, [loadNext, isLoadingNext, pageSize]);
 
   useMemo(
-    () => (rootDataPaginatedTeamMembers.paginatedTeamMembers ? [rootDataPaginatedTeamMembers.paginatedTeamMembers.__id] : []),
-    [rootDataPaginatedTeamMembers.paginatedTeamMembers],
+    () => (rootDataPaginatedTeamMembers.teamMembers ? [rootDataPaginatedTeamMembers.teamMembers.__id] : []),
+    [rootDataPaginatedTeamMembers.teamMembers],
   );
 
   const handleEditOrganizationMembersClick = () => {
@@ -374,12 +374,12 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     setInvitePeopleDialogOpen(false);
   };
 
-  if (!rootData.team || !rootDataPaginatedTeamMembers.paginatedTeamMembers) {
+  if (!rootData.team || !rootDataPaginatedTeamMembers.teamMembers) {
     return <></>;
   }
 
-  const teamMemberEdges = rootDataPaginatedTeamMembers.paginatedTeamMembers.edges;
-  const count = rootDataPaginatedTeamMembers.paginatedTeamMembers.totalCount ? rootDataPaginatedTeamMembers.paginatedTeamMembers.totalCount : 0;
+  const teamMemberEdges = rootDataPaginatedTeamMembers.teamMembers.edges;
+  const count = rootDataPaginatedTeamMembers.teamMembers.totalCount ? rootDataPaginatedTeamMembers.teamMembers.totalCount : 0;
   const slicedrEdges = teamMemberEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > teamMemberEdges.length ? teamMemberEdges.length : page * pageSize + pageSize,

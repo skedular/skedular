@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e13b6d1f578360596be6672fca36aa3>>
+ * @generated SignedSource<<51ec863216fff00075c1bca2879bbdf6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,43 +10,32 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationMemberSelector_query$data = {
-  readonly organizationMemberSelectorPaginatedOrganizationMembers?: {
+export type locationMembersTab_locationMembers_query$data = {
+  readonly locationMembers?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly customer: {
-          readonly familyName: string | null | undefined;
-          readonly givenName: string | null | undefined;
-          readonly middleName: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly photoUrl: string | null | undefined;
-          readonly uniqueId: string;
-        };
         readonly id: string;
+        readonly " $fragmentSpreads": FragmentRefs<"locationMemberCard_LocationMemberDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "organizationMemberSelector_query";
+  readonly " $fragmentType": "locationMembersTab_locationMembers_query";
 };
-export type organizationMemberSelector_query$key = {
-  readonly " $data"?: organizationMemberSelector_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMemberSelector_query">;
+export type locationMembersTab_locationMembers_query$key = {
+  readonly " $data"?: locationMembersTab_locationMembers_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"locationMembersTab_locationMembers_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "organizationMemberSelectorPaginatedOrganizationMembers"
+  "locationMembers"
 ];
 return {
   "argumentDefinitions": [
     {
-      "kind": "RootArgument",
-      "name": "bookingPeopleNameSearchText"
-    },
-    {
-      "defaultValue": 20,
+      "defaultValue": 50,
       "kind": "LocalArgument",
       "name": "count"
     },
@@ -57,15 +46,19 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationExists"
+      "name": "locationExists"
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "locationId"
     },
     {
       "kind": "RootArgument",
-      "name": "organizationMemberSelectorOrganizationMembersSortingValues"
+      "name": "locationMembersSortingValues"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "peopleNameSearchText"
     }
   ],
   "kind": "Fragment",
@@ -88,44 +81,44 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationMemberSelector_refetchableFragment.graphql')
+      "operation": require('./locationMembersTab_locationMembers_refetchableFragment.graphql')
     }
   },
-  "name": "organizationMemberSelector_query",
+  "name": "locationMembersTab_locationMembers_query",
   "selections": [
     {
-      "condition": "organizationExists",
+      "condition": "locationExists",
       "kind": "Condition",
       "passingValue": true,
       "selections": [
         {
-          "alias": "organizationMemberSelectorPaginatedOrganizationMembers",
+          "alias": "locationMembers",
           "args": [
             {
               "kind": "Variable",
               "name": "orderBy",
-              "variableName": "organizationMemberSelectorOrganizationMembersSortingValues"
+              "variableName": "locationMembersSortingValues"
             },
             {
               "fields": [
                 {
                   "kind": "Variable",
-                  "name": "nameContains",
-                  "variableName": "bookingPeopleNameSearchText"
+                  "name": "locationId",
+                  "variableName": "locationId"
                 },
                 {
                   "kind": "Variable",
-                  "name": "organizationId",
-                  "variableName": "organizationId"
+                  "name": "nameContains",
+                  "variableName": "peopleNameSearchText"
                 }
               ],
               "kind": "ObjectValue",
               "name": "where"
             }
           ],
-          "concreteType": "OrganizationMemberConnection",
+          "concreteType": "LocationMemberConnection",
           "kind": "LinkedField",
-          "name": "__organizationMemberSelector_organizationMemberSelectorPaginatedOrganizationMembers_connection",
+          "name": "__locationMembersTab_locationMembers_connection",
           "plural": false,
           "selections": [
             {
@@ -138,7 +131,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "OrganizationMemberEdge",
+              "concreteType": "LocationMemberEdge",
               "kind": "LinkedField",
               "name": "edges",
               "plural": true,
@@ -146,7 +139,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "OrganizationMemberDetails",
+                  "concreteType": "LocationMemberDetails",
                   "kind": "LinkedField",
                   "name": "node",
                   "plural": false,
@@ -159,57 +152,9 @@ return {
                       "storageKey": null
                     },
                     {
-                      "alias": null,
                       "args": null,
-                      "concreteType": "OrganizationCustomerDetails",
-                      "kind": "LinkedField",
-                      "name": "customer",
-                      "plural": false,
-                      "selections": [
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "uniqueId",
-                          "storageKey": null
-                        },
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "name",
-                          "storageKey": null
-                        },
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "givenName",
-                          "storageKey": null
-                        },
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "middleName",
-                          "storageKey": null
-                        },
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "familyName",
-                          "storageKey": null
-                        },
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "photoUrl",
-                          "storageKey": null
-                        }
-                      ],
-                      "storageKey": null
+                      "kind": "FragmentSpread",
+                      "name": "locationMemberCard_LocationMemberDetails"
                     },
                     {
                       "alias": null,
@@ -279,6 +224,6 @@ return {
 };
 })();
 
-(node as any).hash = "f1df4aef90751109db3eba2400283144";
+(node as any).hash = "72ab886bbbc05bc784cd7aac26f6b33b";
 
 export default node;

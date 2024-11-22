@@ -15,12 +15,12 @@ import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { locationZonesTab_paginatedLocationTags_query$key } from './__generated__/locationZonesTab_paginatedLocationTags_query.graphql';
+import type { locationZonesTab_locationTags_query$key } from './__generated__/locationZonesTab_locationTags_query.graphql';
 import type {
   LocationTagOrderField,
   LocationTagOrderInput,
-  locationZonesTab_paginatedLocationTags_refetchableFragment,
-} from './__generated__/locationZonesTab_paginatedLocationTags_refetchableFragment.graphql';
+  locationZonesTab_locationTags_refetchableFragment,
+} from './__generated__/locationZonesTab_locationTags_refetchableFragment.graphql';
 import type { locationZonesTab_query$key } from './__generated__/locationZonesTab_query.graphql';
 import type { locationZonesTab_rootQuery } from './__generated__/locationZonesTab_rootQuery.graphql';
 
@@ -39,7 +39,7 @@ const RootQuery = graphql`
     $zoneSortingValues: [LocationTagOrderInput!]!
   ) {
     ...locationZonesTab_query
-    ...locationZonesTab_paginatedLocationTags_query
+    ...locationZonesTab_locationTags_query
   }
 `;
 
@@ -61,17 +61,17 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<locationZonesTab_paginatedLocationTags_refetchableFragment, locationZonesTab_paginatedLocationTags_query$key>(
+  } = usePaginationFragment<locationZonesTab_locationTags_refetchableFragment, locationZonesTab_locationTags_query$key>(
     graphql`
-      fragment locationZonesTab_paginatedLocationTags_query on Query
+      fragment locationZonesTab_locationTags_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationZonesTab_paginatedLocationTags_refetchableFragment") {
-        paginatedLocationTags(
+      @refetchable(queryName: "locationZonesTab_locationTags_refetchableFragment") {
+        locationTags(
           first: $count
           after: $cursor
           where: { locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText }
           orderBy: $zoneSortingValues
-        ) @connection(key: "locationZonesTab_paginatedLocationTags") @include(if: $locationExists) {
+        ) @connection(key: "locationZonesTab_locationTags") @include(if: $locationExists) {
           __id
           totalCount
           edges {
@@ -149,16 +149,16 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
   };
 
   const connectionIds = useMemo(
-    () => (rootDataPaginatedLocationTags.paginatedLocationTags ? [rootDataPaginatedLocationTags.paginatedLocationTags.__id] : []),
-    [rootDataPaginatedLocationTags.paginatedLocationTags],
+    () => (rootDataPaginatedLocationTags.locationTags ? [rootDataPaginatedLocationTags.locationTags.__id] : []),
+    [rootDataPaginatedLocationTags.locationTags],
   );
   const [isAddZoneDialogOpen, setIsAddZoneDialogOpen] = useState(false);
 
-  if (!rootData.location || !rootDataPaginatedLocationTags.paginatedLocationTags) {
+  if (!rootData.location || !rootDataPaginatedLocationTags.locationTags) {
     return <></>;
   }
 
-  const locationTagEdges = rootDataPaginatedLocationTags.paginatedLocationTags.edges;
+  const locationTagEdges = rootDataPaginatedLocationTags.locationTags.edges;
   const slicedEdges = locationTagEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > locationTagEdges.length ? locationTagEdges.length : page * pageSize + pageSize,
@@ -208,9 +208,7 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
         <Search size="small" placeholder="Find a zone..." defaultValue={zoneNameSearchText} onChange={handleSearchTextChange} />
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
-            count={
-              rootDataPaginatedLocationTags.paginatedLocationTags.totalCount ? rootDataPaginatedLocationTags.paginatedLocationTags.totalCount : 0
-            }
+            count={rootDataPaginatedLocationTags.locationTags.totalCount ? rootDataPaginatedLocationTags.locationTags.totalCount : 0}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={pageSize}

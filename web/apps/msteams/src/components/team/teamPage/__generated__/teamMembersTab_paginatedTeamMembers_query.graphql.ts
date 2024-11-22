@@ -8,10 +8,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
-export type teamMembersTab_paginatedTeamMembers_query$data = {
-  readonly paginatedTeamMembers?: {
+import { FragmentRefs, ReaderFragment } from 'relay-runtime';
+export type teamMembersTab_teamMembers_query$data = {
+  readonly teamMembers?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -21,16 +20,16 @@ export type teamMembersTab_paginatedTeamMembers_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "teamMembersTab_paginatedTeamMembers_query";
+  readonly " $fragmentType": "teamMembersTab_teamMembers_query";
 };
-export type teamMembersTab_paginatedTeamMembers_query$key = {
-  readonly " $data"?: teamMembersTab_paginatedTeamMembers_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"teamMembersTab_paginatedTeamMembers_query">;
+export type teamMembersTab_teamMembers_query$key = {
+  readonly " $data"?: teamMembersTab_teamMembers_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"teamMembersTab_teamMembers_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "paginatedTeamMembers"
+  "teamMembers"
 ];
 return {
   "argumentDefinitions": [
@@ -81,10 +80,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./teamMembersTab_paginatedTeamMembers_refetchableFragment.graphql')
+      "operation": require('./teamMembersTab_teamMembers_refetchableFragment.graphql')
     }
   },
-  "name": "teamMembersTab_paginatedTeamMembers_query",
+  "name": "teamMembersTab_teamMembers_query",
   "selections": [
     {
       "condition": "teamExists",
@@ -92,7 +91,7 @@ return {
       "passingValue": true,
       "selections": [
         {
-          "alias": "paginatedTeamMembers",
+          "alias": "teamMembers",
           "args": [
             {
               "kind": "Variable",
@@ -118,7 +117,7 @@ return {
           ],
           "concreteType": "TeamMemberConnection",
           "kind": "LinkedField",
-          "name": "__teamMembersTab_paginatedTeamMembers_connection",
+          "name": "__teamMembersTab_teamMembers_connection",
           "plural": false,
           "selections": [
             {

@@ -33,12 +33,12 @@ import { PreloadedQuery, useFragment, useMutation, usePaginationFragment, usePre
 import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 import type { organizationMembersTab_inviteCustomersToJoinOrganizationMutation } from './__generated__/organizationMembersTab_inviteCustomersToJoinOrganizationMutation.graphql';
-import type { organizationMembersTab_paginatedOrganizationMembers_query$key } from './__generated__/organizationMembersTab_paginatedOrganizationMembers_query.graphql';
+import type { organizationMembersTab_organizationMembers_query$key } from './__generated__/organizationMembersTab_organizationMembers_query.graphql';
 import type {
   OrganizationMemberOrderField,
   OrganizationMemberOrderInput,
-  organizationMembersTab_paginatedOrganizationMembers_refetchableFragment,
-} from './__generated__/organizationMembersTab_paginatedOrganizationMembers_refetchableFragment.graphql';
+  organizationMembersTab_organizationMembers_refetchableFragment,
+} from './__generated__/organizationMembersTab_organizationMembers_refetchableFragment.graphql';
 import type { organizationMembersTab_query$key } from './__generated__/organizationMembersTab_query.graphql';
 import type { organizationMembersTab_rootQuery } from './__generated__/organizationMembersTab_rootQuery.graphql';
 
@@ -56,7 +56,7 @@ const RootQuery = graphql`
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
     ...organizationMembersTab_query
-    ...organizationMembersTab_paginatedOrganizationMembers_query
+    ...organizationMembersTab_organizationMembers_query
   }
 `;
 
@@ -92,25 +92,23 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
     `,
     rootDataRelay,
   );
+
   const {
     data: rootDataPaginatedOrganizationMembers,
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<
-    organizationMembersTab_paginatedOrganizationMembers_refetchableFragment,
-    organizationMembersTab_paginatedOrganizationMembers_query$key
-  >(
+  } = usePaginationFragment<organizationMembersTab_organizationMembers_refetchableFragment, organizationMembersTab_organizationMembers_query$key>(
     graphql`
-      fragment organizationMembersTab_paginatedOrganizationMembers_query on Query
+      fragment organizationMembersTab_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationMembersTab_paginatedOrganizationMembers_refetchableFragment") {
-        paginatedOrganizationMembers(
+      @refetchable(queryName: "organizationMembersTab_organizationMembers_refetchableFragment") {
+        organizationMembers(
           first: $count
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }
           orderBy: $organizationMembersSortingValues
-        ) @connection(key: "organizationMembersTab_paginatedOrganizationMembers") @include(if: $organizationExists) {
+        ) @connection(key: "organizationMembersTab_organizationMembers") @include(if: $organizationExists) {
           __id
           totalCount
           edges {
@@ -269,11 +267,8 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
   };
 
   const connectionIds = useMemo(
-    () =>
-      rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers
-        ? [rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.__id]
-        : [],
-    [rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers],
+    () => (rootDataPaginatedOrganizationMembers.organizationMembers ? [rootDataPaginatedOrganizationMembers.organizationMembers.__id] : []),
+    [rootDataPaginatedOrganizationMembers.organizationMembers],
   );
 
   const handleSortingChanged = (direction: Direction, value: string) => {
@@ -292,11 +287,11 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
     );
   };
 
-  if (!rootData.organization || !rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers) {
+  if (!rootData.organization || !rootDataPaginatedOrganizationMembers.organizationMembers) {
     return <></>;
   }
 
-  const organizationMemberEdges = rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.edges;
+  const organizationMemberEdges = rootDataPaginatedOrganizationMembers.organizationMembers.edges;
   const slicedEdges = organizationMemberEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > organizationMemberEdges.length ? organizationMemberEdges.length : page * pageSize + pageSize,
@@ -317,8 +312,8 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
             count={
-              rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.totalCount
-                ? rootDataPaginatedOrganizationMembers.paginatedOrganizationMembers.totalCount
+              rootDataPaginatedOrganizationMembers.organizationMembers.totalCount
+                ? rootDataPaginatedOrganizationMembers.organizationMembers.totalCount
                 : 0
             }
             page={page}

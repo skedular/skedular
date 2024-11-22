@@ -125,7 +125,7 @@ public class LocationQuery
     }
 
     [UseServiceScope]
-    public async Task<LocationMemberConnection?> PaginatedLocationMembersAsync(
+    public async Task<LocationMemberConnection?> LocationMembersAsync(
         string? after,
         int? first,
         string? before,
@@ -185,30 +185,7 @@ public class LocationQuery
     }
 
     [UseServiceScope]
-    public async Task<LocationMemberDetails[]?> LocationMembersAsync(
-        LocationMemberWhereInput where,
-        LocationMemberOrderInput[]? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] ILocationMemberService locationMemberService,
-        [Service] IMapper mapper,
-        CancellationToken cancellationToken)
-    {
-        var result = await PaginatedLocationMembersAsync(
-            null,
-            null,
-            null,
-            null,
-            where,
-            orderBy,
-            cachedCustomerService,
-            locationMemberService,
-            mapper,
-            cancellationToken);
-        return result?.Edges.Select(item => item.Node).ToArray();
-    }
-
-    [UseServiceScope]
-    public async Task<LocationTagConnection?> PaginatedLocationTagsAsync(
+    public async Task<LocationTagConnection?> LocationTagsAsync(
         string? after,
         int? first,
         string? before,
@@ -263,7 +240,7 @@ public class LocationQuery
     }
 
     [UseServiceScope]
-    public async Task<DeskConnection?> PaginatedLocationDesksAsync(
+    public async Task<DeskConnection?> LocationDesksAsync(
         string? after,
         int? first,
         string? before,

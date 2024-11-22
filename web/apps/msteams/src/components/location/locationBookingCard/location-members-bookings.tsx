@@ -108,14 +108,18 @@ const LocationMembersBookings = ({
     graphql`
       fragment locationMembersBookings_query on Query {
         organizationMembers(where: { organizationId: $organizationId }, orderBy: $organizationPeopleSortingValues) {
-          id
-          customer {
-            uniqueId
-            name
-            givenName
-            middleName
-            familyName
-            photoUrl
+          edges {
+            node {
+              id
+              customer {
+                uniqueId
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+              }
+            }
           }
         }
         me {
@@ -186,7 +190,7 @@ const LocationMembersBookings = ({
     return <></>;
   }
 
-  const allMembers = rootData.organizationMembers ? rootData.organizationMembers.map((member) => member.customer) : [];
+  const allMembers = rootData.organizationMembers ? rootData.organizationMembers.edges.map(({ node }) => node.customer) : [];
 
   const handleDateRangeTypeChange = (_: React.MouseEvent<HTMLElement>, value: DateRangeType) => {
     let start = startOfDay();

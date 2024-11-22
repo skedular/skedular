@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0dd66d7131e8165896d6851a0f118223>>
+ * @generated SignedSource<<b47594b1939a684c359077f27a7d545a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,26 +10,27 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LocationMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "%future added value";
+export type LocationTagOrderField = "Description" | "Name" | "TagType" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type LocationMemberOrderInput = {
+export type LocationTagOrderInput = {
   direction: OrderDirection;
-  field: LocationMemberOrderField;
+  field: LocationTagOrderField;
 };
-export type locationMembersTab_paginatedLocationMembers_refetchableFragment$variables = {
+export type locationZonesTab_locationTags_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   locationExists: boolean;
   locationId: string;
-  locationMembersSortingValues?: ReadonlyArray<LocationMemberOrderInput> | null | undefined;
-  peopleNameSearchText?: string | null | undefined;
+  zoneNameSearchText?: string | null | undefined;
+  zoneSortingValues?: ReadonlyArray<LocationTagOrderInput> | null | undefined;
+  zoneTagType?: string | null | undefined;
 };
-export type locationMembersTab_paginatedLocationMembers_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationMembersTab_paginatedLocationMembers_query">;
+export type locationZonesTab_locationTags_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"locationZonesTab_locationTags_query">;
 };
-export type locationMembersTab_paginatedLocationMembers_refetchableFragment = {
-  response: locationMembersTab_paginatedLocationMembers_refetchableFragment$data;
-  variables: locationMembersTab_paginatedLocationMembers_refetchableFragment$variables;
+export type locationZonesTab_locationTags_refetchableFragment = {
+  response: locationZonesTab_locationTags_refetchableFragment$data;
+  variables: locationZonesTab_locationTags_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -57,12 +58,17 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "locationMembersSortingValues"
+    "name": "zoneNameSearchText"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "peopleNameSearchText"
+    "name": "zoneSortingValues"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "zoneTagType"
   }
 ],
 v1 = [
@@ -79,7 +85,7 @@ v1 = [
   {
     "kind": "Variable",
     "name": "orderBy",
-    "variableName": "locationMembersSortingValues"
+    "variableName": "zoneSortingValues"
   },
   {
     "fields": [
@@ -91,7 +97,12 @@ v1 = [
       {
         "kind": "Variable",
         "name": "nameContains",
-        "variableName": "peopleNameSearchText"
+        "variableName": "zoneNameSearchText"
+      },
+      {
+        "kind": "Variable",
+        "name": "tagType",
+        "variableName": "zoneTagType"
       }
     ],
     "kind": "ObjectValue",
@@ -103,7 +114,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "locationMembersTab_paginatedLocationMembers_refetchableFragment",
+    "name": "locationZonesTab_locationTags_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -119,7 +130,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "locationMembersTab_paginatedLocationMembers_query"
+        "name": "locationZonesTab_locationTags_query"
       }
     ],
     "type": "Query",
@@ -129,7 +140,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "locationMembersTab_paginatedLocationMembers_refetchableFragment",
+    "name": "locationZonesTab_locationTags_refetchableFragment",
     "selections": [
       {
         "condition": "locationExists",
@@ -139,9 +150,9 @@ return {
           {
             "alias": null,
             "args": (v1/*: any*/),
-            "concreteType": "LocationMemberConnection",
+            "concreteType": "LocationTagConnection",
             "kind": "LinkedField",
-            "name": "paginatedLocationMembers",
+            "name": "locationTags",
             "plural": false,
             "selections": [
               {
@@ -154,7 +165,7 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "LocationMemberEdge",
+                "concreteType": "LocationTagEdge",
                 "kind": "LinkedField",
                 "name": "edges",
                 "plural": true,
@@ -162,7 +173,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "LocationMemberDetails",
+                    "concreteType": "LocationTagDetails",
                     "kind": "LinkedField",
                     "name": "node",
                     "plural": false,
@@ -178,53 +189,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "membershipType",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "LocationCustomerDetails",
-                        "kind": "LinkedField",
-                        "name": "customer",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "name",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "givenName",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "middleName",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "familyName",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "photoUrl",
-                            "storageKey": null
-                          }
-                        ],
+                        "name": "name",
                         "storageKey": null
                       },
                       {
@@ -295,25 +260,25 @@ return {
               "orderBy"
             ],
             "handle": "connection",
-            "key": "locationMembersTab_paginatedLocationMembers",
+            "key": "locationZonesTab_locationTags",
             "kind": "LinkedHandle",
-            "name": "paginatedLocationMembers"
+            "name": "locationTags"
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "cf1d3c5bfb169beb63455ce990bbc60f",
+    "cacheID": "89b7cb7ca83a70ebbdee2b2eb6121251",
     "id": null,
     "metadata": {},
-    "name": "locationMembersTab_paginatedLocationMembers_refetchableFragment",
+    "name": "locationZonesTab_locationTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationMembersTab_paginatedLocationMembers_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationExists: Boolean!\n  $locationId: String!\n  $locationMembersSortingValues: [LocationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...locationMembersTab_paginatedLocationMembers_query_1G22uz\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationMembersTab_paginatedLocationMembers_query_1G22uz on Query {\n  paginatedLocationMembers(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationMembersSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query locationZonesTab_locationTags_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationExists: Boolean!\n  $locationId: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [LocationTagOrderInput!]\n  $zoneTagType: String\n) {\n  ...locationZonesTab_locationTags_query_1G22uz\n}\n\nfragment locationZonesTab_locationTags_query_1G22uz on Query {\n  locationTags(first: $count, after: $cursor, where: {locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_LocationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment zoneCard_LocationTagDetails on LocationTagDetails {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "dfa4f5add7a1188274fdc5b73b30cd39";
+(node as any).hash = "bb057c5b0d8fc3e5feb5746f2e9d3d3b";
 
 export default node;

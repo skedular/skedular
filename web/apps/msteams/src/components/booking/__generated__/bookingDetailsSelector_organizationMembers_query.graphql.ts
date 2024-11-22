@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<53c5d2ff887f2ed5095905681117dae9>>
+ * @generated SignedSource<<d0e9a14cee1a2784be3736a2295d965c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,32 +10,47 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type locationZonesTab_paginatedLocationTags_query$data = {
-  readonly paginatedLocationTags?: {
+export type bookingDetailsSelector_organizationMembers_query$data = {
+  readonly organizationMembers?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly customer: {
+          readonly familyName: string | null | undefined;
+          readonly givenName: string | null | undefined;
+          readonly middleName: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly photoUrl: string | null | undefined;
+          readonly uniqueId: string;
+        };
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"zoneCard_LocationTagDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "locationZonesTab_paginatedLocationTags_query";
+  readonly " $fragmentType": "bookingDetailsSelector_organizationMembers_query";
 };
-export type locationZonesTab_paginatedLocationTags_query$key = {
-  readonly " $data"?: locationZonesTab_paginatedLocationTags_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"locationZonesTab_paginatedLocationTags_query">;
+export type bookingDetailsSelector_organizationMembers_query$key = {
+  readonly " $data"?: bookingDetailsSelector_organizationMembers_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_organizationMembers_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "paginatedLocationTags"
+  "organizationMembers"
 ];
 return {
   "argumentDefinitions": [
     {
-      "defaultValue": 50,
+      "kind": "RootArgument",
+      "name": "bookingDetailsSelectorOrganizationMembersSortingValues"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "bookingPeopleNameSearchText"
+    },
+    {
+      "defaultValue": 20,
       "kind": "LocalArgument",
       "name": "count"
     },
@@ -46,23 +61,11 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "locationExists"
+      "name": "organizationExists"
     },
     {
       "kind": "RootArgument",
-      "name": "locationId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "zoneNameSearchText"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "zoneSortingValues"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "zoneTagType"
+      "name": "organizationId"
     }
   ],
   "kind": "Fragment",
@@ -85,49 +88,44 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./locationZonesTab_paginatedLocationTags_refetchableFragment.graphql')
+      "operation": require('./bookingDetailsSelector_organizationMembers_refetchableFragment.graphql')
     }
   },
-  "name": "locationZonesTab_paginatedLocationTags_query",
+  "name": "bookingDetailsSelector_organizationMembers_query",
   "selections": [
     {
-      "condition": "locationExists",
+      "condition": "organizationExists",
       "kind": "Condition",
       "passingValue": true,
       "selections": [
         {
-          "alias": "paginatedLocationTags",
+          "alias": "organizationMembers",
           "args": [
             {
               "kind": "Variable",
               "name": "orderBy",
-              "variableName": "zoneSortingValues"
+              "variableName": "bookingDetailsSelectorOrganizationMembersSortingValues"
             },
             {
               "fields": [
                 {
                   "kind": "Variable",
-                  "name": "locationId",
-                  "variableName": "locationId"
-                },
-                {
-                  "kind": "Variable",
                   "name": "nameContains",
-                  "variableName": "zoneNameSearchText"
+                  "variableName": "bookingPeopleNameSearchText"
                 },
                 {
                   "kind": "Variable",
-                  "name": "tagType",
-                  "variableName": "zoneTagType"
+                  "name": "organizationId",
+                  "variableName": "organizationId"
                 }
               ],
               "kind": "ObjectValue",
               "name": "where"
             }
           ],
-          "concreteType": "LocationTagConnection",
+          "concreteType": "OrganizationMemberConnection",
           "kind": "LinkedField",
-          "name": "__locationZonesTab_paginatedLocationTags_connection",
+          "name": "__bookingDetailsSelectorQuery_organizationMembers_connection",
           "plural": false,
           "selections": [
             {
@@ -140,7 +138,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "LocationTagEdge",
+              "concreteType": "OrganizationMemberEdge",
               "kind": "LinkedField",
               "name": "edges",
               "plural": true,
@@ -148,7 +146,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "LocationTagDetails",
+                  "concreteType": "OrganizationMemberDetails",
                   "kind": "LinkedField",
                   "name": "node",
                   "plural": false,
@@ -161,9 +159,57 @@ return {
                       "storageKey": null
                     },
                     {
+                      "alias": null,
                       "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "zoneCard_LocationTagDetails"
+                      "concreteType": "OrganizationCustomerDetails",
+                      "kind": "LinkedField",
+                      "name": "customer",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "uniqueId",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "name",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "givenName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "middleName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "familyName",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "photoUrl",
+                          "storageKey": null
+                        }
+                      ],
+                      "storageKey": null
                     },
                     {
                       "alias": null,
@@ -233,6 +279,6 @@ return {
 };
 })();
 
-(node as any).hash = "b2688cb96be0691ba28abbf222148732";
+(node as any).hash = "5b3471efb8fa84424ffae3c5e3357896";
 
 export default node;

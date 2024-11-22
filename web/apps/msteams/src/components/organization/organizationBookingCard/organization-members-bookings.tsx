@@ -97,14 +97,18 @@ const OrganizationMembersBookings = ({
     graphql`
       fragment organizationMembersBookings_query on Query {
         organizationMembers(where: { organizationId: $organizationId }, orderBy: $peopleSortingValues) {
-          id
-          customer {
-            uniqueId
-            name
-            givenName
-            middleName
-            familyName
-            photoUrl
+          edges {
+            node {
+              id
+              customer {
+                uniqueId
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+              }
+            }
           }
         }
         me {
@@ -405,7 +409,7 @@ const OrganizationMembersBookings = ({
             rootDataAllBookingsRelay={rootData}
             organizationId={organizationId}
             startDate={startDate}
-            customers={rootData.organizationMembers.map((member) => member.customer)}
+            customers={rootData.organizationMembers.edges.map(({ node }) => node.customer)}
           />
         </CardContent>
       </Card>

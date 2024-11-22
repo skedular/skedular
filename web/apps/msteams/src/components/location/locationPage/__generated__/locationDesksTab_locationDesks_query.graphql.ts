@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d638337be0d00a6dec4d8117a9253f4>>
+ * @generated SignedSource<<8e3a967b8c538211d4fb1724c4c000d9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,32 +10,32 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type deskMultipleChoicesZones_query$data = {
-  readonly locationTags: {
+export type locationDesksTab_locationDesks_query$data = {
+  readonly locationDesks: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly name: string;
+        readonly " $fragmentSpreads": FragmentRefs<"deskCard_DeskDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "deskMultipleChoicesZones_query";
+  readonly " $fragmentType": "locationDesksTab_locationDesks_query";
 };
-export type deskMultipleChoicesZones_query$key = {
-  readonly " $data"?: deskMultipleChoicesZones_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"deskMultipleChoicesZones_query">;
+export type locationDesksTab_locationDesks_query$key = {
+  readonly " $data"?: locationDesksTab_locationDesks_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_locationDesks_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "locationTags"
+  "locationDesks"
 ];
 return {
   "argumentDefinitions": [
     {
-      "defaultValue": null,
+      "defaultValue": 50,
       "kind": "LocalArgument",
       "name": "count"
     },
@@ -46,15 +46,15 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "deskMultipleChoicesZonesSortingValues"
+      "name": "deskNameSearchText"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "deskSortingValues"
     },
     {
       "kind": "RootArgument",
       "name": "locationId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "zoneTagType"
     }
   ],
   "kind": "Fragment",
@@ -77,18 +77,18 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./deskMultipleChoicesZones_refetchableFragment.graphql')
+      "operation": require('./locationDesksTab_locationDesks_refetchableFragment.graphql')
     }
   },
-  "name": "deskMultipleChoicesZones_query",
+  "name": "locationDesksTab_locationDesks_query",
   "selections": [
     {
-      "alias": "locationTags",
+      "alias": "locationDesks",
       "args": [
         {
           "kind": "Variable",
           "name": "orderBy",
-          "variableName": "deskMultipleChoicesZonesSortingValues"
+          "variableName": "deskSortingValues"
         },
         {
           "fields": [
@@ -99,17 +99,17 @@ return {
             },
             {
               "kind": "Variable",
-              "name": "tagType",
-              "variableName": "zoneTagType"
+              "name": "nameContains",
+              "variableName": "deskNameSearchText"
             }
           ],
           "kind": "ObjectValue",
           "name": "where"
         }
       ],
-      "concreteType": "LocationTagConnection",
+      "concreteType": "DeskConnection",
       "kind": "LinkedField",
-      "name": "__locationZonesTab_locationTags_connection",
+      "name": "__locationDesksTab_locationDesks_connection",
       "plural": false,
       "selections": [
         {
@@ -122,7 +122,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationTagEdge",
+          "concreteType": "DeskEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -130,7 +130,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "LocationTagDetails",
+              "concreteType": "DeskDetails",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
@@ -143,11 +143,9 @@ return {
                   "storageKey": null
                 },
                 {
-                  "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
+                  "kind": "FragmentSpread",
+                  "name": "deskCard_DeskDetails"
                 },
                 {
                   "alias": null,
@@ -215,6 +213,6 @@ return {
 };
 })();
 
-(node as any).hash = "a642f5d7ea5d49f82ff1b1fdb56cb3b2";
+(node as any).hash = "7689530ca9f9146c8787540e0409b247";
 
 export default node;

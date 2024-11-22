@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b3fe6d9309997acd0e604b3c9f1b3fee>>
+ * @generated SignedSource<<bf59b63de6b30757d230e6c26dbc8c48>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,7 +34,7 @@ export type bookingCard_query$data = {
     readonly canDeleteBookingOnBehalf: boolean;
     readonly canUpdateBookingOnBehalf: boolean;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_availableLocationDesks_query" | "bookingDetailsSelector_paginatedOrganizationMembers_query" | "bookingDetailsSelector_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_availableLocationDesks_query" | "bookingDetailsSelector_organizationMembers_query" | "bookingDetailsSelector_query">;
   readonly " $fragmentType": "bookingCard_query";
 };
 export type bookingCard_query$key = {
@@ -202,7 +202,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "bookingDetailsSelector_paginatedOrganizationMembers_query"
+      "name": "bookingDetailsSelector_organizationMembers_query"
     },
     {
       "args": null,
@@ -215,6 +215,6 @@ return {
 };
 })();
 
-(node as any).hash = "4e82f8b53278ab0d9495725f0f366e83";
+(node as any).hash = "4d40610663727653db8efd87b6a731a9";
 
 export default node;

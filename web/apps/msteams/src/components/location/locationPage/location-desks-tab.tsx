@@ -20,12 +20,12 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import type { locationDesksTab_allBookings_query$key } from './__generated__/locationDesksTab_allBookings_query.graphql';
 import type { locationDesksTab_allBookings_refetchableFragment } from './__generated__/locationDesksTab_allBookings_refetchableFragment.graphql';
-import type { locationDesksTab_paginatedLocationDesks_query$key } from './__generated__/locationDesksTab_paginatedLocationDesks_query.graphql';
+import type { locationDesksTab_locationDesks_query$key } from './__generated__/locationDesksTab_locationDesks_query.graphql';
 import type {
   DeskOrderField,
   DeskOrderInput,
-  locationDesksTab_paginatedLocationDesks_refetchableFragment,
-} from './__generated__/locationDesksTab_paginatedLocationDesks_refetchableFragment.graphql';
+  locationDesksTab_locationDesks_refetchableFragment,
+} from './__generated__/locationDesksTab_locationDesks_refetchableFragment.graphql';
 import type { locationDesksTab_query$key } from './__generated__/locationDesksTab_query.graphql';
 import type { locationDesksTab_rootQuery } from './__generated__/locationDesksTab_rootQuery.graphql';
 
@@ -46,7 +46,7 @@ const RootQuery = graphql`
     $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
   ) {
     ...locationDesksTab_query
-    ...locationDesksTab_paginatedLocationDesks_query
+    ...locationDesksTab_locationDesks_query
     ...locationDesksTab_allBookings_query
   }
 `;
@@ -72,17 +72,17 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
     loadNext: loadNextRefetchPaginatedLocationDesks,
     isLoadingNext: isLoadingNextrefetchPaginatedLocationDesks,
     refetch: refetchPaginatedLocationDesks,
-  } = usePaginationFragment<locationDesksTab_paginatedLocationDesks_refetchableFragment, locationDesksTab_paginatedLocationDesks_query$key>(
+  } = usePaginationFragment<locationDesksTab_locationDesks_refetchableFragment, locationDesksTab_locationDesks_query$key>(
     graphql`
-      fragment locationDesksTab_paginatedLocationDesks_query on Query
+      fragment locationDesksTab_locationDesks_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationDesksTab_paginatedLocationDesks_refetchableFragment") {
-        paginatedLocationDesks(
+      @refetchable(queryName: "locationDesksTab_locationDesks_refetchableFragment") {
+        locationDesks(
           first: $count
           after: $cursor
           where: { locationId: $locationId, nameContains: $deskNameSearchText }
           orderBy: $deskSortingValues
-        ) @connection(key: "locationDesksTab_paginatedLocationDesks") {
+        ) @connection(key: "locationDesksTab_locationDesks") {
           __id
           totalCount
           edges {
@@ -217,17 +217,17 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
   };
 
   const connectionIds = useMemo(
-    () => (rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks ? [rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.__id] : []),
-    [rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks],
+    () => (rootDataRefetchPaginatedLocationDesks.locationDesks ? [rootDataRefetchPaginatedLocationDesks.locationDesks.__id] : []),
+    [rootDataRefetchPaginatedLocationDesks.locationDesks],
   );
   const [isAddDeskDialogOpen, setIsAddDeskDialogOpen] = useState(false);
   const [isBulkAddDeskDialogOpen, setIsBulkAddDeskDialogOpen] = useState(false);
 
-  if (!rootData.location || !rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks) {
+  if (!rootData.location || !rootDataRefetchPaginatedLocationDesks.locationDesks) {
     return <></>;
   }
 
-  const desks = rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.edges;
+  const desks = rootDataRefetchPaginatedLocationDesks.locationDesks.edges;
   const slicedEdges = desks.slice(page * pageSize, page * pageSize + pageSize > desks.length ? desks.length : page * pageSize + pageSize);
 
   const handleAddDeskClick = () => {
@@ -295,9 +295,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
             count={
-              rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.totalCount
-                ? rootDataRefetchPaginatedLocationDesks.paginatedLocationDesks.totalCount
-                : 0
+              rootDataRefetchPaginatedLocationDesks.locationDesks.totalCount ? rootDataRefetchPaginatedLocationDesks.locationDesks.totalCount : 0
             }
             page={page}
             onPageChange={handleChangePage}

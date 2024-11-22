@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8d0e2d4b90756b5c943c937c66fa6c7d>>
+ * @generated SignedSource<<ce787856d75564c0de533a007c53dd64>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,31 +11,41 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type TeamMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "%future added value";
-export type TeamMemberOrderInput = {
+export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "%future added value";
+export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
-  field: TeamMemberOrderField;
+  field: OrganizationMemberOrderField;
 };
-export type teamMembersTab_paginatedTeamMembers_refetchableFragment$variables = {
+export type bookingDetailsSelector_organizationMembers_refetchableFragment$variables = {
+  bookingDetailsSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
+  bookingPeopleNameSearchText?: string | null | undefined;
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  peopleNameSearchText?: string | null | undefined;
-  teamExists: boolean;
-  teamId: string;
-  teamMembersSortingValues?: ReadonlyArray<TeamMemberOrderInput> | null | undefined;
+  organizationExists: boolean;
+  organizationId: string;
 };
-export type teamMembersTab_paginatedTeamMembers_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"teamMembersTab_paginatedTeamMembers_query">;
+export type bookingDetailsSelector_organizationMembers_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_organizationMembers_query">;
 };
-export type teamMembersTab_paginatedTeamMembers_refetchableFragment = {
-  response: teamMembersTab_paginatedTeamMembers_refetchableFragment$data;
-  variables: teamMembersTab_paginatedTeamMembers_refetchableFragment$variables;
+export type bookingDetailsSelector_organizationMembers_refetchableFragment = {
+  response: bookingDetailsSelector_organizationMembers_refetchableFragment$data;
+  variables: bookingDetailsSelector_organizationMembers_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": 50,
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "bookingDetailsSelectorOrganizationMembersSortingValues"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "bookingPeopleNameSearchText"
+  },
+  {
+    "defaultValue": 20,
     "kind": "LocalArgument",
     "name": "count"
   },
@@ -47,22 +57,12 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "peopleNameSearchText"
+    "name": "organizationExists"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "teamExists"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "teamId"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "teamMembersSortingValues"
+    "name": "organizationId"
   }
 ],
 v1 = [
@@ -79,77 +79,31 @@ v1 = [
   {
     "kind": "Variable",
     "name": "orderBy",
-    "variableName": "teamMembersSortingValues"
+    "variableName": "bookingDetailsSelectorOrganizationMembersSortingValues"
   },
   {
     "fields": [
       {
         "kind": "Variable",
         "name": "nameContains",
-        "variableName": "peopleNameSearchText"
+        "variableName": "bookingPeopleNameSearchText"
       },
       {
         "kind": "Variable",
-        "name": "teamId",
-        "variableName": "teamId"
+        "name": "organizationId",
+        "variableName": "organizationId"
       }
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "TeamCustomerDetails",
-  "kind": "LinkedField",
-  "name": "customer",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "name",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "givenName",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "middleName",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "familyName",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "photoUrl",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "teamMembersTab_paginatedTeamMembers_refetchableFragment",
+    "name": "bookingDetailsSelector_organizationMembers_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -165,7 +119,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "teamMembersTab_paginatedTeamMembers_query"
+        "name": "bookingDetailsSelector_organizationMembers_query"
       }
     ],
     "type": "Query",
@@ -175,19 +129,19 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "teamMembersTab_paginatedTeamMembers_refetchableFragment",
+    "name": "bookingDetailsSelector_organizationMembers_refetchableFragment",
     "selections": [
       {
-        "condition": "teamExists",
+        "condition": "organizationExists",
         "kind": "Condition",
         "passingValue": true,
         "selections": [
           {
             "alias": null,
             "args": (v1/*: any*/),
-            "concreteType": "TeamMemberConnection",
+            "concreteType": "OrganizationMemberConnection",
             "kind": "LinkedField",
-            "name": "paginatedTeamMembers",
+            "name": "organizationMembers",
             "plural": false,
             "selections": [
               {
@@ -200,7 +154,7 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "TeamMemberEdge",
+                "concreteType": "OrganizationMemberEdge",
                 "kind": "LinkedField",
                 "name": "edges",
                 "plural": true,
@@ -208,7 +162,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "TeamMemberDetails",
+                    "concreteType": "OrganizationMemberDetails",
                     "kind": "LinkedField",
                     "name": "node",
                     "plural": false,
@@ -220,16 +174,56 @@ return {
                         "name": "id",
                         "storageKey": null
                       },
-                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "TeamOrganizationMemberDetails",
+                        "concreteType": "OrganizationCustomerDetails",
                         "kind": "LinkedField",
-                        "name": "organizationMember",
+                        "name": "customer",
                         "plural": false,
                         "selections": [
-                          (v2/*: any*/)
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "uniqueId",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "name",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "givenName",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "middleName",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "familyName",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "photoUrl",
+                            "storageKey": null
+                          }
                         ],
                         "storageKey": null
                       },
@@ -301,25 +295,25 @@ return {
               "orderBy"
             ],
             "handle": "connection",
-            "key": "teamMembersTab_paginatedTeamMembers",
+            "key": "bookingDetailsSelectorQuery_organizationMembers",
             "kind": "LinkedHandle",
-            "name": "paginatedTeamMembers"
+            "name": "organizationMembers"
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "244ba799ca6b3696279d1705993bc372",
+    "cacheID": "3750ced8e97f852afc8dc517160a5ec6",
     "id": null,
     "metadata": {},
-    "name": "teamMembersTab_paginatedTeamMembers_refetchableFragment",
+    "name": "bookingDetailsSelector_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query teamMembersTab_paginatedTeamMembers_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $peopleNameSearchText: String\n  $teamExists: Boolean!\n  $teamId: String!\n  $teamMembersSortingValues: [TeamMemberOrderInput!]\n) {\n  ...teamMembersTab_paginatedTeamMembers_query_1G22uz\n}\n\nfragment teamMemberCard_TeamMemberDetails on TeamMemberDetails {\n  id\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationMember {\n    customer {\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n}\n\nfragment teamMembersTab_paginatedTeamMembers_query_1G22uz on Query {\n  paginatedTeamMembers(first: $count, after: $cursor, where: {teamId: $teamId, nameContains: $peopleNameSearchText}, orderBy: $teamMembersSortingValues) @include(if: $teamExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...teamMemberCard_TeamMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query bookingDetailsSelector_organizationMembers_refetchableFragment(\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n  $count: Int = 20\n  $cursor: String\n  $organizationExists: Boolean!\n  $organizationId: String!\n) {\n  ...bookingDetailsSelector_organizationMembers_query_1G22uz\n}\n\nfragment bookingDetailsSelector_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2c260adf1c0c2b95311a81ade4bd161b";
+(node as any).hash = "5b3471efb8fa84424ffae3c5e3357896";
 
 export default node;

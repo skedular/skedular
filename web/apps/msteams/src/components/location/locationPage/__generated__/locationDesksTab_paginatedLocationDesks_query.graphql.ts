@@ -8,10 +8,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
-export type locationDesksTab_paginatedLocationDesks_query$data = {
-  readonly paginatedLocationDesks: {
+import { FragmentRefs, ReaderFragment } from 'relay-runtime';
+export type locationDesksTab_locationDesks_query$data = {
+  readonly locationDesks: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -21,16 +20,16 @@ export type locationDesksTab_paginatedLocationDesks_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "locationDesksTab_paginatedLocationDesks_query";
+  readonly " $fragmentType": "locationDesksTab_locationDesks_query";
 };
-export type locationDesksTab_paginatedLocationDesks_query$key = {
-  readonly " $data"?: locationDesksTab_paginatedLocationDesks_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_paginatedLocationDesks_query">;
+export type locationDesksTab_locationDesks_query$key = {
+  readonly " $data"?: locationDesksTab_locationDesks_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_locationDesks_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "paginatedLocationDesks"
+  "locationDesks"
 ];
 return {
   "argumentDefinitions": [
@@ -77,13 +76,13 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./locationDesksTab_paginatedLocationDesks_refetchableFragment.graphql')
+      "operation": require('./locationDesksTab_locationDesks_refetchableFragment.graphql')
     }
   },
-  "name": "locationDesksTab_paginatedLocationDesks_query",
+  "name": "locationDesksTab_locationDesks_query",
   "selections": [
     {
-      "alias": "paginatedLocationDesks",
+      "alias": "locationDesks",
       "args": [
         {
           "kind": "Variable",
@@ -109,7 +108,7 @@ return {
       ],
       "concreteType": "DeskConnection",
       "kind": "LinkedField",
-      "name": "__locationDesksTab_paginatedLocationDesks_connection",
+      "name": "__locationDesksTab_locationDesks_connection",
       "plural": false,
       "selections": [
         {

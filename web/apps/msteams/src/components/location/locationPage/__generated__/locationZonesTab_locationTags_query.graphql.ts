@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cc829cd2a2a0fa2f91cbd2bbdd76805f>>
+ * @generated SignedSource<<6c001c676d2e13bc92b50641ffe7e125>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,27 +10,27 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type locationMembersTab_paginatedLocationMembers_query$data = {
-  readonly paginatedLocationMembers?: {
+export type locationZonesTab_locationTags_query$data = {
+  readonly locationTags?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"locationMemberCard_LocationMemberDetails">;
+        readonly " $fragmentSpreads": FragmentRefs<"zoneCard_LocationTagDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "locationMembersTab_paginatedLocationMembers_query";
+  readonly " $fragmentType": "locationZonesTab_locationTags_query";
 };
-export type locationMembersTab_paginatedLocationMembers_query$key = {
-  readonly " $data"?: locationMembersTab_paginatedLocationMembers_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"locationMembersTab_paginatedLocationMembers_query">;
+export type locationZonesTab_locationTags_query$key = {
+  readonly " $data"?: locationZonesTab_locationTags_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"locationZonesTab_locationTags_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "paginatedLocationMembers"
+  "locationTags"
 ];
 return {
   "argumentDefinitions": [
@@ -54,11 +54,15 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "locationMembersSortingValues"
+      "name": "zoneNameSearchText"
     },
     {
       "kind": "RootArgument",
-      "name": "peopleNameSearchText"
+      "name": "zoneSortingValues"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "zoneTagType"
     }
   ],
   "kind": "Fragment",
@@ -81,10 +85,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./locationMembersTab_paginatedLocationMembers_refetchableFragment.graphql')
+      "operation": require('./locationZonesTab_locationTags_refetchableFragment.graphql')
     }
   },
-  "name": "locationMembersTab_paginatedLocationMembers_query",
+  "name": "locationZonesTab_locationTags_query",
   "selections": [
     {
       "condition": "locationExists",
@@ -92,12 +96,12 @@ return {
       "passingValue": true,
       "selections": [
         {
-          "alias": "paginatedLocationMembers",
+          "alias": "locationTags",
           "args": [
             {
               "kind": "Variable",
               "name": "orderBy",
-              "variableName": "locationMembersSortingValues"
+              "variableName": "zoneSortingValues"
             },
             {
               "fields": [
@@ -109,16 +113,21 @@ return {
                 {
                   "kind": "Variable",
                   "name": "nameContains",
-                  "variableName": "peopleNameSearchText"
+                  "variableName": "zoneNameSearchText"
+                },
+                {
+                  "kind": "Variable",
+                  "name": "tagType",
+                  "variableName": "zoneTagType"
                 }
               ],
               "kind": "ObjectValue",
               "name": "where"
             }
           ],
-          "concreteType": "LocationMemberConnection",
+          "concreteType": "LocationTagConnection",
           "kind": "LinkedField",
-          "name": "__locationMembersTab_paginatedLocationMembers_connection",
+          "name": "__locationZonesTab_locationTags_connection",
           "plural": false,
           "selections": [
             {
@@ -131,7 +140,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "LocationMemberEdge",
+              "concreteType": "LocationTagEdge",
               "kind": "LinkedField",
               "name": "edges",
               "plural": true,
@@ -139,7 +148,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "LocationMemberDetails",
+                  "concreteType": "LocationTagDetails",
                   "kind": "LinkedField",
                   "name": "node",
                   "plural": false,
@@ -154,7 +163,7 @@ return {
                     {
                       "args": null,
                       "kind": "FragmentSpread",
-                      "name": "locationMemberCard_LocationMemberDetails"
+                      "name": "zoneCard_LocationTagDetails"
                     },
                     {
                       "alias": null,
@@ -224,6 +233,6 @@ return {
 };
 })();
 
-(node as any).hash = "dfa4f5add7a1188274fdc5b73b30cd39";
+(node as any).hash = "bb057c5b0d8fc3e5feb5746f2e9d3d3b";
 
 export default node;

@@ -1,10 +1,10 @@
 import type { locationMembersTab_inviteCustomersToJoinLocationMutation } from '@/queries/__generated__/locationMembersTab_inviteCustomersToJoinLocationMutation.graphql';
-import type { locationMembersTab_paginatedLocationMembers_query$key } from '@/queries/__generated__/locationMembersTab_paginatedLocationMembers_query.graphql';
+import type { locationMembersTab_locationMembers_query$key } from '@/queries/__generated__/locationMembersTab_locationMembers_query.graphql';
 import type {
   LocationMemberOrderField,
   LocationMemberOrderInput,
-  locationMembersTab_paginatedLocationMembers_refetchableFragment,
-} from '@/queries/__generated__/locationMembersTab_paginatedLocationMembers_refetchableFragment.graphql';
+  locationMembersTab_locationMembers_refetchableFragment,
+} from '@/queries/__generated__/locationMembersTab_locationMembers_refetchableFragment.graphql';
 import type { locationMembersTab_query$key } from '@/queries/__generated__/locationMembersTab_query.graphql';
 import type { locationMembersTab_rootQuery } from '@/queries/__generated__/locationMembersTab_rootQuery.graphql';
 import Button from '@mui/material/Button';
@@ -55,7 +55,7 @@ const RootQuery = graphql`
     $locationMembersSortingValues: [LocationMemberOrderInput!]
   ) {
     ...locationMembersTab_query
-    ...locationMembersTab_paginatedLocationMembers_query
+    ...locationMembersTab_locationMembers_query
   }
 `;
 
@@ -95,17 +95,17 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
     loadNext: loadNextPaginatedLocationMembers,
     isLoadingNext: isLoadingNextPaginatedLocationMembers,
     refetch: refetchLocationMembers,
-  } = usePaginationFragment<locationMembersTab_paginatedLocationMembers_refetchableFragment, locationMembersTab_paginatedLocationMembers_query$key>(
+  } = usePaginationFragment<locationMembersTab_locationMembers_refetchableFragment, locationMembersTab_locationMembers_query$key>(
     graphql`
-      fragment locationMembersTab_paginatedLocationMembers_query on Query
+      fragment locationMembersTab_locationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationMembersTab_paginatedLocationMembers_refetchableFragment") {
-        paginatedLocationMembers(
+      @refetchable(queryName: "locationMembersTab_locationMembers_refetchableFragment") {
+        locationMembers(
           first: $count
           after: $cursor
           where: { locationId: $locationId, nameContains: $peopleNameSearchText }
           orderBy: $locationMembersSortingValues
-        ) @connection(key: "locationMembersTab_paginatedLocationMembers") @include(if: $locationExists) {
+        ) @connection(key: "locationMembersTab_locationMembers") @include(if: $locationExists) {
           __id
           totalCount
           edges {
@@ -195,17 +195,15 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
   };
 
   const connectionIds = useMemo(() => {
-    return rootDataPaginatedLocationMembers.paginatedLocationMembers ? [rootDataPaginatedLocationMembers.paginatedLocationMembers.__id] : [];
-  }, [rootDataPaginatedLocationMembers.paginatedLocationMembers]);
+    return rootDataPaginatedLocationMembers.locationMembers ? [rootDataPaginatedLocationMembers.locationMembers.__id] : [];
+  }, [rootDataPaginatedLocationMembers.locationMembers]);
 
-  if (!rootData.location || !rootDataPaginatedLocationMembers.paginatedLocationMembers) {
+  if (!rootData.location || !rootDataPaginatedLocationMembers.locationMembers) {
     return <></>;
   }
 
-  const locationMemberEdges = rootDataPaginatedLocationMembers.paginatedLocationMembers.edges;
-  const count = rootDataPaginatedLocationMembers.paginatedLocationMembers.totalCount
-    ? rootDataPaginatedLocationMembers.paginatedLocationMembers.totalCount
-    : 0;
+  const locationMemberEdges = rootDataPaginatedLocationMembers.locationMembers.edges;
+  const count = rootDataPaginatedLocationMembers.locationMembers.totalCount ? rootDataPaginatedLocationMembers.locationMembers.totalCount : 0;
   const slicedLocationMemberEdges = locationMemberEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > locationMemberEdges.length ? locationMemberEdges.length : page * pageSize + pageSize,

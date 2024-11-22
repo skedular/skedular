@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2f5c28cd5734f1c6c63bc4c9a301648e>>
+ * @generated SignedSource<<d949ae94168d10c70934facc062b6ee4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,7 @@ export type organizationMembersTab_rootQuery$variables = {
   peopleNameSearchText?: string | null | undefined;
 };
 export type organizationMembersTab_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMembersTab_paginatedOrganizationMembers_query" | "organizationMembersTab_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMembersTab_organizationMembers_query" | "organizationMembersTab_query">;
 };
 export type organizationMembersTab_rootQuery = {
   response: organizationMembersTab_rootQuery$data;
@@ -113,7 +113,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "organizationMembersTab_paginatedOrganizationMembers_query"
+        "name": "organizationMembersTab_organizationMembers_query"
       }
     ],
     "type": "Query",
@@ -173,7 +173,7 @@ return {
             "args": (v6/*: any*/),
             "concreteType": "OrganizationMemberConnection",
             "kind": "LinkedField",
-            "name": "paginatedOrganizationMembers",
+            "name": "organizationMembers",
             "plural": false,
             "selections": [
               {
@@ -315,25 +315,25 @@ return {
               "orderBy"
             ],
             "handle": "connection",
-            "key": "organizationMembersTab_paginatedOrganizationMembers",
+            "key": "organizationMembersTab_organizationMembers",
             "kind": "LinkedHandle",
-            "name": "paginatedOrganizationMembers"
+            "name": "organizationMembers"
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "13746188fa19d956f887e010095ad41c",
+    "cacheID": "f7945a794210fa6e5c779591890c240a",
     "id": null,
     "metadata": {},
     "name": "organizationMembersTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMembersTab_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMembersTab_query\n  ...organizationMembersTab_paginatedOrganizationMembers_query\n}\n\nfragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment organizationMembersTab_paginatedOrganizationMembers_query on Query {\n  paginatedOrganizationMembers(first: 50, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationMemberCard_OrganizationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMembersTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    canInvitePeople\n  }\n  ...organizationSingleChoiceMembershipType_query\n}\n\nfragment organizationSingleChoiceMembershipType_query on Query {\n  organizationMemberMembershipTypes\n}\n"
+    "text": "query organizationMembersTab_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMembersTab_query\n  ...organizationMembersTab_organizationMembers_query\n}\n\nfragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment organizationMembersTab_organizationMembers_query on Query {\n  organizationMembers(first: 50, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationMemberCard_OrganizationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMembersTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    canInvitePeople\n  }\n  ...organizationSingleChoiceMembershipType_query\n}\n\nfragment organizationSingleChoiceMembershipType_query on Query {\n  organizationMemberMembershipTypes\n}\n"
   }
 };
 })();
 
-(node as any).hash = "79b9e13207c5dcb12038d68658f074e3";
+(node as any).hash = "206748fb74c05de2807f07926de85264";
 
 export default node;

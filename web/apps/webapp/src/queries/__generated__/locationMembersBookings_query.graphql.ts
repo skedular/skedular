@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0578c0b93191055a0f061c7bccde732b>>
+ * @generated SignedSource<<08a66754fdc31ce7beba68ba3f3a90a7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,34 +22,42 @@ export type locationMembersBookings_query$data = {
       readonly uniqueId: string;
     } | null | undefined;
   } | null | undefined;
-  readonly locationMembers: ReadonlyArray<{
-    readonly customer: {
-      readonly familyName: string | null | undefined;
-      readonly givenName: string | null | undefined;
-      readonly middleName: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly photoUrl: string | null | undefined;
-      readonly uniqueId: string;
-    };
-    readonly id: string;
-  }> | null | undefined;
+  readonly locationMembers: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly customer: {
+          readonly familyName: string | null | undefined;
+          readonly givenName: string | null | undefined;
+          readonly middleName: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly photoUrl: string | null | undefined;
+          readonly uniqueId: string;
+        };
+        readonly id: string;
+      };
+    }>;
+  } | null | undefined;
   readonly me: {
     readonly defaultLocations: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
     readonly id: string;
   } | null | undefined;
-  readonly organizationMembers?: ReadonlyArray<{
-    readonly customer: {
-      readonly familyName: string | null | undefined;
-      readonly givenName: string | null | undefined;
-      readonly middleName: string | null | undefined;
-      readonly name: string | null | undefined;
-      readonly photoUrl: string | null | undefined;
-      readonly uniqueId: string;
-    };
-    readonly id: string;
-  }> | null | undefined;
+  readonly organizationMembers?: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly customer: {
+          readonly familyName: string | null | undefined;
+          readonly givenName: string | null | undefined;
+          readonly middleName: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly photoUrl: string | null | undefined;
+          readonly uniqueId: string;
+        };
+        readonly id: string;
+      };
+    }>;
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"bookingsWeekGrid_allBookings_query" | "bookingsWeekGrid_query">;
   readonly " $fragmentType": "locationMembersBookings_query";
 };
@@ -159,20 +167,42 @@ return {
           "name": "where"
         }
       ],
-      "concreteType": "LocationMemberDetails",
+      "concreteType": "LocationMemberConnection",
       "kind": "LinkedField",
       "name": "locationMembers",
-      "plural": true,
+      "plural": false,
       "selections": [
-        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationCustomerDetails",
+          "concreteType": "LocationMemberEdge",
           "kind": "LinkedField",
-          "name": "customer",
-          "plural": false,
-          "selections": (v3/*: any*/),
+          "name": "edges",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "LocationMemberDetails",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "LocationCustomerDetails",
+                  "kind": "LinkedField",
+                  "name": "customer",
+                  "plural": false,
+                  "selections": (v3/*: any*/),
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -203,20 +233,42 @@ return {
               "name": "where"
             }
           ],
-          "concreteType": "OrganizationMemberDetails",
+          "concreteType": "OrganizationMemberConnection",
           "kind": "LinkedField",
           "name": "organizationMembers",
-          "plural": true,
+          "plural": false,
           "selections": [
-            (v0/*: any*/),
             {
               "alias": null,
               "args": null,
-              "concreteType": "OrganizationCustomerDetails",
+              "concreteType": "OrganizationMemberEdge",
               "kind": "LinkedField",
-              "name": "customer",
-              "plural": false,
-              "selections": (v3/*: any*/),
+              "name": "edges",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OrganizationMemberDetails",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    (v0/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "OrganizationCustomerDetails",
+                      "kind": "LinkedField",
+                      "name": "customer",
+                      "plural": false,
+                      "selections": (v3/*: any*/),
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
@@ -323,6 +375,6 @@ return {
 };
 })();
 
-(node as any).hash = "8205193189f6fc47a2aad91eef6f3b95";
+(node as any).hash = "e52fb31364a6fae760dba5ce07a03ad9";
 
 export default node;

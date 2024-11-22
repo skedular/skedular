@@ -24,12 +24,12 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
       fragment deskMultipleChoicesZones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "deskMultipleChoicesZones_refetchableFragment") {
-        paginatedLocationTags(
+        locationTags(
           first: $count
           after: $cursor
           where: { locationId: $locationId, tagType: $zoneTagType }
           orderBy: $deskMultipleChoicesZonesSortingValues
-        ) @connection(key: "locationZonesTab_paginatedLocationTags") {
+        ) @connection(key: "locationZonesTab_locationTags") {
           __id
           totalCount
           edges {
@@ -45,12 +45,12 @@ const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
   );
 
   const zones = useMemo<ZoneDetails[]>(() => {
-    if (!rootData.paginatedLocationTags) {
+    if (!rootData.locationTags) {
       return [];
     }
 
-    return rootData.paginatedLocationTags.edges.map(({ node }) => node);
-  }, [rootData.paginatedLocationTags]);
+    return rootData.locationTags.edges.map(({ node }) => node);
+  }, [rootData.locationTags]);
 
   const filter = createFilterOptions<ZoneDetails>();
 

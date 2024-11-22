@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1de967972a5b4969e60122ae74c5c45d>>
+ * @generated SignedSource<<b47594b1939a684c359077f27a7d545a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type LocationTagOrderInput = {
   direction: OrderDirection;
   field: LocationTagOrderField;
 };
-export type locationZonesTab_paginatedLocationTags_refetchableFragment$variables = {
+export type locationZonesTab_locationTags_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   locationExists: boolean;
@@ -25,12 +25,12 @@ export type locationZonesTab_paginatedLocationTags_refetchableFragment$variables
   zoneSortingValues?: ReadonlyArray<LocationTagOrderInput> | null | undefined;
   zoneTagType?: string | null | undefined;
 };
-export type locationZonesTab_paginatedLocationTags_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationZonesTab_paginatedLocationTags_query">;
+export type locationZonesTab_locationTags_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"locationZonesTab_locationTags_query">;
 };
-export type locationZonesTab_paginatedLocationTags_refetchableFragment = {
-  response: locationZonesTab_paginatedLocationTags_refetchableFragment$data;
-  variables: locationZonesTab_paginatedLocationTags_refetchableFragment$variables;
+export type locationZonesTab_locationTags_refetchableFragment = {
+  response: locationZonesTab_locationTags_refetchableFragment$data;
+  variables: locationZonesTab_locationTags_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -114,7 +114,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "locationZonesTab_paginatedLocationTags_refetchableFragment",
+    "name": "locationZonesTab_locationTags_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -130,7 +130,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "locationZonesTab_paginatedLocationTags_query"
+        "name": "locationZonesTab_locationTags_query"
       }
     ],
     "type": "Query",
@@ -140,7 +140,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "locationZonesTab_paginatedLocationTags_refetchableFragment",
+    "name": "locationZonesTab_locationTags_refetchableFragment",
     "selections": [
       {
         "condition": "locationExists",
@@ -152,7 +152,7 @@ return {
             "args": (v1/*: any*/),
             "concreteType": "LocationTagConnection",
             "kind": "LinkedField",
-            "name": "paginatedLocationTags",
+            "name": "locationTags",
             "plural": false,
             "selections": [
               {
@@ -260,25 +260,25 @@ return {
               "orderBy"
             ],
             "handle": "connection",
-            "key": "locationZonesTab_paginatedLocationTags",
+            "key": "locationZonesTab_locationTags",
             "kind": "LinkedHandle",
-            "name": "paginatedLocationTags"
+            "name": "locationTags"
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "48a9d514eb7908277facf54cfe963a99",
+    "cacheID": "89b7cb7ca83a70ebbdee2b2eb6121251",
     "id": null,
     "metadata": {},
-    "name": "locationZonesTab_paginatedLocationTags_refetchableFragment",
+    "name": "locationZonesTab_locationTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationZonesTab_paginatedLocationTags_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationExists: Boolean!\n  $locationId: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [LocationTagOrderInput!]\n  $zoneTagType: String\n) {\n  ...locationZonesTab_paginatedLocationTags_query_1G22uz\n}\n\nfragment locationZonesTab_paginatedLocationTags_query_1G22uz on Query {\n  paginatedLocationTags(first: $count, after: $cursor, where: {locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_LocationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment zoneCard_LocationTagDetails on LocationTagDetails {\n  id\n  name\n}\n"
+    "text": "query locationZonesTab_locationTags_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationExists: Boolean!\n  $locationId: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [LocationTagOrderInput!]\n  $zoneTagType: String\n) {\n  ...locationZonesTab_locationTags_query_1G22uz\n}\n\nfragment locationZonesTab_locationTags_query_1G22uz on Query {\n  locationTags(first: $count, after: $cursor, where: {locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_LocationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment zoneCard_LocationTagDetails on LocationTagDetails {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b2688cb96be0691ba28abbf222148732";
+(node as any).hash = "bb057c5b0d8fc3e5feb5746f2e9d3d3b";
 
 export default node;

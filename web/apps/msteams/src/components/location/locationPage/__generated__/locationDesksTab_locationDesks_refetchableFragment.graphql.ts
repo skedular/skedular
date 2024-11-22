@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ba7d151be91bee34d927f62435d8f94c>>
+ * @generated SignedSource<<b4d2194173ad04c3ad025e1e32dd9b06>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,31 +10,31 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LocationTagOrderField = "Description" | "Name" | "TagType" | "%future added value";
+export type DeskOrderField = "Name" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type LocationTagOrderInput = {
+export type DeskOrderInput = {
   direction: OrderDirection;
-  field: LocationTagOrderField;
+  field: DeskOrderField;
 };
-export type deskMultipleChoicesZones_refetchableFragment$variables = {
+export type locationDesksTab_locationDesks_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  deskMultipleChoicesZonesSortingValues?: ReadonlyArray<LocationTagOrderInput> | null | undefined;
+  deskNameSearchText?: string | null | undefined;
+  deskSortingValues?: ReadonlyArray<DeskOrderInput> | null | undefined;
   locationId: string;
-  zoneTagType?: string | null | undefined;
 };
-export type deskMultipleChoicesZones_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"deskMultipleChoicesZones_query">;
+export type locationDesksTab_locationDesks_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_locationDesks_query">;
 };
-export type deskMultipleChoicesZones_refetchableFragment = {
-  response: deskMultipleChoicesZones_refetchableFragment$data;
-  variables: deskMultipleChoicesZones_refetchableFragment$variables;
+export type locationDesksTab_locationDesks_refetchableFragment = {
+  response: locationDesksTab_locationDesks_refetchableFragment$data;
+  variables: locationDesksTab_locationDesks_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": null,
+    "defaultValue": 50,
     "kind": "LocalArgument",
     "name": "count"
   },
@@ -46,17 +46,17 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "deskMultipleChoicesZonesSortingValues"
+    "name": "deskNameSearchText"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "deskSortingValues"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "locationId"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "zoneTagType"
   }
 ],
 v1 = [
@@ -73,7 +73,7 @@ v1 = [
   {
     "kind": "Variable",
     "name": "orderBy",
-    "variableName": "deskMultipleChoicesZonesSortingValues"
+    "variableName": "deskSortingValues"
   },
   {
     "fields": [
@@ -84,20 +84,34 @@ v1 = [
       },
       {
         "kind": "Variable",
-        "name": "tagType",
-        "variableName": "zoneTagType"
+        "name": "nameContains",
+        "variableName": "deskNameSearchText"
       }
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
-];
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "deskMultipleChoicesZones_refetchableFragment",
+    "name": "locationDesksTab_locationDesks_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -113,7 +127,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "deskMultipleChoicesZones_query"
+        "name": "locationDesksTab_locationDesks_query"
       }
     ],
     "type": "Query",
@@ -123,14 +137,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "deskMultipleChoicesZones_refetchableFragment",
+    "name": "locationDesksTab_locationDesks_refetchableFragment",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "LocationTagConnection",
+        "concreteType": "DeskConnection",
         "kind": "LinkedField",
-        "name": "locationTags",
+        "name": "locationDesks",
         "plural": false,
         "selections": [
           {
@@ -143,7 +157,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "LocationTagEdge",
+            "concreteType": "DeskEdge",
             "kind": "LinkedField",
             "name": "edges",
             "plural": true,
@@ -151,23 +165,38 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "LocationTagDetails",
+                "concreteType": "DeskDetails",
                 "kind": "LinkedField",
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v2/*: any*/),
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "id",
+                    "name": "deactivated",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "name",
+                    "name": "requireBookingApproval",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "LocationTagDetails",
+                    "kind": "LinkedField",
+                    "name": "locationTags",
+                    "plural": true,
+                    "selections": [
+                      (v2/*: any*/),
+                      (v3/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -238,23 +267,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "locationZonesTab_locationTags",
+        "key": "locationDesksTab_locationDesks",
         "kind": "LinkedHandle",
-        "name": "locationTags"
+        "name": "locationDesks"
       }
     ]
   },
   "params": {
-    "cacheID": "20c3df27e4cf1d4b28d98d06bbb00405",
+    "cacheID": "bba0a0e3f860d9d687e57131b291a5bb",
     "id": null,
     "metadata": {},
-    "name": "deskMultipleChoicesZones_refetchableFragment",
+    "name": "locationDesksTab_locationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query deskMultipleChoicesZones_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]\n  $locationId: String!\n  $zoneTagType: String\n) {\n  ...deskMultipleChoicesZones_query_1G22uz\n}\n\nfragment deskMultipleChoicesZones_query_1G22uz on Query {\n  locationTags(first: $count, after: $cursor, where: {locationId: $locationId, tagType: $zoneTagType}, orderBy: $deskMultipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query locationDesksTab_locationDesks_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]\n  $locationId: String!\n) {\n  ...locationDesksTab_locationDesks_query_1G22uz\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  locationTags {\n    id\n    name\n  }\n}\n\nfragment locationDesksTab_locationDesks_query_1G22uz on Query {\n  locationDesks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a642f5d7ea5d49f82ff1b1fdb56cb3b2";
+(node as any).hash = "7689530ca9f9146c8787540e0409b247";
 
 export default node;

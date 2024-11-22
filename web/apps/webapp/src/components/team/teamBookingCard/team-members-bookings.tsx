@@ -92,14 +92,18 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
     graphql`
       fragment teamMembersBookings_query on Query {
         teamMembers(where: { teamId: $teamId }, orderBy: $peopleSortingValues) {
-          id
-          customer {
-            uniqueId
-            name
-            givenName
-            middleName
-            familyName
-            photoUrl
+          edges {
+            node {
+              id
+              customer {
+                uniqueId
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+              }
+            }
           }
         }
         me {
@@ -403,7 +407,7 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
             rootDataAllBookingsRelay={rootData}
             organizationId={organizationId}
             startDate={startDate}
-            customers={rootData.teamMembers.map((member) => member.customer)}
+            customers={rootData.teamMembers.edges.map(({ node }) => node.customer)}
             teamId={teamId}
           />
         </CardContent>
