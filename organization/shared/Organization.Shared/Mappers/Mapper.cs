@@ -5,6 +5,7 @@ using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Organization.Shared.Models;
 using Offering = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Offering;
+using Tag = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Tag;
 
 namespace Organization.Shared.Mappers;
 
@@ -40,6 +41,14 @@ public class Mapper : IMapper
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
+
+        organization.Tags.AddRange(src.Tags.Select(item => new Tag
+        {
+            Id = item.Id,
+            Name = item.Name.ToSafeString(),
+            Description = item.Description.ToSafeString(),
+            TagType = item.Type.ToSafeString()
+        }));
 
         organization.Offering.ActiveCustomerIds.AddRange(
             organizationOffering.OrganizationOfferingActiveMembers.Select(item => item.OrganizationMember.Customer.Id));

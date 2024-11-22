@@ -184,42 +184,20 @@ public class Mapper : IMapper
 
     public Shared.Models.Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
     {
-        var location = src.Data.LocationAfterState;
-        var deletedAt = location.DeletedAt?.ToDateTimeOffset();
+        var locationAfterState = src.Data.LocationAfterState;
+        var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
 
-        return new Shared.Models.Location
+        var location = new Shared.Models.Location
         {
-            Id = location.Id,
+            Id = locationAfterState.Id,
             DeletedAt = deletedAt,
-            Name = location.Name,
-            About = location.About,
-            Timezone = location.Timezone,
-            Organization = string.IsNullOrWhiteSpace(location.OrganizationId)
+            Name = locationAfterState.Name,
+            About = locationAfterState.About,
+            Timezone = locationAfterState.Timezone,
+            Organization = string.IsNullOrWhiteSpace(locationAfterState.OrganizationId)
                 ? null
-                : new Organization { Id = location.OrganizationId },
-            Tags =
-                location.Tags.Select(item => new Shared.Models.Tag
-                {
-                    Id = item.Id,
-                    DeletedAt = deletedAt,
-                    Name = item.Name,
-                    Description = item.Description,
-                    Type = item.TagType,
-                    Location = new Shared.Models.Location { Id = location.Id }
-                }).ToList(),
-            Desks = location.Desks.Select(item => new Desk
-            {
-                Id = item.Id,
-                DeletedAt = deletedAt,
-                Name = item.Name,
-                Tags =
-                    item.LocationTagIds.Select(tagId =>
-                        new Shared.Models.Tag
-                        {
-                            Id = tagId, Location = new Shared.Models.Location { Id = location.Id }
-                        }).ToList()
-            }).ToList(),
-            LocationMembers = location.Members.Select(item =>
+                : new Organization { Id = locationAfterState.OrganizationId },
+            LocationMembers = locationAfterState.Members.Select(item =>
             {
                 return new Shared.Models.LocationMember
                 {
@@ -238,6 +216,28 @@ public class Mapper : IMapper
                 };
             }).ToList()
         };
+
+        location.Tags = locationAfterState.Tags.Select(item => new Shared.Models.Tag
+        {
+            Id = item.Id,
+            DeletedAt = deletedAt,
+            Name = item.Name,
+            Description = item.Description,
+            Type = item.TagType,
+            Location = location
+        }).ToList();
+
+        location.Desks = locationAfterState.Desks.Select(item => new Desk
+        {
+            Id = item.Id,
+            DeletedAt = deletedAt,
+            Name = item.Name,
+            Tags =
+                item.LocationTagIds.Select(tagId =>
+                    new Shared.Models.Tag { Id = tagId, Location = location }).ToList()
+        }).ToList();
+
+        return location;
     }
 
     public Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src)

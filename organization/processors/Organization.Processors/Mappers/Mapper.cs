@@ -15,6 +15,7 @@ using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
+using Tag = Organization.Shared.Database.Entities.Tag;
 
 namespace Organization.Processors.Mappers;
 
@@ -113,6 +114,13 @@ public interface IMapper
         Shared.Models.AzureTenantMember src,
         AzureTenantMember dest,
         AzureTenant azureTenant);
+
+    Tag MapToEntity(Shared.Models.Tag src, Shared.Database.Entities.Organization location);
+
+    Tag MergeToEntity(
+        Shared.Models.Tag src,
+        Tag dest,
+        Shared.Database.Entities.Organization location);
 }
 
 public class Mapper : IMapper
@@ -162,6 +170,16 @@ public class Mapper : IMapper
             Website = organizationAfterState.Website,
             LogoUrl = organizationAfterState.LogoUrl
         };
+        
+        organization.Tags = organizationAfterState.Tags.Select(item => new Shared.Models.Tag
+        {
+            Id = item.Id,
+            DeletedAt = deletedAt,
+            Name = item.Name,
+            Description = item.Description,
+            Type = item.TagType,
+            Organization = organization
+        }).ToList();
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
         {
@@ -508,6 +526,22 @@ public class Mapper : IMapper
         dest.PhotoUrl504 = src.PhotoUrl504;
         dest.PhotoUrl648 = src.PhotoUrl648;
         dest.AzureTenant = azureTenant;
+        return dest;
+    }
+
+    public Tag MapToEntity(Shared.Models.Tag src, Shared.Database.Entities.Organization location) =>
+        MergeToEntity(src, new Tag(), location);
+
+    public Tag MergeToEntity(
+        Shared.Models.Tag src,
+        Tag dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.Name = src.Name;
+        dest.Description = src.Description;
+        dest.Type = src.Type;
+        dest.Organization = organization;
         return dest;
     }
 

@@ -91,9 +91,12 @@ public class OrganizationSubscriber(
             : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization,
                 existingOrganization));
 
+        existingOrganization = RebuildTags(organization, existingOrganization);
         existingOrganization =
             await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         _ = RebuildOrganizationOffering(organization, existingOrganization);
+
+        await repositoryFactory.TagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -178,6 +181,30 @@ public class OrganizationSubscriber(
 
         repositoryFactory.OrganizationOfferingRepository.RemoveRange(itemsToRemove);
         existingOrganization.OrganizationOfferings = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+
+        return existingOrganization;
+    }
+
+    private Shared.Database.Entities.Organization RebuildTags(
+        Shared.Models.Organization organization,
+        Shared.Database.Entities.Organization existingOrganization)
+    {
+        var itemsToRemove = existingOrganization.Tags
+            .Where(tag => organization.Tags.All(item => item.Id != tag.Id)).ToList();
+        var updatedItems = existingOrganization.Tags
+            .Where(locationTag => organization.Tags.Any(item => item.Id == locationTag.Id))
+            .Select(organizationTag => repositoryFactory.TagRepository.Update(mapper.MergeToEntity(
+                organization.Tags.Single(item => item.Id == organizationTag.Id),
+                organizationTag, existingOrganization)))
+            .ToList();
+        var addedItems = organization.Tags
+            .Where(locationTag => existingOrganization.Tags.All(item => item.Id != locationTag.Id))
+            .Select(organizationTag =>
+                repositoryFactory.TagRepository.Add(mapper.MapToEntity(organizationTag, existingOrganization)))
+            .ToList();
+
+        repositoryFactory.TagRepository.RemoveRange(itemsToRemove);
+        existingOrganization.Tags = addedItems.Concat(updatedItems).ToList();
 
         return existingOrganization;
     }
