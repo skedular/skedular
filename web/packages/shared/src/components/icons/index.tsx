@@ -1,8 +1,8 @@
 import Business from '@mui/icons-material/Business';
 import CorporateFare from '@mui/icons-material/CorporateFare';
 import DateRange from '@mui/icons-material/DateRange';
-import Desk from '@mui/icons-material/Desk';
 import Diversity3 from '@mui/icons-material/Diversity3';
+import EventSeat from '@mui/icons-material/EventSeat';
 import Fullscreen from '@mui/icons-material/Fullscreen';
 import Home from '@mui/icons-material/Home';
 import Info from '@mui/icons-material/Info';
@@ -109,10 +109,10 @@ export const ZoneIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
 
 export const DeskIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
   excludeTooltip ? (
-    <Desk fontSize={fontSize} color={color} />
+    <EventSeat fontSize={fontSize} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Desk'}>
-      <Desk fontSize={fontSize} color={color} />
+      <EventSeat fontSize={fontSize} color={color} />
     </TooltipIcon>
   );
 
