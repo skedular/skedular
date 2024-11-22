@@ -2,7 +2,7 @@
 
 import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
 import { GoogleAnalyticsProvider, LogRocketProvider, NextAuthProvider, RelayProvider, SelectedOrganizationProvider } from '@/libs/providers';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
 import {
