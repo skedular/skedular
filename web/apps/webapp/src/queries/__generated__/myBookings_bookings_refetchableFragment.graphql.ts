@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d3d847fb9c94ee6fb090d8da5be9b8d0>>
+ * @generated SignedSource<<0a327a2efabdbebe4a08b724b81a2aab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,8 +13,6 @@ import { FragmentRefs } from "relay-runtime";
 export type myBookings_bookings_refetchableFragment$variables = {
   bookingsSearchCriteriaFrom?: any | null | undefined;
   bookingsSearchCriteriaTo?: any | null | undefined;
-  count?: number | null | undefined;
-  cursor?: string | null | undefined;
   locationIds?: ReadonlyArray<string> | null | undefined;
   organizationId: string;
   teamIds?: ReadonlyArray<string> | null | undefined;
@@ -42,16 +40,6 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "count"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "cursor"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
     "name": "locationIds"
   },
   {
@@ -65,92 +53,23 @@ var v0 = [
     "name": "teamIds"
   }
 ],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "cursor"
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "count"
-  },
-  {
-    "kind": "Literal",
-    "name": "orderBy",
-    "value": [
-      {
-        "direction": "Ascending",
-        "field": "From"
-      }
-    ]
-  },
-  {
-    "fields": [
-      {
-        "kind": "Literal",
-        "name": "combineOrganizationsLocationsTeams",
-        "value": true
-      },
-      {
-        "kind": "Variable",
-        "name": "fromGTE",
-        "variableName": "bookingsSearchCriteriaFrom"
-      },
-      {
-        "kind": "Variable",
-        "name": "fromLTE",
-        "variableName": "bookingsSearchCriteriaTo"
-      },
-      {
-        "kind": "Literal",
-        "name": "includeFutureBookingsOnly",
-        "value": true
-      },
-      {
-        "kind": "Variable",
-        "name": "locationIds",
-        "variableName": "locationIds"
-      },
-      {
-        "items": [
-          {
-            "kind": "Variable",
-            "name": "organizationIds.0",
-            "variableName": "organizationId"
-          }
-        ],
-        "kind": "ListValue",
-        "name": "organizationIds"
-      },
-      {
-        "kind": "Variable",
-        "name": "teamIds",
-        "variableName": "teamIds"
-      }
-    ],
-    "kind": "ObjectValue",
-    "name": "where"
-  }
-],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = [
-  (v2/*: any*/),
-  (v3/*: any*/)
+v3 = [
+  (v1/*: any*/),
+  (v2/*: any*/)
 ];
 return {
   "fragment": {
@@ -160,18 +79,7 @@ return {
     "name": "myBookings_bookings_refetchableFragment",
     "selections": [
       {
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "count",
-            "variableName": "count"
-          },
-          {
-            "kind": "Variable",
-            "name": "cursor",
-            "variableName": "cursor"
-          }
-        ],
+        "args": null,
         "kind": "FragmentSpread",
         "name": "myBookings_bookings_query"
       }
@@ -187,7 +95,65 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": [
+          {
+            "kind": "Literal",
+            "name": "orderBy",
+            "value": [
+              {
+                "direction": "Ascending",
+                "field": "From"
+              }
+            ]
+          },
+          {
+            "fields": [
+              {
+                "kind": "Literal",
+                "name": "combineOrganizationsLocationsTeams",
+                "value": true
+              },
+              {
+                "kind": "Variable",
+                "name": "fromGTE",
+                "variableName": "bookingsSearchCriteriaFrom"
+              },
+              {
+                "kind": "Variable",
+                "name": "fromLTE",
+                "variableName": "bookingsSearchCriteriaTo"
+              },
+              {
+                "kind": "Literal",
+                "name": "includeFutureBookingsOnly",
+                "value": true
+              },
+              {
+                "kind": "Variable",
+                "name": "locationIds",
+                "variableName": "locationIds"
+              },
+              {
+                "items": [
+                  {
+                    "kind": "Variable",
+                    "name": "organizationIds.0",
+                    "variableName": "organizationId"
+                  }
+                ],
+                "kind": "ListValue",
+                "name": "organizationIds"
+              },
+              {
+                "kind": "Variable",
+                "name": "teamIds",
+                "variableName": "teamIds"
+              }
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
+        ],
         "concreteType": "BookingConnection",
         "kind": "LinkedField",
         "name": "bookings",
@@ -252,8 +218,8 @@ return {
                     "name": "customer",
                     "plural": false,
                     "selections": [
+                      (v1/*: any*/),
                       (v2/*: any*/),
-                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -292,7 +258,7 @@ return {
                     "kind": "LinkedField",
                     "name": "location",
                     "plural": false,
-                    "selections": (v4/*: any*/),
+                    "selections": (v3/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -302,7 +268,7 @@ return {
                     "kind": "LinkedField",
                     "name": "team",
                     "plural": false,
-                    "selections": (v4/*: any*/),
+                    "selections": (v3/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -313,8 +279,8 @@ return {
                     "name": "desks",
                     "plural": true,
                     "selections": [
+                      (v1/*: any*/),
                       (v2/*: any*/),
-                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -323,8 +289,8 @@ return {
                         "name": "locationTags",
                         "plural": true,
                         "selections": [
+                          (v1/*: any*/),
                           (v2/*: any*/),
-                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -337,47 +303,8 @@ return {
                       }
                     ],
                     "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
                   }
                 ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
-            "kind": "LinkedField",
-            "name": "pageInfo",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
                 "storageKey": null
               }
             ],
@@ -397,32 +324,20 @@ return {
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "filters": [
-          "where",
-          "orderBy"
-        ],
-        "handle": "connection",
-        "key": "myBookings_bookings",
-        "kind": "LinkedHandle",
-        "name": "bookings"
       }
     ]
   },
   "params": {
-    "cacheID": "f0f31716f046a36d22b48a35c0cdd45e",
+    "cacheID": "1c5460c1288794abefa27961152828b9",
     "id": null,
     "metadata": {},
     "name": "myBookings_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query myBookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $locationIds: [String!]\n  $organizationId: String!\n  $teamIds: [String!]\n) {\n  ...myBookings_bookings_query_1G22uz\n}\n\nfragment myBookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, includeFutureBookingsOnly: true, combineOrganizationsLocationsTeams: true}, orderBy: [{field: From, direction: Ascending}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query myBookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $locationIds: [String!]\n  $organizationId: String!\n  $teamIds: [String!]\n) {\n  ...myBookings_bookings_query\n}\n\nfragment myBookings_bookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, includeFutureBookingsOnly: true, combineOrganizationsLocationsTeams: true}, orderBy: [{field: From, direction: Ascending}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "57f7eb10fb29aaa8f6f7912b22ef5b86";
+(node as any).hash = "31569185e78d2675b2dabaac413b282f";
 
 export default node;

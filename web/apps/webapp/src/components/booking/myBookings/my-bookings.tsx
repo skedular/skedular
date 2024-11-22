@@ -19,7 +19,7 @@ import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { stringToColor, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
-import { graphql, useFragment, usePaginationFragment } from 'react-relay';
+import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: myBookings_query$key;
@@ -81,17 +81,10 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
     rootDataRelay,
   );
 
-  const { data: rootDataBookings, refetch: refetchBookings } = usePaginationFragment<
-    myBookings_bookings_refetchableFragment,
-    myBookings_bookings_query$key
-  >(
+  const [rootDataBookings, refetchBookings] = useRefetchableFragment<myBookings_bookings_refetchableFragment, myBookings_bookings_query$key>(
     graphql`
-      fragment myBookings_bookings_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "myBookings_bookings_refetchableFragment") {
+      fragment myBookings_bookings_query on Query @refetchable(queryName: "myBookings_bookings_refetchableFragment") {
         bookings(
-          first: $count
-          after: $cursor
           where: {
             organizationIds: [$organizationId]
             locationIds: $locationIds
@@ -102,7 +95,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
             combineOrganizationsLocationsTeams: true
           }
           orderBy: [{ field: From, direction: Ascending }]
-        ) @connection(key: "myBookings_bookings") {
+        ) {
           __id
           totalCount
           edges {

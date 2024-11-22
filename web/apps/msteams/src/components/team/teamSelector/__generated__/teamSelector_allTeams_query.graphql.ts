@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bb71e6946d26d1422e04cce8e30621b6>>
+ * @generated SignedSource<<d0c8518de82107ad42c2485d61c0d378>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,54 +28,19 @@ export type teamSelector_allTeams_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"teamSelector_allTeams_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = [
-  "teams"
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "count"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "cursor"
-    },
     {
       "kind": "RootArgument",
       "name": "organizationId"
     }
   ],
   "kind": "Fragment",
-  "metadata": {
-    "connection": [
-      {
-        "count": "count",
-        "cursor": "cursor",
-        "direction": "forward",
-        "path": (v0/*: any*/)
-      }
-    ],
-    "refetch": {
-      "connection": {
-        "forward": {
-          "count": "count",
-          "cursor": "cursor"
-        },
-        "backward": null,
-        "path": (v0/*: any*/)
-      },
-      "fragmentPathInResult": [],
-      "operation": require('./teamSelector_allTeams_refetchableFragment.graphql')
-    }
-  },
+  "metadata": null,
   "name": "teamSelector_allTeams_query",
   "selections": [
     {
-      "alias": "teams",
+      "alias": null,
       "args": [
         {
           "fields": [
@@ -91,7 +56,7 @@ return {
       ],
       "concreteType": "TeamConnection",
       "kind": "LinkedField",
-      "name": "__teamSelector_teams_connection",
+      "name": "teams",
       "plural": false,
       "selections": [
         {
@@ -130,47 +95,8 @@ return {
                   "kind": "ScalarField",
                   "name": "name",
                   "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
                 }
               ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
               "storageKey": null
             }
           ],
@@ -195,8 +121,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "bee9cc6a5bea8db816466702d323cb5a";
+(node as any).hash = "c0d2b052106d4907929e669a7071bbf9";
 
 export default node;

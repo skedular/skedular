@@ -1,5 +1,4 @@
 import type { teamSelector_allTeams_query$key } from '@/queries/__generated__/teamSelector_allTeams_query.graphql';
-import type { teamSelector_allTeams_refetchableFragment } from '@/queries/__generated__/teamSelector_allTeams_refetchableFragment.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -8,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { TeamAvatar } from '@repo/shared/components/avatars';
 import { TeamIcon } from '@repo/shared/components/icons';
 import { memo, useMemo, useState } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: teamSelector_allTeams_query$key;
@@ -18,12 +17,10 @@ type Props = {
 const allTeamsId = 'kkigMVsUXwi2YMSSrXv7i';
 
 const TeamSelector = ({ rootDataRelay, onTeamChanged }: Props) => {
-  const { data: rootData } = usePaginationFragment<teamSelector_allTeams_refetchableFragment, teamSelector_allTeams_query$key>(
+  const rootData = useFragment<teamSelector_allTeams_query$key>(
     graphql`
-      fragment teamSelector_allTeams_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "teamSelector_allTeams_refetchableFragment") {
-        teams(first: $count, after: $cursor, where: { organizationId: $organizationId }) @connection(key: "teamSelector_teams") {
+      fragment teamSelector_allTeams_query on Query {
+        teams(where: { organizationId: $organizationId }) {
           __id
           totalCount
           edges {

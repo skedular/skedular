@@ -20,7 +20,7 @@ import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/sh
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useTransition } from 'react';
-import { graphql, useFragment, useMutation, usePaginationFragment } from 'react-relay';
+import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 
 type Props = {
@@ -114,17 +114,13 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
     rootDataRelay,
   );
 
-  const { data: rootDataAllBookings, refetch } = usePaginationFragment<
+  const [rootDataAllBookings, refetch] = useRefetchableFragment<
     bookingsWeekGrid_allBookings_refetchableFragment,
     bookingsWeekGrid_allBookings_query$key
   >(
     graphql`
-      fragment bookingsWeekGrid_allBookings_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "bookingsWeekGrid_allBookings_refetchableFragment") {
+      fragment bookingsWeekGrid_allBookings_query on Query @refetchable(queryName: "bookingsWeekGrid_allBookings_refetchableFragment") {
         bookings(
-          first: $count
-          after: $cursor
           where: {
             organizationIds: [$organizationId]
             locationIds: [$locationId]
@@ -133,7 +129,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
             toLT: $to
             combineOrganizationsLocationsTeams: true
           }
-        ) @connection(key: "bookingsWeekGrid_bookings") {
+        ) {
           __id
           totalCount
           edges {

@@ -16,7 +16,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useTransition } from 'react';
-import { useFragment, useMutation, usePaginationFragment } from 'react-relay';
+import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import type { bookingsWeekGrid_addBookingMutation } from './__generated__/bookingsWeekGrid_addBookingMutation.graphql';
 import type { bookingsWeekGrid_allBookings_query$key } from './__generated__/bookingsWeekGrid_allBookings_query.graphql';
@@ -115,17 +115,13 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
     rootDataRelay,
   );
 
-  const { data: rootDataAllBookings, refetch } = usePaginationFragment<
+  const [rootDataAllBookings, refetch] = useRefetchableFragment<
     bookingsWeekGrid_allBookings_refetchableFragment,
     bookingsWeekGrid_allBookings_query$key
   >(
     graphql`
-      fragment bookingsWeekGrid_allBookings_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "bookingsWeekGrid_allBookings_refetchableFragment") {
+      fragment bookingsWeekGrid_allBookings_query on Query @refetchable(queryName: "bookingsWeekGrid_allBookings_refetchableFragment") {
         bookings(
-          first: $count
-          after: $cursor
           where: {
             organizationIds: [$organizationId]
             locationIds: [$locationId]
@@ -134,7 +130,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
             toLT: $to
             combineOrganizationsLocationsTeams: true
           }
-        ) @connection(key: "bookingsWeekGrid_bookings") {
+        ) {
           __id
           totalCount
           edges {

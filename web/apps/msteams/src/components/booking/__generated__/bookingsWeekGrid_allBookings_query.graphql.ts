@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1012aaf0025462755386f1e33cbbd111>>
+ * @generated SignedSource<<864c9280e712c4b9465cb150921f201d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -52,38 +52,25 @@ export type bookingsWeekGrid_allBookings_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  "bookings"
-],
-v1 = {
+var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
-  (v2/*: any*/)
+v2 = [
+  (v1/*: any*/)
 ];
 return {
   "argumentDefinitions": [
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "count"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "cursor"
-    },
     {
       "kind": "RootArgument",
       "name": "from"
@@ -107,23 +94,8 @@ return {
   ],
   "kind": "Fragment",
   "metadata": {
-    "connection": [
-      {
-        "count": "count",
-        "cursor": "cursor",
-        "direction": "forward",
-        "path": (v0/*: any*/)
-      }
-    ],
     "refetch": {
-      "connection": {
-        "forward": {
-          "count": "count",
-          "cursor": "cursor"
-        },
-        "backward": null,
-        "path": (v0/*: any*/)
-      },
+      "connection": null,
       "fragmentPathInResult": [],
       "operation": require('./bookingsWeekGrid_allBookings_refetchableFragment.graphql')
     }
@@ -131,7 +103,7 @@ return {
   "name": "bookingsWeekGrid_allBookings_query",
   "selections": [
     {
-      "alias": "bookings",
+      "alias": null,
       "args": [
         {
           "fields": [
@@ -190,7 +162,7 @@ return {
       ],
       "concreteType": "BookingConnection",
       "kind": "LinkedField",
-      "name": "__bookingsWeekGrid_bookings_connection",
+      "name": "bookings",
       "plural": false,
       "selections": [
         {
@@ -245,8 +217,8 @@ return {
                   "name": "customer",
                   "plural": false,
                   "selections": [
+                    (v0/*: any*/),
                     (v1/*: any*/),
-                    (v2/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -285,7 +257,7 @@ return {
                   "kind": "LinkedField",
                   "name": "location",
                   "plural": false,
-                  "selections": (v3/*: any*/),
+                  "selections": (v2/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -295,7 +267,7 @@ return {
                   "kind": "LinkedField",
                   "name": "team",
                   "plural": false,
-                  "selections": (v3/*: any*/),
+                  "selections": (v2/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -306,7 +278,7 @@ return {
                   "name": "desks",
                   "plural": true,
                   "selections": [
-                    (v2/*: any*/),
+                    (v1/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -315,8 +287,8 @@ return {
                       "name": "locationTags",
                       "plural": true,
                       "selections": [
+                        (v0/*: any*/),
                         (v1/*: any*/),
-                        (v2/*: any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -329,47 +301,8 @@ return {
                     }
                   ],
                   "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
                 }
               ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
               "storageKey": null
             }
           ],
@@ -396,6 +329,6 @@ return {
 };
 })();
 
-(node as any).hash = "0b22a0b7699f060895cdb4cc3dc339ba";
+(node as any).hash = "d5c3c8cf71a286ead174724e137316df";
 
 export default node;

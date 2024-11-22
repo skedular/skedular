@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d638337be0d00a6dec4d8117a9253f4>>
+ * @generated SignedSource<<561b2575a6266767d592ccc4d6ee954d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,22 +28,8 @@ export type deskMultipleChoicesZones_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"deskMultipleChoicesZones_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = [
-  "locationTags"
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "count"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "cursor"
-    },
     {
       "kind": "RootArgument",
       "name": "deskMultipleChoicesZonesSortingValues"
@@ -58,32 +44,11 @@ return {
     }
   ],
   "kind": "Fragment",
-  "metadata": {
-    "connection": [
-      {
-        "count": "count",
-        "cursor": "cursor",
-        "direction": "forward",
-        "path": (v0/*: any*/)
-      }
-    ],
-    "refetch": {
-      "connection": {
-        "forward": {
-          "count": "count",
-          "cursor": "cursor"
-        },
-        "backward": null,
-        "path": (v0/*: any*/)
-      },
-      "fragmentPathInResult": [],
-      "operation": require('./deskMultipleChoicesZones_refetchableFragment.graphql')
-    }
-  },
+  "metadata": null,
   "name": "deskMultipleChoicesZones_query",
   "selections": [
     {
-      "alias": "locationTags",
+      "alias": null,
       "args": [
         {
           "kind": "Variable",
@@ -109,7 +74,7 @@ return {
       ],
       "concreteType": "LocationTagConnection",
       "kind": "LinkedField",
-      "name": "__locationZonesTab_locationTags_connection",
+      "name": "locationTags",
       "plural": false,
       "selections": [
         {
@@ -148,47 +113,8 @@ return {
                   "kind": "ScalarField",
                   "name": "name",
                   "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
                 }
               ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
               "storageKey": null
             }
           ],
@@ -213,8 +139,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "a642f5d7ea5d49f82ff1b1fdb56cb3b2";
+(node as any).hash = "be7287d920c56457a5cd3c4098330695";
 
 export default node;

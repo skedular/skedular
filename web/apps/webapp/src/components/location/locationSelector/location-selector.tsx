@@ -1,5 +1,4 @@
 import type { locationSelector_allLocations_query$key } from '@/queries/__generated__/locationSelector_allLocations_query.graphql';
-import type { locationSelector_allLocations_refetchableFragment } from '@/queries/__generated__/locationSelector_allLocations_refetchableFragment.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -8,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { LocationAvatar } from '@repo/shared/components/avatars';
 import { LocationIcon } from '@repo/shared/components/icons';
 import { memo, useMemo, useState } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: locationSelector_allLocations_query$key;
@@ -18,12 +17,10 @@ type Props = {
 const allLocationsId = 'kkigMVsUXwi2YMSSrXv7i';
 
 const LocationSelector = ({ rootDataRelay, onLocationChanged }: Props) => {
-  const { data: rootData } = usePaginationFragment<locationSelector_allLocations_refetchableFragment, locationSelector_allLocations_query$key>(
+  const rootData = useFragment<locationSelector_allLocations_query$key>(
     graphql`
-      fragment locationSelector_allLocations_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "locationSelector_allLocations_refetchableFragment") {
-        locations(first: $count, after: $cursor, where: { organizationId: $organizationId }) @connection(key: "locationSelector_locations") {
+      fragment locationSelector_allLocations_query on Query {
+        locations(where: { organizationId: $organizationId }) {
           __id
           totalCount
           edges {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f3e2facf930b6980b1493a559c0b1d8a>>
+ * @generated SignedSource<<21ce3a1a16c3173c8320c16308aca602>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -176,62 +176,6 @@ v16 = [
   }
 ],
 v17 = [
-  {
-    "fields": [
-      {
-        "kind": "Literal",
-        "name": "combineOrganizationsLocationsTeams",
-        "value": true
-      },
-      {
-        "kind": "Variable",
-        "name": "fromGTE",
-        "variableName": "from"
-      },
-      {
-        "items": [
-          {
-            "kind": "Variable",
-            "name": "locationIds.0",
-            "variableName": "locationId"
-          }
-        ],
-        "kind": "ListValue",
-        "name": "locationIds"
-      },
-      {
-        "items": [
-          {
-            "kind": "Variable",
-            "name": "organizationIds.0",
-            "variableName": "organizationId"
-          }
-        ],
-        "kind": "ListValue",
-        "name": "organizationIds"
-      },
-      {
-        "items": [
-          {
-            "kind": "Variable",
-            "name": "teamIds.0",
-            "variableName": "teamId"
-          }
-        ],
-        "kind": "ListValue",
-        "name": "teamIds"
-      },
-      {
-        "kind": "Variable",
-        "name": "toLT",
-        "variableName": "to"
-      }
-    ],
-    "kind": "ObjectValue",
-    "name": "where"
-  }
-],
-v18 = [
   (v13/*: any*/)
 ];
 return {
@@ -531,7 +475,62 @@ return {
       },
       {
         "alias": null,
-        "args": (v17/*: any*/),
+        "args": [
+          {
+            "fields": [
+              {
+                "kind": "Literal",
+                "name": "combineOrganizationsLocationsTeams",
+                "value": true
+              },
+              {
+                "kind": "Variable",
+                "name": "fromGTE",
+                "variableName": "from"
+              },
+              {
+                "items": [
+                  {
+                    "kind": "Variable",
+                    "name": "locationIds.0",
+                    "variableName": "locationId"
+                  }
+                ],
+                "kind": "ListValue",
+                "name": "locationIds"
+              },
+              {
+                "items": [
+                  {
+                    "kind": "Variable",
+                    "name": "organizationIds.0",
+                    "variableName": "organizationId"
+                  }
+                ],
+                "kind": "ListValue",
+                "name": "organizationIds"
+              },
+              {
+                "items": [
+                  {
+                    "kind": "Variable",
+                    "name": "teamIds.0",
+                    "variableName": "teamId"
+                  }
+                ],
+                "kind": "ListValue",
+                "name": "teamIds"
+              },
+              {
+                "kind": "Variable",
+                "name": "toLT",
+                "variableName": "to"
+              }
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
+        ],
         "concreteType": "BookingConnection",
         "kind": "LinkedField",
         "name": "bookings",
@@ -592,7 +591,7 @@ return {
                     "kind": "LinkedField",
                     "name": "location",
                     "plural": false,
-                    "selections": (v18/*: any*/),
+                    "selections": (v17/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -602,7 +601,7 @@ return {
                     "kind": "LinkedField",
                     "name": "team",
                     "plural": false,
-                    "selections": (v18/*: any*/),
+                    "selections": (v17/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -636,47 +635,8 @@ return {
                       }
                     ],
                     "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
                   }
                 ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
-            "kind": "LinkedField",
-            "name": "pageInfo",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
                 "storageKey": null
               }
             ],
@@ -696,27 +656,16 @@ return {
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v17/*: any*/),
-        "filters": [
-          "where"
-        ],
-        "handle": "connection",
-        "key": "bookingsWeekGrid_bookings",
-        "kind": "LinkedHandle",
-        "name": "bookings"
       }
     ]
   },
   "params": {
-    "cacheID": "d4d96fdd28bc66e30cb37cc7f2e1c2b0",
+    "cacheID": "9f7a6abecc4fbccd8b4b3f24ab96c689",
     "id": null,
     "metadata": {},
     "name": "locationBookingsCard_rootQuery",
     "operationKind": "query",
-    "text": "query locationBookingsCard_rootQuery(\n  $locationPeopleSortingValues: [LocationMemberOrderInput!]!\n  $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]!\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $locationId: String!\n  $locationExists: Boolean!\n  $teamId: String!\n  $teamExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...locationMembersBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingsWeekGrid_query on Query {\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  teamBookingPermissions(teamId: $teamId) @include(if: $teamExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n}\n\nfragment locationMembersBookings_query on Query {\n  locationMembers(where: {locationId: $locationId}, orderBy: $locationPeopleSortingValues) {\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $organizationPeopleSortingValues) @include(if: $organizationExists) {\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    name\n    deskCapacity\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  ...bookingsWeekGrid_query\n  ...bookingsWeekGrid_allBookings_query\n}\n"
+    "text": "query locationBookingsCard_rootQuery(\n  $locationPeopleSortingValues: [LocationMemberOrderInput!]!\n  $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]!\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $locationId: String!\n  $locationExists: Boolean!\n  $teamId: String!\n  $teamExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...locationMembersBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment bookingsWeekGrid_query on Query {\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  teamBookingPermissions(teamId: $teamId) @include(if: $teamExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n}\n\nfragment locationMembersBookings_query on Query {\n  locationMembers(where: {locationId: $locationId}, orderBy: $locationPeopleSortingValues) {\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $organizationPeopleSortingValues) @include(if: $organizationExists) {\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n  me {\n    id\n    defaultLocations {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    name\n    deskCapacity\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  ...bookingsWeekGrid_query\n  ...bookingsWeekGrid_allBookings_query\n}\n"
   }
 };
 })();

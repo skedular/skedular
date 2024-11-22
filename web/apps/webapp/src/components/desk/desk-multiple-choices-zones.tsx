@@ -1,11 +1,10 @@
 import type { deskMultipleChoicesZones_query$key } from '@/queries/__generated__/deskMultipleChoicesZones_query.graphql';
-import type { deskMultipleChoicesZones_refetchableFragment } from '@/queries/__generated__/deskMultipleChoicesZones_refetchableFragment.graphql';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: deskMultipleChoicesZones_query$key;
@@ -19,17 +18,13 @@ type ZoneDetails = {
 };
 
 const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
-  const { data: rootData } = usePaginationFragment<deskMultipleChoicesZones_refetchableFragment, deskMultipleChoicesZones_query$key>(
+  const rootData = useFragment< deskMultipleChoicesZones_query$key>(
     graphql`
-      fragment deskMultipleChoicesZones_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "deskMultipleChoicesZones_refetchableFragment") {
+      fragment deskMultipleChoicesZones_query on Query{
         locationTags(
-          first: $count
-          after: $cursor
           where: { locationId: $locationId, tagType: $zoneTagType }
           orderBy: $deskMultipleChoicesZonesSortingValues
-        ) @connection(key: "locationZonesTab_locationTags") {
+        )  {
           __id
           totalCount
           edges {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8a8a84ab43258a12fa1c62972e2b6d30>>
+ * @generated SignedSource<<56769a10f81505c43574316ed15716b6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,9 +39,6 @@ export type organizationBookings_bookings_query$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "bookings"
-],
-v1 = [
   {
     "alias": null,
     "args": null,
@@ -68,47 +65,16 @@ return {
       "name": "bookingsSearchCriteriaTo"
     },
     {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "count"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "cursor"
-    },
-    {
       "kind": "RootArgument",
       "name": "organizationId"
     }
   ],
   "kind": "Fragment",
-  "metadata": {
-    "connection": [
-      {
-        "count": "count",
-        "cursor": "cursor",
-        "direction": "forward",
-        "path": (v0/*: any*/)
-      }
-    ],
-    "refetch": {
-      "connection": {
-        "forward": {
-          "count": "count",
-          "cursor": "cursor"
-        },
-        "backward": null,
-        "path": (v0/*: any*/)
-      },
-      "fragmentPathInResult": [],
-      "operation": require('./organizationBookings_bookings_refetchableFragment.graphql')
-    }
-  },
+  "metadata": null,
   "name": "organizationBookings_bookings_query",
   "selections": [
     {
-      "alias": "bookings",
+      "alias": null,
       "args": [
         {
           "kind": "Literal",
@@ -150,7 +116,7 @@ return {
       ],
       "concreteType": "BookingConnection",
       "kind": "LinkedField",
-      "name": "__organizationBookings_bookings_connection",
+      "name": "bookings",
       "plural": false,
       "selections": [
         {
@@ -204,7 +170,7 @@ return {
                   "kind": "LinkedField",
                   "name": "location",
                   "plural": false,
-                  "selections": (v1/*: any*/),
+                  "selections": (v0/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -214,49 +180,10 @@ return {
                   "kind": "LinkedField",
                   "name": "team",
                   "plural": false,
-                  "selections": (v1/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
+                  "selections": (v0/*: any*/),
                   "storageKey": null
                 }
               ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
               "storageKey": null
             }
           ],
@@ -283,6 +210,6 @@ return {
 };
 })();
 
-(node as any).hash = "4ea9b80041e0460fb825ecd2b88f7ab5";
+(node as any).hash = "3020162bbbe257fb686fc1d0f7e83265";
 
 export default node;
