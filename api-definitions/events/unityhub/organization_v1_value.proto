@@ -45,6 +45,7 @@ message Organization {
   repeated Member members = 7;
   Offering Offering = 8;
   repeated string azureTenantIds = 9;
+  repeated Tag tags = 10;
 }
 
 enum MembershipType {
@@ -78,4 +79,11 @@ message InvitationToJoinOrganization {
   string organizationId = 3;
   string invitedById = 4;
   string inviteeId = 5;
+}
+
+message Tag {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string tagType = 4;
 }

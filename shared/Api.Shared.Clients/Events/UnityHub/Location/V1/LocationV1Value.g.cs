@@ -34,28 +34,28 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
             "EjAKEmxvY2F0aW9uQWZ0ZXJTdGF0ZRgBIAEoCzISLmxvY2F0aW9uLkxvY2F0",
             "aW9uSAASUAoiaW52aXRhdGlvblRvSm9pbkxvY2F0aW9uQWZ0ZXJTdGF0ZRgC",
             "IAEoCzIiLmxvY2F0aW9uLkludml0YXRpb25Ub0pvaW5Mb2NhdGlvbkgAQgkK",
-            "B3BheWxvYWQi8wEKCExvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRB",
+            "B3BheWxvYWQi6wEKCExvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRB",
             "dBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgD",
             "IAEoCRINCgVhYm91dBgEIAEoCRIhCgdtZW1iZXJzGAUgAygLMhAubG9jYXRp",
             "b24uTWVtYmVyEhYKDm9yZ2FuaXphdGlvbklkGAYgASgJEhAKCHRpbWV6b25l",
-            "GAcgASgJEh0KBWRlc2tzGAggAygLMg4ubG9jYXRpb24uRGVzaxIjCgR0YWdz",
-            "GAkgAygLMhUubG9jYXRpb24uTG9jYXRpb25UYWciWgoGTWVtYmVyEgoKAmlk",
-            "GAEgASgJEjAKDm1lbWJlcnNoaXBUeXBlGAIgASgOMhgubG9jYXRpb24uTWVt",
-            "YmVyc2hpcFR5cGUSEgoKY3VzdG9tZXJJZBgDIAEoCSJtCgREZXNrEgoKAmlk",
-            "GAEgASgJEgwKBG5hbWUYAiABKAkSFgoObG9jYXRpb25UYWdJZHMYAyADKAkS",
-            "EwoLZGVhY3RpdmF0ZWQYBCABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3Zh",
-            "bBgFIAEoCCJNCgtMb2NhdGlvblRhZxIKCgJpZBgBIAEoCRIMCgRuYW1lGAIg",
-            "ASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEg8KB3RhZ1R5cGUYBCABKAkikQEK",
-            "GEludml0YXRpb25Ub0pvaW5Mb2NhdGlvbhIKCgJpZBgBIAEoCRItCglkZWxl",
-            "dGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhIKCmxv",
-            "Y2F0aW9uSWQYAyABKAkSEwoLaW52aXRlZEJ5SWQYBCABKAkSEQoJaW52aXRl",
-            "ZUlkGAUgASgJKnwKBFR5cGUSFAoQTG9jYXRpb25VcHNlcnRlZBAAEhMKD0xv",
-            "Y2F0aW9uRGVsZXRlZBABEiQKIEludml0YXRpb25Ub0pvaW5Mb2NhdGlvblVw",
-            "c2VydGVkEAISIwofSW52aXRhdGlvblRvSm9pbkxvY2F0aW9uRGVsZXRlZBAD",
-            "KmQKDk1lbWJlcnNoaXBUeXBlEhcKE01lbWJlcnNoaXBUeXBlT3duZXIQABIf",
-            "ChtNZW1iZXJzaGlwVHlwZUFkbWluaXN0cmF0b3IQARIYChRNZW1iZXJzaGlw",
-            "VHlwZU1lbWJlchACQjeqAjRBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlVu",
-            "aXR5SHViLkxvY2F0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "GAcgASgJEh0KBWRlc2tzGAggAygLMg4ubG9jYXRpb24uRGVzaxIbCgR0YWdz",
+            "GAkgAygLMg0ubG9jYXRpb24uVGFnIloKBk1lbWJlchIKCgJpZBgBIAEoCRIw",
+            "Cg5tZW1iZXJzaGlwVHlwZRgCIAEoDjIYLmxvY2F0aW9uLk1lbWJlcnNoaXBU",
+            "eXBlEhIKCmN1c3RvbWVySWQYAyABKAkibQoERGVzaxIKCgJpZBgBIAEoCRIM",
+            "CgRuYW1lGAIgASgJEhYKDmxvY2F0aW9uVGFnSWRzGAMgAygJEhMKC2RlYWN0",
+            "aXZhdGVkGAQgASgIEh4KFnJlcXVpcmVCb29raW5nQXBwcm92YWwYBSABKAgi",
+            "RQoDVGFnEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3JpcHRp",
+            "b24YAyABKAkSDwoHdGFnVHlwZRgEIAEoCSKRAQoYSW52aXRhdGlvblRvSm9p",
+            "bkxvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdv",
+            "b2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEgoKbG9jYXRpb25JZBgDIAEoCRIT",
+            "CgtpbnZpdGVkQnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSABKAkqfAoEVHlw",
+            "ZRIUChBMb2NhdGlvblVwc2VydGVkEAASEwoPTG9jYXRpb25EZWxldGVkEAES",
+            "JAogSW52aXRhdGlvblRvSm9pbkxvY2F0aW9uVXBzZXJ0ZWQQAhIjCh9JbnZp",
+            "dGF0aW9uVG9Kb2luTG9jYXRpb25EZWxldGVkEAMqZAoOTWVtYmVyc2hpcFR5",
+            "cGUSFwoTTWVtYmVyc2hpcFR5cGVPd25lchAAEh8KG01lbWJlcnNoaXBUeXBl",
+            "QWRtaW5pc3RyYXRvchABEhgKFE1lbWJlcnNoaXBUeXBlTWVtYmVyEAJCN6oC",
+            "NEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuVW5pdHlIdWIuTG9jYXRpb24u",
+            "VjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -65,7 +65,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Location), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Desks", "Tags" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Member), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Member.Parser, new[]{ "Id", "MembershipType", "CustomerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "LocationTagIds", "Deactivated", "RequireBookingApproval" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.LocationTag), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.LocationTag.Parser, new[]{ "Id", "Name", "Description", "TagType" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Tag), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "TagType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null)
           }));
     }
@@ -1177,12 +1177,12 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
 
     /// <summary>Field number for the "tags" field.</summary>
     public const int TagsFieldNumber = 9;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.LocationTag> _repeated_tags_codec
-        = pb::FieldCodec.ForMessage(74, global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.LocationTag.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.LocationTag> tags_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.LocationTag>();
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Tag> _repeated_tags_codec
+        = pb::FieldCodec.ForMessage(74, global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Tag.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Tag> tags_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Tag>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.LocationTag> Tags {
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Tag> Tags {
       get { return tags_; }
     }
 
@@ -2106,16 +2106,16 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class LocationTag : pb::IMessage<LocationTag>
+  public sealed partial class Tag : pb::IMessage<Tag>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<LocationTag> _parser = new pb::MessageParser<LocationTag>(() => new LocationTag());
+    private static readonly pb::MessageParser<Tag> _parser = new pb::MessageParser<Tag>(() => new Tag());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<LocationTag> Parser { get { return _parser; } }
+    public static pb::MessageParser<Tag> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2131,7 +2131,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public LocationTag() {
+    public Tag() {
       OnConstruction();
     }
 
@@ -2139,7 +2139,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public LocationTag(LocationTag other) : this() {
+    public Tag(Tag other) : this() {
       id_ = other.id_;
       name_ = other.name_;
       description_ = other.description_;
@@ -2149,8 +2149,8 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public LocationTag Clone() {
-      return new LocationTag(this);
+    public Tag Clone() {
+      return new Tag(this);
     }
 
     /// <summary>Field number for the "id" field.</summary>
@@ -2204,12 +2204,12 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as LocationTag);
+      return Equals(other as Tag);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(LocationTag other) {
+    public bool Equals(Tag other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -2321,7 +2321,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(LocationTag other) {
+    public void MergeFrom(Tag other) {
       if (other == null) {
         return;
       }

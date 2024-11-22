@@ -24,9 +24,9 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationTagNameLength);
-        builder.Property(item => item.Description).HasMaxLength(Constants.MaxLocationTagDescriptionLength);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxLocationTagTypeLength);
+        builder.Property(item => item.Name).HasMaxLength(Constants.MaxTagNameLength);
+        builder.Property(item => item.Description).HasMaxLength(Constants.MaxTagDescriptionLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxTagTypeLength);
 
         builder
             .HasOne(item => item.Location)

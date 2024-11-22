@@ -3,34 +3,32 @@ using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Booking.Shared.Database.Entities;
+namespace Organization.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class LocationTag : ReplicatedEntityBaseWithDeleted
+public class Tag : EntityBaseWithDeleted
 {
-    public string? Name { get; set; }
-    public string? Type { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string Type { get; set; }
 
-    public virtual Location? Location { get; set; }
-    public virtual ICollection<Desk> TaggedDesks { get; set; } = [];
-    public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
+    public virtual Organization Organization { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class LocationTagConfiguration : IEntityTypeConfiguration<LocationTag>
+public class TagConfiguration : IEntityTypeConfiguration<Tag>
 {
-    public void Configure(EntityTypeBuilder<LocationTag> builder)
+    public void Configure(EntityTypeBuilder<Tag> builder)
     {
-        builder.ConfigureReplicatedEntityBaseWithDeleted();
+        builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxTagNameLength);
+        builder.Property(item => item.Description).HasMaxLength(Constants.MaxTagDescriptionLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxTagTypeLength);
 
         builder
-            .HasOne(item => item.Location)
+            .HasOne(item => item.Organization)
             .WithMany(item => item.Tags);
-
-        builder.HasIndex(item => item.Name);
     }
 }

@@ -42,7 +42,7 @@ message Location {
   string organizationId = 6;
   string timezone = 7;
   repeated Desk desks = 8;
-  repeated LocationTag tags = 9;
+  repeated Tag tags = 9;
 }
 
 enum MembershipType {
@@ -65,7 +65,7 @@ message Desk {
   bool requireBookingApproval = 5;
 }
 
-message LocationTag {
+message Tag {
   string id = 1;
   string name = 2;
   string description = 3;

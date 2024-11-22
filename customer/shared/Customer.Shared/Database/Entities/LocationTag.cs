@@ -24,8 +24,8 @@ public class LocationTagConfiguration : IEntityTypeConfiguration<LocationTag>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationTagNameLength);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxLocationTagTypeLength);
+        builder.Property(item => item.Name).HasMaxLength(Constants.MaxTagNameLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxTagTypeLength);
 
         builder
             .HasOne(item => item.Location)

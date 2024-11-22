@@ -37,10 +37,11 @@ public static class Constants
     public const int MaxOrganizationIndustrySubCategoryNameLength = 100;
 
     public const int MaxLocationNameLength = 200;
-    public const int MaxLocationTagNameLength = 100;
-    public const int MaxLocationTagDescriptionLength = 1000;
-    public const int MaxLocationTagTypeLength = 50;
     public const int MaxDeskNameLength = 200;
+
+    public const int MaxTagNameLength = 100;
+    public const int MaxTagDescriptionLength = 1000;
+    public const int MaxTagTypeLength = 50;
 
     public const int MaxFormattedAddressLength = 1000;
     public const int MaxAddressLineLength = 200;

@@ -36,42 +36,45 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
             "dGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uQWZ0ZXJTdGF0ZRgCIAEoCzIqLm9y",
             "Z2FuaXphdGlvbi5JbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uSAASNAoS",
             "b2ZmZXJpbmdBZnRlclN0YXRlGAMgASgLMhYub3JnYW5pemF0aW9uLk9mZmVy",
-            "aW5nSABCCQoHcGF5bG9hZCLxAQoMT3JnYW5pemF0aW9uEgoKAmlkGAEgASgJ",
+            "aW5nSABCCQoHcGF5bG9hZCKSAgoMT3JnYW5pemF0aW9uEgoKAmlkGAEgASgJ",
             "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
             "bXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEoCRIPCgdsb2dvVXJsGAUg",
             "ASgJEg8KB3dlYnNpdGUYBiABKAkSJQoHbWVtYmVycxgHIAMoCzIULm9yZ2Fu",
             "aXphdGlvbi5NZW1iZXISKAoIT2ZmZXJpbmcYCCABKAsyFi5vcmdhbml6YXRp",
-            "b24uT2ZmZXJpbmcSFgoOYXp1cmVUZW5hbnRJZHMYCSADKAkiXgoGTWVtYmVy",
-            "EgoKAmlkGAEgASgJEhIKCmN1c3RvbWVySWQYAiABKAkSNAoObWVtYmVyc2hp",
-            "cFR5cGUYAyABKA4yHC5vcmdhbml6YXRpb24uTWVtYmVyc2hpcFR5cGUi0QEK",
-            "CE9mZmVyaW5nEgoKAmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoFc3RhcnQY",
-            "AyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEo",
-            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1JlbmV3GAUg",
-            "ASgIEhEKCXVuaXRQcmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21lcklkcxgH",
-            "IAMoCRIWCg5vcmdhbml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlvbhIKCgJp",
-            "ZBgBIAEoCSKZAQocSW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbhIKCgJp",
-            "ZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYu",
-            "VGltZXN0YW1wEhYKDm9yZ2FuaXphdGlvbklkGAMgASgJEhMKC2ludml0ZWRC",
-            "eUlkGAQgASgJEhEKCWludml0ZWVJZBgFIAEoCSqtAQoEVHlwZRIYChRPcmdh",
-            "bml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQARIo",
-            "CiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhInCiNJ",
-            "bnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVsZXRlZBADEh8KG09yZ2Fu",
-            "aXphdGlvbk9mZmVyaW5nVXBkYXRlZBAEKmQKDk1lbWJlcnNoaXBUeXBlEhcK",
-            "E01lbWJlcnNoaXBUeXBlT3duZXIQABIfChtNZW1iZXJzaGlwVHlwZUFkbWlu",
-            "aXN0cmF0b3IQARIYChRNZW1iZXJzaGlwVHlwZU1lbWJlchACQjuqAjhBcGku",
-            "U2hhcmVkLkNsaWVudHMuRXZlbnRzLlVuaXR5SHViLk9yZ2FuaXphdGlvbi5W",
-            "MS5WYWx1ZWIGcHJvdG8z"));
+            "b24uT2ZmZXJpbmcSFgoOYXp1cmVUZW5hbnRJZHMYCSADKAkSHwoEdGFncxgK",
+            "IAMoCzIRLm9yZ2FuaXphdGlvbi5UYWciXgoGTWVtYmVyEgoKAmlkGAEgASgJ",
+            "EhIKCmN1c3RvbWVySWQYAiABKAkSNAoObWVtYmVyc2hpcFR5cGUYAyABKA4y",
+            "HC5vcmdhbml6YXRpb24uTWVtYmVyc2hpcFR5cGUi0QEKCE9mZmVyaW5nEgoK",
+            "AmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoFc3RhcnQYAyABKAsyGi5nb29n",
+            "bGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEoCzIaLmdvb2dsZS5w",
+            "cm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1JlbmV3GAUgASgIEhEKCXVuaXRQ",
+            "cmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21lcklkcxgHIAMoCRIWCg5vcmdh",
+            "bml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlvbhIKCgJpZBgBIAEoCSKZAQoc",
+            "SW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbhIKCgJpZBgBIAEoCRItCglk",
+            "ZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhYK",
+            "Dm9yZ2FuaXphdGlvbklkGAMgASgJEhMKC2ludml0ZWRCeUlkGAQgASgJEhEK",
+            "CWludml0ZWVJZBgFIAEoCSJFCgNUYWcSCgoCaWQYASABKAkSDAoEbmFtZRgC",
+            "IAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIPCgd0YWdUeXBlGAQgASgJKq0B",
+            "CgRUeXBlEhgKFE9yZ2FuaXphdGlvblVwc2VydGVkEAASFwoTT3JnYW5pemF0",
+            "aW9uRGVsZXRlZBABEigKJEludml0YXRpb25Ub0pvaW5Pcmdhbml6YXRpb25V",
+            "cHNlcnRlZBACEicKI0ludml0YXRpb25Ub0pvaW5Pcmdhbml6YXRpb25EZWxl",
+            "dGVkEAMSHwobT3JnYW5pemF0aW9uT2ZmZXJpbmdVcGRhdGVkEAQqZAoOTWVt",
+            "YmVyc2hpcFR5cGUSFwoTTWVtYmVyc2hpcFR5cGVPd25lchAAEh8KG01lbWJl",
+            "cnNoaXBUeXBlQWRtaW5pc3RyYXRvchABEhgKFE1lbWJlcnNoaXBUeXBlTWVt",
+            "YmVyEAJCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuVW5pdHlIdWIu",
+            "T3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Data.Parser, new[]{ "OrganizationAfterState", "InvitationToJoinOrganizationAfterState", "OfferingAfterState" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Member), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Member.Parser, new[]{ "Id", "CustomerId", "MembershipType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.InvitationToJoinOrganization), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.InvitationToJoinOrganization.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "InvitedById", "InviteeId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.InvitationToJoinOrganization), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.InvitationToJoinOrganization.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "InvitedById", "InviteeId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Tag), global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "TagType" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1131,6 +1134,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       members_ = other.members_.Clone();
       offering_ = other.offering_ != null ? other.offering_.Clone() : null;
       azureTenantIds_ = other.azureTenantIds_.Clone();
+      tags_ = other.tags_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1246,6 +1250,17 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       get { return azureTenantIds_; }
     }
 
+    /// <summary>Field number for the "tags" field.</summary>
+    public const int TagsFieldNumber = 10;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Tag> _repeated_tags_codec
+        = pb::FieldCodec.ForMessage(82, global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Tag.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Tag> tags_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Tag>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Tag> Tags {
+      get { return tags_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1270,6 +1285,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       if(!members_.Equals(other.members_)) return false;
       if (!object.Equals(Offering, other.Offering)) return false;
       if(!azureTenantIds_.Equals(other.azureTenantIds_)) return false;
+      if(!tags_.Equals(other.tags_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1286,6 +1302,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
       hash ^= members_.GetHashCode();
       if (offering_ != null) hash ^= Offering.GetHashCode();
       hash ^= azureTenantIds_.GetHashCode();
+      hash ^= tags_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1334,6 +1351,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
         output.WriteMessage(Offering);
       }
       azureTenantIds_.WriteTo(output, _repeated_azureTenantIds_codec);
+      tags_.WriteTo(output, _repeated_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1374,6 +1392,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
         output.WriteMessage(Offering);
       }
       azureTenantIds_.WriteTo(ref output, _repeated_azureTenantIds_codec);
+      tags_.WriteTo(ref output, _repeated_tags_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1407,6 +1426,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Offering);
       }
       size += azureTenantIds_.CalculateSize(_repeated_azureTenantIds_codec);
+      size += tags_.CalculateSize(_repeated_tags_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1448,6 +1468,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
         Offering.MergeFrom(other.Offering);
       }
       azureTenantIds_.Add(other.azureTenantIds_);
+      tags_.Add(other.tags_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1509,6 +1530,10 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
             azureTenantIds_.AddEntriesFrom(input, _repeated_azureTenantIds_codec);
             break;
           }
+          case 82: {
+            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+            break;
+          }
         }
       }
     #endif
@@ -1568,6 +1593,10 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
           }
           case 74: {
             azureTenantIds_.AddEntriesFrom(ref input, _repeated_azureTenantIds_codec);
+            break;
+          }
+          case 82: {
+            tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
             break;
           }
         }
@@ -2857,6 +2886,315 @@ namespace Api.Shared.Clients.Events.UnityHub.Organization.V1.Value {
           }
           case 42: {
             InviteeId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class Tag : pb::IMessage<Tag>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<Tag> _parser = new pb::MessageParser<Tag>(() => new Tag());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<Tag> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[8]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Tag() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Tag(Tag other) : this() {
+      id_ = other.id_;
+      name_ = other.name_;
+      description_ = other.description_;
+      tagType_ = other.tagType_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Tag Clone() {
+      return new Tag(this);
+    }
+
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private string id_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Id {
+      get { return id_; }
+      set {
+        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "name" field.</summary>
+    public const int NameFieldNumber = 2;
+    private string name_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Name {
+      get { return name_; }
+      set {
+        name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "description" field.</summary>
+    public const int DescriptionFieldNumber = 3;
+    private string description_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Description {
+      get { return description_; }
+      set {
+        description_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "tagType" field.</summary>
+    public const int TagTypeFieldNumber = 4;
+    private string tagType_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string TagType {
+      get { return tagType_; }
+      set {
+        tagType_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as Tag);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(Tag other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Id != other.Id) return false;
+      if (Name != other.Name) return false;
+      if (Description != other.Description) return false;
+      if (TagType != other.TagType) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
+      if (Name.Length != 0) hash ^= Name.GetHashCode();
+      if (Description.Length != 0) hash ^= Description.GetHashCode();
+      if (TagType.Length != 0) hash ^= TagType.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (Name.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Name);
+      }
+      if (Description.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Description);
+      }
+      if (TagType.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(TagType);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (Name.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Name);
+      }
+      if (Description.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Description);
+      }
+      if (TagType.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(TagType);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
+      }
+      if (Name.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
+      }
+      if (Description.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Description);
+      }
+      if (TagType.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(TagType);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(Tag other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Id.Length != 0) {
+        Id = other.Id;
+      }
+      if (other.Name.Length != 0) {
+        Name = other.Name;
+      }
+      if (other.Description.Length != 0) {
+        Description = other.Description;
+      }
+      if (other.TagType.Length != 0) {
+        TagType = other.TagType;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            Name = input.ReadString();
+            break;
+          }
+          case 26: {
+            Description = input.ReadString();
+            break;
+          }
+          case 34: {
+            TagType = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            Name = input.ReadString();
+            break;
+          }
+          case 26: {
+            Description = input.ReadString();
+            break;
+          }
+          case 34: {
+            TagType = input.ReadString();
             break;
           }
         }
