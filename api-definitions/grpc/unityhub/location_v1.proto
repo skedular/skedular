@@ -162,6 +162,8 @@ message LocationOrderInput {
 
 enum LocationOrderField {
     Name = 0;
+    About = 1;
+    Timezone = 2;
 }
 
 message Tag {

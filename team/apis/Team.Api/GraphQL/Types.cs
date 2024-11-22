@@ -220,8 +220,7 @@ public class TeamMemberWhereInput
 public enum TeamOrderField
 {
     Name,
-    About,
-    Website
+    About
 }
 
 [GraphQLName("TeamOrderInput")]

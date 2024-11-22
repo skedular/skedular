@@ -105,6 +105,9 @@ internal static class TeamExtensions
             TeamOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Name)
                 : originalQuery.OrderByDescending(x => x.Name),
+            TeamOrderField.About => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.About)
+                : originalQuery.OrderByDescending(x => x.About),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch

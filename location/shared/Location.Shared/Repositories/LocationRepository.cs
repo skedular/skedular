@@ -99,6 +99,12 @@ internal static class LocationExtensions
             LocationOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Name)
                 : originalQuery.OrderByDescending(x => x.Name),
+            LocationOrderField.About => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.About)
+                : originalQuery.OrderByDescending(x => x.About),
+            LocationOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Timezone)
+                : originalQuery.OrderByDescending(x => x.Timezone),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch

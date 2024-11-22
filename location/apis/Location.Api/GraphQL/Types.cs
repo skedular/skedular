@@ -354,7 +354,9 @@ public class LocationMemberWhereInput
 
 public enum LocationOrderField
 {
-    Name
+    Name,
+    About,
+    Timezone
 }
 
 [GraphQLName("LocationOrderInput")]

@@ -80,8 +80,8 @@ public class TeamQuery
                             : OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            TeamOrderField.Name =>
-                                Shared.Models.TeamOrderField.Name,
+                            TeamOrderField.Name => Shared.Models.TeamOrderField.Name,
+                            TeamOrderField.About => Shared.Models.TeamOrderField.About,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

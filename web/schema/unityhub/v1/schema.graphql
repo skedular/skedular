@@ -794,6 +794,8 @@ enum LocationMemberOrderField {
 }
 enum LocationOrderField {
   Name
+  About
+  Timezone
 }
 enum LocationTagOrderField {
   Name
@@ -839,7 +841,6 @@ enum TeamMemberOrderField {
 enum TeamOrderField {
   Name
   About
-  Website
 }
 input SetOrganizationBillingInfoInput {
   clientMutationId: String

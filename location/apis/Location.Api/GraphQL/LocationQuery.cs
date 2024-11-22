@@ -83,8 +83,9 @@ public class LocationQuery
                             : OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            LocationOrderField.Name =>
-                                Shared.Models.LocationOrderField.Name,
+                            LocationOrderField.Name => Shared.Models.LocationOrderField.Name,
+                            LocationOrderField.About => Shared.Models.LocationOrderField.About,
+                            LocationOrderField.Timezone => Shared.Models.LocationOrderField.Timezone,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

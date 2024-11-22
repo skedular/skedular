@@ -91,6 +91,7 @@ message TeamOrderInput {
 
 enum TeamOrderField {
     Name = 0;
+    About = 1;
 }
 
 message GetPermissionsInput {

@@ -106,6 +106,10 @@ public class LocationGrpcService(
                 {
                     global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationOrderField.Name => LocationOrderField
                         .Name,
+                    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationOrderField.About => LocationOrderField
+                        .About,
+                    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationOrderField.Timezone => LocationOrderField
+                        .Timezone,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 

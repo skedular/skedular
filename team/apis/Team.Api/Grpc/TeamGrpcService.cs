@@ -82,14 +82,13 @@ public class TeamGrpcService(
             new TeamSearchCriteria(request.Where.OrganizationId, request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
-                var direction = item.Direction ==
-                                OrderDirection.Ascending
+                var direction = item.Direction == OrderDirection.Ascending
                     ? Enterprise.Shared.Pagination.OrderDirection.Ascending
                     : Enterprise.Shared.Pagination.OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    TeamOrderField.Name => Shared.Models.TeamOrderField
-                        .Name,
+                    TeamOrderField.Name => Shared.Models.TeamOrderField.Name,
+                    TeamOrderField.About => Shared.Models.TeamOrderField.About,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
