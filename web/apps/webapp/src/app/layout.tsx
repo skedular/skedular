@@ -15,10 +15,13 @@ import {
 } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import { useContext } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+const inter = Inter({ subsets: ['latin'] });
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const paletteMode = useContext(PaletteModeContext);
@@ -27,16 +30,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <GlobalReloadIdProvider>
       <SelectedOrganizationProvider>
         <BreadcrumpsProvider>
-          <AppRouterCacheProvider>
-            <ThemeProvider mode={paletteMode}>
-              <CssBaseline />
-              <DatePickerLocalizationProvider>
-                <NextAuthProvider>
-                  <RelayProvider>{children}</RelayProvider>
-                </NextAuthProvider>
-              </DatePickerLocalizationProvider>
-            </ThemeProvider>
-          </AppRouterCacheProvider>
+          <ThemeProvider mode={paletteMode}>
+            <CssBaseline />
+            <DatePickerLocalizationProvider>
+              <NextAuthProvider>
+                <RelayProvider>{children}</RelayProvider>
+              </NextAuthProvider>
+            </DatePickerLocalizationProvider>
+          </ThemeProvider>
         </BreadcrumpsProvider>
       </SelectedOrganizationProvider>
     </GlobalReloadIdProvider>
@@ -59,10 +60,12 @@ const ThemedRootLayout = ({ children }: Readonly<{ children: React.ReactNode }>)
         defer
       />
     )}
-    <body>
-      <PaletteModeProvider>
-        <RootLayout>{children}</RootLayout>
-      </PaletteModeProvider>
+    <body className={inter.className}>
+      <AppRouterCacheProvider>
+        <PaletteModeProvider>
+          <RootLayout>{children}</RootLayout>
+        </PaletteModeProvider>
+      </AppRouterCacheProvider>
       <Analytics />
       <SpeedInsights />
       <MuiXLicense />
