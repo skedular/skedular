@@ -1,3 +1,4 @@
+using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
@@ -19,12 +20,6 @@ public class AddOrganizationPaymentMethodIntentResponse
     [GraphQLName("publishedKeys")] public string PublishedKeys { get; set; }
 
     [GraphQLName("clientSecret")] public string ClientSecret { get; set; }
-}
-
-[GraphQLName("Node")]
-public interface Node
-{
-    [GraphQLName("id")] [ID] public string Id { get; set; }
 }
 
 [GraphQLName("OrganizationPaymentMethod")]
@@ -63,16 +58,4 @@ public class RemoveOrganizationPaymentMethodInput
 public class RemoveOrganizationPaymentMethodResponse
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-}
-
-[GraphQLName("Version")]
-public class Version
-{
-    [GraphQLName("major")] public int Major { get; set; }
-
-    [GraphQLName("minor")] public int Minor { get; set; }
-
-    [GraphQLName("build")] public int Build { get; set; }
-
-    [GraphQLName("revision")] public int Revision { get; set; }
 }

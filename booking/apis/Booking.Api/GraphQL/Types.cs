@@ -1,3 +1,5 @@
+using Enterprise.Shared.GraphQL.Types;
+using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
@@ -28,14 +30,7 @@ public class AddBookingInput
 }
 
 [GraphQLName("BookingConnection")]
-public class BookingConnection
-{
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; }
-
-    [GraphQLName("edges")] public BookingEdge[] Edges { get; set; }
-
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
-}
+public class BookingConnection : Connection<BookingEdge>;
 
 [GraphQLName("BookingCustomerDetails")]
 public class BookingCustomerDetails
@@ -103,12 +98,7 @@ public class BookingDetails : Node
 }
 
 [GraphQLName("BookingEdge")]
-public class BookingEdge
-{
-    [GraphQLName("node")] public BookingDetails Node { get; set; }
-
-    [GraphQLName("cursor")] public string Cursor { get; set; }
-}
+public class BookingEdge : Edge<BookingDetails>;
 
 [GraphQLName("BookingLocationDetails")]
 public class BookingLocationDetails
@@ -204,10 +194,12 @@ public class BookingWhereInput
     [GraphQLName("teamIds")] public string[]? TeamIds { get; set; }
 
     [GraphQLName("includeMineOnly")] public bool? IncludeMineOnly { get; set; }
-    
-    [GraphQLName("includeFutureBookingsOnly")] public bool? IncludeFutureBookingsOnly { get; set; }
-    
-    [GraphQLName("combineOrganizationsLocationsTeams")] public bool? CombineOrganizationsLocationsTeams { get; set; }
+
+    [GraphQLName("includeFutureBookingsOnly")]
+    public bool? IncludeFutureBookingsOnly { get; set; }
+
+    [GraphQLName("combineOrganizationsLocationsTeams")]
+    public bool? CombineOrganizationsLocationsTeams { get; set; }
 }
 
 [GraphQLName("DeleteBookingInput")]
@@ -236,18 +228,6 @@ public class LocationBookingPermissions
     public bool CanDeleteBookingOnBehalf { get; set; }
 }
 
-[GraphQLName("Node")]
-public interface Node
-{
-    [GraphQLName("id")] [ID] public string Id { get; set; }
-}
-
-public enum OrderDirection
-{
-    Ascending,
-    Descending
-}
-
 [GraphQLName("OrganizationBookingPermissions")]
 public class OrganizationBookingPermissions
 {
@@ -264,18 +244,6 @@ public class OrganizationBookingPermissions
 
     [GraphQLName("canDeleteBookingOnBehalf")]
     public bool CanDeleteBookingOnBehalf { get; set; }
-}
-
-[GraphQLName("PageInfo")]
-public class PageInfo
-{
-    [GraphQLName("hasNextPage")] public bool HasNextPage { get; set; }
-
-    [GraphQLName("hasPreviousPage")] public bool HasPreviousPage { get; set; }
-
-    [GraphQLName("startCursor")] public string? StartCursor { get; set; }
-
-    [GraphQLName("endCursor")] public string? EndCursor { get; set; }
 }
 
 [GraphQLName("TeamBookingPermissions")]
@@ -318,16 +286,4 @@ public class UpdateBookingInput
     [GraphQLName("deskIds")] public string[] DeskIds { get; set; }
 
     [GraphQLName("teamId")] public string? TeamId { get; set; }
-}
-
-[GraphQLName("Version")]
-public class Version
-{
-    [GraphQLName("major")] public int Major { get; set; }
-
-    [GraphQLName("minor")] public int Minor { get; set; }
-
-    [GraphQLName("build")] public int Build { get; set; }
-
-    [GraphQLName("revision")] public int Revision { get; set; }
 }

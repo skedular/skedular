@@ -1,3 +1,5 @@
+using Enterprise.Shared.GraphQL.Types;
+using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
@@ -85,30 +87,6 @@ public class InviteCustomersToJoinTeamPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("Node")]
-public interface Node
-{
-    [GraphQLName("id")] [ID] public string Id { get; set; }
-}
-
-public enum OrderDirection
-{
-    Ascending,
-    Descending
-}
-
-[GraphQLName("PageInfo")]
-public class PageInfo
-{
-    [GraphQLName("hasNextPage")] public bool HasNextPage { get; set; }
-
-    [GraphQLName("hasPreviousPage")] public bool HasPreviousPage { get; set; }
-
-    [GraphQLName("startCursor")] public string? StartCursor { get; set; }
-
-    [GraphQLName("endCursor")] public string? EndCursor { get; set; }
-}
-
 [GraphQLName("RejectInvitationToJoinTeamInput")]
 public class RejectInvitationToJoinTeamInput
 {
@@ -124,14 +102,7 @@ public class RejectInvitationToJoinTeamPayload
 }
 
 [GraphQLName("TeamConnection")]
-public class TeamConnection
-{
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; }
-
-    [GraphQLName("edges")] public TeamEdge[] Edges { get; set; }
-
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
-}
+public class TeamConnection : Connection<TeamEdge>;
 
 [GraphQLName("TeamCustomerDetails")]
 public class TeamCustomerDetails
@@ -186,22 +157,10 @@ public class TeamDetails : Node
 }
 
 [GraphQLName("TeamEdge")]
-public class TeamEdge
-{
-    [GraphQLName("node")] public TeamDetails Node { get; set; }
-
-    [GraphQLName("cursor")] public string Cursor { get; set; }
-}
+public class TeamEdge : Edge<TeamDetails>;
 
 [GraphQLName("TeamMemberConnection")]
-public class TeamMemberConnection
-{
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; }
-
-    [GraphQLName("edges")] public TeamMemberEdge[] Edges { get; set; }
-
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
-}
+public class TeamMemberConnection : Connection<TeamMemberEdge>;
 
 [GraphQLName("TeamMemberDetails")]
 public class TeamMemberDetails : Node
@@ -224,12 +183,7 @@ public class TeamMemberDetailsPayload
 }
 
 [GraphQLName("TeamMemberEdge")]
-public class TeamMemberEdge
-{
-    [GraphQLName("node")] public TeamMemberDetails Node { get; set; }
-
-    [GraphQLName("cursor")] public string Cursor { get; set; }
-}
+public class TeamMemberEdge : Edge<TeamMemberDetails>;
 
 public enum TeamMemberMembershipType
 {
@@ -330,16 +284,4 @@ public class UpdateTeamInput
     [GraphQLName("timezone")] public string? Timezone { get; set; }
 
     [GraphQLName("organizationMemberIds")] public string[] OrganizationMemberIds { get; set; }
-}
-
-[GraphQLName("Version")]
-public class Version
-{
-    [GraphQLName("major")] public int Major { get; set; }
-
-    [GraphQLName("minor")] public int Minor { get; set; }
-
-    [GraphQLName("build")] public int Build { get; set; }
-
-    [GraphQLName("revision")] public int Revision { get; set; }
 }

@@ -3,10 +3,12 @@ using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
+using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Booking.Api.GraphQL;
 
@@ -91,8 +93,8 @@ public class BookingQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             BookingOrderField.From => Shared.Models.BookingOrderField.From,

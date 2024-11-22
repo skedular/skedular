@@ -1,10 +1,12 @@
 using System.Reflection;
+using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Shared.Models;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Organization.Api.GraphQL;
 
@@ -97,8 +99,8 @@ public class OrganizationQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             OrganizationOrderField.Name => Shared.Models.OrganizationOrderField.Name,
@@ -167,8 +169,8 @@ public class OrganizationQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             OrganizationMemberOrderField.MembershipType =>

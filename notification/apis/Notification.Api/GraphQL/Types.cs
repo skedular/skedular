@@ -1,13 +1,9 @@
+using Enterprise.Shared.GraphQL.Types;
+using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
 namespace Notification.Api.GraphQL;
-
-[GraphQLName("Node")]
-public interface Node
-{
-    [GraphQLName("id")] [ID] public string Id { get; set; }
-}
 
 [GraphQLName("Notification")]
 public class Notification : Node
@@ -32,14 +28,7 @@ public class Notification : Node
 }
 
 [GraphQLName("NotificationConnection")]
-public class NotificationConnection
-{
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; }
-
-    [GraphQLName("edges")] public NotificationEdge[] Edges { get; set; }
-
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
-}
+public class NotificationConnection : Connection<NotificationEdge>;
 
 [GraphQLName("NotificationCustomerDetails")]
 public class NotificationCustomerDetails
@@ -72,12 +61,7 @@ public class NotificationCustomerDetails
 }
 
 [GraphQLName("NotificationEdge")]
-public class NotificationEdge
-{
-    [GraphQLName("node")] public Notification Node { get; set; }
-
-    [GraphQLName("cursor")] public string Cursor { get; set; }
-}
+public class NotificationEdge : Edge<Notification>;
 
 [GraphQLName("NotificationLocationDetails")]
 public class NotificationLocationDetails
@@ -124,34 +108,4 @@ public class NotificationTeamDetails
     [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; }
 
     [GraphQLName("name")] public string Name { get; set; }
-}
-
-public enum OrderDirection
-{
-    Ascending,
-    Descending
-}
-
-[GraphQLName("PageInfo")]
-public class PageInfo
-{
-    [GraphQLName("hasNextPage")] public bool HasNextPage { get; set; }
-
-    [GraphQLName("hasPreviousPage")] public bool HasPreviousPage { get; set; }
-
-    [GraphQLName("startCursor")] public string? StartCursor { get; set; }
-
-    [GraphQLName("endCursor")] public string? EndCursor { get; set; }
-}
-
-[GraphQLName("Version")]
-public class Version
-{
-    [GraphQLName("major")] public int Major { get; set; }
-
-    [GraphQLName("minor")] public int Minor { get; set; }
-
-    [GraphQLName("build")] public int Build { get; set; }
-
-    [GraphQLName("revision")] public int Revision { get; set; }
 }

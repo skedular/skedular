@@ -1,10 +1,12 @@
 using System.Reflection;
+using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Shared.Models;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Team.Api.GraphQL;
 
@@ -74,8 +76,8 @@ public class TeamQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             TeamOrderField.Name =>
@@ -147,8 +149,8 @@ public class TeamQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             TeamMemberOrderField.MembershipType => Shared.Models.TeamMemberOrderField

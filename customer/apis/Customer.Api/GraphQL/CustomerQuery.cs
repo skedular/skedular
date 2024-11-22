@@ -2,9 +2,11 @@ using System.Reflection;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Shared.Models;
+using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Customer.Api.GraphQL;
 
@@ -54,8 +56,8 @@ public class CustomerQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             CustomerOrderField.Designation =>

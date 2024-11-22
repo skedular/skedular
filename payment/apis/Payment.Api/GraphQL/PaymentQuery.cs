@@ -3,6 +3,7 @@ using HotChocolate;
 using HotChocolate.Types;
 using Payment.Api.Mappers;
 using Payment.Api.Services;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Payment.Api.GraphQL;
 

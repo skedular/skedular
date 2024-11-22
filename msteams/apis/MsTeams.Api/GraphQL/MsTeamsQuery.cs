@@ -2,6 +2,7 @@ using System.Reflection;
 using HotChocolate;
 using HotChocolate.Types;
 using MsTeams.Api.Services;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace MsTeams.Api.GraphQL;
 

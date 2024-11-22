@@ -1,10 +1,12 @@
 using System.Reflection;
+using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
 using Notification.Api.Mappers;
 using Notification.Api.Services;
 using Notification.Shared.Models;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Notification.Api.GraphQL;
 
@@ -56,8 +58,8 @@ public class NotificationQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             NotificationOrderField.EventRaisedAt => Shared.Models.NotificationOrderField.EventRaisedAt,

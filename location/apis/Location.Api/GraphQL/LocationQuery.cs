@@ -1,10 +1,12 @@
 using System.Reflection;
+using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Shared.Models;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Location.Api.GraphQL;
 
@@ -77,8 +79,8 @@ public class LocationQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             LocationOrderField.Name =>
@@ -151,8 +153,8 @@ public class LocationQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             LocationMemberOrderField.MembershipType => Shared.Models.LocationMemberOrderField
@@ -232,8 +234,8 @@ public class LocationQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             LocationTagOrderField.Name => TagOrderField.Name,
@@ -285,8 +287,8 @@ public class LocationQuery
                     : orderBy.Select(item =>
                     {
                         var direction = item.Direction == OrderDirection.Ascending
-                            ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                            : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
                         var field = item.Field switch
                         {
                             DeskOrderField.Name => Shared.Models.DeskOrderField.Name,

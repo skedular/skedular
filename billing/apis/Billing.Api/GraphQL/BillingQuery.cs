@@ -3,6 +3,7 @@ using Billing.Api.Mappers;
 using Billing.Api.Services;
 using HotChocolate;
 using HotChocolate.Types;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Billing.Api.GraphQL;
 

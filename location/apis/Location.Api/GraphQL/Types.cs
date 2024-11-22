@@ -1,3 +1,5 @@
+using Enterprise.Shared.GraphQL.Types;
+using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
@@ -141,14 +143,7 @@ public class DeleteLocationTagInput
 }
 
 [GraphQLName("DeskConnection")]
-public class DeskConnection
-{
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; }
-
-    [GraphQLName("edges")] public DeskEdge[] Edges { get; set; }
-
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
-}
+public class DeskConnection : Connection<DeskEdge>;
 
 [GraphQLName("DeskDetails")]
 public class DeskDetails : Node
@@ -166,12 +161,7 @@ public class DeskDetails : Node
 }
 
 [GraphQLName("DeskEdge")]
-public class DeskEdge
-{
-    [GraphQLName("node")] public DeskDetails Node { get; set; }
-
-    [GraphQLName("cursor")] public string Cursor { get; set; }
-}
+public class DeskEdge : Edge<DeskDetails>;
 
 public enum DeskOrderField
 {
@@ -228,14 +218,7 @@ public class LocationAnalytics
 }
 
 [GraphQLName("LocationConnection")]
-public class LocationConnection
-{
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; }
-
-    [GraphQLName("edges")] public LocationEdge[] Edges { get; set; }
-
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
-}
+public class LocationConnection : Connection<LocationEdge>;
 
 [GraphQLName("LocationCustomerDetails")]
 public class LocationCustomerDetails
@@ -308,22 +291,10 @@ public class LocationDetails : Node
 }
 
 [GraphQLName("LocationEdge")]
-public class LocationEdge
-{
-    [GraphQLName("node")] public LocationDetails Node { get; set; }
-
-    [GraphQLName("cursor")] public string Cursor { get; set; }
-}
+public class LocationEdge : Edge<LocationDetails>;
 
 [GraphQLName("LocationMemberConnection")]
-public class LocationMemberConnection
-{
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; }
-
-    [GraphQLName("edges")] public LocationMemberEdge[] Edges { get; set; }
-
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
-}
+public class LocationMemberConnection : Connection<LocationMemberEdge>;
 
 [GraphQLName("LocationMemberDetails")]
 public class LocationMemberDetails : Node
@@ -344,12 +315,7 @@ public class LocationMemberDetailsPayload
 }
 
 [GraphQLName("LocationMemberEdge")]
-public class LocationMemberEdge
-{
-    [GraphQLName("node")] public LocationMemberDetails Node { get; set; }
-
-    [GraphQLName("cursor")] public string Cursor { get; set; }
-}
+public class LocationMemberEdge : Edge<LocationMemberDetails>;
 
 public enum LocationMemberMembershipType
 {
@@ -415,14 +381,7 @@ public class LocationPayload
 }
 
 [GraphQLName("LocationTagConnection")]
-public class LocationTagConnection
-{
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; }
-
-    [GraphQLName("edges")] public LocationTagEdge[] Edges { get; set; }
-
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
-}
+public class LocationTagConnection : Connection<LocationTagEdge>;
 
 [GraphQLName("LocationTagDetails")]
 public class LocationTagDetails : Node
@@ -437,12 +396,7 @@ public class LocationTagDetails : Node
 }
 
 [GraphQLName("LocationTagEdge")]
-public class LocationTagEdge
-{
-    [GraphQLName("node")] public LocationTagDetails Node { get; set; }
-
-    [GraphQLName("cursor")] public string Cursor { get; set; }
-}
+public class LocationTagEdge : Edge<LocationTagDetails>;
 
 public enum LocationTagOrderField
 {
@@ -483,30 +437,6 @@ public class LocationWhereInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-}
-
-[GraphQLName("Node")]
-public interface Node
-{
-    [GraphQLName("id")] [ID] public string Id { get; set; }
-}
-
-public enum OrderDirection
-{
-    Ascending,
-    Descending
-}
-
-[GraphQLName("PageInfo")]
-public class PageInfo
-{
-    [GraphQLName("hasNextPage")] public bool HasNextPage { get; set; }
-
-    [GraphQLName("hasPreviousPage")] public bool HasPreviousPage { get; set; }
-
-    [GraphQLName("startCursor")] public string? StartCursor { get; set; }
-
-    [GraphQLName("endCursor")] public string? EndCursor { get; set; }
 }
 
 [GraphQLName("RejectInvitationToJoinLocationInput")]
@@ -568,16 +498,4 @@ public class UpdateLocationTagInput
     [GraphQLName("description")] public string? Description { get; set; }
 
     [GraphQLName("tagType")] public string TagType { get; set; }
-}
-
-[GraphQLName("Version")]
-public class Version
-{
-    [GraphQLName("major")] public int Major { get; set; }
-
-    [GraphQLName("minor")] public int Minor { get; set; }
-
-    [GraphQLName("build")] public int Build { get; set; }
-
-    [GraphQLName("revision")] public int Revision { get; set; }
 }

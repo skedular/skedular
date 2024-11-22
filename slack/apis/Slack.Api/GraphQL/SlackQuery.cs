@@ -2,6 +2,7 @@ using System.Reflection;
 using HotChocolate;
 using HotChocolate.Types;
 using Slack.Api.Services;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Slack.Api.GraphQL;
 

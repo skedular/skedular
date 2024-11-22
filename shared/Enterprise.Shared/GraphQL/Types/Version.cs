@@ -1,6 +1,4 @@
-using HotChocolate;
-
-namespace MsTeams.Api.GraphQL;
+namespace Enterprise.Shared.GraphQL.Types;
 
 [GraphQLName("Version")]
 public class Version

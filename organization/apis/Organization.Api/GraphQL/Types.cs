@@ -1,3 +1,5 @@
+using Enterprise.Shared.GraphQL.Types;
+using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
@@ -103,18 +105,6 @@ public class InviteCustomersToJoinOrganizationPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("Node")]
-public interface Node
-{
-    [GraphQLName("id")] [ID] public string Id { get; set; }
-}
-
-public enum OrderDirection
-{
-    Ascending,
-    Descending
-}
-
 [GraphQLName("OrganizationAnalytics")]
 public class OrganizationAnalytics
 {
@@ -139,14 +129,7 @@ public class OrganizationAvailableOfferingDetails
 }
 
 [GraphQLName("OrganizationConnection")]
-public class OrganizationConnection
-{
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; } = new();
-
-    [GraphQLName("edges")] public OrganizationEdge[] Edges { get; set; } = [];
-
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
-}
+public class OrganizationConnection : Connection<OrganizationEdge>;
 
 [GraphQLName("OrganizationCustomerDetails")]
 public class OrganizationCustomerDetails
@@ -230,12 +213,7 @@ public class OrganizationDetails : Node
 }
 
 [GraphQLName("OrganizationEdge")]
-public class OrganizationEdge
-{
-    [GraphQLName("node")] public OrganizationDetails Node { get; set; }
-
-    [GraphQLName("cursor")] public string Cursor { get; set; } = string.Empty;
-}
+public class OrganizationEdge : Edge<OrganizationDetails>;
 
 [GraphQLName("OrganizationFeatureSetDetails")]
 public class OrganizationFeatureSetDetails
@@ -275,14 +253,7 @@ public class OrganizationMemberAttendancePercentage
 }
 
 [GraphQLName("OrganizationMemberConnection")]
-public class OrganizationMemberConnection
-{
-    [GraphQLName("pageInfo")] public PageInfo PageInfo { get; set; } = new();
-
-    [GraphQLName("edges")] public OrganizationMemberEdge[] Edges { get; set; } = [];
-
-    [GraphQLName("totalCount")] public int? TotalCount { get; set; }
-}
+public class OrganizationMemberConnection : Connection<OrganizationMemberEdge>;
 
 [GraphQLName("OrganizationMemberDetails")]
 public class OrganizationMemberDetails : Node
@@ -306,12 +277,7 @@ public class OrganizationMemberDetailsPayload
 }
 
 [GraphQLName("OrganizationMemberEdge")]
-public class OrganizationMemberEdge
-{
-    [GraphQLName("node")] public OrganizationMemberDetails Node { get; set; }
-
-    [GraphQLName("cursor")] public string Cursor { get; set; } = string.Empty;
-}
+public class OrganizationMemberEdge : Edge<OrganizationMemberDetails>;
 
 public enum OrganizationMemberMembershipType
 {
@@ -400,18 +366,6 @@ public class OrganizationWhereInput
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
 
-[GraphQLName("PageInfo")]
-public class PageInfo
-{
-    [GraphQLName("hasNextPage")] public bool HasNextPage { get; set; }
-
-    [GraphQLName("hasPreviousPage")] public bool HasPreviousPage { get; set; }
-
-    [GraphQLName("startCursor")] public string? StartCursor { get; set; }
-
-    [GraphQLName("endCursor")] public string? EndCursor { get; set; }
-}
-
 [GraphQLName("RejectInvitationToJoinOrganizationInput")]
 public class RejectInvitationToJoinOrganizationInput
 {
@@ -457,18 +411,6 @@ public class UpdateOrganizationOfferingInput
 public class UpdateOrganizationOfferingPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-}
-
-[GraphQLName("Version")]
-public class Version
-{
-    [GraphQLName("major")] public int Major { get; set; }
-
-    [GraphQLName("minor")] public int Minor { get; set; }
-
-    [GraphQLName("build")] public int Build { get; set; }
-
-    [GraphQLName("revision")] public int Revision { get; set; }
 }
 
 [GraphQLName("CompleteOrganizationMemberOnboardingInput")]
