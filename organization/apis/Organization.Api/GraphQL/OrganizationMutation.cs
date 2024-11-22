@@ -151,4 +151,38 @@ public class OrganizationMutation
             cancellationToken);
         return new OrganizationMemberPayload { ClientMutationId = input.ClientMutationId };
     }
+    
+    [UseServiceScope]
+    public async Task<OrganizationTagPayload?> AddOrganizationTagAsync(
+        AddOrganizationTagInput input,
+        [Service] ITagService tagService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
+    {
+        var tag = await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+    }
+
+    [UseServiceScope]
+    public async Task<OrganizationTagPayload?> UpdateOrganizationTagAsync(
+        UpdateOrganizationTagInput input,
+        [Service] ITagService tagService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
+    {
+        var tag = await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+    }
+
+    [UseServiceScope]
+    public async Task<OrganizationTagPayload?> DeleteOrganizationTagAsync(
+        DeleteOrganizationTagInput input,
+        [Service] ITagService tagService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
+    {
+        var tag = await tagService.DeleteAsync(input.Id, cancellationToken);
+        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+    }
+
 }

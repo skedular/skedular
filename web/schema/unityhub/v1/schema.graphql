@@ -116,6 +116,9 @@ type Mutation {
   rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): RejectInvitationToJoinOrganizationPayload
   cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): CancelInvitationToJoinOrganizationPayload
   completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload
+  addOrganizationTag(input: AddOrganizationTagInput!): OrganizationTagPayload
+  updateOrganizationTag(input: UpdateOrganizationTagInput!): OrganizationTagPayload
+  deleteOrganizationTag(input: DeleteOrganizationTagInput!): OrganizationTagPayload
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodResponse
   addTeam(input: AddTeamInput!): TeamPayload
@@ -579,6 +582,16 @@ type OrganizationOfferingDetails {
 type OrganizationPayload {
   clientMutationId: String
   organization: OrganizationDetails!
+}
+type OrganizationTagDetails {
+  name: String!
+  description: String
+  tagType: String!
+  id: ID!
+}
+type OrganizationTagPayload {
+  clientMutationId: String
+  organizationTag: OrganizationTagDetails!
 }
 type OrganizationTermsOfUse {
   terms: String!
@@ -1115,6 +1128,14 @@ input AddOrganizationInput {
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
 }
+input AddOrganizationTagInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  tagType: String!
+  organizationId: String!
+}
 input CancelInvitationToJoinOrganizationInput {
   clientMutationId: String
   id: String!
@@ -1133,6 +1154,10 @@ input CompleteOrganizationMemberOnboardingInput {
   organizationId: String!
 }
 input DeleteOrganizationInput {
+  clientMutationId: String
+  id: String!
+}
+input DeleteOrganizationTagInput {
   clientMutationId: String
   id: String!
 }
@@ -1172,6 +1197,13 @@ input UpdateOrganizationOfferingInput {
   clientMutationId: String
   id: String!
   offeringCode: String!
+}
+input UpdateOrganizationTagInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+  tagType: String!
 }
 input NotificationOrderInput {
   direction: OrderDirection!

@@ -102,6 +102,10 @@ public interface IMapper
 
     IEnumerable<Edge<Tag>> MapTo(IEnumerable<Edge<Shared.Database.Entities.Tag>> src,
         Shared.Models.Organization organization);
+
+    Tag MapTo(AddOrganizationTagInput src);
+    Tag MapTo(UpdateOrganizationTagInput src);
+    OrganizationTagDetails MapTo(Tag src);
 }
 
 public class Mapper : IMapper
@@ -504,6 +508,22 @@ public class Mapper : IMapper
         IEnumerable<Edge<Shared.Database.Entities.Tag>> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
+
+    public Tag MapTo(AddOrganizationTagInput src) =>
+        new()
+        {
+            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Name = src.Name,
+            Description = src.Description,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Type = src.TagType
+        };
+
+    public Tag MapTo(UpdateOrganizationTagInput src) =>
+        new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = src.TagType };
+
+    public OrganizationTagDetails MapTo(Tag src) =>
+        new() { Id = src.Id, Name = src.Name, Description = src.Description, TagType = src.Type };
 
     private IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
 
