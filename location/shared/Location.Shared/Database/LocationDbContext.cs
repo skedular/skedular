@@ -11,6 +11,7 @@ public class LocationDbContext(
     DbContextOptions<LocationDbContext> options,
     CustomDbContextOptions customDbContextOptions) : DbContextBase<LocationDbContext>(options, customDbContextOptions)
 {
+    public DbSet<Address> Address { get; set; }
     public DbSet<Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<DailyDeskCountRecording> DailyDeskCountRecording { get; set; }

@@ -42,6 +42,7 @@ public static class Constants
     public const int MaxLocationTagTypeLength = 50;
     public const int MaxDeskNameLength = 200;
 
+    public const int MaxFormattedAddressLength = 1000;
     public const int MaxAddressLineLength = 200;
     public const int MaxSuburbLength = 100;
     public const int MaxCityLength = 100;

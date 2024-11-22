@@ -6,6 +6,7 @@ namespace Location.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    IAddressRepository AddressRepository { get; }
     IBookingRepository BookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IDailyDeskCountRecordingRepository DailyDeskCountRecordingRepository { get; }
@@ -28,6 +29,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
+        AddressRepository = new AddressRepository(_dbContext, timeProvider);
         BookingRepository = new BookingRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         DailyDeskCountRecordingRepository = new DailyDeskCountRecordingRepository(_dbContext, timeProvider);
@@ -47,6 +49,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    public IAddressRepository AddressRepository { get; }
     public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IDailyDeskCountRecordingRepository DailyDeskCountRecordingRepository { get; }

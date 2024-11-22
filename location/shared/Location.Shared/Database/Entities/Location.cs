@@ -14,6 +14,10 @@ public class Location : EntityBaseWithDeleted
     public string? Timezone { get; set; }
     public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
 
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? AddressId { get; set; }
+    public virtual Address? Address { get; set; }
+
     public virtual Organization? Organization { get; set; }
     public virtual ICollection<Tag> Tags { get; set; } = [];
     public virtual ICollection<Desk> Desks { get; set; } = [];
@@ -33,6 +37,11 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationNameLength);
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
+
+        builder
+            .HasOne(item => item.Address)
+            .WithOne(item => item.Location)
+            .HasForeignKey<Location>(item => item.AddressId);
 
         builder
             .HasOne(item => item.Organization)
