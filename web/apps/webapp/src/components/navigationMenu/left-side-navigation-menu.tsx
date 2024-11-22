@@ -40,7 +40,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
   return (
     <List>
-      <ListItem disablePadding sx={{ justifyContent: 'center' }}>
+      <ListItem disablePadding sx={{ justifyContent: 'center', marginBottom: 3 }}>
         <Image src={logoUrl} width={width} height={height} alt="Skedular" />
       </ListItem>
 

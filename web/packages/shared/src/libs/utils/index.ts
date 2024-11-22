@@ -264,6 +264,20 @@ const toShortDateWithAdditionalDayInfo = (date: Dayjs): string => {
   return dateValue;
 };
 
+const toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo = (date: Dayjs): string => {
+  let dateValue = '';
+
+  if (isTodayDate(date)) {
+    dateValue = `Today, ${toShortDateWithDayAndMonthOnly(date)}`;
+  } else if (isTomorrowDate(date)) {
+    dateValue = `Tomorrow, ${toShortDateWithDayAndMonthOnly(date)}`;
+  } else {
+    dateValue = toShortDateWithDayAndMonthOnly(date);
+  }
+
+  return dateValue;
+};
+
 export {
   convertCalendarDayToStartOfDay,
   convertStringToLowercaseExceptFirstLetter,
@@ -298,5 +312,6 @@ export {
   toShortDateTimeInUtc,
   toShortDateWithAdditionalDayInfo,
   toShortDateWithDayAndMonthOnly,
+  toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo,
   toShortWeekDay,
 };

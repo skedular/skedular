@@ -21,7 +21,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { GlobalReloadIdContext } from '@repo/shared/libs/providers';
-import { endOfDay, getCustomerFullName, isTodayDate, isTomorrowDate, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
+import { endOfDay, getCustomerFullName, toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import type { JSX } from 'react';
@@ -354,15 +354,6 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
     ...Object.entries(groupedOtherBookingsByTeam).map(([teamId, bookings]) => getBookingsByTeamsComponents(teamId, bookings)),
   ];
 
-  let title = '';
-  if (isTodayDate(date)) {
-    title = `Today ${toShortDateWithDayAndMonthOnly(date)}`;
-  } else if (isTomorrowDate(date)) {
-    title = `Tomorrow ${toShortDateWithDayAndMonthOnly(date)}`;
-  } else {
-    title = toShortDateWithDayAndMonthOnly(date);
-  }
-
   const handleClose = () => {
     setBookingPopperAnchorEl(null);
     setBookingPopperLatestUniqueId('');
@@ -374,7 +365,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
         <CardHeader
           title={
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="body1">{title}</Typography>
+              <Typography variant="body1">{toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo(date)}</Typography>
             </Stack>
           }
           subheader={getMyBookingsComponents(myBookings)}

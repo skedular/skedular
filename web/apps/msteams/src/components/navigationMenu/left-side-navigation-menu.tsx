@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -5,7 +6,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
-import { memo } from 'react';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { memo, useContext } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useParams } from 'react-router-dom';
 import type { leftSideNavigationMenu_query$key } from './__generated__/leftSideNavigationMenu_query.graphql';
@@ -13,9 +15,10 @@ import type { leftSideNavigationMenu_query$key } from './__generated__/leftSideN
 type Props = {
   rootDataRelay: leftSideNavigationMenu_query$key;
   onReloadRequired: () => void;
+  maxWidth: number;
 };
 
-const LeftSideNavigationMenu = ({ rootDataRelay }: Props) => {
+const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
   const rootData = useFragment<leftSideNavigationMenu_query$key>(
     graphql`
       fragment leftSideNavigationMenu_query on Query {
@@ -27,6 +30,13 @@ const LeftSideNavigationMenu = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const paletteMode = useContext(PaletteModeContext);
+  const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
+  const originalWidth = 779;
+  const originalHeight = 163;
+  const percentage = ((maxWidth - 30) * 100) / originalWidth;
+  const width = (originalWidth * percentage) / 100;
+  const height = (originalHeight * percentage) / 100;
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -44,6 +54,10 @@ const LeftSideNavigationMenu = ({ rootDataRelay }: Props) => {
 
   return (
     <List>
+      <ListItem disablePadding sx={{ justifyContent: 'center', marginBottom: 3 }}>
+        <Box component="img" sx={{ width, height }} alt="Skedular" src={logoUrl} />
+      </ListItem>
+
       <ListItem disablePadding>
         <Link href={`/organizations/${finalOrganizationId}`}>
           <ListItemButton>
