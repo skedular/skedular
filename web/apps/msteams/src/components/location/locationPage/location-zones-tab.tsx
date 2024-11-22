@@ -8,7 +8,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import graphql from 'babel-plugin-relay/macro';
 import { NewZoneDialog, ZoneCard } from 'components/zone';
 import { nanoid } from 'nanoid';
@@ -259,7 +259,7 @@ const LocationZonesTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
       {
         locationId,
         locationExists: !!locationId,
-        zoneTagType: TAG_TYPE_LOCATION_ZONE,
+        zoneTagType: LOCATION_TAG_TYPE_LOCATION_ZONE,
         zoneSortingValues: [
           {
             direction: 'Ascending',

@@ -17,7 +17,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -258,7 +258,7 @@ const LocationZonesTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
       {
         locationId,
         locationExists: !!locationId,
-        zoneTagType: TAG_TYPE_LOCATION_ZONE,
+        zoneTagType: LOCATION_TAG_TYPE_LOCATION_ZONE,
         zoneSortingValues: [
           {
             direction: 'Ascending',

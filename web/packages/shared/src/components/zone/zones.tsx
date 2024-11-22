@@ -1,10 +1,10 @@
 import Grid from '@mui/material/Grid2';
 import { memo } from 'react';
-import type { ZoneType } from './zone';
+import type { ZoneDetails } from './zone';
 import Zone from './zone';
 
 type Props = {
-  zones: readonly ZoneType[];
+  zones: readonly ZoneDetails[];
   maxWidth?: number;
 };
 

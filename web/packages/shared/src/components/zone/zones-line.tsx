@@ -5,11 +5,11 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { memo, useState } from 'react';
 import { CollapseIcon, MoreItemsIcon, ZoneIcon } from '../icons';
-import type { ZoneType } from './zone';
+import type { ZoneDetails } from './zone';
 import Zone from './zone';
 
 type Props = {
-  zones: readonly ZoneType[];
+  zones: readonly ZoneDetails[];
   zoneTotalDisplayLimit?: number;
 };
 
@@ -34,7 +34,7 @@ const ZonesLine = ({ zones, zoneTotalDisplayLimit = preferredZonesTotalDisplayLi
       {zones.length === 0 && (
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <ZoneIcon />
-          <Typography>No zone</Typography>
+          <Typography>N/A</Typography>
         </Stack>
       )}
 

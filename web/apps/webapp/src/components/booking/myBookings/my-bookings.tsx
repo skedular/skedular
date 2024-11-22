@@ -14,7 +14,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { CalendarIcon, DeskIcon, LocationIcon, TeamIcon, ZoneIcon } from '@repo/shared/components/icons';
-import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { stringToColor, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
@@ -190,7 +190,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
   const rows: RowType[] = myBookings.map((myBooking) => {
     const zones = myBooking.desks
       .flatMap((desk) => desk.locationTags)
-      .filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE)
+      .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE)
       .reduce((acc: LocationTagDetails[], zone) => {
         if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
           acc.push(zone);
@@ -325,7 +325,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
             const desks = myBooking.desks.map((desk) => desk.name).join(', ');
             const zones = myBooking.desks
               .flatMap((desk) => desk.locationTags)
-              .filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE)
+              .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE)
               .reduce((acc: LocationTagDetails[], zone) => {
                 if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
                   acc.push(zone);

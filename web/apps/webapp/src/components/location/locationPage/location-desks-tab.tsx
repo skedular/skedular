@@ -20,7 +20,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
 import { endOfDay, startOfDay } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
@@ -371,7 +371,7 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
     loadQuery(
       {
         locationId,
-        zoneTagType: TAG_TYPE_LOCATION_ZONE,
+        zoneTagType: LOCATION_TAG_TYPE_LOCATION_ZONE,
         fromToGetBookings: from,
         toToGetBookings: to,
         deskSortingValues: [

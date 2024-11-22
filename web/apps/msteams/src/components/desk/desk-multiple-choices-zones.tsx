@@ -19,13 +19,10 @@ type ZoneDetails = {
 };
 
 const DeskMultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
-  const rootData = useFragment< deskMultipleChoicesZones_query$key>(
+  const rootData = useFragment<deskMultipleChoicesZones_query$key>(
     graphql`
-      fragment deskMultipleChoicesZones_query on Query{
-        locationTags(
-          where: { locationId: $locationId, tagType: $zoneTagType }
-          orderBy: $deskMultipleChoicesZonesSortingValues
-        ) {
+      fragment deskMultipleChoicesZones_query on Query {
+        locationTags(where: { locationId: $locationId, tagType: $zoneTagType }, orderBy: $deskMultipleChoicesZonesSortingValues) {
           __id
           totalCount
           edges {

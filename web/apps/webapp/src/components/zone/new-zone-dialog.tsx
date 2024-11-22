@@ -12,7 +12,7 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
@@ -68,7 +68,7 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
           id,
           locationId,
           name,
-          tagType: TAG_TYPE_LOCATION_ZONE,
+          tagType: LOCATION_TAG_TYPE_LOCATION_ZONE,
         },
       },
       onCompleted: (_, errors) => {

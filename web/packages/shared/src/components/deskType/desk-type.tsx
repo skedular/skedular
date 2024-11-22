@@ -3,20 +3,20 @@ import Tooltip from '@mui/material/Tooltip';
 import { memo } from 'react';
 import { stringToColor } from '../../libs/utils';
 
-export type ZoneDetails = {
+export type DeskTypeDetails = {
   id: string;
   name?: string | null | undefined;
 };
 
 type Props = {
-  zone: ZoneDetails;
+  deskType: DeskTypeDetails;
   maxWidth?: number;
 };
 
-const Zone = ({ zone, maxWidth }: Props) => (
-  <Tooltip title={zone.name}>
-    <Chip label={`#${zone.name}`} sx={{ maxWidth, bgcolor: stringToColor(zone.id) }} />
+const DeskType = ({ deskType, maxWidth }: Props) => (
+  <Tooltip title={deskType.name}>
+    <Chip label={`#${deskType.name}`} sx={{ maxWidth, bgcolor: stringToColor(deskType.id) }} />
   </Tooltip>
 );
 
-export default memo(Zone);
+export default memo(DeskType);

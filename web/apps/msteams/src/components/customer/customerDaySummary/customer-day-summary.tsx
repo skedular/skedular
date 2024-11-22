@@ -13,7 +13,7 @@ import { getBookingSummaryMessage } from '@repo/shared/components/booking';
 import { DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { GlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, isTodayDate, isTomorrowDate, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -228,7 +228,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth, 
       )}
 
       {booking.desks?.map(({ uniqueId, name, locationTags }) => {
-        const zones = locationTags.filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE);
+        const zones = locationTags.filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
 
         return (
           <Stack key={uniqueId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>

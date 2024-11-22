@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/zone';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { Autocomplete } from 'mui-rff';
@@ -221,7 +221,7 @@ const BookingDetailsSelector = ({
       uniqueId,
       name,
       zones: locationTags
-        .filter(({ tagType }) => tagType === TAG_TYPE_LOCATION_ZONE)
+        .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE)
         .map(({ uniqueId: id, name }) => ({
           id,
           name,
