@@ -250,6 +250,20 @@ const stringToColor = (string: string) => {
   return color;
 };
 
+const toShortDateWithAdditionalDayInfo = (date: Dayjs): string => {
+  let dateValue = '';
+
+  if (isTodayDate(date)) {
+    dateValue = `Today, ${toShortDate(date)}`;
+  } else if (isTomorrowDate(date)) {
+    dateValue = `Tomorrow, ${toShortDate(date)}`;
+  } else {
+    dateValue = toShortDate(date);
+  }
+
+  return dateValue;
+};
+
 export {
   convertCalendarDayToStartOfDay,
   convertStringToLowercaseExceptFirstLetter,
@@ -282,6 +296,7 @@ export {
   toLongDateTime,
   toShortDate,
   toShortDateTimeInUtc,
+  toShortDateWithAdditionalDayInfo,
   toShortDateWithDayAndMonthOnly,
   toShortWeekDay,
 };
