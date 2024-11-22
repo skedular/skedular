@@ -6,20 +6,18 @@ type Props = {
   required?: boolean;
 };
 
-const ZoneName = ({ name, required }: Props) => {
-  return (
-    <TextField
-      label="Name"
-      name={name}
-      required={required}
-      helperText="Add your zone name"
-      sx={{
-        minWidth: 300,
-        maxWidth: 300,
-        textAlign: 'center',
-      }}
-    />
-  );
-};
+const ZoneName = ({ name, required }: Props) => (
+  <TextField
+    label="Name"
+    name={name}
+    required={required}
+    helperText="Add your zone name"
+    sx={{
+      minWidth: 300,
+      maxWidth: 300,
+      textAlign: 'center',
+    }}
+  />
+);
 
 export default memo(ZoneName);

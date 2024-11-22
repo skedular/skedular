@@ -1,24 +1,19 @@
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { memo, useState } from 'react';
 import { CollapseIcon, MoreItemsIcon, ZoneIcon } from '../icons';
-
-export type Zone = {
-  id: string;
-  name?: string | null | undefined;
-};
+import type { ZoneType } from './zone';
+import Zone from './zone';
 
 type Props = {
-  zones: readonly Zone[];
+  zones: readonly ZoneType[];
   zoneTotalDisplayLimit?: number;
 };
 
 const preferredZonesTotalDisplayLimit = 2;
-const maxChipTextWidthToDisplay = 100;
 
 const ZonesLine = ({ zones, zoneTotalDisplayLimit = preferredZonesTotalDisplayLimit }: Props) => {
   const [showAll, setShowAll] = useState(false);
@@ -46,10 +41,8 @@ const ZonesLine = ({ zones, zoneTotalDisplayLimit = preferredZonesTotalDisplayLi
       {zones.length !== 0 && (
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <ZoneIcon />
-          {zonesToDisplay.map(({ id, name }) => (
-            <Tooltip key={id} title={name}>
-              <Chip label={name} sx={{ maxWidth: maxChipTextWidthToDisplay }} />
-            </Tooltip>
+          {zonesToDisplay.map((zone) => (
+            <Zone key={zone.id} zone={zone} maxWidth={100} />
           ))}
 
           {zones.length - limit > 0 && showAll && (
