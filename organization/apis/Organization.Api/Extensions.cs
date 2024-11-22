@@ -23,6 +23,7 @@ public static class Extensions
             .AddScoped<IOrganizationAnalyticsService, OrganizationAnalyticsService>()
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<IOrganizationInvitationService, OrganizationInvitationService>()
+            .AddScoped<ITagService, TagService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>

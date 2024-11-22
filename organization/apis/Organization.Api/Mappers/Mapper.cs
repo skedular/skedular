@@ -19,6 +19,7 @@ using OrganizationDailyBookingsTotal = Organization.Shared.Models.OrganizationDa
 using OrganizationMember = Organization.Shared.Models.OrganizationMember;
 using OrganizationMemberAttendancePercentage = Organization.Shared.Models.OrganizationMemberAttendancePercentage;
 using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
+using Tag = Organization.Shared.Models.Tag;
 using Team = Organization.Shared.Models.Team;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 
@@ -90,6 +91,17 @@ public interface IMapper
 
     OrganizationMemberEdge MapTo(Edge<OrganizationMember> src);
     MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src);
+
+    Tag MapTo(Shared.Database.Entities.Tag src);
+    Shared.Database.Entities.Tag MapTo(Tag src, Shared.Database.Entities.Organization organization);
+
+    Shared.Database.Entities.Tag MergeTo(
+        Tag src,
+        Shared.Database.Entities.Tag dest,
+        Shared.Database.Entities.Organization organization);
+
+    IEnumerable<Edge<Tag>> MapTo(IEnumerable<Edge<Shared.Database.Entities.Tag>> src,
+        Shared.Models.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -460,6 +472,39 @@ public class Mapper : IMapper
     public MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
+    public Tag MapTo(Shared.Database.Entities.Tag src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Description = src.Description,
+            Type = src.Type
+        };
+
+    public Shared.Database.Entities.Tag MapTo(Tag src, Shared.Database.Entities.Organization organization) =>
+        MergeTo(src, new Shared.Database.Entities.Tag(), organization);
+
+    public Shared.Database.Entities.Tag MergeTo(
+        Tag src,
+        Shared.Database.Entities.Tag dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.Name = src.Name;
+        dest.Description = src.Description;
+        dest.Type = src.Type;
+        dest.Organization = organization;
+        return dest;
+    }
+
+    public IEnumerable<Edge<Tag>> MapTo(
+        IEnumerable<Edge<Shared.Database.Entities.Tag>> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
     private IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
 
     private static global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer MapToGrpcResponse(
@@ -812,4 +857,11 @@ public class Mapper : IMapper
             PhotoUrl648 = src.PhotoUrl648,
             AzureTenant = azureTenant
         };
+
+    private Edge<Tag> MapTo(Edge<Shared.Database.Entities.Tag> src, Shared.Models.Organization organization)
+    {
+        var tag = MapTo(src.Node);
+        tag.Organization = organization;
+        return new Edge<Tag>(src.Cursor, tag);
+    }
 }

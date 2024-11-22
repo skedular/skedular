@@ -426,3 +426,92 @@ public class OrganizationMemberPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
+
+[GraphQLName("AddOrganizationTagInput")]
+public class AddOrganizationTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")] public string? Id { get; set; }
+
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+
+    [GraphQLName("description")] public string? Description { get; set; }
+
+    [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
+
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+}
+
+[GraphQLName("UpdateOrganizationTagInput")]
+public class UpdateOrganizationTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")] public required string Id { get; set; }
+
+    [GraphQLName("name")] public string Name { get; set; }= string.Empty;
+
+    [GraphQLName("description")] public string? Description { get; set; }
+
+    [GraphQLName("tagType")] public string TagType { get; set; }= string.Empty;
+}
+
+[GraphQLName("DeleteOrganizationTagInput")]
+public class DeleteOrganizationTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("OrganizationTagConnection")]
+public class OrganizationTagConnection : Connection<OrganizationTagEdge>;
+
+[GraphQLName("OrganizationTagDetails")]
+public class OrganizationTagDetails : Node
+{
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+
+    [GraphQLName("description")] public string? Description { get; set; }
+
+    [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
+
+    [GraphQLName("id")][ID] public required string Id { get; set; }
+}
+
+[GraphQLName("OrganizationTagEdge")]
+public class OrganizationTagEdge : Edge<OrganizationTagDetails>;
+
+public enum OrganizationTagOrderField
+{
+    Name,
+    Description,
+    TagType
+}
+
+[GraphQLName("OrganizationTagOrderInput")]
+public class OrganizationTagOrderInput
+{
+    [GraphQLName("direction")] public OrderDirection Direction { get; set; }
+
+    [GraphQLName("field")] public OrganizationTagOrderField Field { get; set; }
+}
+
+[GraphQLName("OrganizationTagPayload")]
+public class OrganizationTagPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("organizationTag")] public OrganizationTagDetails OrganizationTag { get; set; }
+}
+
+[GraphQLName("OrganizationTagWhereInput")]
+public class OrganizationTagWhereInput
+{
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+
+    [GraphQLName("tagType")] public string? TagType { get; set; }
+
+    [GraphQLName("nameContains")] public string? NameContains { get; set; }
+}

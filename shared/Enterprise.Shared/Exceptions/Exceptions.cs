@@ -12,7 +12,7 @@ public class OrganizationJoinInvitationNotFound() : Exception("Organization join
 
 public class LocationNotFound() : Exception("Location not found");
 
-public class LocationTagNotFound() : Exception("location tag not found");
+public class LocationTagNotFound() : Exception("Location tag not found");
 
 public class LocationMemberNotFound() : Exception("Location member not found");
 
@@ -53,3 +53,7 @@ public class DeskNotAvailable() : Exception("Desk not available");
 public class SlackWorkspaceNotFound() : Exception("Slack workspace not found");
 
 public class SlackWorkspaceMemberTypeNotSupported() : Exception("Slack workspace member type not supported");
+
+public class OrganizationTagNotFound() : Exception("Organization tag not found");
+
+public class OrganizationTagWithSameNameExist() : Exception("Organization tag with same name exist");

@@ -66,6 +66,12 @@ internal static class TagExtensions
             TagOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Name)
                 : originalQuery.OrderByDescending(x => x.Name),
+            TagOrderField.Description => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Description)
+                : originalQuery.OrderByDescending(x => x.Description),
+            TagOrderField.TagType => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Type)
+                : originalQuery.OrderByDescending(x => x.Type),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch

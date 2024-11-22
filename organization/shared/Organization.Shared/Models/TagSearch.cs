@@ -22,5 +22,7 @@ public record TagOrder(OrderDirection Direction, TagOrderField Field);
 
 public enum TagOrderField
 {
-    Name
+    Name,
+    Description,
+    TagType
 }
