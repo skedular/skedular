@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f229939b64906fd11eed4597c2d90bcd>>
+ * @generated SignedSource<<da13a1ae159aaaa2ff3fe56eb4d48edd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -160,6 +160,11 @@ v14 = [
 v15 = [
   {
     "fields": [
+      {
+        "kind": "Literal",
+        "name": "combineOrganizationsLocationsTeams",
+        "value": true
+      },
       {
         "kind": "Variable",
         "name": "fromGTE",
@@ -602,12 +607,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4a2c798a246fe6decc620ca5cb83ec1e",
+    "cacheID": "a0f59fa321bc42e5ce2d39d79cc8f0d4",
     "id": null,
     "metadata": {},
     "name": "organizationBookingsCard_rootQuery",
     "operationKind": "query",
-    "text": "query organizationBookingsCard_rootQuery(\n  $peopleSortingValues: [OrganizationMemberOrderInput!]!\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $locationId: String!\n  $locationExists: Boolean!\n  $teamId: String!\n  $teamExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationMembersBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingsWeekGrid_query on Query {\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  teamBookingPermissions(teamId: $teamId) @include(if: $teamExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n}\n\nfragment organizationMembersBookings_query on Query {\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  ...bookingsWeekGrid_query\n  ...bookingsWeekGrid_allBookings_query\n}\n"
+    "text": "query organizationBookingsCard_rootQuery(\n  $peopleSortingValues: [OrganizationMemberOrderInput!]!\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $locationId: String!\n  $locationExists: Boolean!\n  $teamId: String!\n  $teamExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationMembersBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingsWeekGrid_query on Query {\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  teamBookingPermissions(teamId: $teamId) @include(if: $teamExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n}\n\nfragment organizationMembersBookings_query on Query {\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $peopleSortingValues) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n  }\n  me {\n    id\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    name\n    logoUrl\n    hasFutureBooking\n    canModify\n    canDelete\n    id\n  }\n  ...bookingsWeekGrid_query\n  ...bookingsWeekGrid_allBookings_query\n}\n"
   }
 };
 })();

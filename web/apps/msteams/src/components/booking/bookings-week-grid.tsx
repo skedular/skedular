@@ -126,7 +126,14 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
         bookings(
           first: $count
           after: $cursor
-          where: { organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to }
+          where: {
+            organizationIds: [$organizationId]
+            locationIds: [$locationId]
+            teamIds: [$teamId]
+            fromGTE: $from
+            toLT: $to
+            combineOrganizationsLocationsTeams: true
+          }
         ) @connection(key: "bookingsWeekGrid_bookings") {
           __id
           totalCount

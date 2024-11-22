@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<208359fdae8a4d010fc8df2e3ceb1003>>
+ * @generated SignedSource<<ef5d9e3623c337b820eb97685150532c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -78,6 +78,11 @@ v1 = [
   },
   {
     "fields": [
+      {
+        "kind": "Literal",
+        "name": "combineOrganizationsLocationsTeams",
+        "value": true
+      },
       {
         "kind": "Variable",
         "name": "fromGTE",
@@ -395,16 +400,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "579f16ef825887fcb70f1c6d07420bf3",
+    "cacheID": "aa4af4a20a47ce940d23e324a0893998",
     "id": null,
     "metadata": {},
     "name": "bookingsWeekGrid_allBookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookingsWeekGrid_allBookings_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $teamId: String!\n  $to: DateTime\n) {\n  ...bookingsWeekGrid_allBookings_query_1G22uz\n}\n\nfragment bookingsWeekGrid_allBookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query bookingsWeekGrid_allBookings_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $teamId: String!\n  $to: DateTime\n) {\n  ...bookingsWeekGrid_allBookings_query_1G22uz\n}\n\nfragment bookingsWeekGrid_allBookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "53381094d70aa5f6e7d256ae52b1301a";
+(node as any).hash = "0b22a0b7699f060895cdb4cc3dc339ba";
 
 export default node;
