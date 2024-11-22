@@ -9,6 +9,7 @@ import { HomeIcon, LocationIcon, NotificationsIcon, OrganizationIcon, SettingsIc
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import Image from 'next/image';
 import NextLink from 'next/link';
+import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -30,6 +31,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
     rootDataRelay,
   );
 
+  const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
   const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
   const originalWidth = 779;
@@ -37,6 +39,16 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
   const percentage = ((maxWidth - 30) * 100) / originalWidth;
   const width = (originalWidth * percentage) / 100;
   const height = (originalHeight * percentage) / 100;
+  const styles = {
+    width: maxWidth - 30,
+    marginLeft: 2,
+    transition: 'border-radius 0.3s ease, width 0.3s ease',
+    '&:hover': {
+      borderRadius: 4,
+      width: maxWidth - 30,
+      marginLeft: 2,
+    },
+  };
 
   return (
     <List>
@@ -46,7 +58,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link component={NextLink} href="/">
-          <ListItemButton>
+          <ListItemButton selected={pathName === '/'} sx={{ ...styles, borderRadius: pathName === '/' ? 4 : 0 }}>
             <ListItemIcon>
               <HomeIcon excludeTooltip />
             </ListItemIcon>
@@ -57,7 +69,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link component={NextLink} href="/organizations">
-          <ListItemButton>
+          <ListItemButton selected={pathName === '/organizations'} sx={{ ...styles, borderRadius: pathName === '/organizations' ? 4 : 0 }}>
             <ListItemIcon>
               <OrganizationIcon excludeTooltip />
             </ListItemIcon>
@@ -68,7 +80,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link component={NextLink} href="/locations">
-          <ListItemButton>
+          <ListItemButton selected={pathName === '/locations'} sx={{ ...styles, borderRadius: pathName === '/locations' ? 4 : 0 }}>
             <ListItemIcon>
               <LocationIcon excludeTooltip />
             </ListItemIcon>
@@ -79,7 +91,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link component={NextLink} href="/teams">
-          <ListItemButton>
+          <ListItemButton selected={pathName === '/teams'} sx={{ ...styles, borderRadius: pathName === '/teams' ? 4 : 0 }}>
             <ListItemIcon>
               <TeamIcon excludeTooltip />
             </ListItemIcon>
@@ -90,7 +102,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link component={NextLink} href="/notifications">
-          <ListItemButton>
+          <ListItemButton selected={pathName === '/notifications'} sx={{ ...styles, borderRadius: pathName === '/notifications' ? 4 : 0 }}>
             <ListItemIcon>
               <NotificationsIcon excludeTooltip />
             </ListItemIcon>
@@ -101,7 +113,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link component={NextLink} href="/settings">
-          <ListItemButton>
+          <ListItemButton selected={pathName === '/settings'} sx={{ ...styles, borderRadius: pathName === '/settings' ? 4 : 0 }}>
             <ListItemIcon>
               <SettingsIcon excludeTooltip />
             </ListItemIcon>

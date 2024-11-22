@@ -9,7 +9,7 @@ import { HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } fro
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { memo, useContext } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import type { leftSideNavigationMenu_query$key } from './__generated__/leftSideNavigationMenu_query.graphql';
 
 type Props = {
@@ -30,6 +30,8 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
     rootDataRelay,
   );
 
+  const location = useLocation();
+  const pathName = location.pathname;
   const paletteMode = useContext(PaletteModeContext);
   const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
   const originalWidth = 779;
@@ -37,6 +39,17 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
   const percentage = ((maxWidth - 30) * 100) / originalWidth;
   const width = (originalWidth * percentage) / 100;
   const height = (originalHeight * percentage) / 100;
+  const styles = {
+    width: maxWidth - 30,
+    marginLeft: 2,
+    transition: 'border-radius 0.3s ease, width 0.3s ease',
+    '&:hover': {
+      borderRadius: 4,
+      width: maxWidth - 30,
+      marginLeft: 2,
+    },
+  };
+
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -60,7 +73,10 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link href={`/organizations/${finalOrganizationId}`}>
-          <ListItemButton>
+          <ListItemButton
+            selected={pathName === `/organizations/${finalOrganizationId}`}
+            sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}` ? 4 : 0 }}
+          >
             <ListItemIcon>
               <HomeIcon excludeTooltip />
             </ListItemIcon>
@@ -71,7 +87,10 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link href={`/organizations/${finalOrganizationId}/locations`}>
-          <ListItemButton>
+          <ListItemButton
+            selected={pathName === `/organizations/${finalOrganizationId}/locations`}
+            sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/locations` ? 4 : 0 }}
+          >
             <ListItemIcon>
               <LocationIcon excludeTooltip />
             </ListItemIcon>
@@ -82,7 +101,10 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link href={`/organizations/${finalOrganizationId}/teams`}>
-          <ListItemButton>
+          <ListItemButton
+            selected={pathName === `/organizations/${finalOrganizationId}/teams`}
+            sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/teams` ? 4 : 0 }}
+          >
             <ListItemIcon>
               <TeamIcon excludeTooltip />
             </ListItemIcon>
@@ -93,7 +115,10 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link href={`/${finalOrganizationId}/notifications`}>
-          <ListItemButton>
+          <ListItemButton
+            selected={pathName === `/${finalOrganizationId}/notifications`}
+            sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/notifications` ? 4 : 0 }}
+          >
             <ListItemIcon>
               <NotificationsIcon excludeTooltip />
             </ListItemIcon>
@@ -104,7 +129,10 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       <ListItem disablePadding>
         <Link href={`/${finalOrganizationId}/settings`}>
-          <ListItemButton>
+          <ListItemButton
+            selected={pathName === `/${finalOrganizationId}/settings`}
+            sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/settings` ? 4 : 0 }}
+          >
             <ListItemIcon>
               <SettingsIcon excludeTooltip />
             </ListItemIcon>
