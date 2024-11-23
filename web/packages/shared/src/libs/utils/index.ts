@@ -6,6 +6,7 @@ import isYesterday from 'dayjs/plugin/isYesterday';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { PayloadError } from 'relay-runtime';
+import { aqua, flame, subbeam, violet } from '../theme/theme-primitives';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -13,6 +14,8 @@ dayjs.extend(advancedFormat);
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 dayjs.extend(isYesterday);
+
+const secondaryColors = [violet, aqua, subbeam, flame];
 
 export type NameDetails = {
   name?: string | null;
@@ -234,20 +237,13 @@ const joinErrors = (errors: PayloadError[]) => errors.map((error) => error.messa
 
 const stringToColor = (string: string) => {
   let hash = 0;
-  let i;
 
-  for (i = 0; i < string.length; i += 1) {
+  for (let i = 0; i < string.length; i++) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
 
-  let color = '#';
-
-  for (i = 0; i < 3; i += 1) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += `00${value.toString(16)}`.slice(-2);
-  }
-
-  return color;
+  const index = Math.abs(hash) % secondaryColors.length;
+  return secondaryColors[index];
 };
 
 const toShortDateWithAdditionalDayInfo = (date: Dayjs): string => {
