@@ -22,20 +22,6 @@ public class AcceptInvitationToJoinLocationPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("AddDeskInput")]
-public class AddDeskInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
-    [GraphQLName("id")] public string? Id { get; set; }
-
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-
-    [GraphQLName("locationId")] public required string LocationId { get; set; }
-
-    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
-}
-
 [GraphQLName("AddLocationInput")]
 public class AddLocationInput
 {
@@ -119,14 +105,6 @@ public class ChangeLocationMemberOwnershipTypeInput
     [GraphQLName("id")] public required string Id { get; set; }
 
     [GraphQLName("membershipType")] public LocationMemberMembershipType MembershipType { get; set; }
-}
-
-[GraphQLName("DeleteDeskInput")]
-public class DeleteDeskInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
-    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("DeleteLocationInput")]
@@ -313,7 +291,7 @@ public class LocationMemberDetails : Node
 public class LocationMemberDetailsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
+    https://meet.google.com/zto-iajd-mqp
     [GraphQLName("member")] public LocationMemberDetails? Member { get; set; }
 }
 
@@ -458,23 +436,6 @@ public class RejectInvitationToJoinLocationPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("UpdateDeskInput")]
-public class UpdateDeskInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
-    [GraphQLName("id")] public required string Id { get; set; }
-
-    [GraphQLName("name")] public string Name { get; set; }= string.Empty;
-
-    [GraphQLName("deactivated")] public bool Deactivated { get; set; }
-
-    [GraphQLName("requireBookingApproval")]
-    public bool RequireBookingApproval { get; set; }
-
-    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
-}
-
 [GraphQLName("UpdateLocationInput")]
 public class UpdateLocationInput
 {
@@ -482,7 +443,7 @@ public class UpdateLocationInput
 
     [GraphQLName("id")] public required string Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }= string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("about")] public string? About { get; set; }
 
@@ -498,9 +459,48 @@ public class UpdateLocationTagInput
 
     [GraphQLName("id")] public required string Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }= string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("description")] public string? Description { get; set; }
 
-    [GraphQLName("tagType")] public string TagType { get; set; }= string.Empty;
+    [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
+}
+
+[GraphQLName("AddDeskInput")]
+public class AddDeskInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")] public string? Id { get; set; }
+
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
+
+    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
+}
+
+[GraphQLName("UpdateDeskInput")]
+public class UpdateDeskInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")] public required string Id { get; set; }
+
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+
+    [GraphQLName("deactivated")] public bool Deactivated { get; set; }
+
+    [GraphQLName("requireBookingApproval")]
+    public bool RequireBookingApproval { get; set; }
+
+    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
+}
+
+[GraphQLName("DeleteDeskInput")]
+public class DeleteDeskInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")] public required string Id { get; set; }
 }
