@@ -182,7 +182,7 @@ public class TeamSubscriber(
         }
 
         repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
-        existingTeam.TeamMembers = addedItems.Concat(updatedItems).ToList();
+        existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
         await UpdateTeamMembersDefaultTeamsAsync(existingTeam, itemsToRemove, cancellationToken);
 
         return existingTeam;

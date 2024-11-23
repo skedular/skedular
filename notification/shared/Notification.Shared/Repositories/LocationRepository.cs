@@ -17,8 +17,7 @@ public interface ILocationRepository : IRepository<Location>
 public class LocationRepository(NotificationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<NotificationDbContext, Location>(dbContext), ILocationRepository
 {
-    public async Task<Location>
-        UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public async Task<Location> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         var existing = await GetByIdAsync(id, cancellationToken);
         if (existing is not null)

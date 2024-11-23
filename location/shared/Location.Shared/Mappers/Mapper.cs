@@ -59,6 +59,7 @@ public class Mapper : IMapper
             };
 
             desk.LocationTagIds.AddRange(item.Tags.Select(tag => tag.Id));
+            desk.OrganizationTagIds.AddRange(item.OrganizationTags.Select(tag => tag.Id));
 
             return desk;
         }));

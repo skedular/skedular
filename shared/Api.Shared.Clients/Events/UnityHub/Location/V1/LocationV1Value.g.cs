@@ -41,21 +41,21 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
             "GAcgASgJEh0KBWRlc2tzGAggAygLMg4ubG9jYXRpb24uRGVzaxIbCgR0YWdz",
             "GAkgAygLMg0ubG9jYXRpb24uVGFnIloKBk1lbWJlchIKCgJpZBgBIAEoCRIw",
             "Cg5tZW1iZXJzaGlwVHlwZRgCIAEoDjIYLmxvY2F0aW9uLk1lbWJlcnNoaXBU",
-            "eXBlEhIKCmN1c3RvbWVySWQYAyABKAkibQoERGVzaxIKCgJpZBgBIAEoCRIM",
-            "CgRuYW1lGAIgASgJEhYKDmxvY2F0aW9uVGFnSWRzGAMgAygJEhMKC2RlYWN0",
-            "aXZhdGVkGAQgASgIEh4KFnJlcXVpcmVCb29raW5nQXBwcm92YWwYBSABKAgi",
-            "RQoDVGFnEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3JpcHRp",
-            "b24YAyABKAkSDwoHdGFnVHlwZRgEIAEoCSKRAQoYSW52aXRhdGlvblRvSm9p",
-            "bkxvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdv",
-            "b2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEgoKbG9jYXRpb25JZBgDIAEoCRIT",
-            "CgtpbnZpdGVkQnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSABKAkqfAoEVHlw",
-            "ZRIUChBMb2NhdGlvblVwc2VydGVkEAASEwoPTG9jYXRpb25EZWxldGVkEAES",
-            "JAogSW52aXRhdGlvblRvSm9pbkxvY2F0aW9uVXBzZXJ0ZWQQAhIjCh9JbnZp",
-            "dGF0aW9uVG9Kb2luTG9jYXRpb25EZWxldGVkEAMqZAoOTWVtYmVyc2hpcFR5",
-            "cGUSFwoTTWVtYmVyc2hpcFR5cGVPd25lchAAEh8KG01lbWJlcnNoaXBUeXBl",
-            "QWRtaW5pc3RyYXRvchABEhgKFE1lbWJlcnNoaXBUeXBlTWVtYmVyEAJCN6oC",
-            "NEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuVW5pdHlIdWIuTG9jYXRpb24u",
-            "VjEuVmFsdWViBnByb3RvMw=="));
+            "eXBlEhIKCmN1c3RvbWVySWQYAyABKAkiiQEKBERlc2sSCgoCaWQYASABKAkS",
+            "DAoEbmFtZRgCIAEoCRIWCg5sb2NhdGlvblRhZ0lkcxgDIAMoCRITCgtkZWFj",
+            "dGl2YXRlZBgEIAEoCBIeChZyZXF1aXJlQm9va2luZ0FwcHJvdmFsGAUgASgI",
+            "EhoKEm9yZ2FuaXphdGlvblRhZ0lkcxgGIAMoCSJFCgNUYWcSCgoCaWQYASAB",
+            "KAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIPCgd0YWdU",
+            "eXBlGAQgASgJIpEBChhJbnZpdGF0aW9uVG9Kb2luTG9jYXRpb24SCgoCaWQY",
+            "ASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
+            "bWVzdGFtcBISCgpsb2NhdGlvbklkGAMgASgJEhMKC2ludml0ZWRCeUlkGAQg",
+            "ASgJEhEKCWludml0ZWVJZBgFIAEoCSp8CgRUeXBlEhQKEExvY2F0aW9uVXBz",
+            "ZXJ0ZWQQABITCg9Mb2NhdGlvbkRlbGV0ZWQQARIkCiBJbnZpdGF0aW9uVG9K",
+            "b2luTG9jYXRpb25VcHNlcnRlZBACEiMKH0ludml0YXRpb25Ub0pvaW5Mb2Nh",
+            "dGlvbkRlbGV0ZWQQAypkCg5NZW1iZXJzaGlwVHlwZRIXChNNZW1iZXJzaGlw",
+            "VHlwZU93bmVyEAASHwobTWVtYmVyc2hpcFR5cGVBZG1pbmlzdHJhdG9yEAES",
+            "GAoUTWVtYmVyc2hpcFR5cGVNZW1iZXIQAkI3qgI0QXBpLlNoYXJlZC5DbGll",
+            "bnRzLkV2ZW50cy5Vbml0eUh1Yi5Mb2NhdGlvbi5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -64,7 +64,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Data), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Data.Parser, new[]{ "LocationAfterState", "InvitationToJoinLocationAfterState" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Location), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Desks", "Tags" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Member), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Member.Parser, new[]{ "Id", "MembershipType", "CustomerId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "LocationTagIds", "Deactivated", "RequireBookingApproval" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "LocationTagIds", "Deactivated", "RequireBookingApproval", "OrganizationTagIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Tag), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "TagType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.UnityHub.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null)
           }));
@@ -1810,6 +1810,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
       locationTagIds_ = other.locationTagIds_.Clone();
       deactivated_ = other.deactivated_;
       requireBookingApproval_ = other.requireBookingApproval_;
+      organizationTagIds_ = other.organizationTagIds_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1878,6 +1879,17 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "organizationTagIds" field.</summary>
+    public const int OrganizationTagIdsFieldNumber = 6;
+    private static readonly pb::FieldCodec<string> _repeated_organizationTagIds_codec
+        = pb::FieldCodec.ForString(50);
+    private readonly pbc::RepeatedField<string> organizationTagIds_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<string> OrganizationTagIds {
+      get { return organizationTagIds_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1898,6 +1910,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
       if(!locationTagIds_.Equals(other.locationTagIds_)) return false;
       if (Deactivated != other.Deactivated) return false;
       if (RequireBookingApproval != other.RequireBookingApproval) return false;
+      if(!organizationTagIds_.Equals(other.organizationTagIds_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1910,6 +1923,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
       hash ^= locationTagIds_.GetHashCode();
       if (Deactivated != false) hash ^= Deactivated.GetHashCode();
       if (RequireBookingApproval != false) hash ^= RequireBookingApproval.GetHashCode();
+      hash ^= organizationTagIds_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1945,6 +1959,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
         output.WriteRawTag(40);
         output.WriteBool(RequireBookingApproval);
       }
+      organizationTagIds_.WriteTo(output, _repeated_organizationTagIds_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1972,6 +1987,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
         output.WriteRawTag(40);
         output.WriteBool(RequireBookingApproval);
       }
+      organizationTagIds_.WriteTo(ref output, _repeated_organizationTagIds_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1995,6 +2011,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
       if (RequireBookingApproval != false) {
         size += 1 + 1;
       }
+      size += organizationTagIds_.CalculateSize(_repeated_organizationTagIds_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -2020,6 +2037,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
       if (other.RequireBookingApproval != false) {
         RequireBookingApproval = other.RequireBookingApproval;
       }
+      organizationTagIds_.Add(other.organizationTagIds_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -2059,6 +2077,10 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
             RequireBookingApproval = input.ReadBool();
             break;
           }
+          case 50: {
+            organizationTagIds_.AddEntriesFrom(input, _repeated_organizationTagIds_codec);
+            break;
+          }
         }
       }
     #endif
@@ -2096,6 +2118,10 @@ namespace Api.Shared.Clients.Events.UnityHub.Location.V1.Value {
           }
           case 40: {
             RequireBookingApproval = input.ReadBool();
+            break;
+          }
+          case 50: {
+            organizationTagIds_.AddEntriesFrom(ref input, _repeated_organizationTagIds_codec);
             break;
           }
         }

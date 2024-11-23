@@ -11,6 +11,7 @@ using LocationMember = Location.Shared.Database.Entities.LocationMember;
 using Offering = Location.Shared.Models.Offering;
 using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
+using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 using Tag = Location.Shared.Database.Entities.Tag;
 
 namespace Location.Processors.Mappers;
@@ -97,13 +98,24 @@ public interface IMapper
     Shared.Database.Entities.Desk MapToEntity(
         Desk src,
         Shared.Database.Entities.Location location,
-        ICollection<Tag> tags);
+        ICollection<Tag> tags,
+        ICollection<OrganizationTag> organizationTags);
 
     Shared.Database.Entities.Desk MergeToEntity(
         Desk src,
         Shared.Database.Entities.Desk dest,
         Shared.Database.Entities.Location location,
-        ICollection<Tag> tags);
+        ICollection<Tag> tags,
+        ICollection<OrganizationTag> organizationTags);
+
+    OrganizationTag MergeToEntity(
+        Shared.Models.OrganizationTag src,
+        OrganizationTag dest,
+        Shared.Database.Entities.Organization organization);
+
+    OrganizationTag MapToEntity(
+        Shared.Models.OrganizationTag src,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -161,6 +173,16 @@ public class Mapper : IMapper
                 ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray()
             }
         };
+
+        organization.Tags = organizationAfterState.Tags.Select(item => new Shared.Models.OrganizationTag
+        {
+            Id = item.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = item.Name,
+            Type = item.TagType,
+            Organization = organization
+        }).ToList();
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
         {
@@ -420,21 +442,40 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Desk MapToEntity(
         Desk src,
         Shared.Database.Entities.Location location,
-        ICollection<Tag> tags) =>
-        MergeToEntity(src, new Shared.Database.Entities.Desk(), location, tags);
+        ICollection<Tag> tags,
+        ICollection<OrganizationTag> organizationTags) =>
+        MergeToEntity(src, new Shared.Database.Entities.Desk(), location, tags, organizationTags);
 
     public Shared.Database.Entities.Desk MergeToEntity(
         Desk src,
         Shared.Database.Entities.Desk dest,
         Shared.Database.Entities.Location location,
-        ICollection<Tag> tags)
+        ICollection<Tag> tags,
+        ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
         dest.Location = location;
         dest.Tags = tags;
+        dest.OrganizationTags = organizationTags;
         return dest;
     }
+
+    public OrganizationTag MergeToEntity(
+        Shared.Models.OrganizationTag src,
+        OrganizationTag dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Type = src.Type;
+        dest.Organization = organization;
+        return dest;
+    }
+
+    public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new OrganizationTag(), organization);
 
     private static Shared.Models.Location MapTo(Shared.Database.Entities.Location src)
     {

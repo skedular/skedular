@@ -128,7 +128,8 @@ public interface IMapper
         Shared.Database.Entities.OrganizationTag dest,
         Shared.Database.Entities.Organization organization);
 
-    Shared.Database.Entities.OrganizationTag MapToEntity(OrganizationTag src,
+    Shared.Database.Entities.OrganizationTag MapToEntity(
+        OrganizationTag src,
         Shared.Database.Entities.Organization organization);
 }
 

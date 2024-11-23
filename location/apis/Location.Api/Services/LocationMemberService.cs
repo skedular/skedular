@@ -195,7 +195,7 @@ public class LocationMemberService(
         }
 
         repositoryFactory.LocationMemberRepository.RemoveRange(itemsToRemove);
-        location.LocationMembers = addedItems.Concat(updatedItems).ToList();
+        location.LocationMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         await locationOutboxPublisher.PublishLocationAsync(
             [mapper.MapTo(location)],

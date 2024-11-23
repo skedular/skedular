@@ -11,4 +11,5 @@ public class Desk : EntityBaseWithDeleted
     public Location Location { get; set; }
     public ICollection<Tag> Tags { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
+    public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
 }

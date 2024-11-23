@@ -129,7 +129,7 @@ public class LocationSubscriber(
             .ToList();
 
         repositoryFactory.LocationTagRepository.RemoveRange(itemsToRemove);
-        existingLocation.Tags = addedItems.Concat(updatedItems).ToList();
+        existingLocation.Tags = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         return existingLocation;
     }
@@ -163,7 +163,7 @@ public class LocationSubscriber(
             .ToList();
 
         repositoryFactory.DeskRepository.RemoveRange(itemsToRemove);
-        existingLocation.Desks = addedItems.Concat(updatedItems).ToList();
+        existingLocation.Desks = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         return existingLocation;
     }
@@ -207,7 +207,7 @@ public class LocationSubscriber(
         }
 
         repositoryFactory.LocationMemberRepository.RemoveRange(itemsToRemove);
-        existingLocation.LocationMembers = addedItems.Concat(updatedItems).ToList();
+        existingLocation.LocationMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
         await UpdateLocationMembersDefaultLocationsAsync(existingLocation, itemsToRemove, cancellationToken);
 
         return existingLocation;

@@ -17,8 +17,7 @@ public interface IOrganizationRepository : IRepository<Organization>
 public class OrganizationRepository(TeamDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<TeamDbContext, Organization>(dbContext), IOrganizationRepository
 {
-    public async Task<Organization>
-        UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public async Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         var existing = await GetByIdAsync(id, cancellationToken);
         if (existing is not null)

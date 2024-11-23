@@ -63,6 +63,7 @@ message Desk {
   repeated string locationTagIds = 3;
   bool deactivated = 4;
   bool requireBookingApproval = 5;
+  repeated string organizationTagIds = 6;
 }
 
 message Tag {

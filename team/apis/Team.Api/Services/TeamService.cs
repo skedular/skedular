@@ -317,7 +317,7 @@ public class TeamService(
             .Select(teamMember => repositoryFactory.TeamMemberRepository.Add(teamMember)).ToList();
 
         repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
-        existingTeam.TeamMembers = addedItems.Concat(updatedItems).ToList();
+        existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         team =
             mapper.MapTo(

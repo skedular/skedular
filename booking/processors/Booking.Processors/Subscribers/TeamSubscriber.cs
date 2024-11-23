@@ -133,7 +133,7 @@ public class TeamSubscriber(
         }
 
         repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
-        existingTeam.TeamMembers = addedItems.Concat(updatedItems).ToList();
+        existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         return existingTeam;
     }

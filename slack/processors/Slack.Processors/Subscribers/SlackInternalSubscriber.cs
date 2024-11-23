@@ -131,7 +131,7 @@ public class SlackInternalSubscriber(
             .ToList();
 
         repositoryFactory.WorkspaceMemberRepository.RemoveRange(itemsToRemove);
-        workspace.WorkspaceMembers = addedItems.Concat(updatedItems).ToList();
+        workspace.WorkspaceMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         await SyncCustomersAndOrganizationMembersAsync(workspace, cancellationToken);
 
@@ -175,7 +175,7 @@ public class SlackInternalSubscriber(
             .ToList();
 
         repositoryFactory.WorkspaceChannelRepository.RemoveRange(itemsToRemove);
-        workspace.Channels = addedItems.Concat(updatedItems).ToList();
+        workspace.Channels = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         workspace.ChannelsLastRefreshedAt = timeProvider.GetUtcNow();
         repositoryFactory.WorkspaceRepository.Update(workspace);

@@ -234,7 +234,7 @@ public class TeamMemberService(
         }
 
         repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
-        team.TeamMembers = addedItems.Concat(updatedItems).ToList();
+        team.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         await teamOutboxPublisher.PublishTeamAsync(
             [mapper.MapTo(team)],

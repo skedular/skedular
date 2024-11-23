@@ -143,7 +143,7 @@ public class OrganizationSubscriber(
         }
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);
-        existingOrganization.OrganizationMembers = addedItems.Concat(updatedItems).ToList();
+        existingOrganization.OrganizationMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         return existingOrganization;
     }

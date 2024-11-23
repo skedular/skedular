@@ -17,8 +17,7 @@ public interface ITeamRepository : IRepository<Team>
 public class TeamRepository(NotificationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<NotificationDbContext, Team>(dbContext), ITeamRepository
 {
-    public async Task<Team>
-        UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public async Task<Team> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         var existing = await GetByIdAsync(id, cancellationToken);
         if (existing is not null)

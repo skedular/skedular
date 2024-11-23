@@ -17,8 +17,7 @@ public interface IOrganizationRepository : IRepository<Organization>
 public class OrganizationRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Organization>(dbContext), IOrganizationRepository
 {
-    public async Task<Organization>
-        UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public async Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         var existing = await GetByIdAsync(id, cancellationToken);
         if (existing is not null)
@@ -37,6 +36,7 @@ public class OrganizationRepository(LocationDbContext dbContext, TimeProvider ti
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
+            .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Locations.Where(location => !location.DeletedAt.HasValue))
             .OrderBy(query => query.Id)
             .FirstOrDefaultAsync(cancellationToken);
