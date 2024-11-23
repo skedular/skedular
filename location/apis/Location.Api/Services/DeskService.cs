@@ -9,6 +9,7 @@ using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
+using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 using Tag = Location.Shared.Database.Entities.Tag;
 
 namespace Location.Api.Services;
@@ -158,11 +159,23 @@ public class DeskService(
                 })
                 .ToListAsync(cancellationToken);
 
+        var organizationTags = existingLocation.Organization is null
+            ? []
+            : await repositoryFactory.OrganizationTagRepository
+                .Query(new Specification<OrganizationTag>
+                {
+                    Criteria = query =>
+                        !query.DeletedAt.HasValue &&
+                        desk.OrganizationTags.Select(item => item.Id).Contains(query.Id) &&
+                        query.Organization.Id == existingLocation.Organization.Id &&
+                        !query.Organization.DeletedAt.HasValue
+                }).ToListAsync(cancellationToken);
+
         await using var transaction =
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationRepository.UnitOfWork,
                 cancellationToken);
 
-        var deskEntity = mapper.MapTo(desk, existingLocation, tags);
+        var deskEntity = mapper.MapTo(desk, existingLocation, tags, organizationTags);
         _ = repositoryFactory.DeskRepository.Add(deskEntity);
 
         await locationOutboxPublisher.PublishLocationAsync(
@@ -221,6 +234,18 @@ public class DeskService(
                 })
                 .ToListAsync(cancellationToken);
 
+        var organizationTags = existingLocation.Organization is null
+            ? []
+            : await repositoryFactory.OrganizationTagRepository
+                .Query(new Specification<OrganizationTag>
+                {
+                    Criteria = query =>
+                        !query.DeletedAt.HasValue &&
+                        organizationTagIds.Contains(query.Id) &&
+                        query.Organization.Id == existingLocation.Organization.Id &&
+                        !query.Organization.DeletedAt.HasValue
+                }).ToListAsync(cancellationToken);
+
         await using var transaction =
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationRepository.UnitOfWork,
                 cancellationToken);
@@ -248,7 +273,8 @@ public class DeskService(
             var deskEntity = mapper.MapTo(
                 new Desk { Id = randomHelper.Generate(), Name = finalDeskName },
                 existingLocation,
-                tags);
+                tags,
+                organizationTags);
 
             deskEntity.Deactivated = deactivated;
             deskEntity.RequireBookingApproval = requireBookingApproval;
@@ -410,13 +436,26 @@ public class DeskService(
                 })
                 .ToListAsync(cancellationToken);
 
+        var organizationTags = existingLocation.Organization is null
+            ? []
+            : await repositoryFactory.OrganizationTagRepository
+                .Query(new Specification<OrganizationTag>
+                {
+                    Criteria = query =>
+                        !query.DeletedAt.HasValue &&
+                        desk.OrganizationTags.Select(item => item.Id).Contains(query.Id) &&
+                        query.Organization.Id == existingLocation.Organization.Id &&
+                        !query.Organization.DeletedAt.HasValue
+                }).ToListAsync(cancellationToken);
+
         await using var transaction =
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.DeskRepository.UnitOfWork,
                 cancellationToken);
 
         desk =
             mapper.MapTo(
-                repositoryFactory.DeskRepository.Update(mapper.MergeTo(desk, existingDesk, existingLocation, tags)),
+                repositoryFactory.DeskRepository.Update(
+                    mapper.MergeTo(desk, existingDesk, existingLocation, tags, organizationTags)),
                 mapper.MapTo(existingLocation));
 
         await locationOutboxPublisher.PublishLocationAsync(
