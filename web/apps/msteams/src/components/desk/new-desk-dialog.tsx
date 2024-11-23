@@ -124,6 +124,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
             id,
             name,
             locationTags: [],
+            organizationTags: [],
           },
         },
       },
