@@ -7,8 +7,9 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
+import graphql from 'babel-plugin-relay/macro';
 import { memo, useContext } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { useFragment } from 'react-relay';
 import { useLocation, useParams } from 'react-router-dom';
 import type { leftSideNavigationMenu_query$key } from './__generated__/leftSideNavigationMenu_query.graphql';
 
