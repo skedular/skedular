@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8a55a4db6d90d00abb8d61d19b4b9c97>>
+ * @generated SignedSource<<1f177fdcaa570cd12f963f3cf4024fec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,6 +32,9 @@ export type bulkNewDeskDialog_bulkAddDeskMutation$data = {
         readonly id: string;
       }>;
       readonly name: string;
+      readonly organizationTags: ReadonlyArray<{
+        readonly uniqueId: string;
+      }>;
     }>;
   } | null | undefined;
 };
@@ -43,6 +46,9 @@ export type bulkNewDeskDialog_bulkAddDeskMutation$rawResponse = {
         readonly id: string;
       }>;
       readonly name: string;
+      readonly organizationTags: ReadonlyArray<{
+        readonly uniqueId: string;
+      }>;
     }>;
   } | null | undefined;
 };
@@ -104,6 +110,24 @@ v3 = {
       "plural": true,
       "selections": [
         (v2/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Organization_OrganizationTagDetails",
+      "kind": "LinkedField",
+      "name": "organizationTags",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "uniqueId",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     }
@@ -175,16 +199,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "adafc976de12dc60c172cdeeb69f2dc0",
+    "cacheID": "0966897abab35b709472648ae9ee62a5",
     "id": null,
     "metadata": {},
     "name": "bulkNewDeskDialog_bulkAddDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation bulkNewDeskDialog_bulkAddDeskMutation(\n  $input: BulkAddDeskInput!\n) {\n  bulkAddDesk(input: $input) {\n    desks {\n      id\n      name\n      locationTags {\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation bulkNewDeskDialog_bulkAddDeskMutation(\n  $input: BulkAddDeskInput!\n) {\n  bulkAddDesk(input: $input) {\n    desks {\n      id\n      name\n      locationTags {\n        id\n      }\n      organizationTags {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2c31367d08161d9fda8b6428ac96f4ca";
+(node as any).hash = "017168d203808d1b8ac710c9a8328cb8";
 
 export default node;

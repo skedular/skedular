@@ -142,6 +142,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           initialValues={{
             name: '',
             locationTagIds: [],
+            organizationTagIds: [],
           }}
           validate={validate}
           render={({ handleSubmit }) => (

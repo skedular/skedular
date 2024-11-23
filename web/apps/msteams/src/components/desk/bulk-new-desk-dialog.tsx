@@ -23,6 +23,7 @@ import { toast } from 'react-toastify';
 import { array, number, object, string } from 'yup';
 import type { bulkNewDeskDialog_bulkAddDeskMutation } from './__generated__/bulkNewDeskDialog_bulkAddDeskMutation.graphql';
 import type { bulkNewDeskDialog_query$key } from './__generated__/bulkNewDeskDialog_query.graphql';
+import DeskMultipleChoicesDeskTypes from './desk-multiple-choices-desk-types';
 import DeskMultipleChoicesZones from './desk-multiple-choices-zones';
 
 type Props = {
@@ -38,12 +39,14 @@ type DeskDetails = {
   namePrefix: string;
   count: number;
   locationTagIds: string[];
+  organizationTagIds: string[];
 };
 
 const deskSchema = object({
   namePrefix: string(),
   count: number().positive().integer().required('Desk count is required'),
   locationTagIds: array().nullable(),
+  organizationTagIds: array().nullable(),
 });
 
 const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicked, onCancelClicked, locationId }: Props) => {
@@ -51,6 +54,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
     graphql`
       fragment bulkNewDeskDialog_query on Query {
         ...deskMultipleChoicesZones_query
+        ...deskMultipleChoicesDeskTypes_query
       }
     `,
     rootDataRelay,
@@ -64,6 +68,9 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
           name
           locationTags {
             id
+          }
+          organizationTags {
+            uniqueId
           }
         }
       }
@@ -118,7 +125,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
       },
       optimisticResponse: {
         bulkAddDesk: {
-          desks: ids.map((id) => ({ id, name: namePrefix, locationTags: [] })),
+          desks: ids.map((id) => ({ id, name: namePrefix, locationTags: [], organizationTags: [] })),
         },
       },
     });
@@ -134,6 +141,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
             namePrefix: '',
             count: 0,
             locationTagIds: [],
+            organizationTagIds: [],
           }}
           validate={validate}
           render={({ handleSubmit }) => (
@@ -141,6 +149,8 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
               <TextField label="Optional name prefix" name="namePrefix" required={requiredFields.namePrefix} helperText="Add your desk name prefix" />
               <TextField label="Count" name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
               <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
+              <DeskMultipleChoicesDeskTypes rootDataRelay={rootData} name="organizationTagIds" required={requiredFields.organizationTagIds} />
+
               <DialogActions>
                 <Button color="secondary" variant="contained" onClick={onCancelClicked}>
                   Cancel
