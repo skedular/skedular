@@ -1,0 +1,423 @@
+import AvatarGroup from '@mui/material/AvatarGroup';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import type { GridColDef } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { CalendarIcon, DeskIcon, LocationIcon, TeamIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE, Zones } from '@repo/shared/components/zone';
+import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
+import { toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
+import dayjs, { Dayjs } from 'dayjs';
+import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
+import { useFragment, useRefetchableFragment } from 'react-relay';
+import type { myBookings_bookings_query$key } from './__generated__/myBookings_bookings_query.graphql';
+import type { myBookings_bookings_refetchableFragment } from './__generated__/myBookings_bookings_refetchableFragment.graphql';
+import type { myBookings_query$key } from './__generated__/myBookings_query.graphql';
+
+type Props = {
+  rootDataRelay: myBookings_query$key;
+  rootDataBookingRelay: myBookings_bookings_query$key;
+  onReloadRequired: () => void;
+  from: Dayjs;
+  to: Dayjs;
+  locationIds: string[];
+  teamIds: string[];
+  viewMode: 'list' | 'grid';
+};
+
+type CustomerDetails = {
+  readonly uniqueId: string;
+  readonly givenName?: string | null | undefined;
+  readonly middleName?: string | null | undefined;
+  readonly familyName?: string | null | undefined;
+  readonly name?: string | null | undefined;
+  readonly photoUrl?: string | null | undefined;
+};
+
+type LocationDetails = {
+  readonly name: string;
+};
+
+type LocationTagDetails = {
+  readonly uniqueId: string;
+  readonly name: string;
+  readonly tagType?: string | null | undefined;
+};
+
+type DeskDetails = {
+  readonly name: string;
+  readonly locationTags: ReadonlyArray<LocationTagDetails>;
+};
+
+type TeamDetails = {
+  readonly name: string;
+};
+
+type RowType = {
+  id: string;
+  readonly location?: LocationDetails | null | undefined;
+  readonly team?: TeamDetails | null | undefined;
+  readonly desks: ReadonlyArray<DeskDetails>;
+  readonly zones: ReadonlyArray<LocationTagDetails>;
+  readonly teammates: ReadonlyArray<CustomerDetails>;
+};
+
+const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, from, to, locationIds, teamIds, viewMode }: Props) => {
+  const rootData = useFragment<myBookings_query$key>(
+    graphql`
+      fragment myBookings_query on Query {
+        me {
+          id
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [rootDataBookings, refetchBookings] = useRefetchableFragment<myBookings_bookings_refetchableFragment, myBookings_bookings_query$key>(
+    graphql`
+      fragment myBookings_bookings_query on Query @refetchable(queryName: "myBookings_bookings_refetchableFragment") {
+        bookings(
+          where: {
+            organizationIds: [$organizationId]
+            locationIds: $locationIds
+            teamIds: $teamIds
+            fromGTE: $bookingsSearchCriteriaFrom
+            fromLTE: $bookingsSearchCriteriaTo
+            includeFutureBookingsOnly: true
+            combineOrganizationsLocationsTeams: true
+          }
+          orderBy: [{ field: From, direction: Ascending }]
+        ) {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              from
+              to
+              notes
+              customer {
+                uniqueId
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+              }
+              location {
+                uniqueId
+                name
+              }
+              team {
+                uniqueId
+                name
+              }
+              desks {
+                uniqueId
+                name
+                locationTags {
+                  uniqueId
+                  name
+                  tagType
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+    rootDataBookingRelay,
+  );
+
+  const bookings = useMemo(() => {
+    if (!rootDataBookings.bookings) {
+      return [];
+    }
+
+    return rootDataBookings.bookings.edges.map((edge) => edge.node);
+  }, [rootDataBookings.bookings]);
+
+  const myBookings = useMemo(() => bookings.filter((booking) => booking.customer?.uniqueId === rootData.me?.id), [bookings, rootData.me?.id]);
+
+  const convertDateToKey = (date: Dayjs) => dayjs(date).format('YYYY-MM-DD');
+
+  const groupedBookingsByFromDate = useMemo(() => {
+    return bookings.reduce(
+      (acc, booking) => {
+        const key = convertDateToKey(booking.from);
+
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+
+        acc[key].push(booking);
+
+        return acc;
+      },
+      {} as Record<string, typeof bookings>,
+    );
+  }, [bookings]);
+
+  const handleRefetchAllBookings = useCallback(
+    (from: Dayjs, to: Dayjs, locationIds: string[], teamIds: string[]) => {
+      startTransition(() => {
+        refetchBookings(
+          {
+            bookingsSearchCriteriaFrom: from.toISOString(),
+            bookingsSearchCriteriaTo: to.toISOString(),
+            locationIds,
+            teamIds,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchBookings],
+  );
+
+  useEffect(() => handleRefetchAllBookings(from, to, locationIds, teamIds), [handleRefetchAllBookings, from, to, locationIds, teamIds]);
+
+  const rows: RowType[] = myBookings.map((myBooking) => {
+    const zones = myBooking.desks
+      .flatMap((desk) => desk.locationTags)
+      .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE)
+      .reduce((acc: LocationTagDetails[], zone) => {
+        if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
+          acc.push(zone);
+        }
+
+        return acc;
+      }, []);
+
+    const key = convertDateToKey(myBooking.from);
+    const teammates: CustomerDetails[] =
+      groupedBookingsByFromDate[key]
+        ?.filter((booking) => booking.customer?.uniqueId !== rootData.me?.id && booking.location?.uniqueId === myBooking.location?.uniqueId)
+        .map((booking) => booking.customer) ?? [];
+
+    return {
+      id: myBooking.id,
+      location: myBooking.location,
+      team: myBooking.team,
+      desks: myBooking.desks,
+      zones,
+      teammates,
+      date: toShortDateWithAdditionalDayInfo(dayjs(myBooking.from)),
+    };
+  });
+
+  const columns: GridColDef<(typeof rows)[number]>[] = [
+    {
+      field: 'location',
+      headerName: 'Location',
+      editable: false,
+      renderCell: (params) => params.value?.name ?? 'N/A',
+      display: 'text',
+      minWidth: 200,
+    },
+    {
+      field: 'team',
+      headerName: 'Team',
+      editable: false,
+      renderCell: (params) => params.value?.name ?? 'N/A',
+      display: 'text',
+      minWidth: 200,
+    },
+    {
+      field: 'desks',
+      headerName: 'Desks',
+      editable: false,
+      renderCell: (params) => {
+        if (!params.value || params.value.length === 0) {
+          return 'N/A';
+        }
+
+        const desks = params.value?.map((item: DeskDetails) => item.name).join(', ');
+        return desks.length === 0 ? 'N/A' : desks;
+      },
+      display: 'text',
+      minWidth: 200,
+    },
+    {
+      field: 'zones',
+      headerName: 'Zones',
+      editable: false,
+      renderCell: (params) => (
+        <>
+          {params.value.length === 0 && 'N/A'}
+          {params.value.length !== 0 && <Zones zones={params.value.map((zone: LocationTagDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
+        </>
+      ),
+      display: 'flex',
+      minWidth: 200,
+    },
+    {
+      field: 'teammates',
+      headerName: 'Teammates',
+      editable: false,
+      renderCell: (params) => (
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <AvatarGroup max={5}>
+            {params.value?.map((customer: CustomerDetails) => (
+              <CustomerAvatar key={customer?.uniqueId} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
+            ))}
+          </AvatarGroup>
+        </Stack>
+      ),
+      display: 'flex',
+      minWidth: 200,
+    },
+    {
+      field: 'date',
+      headerName: 'Date',
+      editable: false,
+      sortable: true,
+      display: 'text',
+      minWidth: 300,
+    },
+  ];
+
+  if (!rootDataBookings.bookings) {
+    return <></>;
+  }
+
+  return (
+    <Stack
+      direction="column"
+      spacing={1}
+      sx={{
+        paddingLeft: defaultPadding,
+        paddingRight: defaultPadding,
+        paddingTop: defaultPadding,
+      }}
+    >
+      <Typography variant="h5">My Bookings</Typography>
+
+      <Divider />
+
+      {viewMode === 'grid' && (
+        <Grid container spacing={defaultSpacing} sx={{ alignItems: 'flex-start' }}>
+          {myBookings.map((myBooking) => {
+            const date = dayjs(myBooking.from);
+            const key = convertDateToKey(myBooking.from);
+            const otherTeammatesBookings = groupedBookingsByFromDate[key]?.filter(
+              (booking) => booking.customer?.uniqueId !== rootData.me?.id && booking.location?.uniqueId === myBooking.location?.uniqueId,
+            );
+
+            const desks = myBooking.desks.map((desk) => desk.name).join(', ');
+            const zones = myBooking.desks
+              .flatMap((desk) => desk.locationTags)
+              .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE)
+              .reduce((acc: LocationTagDetails[], zone) => {
+                if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
+                  acc.push(zone);
+                }
+
+                return acc;
+              }, []);
+
+            return (
+              <Grid key={myBooking.id}>
+                <Card sx={{ width: 250 }}>
+                  <CardHeader
+                    title={
+                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                        <LocationIcon fontSize="medium" />
+                        <Typography variant="h6">{myBooking.location?.name}</Typography>
+                      </Stack>
+                    }
+                  />
+                  <CardContent>
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
+                      <CalendarIcon fontSize="medium" />
+                      <Typography variant="body1">{toShortDateWithAdditionalDayInfo(date)}</Typography>
+                    </Stack>
+
+                    <Divider />
+
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
+                      <TeamIcon fontSize="medium" />
+                      <Typography variant="body1">{myBooking.team ? myBooking.team.name : 'N/A'}</Typography>
+                    </Stack>
+
+                    <Divider />
+
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
+                      <DeskIcon fontSize="medium" />
+                      <Typography variant="body1">{desks.length === 0 ? 'N/A' : desks}</Typography>
+                    </Stack>
+
+                    <Divider />
+
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
+                      <ZoneIcon fontSize="medium" />
+                      {zones.length === 0 && <Typography variant="body1">{desks.length === 0 ? 'N/A' : desks}</Typography>}
+                      {zones.length !== 0 && <Zones zones={zones.map((zone: LocationTagDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
+                    </Stack>
+
+                    <Divider />
+
+                    <Stack direction="column" spacing={1} sx={{ paddingTop: 1, paddingBottom: 1 }}>
+                      <Typography variant="body1">Other teammates coming</Typography>
+                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                        <AvatarGroup max={5}>
+                          {otherTeammatesBookings?.map((booking) => (
+                            <CustomerAvatar
+                              key={booking.customer?.uniqueId}
+                              name={booking.customer}
+                              photo={{ url: booking.customer?.photoUrl }}
+                              size="medium"
+                              showFullName
+                            />
+                          ))}
+                        </AvatarGroup>
+                      </Stack>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
+      )}
+
+      {viewMode === 'list' && (
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          ignoreDiacritics
+          disableRowSelectionOnClick
+          hideFooter
+          getRowHeight={() => 'auto'}
+          rowSpacingType="margin"
+          getRowSpacing={() => ({ top: 3, bottom: 3 })}
+          sx={{
+            [`& .${gridClasses.cell}`]: {
+              paddingTop: 1,
+              paddingBottom: 1,
+            },
+            [`& .${gridClasses.row}`]: {
+              paddingLeft: 1,
+              paddingTop: 1,
+              paddingBottom: 1,
+              borderRadius: 2,
+              backgroundColor: (theme) => theme.palette.background.paper,
+            },
+          }}
+        />
+      )}
+    </Stack>
+  );
+};
+
+export default memo(MyBookings);
