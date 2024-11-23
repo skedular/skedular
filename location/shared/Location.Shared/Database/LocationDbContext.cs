@@ -23,6 +23,7 @@ public class LocationDbContext(
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<Tag> Tag { get; set; }
+    public DbSet<OrganizationTag> OrganizationTag { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class LocationDbContextDesignFactory : IDesignTimeDbContextFactory<LocationDbContext>

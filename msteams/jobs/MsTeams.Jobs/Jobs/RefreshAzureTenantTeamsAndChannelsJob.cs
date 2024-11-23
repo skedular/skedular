@@ -40,7 +40,7 @@ public class RefreshAzureTenantTeamsAndChannelsJob(
                         cancellationToken);
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
+                await Task.Delay(TimeSpan.FromHours(1), cancellationToken);
             }
             catch (OperationCanceledException)
             {
