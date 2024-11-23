@@ -1,4 +1,3 @@
-import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { AppBar } from '@/components/appBar';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
@@ -27,7 +26,6 @@ type Props = {
   onReloadRequired: () => void;
   children: React.ReactNode;
   title?: string | null;
-  appBarBreadcrumbs?: AppBarBreadcrumbs;
 };
 
 const RootQuery = graphql`
@@ -55,7 +53,7 @@ const RootQuery = graphql`
 const maxRetryAttemptsToReload = 20;
 const drawerWidth = 250;
 
-const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrumbs }: Props) => {
+const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const [reloadCount, setReloadCount] = useState(0);
   const areCustomerRecordsSync = useCallback(
@@ -143,7 +141,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, appBarBreadcrum
             <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />
           </Grid>
           <Stack direction="column" sx={{ width: '100vw' }}>
-            <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} breadcrumbs={appBarBreadcrumbs} />
+            <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
           </Stack>
           {!rootData.myOrganizations ||
             (rootData.myOrganizations.length === 0 && (
@@ -165,10 +163,9 @@ const MemoRootShell = memo(RootShell);
 type RelayProps = {
   children: React.ReactNode;
   title?: string | null;
-  appBarBreadcrumbs?: AppBarBreadcrumbs;
 };
 
-const RootShellWithRelay = ({ title, children, appBarBreadcrumbs }: RelayProps) => {
+const RootShellWithRelay = ({ title, children }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -207,7 +204,7 @@ const RootShellWithRelay = ({ title, children, appBarBreadcrumbs }: RelayProps) 
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} title={title} appBarBreadcrumbs={appBarBreadcrumbs}>
+      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} title={title}>
         {children}
       </MemoRootShell>
     </ErrorBoundary>

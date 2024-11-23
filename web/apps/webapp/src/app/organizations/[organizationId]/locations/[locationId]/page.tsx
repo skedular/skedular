@@ -1,11 +1,7 @@
 'use client';
 
-import type { AppBarBreadcrumbs } from '@/components/appBar';
-import { getLocationBaseLink } from '@/components/location';
 import { Location } from '@/components/location/locationPage';
-import { getOrganizationBaseLink, getOrganizationLocationsBaseLink } from '@/components/organization';
 import { RootShell } from '@/components/rootShell';
-import { HomeIcon } from '@repo/shared/components/icons';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
 
@@ -39,31 +35,8 @@ const LocationPage = () => {
     throw new Error('locationId is required');
   }
 
-  const breadcrumps: AppBarBreadcrumbs = {
-    items: [
-      {
-        icon: <HomeIcon />,
-        label: 'Home',
-        href: '/',
-      },
-      {
-        label: 'Organizations',
-        href: '/organizations',
-      },
-      {
-        label: '',
-        href: getOrganizationBaseLink(finalOrganizationId),
-      },
-      {
-        label: 'Locations',
-        href: getOrganizationLocationsBaseLink(finalOrganizationId),
-      },
-    ],
-    lastItemLabel: getLocationBaseLink(finalLocationId, finalOrganizationId),
-  };
-
   return (
-    <RootShell appBarBreadcrumbs={breadcrumps}>
+    <RootShell>
       <Location organizationId={finalOrganizationId} locationId={finalLocationId} />
     </RootShell>
   );

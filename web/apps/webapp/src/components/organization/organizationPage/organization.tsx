@@ -1,5 +1,4 @@
 import { Bookings } from '@/components/booking/bookingsPage';
-import { getOrganizationBaseLink } from '@/components/organization';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
@@ -10,7 +9,7 @@ import { Loading } from '@repo/shared/components/loading';
 import { NotificationContent, errorNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { PaletteModeContext, UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -53,7 +52,6 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
   const tab = searchParams.get('tab');
   const router = useRouter();
   const addPaymentMethodStatus = searchParams.get('add-payment-method-status');
-  const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
   let initialTabIndex = 0;
 
   useEffect(() => {
@@ -62,15 +60,6 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
     } else if (addPaymentMethodStatus === 'added') {
     }
   }, [addPaymentMethodStatus, themedToast]);
-
-  useEffect(() => {
-    if (!rootData.organization) {
-      return;
-    }
-
-    updateBreadcrumps(new Map([[getOrganizationBaseLink(rootData.organization.id), rootData.organization?.name!]]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rootData.organization]);
 
   let tabCount = 0;
   const bookingTabIndex = tabCount++;

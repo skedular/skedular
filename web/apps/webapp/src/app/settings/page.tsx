@@ -1,28 +1,13 @@
 'use client';
 
-import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { CustomerSettings } from '@/components/customer/settings';
 import { RootShell } from '@/components/rootShell';
-import { HomeIcon } from '@repo/shared/components/icons';
 import { memo } from 'react';
 
-const Settings = () => {
-  const breadcrumps: AppBarBreadcrumbs = {
-    items: [
-      {
-        icon: <HomeIcon />,
-        label: 'Home',
-        href: '/',
-      },
-    ],
-    lastItemLabel: 'Settings',
-  };
-
-  return (
-    <RootShell appBarBreadcrumbs={breadcrumps}>
-      <CustomerSettings />
-    </RootShell>
-  );
-};
+const Settings = () => (
+  <RootShell>
+    <CustomerSettings />
+  </RootShell>
+);
 
 export default memo(Settings);

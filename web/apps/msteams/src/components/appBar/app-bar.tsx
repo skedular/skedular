@@ -18,19 +18,6 @@ import type { appBar_query$key } from './__generated__/appBar_query.graphql';
 type Props = {
   rootDataRelay: appBar_query$key;
   onReloadRequired: () => void;
-  breadcrumbs?: AppBarBreadcrumbs;
-};
-
-type AppBarBreadcrumbsItem = {
-  href: string;
-  label: string;
-  icon?: React.ReactNode;
-};
-
-export type AppBarBreadcrumbs = {
-  items?: AppBarBreadcrumbsItem[];
-  lastItemLabel?: string;
-  lastItemIcon?: React.ReactNode;
 };
 
 const AppBar = ({ rootDataRelay }: Props) => {

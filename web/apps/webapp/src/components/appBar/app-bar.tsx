@@ -27,19 +27,6 @@ import { useInterval } from 'usehooks-ts';
 type Props = {
   rootDataRelay: appBar_query$key;
   onReloadRequired: () => void;
-  breadcrumbs?: AppBarBreadcrumbs;
-};
-
-type AppBarBreadcrumbsItem = {
-  href: string;
-  label: string;
-  icon?: React.ReactNode;
-};
-
-export type AppBarBreadcrumbs = {
-  items?: AppBarBreadcrumbsItem[];
-  lastItemLabel?: string;
-  lastItemIcon?: React.ReactNode;
 };
 
 const createOrganizationId = '76eZvntIX6YA5FboBJlRk';

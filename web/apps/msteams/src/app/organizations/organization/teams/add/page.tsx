@@ -1,5 +1,3 @@
-import { HomeIcon } from '@repo/shared/components/icons';
-import type { AppBarBreadcrumbs } from 'components/appBar';
 import { RootShell } from 'components/rootShell';
 import { AddTeam } from 'components/team/addTeam';
 import { memo } from 'react';
@@ -22,21 +20,6 @@ const AddTeamPage = () => {
     throw new Error('organizationId is required');
   }
 
-  const breadcrumps: AppBarBreadcrumbs = {
-    items: [
-      {
-        icon: <HomeIcon />,
-        label: 'Home',
-        href: '/',
-      },
-      {
-        label: 'Teams',
-        href: '/teams',
-      },
-    ],
-    lastItemLabel: 'Add new team',
-  };
-
   const handleAdded = () => {
     navigate(-1);
   };
@@ -48,7 +31,7 @@ const AddTeamPage = () => {
   const handleReloadRequired = () => {};
 
   return (
-    <RootShell appBarBreadcrumbs={breadcrumps}>
+    <RootShell>
       <AddTeam organizationId={finalOrganizationId} onAdded={handleAdded} onCancelled={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );

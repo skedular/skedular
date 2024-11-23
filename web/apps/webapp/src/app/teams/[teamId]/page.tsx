@@ -1,10 +1,7 @@
 'use client';
 
-import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { RootShell } from '@/components/rootShell';
-import { getTeamBaseLink } from '@/components/team';
 import { Team } from '@/components/team/teamPage';
-import { HomeIcon } from '@repo/shared/components/icons';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
 
@@ -24,23 +21,8 @@ const TeamPage = () => {
     throw new Error('teamId is required');
   }
 
-  const breadcrumps: AppBarBreadcrumbs = {
-    items: [
-      {
-        icon: <HomeIcon />,
-        label: 'Home',
-        href: '/',
-      },
-      {
-        label: 'Teams',
-        href: '/teams',
-      },
-    ],
-    lastItemLabel: getTeamBaseLink(finalTeamId),
-  };
-
   return (
-    <RootShell appBarBreadcrumbs={breadcrumps}>
+    <RootShell>
       <Team organizationId="" teamId={finalTeamId} />
     </RootShell>
   );

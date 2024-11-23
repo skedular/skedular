@@ -1,10 +1,7 @@
 'use client';
 
-import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { Bookings } from '@/components/booking/bookingsPage';
-import { getOrganizationBaseLink } from '@/components/organization/organization-link';
 import { RootShell } from '@/components/rootShell';
-import { HomeIcon } from '@repo/shared/components/icons';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
 
@@ -26,23 +23,8 @@ const OrganizationsPage = () => {
 
   const handleReloadRequired = () => {};
 
-  const breadcrumps: AppBarBreadcrumbs = {
-    items: [
-      {
-        icon: <HomeIcon />,
-        label: 'Home',
-        href: '/',
-      },
-      {
-        label: 'Organizations',
-        href: getOrganizationBaseLink(finalOrganizationId),
-      },
-    ],
-    lastItemLabel: 'Bookings',
-  };
-
   return (
-    <RootShell appBarBreadcrumbs={breadcrumps}>
+    <RootShell>
       <Bookings onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
     </RootShell>
   );

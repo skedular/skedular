@@ -1,10 +1,7 @@
 'use client';
 
-import type { AppBarBreadcrumbs } from '@/components/appBar';
 import { AddLocation } from '@/components/location/addLocation';
-import { getOrganizationBaseLink, getOrganizationLocationsBaseLink } from '@/components/organization';
 import { RootShell } from '@/components/rootShell';
-import { HomeIcon } from '@repo/shared/components/icons';
 import { useParams, useRouter } from 'next/navigation';
 import { memo } from 'react';
 
@@ -25,29 +22,6 @@ const AddLocationPage = () => {
     throw new Error('organizationId is required');
   }
 
-  const breadcrumps: AppBarBreadcrumbs = {
-    items: [
-      {
-        icon: <HomeIcon />,
-        label: 'Home',
-        href: '/',
-      },
-      {
-        label: 'Organizations',
-        href: '/organizations',
-      },
-      {
-        label: '',
-        href: getOrganizationBaseLink(finalOrganizationId),
-      },
-      {
-        label: 'Locations',
-        href: getOrganizationLocationsBaseLink(finalOrganizationId),
-      },
-    ],
-    lastItemLabel: 'Add new location',
-  };
-
   const handleAdded = () => {
     router.back();
   };
@@ -59,7 +33,7 @@ const AddLocationPage = () => {
   const handleReloadRequired = () => {};
 
   return (
-    <RootShell appBarBreadcrumbs={breadcrumps}>
+    <RootShell>
       <AddLocation organizationId={finalOrganizationId} onAdded={handleAdded} onCancelled={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );

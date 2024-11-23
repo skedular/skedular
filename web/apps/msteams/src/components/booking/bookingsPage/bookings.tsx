@@ -7,17 +7,13 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { endOfWeek, startOfDay, startOfWeek } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingCard } from 'components/booking';
 import { NewBookingButton } from 'components/booking/addBooking';
-import { getLocationBaseLink } from 'components/location';
-import { getOrganizationBaseLink } from 'components/organization';
-import { getTeamBaseLink } from 'components/team';
 import dayjs, { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
-import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { bookings_bookings_query$key } from './__generated__/bookings_bookings_query.graphql';
@@ -137,26 +133,6 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
   const [startWeek, setStartWeek] = useState(startOfWeek());
   const [pageSize, setPageSize] = useState(50);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-  const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
-
-  useEffect(() => {
-    let breadcrumbs = new Map<string, string>();
-
-    if (rootData.organization) {
-      breadcrumbs = breadcrumbs.set(getOrganizationBaseLink(rootData.organization.id), rootData.organization?.name!);
-    }
-
-    if (rootData.location && rootData.organization) {
-      breadcrumbs = breadcrumbs.set(getLocationBaseLink(rootData.location.id, rootData.organization?.id), rootData.location?.name!);
-    }
-
-    if (rootData.team && rootData.organization) {
-      breadcrumbs = breadcrumbs.set(getTeamBaseLink(rootData.team.id, rootData.organization?.id), rootData.team?.name!);
-    }
-
-    updateBreadcrumps(breadcrumbs);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rootData.organization, rootData.location, rootData.team]);
 
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {

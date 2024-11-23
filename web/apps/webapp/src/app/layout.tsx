@@ -6,7 +6,6 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
 import {
-  BreadcrumpsProvider,
   DatePickerLocalizationProvider,
   GlobalReloadIdProvider,
   PaletteModeContext,
@@ -29,16 +28,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <GlobalReloadIdProvider>
       <SelectedOrganizationProvider>
-        <BreadcrumpsProvider>
-          <ThemeProvider mode={paletteMode}>
-            <CssBaseline />
-            <DatePickerLocalizationProvider>
-              <NextAuthProvider>
-                <RelayProvider>{children}</RelayProvider>
-              </NextAuthProvider>
-            </DatePickerLocalizationProvider>
-          </ThemeProvider>
-        </BreadcrumpsProvider>
+        <ThemeProvider mode={paletteMode}>
+          <CssBaseline />
+          <DatePickerLocalizationProvider>
+            <NextAuthProvider>
+              <RelayProvider>{children}</RelayProvider>
+            </NextAuthProvider>
+          </DatePickerLocalizationProvider>
+        </ThemeProvider>
       </SelectedOrganizationProvider>
     </GlobalReloadIdProvider>
   );

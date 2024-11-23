@@ -1,5 +1,3 @@
-import { HomeIcon } from '@repo/shared/components/icons';
-import type { AppBarBreadcrumbs } from 'components/appBar';
 import { RootShell } from 'components/rootShell';
 import { Teams } from 'components/team/teams';
 import { memo } from 'react';
@@ -21,19 +19,8 @@ const TeamsPage = () => {
     throw new Error('organizationId is required');
   }
 
-  const breadcrumps: AppBarBreadcrumbs = {
-    items: [
-      {
-        icon: <HomeIcon />,
-        label: 'Home',
-        href: '/',
-      },
-    ],
-    lastItemLabel: 'Teams',
-  };
-
   return (
-    <RootShell appBarBreadcrumbs={breadcrumps}>
+    <RootShell>
       <Teams organizationId={finalOrganizationId} />
     </RootShell>
   );

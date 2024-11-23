@@ -11,10 +11,10 @@ import {
 } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { PaletteModeContext, UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { getOrganizationBaseLink, OrganizationMemberSelector } from 'components/organization';
+import { OrganizationMemberSelector } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
@@ -95,18 +95,6 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(teamSchema);
   const requiredFields = makeRequired(teamSchema);
-  const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
-
-  useEffect(() => {
-    let breadcrumbs = new Map<string, string>();
-
-    if (rootData.organization) {
-      breadcrumbs = breadcrumbs.set(getOrganizationBaseLink(rootData.organization.id), rootData.organization?.name!);
-    }
-
-    updateBreadcrumps(breadcrumbs);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rootData.organization]);
 
   const handleCancelClick = () => {
     commitCompleteTeamOnboarding({

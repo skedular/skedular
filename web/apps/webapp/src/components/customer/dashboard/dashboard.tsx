@@ -1,6 +1,5 @@
 import { CustomerDaySummary } from '@/components/customer/customerDaySummary';
 import { LocationBookingsCard } from '@/components/location/locationBookingCard';
-import { getOrganizationBaseLink } from '@/components/organization';
 import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type { dashboard_rootQuery } from '@/queries/__generated__/dashboard_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -9,9 +8,8 @@ import Stack from '@mui/material/Stack';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import { startOfDay } from '@repo/shared/libs/utils';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -50,18 +48,6 @@ const Dashboard = ({ queryReference, organizationId }: Props) => {
   const rootData = usePreloadedQuery<dashboard_rootQuery>(RootQuery, queryReference);
   const [today] = useState(startOfDay());
   const [tomorrow] = useState(startOfDay().add(1, 'day'));
-  const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
-
-  useEffect(() => {
-    let breadcrumbs = new Map<string, string>();
-
-    if (rootData.organization) {
-      breadcrumbs = breadcrumbs.set(getOrganizationBaseLink(rootData.organization.id), rootData.organization?.name!);
-    }
-
-    updateBreadcrumps(breadcrumbs);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rootData.organization]);
 
   if (!rootData.myTeams || !rootData.myLocations) {
     return <></>;

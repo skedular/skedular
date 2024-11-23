@@ -3,14 +3,12 @@ import Tabs from '@mui/material/Tabs';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { UpdateBreadcrumpsContext } from '@repo/shared/libs/providers';
 import graphql from 'babel-plugin-relay/macro';
 import { Bookings } from 'components/booking/bookingsPage';
-import { getLocationBaseLink, LocationLink } from 'components/location';
-import { getOrganizationBaseLink } from 'components/organization';
+import { LocationLink } from 'components/location';
 import { OrganizationDeskTypes } from 'components/organization/organizationPage';
 import { nanoid } from 'nanoid';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useSearchParams } from 'react-router-dom';
@@ -48,23 +46,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
   const rootData = usePreloadedQuery<location_rootQuery>(RootQuery, queryReference);
   const [searchParams, setSearchParams] = useSearchParams();
   const tab = searchParams.get('tab');
-  const updateBreadcrumps = useContext(UpdateBreadcrumpsContext);
   let initialTabIndex = 0;
-
-  useEffect(() => {
-    let breadcrumbs = new Map<string, string>();
-
-    if (rootData.organization) {
-      breadcrumbs = breadcrumbs.set(getOrganizationBaseLink(rootData.organization.id), rootData.organization?.name!);
-    }
-
-    if (rootData.location && rootData.organization) {
-      breadcrumbs = breadcrumbs.set(getLocationBaseLink(rootData.location.id, rootData.organization.id), rootData.location?.name!);
-    }
-
-    updateBreadcrumps(breadcrumbs);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rootData.organization, rootData.location]);
 
   let tabCount = 0;
   const bookingTabIndex = tabCount++;
