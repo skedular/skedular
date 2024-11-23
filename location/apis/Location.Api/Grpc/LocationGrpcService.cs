@@ -405,14 +405,17 @@ public class LocationGrpcService(
 
         var bulkAddDesksResponse = new BulkAddDesksResponse();
 
-        bulkAddDesksResponse.Desks.AddRange((await deskService.BulkAddAsync(
+        var desks = await deskService.BulkAddAsync(
             request.LocationId,
             request.NamePrefix,
             request.Count,
             request.TagIds,
+            request.OrganizationTagIds,
             request.Deactivated,
             request.RequireBookingApproval,
-            context.CancellationToken)).Select(mapper.MapToGrpcResponse));
+            context.CancellationToken);
+
+        bulkAddDesksResponse.Desks.AddRange(desks.Select(mapper.MapToGrpcResponse));
 
         return bulkAddDesksResponse;
     }

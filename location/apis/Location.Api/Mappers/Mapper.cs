@@ -14,6 +14,7 @@ using LocationEdge = Location.Api.GraphQL.LocationEdge;
 using LocationDailyBookingsTotal = Location.Shared.Models.LocationDailyBookingsTotal;
 using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOccupancyPercentage;
 using Organization = Location.Shared.Database.Entities.Organization;
+using OrganizationTag = Location.Shared.Models.OrganizationTag;
 using Permissions = Api.Shared.Services.Grpc.UnityHub.Location.V1.Permissions;
 using Tag = Location.Shared.Database.Entities.Tag;
 using UpdateDeskInput = Location.Api.GraphQL.UpdateDeskInput;
@@ -43,6 +44,7 @@ public interface IMapper
     LocationDetails? MapTo(Shared.Models.Location? src);
     DeskDetails MapTo(Shared.Models.Desk src);
     LocationTagDetails MapTo(Shared.Models.Tag src);
+    OrganizationTagDetails MapTo(OrganizationTag src);
     IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src);
 
     LocationAnalytics MapTo(
@@ -274,6 +276,9 @@ public class Mapper : IMapper
     public LocationTagDetails MapTo(Shared.Models.Tag src) =>
         new() { Id = src.Id, Name = src.Name, Description = src.Description, TagType = src.Type };
 
+    public OrganizationTagDetails MapTo(OrganizationTag src) =>
+        new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type };
+
     public DeskEdge MapTo(Edge<Shared.Models.Desk> src) =>
         new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
@@ -284,7 +289,8 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            LocationTags = MapTo(src.Tags).ToArray()
+            LocationTags = MapTo(src.Tags).ToArray(),
+            OrganizationTags = MapTo(src.OrganizationTags).ToArray()
         };
 
     public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.DeskEdge MapToGrpcResponse(
@@ -394,6 +400,7 @@ public class Mapper : IMapper
             Deactivated = false,
             RequireBookingApproval = false,
             Tags = src.LocationTagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
+            OrganizationTags = src.OrganizationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Location = new Shared.Models.Location { Id = src.LocationId }
         };
 
@@ -404,7 +411,8 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            Tags = src.LocationTagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList()
+            Tags = src.LocationTagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
+            OrganizationTags = src.OrganizationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
@@ -510,6 +518,15 @@ public class Mapper : IMapper
             Type = src.Type.ToSafeString()
         };
 
+    public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrganizationTag MapToGrpcResponse(
+        Shared.Models.OrganizationTag src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Type = src.Type.ToSafeString()
+        };
+
     public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk MapToGrpcResponse(
         Shared.Models.Desk src)
     {
@@ -522,6 +539,7 @@ public class Mapper : IMapper
         };
 
         desk.Tags.AddRange(MapToGrpcResponse(src.Tags));
+        desk.OrganizationTags.AddRange(MapToGrpcResponse(src.OrganizationTags));
 
         return desk;
     }
@@ -563,7 +581,8 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Location = new Shared.Models.Location { Id = src.LocationId },
-            Tags = src.TagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList()
+            Tags = src.TagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
         };
 
     public Shared.Models.Desk MapTo(Admin_AddDeskInput src) =>
@@ -574,7 +593,8 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Location = new Shared.Models.Location { Id = src.LocationId },
-            Tags = src.TagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList()
+            Tags = src.TagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
         };
 
     public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.UpdateDeskInput src) =>
@@ -584,7 +604,8 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            Tags = src.TagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList()
+            Tags = src.TagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
         };
 
     public IEnumerable<Edge<Shared.Models.Desk>> MapTo(IEnumerable<Edge<Desk>> src, Shared.Models.Location location) =>
@@ -626,6 +647,9 @@ public class Mapper : IMapper
     private IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Tag> MapToGrpcResponse(
         IEnumerable<Shared.Models.Tag> src) => src.Select(MapToGrpcResponse);
 
+    private IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrganizationTag> MapToGrpcResponse(
+        IEnumerable<Shared.Models.OrganizationTag> src) => src.Select(MapToGrpcResponse);
+
     private IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk> MapToGrpcResponse(
         IEnumerable<Shared.Models.Desk> src) => src.Select(MapToGrpcResponse);
 
@@ -638,6 +662,8 @@ public class Mapper : IMapper
             };
 
     private IEnumerable<LocationTagDetails> MapTo(IEnumerable<Shared.Models.Tag> src) => src.Select(MapTo);
+
+    private IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 
     private static LocationCustomerDetails MapTo(Customer src) =>
         new()

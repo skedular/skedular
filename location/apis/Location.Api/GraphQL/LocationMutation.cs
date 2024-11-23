@@ -64,6 +64,7 @@ public class LocationMutation
             input.NamePrefix,
             input.Count,
             input.LocationTagIds,
+            input.OrganizationTagIds,
             input.Deactivated,
             input.RequireBookingApproval,
             cancellationToken);

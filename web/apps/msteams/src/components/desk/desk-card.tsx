@@ -314,6 +314,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           deactivated: true,
           requireBookingApproval: deskDetails.requireBookingApproval,
           locationTagIds,
+          organizationTagIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -374,6 +375,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           deactivated: false,
           requireBookingApproval: deskDetails.requireBookingApproval,
           locationTagIds,
+          organizationTagIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -431,6 +433,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           deactivated: deskDetails.deactivated,
           requireBookingApproval: deskDetails.requireBookingApproval,
           locationTagIds,
+          organizationTagIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -607,6 +610,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           deactivated: deskDetails.deactivated,
           requireBookingApproval: true,
           locationTagIds,
+          organizationTagIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -672,6 +676,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           deactivated: deskDetails.deactivated,
           requireBookingApproval: false,
           locationTagIds,
+          organizationTagIds: [],
         },
       },
       onCompleted: (_, errors) => {

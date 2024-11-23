@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cc733daf65859518e9df315d5ee815b0>>
+ * @generated SignedSource<<6c815defc908d19cb2ef2fda95bcdb7e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type AddDeskInput = {
   locationId: string;
   locationTagIds: ReadonlyArray<string>;
   name: string;
+  organizationTagIds: ReadonlyArray<string>;
 };
 export type newDeskDialog_addDeskMutation$variables = {
   connectionIds: ReadonlyArray<string>;

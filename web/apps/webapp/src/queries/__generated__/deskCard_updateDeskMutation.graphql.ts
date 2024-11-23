@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2725287c07b3fb4faf0edc466b9bbcb5>>
+ * @generated SignedSource<<4bc156b1aee526a4b40ebc6f109005b8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type UpdateDeskInput = {
   id: string;
   locationTagIds: ReadonlyArray<string>;
   name: string;
+  organizationTagIds: ReadonlyArray<string>;
   requireBookingApproval: boolean;
 };
 export type deskCard_updateDeskMutation$variables = {

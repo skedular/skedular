@@ -352,6 +352,7 @@ type DeskDetails {
   deactivated: Boolean!
   requireBookingApproval: Boolean!
   locationTags: [LocationTagDetails!]!
+  organizationTags: [Organization_OrganizationTagDetails!]!
   id: ID!
 }
 type DeskEdge {
@@ -458,6 +459,11 @@ type LocationTagEdge {
 type LocationTagPayload {
   clientMutationId: String
   locationTag: LocationTagDetails!
+}
+type Organization_OrganizationTagDetails {
+  name: String
+  tagType: String
+  uniqueId: ID!
 }
 type RejectInvitationToJoinLocationPayload {
   clientMutationId: String
@@ -1028,6 +1034,7 @@ input AddDeskInput {
   name: String!
   locationId: String!
   locationTagIds: [String!]!
+  organizationTagIds: [String!]!
 }
 input AddLocationInput {
   clientMutationId: String
@@ -1052,6 +1059,7 @@ input BulkAddDeskInput {
   locationId: String!
   count: Int!
   locationTagIds: [String!]!
+  organizationTagIds: [String!]!
   deactivated: Boolean!
   requireBookingApproval: Boolean!
 }
@@ -1125,6 +1133,7 @@ input UpdateDeskInput {
   deactivated: Boolean!
   requireBookingApproval: Boolean!
   locationTagIds: [String!]!
+  organizationTagIds: [String!]!
 }
 input UpdateLocationInput {
   clientMutationId: String

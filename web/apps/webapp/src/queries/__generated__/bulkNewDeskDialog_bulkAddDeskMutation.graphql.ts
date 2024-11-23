@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e3a680d26ebc4a39b9d8b0c1e7438124>>
+ * @generated SignedSource<<8a55a4db6d90d00abb8d61d19b4b9c97>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type BulkAddDeskInput = {
   locationId: string;
   locationTagIds: ReadonlyArray<string>;
   namePrefix?: string | null | undefined;
+  organizationTagIds: ReadonlyArray<string>;
   requireBookingApproval: boolean;
 };
 export type bulkNewDeskDialog_bulkAddDeskMutation$variables = {

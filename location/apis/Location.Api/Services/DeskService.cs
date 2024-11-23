@@ -27,6 +27,7 @@ public interface IDeskService
         string? namePrefix,
         int count,
         ICollection<string> tagIds,
+        ICollection<string> organizationTagIds,
         bool deactivated,
         bool requireBookingApproval,
         CancellationToken cancellationToken);
@@ -178,6 +179,7 @@ public class DeskService(
         string? namePrefix,
         int count,
         ICollection<string> tagIds,
+        ICollection<string> organizationTagIds,
         bool deactivated,
         bool requireBookingApproval,
         CancellationToken cancellationToken)

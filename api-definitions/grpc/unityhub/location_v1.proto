@@ -173,12 +173,19 @@ message Tag {
     string type = 4;
 }
 
+message OrganizationTag {
+    string id = 1;
+    string name = 2;
+    string type = 3;
+}
+
 message Desk {
     string id = 1;
     string name = 2;
     repeated Tag tags = 3;
     bool deactivated = 4;
     bool requireBookingApproval = 5;
+    repeated OrganizationTag organizationTags = 6;
 }
 
 message GetPermissionsInput {
@@ -328,6 +335,7 @@ message BulkAddDesksInput {
     repeated string tagIds = 5;
     bool deactivated = 6;
     bool requireBookingApproval = 7;
+    repeated string organizationTagIds = 8;
 }
 
 message BulkAddDesksResponse {
@@ -350,6 +358,7 @@ message AddDeskInput {
     bool deactivated = 4;
     bool requireBookingApproval = 5;
     repeated string tagIds = 6;
+    repeated string organizationTagIds = 7;
 }
 
 message UpdateDeskInput {
@@ -358,6 +367,7 @@ message UpdateDeskInput {
     bool deactivated = 3;
     bool requireBookingApproval = 4;
     repeated string tagIds = 5;
+    repeated string organizationTagIds = 6;
 }
 
 message RemoveDeskInput {

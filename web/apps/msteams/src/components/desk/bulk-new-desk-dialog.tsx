@@ -88,6 +88,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
           locationId,
           count: parseInt(count.toString()),
           locationTagIds: locationTagIds ? locationTagIds : [],
+          organizationTagIds: [],
           deactivated: false,
           requireBookingApproval: false,
         },
