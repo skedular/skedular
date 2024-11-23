@@ -291,7 +291,7 @@ public class LocationMemberDetails : Node
 public class LocationMemberDetailsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    https://meet.google.com/zto-iajd-mqp
+
     [GraphQLName("member")] public LocationMemberDetails? Member { get; set; }
 }
 
