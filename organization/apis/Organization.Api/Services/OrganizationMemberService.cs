@@ -44,6 +44,7 @@ public class OrganizationMemberService(
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
+    IOrganizationService organizationService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IMapper mapper) : IOrganizationMemberService
@@ -275,5 +276,7 @@ public class OrganizationMemberService(
         await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        organizationService.ClearOrganizationMemberCache(organization, customer);
     }
 }

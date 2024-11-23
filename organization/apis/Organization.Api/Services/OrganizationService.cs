@@ -45,6 +45,8 @@ public interface IOrganizationService
         OrganizationSearchCriteria searchCriteria,
         ICollection<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken);
+
+    void ClearOrganizationMemberCache(Shared.Database.Entities.Organization organization, Customer customer);
 }
 
 public class OrganizationService(
@@ -306,6 +308,9 @@ public class OrganizationService(
 
         return (paginatedInfo, mappedOrganizations, totalCount);
     }
+
+    public void ClearOrganizationMemberCache(Shared.Database.Entities.Organization organization, Customer customer) =>
+        memoryCache.Remove($"organization-{organization.Id}-customer-{customer.Id}-member");
 
     private async Task<Shared.Models.Organization> UpdateInternalAsync(
         Shared.Models.Organization organization,
