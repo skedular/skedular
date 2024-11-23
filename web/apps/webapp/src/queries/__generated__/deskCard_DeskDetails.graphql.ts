@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<83b8ebf49ca470acd7374bfcffd8c599>>
+ * @generated SignedSource<<faa1e5e20f49657900d93a5de2e9746d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,10 @@ export type deskCard_DeskDetails$data = {
     readonly name: string;
   }>;
   readonly name: string;
+  readonly organizationTags: ReadonlyArray<{
+    readonly name: string | null | undefined;
+    readonly uniqueId: string;
+  }>;
   readonly requireBookingApproval: boolean;
   readonly " $fragmentType": "deskCard_DeskDetails";
 };
@@ -75,6 +79,25 @@ return {
         (v1/*: any*/)
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Organization_OrganizationTagDetails",
+      "kind": "LinkedField",
+      "name": "organizationTags",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "uniqueId",
+          "storageKey": null
+        },
+        (v1/*: any*/)
+      ],
+      "storageKey": null
     }
   ],
   "type": "DeskDetails",
@@ -82,6 +105,6 @@ return {
 };
 })();
 
-(node as any).hash = "62f05a4e95ea7c13f995bc72d6dd7e54";
+(node as any).hash = "0a9d56e0ecdf04dd90728421e417e687";
 
 export default node;

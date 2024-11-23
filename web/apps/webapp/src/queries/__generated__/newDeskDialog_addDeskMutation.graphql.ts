@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c815defc908d19cb2ef2fda95bcdb7e>>
+ * @generated SignedSource<<4aabbe2d4d88e5cfedcaa78d73ec31c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,6 +29,9 @@ export type newDeskDialog_addDeskMutation$data = {
         readonly id: string;
       }>;
       readonly name: string;
+      readonly organizationTags: ReadonlyArray<{
+        readonly uniqueId: string;
+      }>;
     };
   } | null | undefined;
 };
@@ -40,6 +43,9 @@ export type newDeskDialog_addDeskMutation$rawResponse = {
         readonly id: string;
       }>;
       readonly name: string;
+      readonly organizationTags: ReadonlyArray<{
+        readonly uniqueId: string;
+      }>;
     };
   } | null | undefined;
 };
@@ -101,6 +107,24 @@ v3 = {
       "plural": true,
       "selections": [
         (v2/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Organization_OrganizationTagDetails",
+      "kind": "LinkedField",
+      "name": "organizationTags",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "uniqueId",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     }
@@ -172,16 +196,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e1640dba66d294b7f88627698b6845a7",
+    "cacheID": "2677d50be0f51615f494a2ba8a70f0c1",
     "id": null,
     "metadata": {},
     "name": "newDeskDialog_addDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation newDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      locationTags {\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation newDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      locationTags {\n        id\n      }\n      organizationTags {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "afe6874666e0277c476d4b8ad8a27703";
+(node as any).hash = "41384b9a671ca13baec86e6c3d5fd830";
 
 export default node;

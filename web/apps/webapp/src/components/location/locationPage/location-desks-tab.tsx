@@ -14,6 +14,7 @@ import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import { DayPicker } from '@repo/shared/components/datePickers';
+import { ORGANIZATION_TAG_TYPE_DESK_TYPE } from '@repo/shared/components/deskType';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -36,13 +37,17 @@ type Props = {
 
 const RootQuery = graphql`
   query locationDesksTab_rootQuery(
+    $organizationId: String!
     $locationId: String!
+    $organizationExists: Boolean!
     $zoneTagType: String!
+    $deskTypeTagType: String!
     $fromToGetBookings: DateTime
     $toToGetBookings: DateTime
     $deskNameSearchText: String
     $deskSortingValues: [DeskOrderInput!]!
     $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
+    $deskMultipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
   ) {
     ...locationDesksTab_query
     ...locationDesksTab_locationDesks_query
@@ -60,6 +65,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
         }
         ...deskCard_query
         ...deskMultipleChoicesZones_query
+        ...deskMultipleChoicesDeskTypes_query
         ...newDeskDialog_query
         ...bulkNewDeskDialog_query
       }
@@ -321,6 +327,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
               <DeskCard
                 rootDataRelay={rootData}
                 deskMultipleChoicesZonesData={rootData}
+                deskMultipleChoicesDeskTypesData={rootData}
                 deskDetailsRelay={edge.node}
                 connectionIds={connectionIds}
                 customerDetails={foundBooking ? foundBooking.customer : null}
@@ -356,10 +363,11 @@ const MemoLocationDesksTab = memo(LocationDesksTab);
 
 type RelayProps = {
   onReloadRequired: () => void;
+  organizationId?: string;
   locationId: string;
 };
 
-const LocationDesksTabWithRelay = ({ onReloadRequired, locationId }: RelayProps) => {
+const LocationDesksTabWithRelay = ({ onReloadRequired, locationId, organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationDesksTab_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -370,8 +378,11 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
 
     loadQuery(
       {
+        organizationId: organizationId ?? '',
+        organizationExists: !!organizationId,
         locationId,
         zoneTagType: LOCATION_TAG_TYPE_LOCATION_ZONE,
+        deskTypeTagType: ORGANIZATION_TAG_TYPE_DESK_TYPE,
         fromToGetBookings: from,
         toToGetBookings: to,
         deskSortingValues: [
@@ -386,12 +397,18 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
             field: 'Name',
           },
         ],
+        deskMultipleChoicesDeskTypesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, locationId]);
+  }, [loadQuery, triggerReloadId, organizationId, locationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

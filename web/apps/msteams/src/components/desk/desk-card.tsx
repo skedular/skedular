@@ -16,6 +16,7 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { DeskTypesLine } from '@repo/shared/components/deskType';
 import {
   DangerIcon,
   DeleteIcon,
@@ -50,7 +51,9 @@ import type { deskCard_deleteLocationMutation } from './__generated__/deskCard_d
 import type { deskCard_query$key } from './__generated__/deskCard_query.graphql';
 import type { deskCard_removeCustomerDefaultDeskMutation } from './__generated__/deskCard_removeCustomerDefaultDeskMutation.graphql';
 import type { deskCard_updateDeskMutation } from './__generated__/deskCard_updateDeskMutation.graphql';
+import type { deskMultipleChoicesDeskTypes_query$key } from './__generated__/deskMultipleChoicesDeskTypes_query.graphql';
 import type { deskMultipleChoicesZones_query$key } from './__generated__/deskMultipleChoicesZones_query.graphql';
+import DeskMultipleChoicesDeskTypes from './desk-multiple-choices-desk-types';
 import DeskMultipleChoicesZones from './desk-multiple-choices-zones';
 import DeskName from './desk-name';
 
@@ -58,6 +61,7 @@ type Props = {
   rootDataRelay: deskCard_query$key;
   deskDetailsRelay: deskCard_DeskDetails$key;
   deskMultipleChoicesZonesData: deskMultipleChoicesZones_query$key;
+  deskMultipleChoicesDeskTypesData: deskMultipleChoicesDeskTypes_query$key;
   connectionIds: string[];
   customerDetails: CustomerDetails | null;
   locationId: string;
@@ -75,11 +79,13 @@ type CustomerDetails = {
 type DeskDetails = {
   name: string;
   locationTagIds: string[];
+  organizationTagIds: string[];
 };
 
 const deskSchema = object({
   name: string().required('Desk name is required'),
   locationTagIds: array().nullable(),
+  organizationTagIds: array().nullable(),
 });
 
 enum MoreActionsMenuOptionType {
@@ -113,7 +119,15 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
   },
 };
 
-const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesData, connectionIds, customerDetails, locationId }: Props) => {
+const DeskCard = ({
+  rootDataRelay,
+  deskDetailsRelay,
+  deskMultipleChoicesZonesData,
+  deskMultipleChoicesDeskTypesData,
+  connectionIds,
+  customerDetails,
+  locationId,
+}: Props) => {
   const rootData = useFragment<deskCard_query$key>(
     graphql`
       fragment deskCard_query on Query {
@@ -142,6 +156,10 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           id
           name
         }
+        organizationTags {
+          uniqueId
+          name
+        }
       }
     `,
     deskDetailsRelay,
@@ -157,6 +175,10 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           requireBookingApproval
           locationTags {
             id
+            name
+          }
+          organizationTags {
+            uniqueId
             name
           }
         }
@@ -303,6 +325,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     setDeskDeactivateConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
+    const organizationTagIds = deskDetails.organizationTags.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(<NotificationContent content={`Deactivating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
@@ -314,7 +337,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           deactivated: true,
           requireBookingApproval: deskDetails.requireBookingApproval,
           locationTagIds,
-          organizationTagIds: [],
+          organizationTagIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -346,6 +369,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             deactivated: true,
             requireBookingApproval: deskDetails.requireBookingApproval,
             locationTags: deskDetails.locationTags,
+            organizationTags: deskDetails.organizationTags,
           },
         },
       },
@@ -364,6 +388,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     setDeskActivateConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
+    const organizationTagIds = deskDetails.organizationTags.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(<NotificationContent content={`Activating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
@@ -375,7 +400,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           deactivated: false,
           requireBookingApproval: deskDetails.requireBookingApproval,
           locationTagIds,
-          organizationTagIds: [],
+          organizationTagIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -407,6 +432,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             deactivated: false,
             requireBookingApproval: deskDetails.requireBookingApproval,
             locationTags: deskDetails.locationTags,
+            organizationTags: deskDetails.organizationTags,
           },
         },
       },
@@ -421,7 +447,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     setEditing(false);
   };
 
-  const handleSaveClick = ({ name, locationTagIds }: DeskDetails) => {
+  const handleSaveClick = ({ name, locationTagIds, organizationTagIds }: DeskDetails) => {
     const toastId = themedToast(<NotificationContent content={`Updating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
@@ -433,7 +459,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           deactivated: deskDetails.deactivated,
           requireBookingApproval: deskDetails.requireBookingApproval,
           locationTagIds,
-          organizationTagIds: [],
+          organizationTagIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -467,6 +493,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             deactivated: deskDetails.deactivated,
             requireBookingApproval: deskDetails.requireBookingApproval,
             locationTags: [],
+            organizationTags: [],
           },
         },
       },
@@ -596,6 +623,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     setSetDeskApprovalRequirementConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
+    const organizationTagIds = deskDetails.organizationTags.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(
       <NotificationContent content={`Setting '${deskDetails.name}' require approval property...`} />,
       infoNotificationOptions,
@@ -610,7 +638,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           deactivated: deskDetails.deactivated,
           requireBookingApproval: true,
           locationTagIds,
-          organizationTagIds: [],
+          organizationTagIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -644,6 +672,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             deactivated: deskDetails.deactivated,
             requireBookingApproval: true,
             locationTags: deskDetails.locationTags,
+            organizationTags: deskDetails.organizationTags,
           },
         },
       },
@@ -662,6 +691,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
     setRemoveDeskApprovalRequirementConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
+    const organizationTagIds = deskDetails.organizationTags.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(
       <NotificationContent content={`Unsetting '${deskDetails.name}' require approval property...`} />,
       infoNotificationOptions,
@@ -676,7 +706,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           deactivated: deskDetails.deactivated,
           requireBookingApproval: false,
           locationTagIds,
-          organizationTagIds: [],
+          organizationTagIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -710,6 +740,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             deactivated: deskDetails.deactivated,
             requireBookingApproval: false,
             locationTags: deskDetails.locationTags,
+            organizationTags: deskDetails.organizationTags,
           },
         },
       },
@@ -769,7 +800,10 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
           />
 
           <CardContent>
-            <ZonesLine zones={deskDetails.locationTags} />
+            <Stack direction="column" spacing={1}>
+              <ZonesLine zones={deskDetails.locationTags} />
+              <DeskTypesLine deskTypes={deskDetails.organizationTags.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
+            </Stack>
 
             {extraInfo.length > 0 && (
               <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
@@ -825,6 +859,7 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
             initialValues={{
               name: deskDetails.name,
               locationTagIds: deskDetails.locationTags.map(({ id }) => id),
+              organizationTagIds: deskDetails.organizationTags.map(({ uniqueId }) => uniqueId),
             }}
             validate={validate}
             render={({ handleSubmit }) => (
@@ -834,6 +869,11 @@ const DeskCard = ({ rootDataRelay, deskDetailsRelay, deskMultipleChoicesZonesDat
                   rootDataRelay={deskMultipleChoicesZonesData}
                   name="locationTagIds"
                   required={requiredFields.locationTagIds}
+                />
+                <DeskMultipleChoicesDeskTypes
+                  rootDataRelay={deskMultipleChoicesDeskTypesData}
+                  name="organizationTagIds"
+                  required={requiredFields.organizationTagIds}
                 />
 
                 <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>

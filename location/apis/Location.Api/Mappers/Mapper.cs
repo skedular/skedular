@@ -225,6 +225,17 @@ public class Mapper : IMapper
             Type = src.Type
         };
 
+    public OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Type = src.Type
+        };
+
     public Shared.Models.Desk MapTo(Desk src) =>
         new()
         {
@@ -235,7 +246,8 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            Tags = MapTo(src.Tags).ToList()
+            Tags = MapTo(src.Tags).ToList(),
+            OrganizationTags = MapTo(src.OrganizationTags).ToList()
         };
 
     public Desk MapTo(
@@ -525,7 +537,8 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Location = location,
-            Tags = MapTo(src.Tags, location).ToList()
+            Tags = MapTo(src.Tags, location).ToList(),
+            OrganizationTags = MapTo(src.OrganizationTags, location.Organization).ToList()
         };
 
     public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Tag MapToGrpcResponse(
@@ -649,10 +662,18 @@ public class Mapper : IMapper
     private IEnumerable<Shared.Models.Tag> MapTo(IEnumerable<Tag> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
 
+    private IEnumerable<OrganizationTag> MapTo(
+        IEnumerable<Shared.Database.Entities.OrganizationTag> src,
+        Shared.Models.Organization? organization) =>
+        src.Select(item => MapTo(item, organization));
+
     private IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
 
     private IEnumerable<Shared.Models.Tag> MapTo(IEnumerable<Tag> src) =>
+        src.Select(MapTo);
+
+    private IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) =>
         src.Select(MapTo);
 
     public Shared.Models.Tag MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Tag src) =>
@@ -801,6 +822,28 @@ public class Mapper : IMapper
             Type = src.Type,
             Location = location
         };
+
+    private static OrganizationTag MapTo(
+        Shared.Database.Entities.OrganizationTag src,
+        Shared.Models.Organization? organization)
+    {
+        var organizationTag = new OrganizationTag
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Type = src.Type
+        };
+
+        if (organization is not null)
+        {
+            organizationTag.Organization = organization;
+        }
+
+        return organizationTag;
+    }
 
     private Edge<LocationMember> MapTo(Edge<Shared.Database.Entities.LocationMember> src,
         Shared.Models.Location location) =>

@@ -146,7 +146,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
       {tabIndex === deskTypesTabIndex && organizationId && (
         <OrganizationDeskTypes onReloadRequired={onReloadRequired} organizationId={organizationId} />
       )}
-      {tabIndex === desksTabIndex && <LocationDesksTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+      {tabIndex === desksTabIndex && <LocationDesksTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
       {tabIndex === analyticsTabIndex && rootData.location.canViewAnalytics && (
         <LocationAnalyticsTab
           onReloadRequired={onReloadRequired}

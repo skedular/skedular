@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { memo, useState } from 'react';
-import { CollapseIcon, DeskIcon, MoreItemsIcon } from '../icons';
+import { CollapseIcon, DeskTypeIcon, MoreItemsIcon } from '../icons';
 import type { DeskTypeDetails } from './desk-type';
 import DeskType from './desk-type';
 
@@ -33,14 +33,14 @@ const DeskTypesLine = ({ deskTypes, deskTypeTotalDisplayLimit = preferredDeskTyp
     <>
       {deskTypes.length === 0 && (
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <DeskIcon />
+          <DeskTypeIcon />
           <Typography>N/A</Typography>
         </Stack>
       )}
 
       {deskTypes.length !== 0 && (
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <DeskIcon />
+          <DeskTypeIcon />
           {deskTypesToDisplay.map((deskType) => (
             <DeskType key={deskType.id} deskType={deskType} maxWidth={100} />
           ))}

@@ -50,6 +50,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
     graphql`
       fragment newDeskDialog_query on Query {
         ...deskMultipleChoicesZones_query
+        ...deskMultipleChoicesDeskTypes_query
       }
     `,
     rootDataRelay,
@@ -63,6 +64,9 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           name
           locationTags {
             id
+          }
+          organizationTags {
+            uniqueId
           }
         }
       }

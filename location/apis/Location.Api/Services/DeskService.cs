@@ -353,8 +353,7 @@ public class DeskService(
         return deletedDesk;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Desk>>, int)>
-        GetPaginatedDesksAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<Desk>>, int)> GetPaginatedDesksAsync(
             PaginationInputParam paginationInputParam,
             DeskSearchCriteria searchCriteria,
             ICollection<DeskOrder> orderByFields,
