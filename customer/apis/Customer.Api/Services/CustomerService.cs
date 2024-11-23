@@ -12,6 +12,7 @@ using CustomerOrder = Customer.Shared.Models.CustomerOrder;
 using Desk = Customer.Shared.Database.Entities.Desk;
 using Location = Customer.Shared.Database.Entities.Location;
 using LocationTag = Customer.Shared.Database.Entities.LocationTag;
+using OrganizationTag = Customer.Shared.Database.Entities.OrganizationTag;
 using Team = Customer.Shared.Database.Entities.Team;
 
 namespace Customer.Api.Services;
@@ -226,12 +227,25 @@ public class CustomerService(
         foreach (var desk in customer.PreferredDesks)
         {
             var location =
-                await repositoryFactory.LocationRepository.UpsertNakedAsync(desk.Location.Id, null,
-                    cancellationToken);
+                await repositoryFactory.LocationRepository.UpsertNakedAsync(desk.Location.Id, null, cancellationToken);
 
             preferredDesks.Add(await repositoryFactory.DeskRepository.UpsertNakedAsync(
                 desk.Id,
                 location,
+                cancellationToken));
+        }
+
+        var preferredOrganizationTags = new List<OrganizationTag>();
+        foreach (var organizationTag in customer.PreferredOrganizationTags)
+        {
+            var organization =
+                await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                    organizationTag.Organization.Id,
+                    cancellationToken);
+
+            preferredOrganizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(
+                organizationTag.Id,
+                organization,
                 cancellationToken));
         }
 
@@ -240,6 +254,7 @@ public class CustomerService(
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.OrganizationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await using var transaction =
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.CustomerRepository.UnitOfWork,
@@ -255,7 +270,8 @@ public class CustomerService(
                 defaultLocations,
                 defaultTeams,
                 preferredLocationTags,
-                preferredDesks);
+                preferredDesks,
+                preferredOrganizationTags);
 
             identities.ForEach(identity => identity.Customer = existingCustomer);
             repositoryFactory.IdentityRepository.AddRange(identities);

@@ -97,6 +97,7 @@ message Admin_AddInput {
     repeated LocationTag preferredLocationTags = 27;
     repeated Desk preferredDesks = 28;
     repeated Team defaultTeams = 29;
+    repeated OrganizationTag preferredOrganizationTags = 30;
 }
 
 message Customer {
@@ -129,6 +130,7 @@ message Customer {
     repeated LocationTag preferredLocationTags = 27;
     repeated Desk preferredDesks = 28;
     repeated Team defaultTeams = 29;
+    repeated OrganizationTag preferredOrganizationTags = 30;
 }
 
 message Identity {
@@ -257,4 +259,10 @@ message AddPreferredDeskInput {
 
 message RemovePreferredDeskInput {
     string deskId = 1;
+}
+
+message OrganizationTag {
+    string id = 1;
+    string name = 2;
+    Organization organization = 3;
 }

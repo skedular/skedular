@@ -107,6 +107,15 @@ export const ZoneIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
     </TooltipIcon>
   );
 
+export const DeskTypeIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+  excludeTooltip ? (
+    <LocalOffer fontSize={fontSize} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'Desk type'}>
+      <LocalOffer fontSize={fontSize} color={color} />
+    </TooltipIcon>
+  );
+
 export const DeskIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
   excludeTooltip ? (
     <EventSeat fontSize={fontSize} color={color} />

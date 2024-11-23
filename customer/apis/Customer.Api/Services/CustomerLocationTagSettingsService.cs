@@ -46,7 +46,7 @@ public class CustomerLocationTagSettingsService(
             throw new LocationNotFound();
         }
 
-        if (!await locationAuthorizationService.CanAddLocationAsDefaultAsync(location, customer, cancellationToken))
+        if (!await locationAuthorizationService.CanAddLocationTagAsDefaultAsync(location, customer, cancellationToken))
         {
             throw new Unauthorized();
         }

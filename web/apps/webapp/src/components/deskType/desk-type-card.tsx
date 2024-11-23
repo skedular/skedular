@@ -1,0 +1,457 @@
+import type { deskTypeCard_OrganizationTagDetails$key } from '@/queries/__generated__/deskTypeCard_OrganizationTagDetails.graphql';
+import type { deskTypeCard_Query$key } from '@/queries/__generated__/deskTypeCard_Query.graphql';
+import type { deskTypeCard_addCustomerDefaultOrganizationTagMutation } from '@/queries/__generated__/deskTypeCard_addCustomerDefaultOrganizationTagMutation.graphql';
+import type { deskTypeCard_deleteOrganizationTagMutation } from '@/queries/__generated__/deskTypeCard_deleteOrganizationTagMutation.graphql';
+import type { deskTypeCard_removeCustomerDefaultOrganizationTagMutation } from '@/queries/__generated__/deskTypeCard_removeCustomerDefaultOrganizationTagMutation.graphql';
+import type { deskTypeCard_updateOrganizationTagMutation } from '@/queries/__generated__/deskTypeCard_updateOrganizationTagMutation.graphql';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardHeader from '@mui/material/CardHeader';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import { DeskTypeName, ORGANIZATION_TAG_TYPE_DESK_TYPE } from '@repo/shared/components/deskType';
+import { DangerIcon, DeleteIcon, DeskTypeIcon, EditIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { DialogTransition } from '@repo/shared/components/transitions';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { joinErrors } from '@repo/shared/libs/utils';
+import { makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
+import { memo, useContext, useMemo, useState } from 'react';
+import { Form } from 'react-final-form';
+import { graphql, useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
+import { object, string } from 'yup';
+
+type Props = {
+  rootDataRelay: deskTypeCard_Query$key;
+  organizationTagDetailsRelay: deskTypeCard_OrganizationTagDetails$key;
+  connectionIds: string[];
+};
+
+type OrganizationTagDetails = {
+  name: string;
+};
+
+const deskTypeSchema = object({
+  name: string().required('Desk type name is required'),
+});
+
+const DeskTypeCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }: Props) => {
+  const rootData = useFragment(
+    graphql`
+      fragment deskTypeCard_Query on Query {
+        me {
+          id
+          preferredDeskTypes {
+            uniqueId
+          }
+        }
+        organization(id: $organizationId) {
+          canModify
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const organizationTagDetails = useFragment(
+    graphql`
+      fragment deskTypeCard_OrganizationTagDetails on OrganizationTagDetails {
+        id
+        name
+      }
+    `,
+    organizationTagDetailsRelay,
+  );
+
+  const [commitUpdateOrganizationTag] = useMutation<deskTypeCard_updateOrganizationTagMutation>(graphql`
+    mutation deskTypeCard_updateOrganizationTagMutation($input: UpdateOrganizationTagInput!) {
+      updateOrganizationTag(input: $input) {
+        organizationTag {
+          id
+          name
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteOrganizationTag] = useMutation<deskTypeCard_deleteOrganizationTagMutation>(graphql`
+    mutation deskTypeCard_deleteOrganizationTagMutation($connectionIds: [ID!]!, $input: DeleteOrganizationTagInput!) {
+      deleteOrganizationTag(input: $input) {
+        organizationTag {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitAddCustomerDefaultOrganizationTag] = useMutation<deskTypeCard_addCustomerDefaultOrganizationTagMutation>(graphql`
+    mutation deskTypeCard_addCustomerDefaultOrganizationTagMutation($input: AddCustomerDefaultOrganizationTagInput!) {
+      addCustomerDefaultOrganizationTag(input: $input) {
+        customer {
+          id
+          preferredDeskTypes {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveCustomerDefaultOrganizationTag] = useMutation<deskTypeCard_removeCustomerDefaultOrganizationTagMutation>(graphql`
+    mutation deskTypeCard_removeCustomerDefaultOrganizationTagMutation($input: RemoveCustomerDefaultOrganizationTagInput!) {
+      removeCustomerDefaultOrganizationTag(input: $input) {
+        customer {
+          id
+          preferredDeskTypes {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const [editing, setEditing] = useState(false);
+  const validate = makeValidate(deskTypeSchema);
+  const requiredFields = makeRequired(deskTypeSchema);
+  const [deskTypeRemoveConfirmationDialogOpen, setDeskTypeRemoveConfirmationDialogOpen] = useState(false);
+  const isPreferredDeskType = useMemo(
+    () => !!rootData.me?.preferredDeskTypes.find((deskType) => deskType.uniqueId === organizationTagDetails.id),
+    [rootData.me?.preferredDeskTypes, organizationTagDetails.id],
+  );
+
+  const handleDeleteClick = () => {
+    setDeskTypeRemoveConfirmationDialogOpen(true);
+  };
+
+  const handleCancelRemovingDeskTypeClick = () => {
+    setDeskTypeRemoveConfirmationDialogOpen(false);
+  };
+
+  const handleConfirmRemovingDeskTypeClick = () => {
+    setDeskTypeRemoveConfirmationDialogOpen(false);
+
+    const toastId = themedToast(<NotificationContent content={`Removing desk type '${organizationTagDetails.name}'...`} />, infoNotificationOptions);
+
+    commitDeleteOrganizationTag({
+      variables: {
+        connectionIds: connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          id: organizationTagDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove desk type '${organizationTagDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk type ${organizationTagDetails.name} removed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove desk type '${organizationTagDetails.name}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        deleteOrganizationTag: {
+          organizationTag: {
+            id: organizationTagDetails.id,
+          },
+        },
+      },
+    });
+  };
+
+  const handleEditClick = () => {
+    setEditing(true);
+  };
+
+  const handleCancelClick = () => {
+    setEditing(false);
+  };
+
+  const handleSaveClick = ({ name }: OrganizationTagDetails) => {
+    const toastId = themedToast(<NotificationContent content={`Updating desk type '${organizationTagDetails.name}'...`} />, infoNotificationOptions);
+
+    commitUpdateOrganizationTag({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: organizationTagDetails.id,
+          name,
+          tagType: ORGANIZATION_TAG_TYPE_DESK_TYPE,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update desk type '${organizationTagDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk type ${name} updated.`} />,
+        });
+
+        setEditing(false);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update desk type '${organizationTagDetails.name}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateOrganizationTag: {
+          organizationTag: {
+            id: organizationTagDetails.id,
+            name,
+          },
+        },
+      },
+    });
+  };
+
+  const handleSetAsPreferredDeskTypeClicked = () => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Setting desk type '${organizationTagDetails.name}' as your preferred desk type...`} />,
+      infoNotificationOptions,
+    );
+
+    commitAddCustomerDefaultOrganizationTag({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          organizationTagId: organizationTagDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to set desk type '${organizationTagDetails.name}' as your preferred desk type. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk type '${organizationTagDetails.name}' has been set as the preferred desk type.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent
+              content={`Failed to set desk type '${organizationTagDetails.name}' as your preferred desk type. Error: ${error.message}.`}
+            />
+          ),
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultOrganizationTag: {
+          customer: {
+            id: rootData.me.id,
+            preferredDeskTypes: rootData.me.preferredDeskTypes.concat([
+              {
+                uniqueId: organizationTagDetails.id,
+              },
+            ]),
+          },
+        },
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredDeskTypeClicked = () => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Removing desk type '${organizationTagDetails.name}' as your preferred desk type...`} />,
+      infoNotificationOptions,
+    );
+
+    commitRemoveCustomerDefaultOrganizationTag({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          organizationTagId: organizationTagDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the desk type '${organizationTagDetails.name}' as your preferred desk type. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk type '${organizationTagDetails.name}' has been removed as your preferred desk type.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent
+              content={`Failed to remove the desk type '${organizationTagDetails.name}' as your preferred desk type. Error: ${error.message}.`}
+            />
+          ),
+        });
+      },
+      optimisticResponse: {
+        removeCustomerDefaultOrganizationTag: {
+          customer: {
+            id: rootData.me.id,
+            preferredDeskTypes: rootData.me.preferredDeskTypes.filter(({ uniqueId }) => uniqueId === organizationTagDetails.id),
+          },
+        },
+      },
+    });
+  };
+
+  if (!rootData.organization) {
+    return <></>;
+  }
+
+  return (
+    <>
+      {!editing && (
+        <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
+          <CardHeader
+            title={
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                <DeskTypeIcon />
+                <Typography variant="body1">{organizationTagDetails.name}</Typography>
+              </Stack>
+            }
+          />
+
+          <CardActions sx={{ justifyContent: 'flex-end' }}>
+            {rootData.organization.canModify && (
+              <Tooltip title={'Edit desk type'}>
+                <Button size="small" color="primary" onClick={handleEditClick}>
+                  <EditIcon />
+                </Button>
+              </Tooltip>
+            )}
+            {rootData.organization.canModify && (
+              <Tooltip title={'Remove desk type'}>
+                <Button size="small" color="warning" onClick={handleDeleteClick}>
+                  <DeleteIcon />
+                </Button>
+              </Tooltip>
+            )}
+            {isPreferredDeskType && (
+              <Tooltip title={'Remove as preferred desk type'}>
+                <Button size="small" color="primary" onClick={handleRemoveAsPreferredDeskTypeClicked}>
+                  <PreferredIcon />
+                </Button>
+              </Tooltip>
+            )}
+            {!isPreferredDeskType && (
+              <Tooltip title={'Set as preferred desk type'}>
+                <Button size="small" color="primary" onClick={handleSetAsPreferredDeskTypeClicked}>
+                  <NotPreferredIcon />
+                </Button>
+              </Tooltip>
+            )}
+          </CardActions>
+        </Card>
+      )}
+
+      {editing && (
+        <Paper elevation={24} sx={{ padding: 2 }}>
+          <Form
+            onSubmit={handleSaveClick}
+            initialValues={{
+              name: organizationTagDetails.name,
+            }}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+                <DeskTypeName name="name" required={requiredFields.name} />
+
+                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
+                    Cancel
+                  </Button>
+                  <Button color="primary" variant="contained" type="submit">
+                    Update
+                  </Button>
+                </Stack>
+              </Stack>
+            )}
+          />
+        </Paper>
+      )}
+
+      <Dialog TransitionComponent={DialogTransition} open={deskTypeRemoveConfirmationDialogOpen} onClose={handleCancelRemovingDeskTypeClick}>
+        <DialogTitle>Remove desk type</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{`Are you sure you want to remove the desk type "${organizationTagDetails.name}"?`}</DialogContentText>
+          <DialogActions>
+            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingDeskTypeClick}>
+              Cancel
+            </Button>
+            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskTypeClick}>
+              Remove
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+export default memo(DeskTypeCard);

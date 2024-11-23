@@ -1,3 +1,4 @@
+using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Customer.Api.GraphQL;
 using Customer.Shared.Models;
@@ -11,6 +12,7 @@ using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
 using LocationTag = Customer.Shared.Models.LocationTag;
 using Organization = Customer.Shared.Models.Organization;
+using OrganizationTag = Customer.Shared.Models.OrganizationTag;
 using Team = Customer.Shared.Models.Team;
 
 namespace Customer.Api.Mappers;
@@ -32,7 +34,8 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
         ICollection<Shared.Database.Entities.LocationTag> preferredLocationTags,
-        ICollection<Shared.Database.Entities.Desk> preferredDesks);
+        ICollection<Shared.Database.Entities.Desk> preferredDesks,
+        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags);
 
     IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src);
     CustomerFeedback MapTo(Shared.Database.Entities.CustomerFeedback src);
@@ -88,6 +91,7 @@ public class Mapper(IContext context) : IMapper
             DefaultLocations = [],
             DefaultTeams = [],
             PreferredLocationTags = [],
+            PreferredOrganizationTags = [],
             PreferredDesks = []
         };
 
@@ -162,9 +166,12 @@ public class Mapper(IContext context) : IMapper
             }).ToArray(),
             PreferredZones =
                 src.PreferredLocationTags
-                    .Select(item => new CustomerLocationTagDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
+                    .Where(item => item.Type == LocationTagType.Zone)
+                    .Select(item => new CustomerLocationTagDetails { UniqueId = item.Id, Name = item.Name })
+                    .ToArray(),
             PreferredDesks =
-                src.PreferredDesks.Select(item => new CustomerDeskDetails { UniqueId = item.Id, Name = item.Name })
+                src.PreferredDesks
+                    .Select(item => new CustomerDeskDetails { UniqueId = item.Id, Name = item.Name })
                     .ToArray(),
             DefaultTeams = src.DefaultTeams.Select(item => new CustomerTeamDetails
             {
@@ -179,7 +186,12 @@ public class Mapper(IContext context) : IMapper
                             Name = item.Organization.Name,
                             LogoUrl = item.Organization.LogoUrl
                         }
-            }).ToArray()
+            }).ToArray(),
+            PreferredDeskTypes =
+                src.PreferredOrganizationTags
+                    .Where(item => item.Type == OrganizationTagType.DeskType)
+                    .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name })
+                    .ToArray()
         };
     }
 
@@ -239,49 +251,8 @@ public class Mapper(IContext context) : IMapper
             DefaultLocations = MapTo(src.DefaultLocations).ToList(),
             PreferredLocationTags = MapTo(src.PreferredLocationTags).ToList(),
             PreferredDesks = MapTo(src.PreferredDesks).ToList(),
-            DefaultTeams = MapTo(src.DefaultTeams).ToList()
-        };
-
-    public Shared.Database.Entities.Customer
-        MapToEntity(Shared.Models.Customer src,
-            ICollection<Identity> identities,
-            Shared.Database.Entities.Organization? defaultOrganization,
-            ICollection<Shared.Database.Entities.Location> defaultLocations,
-            ICollection<Shared.Database.Entities.Team> defaultTeams,
-            ICollection<Shared.Database.Entities.LocationTag> preferredLocationTags,
-            ICollection<Shared.Database.Entities.Desk> preferredDesks) =>
-        new()
-        {
-            Id = src.Id,
-            Designation = src.Designation,
-            Title = src.Title,
-            Name = src.Name,
-            GivenName = src.GivenName,
-            MiddleName = src.MiddleName,
-            FamilyName = src.FamilyName,
-            PhotoUrl = src.PhotoUrl,
-            PhotoUrl24 = src.PhotoUrl24,
-            PhotoUrl32 = src.PhotoUrl32,
-            PhotoUrl48 = src.PhotoUrl48,
-            PhotoUrl72 = src.PhotoUrl72,
-            PhotoUrl192 = src.PhotoUrl192,
-            PhotoUrl512 = src.PhotoUrl512,
-            Timezone = src.Timezone,
-            Locale = src.Locale,
-            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
-            IsLocationOnboardingDone = src.IsLocationOnboardingDone,
-            IsTeamOnboardingDone = src.IsTeamOnboardingDone,
-            IsDefaultOrganizationOnboardingDone =
-                src.IsDefaultOrganizationOnboardingDone,
-            IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
-            IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
-            IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
-            Identities = identities,
-            DefaultOrganization = defaultOrganization,
-            DefaultLocations = defaultLocations,
-            DefaultTeams = defaultTeams,
-            PreferredLocationTags = preferredLocationTags,
-            PreferredDesks = preferredDesks
+            DefaultTeams = MapTo(src.DefaultTeams).ToList(),
+            PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
         };
 
     public CustomerFeedback MapTo(Shared.Database.Entities.CustomerFeedback src) =>
@@ -359,6 +330,9 @@ public class Mapper(IContext context) : IMapper
                 .ToList(),
             PreferredDesks = src.PreferredDesks.Select(item =>
                     new Desk { Id = item.Id, Location = new Location { Id = item.Location.Id } })
+                .ToList(),
+            PreferredOrganizationTags = src.PreferredOrganizationTags.Select(item =>
+                    new OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
                 .ToList()
         };
 
@@ -447,6 +421,16 @@ public class Mapper(IContext context) : IMapper
                     Id = item.Location.Id
                 }
             }));
+        customer.PreferredOrganizationTags.AddRange(src.PreferredOrganizationTags.Select(item =>
+            new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.OrganizationTag
+            {
+                Id = item.Id,
+                Name = item.Name.ToSafeString(),
+                Organization = new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization
+                {
+                    Id = item.Organization.Id
+                }
+            }));
         return customer;
     }
 
@@ -487,6 +471,50 @@ public class Mapper(IContext context) : IMapper
         new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
     public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src) => src.Select(MapToEntity);
+
+    public Shared.Database.Entities.Customer
+        MapToEntity(Shared.Models.Customer src,
+            ICollection<Identity> identities,
+            Shared.Database.Entities.Organization? defaultOrganization,
+            ICollection<Shared.Database.Entities.Location> defaultLocations,
+            ICollection<Shared.Database.Entities.Team> defaultTeams,
+            ICollection<Shared.Database.Entities.LocationTag> preferredLocationTags,
+            ICollection<Shared.Database.Entities.Desk> preferredDesks,
+            ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags) =>
+        new()
+        {
+            Id = src.Id,
+            Designation = src.Designation,
+            Title = src.Title,
+            Name = src.Name,
+            GivenName = src.GivenName,
+            MiddleName = src.MiddleName,
+            FamilyName = src.FamilyName,
+            PhotoUrl = src.PhotoUrl,
+            PhotoUrl24 = src.PhotoUrl24,
+            PhotoUrl32 = src.PhotoUrl32,
+            PhotoUrl48 = src.PhotoUrl48,
+            PhotoUrl72 = src.PhotoUrl72,
+            PhotoUrl192 = src.PhotoUrl192,
+            PhotoUrl512 = src.PhotoUrl512,
+            Timezone = src.Timezone,
+            Locale = src.Locale,
+            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
+            IsLocationOnboardingDone = src.IsLocationOnboardingDone,
+            IsTeamOnboardingDone = src.IsTeamOnboardingDone,
+            IsDefaultOrganizationOnboardingDone =
+                src.IsDefaultOrganizationOnboardingDone,
+            IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
+            IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
+            IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
+            Identities = identities,
+            DefaultOrganization = defaultOrganization,
+            DefaultLocations = defaultLocations,
+            DefaultTeams = defaultTeams,
+            PreferredLocationTags = preferredLocationTags,
+            PreferredDesks = preferredDesks,
+            PreferredOrganizationTags = preferredOrganizationTags
+        };
 
     private static Identity MapToEntity(Shared.Models.Identity src) =>
         new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
@@ -556,6 +584,24 @@ public class Mapper(IContext context) : IMapper
                 Type = src.Type,
                 TaggedDesks = MapTo(src.TaggedDesks).ToList(),
                 Location = new Location { Id = src.Location.Id }
+            };
+
+    private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag?>? src) =>
+        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
+
+    private static OrganizationTag? MapTo(Shared.Database.Entities.OrganizationTag? src) =>
+        src is null
+            ? null
+            : new OrganizationTag
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name,
+                Type = src.Type,
+                Organization = new Organization { Id = src.Organization.Id }
             };
 
     private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk?>? src) =>

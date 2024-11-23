@@ -139,6 +139,7 @@ public class Mapper : IMapper
         organization.Teams = MapTo(src.Teams, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
+        organization.Tags = MapTo(src.Tags, organization).ToList();
 
         return organization;
     }
@@ -887,4 +888,21 @@ public class Mapper : IMapper
         tag.Organization = organization;
         return new Edge<Tag>(src.Cursor, tag);
     }
+
+    private IEnumerable<Tag> MapTo(IEnumerable<Shared.Database.Entities.Tag> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static Tag MapTo(Shared.Database.Entities.Tag src, Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Description = src.Description,
+            Type = src.Type,
+            Organization = organization
+        };
 }

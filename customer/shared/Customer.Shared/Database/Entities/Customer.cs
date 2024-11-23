@@ -39,6 +39,7 @@ public class Customer : EntityBaseWithDeleted
     public virtual ICollection<LocationTag> PreferredLocationTags { get; set; } = [];
     public virtual ICollection<Desk> PreferredDesks { get; set; } = [];
     public virtual ICollection<Team> DefaultTeams { get; set; } = [];
+    public virtual ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<LocationMember> LocationMemberships { get; set; } = [];
     public virtual ICollection<TeamMember> TeamMemberships { get; set; } = [];
@@ -86,6 +87,10 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder
             .HasMany(item => item.DefaultTeams)
             .WithMany(item => item.DefaultedByCustomers);
+
+        builder
+            .HasMany(item => item.PreferredOrganizationTags)
+            .WithMany(item => item.PreferredByCustomers);
 
         builder.HasIndex(item => item.Designation);
         builder.HasIndex(item => item.Title);

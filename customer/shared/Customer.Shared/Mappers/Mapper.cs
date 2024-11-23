@@ -66,6 +66,10 @@ public class Mapper : IMapper
                     Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id
                 })
         );
+        customer.DefaultOrganizationTags.AddRange(
+            src.PreferredOrganizationTags.Select(item =>
+                new OrganizationTag { Id = item.Id, OrganizationId = item.Organization.Id })
+        );
 
         return customer;
     }

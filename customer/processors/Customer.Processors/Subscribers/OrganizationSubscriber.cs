@@ -87,6 +87,7 @@ public class OrganizationSubscriber(
             : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization,
                 existingOrganization));
 
+        existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
         _ = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -207,5 +208,29 @@ public class OrganizationSubscriber(
             customer.DefaultOrganization = null;
             _ = repositoryFactory.CustomerRepository.Update(customer);
         }
+    }
+
+    private Organization RebuildOrganizationTags(Shared.Models.Organization organization,
+        Organization existingOrganization)
+    {
+        var itemsToRemove = existingOrganization.Tags
+            .Where(tag => organization.Tags.All(item => item.Id != tag.Id)).ToList();
+        var updatedItems = existingOrganization.Tags
+            .Where(organizationTag => organization.Tags.Any(item => item.Id == organizationTag.Id))
+            .Select(organizationTag => repositoryFactory.OrganizationTagRepository.Update(mapper.MergeToEntity(
+                organization.Tags.Single(item => item.Id == organizationTag.Id),
+                organizationTag, existingOrganization)))
+            .ToList();
+        var addedItems = organization.Tags
+            .Where(organizationTag => existingOrganization.Tags.All(item => item.Id != organizationTag.Id))
+            .Select(organizationTag =>
+                repositoryFactory.OrganizationTagRepository.Add(mapper.MapToEntity(organizationTag,
+                    existingOrganization)))
+            .ToList();
+
+        repositoryFactory.OrganizationTagRepository.RemoveRange(itemsToRemove);
+        existingOrganization.Tags = addedItems.Concat(updatedItems).ToList();
+
+        return existingOrganization;
     }
 }

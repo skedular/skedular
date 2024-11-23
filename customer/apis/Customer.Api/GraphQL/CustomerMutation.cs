@@ -259,4 +259,33 @@ public class CustomerMutation
             cancellationToken);
         return mapper.MapTo(customerFeedback, input.ClientMutationId);
     }
+    
+    [UseServiceScope]
+    public async Task<CustomerPayload?> AddCustomerDefaultOrganizationTagAsync(
+        AddCustomerDefaultOrganizationTagInput input,
+        [Service] ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
+    {
+        var customer = await customerOrganizationTagSettingsService.AddCustomerDefaultOrganizationTagAsync(
+            input.OrganizationTagId,
+            null,
+            cancellationToken);
+        return mapper.MapTo(customer, input.ClientMutationId);
+    }
+
+    [UseServiceScope]
+    public async Task<CustomerPayload?> RemoveCustomerDefaultOrganizationTagAsync(
+        RemoveCustomerDefaultOrganizationTagInput input,
+        [Service] ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken)
+    {
+        var customer =
+            await customerOrganizationTagSettingsService.RemoveCustomerDefaultOrganizationTagAsync(
+                input.OrganizationTagId,
+                null,
+                cancellationToken);
+        return mapper.MapTo(customer, input.ClientMutationId);
+    }
 }

@@ -21,6 +21,7 @@ import { toast } from 'react-toastify';
 import OrganizationAboutTab from './organization-about-tab';
 import OrganizationAnalyticsTab from './organization-analytics-tab';
 import OrganizationBillingTab from './organization-billing-tab';
+import OrganizationDeskTypesTab from './organization-desk-types-tab';
 import OrganizationLocationsTab from './organization-locations-tab';
 import OrganizationMembersTab from './organization-members-tab';
 import OrganizationOfferingTab from './organization-offering-tab';
@@ -77,6 +78,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
   const membersTabIndex = tabCount++;
   const locationTabIndex = tabCount++;
   const teamTabIndex = tabCount++;
+  const deskTypesTabIndex = tabCount++;
   const offeringTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
   const billingTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
   const analyticsTabIndex = rootData.organization?.canViewAnalytics ? tabCount++ : -1;
@@ -91,6 +93,8 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
     initialTabIndex = locationTabIndex;
   } else if (tab === 'teams') {
     initialTabIndex = teamTabIndex;
+  } else if (tab === 'deskTypes') {
+    initialTabIndex = deskTypesTabIndex;
   } else if (tab === 'offering') {
     initialTabIndex = offeringTabIndex;
   } else if (tab === 'billing') {
@@ -116,6 +120,8 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
       tab = 'locations';
     } else if (newValue === teamTabIndex) {
       tab = 'teams';
+    } else if (newValue === deskTypesTabIndex) {
+      tab = 'deskTypes';
     } else if (newValue === offeringTabIndex) {
       tab = 'offering';
     } else if (newValue === billingTabIndex) {
@@ -146,6 +152,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
         <Tab label="Members" />
         <Tab label="Locations" />
         <Tab label="Teams" />
+        <Tab label="Desk Types" />
         {rootData.organization.canModify && <Tab label="Offering" />}
         {rootData.organization.canModify && <Tab label="Billing" />}
         {rootData.organization.canViewAnalytics && <Tab label="Analytics" />}
@@ -156,6 +163,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationId }: Prop
       {tabIndex === membersTabIndex && <OrganizationMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === locationTabIndex && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === teamTabIndex && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === deskTypesTabIndex && <OrganizationDeskTypesTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === offeringTabIndex && rootData.organization.canModify && (
         <OrganizationOfferingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
       )}

@@ -83,8 +83,7 @@ public class TagService(
 
         if (!string.IsNullOrWhiteSpace(tag.Id))
         {
-            var existingTag =
-                await repositoryFactory.TagRepository.GetByIdAsync(tag.Id, cancellationToken);
+            var existingTag = await repositoryFactory.TagRepository.GetByIdAsync(tag.Id, cancellationToken);
             if (existingTag is not null)
             {
                 return await UpdateInternalAsync(

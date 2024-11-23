@@ -87,6 +87,8 @@ type Mutation {
   removeCustomerDefaultDesk(input: RemoveCustomerDefaultDeskInput!): CustomerPayload
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload
+  addCustomerDefaultOrganizationTag(input: AddCustomerDefaultOrganizationTagInput!): CustomerPayload
+  removeCustomerDefaultOrganizationTag(input: RemoveCustomerDefaultOrganizationTagInput!): CustomerPayload
   addLocation(input: AddLocationInput!): LocationPayload
   updateLocation(input: UpdateLocationInput!): LocationPayload
   deleteLocation(input: DeleteLocationInput!): LocationPayload
@@ -286,6 +288,7 @@ type CustomerDetails {
   defaultTeams: [CustomerTeamDetails!]!
   defaultOrganization: CustomerOrganizationDetails
   preferredZones: [CustomerLocationTagDetails!]!
+  preferredDeskTypes: [CustomerOrganizationTagDetails!]!
   preferredDesks: [CustomerDeskDetails!]!
   id: ID!
 }
@@ -311,6 +314,10 @@ type CustomerOrganizationDetails {
   uniqueId: ID!
   name: String
   logoUrl: String
+}
+type CustomerOrganizationTagDetails {
+  uniqueId: ID!
+  name: String
 }
 type CustomerPayload {
   clientMutationId: String
@@ -931,6 +938,10 @@ input AddCustomerDefaultLocationTagInput {
   clientMutationId: String
   locationTagId: String!
 }
+input AddCustomerDefaultOrganizationTagInput {
+  clientMutationId: String
+  organizationTagId: String!
+}
 input AddCustomerDefaultTeamInput {
   clientMutationId: String
   teamId: String!
@@ -978,6 +989,10 @@ input RemoveCustomerDefaultLocationInput {
 input RemoveCustomerDefaultLocationTagInput {
   clientMutationId: String
   locationTagId: String!
+}
+input RemoveCustomerDefaultOrganizationTagInput {
+  clientMutationId: String
+  organizationTagId: String!
 }
 input RemoveCustomerDefaultTeamInput {
   clientMutationId: String

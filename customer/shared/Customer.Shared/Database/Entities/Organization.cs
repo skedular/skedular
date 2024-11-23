@@ -12,6 +12,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string? Name { get; set; }
     public string? LogoUrl { get; set; }
 
+    public virtual ICollection<OrganizationTag> Tags { get; set; } = [];
     public virtual ICollection<Location> Locations { get; set; } = [];
     public virtual ICollection<Team> Teams { get; set; } = [];
     public virtual ICollection<Customer> DefaultedByCustomers { get; set; } = [];

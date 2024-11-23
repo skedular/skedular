@@ -7,6 +7,7 @@ using Enterprise.Shared.Kafka.Consume;
 using Desk = Customer.Shared.Database.Entities.Desk;
 using Location = Customer.Shared.Database.Entities.Location;
 using LocationTag = Customer.Shared.Database.Entities.LocationTag;
+using OrganizationTag = Customer.Shared.Database.Entities.OrganizationTag;
 using Team = Customer.Shared.Database.Entities.Team;
 using Type = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Type;
 
@@ -92,10 +93,13 @@ public class CustomerSubscriber(
         {
             var organization = item.Organization is null
                 ? null
-                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization!.Id,
+                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                    item.Organization!.Id,
                     cancellationToken);
             defaultLocations.Add(
-                await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Id, organization,
+                await repositoryFactory.LocationRepository.UpsertNakedAsync(
+                    item.Id,
+                    organization,
                     cancellationToken));
 
             await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -107,9 +111,12 @@ public class CustomerSubscriber(
         {
             var organization = item.Organization is null
                 ? null
-                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization!.Id,
+                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                    item.Organization!.Id,
                     cancellationToken);
-            defaultTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(item.Id, organization,
+            defaultTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(
+                item.Id,
+                organization,
                 cancellationToken));
 
             await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -120,11 +127,12 @@ public class CustomerSubscriber(
         foreach (var item in customer.PreferredLocationTags)
         {
             var location =
-                await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Location.Id, null,
+                await repositoryFactory.LocationRepository.UpsertNakedAsync(
+                    item.Location.Id,
+                    null,
                     cancellationToken);
             preferredLocationTags.Add(
-                await repositoryFactory.LocationTagRepository.UpsertNakedAsync(item.Id, location,
-                    cancellationToken));
+                await repositoryFactory.LocationTagRepository.UpsertNakedAsync(item.Id, location, cancellationToken));
 
             await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             await repositoryFactory.LocationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -134,14 +142,32 @@ public class CustomerSubscriber(
         foreach (var item in customer.PreferredDesks)
         {
             var location =
-                await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Location.Id, null,
+                await repositoryFactory.LocationRepository.UpsertNakedAsync(
+                    item.Location.Id,
+                    null,
                     cancellationToken);
             preferredDesks.Add(
-                await repositoryFactory.DeskRepository.UpsertNakedAsync(item.Id, location,
-                    cancellationToken));
+                await repositoryFactory.DeskRepository.UpsertNakedAsync(item.Id, location, cancellationToken));
 
             await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        var preferredOrganizationTags = new List<OrganizationTag>();
+        foreach (var item in customer.PreferredOrganizationTags)
+        {
+            var organization =
+                await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                    item.Organization.Id,
+                    cancellationToken);
+            preferredOrganizationTags.Add(
+                await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(
+                    item.Id,
+                    organization,
+                    cancellationToken));
+
+            await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.OrganizationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         if (existingCustomer is null)
@@ -154,7 +180,8 @@ public class CustomerSubscriber(
                 defaultLocations,
                 defaultTeams,
                 preferredLocationTags,
-                preferredDesks);
+                preferredDesks,
+                preferredOrganizationTags);
 
             identities.ForEach(identity => identity.Customer = existingCustomer);
             repositoryFactory.IdentityRepository.AddRange(identities);
@@ -173,7 +200,7 @@ public class CustomerSubscriber(
                     defaultLocations,
                     defaultTeams,
                     preferredLocationTags,
-                    preferredDesks)
+                    preferredDesks, preferredOrganizationTags)
             );
         }
 

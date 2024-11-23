@@ -1,0 +1,78 @@
+using Customer.Api.Mappers;
+using Customer.Api.Services.Authorization;
+using Customer.Shared.Repositories;
+using Enterprise.Shared.Exceptions;
+
+namespace Customer.Api.Services;
+
+public interface ICustomerOrganizationTagSettingsService
+{
+    Task<Shared.Models.Customer> AddCustomerDefaultOrganizationTagAsync(
+        string organizationTagId,
+        string? customerId,
+        CancellationToken cancellationToken);
+
+    Task<Shared.Models.Customer> RemoveCustomerDefaultOrganizationTagAsync(
+        string organizationTagId,
+        string? customerId,
+        CancellationToken cancellationToken);
+}
+
+public class CustomerOrganizationTagSettingsService(
+    ICustomerHelperService customerHelperService,
+    IOrganizationAuthorizationService organizationAuthorizationService,
+    IRepositoryFactory repositoryFactory,
+    IMapper mapper)
+    : ICustomerOrganizationTagSettingsService
+{
+    public async Task<Shared.Models.Customer> AddCustomerDefaultOrganizationTagAsync(
+        string organizationTagId,
+        string? customerId,
+        CancellationToken cancellationToken)
+    {
+        var customer = string.IsNullOrWhiteSpace(customerId)
+            ? await customerHelperService.GetCustomerAsync(cancellationToken)
+            : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
+        var organizationTag = await repositoryFactory.OrganizationTagRepository.GetByIdAsync(
+            organizationTagId,
+            cancellationToken);
+        if (organizationTag is null)
+        {
+            throw new OrganizationTagNotFound();
+        }
+
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+            organizationTag.Organization.Id,
+            cancellationToken);
+        if (organization is null)
+        {
+            throw new OrganizationNotFound();
+        }
+
+        if (!organizationAuthorizationService.CanAddOrganizationTagAsDefault(organization, customer))
+        {
+            throw new Unauthorized();
+        }
+
+        if (customer.PreferredOrganizationTags.Any(item => item.Id == organizationTagId))
+        {
+            return mapper.MapTo(customer);
+        }
+
+        customer.PreferredOrganizationTags = customer.PreferredOrganizationTags.Concat([organizationTag]).ToList();
+        return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
+    }
+
+    public async Task<Shared.Models.Customer> RemoveCustomerDefaultOrganizationTagAsync(
+        string organizationTagId,
+        string? customerId,
+        CancellationToken cancellationToken)
+    {
+        var customer = string.IsNullOrWhiteSpace(customerId)
+            ? await customerHelperService.GetCustomerAsync(cancellationToken)
+            : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
+        customer.PreferredOrganizationTags =
+            customer.PreferredOrganizationTags.Where(item => item.Id != organizationTagId).ToList();
+        return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
+    }
+}

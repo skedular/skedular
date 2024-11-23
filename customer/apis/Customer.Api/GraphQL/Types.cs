@@ -29,6 +29,14 @@ public class AddCustomerDefaultLocationTagInput
     [GraphQLName("locationTagId")] public string LocationTagId { get; set; }
 }
 
+[GraphQLName("AddCustomerDefaultOrganizationTagInput")]
+public class AddCustomerDefaultOrganizationTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("organizationTagId")] public string OrganizationTagId { get; set; }
+}
+
 [GraphQLName("AddCustomerDefaultTeamInput")]
 public class AddCustomerDefaultTeamInput
 {
@@ -161,6 +169,8 @@ public class CustomerDetails : Node
 
     [GraphQLName("preferredZones")] public CustomerLocationTagDetails[] PreferredZones { get; set; }
 
+    [GraphQLName("preferredDeskTypes")] public CustomerOrganizationTagDetails[] PreferredDeskTypes { get; set; }
+
     [GraphQLName("preferredDesks")] public CustomerDeskDetails[] PreferredDesks { get; set; }
 
     [GraphQLName("id")] [ID] public string Id { get; set; }
@@ -191,6 +201,14 @@ public class CustomerLocationDetails
 
 [GraphQLName("CustomerLocationTagDetails")]
 public class CustomerLocationTagDetails
+{
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; }
+
+    [GraphQLName("name")] public string? Name { get; set; }
+}
+
+[GraphQLName("CustomerOrganizationTagDetails")]
+public class CustomerOrganizationTagDetails
 {
     [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; }
 
@@ -282,6 +300,14 @@ public class RemoveCustomerDefaultLocationTagInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
     [GraphQLName("locationTagId")] public string LocationTagId { get; set; }
+}
+
+[GraphQLName("RemoveCustomerDefaultOrganizationTagInput")]
+public class RemoveCustomerDefaultOrganizationTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("organizationTagId")] public string OrganizationTagId { get; set; }
 }
 
 [GraphQLName("RemoveCustomerDefaultTeamInput")]

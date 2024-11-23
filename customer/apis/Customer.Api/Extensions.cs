@@ -25,6 +25,7 @@ public static class Extensions
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<ILocationAuthorizationService, LocationAuthorizationService>()
             .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
+            .AddScoped<ICustomerOrganizationTagSettingsService, CustomerOrganizationTagSettingsService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>

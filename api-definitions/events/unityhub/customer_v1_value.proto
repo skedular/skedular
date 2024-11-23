@@ -51,6 +51,7 @@ message Customer {
   repeated Desk defaultDesks = 22;
   Settings settings = 23;
   repeated Team defaultTeams = 24;
+  repeated OrganizationTag defaultOrganizationTags = 25;
 }
 
 message Identity {
@@ -88,4 +89,9 @@ message LocationTag {
 message Desk {
   string id = 1;
   string locationId = 2;
+}
+
+message OrganizationTag {
+  string id = 1;
+  string organizationId = 2;
 }
