@@ -19,13 +19,15 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
   const rootData = useFragment<zoneSelector_allZones_query$key>(
     graphql`
       fragment zoneSelector_allZones_query on Query {
-        organizationTags(where: { organizationId: $organizationId, tagType: $deskTypeTagType }) {
+        locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
           __id
           totalCount
           edges {
             node {
-              id
-              name
+              locationTags {
+                id
+                name
+              }
             }
           }
         }
@@ -35,10 +37,11 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
   );
 
   const [id, setId] = useState<string>(allId);
-  const allItems = useMemo(
-    () => (rootData.organizationTags?.edges ? rootData.organizationTags.edges.map(({ node }) => node) : []),
-    [rootData.organizationTags],
-  );
+  const allItems = useMemo(() => {
+    const allLocations = rootData.locations?.edges ? rootData.locations.edges.map(({ node }) => node) : [];
+
+    return allLocations.flatMap((location) => location.locationTags);
+  }, [rootData.locations]);
 
   const handleSelectedChanged = (event: SelectChangeEvent) => {
     const id = event.target.value as string;
@@ -67,7 +70,7 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
           return (
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <ZoneIcon />
-              <Typography variant="h6">Desks</Typography>
+              <Typography variant="h6">Zones</Typography>
               <Divider orientation="vertical" flexItem />
               <Typography variant="body1">{selectedItem.name}</Typography>
             </Stack>
@@ -77,7 +80,7 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
         return (
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <ZoneIcon />
-            <Typography variant="h6">Desks</Typography>
+            <Typography variant="h6">Zones</Typography>
             <Divider orientation="vertical" flexItem />
             <Typography variant="body1">All</Typography>
           </Stack>
