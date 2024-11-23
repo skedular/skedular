@@ -197,7 +197,8 @@ public class Mapper : IMapper
                 CanViewAnalytics = src.Permissions.CanViewAnalytics,
                 HasFutureBooking = src.HasFutureBooking,
                 DeskCapacity = src.Desks.Count,
-                Organization = MapTo(src.Organization)
+                Organization = MapTo(src.Organization),
+                LocationTags = MapTo(src.Tags).ToArray()
             };
 
     public Tag MapTo(Shared.Models.Tag src, Shared.Database.Entities.Location location) =>

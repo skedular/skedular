@@ -408,6 +408,7 @@ type LocationDetails {
   canDelete: Boolean!
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
+  locationTags: [LocationTagDetails!]!
   id: ID!
 }
 type LocationEdge {

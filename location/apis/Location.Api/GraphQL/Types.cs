@@ -272,6 +272,8 @@ public class LocationDetails : Node
 
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
 
+    [GraphQLName("locationTags")] public LocationTagDetails[] LocationTags { get; set; } = [];
+
     [GraphQLName("id")][ID] public string Id { get; set; }
 }
 
