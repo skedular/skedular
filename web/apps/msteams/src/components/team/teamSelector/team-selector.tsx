@@ -12,12 +12,12 @@ import type { teamSelector_allTeams_query$key } from './__generated__/teamSelect
 
 type Props = {
   rootDataRelay: teamSelector_allTeams_query$key;
-  onTeamChanged: (teamId?: string) => void;
+  onChange: (id?: string) => void;
 };
 
-const allTeamsId = 'kkigMVsUXwi2YMSSrXv7i';
+const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
-const TeamSelector = ({ rootDataRelay, onTeamChanged }: Props) => {
+const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
   const rootData = useFragment<teamSelector_allTeams_query$key>(
     graphql`
       fragment teamSelector_allTeams_query on Query {
@@ -36,20 +36,20 @@ const TeamSelector = ({ rootDataRelay, onTeamChanged }: Props) => {
     rootDataRelay,
   );
 
-  const [selectedTeamId, setSelectedTeamId] = useState<string>(allTeamsId);
-  const allTeams = useMemo(() => (rootData.teams?.edges ? rootData.teams.edges.map(({ node }) => node) : []), [rootData.teams]);
+  const [id, setId] = useState<string>(allId);
+  const allItems = useMemo(() => (rootData.teams?.edges ? rootData.teams.edges.map(({ node }) => node) : []), [rootData.teams]);
 
-  const handleSelectedTeamChange = (event: SelectChangeEvent) => {
+  const handleChanged = (event: SelectChangeEvent) => {
     const id = event.target.value as string;
 
-    setSelectedTeamId(id);
-    onTeamChanged(id === allTeamsId ? undefined : id);
+    setId(id);
+    onChange(id === allId ? undefined : id);
   };
 
   return (
     <Select
-      value={selectedTeamId}
-      onChange={handleSelectedTeamChange}
+      value={id}
+      onChange={handleChanged}
       sx={{
         '& .MuiOutlinedInput-notchedOutline': {
           borderRadius: 4,
@@ -61,14 +61,14 @@ const TeamSelector = ({ rootDataRelay, onTeamChanged }: Props) => {
       }}
       size="small"
       renderValue={(selectedId) => {
-        const selectedTeam = allTeams.find((team) => team.id === selectedId);
-        if (selectedTeam) {
+        const selectedItem = allItems.find((item) => item.id === selectedId);
+        if (selectedItem) {
           return (
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <TeamIcon />
               <Typography variant="h6">Team</Typography>
               <Divider orientation="vertical" flexItem />
-              <Typography variant="body1">{selectedTeam.name}</Typography>
+              <Typography variant="body1">{selectedItem.name}</Typography>
             </Stack>
           );
         }
@@ -83,13 +83,13 @@ const TeamSelector = ({ rootDataRelay, onTeamChanged }: Props) => {
         );
       }}
     >
-      <MenuItem value={allTeamsId}>
+      <MenuItem value={allId}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <Typography variant="h6">All</Typography>
         </Stack>
       </MenuItem>
 
-      {allTeams.map((team) => (
+      {allItems.map((team) => (
         <MenuItem key={team.id} value={team.id}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <TeamAvatar name={{ name: team.name }} size="small" />

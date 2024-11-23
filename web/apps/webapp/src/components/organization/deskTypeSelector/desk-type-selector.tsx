@@ -1,26 +1,25 @@
-import type { teamSelector_allTeams_query$key } from '@/queries/__generated__/teamSelector_allTeams_query.graphql';
+import type { deskTypeSelector_allDeskTypes_query$key } from '@/queries/__generated__/deskTypeSelector_allDeskTypes_query.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { TeamAvatar } from '@repo/shared/components/avatars';
-import { TeamIcon } from '@repo/shared/components/icons';
+import { DeskIcon } from '@repo/shared/components/icons';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 type Props = {
-  rootDataRelay: teamSelector_allTeams_query$key;
+  rootDataRelay: deskTypeSelector_allDeskTypes_query$key;
   onChange: (id?: string) => void;
 };
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
-const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
-  const rootData = useFragment<teamSelector_allTeams_query$key>(
+const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
+  const rootData = useFragment<deskTypeSelector_allDeskTypes_query$key>(
     graphql`
-      fragment teamSelector_allTeams_query on Query {
-        teams(where: { organizationId: $organizationId }) {
+      fragment deskTypeSelector_allDeskTypes_query on Query {
+        organizationTags(where: { organizationId: $organizationId, tagType: $deskTypeTagType }) {
           __id
           totalCount
           edges {
@@ -36,9 +35,12 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
   );
 
   const [id, setId] = useState<string>(allId);
-  const allItems = useMemo(() => (rootData.teams?.edges ? rootData.teams.edges.map(({ node }) => node) : []), [rootData.teams]);
+  const allItems = useMemo(
+    () => (rootData.organizationTags?.edges ? rootData.organizationTags.edges.map(({ node }) => node) : []),
+    [rootData.organizationTags],
+  );
 
-  const handleChanged = (event: SelectChangeEvent) => {
+  const handleSelectedChanged = (event: SelectChangeEvent) => {
     const id = event.target.value as string;
 
     setId(id);
@@ -48,7 +50,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
   return (
     <Select
       value={id}
-      onChange={handleChanged}
+      onChange={handleSelectedChanged}
       sx={{
         '& .MuiOutlinedInput-notchedOutline': {
           borderRadius: 4,
@@ -64,8 +66,8 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
         if (selectedItem) {
           return (
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <TeamIcon />
-              <Typography variant="h6">Team</Typography>
+              <DeskIcon />
+              <Typography variant="h6">Desks</Typography>
               <Divider orientation="vertical" flexItem />
               <Typography variant="body1">{selectedItem.name}</Typography>
             </Stack>
@@ -74,8 +76,8 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
 
         return (
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <TeamIcon />
-            <Typography variant="h6">Team</Typography>
+            <DeskIcon />
+            <Typography variant="h6">Desks</Typography>
             <Divider orientation="vertical" flexItem />
             <Typography variant="body1">All</Typography>
           </Stack>
@@ -88,11 +90,10 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
         </Stack>
       </MenuItem>
 
-      {allItems.map((team) => (
-        <MenuItem key={team.id} value={team.id}>
+      {allItems.map((location) => (
+        <MenuItem key={location.id} value={location.id}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <TeamAvatar name={{ name: team.name }} size="small" />
-            <Typography variant="h6">{team.name}</Typography>
+            <Typography variant="h6">{location.name}</Typography>
           </Stack>
         </MenuItem>
       ))}
@@ -100,4 +101,4 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
   );
 };
 
-export default memo(TeamSelector);
+export default memo(DeskTypeSelector);

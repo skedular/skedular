@@ -11,12 +11,12 @@ import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: locationSelector_allLocations_query$key;
-  onLocationChanged: (locationId?: string) => void;
+  onChange: (id?: string) => void;
 };
 
-const allLocationsId = 'kkigMVsUXwi2YMSSrXv7i';
+const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
-const LocationSelector = ({ rootDataRelay, onLocationChanged }: Props) => {
+const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
   const rootData = useFragment<locationSelector_allLocations_query$key>(
     graphql`
       fragment locationSelector_allLocations_query on Query {
@@ -35,20 +35,20 @@ const LocationSelector = ({ rootDataRelay, onLocationChanged }: Props) => {
     rootDataRelay,
   );
 
-  const [selectedLocationId, setSelectedLocationId] = useState<string>(allLocationsId);
-  const allLocations = useMemo(() => (rootData.locations?.edges ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
+  const [id, setId] = useState<string>(allId);
+  const allItems = useMemo(() => (rootData.locations?.edges ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
 
-  const handleSelectedLocationChange = (event: SelectChangeEvent) => {
+  const handleSelectedChanged = (event: SelectChangeEvent) => {
     const id = event.target.value as string;
 
-    setSelectedLocationId(id);
-    onLocationChanged(id === allLocationsId ? undefined : id);
+    setId(id);
+    onChange(id === allId ? undefined : id);
   };
 
   return (
     <Select
-      value={selectedLocationId}
-      onChange={handleSelectedLocationChange}
+      value={id}
+      onChange={handleSelectedChanged}
       sx={{
         '& .MuiOutlinedInput-notchedOutline': {
           borderRadius: 4,
@@ -60,14 +60,14 @@ const LocationSelector = ({ rootDataRelay, onLocationChanged }: Props) => {
       }}
       size="small"
       renderValue={(selectedId) => {
-        const selectedLocation = allLocations.find((location) => location.id === selectedId);
-        if (selectedLocation) {
+        const selectedItem = allItems.find((item) => item.id === selectedId);
+        if (selectedItem) {
           return (
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
               <LocationIcon />
               <Typography variant="h6">Location</Typography>
               <Divider orientation="vertical" flexItem />
-              <Typography variant="body1">{selectedLocation.name}</Typography>
+              <Typography variant="body1">{selectedItem.name}</Typography>
             </Stack>
           );
         }
@@ -82,13 +82,13 @@ const LocationSelector = ({ rootDataRelay, onLocationChanged }: Props) => {
         );
       }}
     >
-      <MenuItem value={allLocationsId}>
+      <MenuItem value={allId}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <Typography variant="h6">All</Typography>
         </Stack>
       </MenuItem>
 
-      {allLocations.map((location) => (
+      {allItems.map((location) => (
         <MenuItem key={location.id} value={location.id}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <LocationAvatar name={{ name: location.name }} size="small" />
