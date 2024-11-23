@@ -1,6 +1,7 @@
 import { Bookings } from '@/components/booking/bookingsPage';
 import { LocationLink, getLocationBaseLink } from '@/components/location';
 import { getOrganizationBaseLink } from '@/components/organization';
+import { OrganizationDeskTypes } from '@/components/organization/organizationPage';
 import type { location_rootQuery } from '@/queries/__generated__/location_rootQuery.graphql';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -72,6 +73,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
   const aboutTabIndex = tabCount++;
   const membersTabIndex = organizationId ? -1 : tabCount++;
   const zonesTabIndex = tabCount++;
+  const deskTypesTabIndex = organizationId ? tabCount++ : -1;
   const desksTabIndex = tabCount++;
   const analyticsTabIndex = rootData.location?.canViewAnalytics ? tabCount++ : -1;
 
@@ -83,6 +85,8 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
     initialTabIndex = membersTabIndex;
   } else if (tab === 'zones') {
     initialTabIndex = zonesTabIndex;
+  } else if (tab === 'deskTypes') {
+    initialTabIndex = deskTypesTabIndex;
   } else if (tab === 'desks') {
     initialTabIndex = desksTabIndex;
   } else if (tab === 'analytics') {
@@ -104,6 +108,8 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
       tab = 'members';
     } else if (newValue === zonesTabIndex) {
       tab = 'zones';
+    } else if (newValue === deskTypesTabIndex) {
+      tab = 'deskTypes';
     } else if (newValue === desksTabIndex) {
       tab = 'desks';
     } else if (newValue === analyticsTabIndex) {
@@ -128,6 +134,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
         <Tab label="About" />
         {!organizationId && <Tab label="Members" />}
         <Tab label="Zones" />
+        {organizationId && <Tab label="Desk Types" />}
         <Tab label="Desks" />
         {rootData.location.canViewAnalytics && <Tab label="Analytics" />}
       </Tabs>
@@ -136,6 +143,9 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
       {tabIndex === aboutTabIndex && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
       {tabIndex === membersTabIndex && !organizationId && <LocationMembersTab onReloadRequired={onReloadRequired} locationId={locationId} />}
       {tabIndex === zonesTabIndex && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+      {tabIndex === deskTypesTabIndex && organizationId && (
+        <OrganizationDeskTypes onReloadRequired={onReloadRequired} organizationId={organizationId} />
+      )}
       {tabIndex === desksTabIndex && <LocationDesksTab onReloadRequired={onReloadRequired} locationId={locationId} />}
       {tabIndex === analyticsTabIndex && rootData.location.canViewAnalytics && (
         <LocationAnalyticsTab

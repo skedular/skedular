@@ -8,6 +8,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { Bookings } from 'components/booking/bookingsPage';
 import { getLocationBaseLink, LocationLink } from 'components/location';
 import { getOrganizationBaseLink } from 'components/organization';
+import { OrganizationDeskTypes } from 'components/organization/organizationPage';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -69,6 +70,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
   const bookingTabIndex = tabCount++;
   const aboutTabIndex = tabCount++;
   const zonesTabIndex = tabCount++;
+  const deskTypesTabIndex = tabCount++;
   const desksTabIndex = tabCount++;
   const analyticsTabIndex = rootData.location?.canViewAnalytics ? tabCount++ : -1;
 
@@ -78,6 +80,8 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
     initialTabIndex = aboutTabIndex;
   } else if (tab === 'zones') {
     initialTabIndex = zonesTabIndex;
+  } else if (tab === 'deskTypes') {
+    initialTabIndex = deskTypesTabIndex;
   } else if (tab === 'desks') {
     initialTabIndex = desksTabIndex;
   } else if (tab === 'analytics') {
@@ -97,6 +101,8 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
       tab = 'about';
     } else if (newValue === zonesTabIndex) {
       tab = 'zones';
+    } else if (newValue === deskTypesTabIndex) {
+      tab = 'deskTypes';
     } else if (newValue === desksTabIndex) {
       tab = 'desks';
     } else if (newValue === analyticsTabIndex) {
@@ -120,6 +126,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
         <Tab label="Bookings" />
         <Tab label="About" />
         <Tab label="Zones" />
+        <Tab label="Desk Types" />
         <Tab label="Desks" />
         {rootData.location.canViewAnalytics && <Tab label="Analytics" />}
       </Tabs>
@@ -130,6 +137,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
           <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />
         )}
         {tabIndex === zonesTabIndex && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+        {tabIndex === deskTypesTabIndex && <OrganizationDeskTypes onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === desksTabIndex && <LocationDesksTab onReloadRequired={onReloadRequired} locationId={locationId} />}
         {tabIndex === analyticsTabIndex && rootData.location.canViewAnalytics && (
           <LocationAnalyticsTab
