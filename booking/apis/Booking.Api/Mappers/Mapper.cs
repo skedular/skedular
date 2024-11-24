@@ -464,7 +464,10 @@ public class Mapper : IMapper
         {
             UniqueId = src.Id,
             Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
-            LocationTags = MapTo(src.Tags).ToArray()
+            LocationTags = MapTo(src.Tags).ToArray(),
+            Deactivated = src.Deactivated,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Location = MapTo(src.Location)
         };
 
     private static IEnumerable<BookingLocationTagDetails> MapTo(IEnumerable<Shared.Models.LocationTag> src) =>

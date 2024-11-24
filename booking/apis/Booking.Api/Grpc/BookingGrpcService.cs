@@ -341,7 +341,7 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        var desks = await deskService.GetAvailableDesksAsync(
+        var desks = await deskService.GetAvailableDesksByLocationAsync(
             request.LocationId,
             request.Date.ToDateTimeOffset(),
             request.DeskIdsToInclude,

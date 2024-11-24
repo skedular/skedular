@@ -14,6 +14,7 @@ type Query {
   booking(id: String!): BookingDetails
   bookings(after: String, first: Int, before: String, last: Int, where: BookingWhereInput!, orderBy: [BookingOrderInput!]): BookingConnection
   allBookings(where: BookingWhereInput!): [BookingDetails!]
+  availableOrganizationDesks(organizationId: String!, date: DateTime!, deskIdsToInclude: [String!]!): [BookingDeskDetails!]
   availableLocationDesks(locationId: String!, date: DateTime!, deskIdsToInclude: [String!]!): [BookingDeskDetails!]
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions
   locationBookingPermissions(locationId: String!): LocationBookingPermissions
@@ -182,6 +183,7 @@ type BookingDeskDetails {
   name: String!
   deactivated: Boolean!
   requireBookingApproval: Boolean!
+  location: BookingLocationDetails
   locationTags: [BookingLocationTagDetails!]!
 }
 type BookingDetails {

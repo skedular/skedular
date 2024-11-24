@@ -17,7 +17,7 @@ public interface IDeskService
         ICollection<string> deskIdsToInclude,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Desk>> GetAvailableDesksAsync(
+    Task<ICollection<Desk>> GetAvailableDesksByLocationAsync(
         string locationId,
         DateTimeOffset date,
         ICollection<string> deskIdsToInclude,
@@ -101,7 +101,7 @@ public class DeskService(
         }).ToList();
     }
 
-    public async Task<ICollection<Desk>> GetAvailableDesksAsync(
+    public async Task<ICollection<Desk>> GetAvailableDesksByLocationAsync(
         string locationId,
         DateTimeOffset date,
         ICollection<string> deskIdsToInclude,
