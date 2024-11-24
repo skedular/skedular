@@ -263,7 +263,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
             {paletteMode === 'dark' && (
               <MenuItem onClick={handleLightThemeClicked}>
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <LightModeIcon fontSize="medium" />
+                  <DarkModeIcon fontSize="medium" />
                   <Typography textAlign="center">Dark Mode</Typography>
                 </Stack>
               </MenuItem>
@@ -272,7 +272,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
             {paletteMode === 'light' && (
               <MenuItem onClick={handleDarkThemeClicked}>
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <DarkModeIcon fontSize="medium" />
+                  <LightModeIcon fontSize="medium" />
                   <Typography textAlign="center">Light Mode</Typography>
                 </Stack>
               </MenuItem>
