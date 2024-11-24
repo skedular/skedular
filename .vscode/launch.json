@@ -22,7 +22,10 @@
       "request": "launch",
       "command": "pnpm dev",
       "cwd": "${workspaceFolder}/web/app/webapp",
-      "envFile": "${workspaceFolder}/web/app/webapp/.env"
+      "envFile": "${workspaceFolder}/web/app/webapp/.env",
+      "env": {
+        "PORT": "15000"
+      }
     },
     {
       "name": "Webapp - debug client-side",
@@ -31,7 +34,8 @@
       "url": "http://localhost:15002",
       "cwd": "${workspaceFolder}/web/app/webapp",
       "env": {
-        "NEXTAUTH_SECRET": "XXXX"
+        "NEXTAUTH_SECRET": "XXXX",
+        "PORT": "15000"
       }
     },
     {
@@ -45,7 +49,10 @@
         "action": "debugWithChrome"
       },
       "cwd": "${workspaceFolder}/web/app/webapp",
-      "envFile": "${workspaceFolder}/web/app/webapp/.env"
+      "envFile": "${workspaceFolder}/web/app/webapp/.env",
+      "env": {
+        "PORT": "15000"
+      }
     }
   ]
 }
