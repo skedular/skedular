@@ -17,25 +17,25 @@
       "envFile": "${workspaceFolder}/.env"
     },
     {
-      "name": "Next.js: debug server-side",
+      "name": "Webapp - debug server-side",
       "type": "node-terminal",
       "request": "launch",
       "command": "pnpm dev",
-      "cwd": "${workspaceFolder}/web",
-      "envFile": "${workspaceFolder}/.env"
+      "cwd": "${workspaceFolder}/web/app/webapp",
+      "envFile": "${workspaceFolder}/web/app/webapp/.env"
     },
     {
-      "name": "Next.js: debug client-side",
+      "name": "Webapp - debug client-side",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:15002",
-      "cwd": "${workspaceFolder}/web",
+      "cwd": "${workspaceFolder}/web/app/webapp",
       "env": {
         "NEXTAUTH_SECRET": "XXXX"
       }
     },
     {
-      "name": "Next.js: debug full stack",
+      "name": "Webapp - debug full stack",
       "type": "node-terminal",
       "request": "launch",
       "command": "pnpm dev",
@@ -44,7 +44,8 @@
         "uriFormat": "%s",
         "action": "debugWithChrome"
       },
-      "cwd": "${workspaceFolder}/web"
+      "cwd": "${workspaceFolder}/web/app/webapp",
+      "envFile": "${workspaceFolder}/web/app/webapp/.env"
     }
   ]
 }
