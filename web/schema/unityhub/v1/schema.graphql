@@ -409,6 +409,7 @@ type LocationDetails {
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
   locationTags: [LocationTagDetails!]!
+  desks: [DeskDetails!]!
   id: ID!
 }
 type LocationEdge {

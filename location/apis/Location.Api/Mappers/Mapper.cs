@@ -198,7 +198,8 @@ public class Mapper : IMapper
                 HasFutureBooking = src.HasFutureBooking,
                 DeskCapacity = src.Desks.Count,
                 Organization = MapTo(src.Organization),
-                LocationTags = MapTo(src.Tags).ToArray()
+                LocationTags = MapTo(src.Tags).ToArray(),
+                Desks = MapTo(src.Desks).ToArray()
             };
 
     public Tag MapTo(Shared.Models.Tag src, Shared.Database.Entities.Location location) =>
@@ -706,6 +707,8 @@ public class Mapper : IMapper
     private IEnumerable<LocationTagDetails> MapTo(IEnumerable<Shared.Models.Tag> src) => src.Select(MapTo);
 
     private IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
+
+    private IEnumerable<DeskDetails> MapTo(IEnumerable<Shared.Models.Desk> src) => src.Select(MapTo);
 
     private static LocationCustomerDetails MapTo(Customer src) =>
         new()

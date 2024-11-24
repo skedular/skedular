@@ -274,6 +274,8 @@ public class LocationDetails : Node
 
     [GraphQLName("locationTags")] public LocationTagDetails[] LocationTags { get; set; } = [];
 
+    [GraphQLName("desks")] public DeskDetails[] Desks { get; set; } = [];
+
     [GraphQLName("id")][ID] public string Id { get; set; }
 }
 
