@@ -21,8 +21,8 @@
       "type": "node-terminal",
       "request": "launch",
       "command": "pnpm dev",
-      "cwd": "${workspaceFolder}/web/app/webapp",
-      "envFile": "${workspaceFolder}/web/app/webapp/.env",
+      "cwd": "${workspaceFolder}/web/apps/webapp",
+      "envFile": "${workspaceFolder}/web/apps/webapp/.env",
       "env": {
         "PORT": "15000"
       }
@@ -32,7 +32,7 @@
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:15002",
-      "cwd": "${workspaceFolder}/web/app/webapp",
+      "cwd": "${workspaceFolder}/web/apps/webapp",
       "env": {
         "NEXTAUTH_SECRET": "XXXX",
         "PORT": "15000"
@@ -48,8 +48,8 @@
         "uriFormat": "%s",
         "action": "debugWithChrome"
       },
-      "cwd": "${workspaceFolder}/web/app/webapp",
-      "envFile": "${workspaceFolder}/web/app/webapp/.env",
+      "cwd": "${workspaceFolder}/web/apps/webapp",
+      "envFile": "${workspaceFolder}/web/apps/webapp/.env",
       "env": {
         "PORT": "15000"
       }
