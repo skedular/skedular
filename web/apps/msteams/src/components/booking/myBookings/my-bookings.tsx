@@ -33,40 +33,40 @@ type Props = {
 };
 
 type CustomerDetails = {
-  readonly uniqueId: string;
-  readonly givenName?: string | null | undefined;
-  readonly middleName?: string | null | undefined;
-  readonly familyName?: string | null | undefined;
-  readonly name?: string | null | undefined;
-  readonly photoUrl?: string | null | undefined;
+  uniqueId: string;
+  givenName?: string | null | undefined;
+  middleName?: string | null | undefined;
+  familyName?: string | null | undefined;
+  name?: string | null | undefined;
+  photoUrl?: string | null | undefined;
 };
 
 type LocationDetails = {
-  readonly name: string;
+  name: string;
 };
 
 type LocationTagDetails = {
-  readonly uniqueId: string;
-  readonly name: string;
-  readonly tagType?: string | null | undefined;
+  uniqueId: string;
+  name: string;
+  tagType?: string | null | undefined;
 };
 
 type DeskDetails = {
-  readonly name: string;
-  readonly locationTags: ReadonlyArray<LocationTagDetails>;
+  name: string;
+  locationTags: ReadonlyArray<LocationTagDetails>;
 };
 
 type TeamDetails = {
-  readonly name: string;
+  name: string;
 };
 
 type RowType = {
   id: string;
-  readonly location?: LocationDetails | null | undefined;
-  readonly team?: TeamDetails | null | undefined;
-  readonly desks: ReadonlyArray<DeskDetails>;
-  readonly zones: ReadonlyArray<LocationTagDetails>;
-  readonly teammates: ReadonlyArray<CustomerDetails>;
+  location?: LocationDetails | null | undefined;
+  team?: TeamDetails | null | undefined;
+  desks: ReadonlyArray<DeskDetails>;
+  zones: ReadonlyArray<LocationTagDetails>;
+  teammates: ReadonlyArray<CustomerDetails>;
 };
 
 const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, from, to, locationIds, teamIds, viewMode }: Props) => {
