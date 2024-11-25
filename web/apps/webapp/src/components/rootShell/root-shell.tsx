@@ -144,7 +144,8 @@ const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
         </Drawer>
         <Grid container>
           <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, display: { xs: 'block', sm: 'none' } }}>
-            <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />
+            {!switchToModernUI && <OldLeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />}
+            {switchToModernUI && <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />}
           </Grid>
           <Stack direction="column" sx={{ width: '100vw' }}>
             {!switchToModernUI && <OldAppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
