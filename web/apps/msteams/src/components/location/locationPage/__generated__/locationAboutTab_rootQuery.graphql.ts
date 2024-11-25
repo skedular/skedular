@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cb039511d19ff9b34be826413567f062>>
+ * @generated SignedSource<<e2615f8e7569add2aca3328e824a16e7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,9 @@ export type locationAboutTab_rootQuery$data = {
     readonly name: string;
     readonly organization: {
       readonly name: string;
+    } | null | undefined;
+    readonly physicalAddress: {
+      readonly formattedAddress: string | null | undefined;
     } | null | undefined;
     readonly timezone: string | null | undefined;
   } | null | undefined;
@@ -84,6 +87,24 @@ v2 = [
       {
         "alias": null,
         "args": null,
+        "concreteType": "LocationAddressDetails",
+        "kind": "LinkedField",
+        "name": "physicalAddress",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "formattedAddress",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
         "concreteType": "LocationOrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
@@ -122,16 +143,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "45215bbb56686b3db1be8209972ed64d",
+    "cacheID": "dc96ff56e7c65eb588e4259474bda886",
     "id": null,
     "metadata": {},
     "name": "locationAboutTab_rootQuery",
     "operationKind": "query",
-    "text": "query locationAboutTab_rootQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    id\n    name\n    about\n    timezone\n    organization {\n      name\n    }\n    canModify\n  }\n}\n"
+    "text": "query locationAboutTab_rootQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    id\n    name\n    about\n    timezone\n    physicalAddress {\n      formattedAddress\n    }\n    organization {\n      name\n    }\n    canModify\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "353992f77af79f68ca2013f5baae54fc";
+(node as any).hash = "693f01a7340084aecd19a274a260614d";
 
 export default node;

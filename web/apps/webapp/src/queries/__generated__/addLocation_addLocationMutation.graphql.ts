@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<27070b9bfb3caac7d3c55cbdd8a4101f>>
+ * @generated SignedSource<<0d18f04f5eb2e0b4649f65f219ed5f57>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,18 @@ export type AddLocationInput = {
   id?: string | null | undefined;
   name: string;
   organizationId?: string | null | undefined;
+  physicalAddress?: LocationAddressDetailsInput | null | undefined;
   timezone?: string | null | undefined;
+};
+export type LocationAddressDetailsInput = {
+  addressLine1?: string | null | undefined;
+  addressLine2?: string | null | undefined;
+  city?: string | null | undefined;
+  country?: string | null | undefined;
+  formattedAddress?: string | null | undefined;
+  province?: string | null | undefined;
+  suburb?: string | null | undefined;
+  zipcode?: string | null | undefined;
 };
 export type addLocation_addLocationMutation$variables = {
   input: AddLocationInput;
@@ -26,6 +37,9 @@ export type addLocation_addLocationMutation$data = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly name: string;
+      readonly physicalAddress: {
+        readonly formattedAddress: string | null | undefined;
+      } | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -36,6 +50,9 @@ export type addLocation_addLocationMutation$rawResponse = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly name: string;
+      readonly physicalAddress: {
+        readonly formattedAddress: string | null | undefined;
+      } | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -104,6 +121,24 @@ v1 = [
             "kind": "ScalarField",
             "name": "timezone",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "LocationAddressDetails",
+            "kind": "LinkedField",
+            "name": "physicalAddress",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "formattedAddress",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -130,16 +165,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "50e1d4faeafd8c97babd72e4c8129bee",
+    "cacheID": "0c2711ddb44f8a4134fe787b2b8219ca",
     "id": null,
     "metadata": {},
     "name": "addLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n    }\n  }\n}\n"
+    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        formattedAddress\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "521f39a921d6d6827549d9aed581ca1e";
+(node as any).hash = "a2723c937dd7c493dbe170bf00a49264";
 
 export default node;

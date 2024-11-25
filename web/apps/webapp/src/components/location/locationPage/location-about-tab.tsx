@@ -36,6 +36,9 @@ const RootQuery = graphql`
       name
       about
       timezone
+      physicalAddress {
+        formattedAddress
+      }
       organization {
         name
       }
@@ -48,12 +51,14 @@ type LocationDetails = {
   name: string;
   about: string | null;
   timezone: string;
+  physicalAddress: string;
 };
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three charcters long.').required('Location name is required'),
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
+  physicalAddress: string().nullable(),
 });
 
 const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
@@ -66,6 +71,9 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
           name
           about
           timezone
+          physicalAddress {
+            formattedAddress
+          }
         }
       }
     }
@@ -76,7 +84,7 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
   const validate = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
 
-  const handleLocationUpdateClick = ({ name, about, timezone }: LocationDetails) => {
+  const handleLocationUpdateClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
     if (!rootData.location) {
       return;
     }
@@ -92,6 +100,9 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
           about,
           timezone,
           organizationId,
+          physicalAddress: {
+            formattedAddress: physicalAddress,
+          },
         },
       },
       onCompleted: (_, errors) => {
@@ -122,6 +133,9 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
             name,
             about,
             timezone,
+            physicalAddress: {
+              formattedAddress: physicalAddress,
+            },
           },
         },
       },
@@ -141,6 +155,7 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
         name: location.name,
         about: location.about,
         timezone: location.timezone,
+        physicalAddress: location.physicalAddress?.formattedAddress,
       }}
       validate={validate}
       render={({ handleSubmit }) => (
@@ -148,6 +163,7 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
           <TextField label="Name" name="name" required={requiredFields.name} />
           <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
           <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+          <TextField label="Physical Address" name="physicalAddress" required={requiredFields.physicalAddress} multiline={true} />
 
           <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
             <Button color="primary" variant="contained" type="submit">

@@ -31,13 +31,15 @@ type Props = {
 type LocationDetails = {
   name: string;
   about: string | null;
-  timezone: string | null;
+  timezone: string;
+  physicalAddress: string | null;
 };
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three charcters long.').required('Location name is required'),
   about: string().nullable(),
-  timezone: string().nullable(),
+  timezone: string().required('Timezone is required'),
+  physicalAddress: string().nullable(),
 });
 
 const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, cancelButtonText }: Props) => {
@@ -49,6 +51,9 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
           name
           about
           timezone
+          physicalAddress {
+            formattedAddress
+          }
         }
       }
     }
@@ -85,7 +90,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
     });
   };
 
-  const handleLocationCreateClick = ({ name, about, timezone }: LocationDetails) => {
+  const handleLocationCreateClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
 
@@ -98,6 +103,9 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
           about,
           organizationId,
           timezone,
+          physicalAddress: {
+            formattedAddress: physicalAddress,
+          },
         },
       },
       onCompleted: (_, errors) => {
@@ -153,6 +161,9 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
             name,
             about,
             timezone,
+            physicalAddress: {
+              formattedAddress: physicalAddress,
+            },
           },
         },
       },
@@ -167,6 +178,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
           name: '',
           about: null,
           organizationId,
+          physicalAddress: null,
         }}
         validate={validate}
         render={({ handleSubmit }) => (
@@ -174,6 +186,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
             <TextField label="Name" name="name" required={requiredFields.name} />
             <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
             <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+            <TextField label="Physical Address" name="physicalAddress" required={requiredFields.physicalAddress} multiline={true} />
 
             <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
               <Button color="secondary" variant="contained" onClick={handleCancelClick}>
