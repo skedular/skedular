@@ -1,5 +1,5 @@
-import { AppBar } from '@/components/appBar';
-import { LeftSideNavigationMenu } from '@/components/navigationMenu';
+import { AppBar, OldAppBar } from '@/components/appBar';
+import { LeftSideNavigationMenu, OldLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
 import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
@@ -14,10 +14,11 @@ import { LogoutIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { nanoid } from 'nanoid';
 import { signOut } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { memo, useCallback, useEffect, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -45,7 +46,9 @@ const RootQuery = graphql`
     paymentCustomerRecordSynced
     slackCustomerRecordSynced
     teamCustomerRecordSynced
+    ...oldAppBar_query
     ...appBar_query
+    ...oldLeftSideNavigationMenu_query
     ...leftSideNavigationMenu_query
   }
 `;
@@ -55,6 +58,8 @@ const drawerWidth = 250;
 
 const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
+  const switchToModernUI = useContext(SwitchToModernUIContext);
+
   const [reloadCount, setReloadCount] = useState(0);
   const areCustomerRecordsSync = useCallback(
     () =>
@@ -134,14 +139,16 @@ const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
           variant="persistent"
           open={true}
         >
-          <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />
+          {!switchToModernUI && <OldLeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />}
+          {switchToModernUI && <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />}
         </Drawer>
         <Grid container>
           <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, display: { xs: 'block', sm: 'none' } }}>
             <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />
           </Grid>
           <Stack direction="column" sx={{ width: '100vw' }}>
-            <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
+            {!switchToModernUI && <OldAppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
+            {switchToModernUI && <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
           </Stack>
           {!rootData.myOrganizations ||
             (rootData.myOrganizations.length === 0 && (

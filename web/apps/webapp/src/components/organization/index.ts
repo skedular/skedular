@@ -1,5 +1,6 @@
 export {
   default as OrganizationLink,
+  getModernOrganizationLocationsBaseLink,
   getOrganizationAddLink,
   getOrganizationAnalyticsBaseLink,
   getOrganizationBaseLink,

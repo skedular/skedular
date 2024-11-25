@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ddb2115305e1f27e1fd4a9cbb7c719a>>
+ * @generated SignedSource<<857f399d4276350085471eb931753ca9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,11 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type myLocations_locations_query$data = {
+  readonly availableOrganizationDesks: ReadonlyArray<{
+    readonly location: {
+      readonly uniqueId: string;
+    } | null | undefined;
+  }> | null | undefined;
   readonly locations: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -28,7 +33,13 @@ export type myLocations_locations_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"myLocations_locations_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "kind": "Variable",
+  "name": "organizationId",
+  "variableName": "organizationId"
+};
+return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -37,6 +48,10 @@ const node: ReaderFragment = {
     {
       "kind": "RootArgument",
       "name": "organizationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "todayDate"
     }
   ],
   "kind": "Fragment",
@@ -59,11 +74,7 @@ const node: ReaderFragment = {
         },
         {
           "fields": [
-            {
-              "kind": "Variable",
-              "name": "organizationId",
-              "variableName": "organizationId"
-            }
+            (v0/*: any*/)
           ],
           "kind": "ObjectValue",
           "name": "where"
@@ -131,12 +142,54 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "date",
+          "variableName": "todayDate"
+        },
+        {
+          "kind": "Literal",
+          "name": "deskIdsToInclude",
+          "value": []
+        },
+        (v0/*: any*/)
+      ],
+      "concreteType": "BookingDeskDetails",
+      "kind": "LinkedField",
+      "name": "availableOrganizationDesks",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingLocationDetails",
+          "kind": "LinkedField",
+          "name": "location",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "uniqueId",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "c8ef07a8a724793d5c9cf092e8c58780";
+(node as any).hash = "2d606e61a1e7911e38354090909e9666";
 
 export default node;

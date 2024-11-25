@@ -1,3 +1,4 @@
+export { default as OldOrganization } from './old-organization';
 export { default as Organization } from './organization';
 export { default as OrganizationAbout } from './organization-about-tab';
 export { default as OrganizationAnalytics } from './organization-analytics-tab';

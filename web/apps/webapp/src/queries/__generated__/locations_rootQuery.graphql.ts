@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2ce0fbacb2ce2363206f8695beb875e2>>
+ * @generated SignedSource<<ebf26038f5c93ede49123736647a5043>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,11 +17,13 @@ export type LocationOrderInput = {
   field: LocationOrderField;
 };
 export type locations_rootQuery$variables = {
-  locationNameSearchText?: string | null | undefined;
+  deskTypeTagType: string;
   locationsSortingValues: ReadonlyArray<LocationOrderInput>;
+  organizationId: string;
+  todayDate: any;
 };
 export type locations_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locations_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"deskTypeSelector_allDeskTypes_query" | "myLocations_locations_query" | "zoneSelector_allZones_query">;
 };
 export type locations_rootQuery = {
   response: locations_rootQuery$data;
@@ -32,48 +34,72 @@ const node: ConcreteRequest = (function(){
 var v0 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "locationNameSearchText"
+  "name": "deskTypeTagType"
 },
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
   "name": "locationsSortingValues"
 },
-v2 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 50
-  },
-  {
-    "kind": "Variable",
-    "name": "orderBy",
-    "variableName": "locationsSortingValues"
-  },
-  {
-    "fields": [
-      {
-        "kind": "Variable",
-        "name": "nameContains",
-        "variableName": "locationNameSearchText"
-      }
-    ],
-    "kind": "ObjectValue",
-    "name": "where"
-  }
-],
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationId"
+},
 v3 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "todayDate"
+},
+v4 = {
+  "kind": "Variable",
+  "name": "organizationId",
+  "variableName": "organizationId"
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "totalCount",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
+},
+v8 = [
+  (v6/*: any*/),
+  (v7/*: any*/)
+],
+v9 = {
+  "kind": "ClientExtension",
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "__id",
+      "storageKey": null
+    }
+  ]
 };
 return {
   "fragment": {
     "argumentDefinitions": [
       (v0/*: any*/),
-      (v1/*: any*/)
+      (v1/*: any*/),
+      (v2/*: any*/),
+      (v3/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -82,7 +108,17 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "locations_query"
+        "name": "deskTypeSelector_allDeskTypes_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "zoneSelector_allZones_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "myLocations_locations_query"
       }
     ],
     "type": "Query",
@@ -91,27 +127,83 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
+      (v2/*: any*/),
       (v1/*: any*/),
-      (v0/*: any*/)
+      (v0/*: any*/),
+      (v3/*: any*/)
     ],
     "kind": "Operation",
     "name": "locations_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": [
+          {
+            "fields": [
+              (v4/*: any*/),
+              {
+                "kind": "Variable",
+                "name": "tagType",
+                "variableName": "deskTypeTagType"
+              }
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
+        ],
+        "concreteType": "OrganizationTagConnection",
+        "kind": "LinkedField",
+        "name": "organizationTags",
+        "plural": false,
+        "selections": [
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationTagEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationTagDetails",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": (v8/*: any*/),
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v9/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "orderBy",
+            "variableName": "locationsSortingValues"
+          },
+          {
+            "fields": [
+              (v4/*: any*/)
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
+        ],
         "concreteType": "LocationConnection",
         "kind": "LinkedField",
         "name": "locations",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "totalCount",
-            "storageKey": null
-          },
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -131,115 +223,79 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "id",
-                    "storageKey": null
-                  },
-                  (v3/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "LocationOrganizationDetails",
+                    "concreteType": "LocationTagDetails",
                     "kind": "LinkedField",
-                    "name": "organization",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "uniqueId",
-                        "storageKey": null
-                      },
-                      (v3/*: any*/)
-                    ],
+                    "name": "locationTags",
+                    "plural": true,
+                    "selections": (v8/*: any*/),
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  }
+                  (v6/*: any*/),
+                  (v7/*: any*/)
                 ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
+          (v9/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "date",
+            "variableName": "todayDate"
+          },
+          {
+            "kind": "Literal",
+            "name": "deskIdsToInclude",
+            "value": []
+          },
+          (v4/*: any*/)
+        ],
+        "concreteType": "BookingDeskDetails",
+        "kind": "LinkedField",
+        "name": "availableOrganizationDesks",
+        "plural": true,
+        "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "PageInfo",
+            "concreteType": "BookingLocationDetails",
             "kind": "LinkedField",
-            "name": "pageInfo",
+            "name": "location",
             "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
+                "name": "uniqueId",
                 "storageKey": null
               }
             ],
             "storageKey": null
-          },
-          {
-            "kind": "ClientExtension",
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__id",
-                "storageKey": null
-              }
-            ]
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v2/*: any*/),
-        "filters": [
-          "where",
-          "orderBy"
-        ],
-        "handle": "connection",
-        "key": "locations_locations",
-        "kind": "LinkedHandle",
-        "name": "locations"
       }
     ]
   },
   "params": {
-    "cacheID": "dacdc8795d82e1ead06227d629c44893",
+    "cacheID": "6a0d29bdd3d929243466a793eefa035c",
     "id": null,
     "metadata": {},
     "name": "locations_rootQuery",
     "operationKind": "query",
-    "text": "query locations_rootQuery(\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String\n) {\n  ...locations_query\n}\n\nfragment locations_query on Query {\n  locations(first: 50, where: {nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $deskTypeTagType: String!\n  $todayDate: DateTime!\n) {\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n  ...myLocations_locations_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  organizationTags(where: {organizationId: $organizationId, tagType: $deskTypeTagType}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myLocations_locations_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        locationTags {\n          id\n          name\n        }\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8b49422dfbc64e643413943172045cd1";
+(node as any).hash = "d973025589827e9456b9fb330c2a9363";
 
 export default node;

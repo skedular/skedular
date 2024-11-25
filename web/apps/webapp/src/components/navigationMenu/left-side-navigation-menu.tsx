@@ -1,3 +1,8 @@
+import {
+  getModernOrganizationLocationsBaseLink,
+  getOrganizationBaseLink,
+  getOrganizationTeamsBaseLink,
+} from '@/components/organization/organization-link';
 import type { leftSideNavigationMenu_query$key } from '@/queries/__generated__/leftSideNavigationMenu_query.graphql';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
@@ -5,7 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { HomeIcon, LocationIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
+import { DeskIcon, HomeIcon, LocationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import Image from 'next/image';
 import NextLink from 'next/link';
@@ -24,6 +29,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
     graphql`
       fragment leftSideNavigationMenu_query on Query {
         organization(id: $organizationId) @include(if: $organizationExists) {
+          id
           canModify
         }
       }
@@ -39,6 +45,14 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
   const percentage = ((maxWidth - 30) * 100) / originalWidth;
   const width = (originalWidth * percentage) / 100;
   const height = (originalHeight * percentage) / 100;
+
+  if (!rootData?.organization) {
+    return <></>;
+  }
+
+  const organizationBaseLink = getOrganizationBaseLink(rootData.organization.id);
+  const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
+  const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(rootData.organization.id);
   const styles = {
     width: maxWidth - 30,
     marginLeft: 2,
@@ -57,8 +71,8 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
       </ListItem>
 
       <ListItem disablePadding>
-        <Link component={NextLink} href="/">
-          <ListItemButton selected={pathName === '/'} sx={{ ...styles, borderRadius: pathName === '/' ? 4 : 0 }}>
+        <Link component={NextLink} href={organizationBaseLink}>
+          <ListItemButton selected={pathName === organizationBaseLink} sx={{ ...styles, borderRadius: pathName === organizationBaseLink ? 4 : 0 }}>
             <ListItemIcon>
               <HomeIcon excludeTooltip />
             </ListItemIcon>
@@ -68,19 +82,11 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
       </ListItem>
 
       <ListItem disablePadding>
-        <Link component={NextLink} href="/organizations">
-          <ListItemButton selected={pathName === '/organizations'} sx={{ ...styles, borderRadius: pathName === '/organizations' ? 4 : 0 }}>
-            <ListItemIcon>
-              <OrganizationIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Organizations</ListItemText>
-          </ListItemButton>
-        </Link>
-      </ListItem>
-
-      <ListItem disablePadding>
-        <Link component={NextLink} href="/locations">
-          <ListItemButton selected={pathName === '/locations'} sx={{ ...styles, borderRadius: pathName === '/locations' ? 4 : 0 }}>
+        <Link component={NextLink} href={organizationLocationsBaseLink}>
+          <ListItemButton
+            selected={pathName === organizationLocationsBaseLink}
+            sx={{ ...styles, borderRadius: pathName === organizationLocationsBaseLink ? 4 : 0 }}
+          >
             <ListItemIcon>
               <LocationIcon excludeTooltip />
             </ListItemIcon>
@@ -90,8 +96,11 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
       </ListItem>
 
       <ListItem disablePadding>
-        <Link component={NextLink} href="/teams">
-          <ListItemButton selected={pathName === '/teams'} sx={{ ...styles, borderRadius: pathName === '/teams' ? 4 : 0 }}>
+        <Link component={NextLink} href={organizationTeamsBaseLink}>
+          <ListItemButton
+            selected={pathName === organizationTeamsBaseLink}
+            sx={{ ...styles, borderRadius: pathName === organizationTeamsBaseLink ? 4 : 0 }}
+          >
             <ListItemIcon>
               <TeamIcon excludeTooltip />
             </ListItemIcon>
@@ -100,27 +109,31 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
         </Link>
       </ListItem>
 
-      <ListItem disablePadding>
-        <Link component={NextLink} href="/notifications">
-          <ListItemButton selected={pathName === '/notifications'} sx={{ ...styles, borderRadius: pathName === '/notifications' ? 4 : 0 }}>
-            <ListItemIcon>
-              <NotificationsIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Notifications</ListItemText>
-          </ListItemButton>
-        </Link>
-      </ListItem>
+      {rootData.organization.canModify && (
+        <ListItem disablePadding>
+          <Link component={NextLink} href="/notifications">
+            <ListItemButton selected={pathName === '/notifications'} sx={{ ...styles, borderRadius: pathName === '/notifications' ? 4 : 0 }}>
+              <ListItemIcon>
+                <DeskIcon excludeTooltip />
+              </ListItemIcon>
+              <ListItemText>Manage Seats</ListItemText>
+            </ListItemButton>
+          </Link>
+        </ListItem>
+      )}
 
-      <ListItem disablePadding>
-        <Link component={NextLink} href="/settings">
-          <ListItemButton selected={pathName === '/settings'} sx={{ ...styles, borderRadius: pathName === '/settings' ? 4 : 0 }}>
-            <ListItemIcon>
-              <SettingsIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Settings</ListItemText>
-          </ListItemButton>
-        </Link>
-      </ListItem>
+      {rootData.organization.canModify && (
+        <ListItem disablePadding>
+          <Link component={NextLink} href="/settings">
+            <ListItemButton selected={pathName === '/settings'} sx={{ ...styles, borderRadius: pathName === '/settings' ? 4 : 0 }}>
+              <ListItemIcon>
+                <SettingsIcon excludeTooltip />
+              </ListItemIcon>
+              <ListItemText>Admin</ListItemText>
+            </ListItemButton>
+          </Link>
+        </ListItem>
+      )}
     </List>
   );
 };

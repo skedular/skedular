@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b9d07867312f040d99c57246090ebbd>>
+ * @generated SignedSource<<56975d7fa76b98e83ae4603ba2fe1a0e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,8 @@ export type LocationOrderInput = {
 };
 export type myLocations_locations_refetchableFragment$variables = {
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
-  organizationId?: string | null | undefined;
+  organizationId: string;
+  todayDate: any;
 };
 export type myLocations_locations_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"myLocations_locations_query">;
@@ -39,8 +40,18 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "organizationId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "todayDate"
   }
-];
+],
+v1 = {
+  "kind": "Variable",
+  "name": "organizationId",
+  "variableName": "organizationId"
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -73,11 +84,7 @@ return {
           },
           {
             "fields": [
-              {
-                "kind": "Variable",
-                "name": "organizationId",
-                "variableName": "organizationId"
-              }
+              (v1/*: any*/)
             ],
             "kind": "ObjectValue",
             "name": "where"
@@ -145,20 +152,61 @@ return {
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "date",
+            "variableName": "todayDate"
+          },
+          {
+            "kind": "Literal",
+            "name": "deskIdsToInclude",
+            "value": []
+          },
+          (v1/*: any*/)
+        ],
+        "concreteType": "BookingDeskDetails",
+        "kind": "LinkedField",
+        "name": "availableOrganizationDesks",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "BookingLocationDetails",
+            "kind": "LinkedField",
+            "name": "location",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "uniqueId",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "ef55c82ae8013702f95297faa4617fed",
+    "cacheID": "fbea43e2eedb2f4d49f4716811b32a4f",
     "id": null,
     "metadata": {},
     "name": "myLocations_locations_refetchableFragment",
     "operationKind": "query",
-    "text": "query myLocations_locations_refetchableFragment(\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String\n) {\n  ...myLocations_locations_query\n}\n\nfragment myLocations_locations_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query myLocations_locations_refetchableFragment(\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String!\n  $todayDate: DateTime!\n) {\n  ...myLocations_locations_query\n}\n\nfragment myLocations_locations_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c8ef07a8a724793d5c9cf092e8c58780";
+(node as any).hash = "2d606e61a1e7911e38354090909e9666";
 
 export default node;

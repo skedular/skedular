@@ -14,13 +14,13 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
-import { AddIcon, FeedbackIcon, LogoutIcon, NotificationsIcon, SettingsIcon } from '@repo/shared/components/icons';
-import { PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
+import { AddIcon, FeedbackIcon, LogoutIcon, NotificationsIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
+import { PaletteModeContext, SwitchToModernUIContext, UpdatePaletteModeContext, UpdateSwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
 
@@ -65,6 +65,8 @@ const AppBar = ({ rootDataRelay }: Props) => {
   const updateSelectedOrganization = useContext(UpdateSelectedOrganizationContext);
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
+  const switchToModernUI = useContext(SwitchToModernUIContext);
+  const UpdateSwitchToModernUI = useContext(UpdateSwitchToModernUIContext);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
 
@@ -90,6 +92,14 @@ const AppBar = ({ rootDataRelay }: Props) => {
   });
 
   useInterval(() => setCurrentTime(localNow()), 1000);
+
+  useEffect(() => {
+    if (finalOrganizationId || !selectedOrganizationId) {
+      return;
+    }
+
+    router.push(getOrganizationBaseLink(selectedOrganizationId));
+  }, [router, finalOrganizationId, selectedOrganizationId]);
 
   const handleSelectedOrganizationChange = (event: SelectChangeEvent) => {
     const id = event.target.value as string;
@@ -136,6 +146,14 @@ const AppBar = ({ rootDataRelay }: Props) => {
 
   const handleLightThemeClicked = () => {
     updatePaletteMode('light');
+  };
+
+  const handleModernUIClicked = () => {
+    UpdateSwitchToModernUI(true);
+  };
+
+  const handleClassicUIClicked = () => {
+    UpdateSwitchToModernUI(false);
   };
 
   if (!rootData.myOrganizations) {
@@ -274,6 +292,24 @@ const AppBar = ({ rootDataRelay }: Props) => {
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <LightModeIcon fontSize="medium" />
                   <Typography textAlign="center">Light Mode</Typography>
+                </Stack>
+              </MenuItem>
+            )}
+
+            {!switchToModernUI && (
+              <MenuItem onClick={handleModernUIClicked}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <ToggleOffIcon fontSize="medium" />
+                  <Typography textAlign="center">Switch to modern UI</Typography>
+                </Stack>
+              </MenuItem>
+            )}
+
+            {switchToModernUI && (
+              <MenuItem onClick={handleClassicUIClicked}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <ToggleOnIcon fontSize="medium" />
+                  <Typography textAlign="center">Switch to classic UI</Typography>
                 </Stack>
               </MenuItem>
             )}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f4bcc5f984fb6e0208807623523a0d1>>
+ * @generated SignedSource<<541b9a929f9c84b8bd97d8c536d3804b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,7 +30,7 @@ export type rootShell_rootQuery$data = {
   readonly paymentCustomerRecordSynced: boolean;
   readonly slackCustomerRecordSynced: boolean;
   readonly teamCustomerRecordSynced: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"appBar_query" | "leftSideNavigationMenu_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"appBar_query" | "leftSideNavigationMenu_query" | "oldAppBar_query" | "oldLeftSideNavigationMenu_query">;
 };
 export type rootShell_rootQuery = {
   response: rootShell_rootQuery$data;
@@ -177,7 +177,17 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
+        "name": "oldAppBar_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
         "name": "appBar_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "oldLeftSideNavigationMenu_query"
       },
       {
         "args": null,
@@ -330,16 +340,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f022b0628290bec214b1fbaed8e74e51",
+    "cacheID": "4bd4ebf4b035dc1e21e6d5cc9f3dde68",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    canModify\n    id\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
+    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...oldAppBar_query\n  ...appBar_query\n  ...oldLeftSideNavigationMenu_query\n  ...leftSideNavigationMenu_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    canModify\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment oldAppBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment oldLeftSideNavigationMenu_query on Query {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    canModify\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "38455c1282bafac1b426853317674d72";
+(node as any).hash = "4d7c80e6720c917c37ba2571c77abebc";
 
 export default node;

@@ -1,3 +1,7 @@
+import { NewFeedbackDialog } from '@/components/feedback';
+import type { oldAppBar_query$key } from '@/queries/__generated__/oldAppBar_query.graphql';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
@@ -6,25 +10,24 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { FeedbackIcon, NotificationsIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
-import { SwitchToModernUIContext, UpdateSwitchToModernUIContext } from '@repo/shared/libs/providers';
+import { FeedbackIcon, LogoutIcon, NotificationsIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
+import { PaletteModeContext, SwitchToModernUIContext, UpdatePaletteModeContext, UpdateSwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
-import graphql from 'babel-plugin-relay/macro';
-import { NewFeedbackDialog } from 'components/feedback';
+import { signOut } from 'next-auth/react';
+import NextLink from 'next/link';
 import { memo, useContext, useState } from 'react';
-import { useFragment } from 'react-relay';
+import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
-import type { appBar_query$key } from './__generated__/appBar_query.graphql';
 
 type Props = {
-  rootDataRelay: appBar_query$key;
+  rootDataRelay: oldAppBar_query$key;
   onReloadRequired: () => void;
 };
 
-const AppBar = ({ rootDataRelay }: Props) => {
-  const rootData = useFragment<appBar_query$key>(
+const OldAppBar = ({ rootDataRelay }: Props) => {
+  const rootData = useFragment<oldAppBar_query$key>(
     graphql`
-      fragment appBar_query on Query {
+      fragment oldAppBar_query on Query {
         me {
           email {
             email
@@ -42,6 +45,8 @@ const AppBar = ({ rootDataRelay }: Props) => {
   );
 
   const [currentTime, setCurrentTime] = useState(localNow());
+  const paletteMode = useContext(PaletteModeContext);
+  const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const switchToModernUI = useContext(SwitchToModernUIContext);
   const UpdateSwitchToModernUI = useContext(UpdateSwitchToModernUIContext);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
@@ -57,6 +62,11 @@ const AppBar = ({ rootDataRelay }: Props) => {
     setProfileOpenAnchorEl(null);
   };
 
+  const handleSignOutClick = () => {
+    setProfileOpenAnchorEl(null);
+    signOut();
+  };
+
   const handleSubmitFeedbackClicked = () => {
     setProfileOpenAnchorEl(null);
     setSubmitFeedbackDialogOpen(true);
@@ -68,6 +78,14 @@ const AppBar = ({ rootDataRelay }: Props) => {
 
   const handleSubmitFeedbackCancelClick = () => {
     setSubmitFeedbackDialogOpen(false);
+  };
+
+  const handleDarkThemeClicked = () => {
+    updatePaletteMode('dark');
+  };
+
+  const handleLightThemeClicked = () => {
+    updatePaletteMode('light');
   };
 
   const handleModernUIClicked = () => {
@@ -146,13 +164,31 @@ const AppBar = ({ rootDataRelay }: Props) => {
             <Divider />
 
             <MenuItem>
-              <Link href="/settings" color="inherit">
+              <Link component={NextLink} href="/settings" color="inherit">
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                   <SettingsIcon fontSize="medium" />
                   <Typography textAlign="center">Settings</Typography>
                 </Stack>
               </Link>
             </MenuItem>
+
+            {paletteMode === 'dark' && (
+              <MenuItem onClick={handleLightThemeClicked}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <DarkModeIcon fontSize="medium" />
+                  <Typography textAlign="center">Dark Mode</Typography>
+                </Stack>
+              </MenuItem>
+            )}
+
+            {paletteMode === 'light' && (
+              <MenuItem onClick={handleDarkThemeClicked}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <LightModeIcon fontSize="medium" />
+                  <Typography textAlign="center">Light Mode</Typography>
+                </Stack>
+              </MenuItem>
+            )}
 
             {!switchToModernUI && (
               <MenuItem onClick={handleModernUIClicked}>
@@ -180,6 +216,15 @@ const AppBar = ({ rootDataRelay }: Props) => {
                 <Typography textAlign="center">Send us feedback</Typography>
               </Stack>
             </MenuItem>
+
+            <Divider />
+
+            <MenuItem onClick={handleSignOutClick}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <LogoutIcon fontSize="medium" />
+                <Typography textAlign="center">Sign out</Typography>
+              </Stack>
+            </MenuItem>
           </Menu>
         </Stack>
       </Stack>
@@ -194,4 +239,4 @@ const AppBar = ({ rootDataRelay }: Props) => {
   );
 };
 
-export default memo(AppBar);
+export default memo(OldAppBar);

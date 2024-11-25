@@ -1,196 +1,175 @@
-import { Bookings } from '@/components/booking/bookingsPage';
+import { NewBookingButton } from '@/components/booking/addBooking';
+import { MyBookings } from '@/components/booking/myBookings';
+import { GettingStarted } from '@/components/gettingStarted';
+import { LocationSelector } from '@/components/location/locationSelector';
+import { TeamSelector } from '@/components/team/teamSelector';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Typography from '@mui/material/Typography';
-import { OrganizationAvatar } from '@repo/shared/components/avatars';
+import { WeekRangePicker } from '@repo/shared/components/datePickers';
+import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
-import { NotificationContent, errorNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { getCurrentCompleteUrl } from '@repo/shared/libs/utils';
-import { nanoid } from 'nanoid';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { defaultPadding } from '@repo/shared/libs/theme';
+import { endOfWeek, startOfDay, startOfWeek } from '@repo/shared/libs/utils';
+import { Dayjs } from 'dayjs';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { toast } from 'react-toastify';
-import OrganizationAboutTab from './organization-about-tab';
-import OrganizationAnalyticsTab from './organization-analytics-tab';
-import OrganizationBillingTab from './organization-billing-tab';
-import OrganizationDeskTypesTab from './organization-desk-types-tab';
-import OrganizationLocationsTab from './organization-locations-tab';
-import OrganizationMembersTab from './organization-members-tab';
-import OrganizationOfferingTab from './organization-offering-tab';
-import OrganizationTeamsTab from './organization-teams-tab';
 
 type Props = {
   queryReference: PreloadedQuery<organization_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
+  defaultStartWeek: Dayjs;
 };
 
 const RootQuery = graphql`
-  query organization_rootQuery($organizationId: String!) {
+  query organization_rootQuery(
+    $organizationId: String!
+    $locationIds: [String!]!
+    $teamIds: [String!]!
+    $bookingsSearchCriteriaFrom: DateTime!
+    $bookingsSearchCriteriaTo: DateTime!
+  ) {
     organization(id: $organizationId) {
       id
       name
-      logoUrl
-      canModify
-      canViewAnalytics
     }
+    myLocations(organizationId: $organizationId) {
+      id
+      name
+      organization {
+        uniqueId
+        name
+      }
+    }
+    myTeams(organizationId: $organizationId) {
+      id
+      name
+      organization {
+        uniqueId
+        name
+      }
+    }
+    ...locationSelector_allLocations_query
+    ...teamSelector_allTeams_query
+    ...gettingStarted_query
+    ...myBookings_query
+    ...myBookings_bookings_query
   }
 `;
 
-const Organization = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const Dashboard = ({ queryReference, onReloadRequired, organizationId, defaultStartWeek }: Props) => {
   const rootData = usePreloadedQuery<organization_rootQuery>(RootQuery, queryReference);
-  const paletteMode = useContext(PaletteModeContext);
-  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const searchParams = useSearchParams();
-  const tab = searchParams.get('tab');
-  const router = useRouter();
-  const addPaymentMethodStatus = searchParams.get('add-payment-method-status');
-  let initialTabIndex = 0;
+  const [today] = useState(startOfDay());
+  const [startWeek, setStartWeek] = useState(defaultStartWeek);
+  const [endWeek, setEndWeek] = useState(endOfWeek(defaultStartWeek).add(-1, 'milliseconds'));
+  const [locationIds, setLocationIds] = useState<string[]>([]);
+  const [teamIds, setTeamIds] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
 
-  useEffect(() => {
-    if (addPaymentMethodStatus === 'failed') {
-      themedToast(<NotificationContent content={`Failed to add payment method`} />, errorNotificationOptions);
-    } else if (addPaymentMethodStatus === 'added') {
-    }
-  }, [addPaymentMethodStatus, themedToast]);
-
-  let tabCount = 0;
-  const bookingTabIndex = tabCount++;
-  const aboutTabIndex = tabCount++;
-  const membersTabIndex = tabCount++;
-  const locationTabIndex = tabCount++;
-  const teamTabIndex = tabCount++;
-  const deskTypesTabIndex = tabCount++;
-  const offeringTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
-  const billingTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
-  const analyticsTabIndex = rootData.organization?.canViewAnalytics ? tabCount++ : -1;
-
-  if (tab === 'bookings') {
-    initialTabIndex = bookingTabIndex;
-  } else if (tab === 'about') {
-    initialTabIndex = aboutTabIndex;
-  } else if (tab === 'members') {
-    initialTabIndex = membersTabIndex;
-  } else if (tab === 'locations') {
-    initialTabIndex = locationTabIndex;
-  } else if (tab === 'teams') {
-    initialTabIndex = teamTabIndex;
-  } else if (tab === 'deskTypes') {
-    initialTabIndex = deskTypesTabIndex;
-  } else if (tab === 'offering') {
-    initialTabIndex = offeringTabIndex;
-  } else if (tab === 'billing') {
-    initialTabIndex = billingTabIndex;
-  } else if (tab === 'analytics') {
-    initialTabIndex = analyticsTabIndex;
-  }
-
-  const [tabIndex, setTabIndex] = useState(initialTabIndex);
-
-  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
-    setTabIndex(newValue);
-
-    let tab = '';
-
-    if (newValue === bookingTabIndex) {
-      tab = 'bookings';
-    } else if (newValue === aboutTabIndex) {
-      tab = 'about';
-    } else if (newValue === membersTabIndex) {
-      tab = 'members';
-    } else if (newValue === locationTabIndex) {
-      tab = 'locations';
-    } else if (newValue === teamTabIndex) {
-      tab = 'teams';
-    } else if (newValue === deskTypesTabIndex) {
-      tab = 'deskTypes';
-    } else if (newValue === offeringTabIndex) {
-      tab = 'offering';
-    } else if (newValue === billingTabIndex) {
-      tab = 'billing';
-    } else if (newValue === analyticsTabIndex) {
-      tab = 'analytics';
-    }
-
-    if (tab) {
-      router.push(`${getCurrentCompleteUrl()}?tab=${tab}`);
-    }
+  const handleWeehChanged = (date: Dayjs) => {
+    setStartWeek(date);
+    setEndWeek(endOfWeek(date).add(-1, 'milliseconds'));
   };
 
-  if (!rootData.organization) {
-    return null;
+  const handlLocationChanged = (id?: string) => {
+    setLocationIds(id ? [id] : []);
+  };
+
+  const handlTeamChanged = (id?: string) => {
+    setTeamIds(id ? [id] : []);
+  };
+
+  const handlViewModeChanged = (newViewMode: 'list' | 'grid') => {
+    setViewMode(newViewMode);
+  };
+
+  if (!rootData.myTeams || !rootData.myLocations) {
+    return <></>;
+  }
+
+  if (!organizationId) {
+    return <></>;
   }
 
   return (
-    <>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} sx={{ marginBottom: 1 }} />
-        <Typography variant="h6">{rootData.organization?.name}</Typography>
+    <Stack direction="column" spacing={1}>
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          paddingLeft: defaultPadding,
+          paddingRight: defaultPadding,
+          paddingBottom: defaultPadding,
+          paddingTop: defaultPadding,
+        }}
+      >
+        <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
+        <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
+        <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} disablePastWeeksSelection />
+        <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
+        <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
+        <NewBookingButton
+          hideLocationControl={false}
+          hideOrganizationControl={true}
+          onReloadRequired={onReloadRequired}
+          defaultDate={today}
+          organizationId={organizationId}
+        />
       </Stack>
-
-      <Tabs value={tabIndex} onChange={handleTabChange}>
-        <Tab label="Bookings" />
-        <Tab label="About" />
-        <Tab label="Members" />
-        <Tab label="Locations" />
-        <Tab label="Teams" />
-        <Tab label="Desk Types" />
-        {rootData.organization.canModify && <Tab label="Offering" />}
-        {rootData.organization.canModify && <Tab label="Billing" />}
-        {rootData.organization.canViewAnalytics && <Tab label="Analytics" />}
-      </Tabs>
-
-      {tabIndex === bookingTabIndex && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === aboutTabIndex && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === membersTabIndex && <OrganizationMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === locationTabIndex && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === teamTabIndex && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === deskTypesTabIndex && <OrganizationDeskTypesTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === offeringTabIndex && rootData.organization.canModify && (
-        <OrganizationOfferingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
-      )}
-      {tabIndex === billingTabIndex && rootData.organization.canModify && (
-        <OrganizationBillingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
-      )}
-      {tabIndex === analyticsTabIndex && rootData.organization.canViewAnalytics && (
-        <OrganizationAnalyticsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
-      )}
-    </>
+      <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
+      <MyBookings
+        rootDataRelay={rootData}
+        rootDataBookingRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        from={startWeek}
+        to={endWeek}
+        locationIds={locationIds}
+        teamIds={teamIds}
+        viewMode={viewMode}
+      />
+    </Stack>
   );
 };
 
-const MemoOrganization = memo(Organization);
+const MemoDashboard = memo(Dashboard);
 
 type RelayProps = {
   organizationId: string;
 };
 
-const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
+const DashboardWithRelay = ({ organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organization_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [triggerReload, setTriggerReload] = useState(0);
   const [, startTransition] = useTransition();
+  const [startWeek] = useState(startOfWeek());
 
   useEffect(() => {
+    const bookingsSearchCriteriaFrom = startWeek.toISOString();
+    const bookingsSearchCriteriaTo = endOfWeek(startWeek).add(-1, 'milliseconds').toISOString();
+
     loadQuery(
       {
         organizationId,
+        bookingsSearchCriteriaFrom,
+        bookingsSearchCriteriaTo,
+        locationIds: [],
+        teamIds: [],
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationId]);
+  }, [loadQuery, triggerReload, startWeek, organizationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
-      setTriggerReloadId(nanoid());
+      setTriggerReload(triggerReload + 1);
     });
   };
 
@@ -200,9 +179,14 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganization queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoDashboard
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
+        defaultStartWeek={startWeek}
+      />
     </ErrorBoundary>
   );
 };
 
-export default memo(OrganizationWithRelay);
+export default memo(DashboardWithRelay);

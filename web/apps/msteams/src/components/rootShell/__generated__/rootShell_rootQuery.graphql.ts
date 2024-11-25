@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<55a78ecc466477448fb73726c1c52a1d>>
+ * @generated SignedSource<<326bca851e8fbdee09cb41c904d9eb89>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,7 @@ export type rootShell_rootQuery$data = {
   readonly paymentCustomerRecordSynced: boolean;
   readonly slackCustomerRecordSynced: boolean;
   readonly teamCustomerRecordSynced: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"appBar_query" | "leftSideNavigationMenu_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"appBar_query" | "leftSideNavigationMenu_query" | "oldAppBar_query">;
 };
 export type rootShell_rootQuery = {
   response: rootShell_rootQuery$data;
@@ -139,6 +139,11 @@ return {
       (v8/*: any*/),
       (v9/*: any*/),
       (v10/*: any*/),
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "oldAppBar_query"
+      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -269,16 +274,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4f7a9f045d4661a00080eacbc075ffc9",
+    "cacheID": "ff2d31073023467e96537d7704e3af8a",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n) {\n  me {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n"
+    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n) {\n  me {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...oldAppBar_query\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment oldAppBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2c8c6718264dd360edd366e27921e94e";
+(node as any).hash = "d68cb3fe199fa899f34b7f38c3fd7459";
 
 export default node;

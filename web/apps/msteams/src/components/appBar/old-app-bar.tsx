@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { FeedbackIcon, NotificationsIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
+import { FeedbackIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
 import { SwitchToModernUIContext, UpdateSwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -14,17 +14,17 @@ import { NewFeedbackDialog } from 'components/feedback';
 import { memo, useContext, useState } from 'react';
 import { useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
-import type { appBar_query$key } from './__generated__/appBar_query.graphql';
+import type { oldAppBar_query$key } from './__generated__/oldAppBar_query.graphql';
 
 type Props = {
-  rootDataRelay: appBar_query$key;
+  rootDataRelay: oldAppBar_query$key;
   onReloadRequired: () => void;
 };
 
-const AppBar = ({ rootDataRelay }: Props) => {
-  const rootData = useFragment<appBar_query$key>(
+const OldAppBar = ({ rootDataRelay }: Props) => {
+  const rootData = useFragment<oldAppBar_query$key>(
     graphql`
-      fragment appBar_query on Query {
+      fragment oldAppBar_query on Query {
         me {
           email {
             email
@@ -96,14 +96,8 @@ const AppBar = ({ rootDataRelay }: Props) => {
         </Stack>
 
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Typography variant="h6" sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {`${toLongDateTime(currentTime)}`}
-          </Typography>
+          <Typography variant="h6" sx={{ display: { xs: 'none', sm: 'block' } }}>{`${toLongDateTime(currentTime)}`}</Typography>
           <Divider orientation="vertical" flexItem />
-
-          <IconButton sx={{ ml: 1 }}>
-            <NotificationsIcon />
-          </IconButton>
 
           <IconButton onClick={handleProfileMenuOpenClick}>
             <CustomerAvatar
@@ -194,4 +188,4 @@ const AppBar = ({ rootDataRelay }: Props) => {
   );
 };
 
-export default memo(AppBar);
+export default memo(OldAppBar);

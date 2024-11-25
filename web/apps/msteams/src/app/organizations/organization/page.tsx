@@ -1,9 +1,11 @@
-import { Dashboard } from 'components/customer/dashboard';
+import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
+import { OldOrganization, Organization } from 'components/organization/organizationPage';
 import { RootShell } from 'components/rootShell';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 const OrganizationPage = () => {
+  const switchToModernUI = useContext(SwitchToModernUIContext);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -21,7 +23,8 @@ const OrganizationPage = () => {
 
   return (
     <RootShell>
-      <Dashboard organizationId={finalOrganizationId} />
+      {!switchToModernUI && <OldOrganization organizationId={finalOrganizationId} />}
+      {switchToModernUI && <Organization organizationId={finalOrganizationId} />}
     </RootShell>
   );
 };
