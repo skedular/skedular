@@ -27,7 +27,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query rootShell_rootQuery($organizationId: String!) {
+  query rootShell_rootQuery {
     me {
       id
     }
@@ -42,7 +42,6 @@ const RootQuery = graphql`
     teamCustomerRecordSynced
     ...oldAppBar_query
     ...appBar_query
-    ...leftSideNavigationMenu_query
   }
 `;
 
@@ -123,11 +122,11 @@ const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
           variant="persistent"
           open={true}
         >
-          <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />
+          <LeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />
         </Drawer>
         <Grid container>
           <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, display: { xs: 'block', sm: 'none' } }}>
-            <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />
+            <LeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />
           </Grid>
           <Stack direction="column" sx={{ width: '100vw' }}>
             {!switchToModernUI && <OldAppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
@@ -168,9 +167,7 @@ const RootShellWithRelay = ({ children, title }: RelayProps) => {
 
   useEffect(() => {
     loadQuery(
-      {
-        organizationId: finalOrganizationId,
-      },
+      {},
       {
         fetchPolicy: 'store-and-network',
       },

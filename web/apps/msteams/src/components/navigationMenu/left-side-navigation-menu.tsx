@@ -7,30 +7,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import graphql from 'babel-plugin-relay/macro';
 import { memo, useContext } from 'react';
-import { useFragment } from 'react-relay';
 import { useLocation, useParams } from 'react-router-dom';
-import type { leftSideNavigationMenu_query$key } from './__generated__/leftSideNavigationMenu_query.graphql';
 
 type Props = {
-  rootDataRelay: leftSideNavigationMenu_query$key;
   onReloadRequired: () => void;
   maxWidth: number;
 };
 
-const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
-  const rootData = useFragment<leftSideNavigationMenu_query$key>(
-    graphql`
-      fragment leftSideNavigationMenu_query on Query {
-        organization(id: $organizationId) {
-          canModify
-        }
-      }
-    `,
-    rootDataRelay,
-  );
-
+const LeftSideNavigationMenu = ({ maxWidth }: Props) => {
   const location = useLocation();
   const pathName = location.pathname;
   const paletteMode = useContext(PaletteModeContext);

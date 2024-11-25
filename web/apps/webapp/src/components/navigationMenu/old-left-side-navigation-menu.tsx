@@ -1,4 +1,3 @@
-import type { oldLeftSideNavigationMenu_query$key } from '@/queries/__generated__/oldLeftSideNavigationMenu_query.graphql';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -11,26 +10,13 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
-import { graphql, useFragment } from 'react-relay';
 
 type Props = {
-  rootDataRelay: oldLeftSideNavigationMenu_query$key;
   onReloadRequired: () => void;
   maxWidth: number;
 };
 
-const OldLeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
-  const rootData = useFragment<oldLeftSideNavigationMenu_query$key>(
-    graphql`
-      fragment oldLeftSideNavigationMenu_query on Query {
-        organization(id: $organizationId) @include(if: $organizationExists) {
-          canModify
-        }
-      }
-    `,
-    rootDataRelay,
-  );
-
+const OldLeftSideNavigationMenu = ({ maxWidth }: Props) => {
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
   const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
