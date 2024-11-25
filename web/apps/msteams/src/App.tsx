@@ -2,7 +2,7 @@ import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
-import { DatePickerLocalizationProvider, GlobalReloadIdProvider, ThemeProvider } from '@repo/shared/libs/providers';
+import { DatePickerLocalizationProvider, GlobalReloadIdProvider, SwitchToModernUIProvider, ThemeProvider } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Home } from 'app/';
@@ -124,14 +124,16 @@ const App = () => {
     <>
       <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
         <GlobalReloadIdProvider>
-          <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
-            <CssBaseline />
-            <DatePickerLocalizationProvider>
-              <RelayProvider token={token}>
-                <RouterProvider router={router} />
-              </RelayProvider>
-            </DatePickerLocalizationProvider>
-          </ThemeProvider>
+          <SwitchToModernUIProvider>
+            <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
+              <CssBaseline />
+              <DatePickerLocalizationProvider>
+                <RelayProvider token={token}>
+                  <RouterProvider router={router} />
+                </RelayProvider>
+              </DatePickerLocalizationProvider>
+            </ThemeProvider>
+          </SwitchToModernUIProvider>
         </GlobalReloadIdProvider>
       </TeamsFxContext.Provider>
       <Analytics />

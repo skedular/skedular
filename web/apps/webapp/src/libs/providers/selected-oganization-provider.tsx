@@ -15,9 +15,7 @@ const SelectedOrganizationProvider = ({ children }: Props) => {
   );
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(undefined);
 
-  useEffect(() => {
-    setSelectedOrganizationId(persistedSelectedOrganizationId ?? undefined);
-  }, [persistedSelectedOrganizationId]);
+  useEffect(() => setSelectedOrganizationId(persistedSelectedOrganizationId ?? undefined), [persistedSelectedOrganizationId]);
 
   const updateSelectedOrganizationId = (selectedOrganizationId: string) => {
     setSelectedOrganizationId(selectedOrganizationId);

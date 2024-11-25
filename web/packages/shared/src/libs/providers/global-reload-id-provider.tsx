@@ -10,9 +10,7 @@ type Props = {
 
 const GlobalReloadIdProvider = ({ children }: Props) => {
   const [selectedGlobalReloadId, setGlobalReloadId] = useState<string>(uuidv4());
-  const updateGlobalReloadId = () => {
-    setGlobalReloadId(uuidv4());
-  };
+  const updateGlobalReloadId = () => setGlobalReloadId(uuidv4());
 
   return (
     <GlobalReloadIdContext.Provider value={selectedGlobalReloadId}>
