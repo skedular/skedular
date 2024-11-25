@@ -141,7 +141,7 @@ public class DeskDetails : Node
     [GraphQLName("locationTags")] public LocationTagDetails[] LocationTags { get; set; } = [];
 
     [GraphQLName("organizationTags")] public OrganizationTagDetails[] OrganizationTags { get; set; } = [];
-    
+
     [GraphQLName("id")][ID] public required string Id { get; set; }
 }
 
@@ -276,6 +276,8 @@ public class LocationDetails : Node
 
     [GraphQLName("desks")] public DeskDetails[] Desks { get; set; } = [];
 
+    [GraphQLName("physicalAddress")] public LocationAddress? PhysicalAddress { get; set; }
+
     [GraphQLName("id")][ID] public string Id { get; set; }
 }
 
@@ -393,7 +395,7 @@ public class OrganizationTagDetails
 
     [GraphQLName("tagType")] public string? TagType { get; set; }
 
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
 }
 
 [GraphQLName("LocationTagEdge")]
@@ -525,4 +527,24 @@ public class DeleteDeskInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
     [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("LocationAddress")]
+public class LocationAddress
+{
+    [GraphQLName("formattedAddress")] public string? FormattedAddress { get; set; }
+
+    [GraphQLName("addressLine1")] public string? AddressLine1 { get; set; }
+
+    [GraphQLName("addressLine2")] public string? AddressLine2 { get; set; }
+
+    [GraphQLName("suburb")] public string? Suburb { get; set; }
+
+    [GraphQLName("city")] public string? City { get; set; }
+
+    [GraphQLName("province")] public string? Province { get; set; }
+
+    [GraphQLName("zipcode")] public string? Zipcode { get; set; }
+
+    [GraphQLName("country")] public string? Country { get; set; }
 }

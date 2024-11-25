@@ -15,8 +15,8 @@ public class Location : EntityBaseWithDeleted
     public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string? AddressId { get; set; }
-    public virtual Address? Address { get; set; }
+    public string? PhysicalAddressId { get; set; }
+    public virtual Address? PhysicalAddress { get; set; }
 
     public virtual Organization? Organization { get; set; }
     public virtual ICollection<Tag> Tags { get; set; } = [];
@@ -39,9 +39,9 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
 
         builder
-            .HasOne(item => item.Address)
+            .HasOne(item => item.PhysicalAddress)
             .WithOne(item => item.Location)
-            .HasForeignKey<Location>(item => item.AddressId);
+            .HasForeignKey<Location>(item => item.PhysicalAddressId);
 
         builder
             .HasOne(item => item.Organization)

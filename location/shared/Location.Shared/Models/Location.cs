@@ -9,6 +9,8 @@ public class Location : ModelBaseWithDeleted
     public string? Timezone { get; set; }
     public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
 
+    public Address? PhysicalAddress { get; set; }
+
     public Organization? Organization { get; set; }
     public ICollection<Tag> Tags { get; set; } = [];
     public ICollection<Desk> Desks { get; set; } = [];
