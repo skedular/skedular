@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<857f399d4276350085471eb931753ca9>>
+ * @generated SignedSource<<4940c8aede3e33c68026a5eca83ae9c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,15 @@ export type myLocations_locations_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly desks: ReadonlyArray<{
+          readonly id: string;
+        }>;
         readonly id: string;
+        readonly locationTags: ReadonlyArray<{
+          readonly id: string;
+          readonly name: string;
+          readonly tagType: string;
+        }>;
         readonly name: string;
       };
     }>;
@@ -38,6 +46,20 @@ var v0 = {
   "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
 };
 return {
   "argumentDefinitions": [
@@ -108,18 +130,38 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
+                  "concreteType": "DeskDetails",
+                  "kind": "LinkedField",
+                  "name": "desks",
+                  "plural": true,
+                  "selections": [
+                    (v1/*: any*/)
+                  ],
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
+                  "concreteType": "LocationTagDetails",
+                  "kind": "LinkedField",
+                  "name": "locationTags",
+                  "plural": true,
+                  "selections": [
+                    (v1/*: any*/),
+                    (v2/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "tagType",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 }
               ],
@@ -190,6 +232,6 @@ return {
 };
 })();
 
-(node as any).hash = "2d606e61a1e7911e38354090909e9666";
+(node as any).hash = "e574f2985fd7b617f006485e33bca08e";
 
 export default node;

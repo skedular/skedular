@@ -5,9 +5,11 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
+import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { LocationIcon } from '@repo/shared/components/icons';
+import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE, Zones } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
@@ -29,6 +31,14 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
             node {
               id
               name
+              desks {
+                id
+              }
+              locationTags {
+                id
+                name
+                tagType
+              }
             }
           }
         }
@@ -63,7 +73,7 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
 
   useEffect(() => handleRefetchAllBookings(), [handleRefetchAllBookings]);
 
-  if (!rootData.locations) {
+  if (!rootData.locations || !rootData.availableOrganizationDesks) {
     return <></>;
   }
 
@@ -84,6 +94,13 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
       {viewMode === 'grid' && (
         <Grid container spacing={defaultSpacing} sx={{ alignItems: 'flex-start' }}>
           {locations.map((location) => {
+            const allDesksCount = location.desks.length;
+            const availableDesksCount = rootData.availableOrganizationDesks
+              ? rootData.availableOrganizationDesks.filter((desk) => desk.location?.uniqueId === location.id).length
+              : 0;
+            const availablePercentage = (availableDesksCount / allDesksCount) * 100;
+            const zones = location.locationTags.filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
+
             return (
               <Grid key={location.id}>
                 <Card sx={{ width: 600 }}>
@@ -95,7 +112,26 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
                       </Stack>
                     }
                   />
-                  <CardContent></CardContent>
+                  <CardContent>
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1, width: '100%' }}>
+                      <DeskIcon fontSize="medium" />
+                      <Typography variant="body1" sx={{ flexGrow: 0, flexShrink: 0 }}>{`${allDesksCount} Desks`}</Typography>
+
+                      <Stack direction="column" sx={{ paddingLeft: 20, alignItems: 'flex-end', width: '100%' }}>
+                        <Typography variant="body2">{`${availableDesksCount} Available Today`}</Typography>
+                        <LinearProgress value={availablePercentage} variant="determinate" sx={{ width: '100%' }} />
+                      </Stack>
+                    </Stack>
+
+                    <Divider />
+
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
+                      <ZoneIcon fontSize="medium" />
+                      <Zones zones={zones} />
+                    </Stack>
+
+                    <Divider />
+                  </CardContent>
                 </Card>
               </Grid>
             );

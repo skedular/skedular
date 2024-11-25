@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ebf26038f5c93ede49123736647a5043>>
+ * @generated SignedSource<<169de8c98020bb8468c640a36bc2c793>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -77,11 +77,7 @@ v7 = {
   "name": "name",
   "storageKey": null
 },
-v8 = [
-  (v6/*: any*/),
-  (v7/*: any*/)
-],
-v9 = {
+v8 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -172,13 +168,16 @@ return {
                 "kind": "LinkedField",
                 "name": "node",
                 "plural": false,
-                "selections": (v8/*: any*/),
+                "selections": [
+                  (v6/*: any*/),
+                  (v7/*: any*/)
+                ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v9/*: any*/)
+          (v8/*: any*/)
         ],
         "storageKey": null
       },
@@ -227,18 +226,40 @@ return {
                     "kind": "LinkedField",
                     "name": "locationTags",
                     "plural": true,
-                    "selections": (v8/*: any*/),
+                    "selections": [
+                      (v6/*: any*/),
+                      (v7/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "tagType",
+                        "storageKey": null
+                      }
+                    ],
                     "storageKey": null
                   },
                   (v6/*: any*/),
-                  (v7/*: any*/)
+                  (v7/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "DeskDetails",
+                    "kind": "LinkedField",
+                    "name": "desks",
+                    "plural": true,
+                    "selections": [
+                      (v6/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v9/*: any*/)
+          (v8/*: any*/)
         ],
         "storageKey": null
       },
@@ -286,12 +307,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6a0d29bdd3d929243466a793eefa035c",
+    "cacheID": "bff4a4f5d52df14d5f674a6d1ffdfda0",
     "id": null,
     "metadata": {},
     "name": "locations_rootQuery",
     "operationKind": "query",
-    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $deskTypeTagType: String!\n  $todayDate: DateTime!\n) {\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n  ...myLocations_locations_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  organizationTags(where: {organizationId: $organizationId, tagType: $deskTypeTagType}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myLocations_locations_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        locationTags {\n          id\n          name\n        }\n        id\n      }\n    }\n  }\n}\n"
+    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $deskTypeTagType: String!\n  $todayDate: DateTime!\n) {\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n  ...myLocations_locations_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  organizationTags(where: {organizationId: $organizationId, tagType: $deskTypeTagType}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myLocations_locations_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          id\n        }\n        locationTags {\n          id\n          name\n          tagType\n        }\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        locationTags {\n          id\n          name\n        }\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
