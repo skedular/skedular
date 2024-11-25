@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<28c0d71d7e2791340de05df5a2091b5f>>
+ * @generated SignedSource<<d14fe13022580a65d80a9a1477cdde46>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,6 +68,10 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
+      "name": "deskTypeIds"
+    },
+    {
+      "kind": "RootArgument",
       "name": "locationsSortingValues"
     },
     {
@@ -77,6 +81,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "todayDate"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "zoneIds"
     }
   ],
   "kind": "Fragment",
@@ -99,7 +107,17 @@ return {
         },
         {
           "fields": [
-            (v0/*: any*/)
+            {
+              "kind": "Variable",
+              "name": "deskTypeIds",
+              "variableName": "deskTypeIds"
+            },
+            (v0/*: any*/),
+            {
+              "kind": "Variable",
+              "name": "zoneIds",
+              "variableName": "zoneIds"
+            }
           ],
           "kind": "ObjectValue",
           "name": "where"
@@ -253,6 +271,6 @@ return {
 };
 })();
 
-(node as any).hash = "9d13433f163e42323f7e41f51ebdc650";
+(node as any).hash = "8b62b81da8ca4732ccf0de4318fe922d";
 
 export default node;

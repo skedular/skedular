@@ -73,7 +73,11 @@ public class LocationQuery
         var (paginatedInfo, edges, totalCount) =
             await locationService.GetPaginatedLocationsAsync(
                 new PaginationInputParam(after, first, before, last),
-                new LocationSearchCriteria(where.OrganizationId, where.NameContains),
+                new LocationSearchCriteria(
+                    where.OrganizationId, 
+                    where.NameContains,
+                    where.ZoneIds ?? [],
+                    where.DeskTypeIds ?? []),
                 orderBy is null
                     ? []
                     : orderBy.Select(item =>

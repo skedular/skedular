@@ -23,6 +23,8 @@ type Props = {
   rootDataRelay: myLocations_query$key;
   rootDataRefetchableRelay: myLocations_locations_availableOrganizationDesks_query$key;
   onReloadRequired: () => void;
+  deskTypeIds: string[];
+  zoneIds: string[];
   viewMode: 'list' | 'grid';
 };
 
@@ -58,7 +60,7 @@ type RowType = {
   teammates: ReadonlyArray<CustomerDetails>;
 };
 
-const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, viewMode }: Props) => {
+const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, deskTypeIds, zoneIds, viewMode }: Props) => {
   const rootData = useFragment<myLocations_query$key>(
     graphql`
       fragment myLocations_query on Query {
@@ -91,7 +93,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     graphql`
       fragment myLocations_locations_availableOrganizationDesks_query on Query
       @refetchable(queryName: "myLocations_locations_availableOrganizationDesks_refetchableFragment") {
-        locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
+        locations(where: { organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds }, orderBy: $locationsSortingValues) {
           __id
           totalCount
           edges {
@@ -138,18 +140,24 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     return rootData.organizationMembers.edges.map((edge) => edge.node);
   }, [rootData.organizationMembers]);
 
-  const handleRefetchAllBookings = useCallback(() => {
-    startTransition(() => {
-      refetch(
-        {},
-        {
-          fetchPolicy: 'store-and-network',
-        },
-      );
-    });
-  }, [refetch]);
+  const handleRefetchAllBookings = useCallback(
+    (deskTypeIds: string[], zoneIds: string[]) => {
+      startTransition(() => {
+        refetch(
+          {
+            deskTypeIds,
+            zoneIds,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetch],
+  );
 
-  useEffect(() => handleRefetchAllBookings(), [handleRefetchAllBookings]);
+  useEffect(() => handleRefetchAllBookings(deskTypeIds, zoneIds), [handleRefetchAllBookings, deskTypeIds, zoneIds]);
 
   const rows: RowType[] = locations.map((location) => {
     const desksCount = location.desks.length;

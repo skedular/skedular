@@ -442,6 +442,10 @@ public class LocationWhereInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
+
+    [GraphQLName("zoneIds")] public string[]? ZoneIds { get; set; }
+
+    [GraphQLName("deskTypeIds")] public string[]? DeskTypeIds { get; set; }
 }
 
 [GraphQLName("RejectInvitationToJoinLocationInput")]

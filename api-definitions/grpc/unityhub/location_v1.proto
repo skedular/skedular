@@ -153,6 +153,8 @@ message GetPaginatedLocationsInput {
 message LocationWhereInput {
     string organizationId = 1;
     string nameContains = 2;
+    repeated string zoneIds = 3;
+    repeated string deskTypeIds = 4;
 }
 
 message LocationOrderInput {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fc59fd6a9badd81d90841e3a4c41656c>>
+ * @generated SignedSource<<b485a45ba6010bd1748f535f06acf11f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type zoneSelector_allZones_query$data = {
-  readonly locations: {
+  readonly zonesLocations: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -46,7 +46,7 @@ const node: ReaderFragment = {
   "name": "zoneSelector_allZones_query",
   "selections": [
     {
-      "alias": null,
+      "alias": "zonesLocations",
       "args": [
         {
           "kind": "Variable",
@@ -144,6 +144,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "d975a521c0a075576b7352dd6abdefa8";
+(node as any).hash = "6cfbe4537f19009c2f0822e9eb4108c1";
 
 export default node;

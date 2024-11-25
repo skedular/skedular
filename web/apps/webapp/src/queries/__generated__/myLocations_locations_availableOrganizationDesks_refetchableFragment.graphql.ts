@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4d42795f76180cd81e4d75d9796cd67d>>
+ * @generated SignedSource<<684ac02665711b68711398c56b7a1a29>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,9 +17,11 @@ export type LocationOrderInput = {
   field: LocationOrderField;
 };
 export type myLocations_locations_availableOrganizationDesks_refetchableFragment$variables = {
+  deskTypeIds?: ReadonlyArray<string> | null | undefined;
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
   organizationId: string;
   todayDate: any;
+  zoneIds?: ReadonlyArray<string> | null | undefined;
 };
 export type myLocations_locations_availableOrganizationDesks_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"myLocations_locations_availableOrganizationDesks_query">;
@@ -34,6 +36,11 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
+    "name": "deskTypeIds"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
     "name": "locationsSortingValues"
   },
   {
@@ -45,6 +52,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "todayDate"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "zoneIds"
   }
 ],
 v1 = {
@@ -98,7 +110,17 @@ return {
           },
           {
             "fields": [
-              (v1/*: any*/)
+              {
+                "kind": "Variable",
+                "name": "deskTypeIds",
+                "variableName": "deskTypeIds"
+              },
+              (v1/*: any*/),
+              {
+                "kind": "Variable",
+                "name": "zoneIds",
+                "variableName": "zoneIds"
+              }
             ],
             "kind": "ObjectValue",
             "name": "where"
@@ -249,16 +271,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5d9e1104a8216fb61fb79272e31f69b3",
+    "cacheID": "3401f8931e2735aaaf7a11edcc5945c3",
     "id": null,
     "metadata": {},
     "name": "myLocations_locations_availableOrganizationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query myLocations_locations_availableOrganizationDesks_refetchableFragment(\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String!\n  $todayDate: DateTime!\n) {\n  ...myLocations_locations_availableOrganizationDesks_query\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          id\n        }\n        locationTags {\n          id\n          name\n          tagType\n        }\n        physicalAddress {\n          formattedAddress\n        }\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query myLocations_locations_availableOrganizationDesks_refetchableFragment(\n  $deskTypeIds: [String!]\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String!\n  $todayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...myLocations_locations_availableOrganizationDesks_query\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          id\n        }\n        locationTags {\n          id\n          name\n          tagType\n        }\n        physicalAddress {\n          formattedAddress\n        }\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9d13433f163e42323f7e41f51ebdc650";
+(node as any).hash = "8b62b81da8ca4732ccf0de4318fe922d";
 
 export default node;

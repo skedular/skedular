@@ -95,7 +95,11 @@ public class LocationGrpcService(
                 request.First.FromNullInt(),
                 request.Before,
                 request.Last.FromNullInt()),
-            new LocationSearchCriteria(request.Where.OrganizationId, request.Where.NameContains),
+            new LocationSearchCriteria(
+                request.Where.OrganizationId,
+                request.Where.NameContains,
+                request.Where.ZoneIds.ToArray(),
+                request.Where.DeskTypeIds.ToArray()),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
@@ -160,7 +164,11 @@ public class LocationGrpcService(
                 request.First.FromNullInt(),
                 request.Before,
                 request.Last.FromNullInt()),
-            new LocationSearchCriteria(request.Where.OrganizationId, request.Where.NameContains),
+            new LocationSearchCriteria(
+                request.Where.OrganizationId,
+                request.Where.NameContains,
+                request.Where.ZoneIds.ToArray(),
+                request.Where.DeskTypeIds.ToArray()),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==

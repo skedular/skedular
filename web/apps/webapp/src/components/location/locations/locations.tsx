@@ -28,6 +28,8 @@ const RootQuery = graphql`
     $deskTypeTagType: String!
     $todayDate: DateTime!
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $zoneIds: [String!]!
+    $deskTypeIds: [String!]!
   ) {
     ...deskTypeSelector_allDeskTypes_query
     ...zoneSelector_allZones_query
@@ -39,10 +41,15 @@ const RootQuery = graphql`
 const Locations = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<locations_rootQuery>(RootQuery, queryReference);
   const [deskTypeIds, setDeskTypeIds] = useState<string[]>([]);
+  const [zoneIds, setZoneIds] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
 
   const handleDeskTypeChanged = (id?: string) => {
     setDeskTypeIds(id ? [id] : []);
+  };
+
+  const handleZoneTypeChanged = (id?: string) => {
+    setZoneIds(id ? [id] : []);
   };
 
   const handlViewModeChanged = (newViewMode: 'list' | 'grid') => {
@@ -64,10 +71,17 @@ const Locations = ({ queryReference, onReloadRequired }: Props) => {
         }}
       >
         <DeskTypeSelector rootDataRelay={rootData} onChange={handleDeskTypeChanged} />
-        <ZoneSelector rootDataRelay={rootData} onChange={handleDeskTypeChanged} />
+        <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
       </Stack>
-      <MyLocations rootDataRelay={rootData} rootDataRefetchableRelay={rootData} onReloadRequired={onReloadRequired} viewMode={viewMode} />
+      <MyLocations
+        rootDataRelay={rootData}
+        rootDataRefetchableRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        deskTypeIds={deskTypeIds}
+        zoneIds={zoneIds}
+        viewMode={viewMode}
+      />
     </Stack>
   );
 };
@@ -103,6 +117,8 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
             field: 'Name',
           },
         ],
+        deskTypeIds: [],
+        zoneIds: [],
       },
       {
         fetchPolicy: 'store-and-network',

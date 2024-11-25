@@ -1147,6 +1147,8 @@ input LocationTagWhereInput {
 input LocationWhereInput {
   organizationId: String
   nameContains: String
+  zoneIds: [String!]
+  deskTypeIds: [String!]
 }
 input RejectInvitationToJoinLocationInput {
   clientMutationId: String
