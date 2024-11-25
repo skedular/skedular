@@ -10,6 +10,8 @@ import Grid from '@mui/material/Grid2';
 import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import type { GridColDef } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { LOCATION_TAG_TYPE_LOCATION_ZONE, Zones } from '@repo/shared/components/zone';
@@ -22,6 +24,38 @@ type Props = {
   rootDataRefetchableRelay: myLocations_locations_availableOrganizationDesks_query$key;
   onReloadRequired: () => void;
   viewMode: 'list' | 'grid';
+};
+
+type LocationDetails = {
+  name: string;
+};
+
+type DesksAvailabilityDetails = {
+  desksCount: number;
+  availablePercentage: number;
+};
+
+type ZoneDetails = {
+  id: string;
+  name: string;
+};
+
+type CustomerDetails = {
+  uniqueId: string;
+  givenName?: string | null | undefined;
+  middleName?: string | null | undefined;
+  familyName?: string | null | undefined;
+  name?: string | null | undefined;
+  photoUrl?: string | null | undefined;
+};
+
+type RowType = {
+  id: string;
+  location: LocationDetails;
+  desksCount: number;
+  desksAvailability: DesksAvailabilityDetails;
+  zones: ZoneDetails[];
+  teammates: ReadonlyArray<CustomerDetails>;
 };
 
 const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, viewMode }: Props) => {
@@ -117,6 +151,94 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
 
   useEffect(() => handleRefetchAllBookings(), [handleRefetchAllBookings]);
 
+  const rows: RowType[] = locations.map((location) => {
+    const desksCount = location.desks.length;
+    const availableDesksCount = rootDataRefetchable.availableOrganizationDesks
+      ? rootDataRefetchable.availableOrganizationDesks.filter((desk) => desk.location?.uniqueId === location.id).length
+      : 0;
+    const availablePercentage = (availableDesksCount / desksCount) * 100;
+    const zones = location.locationTags.filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
+
+    return {
+      id: location.id,
+      location,
+      desksCount,
+      desksAvailability: {
+        desksCount,
+        availablePercentage,
+      },
+      zones,
+      teammates: organizationMembers.map(({ customer }) => customer),
+      physicalAddress: location.physicalAddress?.formattedAddress,
+    };
+  });
+
+  const columns: GridColDef<(typeof rows)[number]>[] = [
+    {
+      field: 'location',
+      headerName: 'Location',
+      editable: false,
+      renderCell: (params) => params.value.name,
+      display: 'text',
+      minWidth: 200,
+    },
+    {
+      field: 'desksCount',
+      headerName: 'Desks count',
+      editable: false,
+      renderCell: (params) => params.value.desksCount,
+      display: 'text',
+      minWidth: 150,
+    },
+    {
+      field: 'desksAvailability',
+      headerName: 'Availability',
+      editable: false,
+      renderCell: (params) => (
+        <Stack direction="column" sx={{ alignItems: 'flex-end' }}>
+          <Typography variant="body2">{`${params.value.desksCount} Available Today`}</Typography>
+          <LinearProgress value={params.value.availablePercentage} variant="determinate" sx={{ width: '100%' }} />
+        </Stack>
+      ),
+      display: 'flex',
+      minWidth: 200,
+    },
+    {
+      field: 'zones',
+      headerName: 'Zones',
+      editable: false,
+      renderCell: (params) => <Zones zones={params.value} />,
+      display: 'flex',
+      minWidth: 300,
+    },
+    {
+      field: 'teammates',
+      headerName: 'Shared with teammates',
+      editable: false,
+      renderCell: (params) => (
+        <AvatarGroup max={5}>
+          {params.value.map((customer: CustomerDetails) => (
+            <CustomerAvatar key={customer?.uniqueId} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
+          ))}
+        </AvatarGroup>
+      ),
+      display: 'flex',
+      minWidth: 300,
+    },
+    {
+      field: 'physicalAddress',
+      headerName: 'Address',
+      editable: false,
+      renderCell: (params) => (
+        <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
+          {params.value ? params.value : 'N/A'}
+        </Typography>
+      ),
+      display: 'flex',
+      minWidth: 200,
+    },
+  ];
+
   if (!rootDataRefetchable.locations || !rootDataRefetchable.availableOrganizationDesks || !rootData.organizationMembers) {
     return <></>;
   }
@@ -138,11 +260,11 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       {viewMode === 'grid' && (
         <Grid container spacing={defaultSpacing} sx={{ alignItems: 'flex-start' }}>
           {locations.map((location) => {
-            const allDesksCount = location.desks.length;
+            const desksCount = location.desks.length;
             const availableDesksCount = rootDataRefetchable.availableOrganizationDesks
               ? rootDataRefetchable.availableOrganizationDesks.filter((desk) => desk.location?.uniqueId === location.id).length
               : 0;
-            const availablePercentage = (availableDesksCount / allDesksCount) * 100;
+            const availablePercentage = (availableDesksCount / desksCount) * 100;
             const zones = location.locationTags.filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
 
             return (
@@ -159,7 +281,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
                   <CardContent>
                     <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1, width: '100%' }}>
                       <DeskIcon fontSize="medium" />
-                      <Typography variant="body1" sx={{ flexGrow: 0, flexShrink: 0 }}>{`${allDesksCount} Desks`}</Typography>
+                      <Typography variant="body1" sx={{ flexGrow: 0, flexShrink: 0 }}>{`${desksCount} Desks`}</Typography>
 
                       <Stack direction="column" sx={{ paddingLeft: 20, alignItems: 'flex-end', width: '100%' }}>
                         <Typography variant="body2">{`${availableDesksCount} Available Today`}</Typography>
@@ -210,7 +332,31 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
         </Grid>
       )}
 
-      {viewMode === 'list' && <></>}
+      {viewMode === 'list' && (
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          ignoreDiacritics
+          disableRowSelectionOnClick
+          hideFooter
+          getRowHeight={() => 'auto'}
+          rowSpacingType="margin"
+          getRowSpacing={() => ({ top: 3, bottom: 3 })}
+          sx={{
+            [`& .${gridClasses.cell}`]: {
+              paddingTop: 1,
+              paddingBottom: 1,
+            },
+            [`& .${gridClasses.row}`]: {
+              paddingLeft: 1,
+              paddingTop: 1,
+              paddingBottom: 1,
+              borderRadius: 2,
+              backgroundColor: (theme) => theme.palette.background.paper,
+            },
+          }}
+        />
+      )}
     </Stack>
   );
 };
