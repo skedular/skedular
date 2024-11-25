@@ -10,6 +10,7 @@ using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Address = Location.Shared.Database.Entities.Address;
 using Booking = Location.Shared.Database.Entities.Booking;
 using Customer = Location.Shared.Models.Customer;
 using LocationMember = Location.Shared.Database.Entities.LocationMember;
@@ -118,6 +119,9 @@ public class LocationService(
                 cancellationToken);
 
         var locationEntity = mapper.MapTo(location, organization);
+        var physicalAddress = location.PhysicalAddress is null
+            ? null
+            : mapper.MapTo(location.PhysicalAddress, locationEntity);
 
         if (string.IsNullOrWhiteSpace(location.Organization?.Id))
         {
@@ -137,6 +141,12 @@ public class LocationService(
             repositoryFactory.LocationMemberRepository.AddRange(locationMembers);
         }
 
+        if (physicalAddress is not null)
+        {
+            physicalAddress.Id = randomHelper.Generate();
+            _ = repositoryFactory.AddressRepository.Add(physicalAddress);
+        }
+
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
         location = mapper.MapTo(locationEntity);
 
@@ -144,6 +154,8 @@ public class LocationService(
             [location],
             repositoryFactory.LocationRepository.UnitOfWork,
             cancellationToken);
+
+        await repositoryFactory.AddressRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -315,14 +327,37 @@ public class LocationService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationRepository.UnitOfWork,
                 cancellationToken);
 
+        Address? physicalAddress = null;
+
+        if (location.PhysicalAddress is null && existingLocation.PhysicalAddress is not null)
+        {
+            repositoryFactory.AddressRepository.Remove(existingLocation.PhysicalAddress);
+        }
+        else if (location.PhysicalAddress is not null && existingLocation.PhysicalAddress is null)
+        {
+            physicalAddress = mapper.MapTo(location.PhysicalAddress, existingLocation);
+            physicalAddress.Id = randomHelper.Generate();
+            repositoryFactory.AddressRepository.Add(physicalAddress);
+        }
+        else if (location.PhysicalAddress is not null && existingLocation.PhysicalAddress is not null)
+        {
+            physicalAddress = mapper.MergeToEntity(
+                location.PhysicalAddress,
+                existingLocation.PhysicalAddress,
+                existingLocation);
+            repositoryFactory.AddressRepository.Update(physicalAddress);
+        }
+
         location =
             mapper.MapTo(
-                repositoryFactory.LocationRepository.Update(mapper.MergeTo(location, existingLocation)));
+                repositoryFactory.LocationRepository.Update(
+                    mapper.MergeTo(location, existingLocation, physicalAddress)));
 
         await locationOutboxPublisher.PublishLocationAsync(
             [location],
             repositoryFactory.LocationRepository.UnitOfWork,
             cancellationToken);
+        await repositoryFactory.AddressRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return location;

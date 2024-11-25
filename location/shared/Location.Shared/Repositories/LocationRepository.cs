@@ -16,13 +16,13 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
 
     Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
         string customerId,
-        string? organizationId,
+        string? locationId,
         CancellationToken cancellationToken);
 
     Task<ICollection<Database.Entities.Location>> GetAllAsync(CancellationToken cancellationToken);
-    Database.Entities.Location Add(Database.Entities.Location organization);
-    Database.Entities.Location Update(Database.Entities.Location organization);
-    Database.Entities.Location Remove(Database.Entities.Location organization);
+    Database.Entities.Location Add(Database.Entities.Location location);
+    Database.Entities.Location Update(Database.Entities.Location location);
+    Database.Entities.Location Remove(Database.Entities.Location location);
 
     Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Location>>, int )> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
@@ -132,18 +132,18 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         return DbContext.Location.Add(new Database.Entities.Location { Id = id, CreatedAt = now }).Entity;
     }
 
-    public Database.Entities.Location Add(Database.Entities.Location organization)
+    public Database.Entities.Location Add(Database.Entities.Location location)
     {
         var now = timeProvider.GetUtcNow();
-        organization.CreatedAt = now;
-        return DbContext.Location.Add(organization).Entity;
+        location.CreatedAt = now;
+        return DbContext.Location.Add(location).Entity;
     }
 
-    public Database.Entities.Location Update(Database.Entities.Location organization)
+    public Database.Entities.Location Update(Database.Entities.Location location)
     {
         var now = timeProvider.GetUtcNow();
-        organization.ModifiedAt = now;
-        return DbContext.Location.Update(organization).Entity;
+        location.ModifiedAt = now;
+        return DbContext.Location.Update(location).Entity;
     }
 
     public async Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -155,7 +155,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
 
     public async Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
         string customerId,
-        string? organizationId,
+        string? locationId,
         CancellationToken cancellationToken)
     {
         var query = DbContext.Location
@@ -168,13 +168,13 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
                                                   location.Organization.OrganizationMembers.Any(organizationMember =>
                                                       organizationMember.Customer.Id == customerId))));
 
-        query = string.IsNullOrWhiteSpace(organizationId)
+        query = string.IsNullOrWhiteSpace(locationId)
             ? query.Where(team =>
                 team.Organization == null || (team.Organization != null && !team.Organization.DeletedAt.HasValue))
             : query.Where(team =>
                 team.Organization != null &&
                 !team.Organization.DeletedAt.HasValue &&
-                team.Organization.Id == organizationId);
+                team.Organization.Id == locationId);
 
         return await query
             .AddDependentObjects()
@@ -187,11 +187,11 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
             .AddDependentObjects()
             .ToListAsync(cancellationToken);
 
-    public Database.Entities.Location Remove(Database.Entities.Location organization)
+    public Database.Entities.Location Remove(Database.Entities.Location location)
     {
         var now = timeProvider.GetUtcNow();
-        organization.DeletedAt = now;
-        return DbContext.Location.Update(organization).Entity;
+        location.DeletedAt = now;
+        return DbContext.Location.Update(location).Entity;
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Location>>, int)> GetPaginatedLocationsAsync(

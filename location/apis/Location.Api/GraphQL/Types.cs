@@ -36,6 +36,8 @@ public class AddLocationInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
     [GraphQLName("timezone")] public string? Timezone { get; set; }
+    
+    [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
 }
 
 [GraphQLName("AddLocationTagInput")]
@@ -276,7 +278,7 @@ public class LocationDetails : Node
 
     [GraphQLName("desks")] public DeskDetails[] Desks { get; set; } = [];
 
-    [GraphQLName("physicalAddress")] public LocationAddress? PhysicalAddress { get; set; }
+    [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
 
     [GraphQLName("id")][ID] public string Id { get; set; }
 }
@@ -470,6 +472,8 @@ public class UpdateLocationInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
     [GraphQLName("timezone")] public string? Timezone { get; set; }
+    
+    [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
 }
 
 [GraphQLName("UpdateLocationTagInput")]
@@ -529,8 +533,8 @@ public class DeleteDeskInput
     [GraphQLName("id")] public required string Id { get; set; }
 }
 
-[GraphQLName("LocationAddress")]
-public class LocationAddress
+[GraphQLName("LocationAddressDetails")]
+public class LocationAddressDetails
 {
     [GraphQLName("formattedAddress")] public string? FormattedAddress { get; set; }
 

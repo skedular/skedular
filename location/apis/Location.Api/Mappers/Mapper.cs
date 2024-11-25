@@ -3,16 +3,20 @@ using Api.Shared.Services.Grpc.UnityHub.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Location.Api.GraphQL;
-using Location.Shared.Models;
+using Location.Shared.Database.Entities;
 using AddDeskInput = Location.Api.GraphQL.AddDeskInput;
+using Booking = Location.Shared.Models.Booking;
 using Customer = Location.Shared.Models.Customer;
+using DailyDeskCountRecording = Location.Shared.Models.DailyDeskCountRecording;
 using Desk = Location.Shared.Database.Entities.Desk;
 using DeskEdge = Location.Api.GraphQL.DeskEdge;
 using Identity = Location.Shared.Models.Identity;
+using JoinInvitation = Location.Shared.Models.JoinInvitation;
 using LocationTagEdge = Location.Api.GraphQL.LocationTagEdge;
 using LocationEdge = Location.Api.GraphQL.LocationEdge;
 using LocationDailyBookingsTotal = Location.Shared.Models.LocationDailyBookingsTotal;
 using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOccupancyPercentage;
+using LocationMember = Location.Shared.Models.LocationMember;
 using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationTag = Location.Shared.Models.OrganizationTag;
 using Permissions = Api.Shared.Services.Grpc.UnityHub.Location.V1.Permissions;
@@ -26,7 +30,12 @@ public interface IMapper
     Shared.Models.Location MapTo(Shared.Database.Entities.Location src);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
     Shared.Database.Entities.Location MapTo(Shared.Models.Location src, Organization? organization);
-    Shared.Database.Entities.Location MergeTo(Shared.Models.Location src, Shared.Database.Entities.Location dest);
+
+    Shared.Database.Entities.Location MergeTo(
+        Shared.Models.Location src,
+        Shared.Database.Entities.Location dest,
+        Address? physicalAddress);
+
     Tag MapTo(Shared.Models.Tag src, Shared.Database.Entities.Location location);
     Tag MergeTo(Shared.Models.Tag src, Tag dest, Shared.Database.Entities.Location location);
     Shared.Models.Tag MapTo(Tag src);
@@ -44,6 +53,7 @@ public interface IMapper
         Shared.Database.Entities.Location location,
         ICollection<Tag> tags,
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
+
     Shared.Models.Desk MapTo(Desk src, Shared.Models.Location location);
 
     IEnumerable<LocationMember> MapTo(
@@ -96,7 +106,8 @@ public interface IMapper
 
     LocationMemberEdge MapTo(Edge<LocationMember> src);
 
-    IEnumerable<Edge<LocationMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.LocationMember>> src,
+    IEnumerable<Edge<LocationMember>> MapTo(
+        IEnumerable<Edge<Shared.Database.Entities.LocationMember>> src,
         Shared.Models.Location location);
 
     Shared.Database.Entities.LocationMember MapToEntity(
@@ -111,6 +122,9 @@ public interface IMapper
         Shared.Database.Entities.Customer customer);
 
     ICollection<LocationMember> MapTo(Admin_UpdateMembersInput src);
+
+    Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Location location);
+    Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Location location);
 }
 
 public class Mapper : IMapper
@@ -135,6 +149,7 @@ public class Mapper : IMapper
         location.JoinInvitations = MapTo(src.JoinInvitations, location).ToList();
         location.Tags = MapTo(src.Tags, location).ToList();
         location.Desks = MapTo(src.Desks, location).ToList();
+        location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
 
         return location;
     }
@@ -173,12 +188,16 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    public Shared.Database.Entities.Location MergeTo(Shared.Models.Location src, Shared.Database.Entities.Location dest)
+    public Shared.Database.Entities.Location MergeTo(
+        Shared.Models.Location src,
+        Shared.Database.Entities.Location dest,
+        Address? physicalAddress)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Timezone = src.Timezone;
+        dest.PhysicalAddress = physicalAddress;
         return dest;
     }
 
@@ -199,7 +218,8 @@ public class Mapper : IMapper
                 DeskCapacity = src.Desks.Count,
                 Organization = MapTo(src.Organization),
                 LocationTags = MapTo(src.Tags).ToArray(),
-                Desks = MapTo(src.Desks).ToArray()
+                Desks = MapTo(src.Desks).ToArray(),
+                PhysicalAddress = MapToGraphQl(src.PhysicalAddress)
             };
 
     public Tag MapTo(Shared.Models.Tag src, Shared.Database.Entities.Location location) =>
@@ -224,17 +244,6 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Description = src.Description,
-            Type = src.Type
-        };
-
-    public OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
             Type = src.Type
         };
 
@@ -376,6 +385,23 @@ public class Mapper : IMapper
     public ICollection<LocationMember> MapTo(Admin_UpdateMembersInput src) =>
         src.Members.Select(item => MapTo(item, new Shared.Models.Location { Id = src.Id })).ToList();
 
+    public Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Location location) =>
+        MergeToEntity(src, new Address(), location);
+
+    public Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Location location)
+    {
+        dest.FormattedAddress = src.FormattedAddress;
+        dest.AddressLine1 = src.AddressLine1;
+        dest.AddressLine2 = src.AddressLine2;
+        dest.Suburb = src.Suburb;
+        dest.City = src.City;
+        dest.Province = src.Province;
+        dest.Zipcode = src.Zipcode;
+        dest.Country = src.Country;
+        dest.Location = location;
+        return dest;
+    }
+
     public IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) =>
         src.Select(MapTo)!;
 
@@ -392,8 +418,9 @@ public class Mapper : IMapper
                 .ToArray()
         };
 
-    public Shared.Models.Location MapTo(AddLocationInput src) =>
-        new()
+    public Shared.Models.Location MapTo(AddLocationInput src)
+    {
+        var location = new Shared.Models.Location
         {
             Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
             Name = src.Name,
@@ -404,14 +431,25 @@ public class Mapper : IMapper
                 : new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public Shared.Models.Location MapTo(UpdateLocationInput src) =>
-        new()
+        location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
+
+        return location;
+    }
+
+    public Shared.Models.Location MapTo(UpdateLocationInput src)
+    {
+        var location = new Shared.Models.Location
         {
             Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone
         };
+
+        location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
+
+        return location;
+    }
 
     public Shared.Models.Tag MapTo(AddLocationTagInput src) =>
         new()
@@ -464,8 +502,7 @@ public class Mapper : IMapper
             Invitee = MapTo(src.Invitee)
         };
 
-    public Shared.Models.Location MapTo(
-        Admin_AddInput src) =>
+    public Shared.Models.Location MapTo(Admin_AddInput src) =>
         new()
         {
             Id = src.Id,
@@ -553,15 +590,6 @@ public class Mapper : IMapper
             Type = src.Type.ToSafeString()
         };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrganizationTag MapToGrpcResponse(
-        OrganizationTag src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Type = src.Type.ToSafeString()
-        };
-
     public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk MapToGrpcResponse(
         Shared.Models.Desk src)
     {
@@ -617,7 +645,7 @@ public class Mapper : IMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Location = new Shared.Models.Location { Id = src.LocationId },
             Tags = src.TagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public Shared.Models.Desk MapTo(Admin_AddDeskInput src) =>
@@ -629,7 +657,7 @@ public class Mapper : IMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Location = new Shared.Models.Location { Id = src.LocationId },
             Tags = src.TagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.UpdateDeskInput src) =>
@@ -640,11 +668,42 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Tags = src.TagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public IEnumerable<Edge<Shared.Models.Desk>> MapTo(IEnumerable<Edge<Desk>> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
+
+    public OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Type = src.Type
+        };
+
+    private static Shared.Models.Address? MapTo(LocationAddressDetails? src, Shared.Models.Location location) =>
+        src is null
+            ? null
+            : new Shared.Models.Address
+            {
+                FormattedAddress = src.FormattedAddress,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country,
+                Location = location
+            };
+
+    public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrganizationTag MapToGrpcResponse(
+        OrganizationTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Type = src.Type.ToSafeString() };
 
     private static LocationMember MapTo(Member src, Shared.Models.Location location) =>
         new()
@@ -866,4 +925,36 @@ public class Mapper : IMapper
         tag.Location = location;
         return new Edge<Shared.Models.Tag>(src.Cursor, tag);
     }
+
+    private static LocationAddressDetails? MapToGraphQl(Shared.Models.Address? src) =>
+        src is null
+            ? null
+            : new LocationAddressDetails
+            {
+                FormattedAddress = src.FormattedAddress,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country
+            };
+
+    private static Shared.Models.Address? MapTo(Address? src, Shared.Models.Location location) =>
+        src is null
+            ? null
+            : new Shared.Models.Address
+            {
+                Id = src.Id,
+                FormattedAddress = src.FormattedAddress,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country,
+                Location = location
+            };
 }

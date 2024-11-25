@@ -368,6 +368,16 @@ type DeskPayload {
 type InviteCustomersToJoinLocationPayload {
   clientMutationId: String
 }
+type LocationAddressDetails {
+  formattedAddress: String
+  addressLine1: String
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String
+  country: String
+}
 type LocationAnalytics {
   desksOccupancyPercentage: [LocationDesksOccupancyPercentage!]!
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
@@ -412,6 +422,7 @@ type LocationDetails {
   canViewAnalytics: Boolean!
   locationTags: [LocationTagDetails!]!
   desks: [DeskDetails!]!
+  physicalAddress: LocationAddressDetails
   id: ID!
 }
 type LocationEdge {
@@ -1047,6 +1058,7 @@ input AddLocationInput {
   about: String
   organizationId: String
   timezone: String
+  physicalAddress: LocationAddressDetailsInput
 }
 input AddLocationTagInput {
   clientMutationId: String
@@ -1101,6 +1113,16 @@ input InviteCustomersToJoinLocationInput {
   locationId: String!
   emails: [String!]!
 }
+input LocationAddressDetailsInput {
+  formattedAddress: String
+  addressLine1: String
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String
+  country: String
+}
 input LocationMemberOrderInput {
   direction: OrderDirection!
   field: LocationMemberOrderField!
@@ -1146,6 +1168,7 @@ input UpdateLocationInput {
   about: String
   organizationId: String
   timezone: String
+  physicalAddress: LocationAddressDetailsInput
 }
 input UpdateLocationTagInput {
   clientMutationId: String
