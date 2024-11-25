@@ -176,14 +176,31 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
 
                     <Divider />
 
-                    <Stack direction="column" spacing={1}></Stack>
-                    <Typography variant="body1">Shared with teammates</Typography>
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                      <AvatarGroup max={5}>
-                        {organizationMembers.map(({ customer }) => (
-                          <CustomerAvatar key={customer?.uniqueId} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
-                        ))}
-                      </AvatarGroup>
+                    <Stack direction="row" spacing={1}>
+                      <Stack direction="column" spacing={1}>
+                        <Typography variant="body1">Shared with teammates</Typography>
+                        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                          <AvatarGroup max={5}>
+                            {organizationMembers.map(({ customer }) => (
+                              <CustomerAvatar
+                                key={customer?.uniqueId}
+                                name={customer}
+                                photo={{ url: customer?.photoUrl }}
+                                size="medium"
+                                showFullName
+                              />
+                            ))}
+                          </AvatarGroup>
+                        </Stack>
+                      </Stack>
+
+                      <Divider orientation="vertical" flexItem />
+
+                      <Stack direction="column" spacing={1}>
+                        <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
+                          {location.physicalAddress?.formattedAddress ? location.physicalAddress?.formattedAddress : 'N/A'}
+                        </Typography>
+                      </Stack>
                     </Stack>
                   </CardContent>
                 </Card>
