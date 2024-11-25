@@ -3,5 +3,7 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
   },
-  "git.autorefresh": true
+  "git.autorefresh": true,
+  "dotnet.defaultSolution": "disable",
+  "files.eol": "\n"
 }
