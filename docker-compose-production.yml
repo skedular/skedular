@@ -7,6 +7,17 @@ volumes:
   unityhubio_kafka1_data:
 
 services:
+  dozzle:
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 5000:8080
+    networks:
+      unityhubio_network:
+        aliases:
+          - dozzle.localhost
+
   postgres:
     image: postgres:16-alpine
     command: postgres -c 'max_connections=10000'
