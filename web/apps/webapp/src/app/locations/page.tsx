@@ -1,13 +1,19 @@
 'use client';
 
-import { Locations } from '@/components/location/locations';
+import { OldLocations } from '@/components/location/locations';
 import { RootShell } from '@/components/rootShell';
-import { memo } from 'react';
+import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
+import { memo, useContext } from 'react';
 
-const LocationsPage = () => (
-  <RootShell>
-    <Locations />
-  </RootShell>
-);
+const LocationsPage = () => {
+  const switchToModernUI = useContext(SwitchToModernUIContext);
+
+  return (
+    <RootShell>
+      {!switchToModernUI && <OldLocations />}
+      {switchToModernUI && <></>}
+    </RootShell>
+  );
+};
 
 export default memo(LocationsPage);
