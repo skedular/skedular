@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f0ecee3e0071d2f9bf3d555142b0918>>
+ * @generated SignedSource<<4d42795f76180cd81e4d75d9796cd67d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,17 +16,17 @@ export type LocationOrderInput = {
   direction: OrderDirection;
   field: LocationOrderField;
 };
-export type myLocations_locations_refetchableFragment$variables = {
+export type myLocations_locations_availableOrganizationDesks_refetchableFragment$variables = {
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
   organizationId: string;
   todayDate: any;
 };
-export type myLocations_locations_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"myLocations_locations_query">;
+export type myLocations_locations_availableOrganizationDesks_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"myLocations_locations_availableOrganizationDesks_query">;
 };
-export type myLocations_locations_refetchableFragment = {
-  response: myLocations_locations_refetchableFragment$data;
-  variables: myLocations_locations_refetchableFragment$variables;
+export type myLocations_locations_availableOrganizationDesks_refetchableFragment = {
+  response: myLocations_locations_availableOrganizationDesks_refetchableFragment$data;
+  variables: myLocations_locations_availableOrganizationDesks_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -71,12 +71,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "myLocations_locations_refetchableFragment",
+    "name": "myLocations_locations_availableOrganizationDesks_refetchableFragment",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "myLocations_locations_query"
+        "name": "myLocations_locations_availableOrganizationDesks_query"
       }
     ],
     "type": "Query",
@@ -86,7 +86,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "myLocations_locations_refetchableFragment",
+    "name": "myLocations_locations_availableOrganizationDesks_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -165,6 +165,24 @@ return {
                       }
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "LocationAddressDetails",
+                    "kind": "LinkedField",
+                    "name": "physicalAddress",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "formattedAddress",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -231,16 +249,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fafb946e99cd44809b7026d2065c0fd3",
+    "cacheID": "5d9e1104a8216fb61fb79272e31f69b3",
     "id": null,
     "metadata": {},
-    "name": "myLocations_locations_refetchableFragment",
+    "name": "myLocations_locations_availableOrganizationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query myLocations_locations_refetchableFragment(\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String!\n  $todayDate: DateTime!\n) {\n  ...myLocations_locations_query\n}\n\nfragment myLocations_locations_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          id\n        }\n        locationTags {\n          id\n          name\n          tagType\n        }\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query myLocations_locations_availableOrganizationDesks_refetchableFragment(\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String!\n  $todayDate: DateTime!\n) {\n  ...myLocations_locations_availableOrganizationDesks_query\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          id\n        }\n        locationTags {\n          id\n          name\n          tagType\n        }\n        physicalAddress {\n          formattedAddress\n        }\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e574f2985fd7b617f006485e33bca08e";
+(node as any).hash = "9d13433f163e42323f7e41f51ebdc650";
 
 export default node;

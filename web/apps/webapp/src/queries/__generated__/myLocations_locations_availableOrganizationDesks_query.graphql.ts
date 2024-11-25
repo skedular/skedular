@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4940c8aede3e33c68026a5eca83ae9c5>>
+ * @generated SignedSource<<28c0d71d7e2791340de05df5a2091b5f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type myLocations_locations_query$data = {
+export type myLocations_locations_availableOrganizationDesks_query$data = {
   readonly availableOrganizationDesks: ReadonlyArray<{
     readonly location: {
       readonly uniqueId: string;
@@ -30,15 +30,18 @@ export type myLocations_locations_query$data = {
           readonly tagType: string;
         }>;
         readonly name: string;
+        readonly physicalAddress: {
+          readonly formattedAddress: string | null | undefined;
+        } | null | undefined;
       };
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "myLocations_locations_query";
+  readonly " $fragmentType": "myLocations_locations_availableOrganizationDesks_query";
 };
-export type myLocations_locations_query$key = {
-  readonly " $data"?: myLocations_locations_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"myLocations_locations_query">;
+export type myLocations_locations_availableOrganizationDesks_query$key = {
+  readonly " $data"?: myLocations_locations_availableOrganizationDesks_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"myLocations_locations_availableOrganizationDesks_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -81,10 +84,10 @@ return {
     "refetch": {
       "connection": null,
       "fragmentPathInResult": [],
-      "operation": require('./myLocations_locations_refetchableFragment.graphql')
+      "operation": require('./myLocations_locations_availableOrganizationDesks_refetchableFragment.graphql')
     }
   },
-  "name": "myLocations_locations_query",
+  "name": "myLocations_locations_availableOrganizationDesks_query",
   "selections": [
     {
       "alias": null,
@@ -163,6 +166,24 @@ return {
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "LocationAddressDetails",
+                  "kind": "LinkedField",
+                  "name": "physicalAddress",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "formattedAddress",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
                 }
               ],
               "storageKey": null
@@ -232,6 +253,6 @@ return {
 };
 })();
 
-(node as any).hash = "e574f2985fd7b617f006485e33bca08e";
+(node as any).hash = "9d13433f163e42323f7e41f51ebdc650";
 
 export default node;

@@ -1,5 +1,7 @@
-import type { myLocations_locations_query$key } from '@/queries/__generated__/myLocations_locations_query.graphql';
-import type { myLocations_locations_refetchableFragment } from '@/queries/__generated__/myLocations_locations_refetchableFragment.graphql';
+import type { myLocations_locations_availableOrganizationDesks_query$key } from '@/queries/__generated__/myLocations_locations_availableOrganizationDesks_query.graphql';
+import type { myLocations_locations_availableOrganizationDesks_refetchableFragment } from '@/queries/__generated__/myLocations_locations_availableOrganizationDesks_refetchableFragment.graphql';
+import type { myLocations_query$key } from '@/queries/__generated__/myLocations_query.graphql';
+import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -8,22 +10,53 @@ import Grid from '@mui/material/Grid2';
 import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { LOCATION_TAG_TYPE_LOCATION_ZONE, Zones } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
-import { graphql, useRefetchableFragment } from 'react-relay';
+import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 
 type Props = {
-  rootDataRelay: myLocations_locations_query$key;
+  rootDataRelay: myLocations_query$key;
+  rootDataRefetchableRelay: myLocations_locations_availableOrganizationDesks_query$key;
   onReloadRequired: () => void;
   viewMode: 'list' | 'grid';
 };
 
-const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment<myLocations_locations_refetchableFragment, myLocations_locations_query$key>(
+const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, viewMode }: Props) => {
+  const rootData = useFragment<myLocations_query$key>(
     graphql`
-      fragment myLocations_locations_query on Query @refetchable(queryName: "myLocations_locations_refetchableFragment") {
+      fragment myLocations_query on Query {
+        organizationMembers(where: { organizationId: $organizationId }, orderBy: $organizationMembersSortingValues) {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              customer {
+                uniqueId
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+              }
+            }
+          }
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [rootDataRefetchable, refetch] = useRefetchableFragment<
+    myLocations_locations_availableOrganizationDesks_refetchableFragment,
+    myLocations_locations_availableOrganizationDesks_query$key
+  >(
+    graphql`
+      fragment myLocations_locations_availableOrganizationDesks_query on Query
+      @refetchable(queryName: "myLocations_locations_availableOrganizationDesks_refetchableFragment") {
         locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
           __id
           totalCount
@@ -39,6 +72,9 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
                 name
                 tagType
               }
+              physicalAddress {
+                formattedAddress
+              }
             }
           }
         }
@@ -49,16 +85,24 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
         }
       }
     `,
-    rootDataRelay,
+    rootDataRefetchableRelay,
   );
 
   const locations = useMemo(() => {
-    if (!rootData.locations) {
+    if (!rootDataRefetchable.locations) {
       return [];
     }
 
-    return rootData.locations.edges.map((edge) => edge.node);
-  }, [rootData.locations]);
+    return rootDataRefetchable.locations.edges.map((edge) => edge.node);
+  }, [rootDataRefetchable.locations]);
+
+  const organizationMembers = useMemo(() => {
+    if (!rootData.organizationMembers) {
+      return [];
+    }
+
+    return rootData.organizationMembers.edges.map((edge) => edge.node);
+  }, [rootData.organizationMembers]);
 
   const handleRefetchAllBookings = useCallback(() => {
     startTransition(() => {
@@ -73,7 +117,7 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
 
   useEffect(() => handleRefetchAllBookings(), [handleRefetchAllBookings]);
 
-  if (!rootData.locations || !rootData.availableOrganizationDesks) {
+  if (!rootDataRefetchable.locations || !rootDataRefetchable.availableOrganizationDesks || !rootData.organizationMembers) {
     return <></>;
   }
 
@@ -95,8 +139,8 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
         <Grid container spacing={defaultSpacing} sx={{ alignItems: 'flex-start' }}>
           {locations.map((location) => {
             const allDesksCount = location.desks.length;
-            const availableDesksCount = rootData.availableOrganizationDesks
-              ? rootData.availableOrganizationDesks.filter((desk) => desk.location?.uniqueId === location.id).length
+            const availableDesksCount = rootDataRefetchable.availableOrganizationDesks
+              ? rootDataRefetchable.availableOrganizationDesks.filter((desk) => desk.location?.uniqueId === location.id).length
               : 0;
             const availablePercentage = (availableDesksCount / allDesksCount) * 100;
             const zones = location.locationTags.filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
@@ -131,6 +175,16 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
                     </Stack>
 
                     <Divider />
+
+                    <Stack direction="column" spacing={1}></Stack>
+                    <Typography variant="body1">Shared with teammates</Typography>
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                      <AvatarGroup max={5}>
+                        {organizationMembers.map(({ customer }) => (
+                          <CustomerAvatar key={customer?.uniqueId} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
+                        ))}
+                      </AvatarGroup>
+                    </Stack>
                   </CardContent>
                 </Card>
               </Grid>

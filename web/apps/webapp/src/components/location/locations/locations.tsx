@@ -27,10 +27,12 @@ const RootQuery = graphql`
     $locationsSortingValues: [LocationOrderInput!]!
     $deskTypeTagType: String!
     $todayDate: DateTime!
+    $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
     ...deskTypeSelector_allDeskTypes_query
     ...zoneSelector_allZones_query
-    ...myLocations_locations_query
+    ...myLocations_query
+    ...myLocations_locations_availableOrganizationDesks_query
   }
 `;
 
@@ -65,7 +67,7 @@ const Locations = ({ queryReference, onReloadRequired }: Props) => {
         <ZoneSelector rootDataRelay={rootData} onChange={handleDeskTypeChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
       </Stack>
-      <MyLocations rootDataRelay={rootData} onReloadRequired={onReloadRequired} viewMode={viewMode} />
+      <MyLocations rootDataRelay={rootData} rootDataRefetchableRelay={rootData} onReloadRequired={onReloadRequired} viewMode={viewMode} />
     </Stack>
   );
 };
@@ -95,6 +97,12 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
           },
         ],
         todayDate: today.toISOString(),
+        organizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
       },
       {
         fetchPolicy: 'store-and-network',

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<169de8c98020bb8468c640a36bc2c793>>
+ * @generated SignedSource<<babe24c46ffbf27acc2365df26cda4b2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,18 +12,24 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LocationOrderField = "About" | "Name" | "Timezone" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
+export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "%future added value";
 export type LocationOrderInput = {
   direction: OrderDirection;
   field: LocationOrderField;
+};
+export type OrganizationMemberOrderInput = {
+  direction: OrderDirection;
+  field: OrganizationMemberOrderField;
 };
 export type locations_rootQuery$variables = {
   deskTypeTagType: string;
   locationsSortingValues: ReadonlyArray<LocationOrderInput>;
   organizationId: string;
+  organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   todayDate: any;
 };
 export type locations_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"deskTypeSelector_allDeskTypes_query" | "myLocations_locations_query" | "zoneSelector_allZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"deskTypeSelector_allDeskTypes_query" | "myLocations_locations_availableOrganizationDesks_query" | "myLocations_query" | "zoneSelector_allZones_query">;
 };
 export type locations_rootQuery = {
   response: locations_rootQuery$data;
@@ -49,35 +55,40 @@ v2 = {
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "todayDate"
+  "name": "organizationMembersSortingValues"
 },
 v4 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "todayDate"
+},
+v5 = {
   "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
 },
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -88,6 +99,20 @@ v8 = {
       "storageKey": null
     }
   ]
+},
+v10 = {
+  "fields": [
+    (v5/*: any*/)
+  ],
+  "kind": "ObjectValue",
+  "name": "where"
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "uniqueId",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -95,7 +120,8 @@ return {
       (v0/*: any*/),
       (v1/*: any*/),
       (v2/*: any*/),
-      (v3/*: any*/)
+      (v3/*: any*/),
+      (v4/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -114,7 +140,12 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "myLocations_locations_query"
+        "name": "myLocations_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "myLocations_locations_availableOrganizationDesks_query"
       }
     ],
     "type": "Query",
@@ -126,6 +157,7 @@ return {
       (v2/*: any*/),
       (v1/*: any*/),
       (v0/*: any*/),
+      (v4/*: any*/),
       (v3/*: any*/)
     ],
     "kind": "Operation",
@@ -136,7 +168,7 @@ return {
         "args": [
           {
             "fields": [
-              (v4/*: any*/),
+              (v5/*: any*/),
               {
                 "kind": "Variable",
                 "name": "tagType",
@@ -152,7 +184,7 @@ return {
         "name": "organizationTags",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -169,15 +201,15 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
-                  (v7/*: any*/)
+                  (v7/*: any*/),
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v8/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
@@ -189,20 +221,14 @@ return {
             "name": "orderBy",
             "variableName": "locationsSortingValues"
           },
-          {
-            "fields": [
-              (v4/*: any*/)
-            ],
-            "kind": "ObjectValue",
-            "name": "where"
-          }
+          (v10/*: any*/)
         ],
         "concreteType": "LocationConnection",
         "kind": "LinkedField",
         "name": "locations",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -227,8 +253,8 @@ return {
                     "name": "locationTags",
                     "plural": true,
                     "selections": [
-                      (v6/*: any*/),
                       (v7/*: any*/),
+                      (v8/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -239,8 +265,8 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v6/*: any*/),
                   (v7/*: any*/),
+                  (v8/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -249,7 +275,25 @@ return {
                     "name": "desks",
                     "plural": true,
                     "selections": [
-                      (v6/*: any*/)
+                      (v7/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "LocationAddressDetails",
+                    "kind": "LinkedField",
+                    "name": "physicalAddress",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "formattedAddress",
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   }
@@ -259,7 +303,91 @@ return {
             ],
             "storageKey": null
           },
-          (v8/*: any*/)
+          (v9/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "orderBy",
+            "variableName": "organizationMembersSortingValues"
+          },
+          (v10/*: any*/)
+        ],
+        "concreteType": "OrganizationMemberConnection",
+        "kind": "LinkedField",
+        "name": "organizationMembers",
+        "plural": false,
+        "selections": [
+          (v6/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationMemberEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationMemberDetails",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v7/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "OrganizationCustomerDetails",
+                    "kind": "LinkedField",
+                    "name": "customer",
+                    "plural": false,
+                    "selections": [
+                      (v11/*: any*/),
+                      (v8/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "givenName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "middleName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "familyName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "photoUrl",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
@@ -276,7 +404,7 @@ return {
             "name": "deskIdsToInclude",
             "value": []
           },
-          (v4/*: any*/)
+          (v5/*: any*/)
         ],
         "concreteType": "BookingDeskDetails",
         "kind": "LinkedField",
@@ -291,13 +419,7 @@ return {
             "name": "location",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "uniqueId",
-                "storageKey": null
-              }
+              (v11/*: any*/)
             ],
             "storageKey": null
           }
@@ -307,16 +429,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bff4a4f5d52df14d5f674a6d1ffdfda0",
+    "cacheID": "b860943aefd5d5d272c160cfa7cf7009",
     "id": null,
     "metadata": {},
     "name": "locations_rootQuery",
     "operationKind": "query",
-    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $deskTypeTagType: String!\n  $todayDate: DateTime!\n) {\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n  ...myLocations_locations_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  organizationTags(where: {organizationId: $organizationId, tagType: $deskTypeTagType}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myLocations_locations_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          id\n        }\n        locationTags {\n          id\n          name\n          tagType\n        }\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        locationTags {\n          id\n          name\n        }\n        id\n      }\n    }\n  }\n}\n"
+    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $deskTypeTagType: String!\n  $todayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n  ...myLocations_query\n  ...myLocations_locations_availableOrganizationDesks_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  organizationTags(where: {organizationId: $organizationId, tagType: $deskTypeTagType}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          id\n        }\n        locationTags {\n          id\n          name\n          tagType\n        }\n        physicalAddress {\n          formattedAddress\n        }\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment myLocations_query on Query {\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  locations(where: {organizationId: $organizationId}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        locationTags {\n          id\n          name\n        }\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d973025589827e9456b9fb330c2a9363";
+(node as any).hash = "15f8c5548fdc94f2e4218d3a54816e5c";
 
 export default node;
