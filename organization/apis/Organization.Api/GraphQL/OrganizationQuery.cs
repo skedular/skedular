@@ -11,7 +11,7 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Organization.Api.GraphQL;
 
-public class OrganizationQuery
+public class OrganizationQuery(IMapper mapper)
 {
     [UseServiceScope]
     public Version OrganizationVersion()
@@ -36,7 +36,6 @@ public class OrganizationQuery
     [UseServiceScope]
     public async Task<OrganizationTermsOfUse> ActiveOrganizationTermsOfUseAsync(
         [Service] IOrganizationTermsOfUseService organizationTermsOfUseService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var termsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken);
@@ -55,7 +54,6 @@ public class OrganizationQuery
     public async Task<OrganizationIndustryMainCategoryReferenceDetails[]>
         OrganizationIndustryMainCategoriesReferencesAsync(
             [Service] IIndustryMainCategoryService industryMainCategoryService,
-            [Service] IMapper mapper,
             CancellationToken cancellationToken)
     {
         var industryMainCategories = await industryMainCategoryService.GetAllAsync(cancellationToken);
@@ -66,7 +64,6 @@ public class OrganizationQuery
     public async Task<OrganizationDetails?> OrganizationAsync(
         string id,
         [Service] IOrganizationService organizationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var organization = await organizationService.GetByIdAsync(id, cancellationToken);
@@ -83,7 +80,6 @@ public class OrganizationQuery
         OrganizationOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
@@ -130,7 +126,6 @@ public class OrganizationQuery
     public async Task<OrganizationDetails[]?> MyOrganizationsAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
@@ -151,7 +146,6 @@ public class OrganizationQuery
         OrganizationMemberOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationMemberService organizationMemberService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.OrganizationId);
@@ -211,7 +205,6 @@ public class OrganizationQuery
         DateTimeOffset from,
         DateTimeOffset until,
         [Service] IOrganizationAnalyticsService organizationAnalyticsService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var (organizationMemberAttendancePercentages, organizationDailyBookingsTotals) =
@@ -234,21 +227,62 @@ public class OrganizationQuery
     [UseServiceScope]
     public async Task<OrganizationDetails?> AzureTenantOrganizationAsync(
         [Service] IOrganizationService organizationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
 
     [UseServiceScope]
-    public async Task<OrganizationTagConnection?> OrganizationTagsAsync(
+    public async Task<OrganizationTagConnection?> DeskTypesAsync(
         string? after,
         int? first,
         string? before,
         int? last,
-        OrganizationTagWhereInput where,
+        DeskTypeOrganizationTagWhereInput where,
         OrganizationTagOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        await OrganizationTagsAsync(
+            after,
+            first,
+            before,
+            last,
+            new TagSearchCriteria(where.OrganizationId, OrganizationTagType.DeskType, where.NameContains),
+            orderBy,
+            cachedCustomerService,
+            tagService,
+            cancellationToken);
+
+    [UseServiceScope]
+    public async Task<OrganizationTagConnection?> ZonesAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        ZoneOrganizationTagWhereInput where,
+        OrganizationTagOrderInput[]? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken) =>
+        await OrganizationTagsAsync(
+            after,
+            first,
+            before,
+            last,
+            new TagSearchCriteria(where.OrganizationId, OrganizationTagType.Zone, where.NameContains),
+            orderBy,
+            cachedCustomerService,
+            tagService,
+            cancellationToken);
+
+    private async Task<OrganizationTagConnection?> OrganizationTagsAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        TagSearchCriteria tagSearchCriteria,
+        OrganizationTagOrderInput[]? orderBy,
+        ICachedCustomerService cachedCustomerService,
+        ITagService tagService,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
@@ -259,7 +293,7 @@ public class OrganizationQuery
         var (paginatedInfo, edges, totalCount) =
             await tagService.GetPaginatedTagsAsync(
                 new PaginationInputParam(after, first, before, last),
-                new TagSearchCriteria(where.OrganizationId, where.TagType, where.NameContains),
+                tagSearchCriteria,
                 orderBy is null
                     ? []
                     : orderBy.Select(item =>
@@ -292,62 +326,4 @@ public class OrganizationQuery
             TotalCount = totalCount
         };
     }
-
-    [UseServiceScope]
-    public async Task<OrganizationTagConnection?> DeskTypesAsync(
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        DeskTypeOrganizationTagWhereInput where,
-        OrganizationTagOrderInput[]? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] ITagService tagService,
-        [Service] IMapper mapper,
-        CancellationToken cancellationToken) =>
-        await OrganizationTagsAsync(
-            after,
-            first,
-            before,
-            last,
-            new OrganizationTagWhereInput
-            {
-                OrganizationId = where.OrganizationId,
-                TagType = OrganizationTagType.DeskType,
-                NameContains = where.NameContains
-            },
-            orderBy,
-            cachedCustomerService,
-            tagService,
-            mapper,
-            cancellationToken);
-
-    [UseServiceScope]
-    public async Task<OrganizationTagConnection?> ZonesAsync(
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        ZoneOrganizationTagWhereInput where,
-        OrganizationTagOrderInput[]? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] ITagService tagService,
-        [Service] IMapper mapper,
-        CancellationToken cancellationToken) =>
-        await OrganizationTagsAsync(
-            after,
-            first,
-            before,
-            last,
-            new OrganizationTagWhereInput
-            {
-                OrganizationId = where.OrganizationId,
-                TagType = OrganizationTagType.ZoneType,
-                NameContains = where.NameContains
-            },
-            orderBy,
-            cachedCustomerService,
-            tagService,
-            mapper,
-            cancellationToken);
 }

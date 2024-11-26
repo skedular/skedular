@@ -47,7 +47,6 @@ type Query {
   isAzureTenantInstalled: Boolean!
   azureTenantAdminConsentUrl: String!
   azureTenantOrganization: OrganizationDetails
-  organizationTags(after: String, first: Int, before: String, last: Int, where: OrganizationTagWhereInput!, orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection
   deskTypes(after: String, first: Int, before: String, last: Int, where: DeskTypeOrganizationTagWhereInput!, orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection
   zones(after: String, first: Int, before: String, last: Int, where: ZoneOrganizationTagWhereInput!, orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection
   notificationVersion: Version!
@@ -118,9 +117,12 @@ type Mutation {
   rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): RejectInvitationToJoinOrganizationPayload
   cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): CancelInvitationToJoinOrganizationPayload
   completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload
-  addOrganizationTag(input: AddOrganizationTagInput!): OrganizationTagPayload
-  updateOrganizationTag(input: UpdateOrganizationTagInput!): OrganizationTagPayload
-  deleteOrganizationTag(input: DeleteOrganizationTagInput!): OrganizationTagPayload
+  addDeskType(input: AddDeskTypeInput!): OrganizationTagPayload
+  updateDeskType(input: UpdateDeskTypeInput!): OrganizationTagPayload
+  deleteDeskType(input: DeleteDeskTypeInput!): OrganizationTagPayload
+  addZone(input: AddZoneInput!): OrganizationTagPayload
+  updateZone(input: UpdateZoneInput!): OrganizationTagPayload
+  deleteZone(input: DeleteZoneInput!): OrganizationTagPayload
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodResponse
   addTeam(input: AddTeamInput!): TeamPayload
@@ -1189,6 +1191,13 @@ input AcceptInvitationToJoinOrganizationInput {
   clientMutationId: String
   id: String!
 }
+input AddDeskTypeInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  organizationId: String!
+}
 input AddOrganizationInput {
   clientMutationId: String
   id: String
@@ -1199,12 +1208,11 @@ input AddOrganizationInput {
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
 }
-input AddOrganizationTagInput {
+input AddZoneInput {
   clientMutationId: String
   id: String
   name: String!
   description: String
-  tagType: String!
   organizationId: String!
 }
 input CancelInvitationToJoinOrganizationInput {
@@ -1224,11 +1232,15 @@ input CompleteOrganizationMemberOnboardingInput {
   clientMutationId: String
   organizationId: String!
 }
+input DeleteDeskTypeInput {
+  clientMutationId: String
+  id: String!
+}
 input DeleteOrganizationInput {
   clientMutationId: String
   id: String!
 }
-input DeleteOrganizationTagInput {
+input DeleteZoneInput {
   clientMutationId: String
   id: String!
 }
@@ -1257,17 +1269,18 @@ input OrganizationTagOrderInput {
   direction: OrderDirection!
   field: OrganizationTagOrderField!
 }
-input OrganizationTagWhereInput {
-  organizationId: String!
-  tagType: String
-  nameContains: String
-}
 input OrganizationWhereInput {
   nameContains: String
 }
 input RejectInvitationToJoinOrganizationInput {
   clientMutationId: String
   id: String!
+}
+input UpdateDeskTypeInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
 }
 input UpdateOrganizationInput {
   clientMutationId: String
@@ -1282,12 +1295,11 @@ input UpdateOrganizationOfferingInput {
   id: String!
   offeringCode: String!
 }
-input UpdateOrganizationTagInput {
+input UpdateZoneInput {
   clientMutationId: String
   id: String!
   name: String!
   description: String
-  tagType: String!
 }
 input ZoneOrganizationTagWhereInput {
   organizationId: String!

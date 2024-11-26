@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<765ee589d98f468e97c27280445c7739>>
+ * @generated SignedSource<<cb967a198d76cc6601bab531cdecfa24>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,24 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type DeleteOrganizationTagInput = {
+export type DeleteDeskTypeInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type deskTypeCard_deleteOrganizationTagMutation$variables = {
+export type deskTypeCard_deleteDeskTypeMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: DeleteOrganizationTagInput;
+  input: DeleteDeskTypeInput;
 };
-export type deskTypeCard_deleteOrganizationTagMutation$data = {
-  readonly deleteOrganizationTag: {
+export type deskTypeCard_deleteDeskTypeMutation$data = {
+  readonly deleteDeskType: {
     readonly organizationTag: {
       readonly id: string;
     };
   } | null | undefined;
 };
-export type deskTypeCard_deleteOrganizationTagMutation = {
-  response: deskTypeCard_deleteOrganizationTagMutation$data;
-  variables: deskTypeCard_deleteOrganizationTagMutation$variables;
+export type deskTypeCard_deleteDeskTypeMutation = {
+  response: deskTypeCard_deleteDeskTypeMutation$data;
+  variables: deskTypeCard_deleteDeskTypeMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,14 +61,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "deskTypeCard_deleteOrganizationTagMutation",
+    "name": "deskTypeCard_deleteDeskTypeMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "OrganizationTagPayload",
         "kind": "LinkedField",
-        "name": "deleteOrganizationTag",
+        "name": "deleteDeskType",
         "plural": false,
         "selections": [
           {
@@ -94,14 +94,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "deskTypeCard_deleteOrganizationTagMutation",
+    "name": "deskTypeCard_deleteDeskTypeMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "OrganizationTagPayload",
         "kind": "LinkedField",
-        "name": "deleteOrganizationTag",
+        "name": "deleteDeskType",
         "plural": false,
         "selections": [
           {
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e49e08fc83958b88700a43bf98af24be",
+    "cacheID": "72bd5edef2060d9559f59e9f5313eb81",
     "id": null,
     "metadata": {},
-    "name": "deskTypeCard_deleteOrganizationTagMutation",
+    "name": "deskTypeCard_deleteDeskTypeMutation",
     "operationKind": "mutation",
-    "text": "mutation deskTypeCard_deleteOrganizationTagMutation(\n  $input: DeleteOrganizationTagInput!\n) {\n  deleteOrganizationTag(input: $input) {\n    organizationTag {\n      id\n    }\n  }\n}\n"
+    "text": "mutation deskTypeCard_deleteDeskTypeMutation(\n  $input: DeleteDeskTypeInput!\n) {\n  deleteDeskType(input: $input) {\n    organizationTag {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1652939601dd40f73393a5740d0ff552";
+(node as any).hash = "997a5a3244e016532fd39aded8defa9c";
 
 export default node;

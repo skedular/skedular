@@ -103,8 +103,10 @@ public interface IMapper
     IEnumerable<Edge<Tag>> MapTo(IEnumerable<Edge<Shared.Database.Entities.Tag>> src,
         Shared.Models.Organization organization);
 
-    Tag MapTo(AddOrganizationTagInput src);
-    Tag MapTo(UpdateOrganizationTagInput src);
+    Tag MapTo(AddDeskTypeInput src);
+    Tag MapTo(UpdateDeskTypeInput src);
+    Tag MapTo(AddZoneInput src);
+    Tag MapTo(UpdateZoneInput src);
     OrganizationTagDetails MapTo(Tag src);
     OrganizationTagEdge MapTo(Edge<Tag> src);
 }
@@ -511,18 +513,31 @@ public class Mapper : IMapper
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    public Tag MapTo(AddOrganizationTagInput src) =>
+    public Tag MapTo(AddDeskTypeInput src) =>
         new()
         {
             Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
             Name = src.Name,
             Description = src.Description,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Type = src.TagType
+            Type = OrganizationTagType.DeskType
         };
 
-    public Tag MapTo(UpdateOrganizationTagInput src) =>
-        new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = src.TagType };
+    public Tag MapTo(UpdateDeskTypeInput src) =>
+        new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = OrganizationTagType.DeskType };
+
+    public Tag MapTo(AddZoneInput src) =>
+        new()
+        {
+            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Name = src.Name,
+            Description = src.Description,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Type = OrganizationTagType.Zone
+        };
+
+    public Tag MapTo(UpdateZoneInput src) =>
+        new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = OrganizationTagType.Zone };
 
     public OrganizationTagDetails MapTo(Tag src) =>
         new() { Id = src.Id, Name = src.Name, Description = src.Description, TagType = src.Type };

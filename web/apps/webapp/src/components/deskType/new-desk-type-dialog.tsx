@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
-import { DeskTypeName, ORGANIZATION_TAG_TYPE_DESK_TYPE } from '@repo/shared/components/deskType';
+import { DeskTypeName } from '@repo/shared/components/deskType';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -41,8 +41,8 @@ const deskTypeSchema = object({
 
 const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClicked, organizationId }: Props) => {
   const [commitAddDeskType] = useMutation<newDeskTypeDialog_addDeskTypeMutation>(graphql`
-    mutation newDeskTypeDialog_addDeskTypeMutation($connectionIds: [ID!]!, $input: AddOrganizationTagInput!) @raw_response_type {
-      addOrganizationTag(input: $input) {
+    mutation newDeskTypeDialog_addDeskTypeMutation($connectionIds: [ID!]!, $input: AddDeskTypeInput!) @raw_response_type {
+      addDeskType(input: $input) {
         organizationTag @appendNode(connections: $connectionIds, edgeTypeName: "OrganizationTagDetails") {
           id
           name
@@ -68,7 +68,6 @@ const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel
           id,
           organizationId,
           name,
-          tagType: ORGANIZATION_TAG_TYPE_DESK_TYPE,
         },
       },
       onCompleted: (_, errors) => {
@@ -95,7 +94,7 @@ const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel
         });
       },
       optimisticResponse: {
-        addOrganizationTag: {
+        addDeskType: {
           organizationTag: {
             id,
             name,

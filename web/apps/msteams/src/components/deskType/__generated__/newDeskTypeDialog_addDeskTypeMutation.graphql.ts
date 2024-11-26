@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1565ee35591519789542f399e99b59d9>>
+ * @generated SignedSource<<13882c8b8ef43c846de2371dbcdd6215>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,20 +9,19 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type AddOrganizationTagInput = {
+export type AddDeskTypeInput = {
   clientMutationId?: string | null | undefined;
   description?: string | null | undefined;
   id?: string | null | undefined;
   name: string;
   organizationId: string;
-  tagType: string;
 };
 export type newDeskTypeDialog_addDeskTypeMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: AddOrganizationTagInput;
+  input: AddDeskTypeInput;
 };
 export type newDeskTypeDialog_addDeskTypeMutation$data = {
-  readonly addOrganizationTag: {
+  readonly addDeskType: {
     readonly organizationTag: {
       readonly id: string;
       readonly name: string;
@@ -30,7 +29,7 @@ export type newDeskTypeDialog_addDeskTypeMutation$data = {
   } | null | undefined;
 };
 export type newDeskTypeDialog_addDeskTypeMutation$rawResponse = {
-  readonly addOrganizationTag: {
+  readonly addDeskType: {
     readonly organizationTag: {
       readonly id: string;
       readonly name: string;
@@ -100,7 +99,7 @@ return {
         "args": (v1/*: any*/),
         "concreteType": "OrganizationTagPayload",
         "kind": "LinkedField",
-        "name": "addOrganizationTag",
+        "name": "addDeskType",
         "plural": false,
         "selections": [
           (v2/*: any*/)
@@ -122,7 +121,7 @@ return {
         "args": (v1/*: any*/),
         "concreteType": "OrganizationTagPayload",
         "kind": "LinkedField",
-        "name": "addOrganizationTag",
+        "name": "addDeskType",
         "plural": false,
         "selections": [
           (v2/*: any*/),
@@ -153,16 +152,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7992137a36e905780d9cbbea06793f0e",
+    "cacheID": "c42f33b4e0241c73eb064c7ba2da28c6",
     "id": null,
     "metadata": {},
     "name": "newDeskTypeDialog_addDeskTypeMutation",
     "operationKind": "mutation",
-    "text": "mutation newDeskTypeDialog_addDeskTypeMutation(\n  $input: AddOrganizationTagInput!\n) {\n  addOrganizationTag(input: $input) {\n    organizationTag {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation newDeskTypeDialog_addDeskTypeMutation(\n  $input: AddDeskTypeInput!\n) {\n  addDeskType(input: $input) {\n    organizationTag {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "89df09bcd8aef788e833d4467e20b226";
+(node as any).hash = "8db69056a106d438b4fdcd467b4c1dbc";
 
 export default node;

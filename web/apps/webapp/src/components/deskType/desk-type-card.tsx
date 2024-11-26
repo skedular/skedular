@@ -1,9 +1,9 @@
 import type { deskTypeCard_OrganizationTagDetails$key } from '@/queries/__generated__/deskTypeCard_OrganizationTagDetails.graphql';
 import type { deskTypeCard_Query$key } from '@/queries/__generated__/deskTypeCard_Query.graphql';
 import type { deskTypeCard_addCustomerDefaultOrganizationTagMutation } from '@/queries/__generated__/deskTypeCard_addCustomerDefaultOrganizationTagMutation.graphql';
-import type { deskTypeCard_deleteOrganizationTagMutation } from '@/queries/__generated__/deskTypeCard_deleteOrganizationTagMutation.graphql';
+import type { deskTypeCard_deleteDeskTypeMutation } from '@/queries/__generated__/deskTypeCard_deleteDeskTypeMutation.graphql';
 import type { deskTypeCard_removeCustomerDefaultOrganizationTagMutation } from '@/queries/__generated__/deskTypeCard_removeCustomerDefaultOrganizationTagMutation.graphql';
-import type { deskTypeCard_updateOrganizationTagMutation } from '@/queries/__generated__/deskTypeCard_updateOrganizationTagMutation.graphql';
+import type { deskTypeCard_updateDeskTypeMutation } from '@/queries/__generated__/deskTypeCard_updateDeskTypeMutation.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -17,7 +17,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { DeskTypeName, ORGANIZATION_TAG_TYPE_DESK_TYPE } from '@repo/shared/components/deskType';
+import { DeskTypeName } from '@repo/shared/components/deskType';
 import { DangerIcon, DeleteIcon, DeskTypeIcon, EditIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -78,9 +78,9 @@ const DeskTypeCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionId
     organizationTagDetailsRelay,
   );
 
-  const [commitUpdateOrganizationTag] = useMutation<deskTypeCard_updateOrganizationTagMutation>(graphql`
-    mutation deskTypeCard_updateOrganizationTagMutation($input: UpdateOrganizationTagInput!) {
-      updateOrganizationTag(input: $input) {
+  const [commitUpdateDeskType] = useMutation<deskTypeCard_updateDeskTypeMutation>(graphql`
+    mutation deskTypeCard_updateDeskTypeMutation($input: UpdateDeskTypeInput!) {
+      updateDeskType(input: $input) {
         organizationTag {
           id
           name
@@ -89,9 +89,9 @@ const DeskTypeCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionId
     }
   `);
 
-  const [commitDeleteOrganizationTag] = useMutation<deskTypeCard_deleteOrganizationTagMutation>(graphql`
-    mutation deskTypeCard_deleteOrganizationTagMutation($connectionIds: [ID!]!, $input: DeleteOrganizationTagInput!) {
-      deleteOrganizationTag(input: $input) {
+  const [commitDeleteDeskType] = useMutation<deskTypeCard_deleteDeskTypeMutation>(graphql`
+    mutation deskTypeCard_deleteDeskTypeMutation($connectionIds: [ID!]!, $input: DeleteDeskTypeInput!) {
+      deleteDeskType(input: $input) {
         organizationTag {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -149,7 +149,7 @@ const DeskTypeCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionId
 
     const toastId = themedToast(<NotificationContent content={`Removing desk type '${organizationTagDetails.name}'...`} />, infoNotificationOptions);
 
-    commitDeleteOrganizationTag({
+    commitDeleteDeskType({
       variables: {
         connectionIds: connectionIds,
         input: {
@@ -199,13 +199,12 @@ const DeskTypeCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionId
   const handleSaveClick = ({ name }: OrganizationTagDetails) => {
     const toastId = themedToast(<NotificationContent content={`Updating desk type '${organizationTagDetails.name}'...`} />, infoNotificationOptions);
 
-    commitUpdateOrganizationTag({
+    commitUpdateDeskType({
       variables: {
         input: {
           clientMutationId: nanoid(),
           id: organizationTagDetails.id,
           name,
-          tagType: ORGANIZATION_TAG_TYPE_DESK_TYPE,
         },
       },
       onCompleted: (_, errors) => {

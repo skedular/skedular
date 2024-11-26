@@ -427,8 +427,8 @@ public class OrganizationMemberPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("AddOrganizationTagInput")]
-public class AddOrganizationTagInput
+[GraphQLName("AddDeskTypeInput")]
+public class AddDeskTypeInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
@@ -438,27 +438,57 @@ public class AddOrganizationTagInput
 
     [GraphQLName("description")] public string? Description { get; set; }
 
-    [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
-
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
 }
 
-[GraphQLName("UpdateOrganizationTagInput")]
-public class UpdateOrganizationTagInput
+[GraphQLName("UpdateDeskTypeInput")]
+public class UpdateDeskTypeInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
     [GraphQLName("id")] public required string Id { get; set; }
 
-    [GraphQLName("name")] public string Name { get; set; }= string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+
+    [GraphQLName("description")] public string? Description { get; set; }
+}
+
+[GraphQLName("DeleteDeskTypeInput")]
+public class DeleteDeskTypeInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("AddZoneInput")]
+public class AddZoneInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")] public string? Id { get; set; }
+
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("description")] public string? Description { get; set; }
 
-    [GraphQLName("tagType")] public string TagType { get; set; }= string.Empty;
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
 }
 
-[GraphQLName("DeleteOrganizationTagInput")]
-public class DeleteOrganizationTagInput
+[GraphQLName("UpdateZoneInput")]
+public class UpdateZoneInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")] public required string Id { get; set; }
+
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+
+    [GraphQLName("description")] public string? Description { get; set; }
+}
+
+[GraphQLName("DeleteZoneInput")]
+public class DeleteZoneInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
@@ -477,7 +507,7 @@ public class OrganizationTagDetails : Node
 
     [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
 
-    [GraphQLName("id")][ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("OrganizationTagEdge")]
@@ -506,16 +536,6 @@ public class OrganizationTagPayload
     [GraphQLName("organizationTag")] public OrganizationTagDetails OrganizationTag { get; set; }
 }
 
-[GraphQLName("OrganizationTagWhereInput")]
-public class OrganizationTagWhereInput
-{
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
-
-    [GraphQLName("tagType")] public string? TagType { get; set; }
-
-    [GraphQLName("nameContains")] public string? NameContains { get; set; }
-}
-
 [GraphQLName("DeskTypeOrganizationTagWhereInput")]
 public class DeskTypeOrganizationTagWhereInput
 {
@@ -531,4 +551,3 @@ public class ZoneOrganizationTagWhereInput
 
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
-

@@ -336,7 +336,7 @@ public class Mapper : IMapper
             DeskTypes =
                 MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.DeskType)).ToArray(),
             Zones =
-                MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.ZoneType)).ToArray()
+                MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Zone)).ToArray()
         };
 
     public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.DeskEdge MapToGrpcResponse(

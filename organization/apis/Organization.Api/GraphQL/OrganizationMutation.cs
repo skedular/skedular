@@ -7,13 +7,12 @@ using Organization.Api.Services;
 
 namespace Organization.Api.GraphQL;
 
-public class OrganizationMutation
+public class OrganizationMutation(IMapper mapper)
 {
     [UseServiceScope]
     public async Task<OrganizationPayload?> AddOrganizationAsync(
         AddOrganizationInput input,
         [Service] IOrganizationService organizationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var organization = await organizationService.AddAsync(mapper.MapTo(input), null, false, cancellationToken);
@@ -27,7 +26,6 @@ public class OrganizationMutation
     public async Task<OrganizationPayload?> UpdateOrganizationAsync(
         UpdateOrganizationInput input,
         [Service] IOrganizationService organizationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var organization = await organizationService.UpdateAsync(mapper.MapTo(input), cancellationToken);
@@ -41,7 +39,6 @@ public class OrganizationMutation
     public async Task<OrganizationPayload?> DeleteOrganizationAsync(
         DeleteOrganizationInput input,
         [Service] IOrganizationService organizationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var organization = await organizationService.DeleteAsync(input.Id, cancellationToken);
@@ -78,7 +75,6 @@ public class OrganizationMutation
     public async Task<OrganizationMemberDetailsPayload?> ChangeOrganizationMemberOwnershipTypeAsync(
         ChangeOrganizationMemberOwnershipTypeInput input,
         [Service] IOrganizationMemberService organizationMemberService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var organizationMember =
@@ -143,7 +139,6 @@ public class OrganizationMutation
     public async Task<OrganizationMemberPayload?> CompleteOrganizationMemberOnboardingAsync(
         CompleteOrganizationMemberOnboardingInput input,
         [Service] IOrganizationMemberService organizationMemberService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         await organizationMemberService.CompleteOrganizationMemberOnboardingAsync(
@@ -151,38 +146,82 @@ public class OrganizationMutation
             cancellationToken);
         return new OrganizationMemberPayload { ClientMutationId = input.ClientMutationId };
     }
-    
+
     [UseServiceScope]
-    public async Task<OrganizationTagPayload?> AddOrganizationTagAsync(
-        AddOrganizationTagInput input,
+    public async Task<OrganizationTagPayload?> AddDeskTypeAsync(
+        AddDeskTypeInput input,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var tag = await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken);
-        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+        return new OrganizationTagPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)
+        };
     }
 
     [UseServiceScope]
-    public async Task<OrganizationTagPayload?> UpdateOrganizationTagAsync(
-        UpdateOrganizationTagInput input,
+    public async Task<OrganizationTagPayload?> UpdateDeskTypeAsync(
+        UpdateDeskTypeInput input,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var tag = await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+        return new OrganizationTagPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)
+        };
     }
 
     [UseServiceScope]
-    public async Task<OrganizationTagPayload?> DeleteOrganizationTagAsync(
-        DeleteOrganizationTagInput input,
+    public async Task<OrganizationTagPayload?> DeleteDeskTypeAsync(
+        DeleteDeskTypeInput input,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var tag = await tagService.DeleteAsync(input.Id, cancellationToken);
-        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+        return new OrganizationTagPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)
+        };
     }
 
+    [UseServiceScope]
+    public async Task<OrganizationTagPayload?> AddZoneAsync(
+        AddZoneInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken)
+    {
+        var tag = await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        return new OrganizationTagPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)
+        };
+    }
+
+    [UseServiceScope]
+    public async Task<OrganizationTagPayload?> UpdateZoneAsync(
+        UpdateZoneInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken)
+    {
+        var tag = await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        return new OrganizationTagPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)
+        };
+    }
+
+    [UseServiceScope]
+    public async Task<OrganizationTagPayload?> DeleteZoneAsync(
+        DeleteZoneInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken)
+    {
+        var tag = await tagService.DeleteAsync(input.Id, cancellationToken);
+        return new OrganizationTagPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)
+        };
+    }
 }
