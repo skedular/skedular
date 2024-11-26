@@ -20,6 +20,7 @@ public class BookingDbContext(
     public DbSet<LocationTag> LocationTag { get; set; }
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
+    public DbSet<OrganizationTag> OrganizationTag { get; set; }
     public DbSet<Team> Team { get; set; }
     public DbSet<TeamMember> TeamMember { get; set; }
 
