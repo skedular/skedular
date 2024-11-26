@@ -13,6 +13,7 @@ public class Desk : ReplicatedEntityBaseWithDeleted
 
     public virtual Location Location { get; set; }
     public virtual ICollection<LocationTag> Tags { get; set; } = [];
+    public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -31,6 +32,10 @@ public class DeskConfiguration : IEntityTypeConfiguration<Desk>
 
         builder
             .HasMany(item => item.Tags)
+            .WithMany(item => item.TaggedDesks);
+
+        builder
+            .HasMany(item => item.OrganizationTags)
             .WithMany(item => item.TaggedDesks);
 
         builder.HasIndex(item => item.Name);

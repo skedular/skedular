@@ -132,9 +132,9 @@ public class LocationSubscriber(
             .Where(desk => location.Desks.Any(item => item.Id == desk.Id))
             .Select(desk =>
             {
-                var locationTags = existingLocation.Tags.Where(existingLocationTag =>
+                var locationTags = existingLocation.Tags.Where(tag =>
                         location.Desks.Single(item => item.Id == desk.Id).Tags
-                            .Any(locationTag => locationTag.Id == existingLocationTag.Id))
+                            .Any(locationTag => locationTag.Id == tag.Id))
                     .ToList();
                 return repositoryFactory.DeskRepository.Update(mapper.MergeToEntity(
                     location.Desks.Single(item => item.Id == desk.Id), desk, existingLocation, locationTags));
@@ -144,8 +144,8 @@ public class LocationSubscriber(
             .Where(desk => existingLocation.Desks.All(item => item.Id != desk.Id))
             .Select(desk =>
             {
-                var locationTags = existingLocation.Tags.Where(existingLocationTag =>
-                        desk.Tags.Any(locationTag => locationTag.Id == existingLocationTag.Id))
+                var locationTags = existingLocation.Tags.Where(tag =>
+                        desk.Tags.Any(locationTag => locationTag.Id == tag.Id))
                     .ToList();
                 return repositoryFactory.DeskRepository.Add(
                     mapper.MapToEntity(desk, existingLocation, locationTags));

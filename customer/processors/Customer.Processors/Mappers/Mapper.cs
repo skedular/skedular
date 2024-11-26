@@ -73,13 +73,15 @@ public interface IMapper
     Shared.Database.Entities.Desk MapToEntity(
         Desk src,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.LocationTag> locationTags);
+        ICollection<Shared.Database.Entities.LocationTag> locationTags,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Shared.Database.Entities.Desk MergeToEntity(
         Desk src,
         Shared.Database.Entities.Desk dest,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.LocationTag> locationTags);
+        ICollection<Shared.Database.Entities.LocationTag> locationTags,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization? organization);
 
@@ -296,6 +298,11 @@ public class Mapper : IMapper
             Location = location
         }).ToList();
 
+        var organizationTags = location.Organization is null
+            ? []
+            : locationAfterState.Desks.SelectMany(item => item.OrganizationTagIds).Select(item =>
+                new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
+
         location.Desks = locationAfterState.Desks.Select(item => new Desk
         {
             Id = item.Id,
@@ -303,6 +310,7 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
             Tags = location.Tags.Where(tag => item.LocationTagIds.Contains(tag.Id)).ToList(),
+            OrganizationTags = organizationTags.Where(tag => item.OrganizationTagIds.Contains(tag.Id)).ToList(),
             Location = location
         }).ToList();
 
@@ -529,18 +537,26 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Desk MapToEntity(Desk src, Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.LocationTag> locationTags) =>
-        MergeToEntity(src, new Shared.Database.Entities.Desk(), location, locationTags);
+    public Shared.Database.Entities.Desk MapToEntity(
+        Desk src,
+        Shared.Database.Entities.Location location,
+        ICollection<Shared.Database.Entities.LocationTag> locationTags,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags) =>
+        MergeToEntity(src, new Shared.Database.Entities.Desk(), location, locationTags, organizationTags);
 
-    public Shared.Database.Entities.Desk MergeToEntity(Desk src, Shared.Database.Entities.Desk dest,
-        Shared.Database.Entities.Location location, ICollection<Shared.Database.Entities.LocationTag> locationTags)
+    public Shared.Database.Entities.Desk MergeToEntity(
+        Desk src,
+        Shared.Database.Entities.Desk dest,
+        Shared.Database.Entities.Location location,
+        ICollection<Shared.Database.Entities.LocationTag> locationTags,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
         dest.Location = location;
         dest.Tags = locationTags;
+        dest.OrganizationTags = organizationTags;
         return dest;
     }
 
@@ -709,6 +725,26 @@ public class Mapper : IMapper
                 TaggedDesks = includeDesks ? MapTo(src.TaggedDesks).ToList() : []
             };
 
+    private static IEnumerable<OrganizationTag> MapTo(
+        IEnumerable<Shared.Database.Entities.OrganizationTag?>? src,
+        bool includeDesks) =>
+        (src is null ? [] : src.Where(item => item is not null).Select(item => MapTo(item, includeDesks)))!;
+
+    private static OrganizationTag? MapTo(Shared.Database.Entities.OrganizationTag? src, bool includeDesks) =>
+        src is null
+            ? null
+            : new OrganizationTag
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name,
+                Type = src.Type,
+                TaggedDesks = includeDesks ? MapTo(src.TaggedDesks).ToList() : []
+            };
+
     private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
 
@@ -724,7 +760,8 @@ public class Mapper : IMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
                 Location = MapTo(src.Location, false, false)!,
-                Tags = MapTo(src.Tags, false).ToList()
+                Tags = MapTo(src.Tags, false).ToList(),
+                OrganizationTags = MapTo(src.OrganizationTags, false).ToList()
             };
 
     private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team?>? src) =>

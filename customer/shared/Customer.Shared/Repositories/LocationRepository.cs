@@ -40,6 +40,8 @@ public class LocationRepository(CustomerDbContext dbContext, TimeProvider timePr
             .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Desks)
             .ThenInclude(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.Desks)
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Organization)
             .Include(query => query.DefaultedByCustomers)
             .OrderBy(query => query.Id)

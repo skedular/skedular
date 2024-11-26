@@ -601,6 +601,7 @@ public class Mapper(IContext context) : IMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
                 Type = src.Type,
+                TaggedDesks = MapTo(src.TaggedDesks).ToList(),
                 Organization = new Organization { Id = src.Organization.Id }
             };
 
@@ -619,8 +620,15 @@ public class Mapper(IContext context) : IMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
                 Location = new Location { Id = src.Location.Id },
-                Tags = src.Tags.Select(item =>
-                    new LocationTag { Id = item.Id, Location = new Location { Id = item.Location.Id } }).ToList()
+                Tags = src.Tags
+                    .Select(item => new LocationTag { Id = item.Id, Location = new Location { Id = item.Location.Id } })
+                    .ToList(),
+                OrganizationTags = src.OrganizationTags
+                    .Select(item => new OrganizationTag
+                    {
+                        Id = item.Id, Organization = new Organization { Id = item.Organization.Id }
+                    })
+                    .ToList()
             };
 
     private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team?>? src) =>
