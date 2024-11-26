@@ -71,7 +71,9 @@ public class BulkAddDeskInput
 
     [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 
-    [GraphQLName("organizationTagIds")] public string[] OrganizationTagIds { get; set; } = [];
+    [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
+
+    [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
 
     [GraphQLName("deactivated")] public bool Deactivated { get; set; }
 
@@ -142,7 +144,9 @@ public class DeskDetails : Node
 
     [GraphQLName("locationTags")] public LocationTagDetails[] LocationTags { get; set; } = [];
 
-    [GraphQLName("organizationTags")] public OrganizationTagDetails[] OrganizationTags { get; set; } = [];
+    [GraphQLName("deskTypes")] public OrganizationTagDetails[] DeskTypes { get; set; } = [];
+
+    [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
 
     [GraphQLName("id")][ID] public required string Id { get; set; }
 }
@@ -507,7 +511,9 @@ public class AddDeskInput
 
     [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 
-    [GraphQLName("organizationTagIds")] public string[] OrganizationTagIds { get; set; } = [];
+    [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
+    
+    [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
 }
 
 [GraphQLName("UpdateDeskInput")]
@@ -526,7 +532,9 @@ public class UpdateDeskInput
 
     [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 
-    [GraphQLName("organizationTagIds")] public string[] OrganizationTagIds { get; set; } = [];
+    [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
+    
+    [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
 }
 
 [GraphQLName("DeleteDeskInput")]

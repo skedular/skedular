@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5aa92a20cfc06e5dd5776c6ffa5d13a2>>
+ * @generated SignedSource<<78015509b37c4cb3df0b2ddfe98e2418>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,11 +19,10 @@ export type OrganizationTagOrderInput = {
 export type organizationDeskTypesTab_rootQuery$variables = {
   deskTypeNameSearchText?: string | null | undefined;
   deskTypeSortingValues: ReadonlyArray<OrganizationTagOrderInput>;
-  deskTypeTagType: string;
   organizationId: string;
 };
 export type organizationDeskTypesTab_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationDeskTypesTab_organizationTags_query" | "organizationDeskTypesTab_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationDeskTypesTab_deskTypes_query" | "organizationDeskTypesTab_query">;
 };
 export type organizationDeskTypesTab_rootQuery = {
   response: organizationDeskTypesTab_rootQuery$data;
@@ -44,21 +43,16 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "deskTypeTagType"
-},
-v3 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
   "name": "organizationId"
 },
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = [
+v4 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -80,11 +74,6 @@ v5 = [
         "kind": "Variable",
         "name": "organizationId",
         "variableName": "organizationId"
-      },
-      {
-        "kind": "Variable",
-        "name": "tagType",
-        "variableName": "deskTypeTagType"
       }
     ],
     "kind": "ObjectValue",
@@ -96,8 +85,7 @@ return {
     "argumentDefinitions": [
       (v0/*: any*/),
       (v1/*: any*/),
-      (v2/*: any*/),
-      (v3/*: any*/)
+      (v2/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -111,7 +99,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "organizationDeskTypesTab_organizationTags_query"
+        "name": "organizationDeskTypesTab_deskTypes_query"
       }
     ],
     "type": "Query",
@@ -120,7 +108,6 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v3/*: any*/),
       (v2/*: any*/),
       (v0/*: any*/),
       (v1/*: any*/)
@@ -149,7 +136,7 @@ return {
             "name": "canModify",
             "storageKey": null
           },
-          (v4/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       },
@@ -161,7 +148,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -185,10 +172,10 @@ return {
       },
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
-        "name": "organizationTags",
+        "name": "deskTypes",
         "plural": false,
         "selections": [
           {
@@ -214,7 +201,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -284,29 +271,29 @@ return {
       },
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v4/*: any*/),
         "filters": [
           "where",
           "orderBy"
         ],
         "handle": "connection",
-        "key": "organizationDeskTypesTab_organizationTags",
+        "key": "organizationDeskTypesTab_deskTypes",
         "kind": "LinkedHandle",
-        "name": "organizationTags"
+        "name": "deskTypes"
       }
     ]
   },
   "params": {
-    "cacheID": "f63a5d100aee376ff4ac0156b7a9fae2",
+    "cacheID": "0dae794f3eea7cf0a473aa800c59a2a2",
     "id": null,
     "metadata": {},
     "name": "organizationDeskTypesTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationDeskTypesTab_rootQuery(\n  $organizationId: String!\n  $deskTypeTagType: String!\n  $deskTypeNameSearchText: String\n  $deskTypeSortingValues: [OrganizationTagOrderInput!]!\n) {\n  ...organizationDeskTypesTab_query\n  ...organizationDeskTypesTab_organizationTags_query\n}\n\nfragment deskTypeCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment deskTypeCard_Query on Query {\n  me {\n    id\n    preferredDeskTypes {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n\nfragment organizationDeskTypesTab_organizationTags_query on Query {\n  organizationTags(first: 50, where: {organizationId: $organizationId, tagType: $deskTypeTagType, nameContains: $deskTypeNameSearchText}, orderBy: $deskTypeSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskTypeCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationDeskTypesTab_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...deskTypeCard_Query\n}\n"
+    "text": "query organizationDeskTypesTab_rootQuery(\n  $organizationId: String!\n  $deskTypeNameSearchText: String\n  $deskTypeSortingValues: [OrganizationTagOrderInput!]!\n) {\n  ...organizationDeskTypesTab_query\n  ...organizationDeskTypesTab_deskTypes_query\n}\n\nfragment deskTypeCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment deskTypeCard_Query on Query {\n  me {\n    id\n    preferredDeskTypes {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n\nfragment organizationDeskTypesTab_deskTypes_query on Query {\n  deskTypes(first: 50, where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: $deskTypeSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskTypeCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationDeskTypesTab_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...deskTypeCard_Query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "909d37e26f55df62d3473b915d950b58";
+(node as any).hash = "fdf1fd2706e902b15bbe0df20c527085";
 
 export default node;

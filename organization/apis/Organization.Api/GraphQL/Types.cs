@@ -515,3 +515,20 @@ public class OrganizationTagWhereInput
 
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
+
+[GraphQLName("DeskTypeOrganizationTagWhereInput")]
+public class DeskTypeOrganizationTagWhereInput
+{
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+
+    [GraphQLName("nameContains")] public string? NameContains { get; set; }
+}
+
+[GraphQLName("ZoneOrganizationTagWhereInput")]
+public class ZoneOrganizationTagWhereInput
+{
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+
+    [GraphQLName("nameContains")] public string? NameContains { get; set; }
+}
+

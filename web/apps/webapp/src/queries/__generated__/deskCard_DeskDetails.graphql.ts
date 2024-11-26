@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<faa1e5e20f49657900d93a5de2e9746d>>
+ * @generated SignedSource<<42b18927fac59b36c9344dd7833a2559>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,17 +12,21 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type deskCard_DeskDetails$data = {
   readonly deactivated: boolean;
+  readonly deskTypes: ReadonlyArray<{
+    readonly name: string | null | undefined;
+    readonly uniqueId: string;
+  }>;
   readonly id: string;
   readonly locationTags: ReadonlyArray<{
     readonly id: string;
     readonly name: string;
   }>;
   readonly name: string;
-  readonly organizationTags: ReadonlyArray<{
+  readonly requireBookingApproval: boolean;
+  readonly zones: ReadonlyArray<{
     readonly name: string | null | undefined;
     readonly uniqueId: string;
   }>;
-  readonly requireBookingApproval: boolean;
   readonly " $fragmentType": "deskCard_DeskDetails";
 };
 export type deskCard_DeskDetails$key = {
@@ -44,7 +48,17 @@ v1 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-};
+},
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "uniqueId",
+    "storageKey": null
+  },
+  (v1/*: any*/)
+];
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -85,18 +99,19 @@ return {
       "args": null,
       "concreteType": "Organization_OrganizationTagDetails",
       "kind": "LinkedField",
-      "name": "organizationTags",
+      "name": "deskTypes",
       "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "uniqueId",
-          "storageKey": null
-        },
-        (v1/*: any*/)
-      ],
+      "selections": (v2/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Organization_OrganizationTagDetails",
+      "kind": "LinkedField",
+      "name": "zones",
+      "plural": true,
+      "selections": (v2/*: any*/),
       "storageKey": null
     }
   ],
@@ -105,6 +120,6 @@ return {
 };
 })();
 
-(node as any).hash = "0a9d56e0ecdf04dd90728421e417e687";
+(node as any).hash = "511d4bd1c583d97a0b9f0e0eb1428720";
 
 export default node;

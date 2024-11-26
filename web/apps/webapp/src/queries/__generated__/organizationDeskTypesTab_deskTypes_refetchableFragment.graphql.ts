@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cc92b8808be8bd770ef1a443a3fa1033>>
+ * @generated SignedSource<<d111720819328f7082a2715a581ba739>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,20 +16,19 @@ export type OrganizationTagOrderInput = {
   direction: OrderDirection;
   field: OrganizationTagOrderField;
 };
-export type organizationDeskTypesTab_organizationTags_refetchableFragment$variables = {
+export type organizationDeskTypesTab_deskTypes_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   deskTypeNameSearchText?: string | null | undefined;
   deskTypeSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
-  deskTypeTagType?: string | null | undefined;
   organizationId: string;
 };
-export type organizationDeskTypesTab_organizationTags_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationDeskTypesTab_organizationTags_query">;
+export type organizationDeskTypesTab_deskTypes_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationDeskTypesTab_deskTypes_query">;
 };
-export type organizationDeskTypesTab_organizationTags_refetchableFragment = {
-  response: organizationDeskTypesTab_organizationTags_refetchableFragment$data;
-  variables: organizationDeskTypesTab_organizationTags_refetchableFragment$variables;
+export type organizationDeskTypesTab_deskTypes_refetchableFragment = {
+  response: organizationDeskTypesTab_deskTypes_refetchableFragment$data;
+  variables: organizationDeskTypesTab_deskTypes_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -53,11 +52,6 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "deskTypeSortingValues"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "deskTypeTagType"
   },
   {
     "defaultValue": null,
@@ -92,11 +86,6 @@ v1 = [
         "kind": "Variable",
         "name": "organizationId",
         "variableName": "organizationId"
-      },
-      {
-        "kind": "Variable",
-        "name": "tagType",
-        "variableName": "deskTypeTagType"
       }
     ],
     "kind": "ObjectValue",
@@ -108,7 +97,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationDeskTypesTab_organizationTags_refetchableFragment",
+    "name": "organizationDeskTypesTab_deskTypes_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -124,7 +113,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "organizationDeskTypesTab_organizationTags_query"
+        "name": "organizationDeskTypesTab_deskTypes_query"
       }
     ],
     "type": "Query",
@@ -134,14 +123,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationDeskTypesTab_organizationTags_refetchableFragment",
+    "name": "organizationDeskTypesTab_deskTypes_refetchableFragment",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
-        "name": "organizationTags",
+        "name": "deskTypes",
         "plural": false,
         "selections": [
           {
@@ -249,23 +238,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "organizationDeskTypesTab_organizationTags",
+        "key": "organizationDeskTypesTab_deskTypes",
         "kind": "LinkedHandle",
-        "name": "organizationTags"
+        "name": "deskTypes"
       }
     ]
   },
   "params": {
-    "cacheID": "829c8a841d6d8f7f27aed129e4a0cd8e",
+    "cacheID": "4b71926c3ffa55bcb14229f6d1973dfc",
     "id": null,
     "metadata": {},
-    "name": "organizationDeskTypesTab_organizationTags_refetchableFragment",
+    "name": "organizationDeskTypesTab_deskTypes_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationDeskTypesTab_organizationTags_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskTypeNameSearchText: String\n  $deskTypeSortingValues: [OrganizationTagOrderInput!]\n  $deskTypeTagType: String\n  $organizationId: String!\n) {\n  ...organizationDeskTypesTab_organizationTags_query_1G22uz\n}\n\nfragment deskTypeCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment organizationDeskTypesTab_organizationTags_query_1G22uz on Query {\n  organizationTags(first: $count, after: $cursor, where: {organizationId: $organizationId, tagType: $deskTypeTagType, nameContains: $deskTypeNameSearchText}, orderBy: $deskTypeSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskTypeCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationDeskTypesTab_deskTypes_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskTypeNameSearchText: String\n  $deskTypeSortingValues: [OrganizationTagOrderInput!]\n  $organizationId: String!\n) {\n  ...organizationDeskTypesTab_deskTypes_query_1G22uz\n}\n\nfragment deskTypeCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment organizationDeskTypesTab_deskTypes_query_1G22uz on Query {\n  deskTypes(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: $deskTypeSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskTypeCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f74df9728c61bfb15380eb9e68b5f6c0";
+(node as any).hash = "d96b9a29970af12be2f25f68a5941c46";
 
 export default node;

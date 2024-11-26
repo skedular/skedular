@@ -67,7 +67,10 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           locationTags {
             id
           }
-          organizationTags {
+          deskTypes {
+            uniqueId
+          }
+          zones {
             uniqueId
           }
         }
@@ -93,7 +96,8 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           locationId,
           name,
           locationTagIds,
-          organizationTagIds,
+          deskTypeIds: [],
+          zoneIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -126,7 +130,8 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
             id,
             name,
             locationTags: [],
-            organizationTags: [],
+            deskTypes: [],
+            zones: [],
           },
         },
       },
@@ -142,7 +147,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           initialValues={{
             name: '',
             locationTagIds: [],
-            organizationTagIds: [],
+            deskTypeIds: [],
           }}
           validate={validate}
           render={({ handleSubmit }) => (

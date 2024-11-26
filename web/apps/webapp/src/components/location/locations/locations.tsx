@@ -3,7 +3,6 @@ import { ZoneSelector } from '@/components/location/zoneSelector';
 import { DeskTypeSelector } from '@/components/organization/deskTypeSelector';
 import type { locations_rootQuery } from '@/queries/__generated__/locations_rootQuery.graphql';
 import Stack from '@mui/material/Stack';
-import { ORGANIZATION_TAG_TYPE_DESK_TYPE } from '@repo/shared/components/deskType';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -25,7 +24,6 @@ const RootQuery = graphql`
   query locations_rootQuery(
     $organizationId: String!
     $locationsSortingValues: [LocationOrderInput!]!
-    $deskTypeTagType: String!
     $todayDate: DateTime!
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $zoneIds: [String!]!
@@ -103,7 +101,6 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
     loadQuery(
       {
         organizationId: organizationId ?? '',
-        deskTypeTagType: ORGANIZATION_TAG_TYPE_DESK_TYPE,
         locationsSortingValues: [
           {
             direction: 'Ascending',

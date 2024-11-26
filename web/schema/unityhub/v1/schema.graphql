@@ -48,6 +48,8 @@ type Query {
   azureTenantAdminConsentUrl: String!
   azureTenantOrganization: OrganizationDetails
   organizationTags(after: String, first: Int, before: String, last: Int, where: OrganizationTagWhereInput!, orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection
+  deskTypes(after: String, first: Int, before: String, last: Int, where: DeskTypeOrganizationTagWhereInput!, orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection
+  zones(after: String, first: Int, before: String, last: Int, where: ZoneOrganizationTagWhereInput!, orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection
   notificationVersion: Version!
   notificationCustomerRecordSynced: Boolean!
   myNotifications(after: String, first: Int, before: String, last: Int, orderBy: [NotificationOrderInput!]): NotificationConnection
@@ -354,7 +356,8 @@ type DeskDetails {
   deactivated: Boolean!
   requireBookingApproval: Boolean!
   locationTags: [LocationTagDetails!]!
-  organizationTags: [Organization_OrganizationTagDetails!]!
+  deskTypes: [Organization_OrganizationTagDetails!]!
+  zones: [Organization_OrganizationTagDetails!]!
   id: ID!
 }
 type DeskEdge {
@@ -1049,7 +1052,8 @@ input AddDeskInput {
   name: String!
   locationId: String!
   locationTagIds: [String!]!
-  organizationTagIds: [String!]!
+  deskTypeIds: [String!]!
+  zoneIds: [String!]!
 }
 input AddLocationInput {
   clientMutationId: String
@@ -1075,7 +1079,8 @@ input BulkAddDeskInput {
   locationId: String!
   count: Int!
   locationTagIds: [String!]!
-  organizationTagIds: [String!]!
+  deskTypeIds: [String!]!
+  zoneIds: [String!]!
   deactivated: Boolean!
   requireBookingApproval: Boolean!
 }
@@ -1161,7 +1166,8 @@ input UpdateDeskInput {
   deactivated: Boolean!
   requireBookingApproval: Boolean!
   locationTagIds: [String!]!
-  organizationTagIds: [String!]!
+  deskTypeIds: [String!]!
+  zoneIds: [String!]!
 }
 input UpdateLocationInput {
   clientMutationId: String
@@ -1226,6 +1232,10 @@ input DeleteOrganizationTagInput {
   clientMutationId: String
   id: String!
 }
+input DeskTypeOrganizationTagWhereInput {
+  organizationId: String!
+  nameContains: String
+}
 input InviteCustomersToJoinOrganizationInput {
   clientMutationId: String
   organizationId: String!
@@ -1278,6 +1288,10 @@ input UpdateOrganizationTagInput {
   name: String!
   description: String
   tagType: String!
+}
+input ZoneOrganizationTagWhereInput {
+  organizationId: String!
+  nameContains: String
 }
 input NotificationOrderInput {
   direction: OrderDirection!

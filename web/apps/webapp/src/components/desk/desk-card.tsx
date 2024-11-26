@@ -78,13 +78,13 @@ type CustomerDetails = {
 type DeskDetails = {
   name: string;
   locationTagIds: string[];
-  organizationTagIds: string[];
+  deskTypeIds: string[];
 };
 
 const deskSchema = object({
   name: string().required('Desk name is required'),
   locationTagIds: array().nullable(),
-  organizationTagIds: array().nullable(),
+  deskTypeIds: array().nullable(),
 });
 
 enum MoreActionsMenuOptionType {
@@ -155,7 +155,11 @@ const DeskCard = ({
           id
           name
         }
-        organizationTags {
+        deskTypes {
+          uniqueId
+          name
+        }
+        zones {
           uniqueId
           name
         }
@@ -176,7 +180,11 @@ const DeskCard = ({
             id
             name
           }
-          organizationTags {
+          deskTypes {
+            uniqueId
+            name
+          }
+          zones {
             uniqueId
             name
           }
@@ -324,7 +332,7 @@ const DeskCard = ({
     setDeskDeactivateConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
-    const organizationTagIds = deskDetails.organizationTags.map(({ uniqueId }) => uniqueId);
+    const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(<NotificationContent content={`Deactivating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
@@ -336,7 +344,8 @@ const DeskCard = ({
           deactivated: true,
           requireBookingApproval: deskDetails.requireBookingApproval,
           locationTagIds,
-          organizationTagIds,
+          deskTypeIds,
+          zoneIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -368,7 +377,8 @@ const DeskCard = ({
             deactivated: true,
             requireBookingApproval: deskDetails.requireBookingApproval,
             locationTags: deskDetails.locationTags,
-            organizationTags: deskDetails.organizationTags,
+            deskTypes: deskDetails.deskTypes,
+            zones: [],
           },
         },
       },
@@ -387,7 +397,7 @@ const DeskCard = ({
     setDeskActivateConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
-    const organizationTagIds = deskDetails.organizationTags.map(({ uniqueId }) => uniqueId);
+    const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(<NotificationContent content={`Activating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
@@ -399,7 +409,8 @@ const DeskCard = ({
           deactivated: false,
           requireBookingApproval: deskDetails.requireBookingApproval,
           locationTagIds,
-          organizationTagIds,
+          deskTypeIds,
+          zoneIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -431,7 +442,8 @@ const DeskCard = ({
             deactivated: false,
             requireBookingApproval: deskDetails.requireBookingApproval,
             locationTags: deskDetails.locationTags,
-            organizationTags: deskDetails.organizationTags,
+            deskTypes: deskDetails.deskTypes,
+            zones: [],
           },
         },
       },
@@ -446,7 +458,7 @@ const DeskCard = ({
     setEditing(false);
   };
 
-  const handleSaveClick = ({ name, locationTagIds, organizationTagIds }: DeskDetails) => {
+  const handleSaveClick = ({ name, locationTagIds, deskTypeIds }: DeskDetails) => {
     const toastId = themedToast(<NotificationContent content={`Updating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
@@ -458,7 +470,8 @@ const DeskCard = ({
           deactivated: deskDetails.deactivated,
           requireBookingApproval: deskDetails.requireBookingApproval,
           locationTagIds,
-          organizationTagIds,
+          deskTypeIds,
+          zoneIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -492,7 +505,8 @@ const DeskCard = ({
             deactivated: deskDetails.deactivated,
             requireBookingApproval: deskDetails.requireBookingApproval,
             locationTags: [],
-            organizationTags: [],
+            deskTypes: [],
+            zones: [],
           },
         },
       },
@@ -621,7 +635,7 @@ const DeskCard = ({
     setSetDeskApprovalRequirementConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
-    const organizationTagIds = deskDetails.organizationTags.map(({ uniqueId }) => uniqueId);
+    const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(
       <NotificationContent content={`Setting '${deskDetails.name}' require approval property...`} />,
       infoNotificationOptions,
@@ -636,7 +650,8 @@ const DeskCard = ({
           deactivated: deskDetails.deactivated,
           requireBookingApproval: true,
           locationTagIds,
-          organizationTagIds,
+          deskTypeIds,
+          zoneIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -670,7 +685,8 @@ const DeskCard = ({
             deactivated: deskDetails.deactivated,
             requireBookingApproval: true,
             locationTags: deskDetails.locationTags,
-            organizationTags: deskDetails.organizationTags,
+            deskTypes: deskDetails.deskTypes,
+            zones: [],
           },
         },
       },
@@ -689,7 +705,7 @@ const DeskCard = ({
     setRemoveDeskApprovalRequirementConfirmationDialogOpen(false);
 
     const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
-    const organizationTagIds = deskDetails.organizationTags.map(({ uniqueId }) => uniqueId);
+    const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(
       <NotificationContent content={`Unsetting '${deskDetails.name}' require approval property...`} />,
       infoNotificationOptions,
@@ -704,7 +720,8 @@ const DeskCard = ({
           deactivated: deskDetails.deactivated,
           requireBookingApproval: false,
           locationTagIds,
-          organizationTagIds,
+          deskTypeIds,
+          zoneIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -738,7 +755,8 @@ const DeskCard = ({
             deactivated: deskDetails.deactivated,
             requireBookingApproval: false,
             locationTags: deskDetails.locationTags,
-            organizationTags: deskDetails.organizationTags,
+            deskTypes: deskDetails.deskTypes,
+            zones: [],
           },
         },
       },
@@ -800,7 +818,7 @@ const DeskCard = ({
           <CardContent>
             <Stack direction="column" spacing={1}>
               <ZonesLine zones={deskDetails.locationTags} />
-              <DeskTypesLine deskTypes={deskDetails.organizationTags.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
+              <DeskTypesLine deskTypes={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
             </Stack>
 
             {extraInfo.length > 0 && (
@@ -857,7 +875,7 @@ const DeskCard = ({
             initialValues={{
               name: deskDetails.name,
               locationTagIds: deskDetails.locationTags.map(({ id }) => id),
-              organizationTagIds: deskDetails.organizationTags.map(({ uniqueId }) => uniqueId),
+              deskTypeIds: deskDetails.deskTypes.map(({ uniqueId }) => uniqueId),
             }}
             validate={validate}
             render={({ handleSubmit }) => (
@@ -870,8 +888,8 @@ const DeskCard = ({
                 />
                 <DeskMultipleChoicesDeskTypes
                   rootDataRelay={deskMultipleChoicesDeskTypesData}
-                  name="organizationTagIds"
-                  required={requiredFields.organizationTagIds}
+                  name="deskTypeIds"
+                  required={requiredFields.deskTypeIds}
                 />
 
                 <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>

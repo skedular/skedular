@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cf84d83e018d6b5b1c771e26357be9bd>>
+ * @generated SignedSource<<d111720819328f7082a2715a581ba739>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,25 +10,25 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type DeskOrderField = "Name" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type DeskOrderInput = {
+export type OrganizationTagOrderField = "Description" | "Name" | "TagType" | "%future added value";
+export type OrganizationTagOrderInput = {
   direction: OrderDirection;
-  field: DeskOrderField;
+  field: OrganizationTagOrderField;
 };
-export type locationDesksTab_locationDesks_refetchableFragment$variables = {
+export type organizationDeskTypesTab_deskTypes_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  deskNameSearchText?: string | null | undefined;
-  deskSortingValues?: ReadonlyArray<DeskOrderInput> | null | undefined;
-  locationId: string;
+  deskTypeNameSearchText?: string | null | undefined;
+  deskTypeSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
+  organizationId: string;
 };
-export type locationDesksTab_locationDesks_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_locationDesks_query">;
+export type organizationDeskTypesTab_deskTypes_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationDeskTypesTab_deskTypes_query">;
 };
-export type locationDesksTab_locationDesks_refetchableFragment = {
-  response: locationDesksTab_locationDesks_refetchableFragment$data;
-  variables: locationDesksTab_locationDesks_refetchableFragment$variables;
+export type organizationDeskTypesTab_deskTypes_refetchableFragment = {
+  response: organizationDeskTypesTab_deskTypes_refetchableFragment$data;
+  variables: organizationDeskTypesTab_deskTypes_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -46,17 +46,17 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "deskNameSearchText"
+    "name": "deskTypeNameSearchText"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "deskSortingValues"
+    "name": "deskTypeSortingValues"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "locationId"
+    "name": "organizationId"
   }
 ],
 v1 = [
@@ -73,55 +73,31 @@ v1 = [
   {
     "kind": "Variable",
     "name": "orderBy",
-    "variableName": "deskSortingValues"
+    "variableName": "deskTypeSortingValues"
   },
   {
     "fields": [
       {
         "kind": "Variable",
-        "name": "locationId",
-        "variableName": "locationId"
+        "name": "nameContains",
+        "variableName": "deskTypeNameSearchText"
       },
       {
         "kind": "Variable",
-        "name": "nameContains",
-        "variableName": "deskNameSearchText"
+        "name": "organizationId",
+        "variableName": "organizationId"
       }
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v4 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  },
-  (v3/*: any*/)
 ];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "locationDesksTab_locationDesks_refetchableFragment",
+    "name": "organizationDeskTypesTab_deskTypes_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -137,7 +113,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "locationDesksTab_locationDesks_query"
+        "name": "organizationDeskTypesTab_deskTypes_query"
       }
     ],
     "type": "Query",
@@ -147,14 +123,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "locationDesksTab_locationDesks_refetchableFragment",
+    "name": "organizationDeskTypesTab_deskTypes_refetchableFragment",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "DeskConnection",
+        "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
-        "name": "locationDesks",
+        "name": "deskTypes",
         "plural": false,
         "selections": [
           {
@@ -167,7 +143,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "DeskEdge",
+            "concreteType": "OrganizationTagEdge",
             "kind": "LinkedField",
             "name": "edges",
             "plural": true,
@@ -175,58 +151,23 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "DeskDetails",
+                "concreteType": "OrganizationTagDetails",
                 "kind": "LinkedField",
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
-                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "deactivated",
+                    "name": "id",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "requireBookingApproval",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "LocationTagDetails",
-                    "kind": "LinkedField",
-                    "name": "locationTags",
-                    "plural": true,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Organization_OrganizationTagDetails",
-                    "kind": "LinkedField",
-                    "name": "deskTypes",
-                    "plural": true,
-                    "selections": (v4/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Organization_OrganizationTagDetails",
-                    "kind": "LinkedField",
-                    "name": "zones",
-                    "plural": true,
-                    "selections": (v4/*: any*/),
+                    "name": "name",
                     "storageKey": null
                   },
                   {
@@ -297,23 +238,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "locationDesksTab_locationDesks",
+        "key": "organizationDeskTypesTab_deskTypes",
         "kind": "LinkedHandle",
-        "name": "locationDesks"
+        "name": "deskTypes"
       }
     ]
   },
   "params": {
-    "cacheID": "0200e9ab3974875f41977c1bf9838c8e",
+    "cacheID": "4b71926c3ffa55bcb14229f6d1973dfc",
     "id": null,
     "metadata": {},
-    "name": "locationDesksTab_locationDesks_refetchableFragment",
+    "name": "organizationDeskTypesTab_deskTypes_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationDesksTab_locationDesks_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]\n  $locationId: String!\n) {\n  ...locationDesksTab_locationDesks_query_1G22uz\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  locationTags {\n    id\n    name\n  }\n  deskTypes {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n}\n\nfragment locationDesksTab_locationDesks_query_1G22uz on Query {\n  locationDesks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationDeskTypesTab_deskTypes_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskTypeNameSearchText: String\n  $deskTypeSortingValues: [OrganizationTagOrderInput!]\n  $organizationId: String!\n) {\n  ...organizationDeskTypesTab_deskTypes_query_1G22uz\n}\n\nfragment deskTypeCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment organizationDeskTypesTab_deskTypes_query_1G22uz on Query {\n  deskTypes(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: $deskTypeSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskTypeCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7689530ca9f9146c8787540e0409b247";
+(node as any).hash = "d96b9a29970af12be2f25f68a5941c46";
 
 export default node;

@@ -1,17 +1,16 @@
 import { DeskTypeCard, NewDeskTypeDialog } from '@/components/deskType';
-import type { organizationDeskTypesTab_organizationTags_query$key } from '@/queries/__generated__/organizationDeskTypesTab_organizationTags_query.graphql';
+import type { organizationDeskTypesTab_deskTypes_query$key } from '@/queries/__generated__/organizationDeskTypesTab_deskTypes_query.graphql';
 import type {
   OrganizationTagOrderField,
   OrganizationTagOrderInput,
-  organizationDeskTypesTab_organizationTags_refetchableFragment,
-} from '@/queries/__generated__/organizationDeskTypesTab_organizationTags_refetchableFragment.graphql';
+  organizationDeskTypesTab_deskTypes_refetchableFragment,
+} from '@/queries/__generated__/organizationDeskTypesTab_deskTypes_refetchableFragment.graphql';
 import type { organizationDeskTypesTab_query$key } from '@/queries/__generated__/organizationDeskTypesTab_query.graphql';
 import type { organizationDeskTypesTab_rootQuery } from '@/queries/__generated__/organizationDeskTypesTab_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import { ORGANIZATION_TAG_TYPE_DESK_TYPE } from '@repo/shared/components/deskType';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -32,12 +31,11 @@ type Props = {
 const RootQuery = graphql`
   query organizationDeskTypesTab_rootQuery(
     $organizationId: String!
-    $deskTypeTagType: String!
     $deskTypeNameSearchText: String
     $deskTypeSortingValues: [OrganizationTagOrderInput!]!
   ) {
     ...organizationDeskTypesTab_query
-    ...organizationDeskTypesTab_organizationTags_query
+    ...organizationDeskTypesTab_deskTypes_query
   }
 `;
 
@@ -59,17 +57,17 @@ const OrganizationDeskTypesTab = ({ queryReference, onReloadRequired, organizati
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<organizationDeskTypesTab_organizationTags_refetchableFragment, organizationDeskTypesTab_organizationTags_query$key>(
+  } = usePaginationFragment<organizationDeskTypesTab_deskTypes_refetchableFragment, organizationDeskTypesTab_deskTypes_query$key>(
     graphql`
-      fragment organizationDeskTypesTab_organizationTags_query on Query
+      fragment organizationDeskTypesTab_deskTypes_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "organizationDeskTypesTab_organizationTags_refetchableFragment") {
-        organizationTags(
+      @refetchable(queryName: "organizationDeskTypesTab_deskTypes_refetchableFragment") {
+        deskTypes(
           first: $count
           after: $cursor
-          where: { organizationId: $organizationId, tagType: $deskTypeTagType, nameContains: $deskTypeNameSearchText }
+          where: { organizationId: $organizationId, nameContains: $deskTypeNameSearchText }
           orderBy: $deskTypeSortingValues
-        ) @connection(key: "organizationDeskTypesTab_organizationTags") {
+        ) @connection(key: "organizationDeskTypesTab_deskTypes") {
           __id
           totalCount
           edges {
@@ -146,16 +144,16 @@ const OrganizationDeskTypesTab = ({ queryReference, onReloadRequired, organizati
   };
 
   const connectionIds = useMemo(
-    () => (rootDataPaginatedOrganizationTags.organizationTags ? [rootDataPaginatedOrganizationTags.organizationTags.__id] : []),
-    [rootDataPaginatedOrganizationTags.organizationTags],
+    () => (rootDataPaginatedOrganizationTags.deskTypes ? [rootDataPaginatedOrganizationTags.deskTypes.__id] : []),
+    [rootDataPaginatedOrganizationTags.deskTypes],
   );
   const [isAddDeskTypeDialogOpen, setIsAddDeskTypeDialogOpen] = useState(false);
 
-  if (!rootData.organization || !rootDataPaginatedOrganizationTags.organizationTags) {
+  if (!rootData.organization || !rootDataPaginatedOrganizationTags.deskTypes) {
     return <></>;
   }
 
-  const organizationTagEdges = rootDataPaginatedOrganizationTags.organizationTags.edges;
+  const organizationTagEdges = rootDataPaginatedOrganizationTags.deskTypes.edges;
   const slicedEdges = organizationTagEdges.slice(
     page * pageSize,
     page * pageSize + pageSize > organizationTagEdges.length ? organizationTagEdges.length : page * pageSize + pageSize,
@@ -205,7 +203,7 @@ const OrganizationDeskTypesTab = ({ queryReference, onReloadRequired, organizati
         <Search size="small" placeholder="Find a desk type..." defaultValue={deskTypeNameSearchText} onChange={handleSearchTextChange} />
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
-            count={rootDataPaginatedOrganizationTags.organizationTags.totalCount ? rootDataPaginatedOrganizationTags.organizationTags.totalCount : 0}
+            count={rootDataPaginatedOrganizationTags.deskTypes.totalCount ? rootDataPaginatedOrganizationTags.deskTypes.totalCount : 0}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={pageSize}
@@ -255,7 +253,6 @@ const OrganizationDeskTypesTabWithRelay = ({ onReloadRequired, organizationId }:
     loadQuery(
       {
         organizationId,
-        deskTypeTagType: ORGANIZATION_TAG_TYPE_DESK_TYPE,
         deskTypeSortingValues: [
           {
             direction: 'Ascending',

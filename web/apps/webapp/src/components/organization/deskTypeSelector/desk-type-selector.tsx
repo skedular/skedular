@@ -19,7 +19,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
   const rootData = useFragment<deskTypeSelector_allDeskTypes_query$key>(
     graphql`
       fragment deskTypeSelector_allDeskTypes_query on Query {
-        organizationTags(where: { organizationId: $organizationId, tagType: $deskTypeTagType }) {
+        deskTypes(where: { organizationId: $organizationId }) {
           __id
           totalCount
           edges {
@@ -35,10 +35,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
   );
 
   const [id, setId] = useState<string>(allId);
-  const allItems = useMemo(
-    () => (rootData.organizationTags?.edges ? rootData.organizationTags.edges.map(({ node }) => node) : []),
-    [rootData.organizationTags],
-  );
+  const allItems = useMemo(() => (rootData.deskTypes?.edges ? rootData.deskTypes.edges.map(({ node }) => node) : []), [rootData.deskTypes]);
 
   const handleSelectedChanged = (event: SelectChangeEvent) => {
     const id = event.target.value as string;

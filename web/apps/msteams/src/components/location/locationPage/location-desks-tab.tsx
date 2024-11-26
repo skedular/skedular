@@ -3,7 +3,6 @@ import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import { DayPicker } from '@repo/shared/components/datePickers';
-import { ORGANIZATION_TAG_TYPE_DESK_TYPE } from '@repo/shared/components/deskType';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -41,7 +40,6 @@ const RootQuery = graphql`
     $organizationId: String!
     $locationId: String!
     $zoneTagType: String!
-    $deskTypeTagType: String!
     $fromToGetBookings: DateTime
     $toToGetBookings: DateTime
     $deskNameSearchText: String
@@ -381,7 +379,6 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, organizationId, locationI
         organizationId,
         locationId,
         zoneTagType: LOCATION_TAG_TYPE_LOCATION_ZONE,
-        deskTypeTagType: ORGANIZATION_TAG_TYPE_DESK_TYPE,
         fromToGetBookings: from,
         toToGetBookings: to,
         deskSortingValues: [

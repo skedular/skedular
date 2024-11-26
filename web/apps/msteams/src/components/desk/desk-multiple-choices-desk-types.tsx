@@ -22,7 +22,7 @@ const DeskMultipleChoicesDeskTypes = ({ rootDataRelay, name, required }: Props) 
   const rootData = useFragment<deskMultipleChoicesDeskTypes_query$key>(
     graphql`
       fragment deskMultipleChoicesDeskTypes_query on Query {
-        organizationTags(where: { organizationId: $organizationId, tagType: $deskTypeTagType }, orderBy: $deskMultipleChoicesDeskTypesSortingValues) {
+        deskTypes(where: { organizationId: $organizationId }, orderBy: $deskMultipleChoicesDeskTypesSortingValues) {
           __id
           totalCount
           edges {
@@ -37,15 +37,15 @@ const DeskMultipleChoicesDeskTypes = ({ rootDataRelay, name, required }: Props) 
     rootDataRelay,
   );
 
-  const zones = useMemo<DeskTypeDetails[]>(() => {
-    if (!rootData.organizationTags) {
+  const deskTypes = useMemo<DeskTypeDetails[]>(() => {
+    if (!rootData.deskTypes) {
       return [];
     }
 
-    return rootData.organizationTags.edges.map(({ node }) => node);
-  }, [rootData.organizationTags]);
+    return rootData.deskTypes.edges.map(({ node }) => node);
+  }, [rootData.deskTypes]);
 
-  if (!rootData.organizationTags) {
+  if (!rootData.deskTypes) {
     return <></>;
   }
 
@@ -57,7 +57,7 @@ const DeskMultipleChoicesDeskTypes = ({ rootDataRelay, name, required }: Props) 
       name={name}
       multiple={true}
       required={required}
-      options={zones}
+      options={deskTypes}
       getOptionValue={(option) => (option as DeskTypeDetails).id}
       getOptionLabel={(option: string | DeskTypeDetails) => (option as DeskTypeDetails).name}
       renderOption={(props, option) => {

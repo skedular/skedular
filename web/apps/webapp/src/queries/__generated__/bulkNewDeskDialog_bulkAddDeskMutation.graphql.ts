@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f177fdcaa570cd12f963f3cf4024fec>>
+ * @generated SignedSource<<b4fc39bd7e7576b93cecf4ff3d5fbe42>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,12 +13,13 @@ export type BulkAddDeskInput = {
   clientMutationId?: string | null | undefined;
   count: number;
   deactivated: boolean;
+  deskTypeIds: ReadonlyArray<string>;
   id?: string | null | undefined;
   locationId: string;
   locationTagIds: ReadonlyArray<string>;
   namePrefix?: string | null | undefined;
-  organizationTagIds: ReadonlyArray<string>;
   requireBookingApproval: boolean;
+  zoneIds: ReadonlyArray<string>;
 };
 export type bulkNewDeskDialog_bulkAddDeskMutation$variables = {
   connectionIds: ReadonlyArray<string>;
@@ -27,12 +28,15 @@ export type bulkNewDeskDialog_bulkAddDeskMutation$variables = {
 export type bulkNewDeskDialog_bulkAddDeskMutation$data = {
   readonly bulkAddDesk: {
     readonly desks: ReadonlyArray<{
+      readonly deskTypes: ReadonlyArray<{
+        readonly uniqueId: string;
+      }>;
       readonly id: string;
       readonly locationTags: ReadonlyArray<{
         readonly id: string;
       }>;
       readonly name: string;
-      readonly organizationTags: ReadonlyArray<{
+      readonly zones: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
     }>;
@@ -41,12 +45,15 @@ export type bulkNewDeskDialog_bulkAddDeskMutation$data = {
 export type bulkNewDeskDialog_bulkAddDeskMutation$rawResponse = {
   readonly bulkAddDesk: {
     readonly desks: ReadonlyArray<{
+      readonly deskTypes: ReadonlyArray<{
+        readonly uniqueId: string;
+      }>;
       readonly id: string;
       readonly locationTags: ReadonlyArray<{
         readonly id: string;
       }>;
       readonly name: string;
-      readonly organizationTags: ReadonlyArray<{
+      readonly zones: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
     }>;
@@ -85,7 +92,16 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = {
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "uniqueId",
+    "storageKey": null
+  }
+],
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": "DeskDetails",
@@ -118,17 +134,19 @@ v3 = {
       "args": null,
       "concreteType": "Organization_OrganizationTagDetails",
       "kind": "LinkedField",
-      "name": "organizationTags",
+      "name": "deskTypes",
       "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "uniqueId",
-          "storageKey": null
-        }
-      ],
+      "selections": (v3/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Organization_OrganizationTagDetails",
+      "kind": "LinkedField",
+      "name": "zones",
+      "plural": true,
+      "selections": (v3/*: any*/),
       "storageKey": null
     }
   ],
@@ -149,7 +167,7 @@ return {
         "name": "bulkAddDesk",
         "plural": false,
         "selections": [
-          (v3/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
@@ -171,7 +189,7 @@ return {
         "name": "bulkAddDesk",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -199,16 +217,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0966897abab35b709472648ae9ee62a5",
+    "cacheID": "94618f67587e60abd0e067f7891998c2",
     "id": null,
     "metadata": {},
     "name": "bulkNewDeskDialog_bulkAddDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation bulkNewDeskDialog_bulkAddDeskMutation(\n  $input: BulkAddDeskInput!\n) {\n  bulkAddDesk(input: $input) {\n    desks {\n      id\n      name\n      locationTags {\n        id\n      }\n      organizationTags {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation bulkNewDeskDialog_bulkAddDeskMutation(\n  $input: BulkAddDeskInput!\n) {\n  bulkAddDesk(input: $input) {\n    desks {\n      id\n      name\n      locationTags {\n        id\n      }\n      deskTypes {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "017168d203808d1b8ac710c9a8328cb8";
+(node as any).hash = "eec0e0f83ff467dd7fa8a93ec25c0e6c";
 
 export default node;

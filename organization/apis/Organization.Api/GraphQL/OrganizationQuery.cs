@@ -1,4 +1,5 @@
 using System.Reflection;
+using Api.Shared.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -236,7 +237,7 @@ public class OrganizationQuery
         [Service] IMapper mapper,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
-    
+
     [UseServiceScope]
     public async Task<OrganizationTagConnection?> OrganizationTagsAsync(
         string? after,
@@ -291,4 +292,62 @@ public class OrganizationQuery
             TotalCount = totalCount
         };
     }
+
+    [UseServiceScope]
+    public async Task<OrganizationTagConnection?> DeskTypesAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        DeskTypeOrganizationTagWhereInput where,
+        OrganizationTagOrderInput[]? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] ITagService tagService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        await OrganizationTagsAsync(
+            after,
+            first,
+            before,
+            last,
+            new OrganizationTagWhereInput
+            {
+                OrganizationId = where.OrganizationId,
+                TagType = OrganizationTagType.DeskType,
+                NameContains = where.NameContains
+            },
+            orderBy,
+            cachedCustomerService,
+            tagService,
+            mapper,
+            cancellationToken);
+
+    [UseServiceScope]
+    public async Task<OrganizationTagConnection?> ZonesAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        ZoneOrganizationTagWhereInput where,
+        OrganizationTagOrderInput[]? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] ITagService tagService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        await OrganizationTagsAsync(
+            after,
+            first,
+            before,
+            last,
+            new OrganizationTagWhereInput
+            {
+                OrganizationId = where.OrganizationId,
+                TagType = OrganizationTagType.ZoneType,
+                NameContains = where.NameContains
+            },
+            orderBy,
+            cachedCustomerService,
+            tagService,
+            mapper,
+            cancellationToken);
 }

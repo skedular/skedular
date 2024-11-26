@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f3d6243ea7c2ff295eaf3aea92992d3>>
+ * @generated SignedSource<<ab2b5a4c5188d531b315c8a53976dc09>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,8 +10,8 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationDeskTypesTab_organizationTags_query$data = {
-  readonly organizationTags: {
+export type organizationDeskTypesTab_deskTypes_query$data = {
+  readonly deskTypes: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -21,16 +21,16 @@ export type organizationDeskTypesTab_organizationTags_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "organizationDeskTypesTab_organizationTags_query";
+  readonly " $fragmentType": "organizationDeskTypesTab_deskTypes_query";
 };
-export type organizationDeskTypesTab_organizationTags_query$key = {
-  readonly " $data"?: organizationDeskTypesTab_organizationTags_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationDeskTypesTab_organizationTags_query">;
+export type organizationDeskTypesTab_deskTypes_query$key = {
+  readonly " $data"?: organizationDeskTypesTab_deskTypes_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationDeskTypesTab_deskTypes_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "organizationTags"
+  "deskTypes"
 ];
 return {
   "argumentDefinitions": [
@@ -51,10 +51,6 @@ return {
     {
       "kind": "RootArgument",
       "name": "deskTypeSortingValues"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "deskTypeTagType"
     },
     {
       "kind": "RootArgument",
@@ -81,13 +77,13 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationDeskTypesTab_organizationTags_refetchableFragment.graphql')
+      "operation": require('./organizationDeskTypesTab_deskTypes_refetchableFragment.graphql')
     }
   },
-  "name": "organizationDeskTypesTab_organizationTags_query",
+  "name": "organizationDeskTypesTab_deskTypes_query",
   "selections": [
     {
-      "alias": "organizationTags",
+      "alias": "deskTypes",
       "args": [
         {
           "kind": "Variable",
@@ -105,11 +101,6 @@ return {
               "kind": "Variable",
               "name": "organizationId",
               "variableName": "organizationId"
-            },
-            {
-              "kind": "Variable",
-              "name": "tagType",
-              "variableName": "deskTypeTagType"
             }
           ],
           "kind": "ObjectValue",
@@ -118,7 +109,7 @@ return {
       ],
       "concreteType": "OrganizationTagConnection",
       "kind": "LinkedField",
-      "name": "__organizationDeskTypesTab_organizationTags_connection",
+      "name": "__organizationDeskTypesTab_deskTypes_connection",
       "plural": false,
       "selections": [
         {
@@ -222,6 +213,6 @@ return {
 };
 })();
 
-(node as any).hash = "f74df9728c61bfb15380eb9e68b5f6c0";
+(node as any).hash = "d96b9a29970af12be2f25f68a5941c46";
 
 export default node;

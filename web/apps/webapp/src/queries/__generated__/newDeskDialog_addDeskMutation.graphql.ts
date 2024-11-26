@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4aabbe2d4d88e5cfedcaa78d73ec31c5>>
+ * @generated SignedSource<<50643ed2ec7b327a30bb38995de6a7ab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,12 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type AddDeskInput = {
   clientMutationId?: string | null | undefined;
+  deskTypeIds: ReadonlyArray<string>;
   id?: string | null | undefined;
   locationId: string;
   locationTagIds: ReadonlyArray<string>;
   name: string;
-  organizationTagIds: ReadonlyArray<string>;
+  zoneIds: ReadonlyArray<string>;
 };
 export type newDeskDialog_addDeskMutation$variables = {
   connectionIds: ReadonlyArray<string>;
@@ -24,12 +25,15 @@ export type newDeskDialog_addDeskMutation$variables = {
 export type newDeskDialog_addDeskMutation$data = {
   readonly addDesk: {
     readonly desk: {
+      readonly deskTypes: ReadonlyArray<{
+        readonly uniqueId: string;
+      }>;
       readonly id: string;
       readonly locationTags: ReadonlyArray<{
         readonly id: string;
       }>;
       readonly name: string;
-      readonly organizationTags: ReadonlyArray<{
+      readonly zones: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
     };
@@ -38,12 +42,15 @@ export type newDeskDialog_addDeskMutation$data = {
 export type newDeskDialog_addDeskMutation$rawResponse = {
   readonly addDesk: {
     readonly desk: {
+      readonly deskTypes: ReadonlyArray<{
+        readonly uniqueId: string;
+      }>;
       readonly id: string;
       readonly locationTags: ReadonlyArray<{
         readonly id: string;
       }>;
       readonly name: string;
-      readonly organizationTags: ReadonlyArray<{
+      readonly zones: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
     };
@@ -82,7 +89,16 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = {
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "uniqueId",
+    "storageKey": null
+  }
+],
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": "DeskDetails",
@@ -115,17 +131,19 @@ v3 = {
       "args": null,
       "concreteType": "Organization_OrganizationTagDetails",
       "kind": "LinkedField",
-      "name": "organizationTags",
+      "name": "deskTypes",
       "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "uniqueId",
-          "storageKey": null
-        }
-      ],
+      "selections": (v3/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Organization_OrganizationTagDetails",
+      "kind": "LinkedField",
+      "name": "zones",
+      "plural": true,
+      "selections": (v3/*: any*/),
       "storageKey": null
     }
   ],
@@ -146,7 +164,7 @@ return {
         "name": "addDesk",
         "plural": false,
         "selections": [
-          (v3/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
@@ -168,7 +186,7 @@ return {
         "name": "addDesk",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -196,16 +214,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2677d50be0f51615f494a2ba8a70f0c1",
+    "cacheID": "471175e40f40b1d812a73d2fa770a358",
     "id": null,
     "metadata": {},
     "name": "newDeskDialog_addDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation newDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      locationTags {\n        id\n      }\n      organizationTags {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation newDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      locationTags {\n        id\n      }\n      deskTypes {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "41384b9a671ca13baec86e6c3d5fd830";
+(node as any).hash = "4f3c66cd3f948f25b5bba75b5b99f8c5";
 
 export default node;

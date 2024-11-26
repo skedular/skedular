@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9c550c7c50d8ca972216b5f751d9bbfd>>
+ * @generated SignedSource<<d36f05885f256536dfdcaf5141e2df5d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type deskMultipleChoicesDeskTypes_query$data = {
-  readonly organizationTags: {
+  readonly deskTypes: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -36,10 +36,6 @@ const node: ReaderFragment = {
     },
     {
       "kind": "RootArgument",
-      "name": "deskTypeTagType"
-    },
-    {
-      "kind": "RootArgument",
       "name": "organizationId"
     }
   ],
@@ -61,11 +57,6 @@ const node: ReaderFragment = {
               "kind": "Variable",
               "name": "organizationId",
               "variableName": "organizationId"
-            },
-            {
-              "kind": "Variable",
-              "name": "tagType",
-              "variableName": "deskTypeTagType"
             }
           ],
           "kind": "ObjectValue",
@@ -74,7 +65,7 @@ const node: ReaderFragment = {
       ],
       "concreteType": "OrganizationTagConnection",
       "kind": "LinkedField",
-      "name": "organizationTags",
+      "name": "deskTypes",
       "plural": false,
       "selections": [
         {
@@ -140,6 +131,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "02c6985efedc64a7b76050a4ff6e627d";
+(node as any).hash = "0c9f5423f7b49aee84c26f6548df4355";
 
 export default node;

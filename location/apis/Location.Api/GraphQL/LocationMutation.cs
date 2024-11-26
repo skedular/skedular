@@ -64,7 +64,7 @@ public class LocationMutation
             input.NamePrefix,
             input.Count,
             input.LocationTagIds,
-            input.OrganizationTagIds,
+            input.DeskTypeIds.Concat(input.ZoneIds).ToList(),
             input.Deactivated,
             input.RequireBookingApproval,
             cancellationToken);
