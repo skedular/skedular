@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<48a1fd85e0323dcb11bb3da77c23c143>>
+ * @generated SignedSource<<91c653c8b4dbd0571f798eedd4916648>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,20 +13,20 @@ export type DeleteLocationTagInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type zoneCard_deleteLocationTagMutation$variables = {
+export type oldZoneCard_deleteLocationTagMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: DeleteLocationTagInput;
 };
-export type zoneCard_deleteLocationTagMutation$data = {
+export type oldZoneCard_deleteLocationTagMutation$data = {
   readonly deleteLocationTag: {
     readonly locationTag: {
       readonly id: string;
     };
   } | null | undefined;
 };
-export type zoneCard_deleteLocationTagMutation = {
-  response: zoneCard_deleteLocationTagMutation$data;
-  variables: zoneCard_deleteLocationTagMutation$variables;
+export type oldZoneCard_deleteLocationTagMutation = {
+  response: oldZoneCard_deleteLocationTagMutation$data;
+  variables: oldZoneCard_deleteLocationTagMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "zoneCard_deleteLocationTagMutation",
+    "name": "oldZoneCard_deleteLocationTagMutation",
     "selections": [
       {
         "alias": null,
@@ -94,7 +94,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "zoneCard_deleteLocationTagMutation",
+    "name": "oldZoneCard_deleteLocationTagMutation",
     "selections": [
       {
         "alias": null,
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f5da1421376de0aa1f208c51f51d998a",
+    "cacheID": "b787087c1e7c176bd0e2165042601941",
     "id": null,
     "metadata": {},
-    "name": "zoneCard_deleteLocationTagMutation",
+    "name": "oldZoneCard_deleteLocationTagMutation",
     "operationKind": "mutation",
-    "text": "mutation zoneCard_deleteLocationTagMutation(\n  $input: DeleteLocationTagInput!\n) {\n  deleteLocationTag(input: $input) {\n    locationTag {\n      id\n    }\n  }\n}\n"
+    "text": "mutation oldZoneCard_deleteLocationTagMutation(\n  $input: DeleteLocationTagInput!\n) {\n  deleteLocationTag(input: $input) {\n    locationTag {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "72dc7098aa5686bfd6bb69fba8eee1c9";
+(node as any).hash = "2e1b8f09259e7dd9039f031872f6c093";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<765ee589d98f468e97c27280445c7739>>
+ * @generated SignedSource<<91c653c8b4dbd0571f798eedd4916648>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,24 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type DeleteOrganizationTagInput = {
+export type DeleteLocationTagInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type deskTypeCard_deleteOrganizationTagMutation$variables = {
+export type oldZoneCard_deleteLocationTagMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: DeleteOrganizationTagInput;
+  input: DeleteLocationTagInput;
 };
-export type deskTypeCard_deleteOrganizationTagMutation$data = {
-  readonly deleteOrganizationTag: {
-    readonly organizationTag: {
+export type oldZoneCard_deleteLocationTagMutation$data = {
+  readonly deleteLocationTag: {
+    readonly locationTag: {
       readonly id: string;
     };
   } | null | undefined;
 };
-export type deskTypeCard_deleteOrganizationTagMutation = {
-  response: deskTypeCard_deleteOrganizationTagMutation$data;
-  variables: deskTypeCard_deleteOrganizationTagMutation$variables;
+export type oldZoneCard_deleteLocationTagMutation = {
+  response: oldZoneCard_deleteLocationTagMutation$data;
+  variables: oldZoneCard_deleteLocationTagMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,22 +61,22 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "deskTypeCard_deleteOrganizationTagMutation",
+    "name": "oldZoneCard_deleteLocationTagMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "OrganizationTagPayload",
+        "concreteType": "LocationTagPayload",
         "kind": "LinkedField",
-        "name": "deleteOrganizationTag",
+        "name": "deleteLocationTag",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "OrganizationTagDetails",
+            "concreteType": "LocationTagDetails",
             "kind": "LinkedField",
-            "name": "organizationTag",
+            "name": "locationTag",
             "plural": false,
             "selections": [
               (v2/*: any*/)
@@ -94,22 +94,22 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "deskTypeCard_deleteOrganizationTagMutation",
+    "name": "oldZoneCard_deleteLocationTagMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "OrganizationTagPayload",
+        "concreteType": "LocationTagPayload",
         "kind": "LinkedField",
-        "name": "deleteOrganizationTag",
+        "name": "deleteLocationTag",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "OrganizationTagDetails",
+            "concreteType": "LocationTagDetails",
             "kind": "LinkedField",
-            "name": "organizationTag",
+            "name": "locationTag",
             "plural": false,
             "selections": [
               (v2/*: any*/),
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e49e08fc83958b88700a43bf98af24be",
+    "cacheID": "b787087c1e7c176bd0e2165042601941",
     "id": null,
     "metadata": {},
-    "name": "deskTypeCard_deleteOrganizationTagMutation",
+    "name": "oldZoneCard_deleteLocationTagMutation",
     "operationKind": "mutation",
-    "text": "mutation deskTypeCard_deleteOrganizationTagMutation(\n  $input: DeleteOrganizationTagInput!\n) {\n  deleteOrganizationTag(input: $input) {\n    organizationTag {\n      id\n    }\n  }\n}\n"
+    "text": "mutation oldZoneCard_deleteLocationTagMutation(\n  $input: DeleteLocationTagInput!\n) {\n  deleteLocationTag(input: $input) {\n    locationTag {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1652939601dd40f73393a5740d0ff552";
+(node as any).hash = "2e1b8f09259e7dd9039f031872f6c093";
 
 export default node;

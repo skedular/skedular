@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c001c676d2e13bc92b50641ffe7e125>>
+ * @generated SignedSource<<c879c849456fc7e8cdfa06f605340359>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type locationZonesTab_locationTags_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"zoneCard_LocationTagDetails">;
+        readonly " $fragmentSpreads": FragmentRefs<"oldZoneCard_LocationTagDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -163,7 +163,7 @@ return {
                     {
                       "args": null,
                       "kind": "FragmentSpread",
-                      "name": "zoneCard_LocationTagDetails"
+                      "name": "oldZoneCard_LocationTagDetails"
                     },
                     {
                       "alias": null,
@@ -233,6 +233,6 @@ return {
 };
 })();
 
-(node as any).hash = "bb057c5b0d8fc3e5feb5746f2e9d3d3b";
+(node as any).hash = "4e585312299fd29704c690727d5920b3";
 
 export default node;

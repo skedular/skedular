@@ -1,4 +1,3 @@
-import type { newZoneDialog_addZoneMutation } from '@/queries/__generated__/newZoneDialog_addZoneMutation.graphql';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -15,13 +14,15 @@ import { LOCATION_TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/componen
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, useMutation } from 'react-relay';
+import { useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
+import type { newOldZoneDialog_addZoneMutation } from './__generated__/newOldZoneDialog_addZoneMutation.graphql';
 
 type Props = {
   connectionIds: string[];
@@ -39,9 +40,9 @@ const zoneSchema = object({
   name: string().required('Zone name is required'),
 });
 
-const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClicked, locationId }: Props) => {
-  const [commitAddZone] = useMutation<newZoneDialog_addZoneMutation>(graphql`
-    mutation newZoneDialog_addZoneMutation($connectionIds: [ID!]!, $input: AddLocationTagInput!) @raw_response_type {
+const NewOldZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClicked, locationId }: Props) => {
+  const [commitAddZone] = useMutation<newOldZoneDialog_addZoneMutation>(graphql`
+    mutation newOldZoneDialog_addZoneMutation($connectionIds: [ID!]!, $input: AddLocationTagInput!) @raw_response_type {
       addLocationTag(input: $input) {
         locationTag @appendNode(connections: $connectionIds, edgeTypeName: "LocationTagDetails") {
           id
@@ -135,4 +136,4 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
   );
 };
 
-export default memo(NewZoneDialog);
+export default memo(NewOldZoneDialog);

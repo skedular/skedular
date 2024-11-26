@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d38886387a605bb830cd48e3596ed606>>
+ * @generated SignedSource<<af8574240cb3c777582b1d8d9953499c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,15 +9,15 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type AddCustomerDefaultLocationTagInput = {
+export type RemoveCustomerDefaultLocationTagInput = {
   clientMutationId?: string | null | undefined;
   locationTagId: string;
 };
-export type zoneCard_addCustomerDefaultLocationTagMutation$variables = {
-  input: AddCustomerDefaultLocationTagInput;
+export type oldZoneCard_removeCustomerDefaultLocationTagMutation$variables = {
+  input: RemoveCustomerDefaultLocationTagInput;
 };
-export type zoneCard_addCustomerDefaultLocationTagMutation$data = {
-  readonly addCustomerDefaultLocationTag: {
+export type oldZoneCard_removeCustomerDefaultLocationTagMutation$data = {
+  readonly removeCustomerDefaultLocationTag: {
     readonly customer: {
       readonly id: string;
       readonly preferredZones: ReadonlyArray<{
@@ -26,9 +26,9 @@ export type zoneCard_addCustomerDefaultLocationTagMutation$data = {
     };
   } | null | undefined;
 };
-export type zoneCard_addCustomerDefaultLocationTagMutation = {
-  response: zoneCard_addCustomerDefaultLocationTagMutation$data;
-  variables: zoneCard_addCustomerDefaultLocationTagMutation$variables;
+export type oldZoneCard_removeCustomerDefaultLocationTagMutation = {
+  response: oldZoneCard_removeCustomerDefaultLocationTagMutation$data;
+  variables: oldZoneCard_removeCustomerDefaultLocationTagMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -51,7 +51,7 @@ v1 = [
     ],
     "concreteType": "CustomerPayload",
     "kind": "LinkedField",
-    "name": "addCustomerDefaultLocationTag",
+    "name": "removeCustomerDefaultLocationTag",
     "plural": false,
     "selections": [
       {
@@ -99,7 +99,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "zoneCard_addCustomerDefaultLocationTagMutation",
+    "name": "oldZoneCard_removeCustomerDefaultLocationTagMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -108,20 +108,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "zoneCard_addCustomerDefaultLocationTagMutation",
+    "name": "oldZoneCard_removeCustomerDefaultLocationTagMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "8abb3fe085bbcf570658ab9dfd286b66",
+    "cacheID": "a4a48d8264e208d69d44dd4e5eac9588",
     "id": null,
     "metadata": {},
-    "name": "zoneCard_addCustomerDefaultLocationTagMutation",
+    "name": "oldZoneCard_removeCustomerDefaultLocationTagMutation",
     "operationKind": "mutation",
-    "text": "mutation zoneCard_addCustomerDefaultLocationTagMutation(\n  $input: AddCustomerDefaultLocationTagInput!\n) {\n  addCustomerDefaultLocationTag(input: $input) {\n    customer {\n      id\n      preferredZones {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation oldZoneCard_removeCustomerDefaultLocationTagMutation(\n  $input: RemoveCustomerDefaultLocationTagInput!\n) {\n  removeCustomerDefaultLocationTag(input: $input) {\n    customer {\n      id\n      preferredZones {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "34ebe211beaf349697974f1b6161d017";
+(node as any).hash = "4748a8bcc0652efc51eb033ef1fc786a";
 
 export default node;

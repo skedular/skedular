@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2729facb1843d0de2fcae3a8d9e6760a>>
+ * @generated SignedSource<<64fb6d15073a66eab298c3242631346d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,10 +16,10 @@ export type UpdateLocationTagInput = {
   name: string;
   tagType: string;
 };
-export type zoneCard_updateLocationTagMutation$variables = {
+export type oldZoneCard_updateLocationTagMutation$variables = {
   input: UpdateLocationTagInput;
 };
-export type zoneCard_updateLocationTagMutation$data = {
+export type oldZoneCard_updateLocationTagMutation$data = {
   readonly updateLocationTag: {
     readonly locationTag: {
       readonly id: string;
@@ -27,9 +27,9 @@ export type zoneCard_updateLocationTagMutation$data = {
     };
   } | null | undefined;
 };
-export type zoneCard_updateLocationTagMutation = {
-  response: zoneCard_updateLocationTagMutation$data;
-  variables: zoneCard_updateLocationTagMutation$variables;
+export type oldZoneCard_updateLocationTagMutation = {
+  response: oldZoneCard_updateLocationTagMutation$data;
+  variables: oldZoneCard_updateLocationTagMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -89,7 +89,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "zoneCard_updateLocationTagMutation",
+    "name": "oldZoneCard_updateLocationTagMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -98,20 +98,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "zoneCard_updateLocationTagMutation",
+    "name": "oldZoneCard_updateLocationTagMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "21a3c138b8c198e145b8e8948076ca5a",
+    "cacheID": "650385acb1d3a3920f3125a644517498",
     "id": null,
     "metadata": {},
-    "name": "zoneCard_updateLocationTagMutation",
+    "name": "oldZoneCard_updateLocationTagMutation",
     "operationKind": "mutation",
-    "text": "mutation zoneCard_updateLocationTagMutation(\n  $input: UpdateLocationTagInput!\n) {\n  updateLocationTag(input: $input) {\n    locationTag {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation oldZoneCard_updateLocationTagMutation(\n  $input: UpdateLocationTagInput!\n) {\n  updateLocationTag(input: $input) {\n    locationTag {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "726e5875176c426ae08a44528d7f4521";
+(node as any).hash = "46183307b306ac92c93627a8a67e27a2";
 
 export default node;

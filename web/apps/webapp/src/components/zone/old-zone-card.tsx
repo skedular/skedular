@@ -1,3 +1,9 @@
+import type { oldZoneCard_LocationTagDetails$key } from '@/queries/__generated__/oldZoneCard_LocationTagDetails.graphql';
+import type { oldZoneCard_Query$key } from '@/queries/__generated__/oldZoneCard_Query.graphql';
+import type { oldZoneCard_addCustomerDefaultLocationTagMutation } from '@/queries/__generated__/oldZoneCard_addCustomerDefaultLocationTagMutation.graphql';
+import type { oldZoneCard_deleteLocationTagMutation } from '@/queries/__generated__/oldZoneCard_deleteLocationTagMutation.graphql';
+import type { oldZoneCard_removeCustomerDefaultLocationTagMutation } from '@/queries/__generated__/oldZoneCard_removeCustomerDefaultLocationTagMutation.graphql';
+import type { oldZoneCard_updateLocationTagMutation } from '@/queries/__generated__/oldZoneCard_updateLocationTagMutation.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -22,24 +28,17 @@ import { LOCATION_TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/componen
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
-import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
-import { useFragment, useMutation } from 'react-relay';
+import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
-import type { zoneCard_LocationTagDetails$key } from './__generated__/zoneCard_LocationTagDetails.graphql';
-import type { zoneCard_Query$key } from './__generated__/zoneCard_Query.graphql';
-import type { zoneCard_addCustomerDefaultLocationTagMutation } from './__generated__/zoneCard_addCustomerDefaultLocationTagMutation.graphql';
-import type { zoneCard_deleteLocationTagMutation } from './__generated__/zoneCard_deleteLocationTagMutation.graphql';
-import type { zoneCard_removeCustomerDefaultLocationTagMutation } from './__generated__/zoneCard_removeCustomerDefaultLocationTagMutation.graphql';
-import type { zoneCard_updateLocationTagMutation } from './__generated__/zoneCard_updateLocationTagMutation.graphql';
 
 type Props = {
-  rootDataRelay: zoneCard_Query$key;
-  locationTagDetailsRelay: zoneCard_LocationTagDetails$key;
+  rootDataRelay: oldZoneCard_Query$key;
+  locationTagDetailsRelay: oldZoneCard_LocationTagDetails$key;
   connectionIds: string[];
 };
 
@@ -51,10 +50,10 @@ const zoneSchema = object({
   name: string().required('Zone name is required'),
 });
 
-const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Props) => {
+const OldZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Props) => {
   const rootData = useFragment(
     graphql`
-      fragment zoneCard_Query on Query {
+      fragment oldZoneCard_Query on Query {
         me {
           id
           preferredZones {
@@ -71,7 +70,7 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
 
   const locationTagDetails = useFragment(
     graphql`
-      fragment zoneCard_LocationTagDetails on LocationTagDetails {
+      fragment oldZoneCard_LocationTagDetails on LocationTagDetails {
         id
         name
       }
@@ -79,8 +78,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     locationTagDetailsRelay,
   );
 
-  const [commitUpdateLocationTag] = useMutation<zoneCard_updateLocationTagMutation>(graphql`
-    mutation zoneCard_updateLocationTagMutation($input: UpdateLocationTagInput!) {
+  const [commitUpdateLocationTag] = useMutation<oldZoneCard_updateLocationTagMutation>(graphql`
+    mutation oldZoneCard_updateLocationTagMutation($input: UpdateLocationTagInput!) {
       updateLocationTag(input: $input) {
         locationTag {
           id
@@ -90,8 +89,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     }
   `);
 
-  const [commitDeleteLocationTag] = useMutation<zoneCard_deleteLocationTagMutation>(graphql`
-    mutation zoneCard_deleteLocationTagMutation($connectionIds: [ID!]!, $input: DeleteLocationTagInput!) {
+  const [commitDeleteLocationTag] = useMutation<oldZoneCard_deleteLocationTagMutation>(graphql`
+    mutation oldZoneCard_deleteLocationTagMutation($connectionIds: [ID!]!, $input: DeleteLocationTagInput!) {
       deleteLocationTag(input: $input) {
         locationTag {
           id @deleteEdge(connections: $connectionIds)
@@ -100,8 +99,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     }
   `);
 
-  const [commitAddCustomerDefaultLocationTag] = useMutation<zoneCard_addCustomerDefaultLocationTagMutation>(graphql`
-    mutation zoneCard_addCustomerDefaultLocationTagMutation($input: AddCustomerDefaultLocationTagInput!) {
+  const [commitAddCustomerDefaultLocationTag] = useMutation<oldZoneCard_addCustomerDefaultLocationTagMutation>(graphql`
+    mutation oldZoneCard_addCustomerDefaultLocationTagMutation($input: AddCustomerDefaultLocationTagInput!) {
       addCustomerDefaultLocationTag(input: $input) {
         customer {
           id
@@ -113,8 +112,8 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
     }
   `);
 
-  const [commitRemoveCustomerDefaultLocationTag] = useMutation<zoneCard_removeCustomerDefaultLocationTagMutation>(graphql`
-    mutation zoneCard_removeCustomerDefaultLocationTagMutation($input: RemoveCustomerDefaultLocationTagInput!) {
+  const [commitRemoveCustomerDefaultLocationTag] = useMutation<oldZoneCard_removeCustomerDefaultLocationTagMutation>(graphql`
+    mutation oldZoneCard_removeCustomerDefaultLocationTagMutation($input: RemoveCustomerDefaultLocationTagInput!) {
       removeCustomerDefaultLocationTag(input: $input) {
         customer {
           id
@@ -453,4 +452,4 @@ const ZoneCard = ({ rootDataRelay, locationTagDetailsRelay, connectionIds }: Pro
   );
 };
 
-export default memo(ZoneCard);
+export default memo(OldZoneCard);

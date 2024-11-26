@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2d1e8b46f5704d4ae28e9805a62b545e>>
+ * @generated SignedSource<<24790ae35711b826b186f9cbc4118348>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type zoneCard_Query$data = {
+export type oldZoneCard_Query$data = {
   readonly location: {
     readonly canModify: boolean;
   } | null | undefined;
@@ -20,11 +20,11 @@ export type zoneCard_Query$data = {
       readonly uniqueId: string;
     }>;
   } | null | undefined;
-  readonly " $fragmentType": "zoneCard_Query";
+  readonly " $fragmentType": "oldZoneCard_Query";
 };
-export type zoneCard_Query$key = {
-  readonly " $data"?: zoneCard_Query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"zoneCard_Query">;
+export type oldZoneCard_Query$key = {
+  readonly " $data"?: oldZoneCard_Query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"oldZoneCard_Query">;
 };
 
 const node: ReaderFragment = {
@@ -36,7 +36,7 @@ const node: ReaderFragment = {
   ],
   "kind": "Fragment",
   "metadata": null,
-  "name": "zoneCard_Query",
+  "name": "oldZoneCard_Query",
   "selections": [
     {
       "alias": null,
@@ -103,6 +103,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "e3009bea4cac5e32906d4e31c1f53c11";
+(node as any).hash = "cde9e2c814b062ad51fec55027d5dbfb";
 
 export default node;

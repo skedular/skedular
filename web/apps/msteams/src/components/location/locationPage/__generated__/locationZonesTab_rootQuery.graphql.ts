@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<91bb50ea9b89bb8609c67ecd10ac7651>>
+ * @generated SignedSource<<e39018c8462a168d906f4321a5ad3354>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -312,12 +312,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c3de1bf434885d65abad906a229613f7",
+    "cacheID": "06152d228d8a6710949b68936cacbb47",
     "id": null,
     "metadata": {},
     "name": "locationZonesTab_rootQuery",
     "operationKind": "query",
-    "text": "query locationZonesTab_rootQuery(\n  $locationId: String!\n  $locationExists: Boolean!\n  $zoneTagType: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [LocationTagOrderInput!]!\n) {\n  ...locationZonesTab_query\n  ...locationZonesTab_locationTags_query\n}\n\nfragment locationZonesTab_locationTags_query on Query {\n  locationTags(first: 50, where: {locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_LocationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationZonesTab_query on Query {\n  location(id: $locationId) {\n    canModify\n    id\n  }\n  ...zoneCard_Query\n}\n\nfragment zoneCard_LocationTagDetails on LocationTagDetails {\n  id\n  name\n}\n\nfragment zoneCard_Query on Query {\n  me {\n    id\n    preferredZones {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    canModify\n    id\n  }\n}\n"
+    "text": "query locationZonesTab_rootQuery(\n  $locationId: String!\n  $locationExists: Boolean!\n  $zoneTagType: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [LocationTagOrderInput!]!\n) {\n  ...locationZonesTab_query\n  ...locationZonesTab_locationTags_query\n}\n\nfragment locationZonesTab_locationTags_query on Query {\n  locationTags(first: 50, where: {locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...oldZoneCard_LocationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationZonesTab_query on Query {\n  location(id: $locationId) {\n    canModify\n    id\n  }\n  ...oldZoneCard_Query\n}\n\nfragment oldZoneCard_LocationTagDetails on LocationTagDetails {\n  id\n  name\n}\n\nfragment oldZoneCard_Query on Query {\n  me {\n    id\n    preferredZones {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    canModify\n    id\n  }\n}\n"
   }
 };
 })();

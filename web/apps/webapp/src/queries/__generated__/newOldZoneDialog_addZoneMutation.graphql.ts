@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<67740b9f17aee1f91393cd6f71177afd>>
+ * @generated SignedSource<<aea9c85130a432cb6f01149207d65fe0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,11 +17,11 @@ export type AddLocationTagInput = {
   name: string;
   tagType: string;
 };
-export type newZoneDialog_addZoneMutation$variables = {
+export type newOldZoneDialog_addZoneMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: AddLocationTagInput;
 };
-export type newZoneDialog_addZoneMutation$data = {
+export type newOldZoneDialog_addZoneMutation$data = {
   readonly addLocationTag: {
     readonly locationTag: {
       readonly id: string;
@@ -29,7 +29,7 @@ export type newZoneDialog_addZoneMutation$data = {
     };
   } | null | undefined;
 };
-export type newZoneDialog_addZoneMutation$rawResponse = {
+export type newOldZoneDialog_addZoneMutation$rawResponse = {
   readonly addLocationTag: {
     readonly locationTag: {
       readonly id: string;
@@ -37,10 +37,10 @@ export type newZoneDialog_addZoneMutation$rawResponse = {
     };
   } | null | undefined;
 };
-export type newZoneDialog_addZoneMutation = {
-  rawResponse: newZoneDialog_addZoneMutation$rawResponse;
-  response: newZoneDialog_addZoneMutation$data;
-  variables: newZoneDialog_addZoneMutation$variables;
+export type newOldZoneDialog_addZoneMutation = {
+  rawResponse: newOldZoneDialog_addZoneMutation$rawResponse;
+  response: newOldZoneDialog_addZoneMutation$data;
+  variables: newOldZoneDialog_addZoneMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -93,7 +93,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "newZoneDialog_addZoneMutation",
+    "name": "newOldZoneDialog_addZoneMutation",
     "selections": [
       {
         "alias": null,
@@ -115,7 +115,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "newZoneDialog_addZoneMutation",
+    "name": "newOldZoneDialog_addZoneMutation",
     "selections": [
       {
         "alias": null,
@@ -153,16 +153,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "105b19d9325eccec814c58f0f06b98c9",
+    "cacheID": "570d82abfe20bb2fc36a4860d7ccc1c4",
     "id": null,
     "metadata": {},
-    "name": "newZoneDialog_addZoneMutation",
+    "name": "newOldZoneDialog_addZoneMutation",
     "operationKind": "mutation",
-    "text": "mutation newZoneDialog_addZoneMutation(\n  $input: AddLocationTagInput!\n) {\n  addLocationTag(input: $input) {\n    locationTag {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation newOldZoneDialog_addZoneMutation(\n  $input: AddLocationTagInput!\n) {\n  addLocationTag(input: $input) {\n    locationTag {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "baf76755fcc7ef7886bf439428b24a43";
+(node as any).hash = "616027a3129826dc411d57bbdb863b48";
 
 export default node;

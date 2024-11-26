@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4d801889b1aa1e9bdc3508c012f4eb0c>>
+ * @generated SignedSource<<060f487f031db483eb76f167e7ab59e4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,21 +10,21 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type zoneCard_LocationTagDetails$data = {
+export type oldZoneCard_LocationTagDetails$data = {
   readonly id: string;
   readonly name: string;
-  readonly " $fragmentType": "zoneCard_LocationTagDetails";
+  readonly " $fragmentType": "oldZoneCard_LocationTagDetails";
 };
-export type zoneCard_LocationTagDetails$key = {
-  readonly " $data"?: zoneCard_LocationTagDetails$data;
-  readonly " $fragmentSpreads": FragmentRefs<"zoneCard_LocationTagDetails">;
+export type oldZoneCard_LocationTagDetails$key = {
+  readonly " $data"?: oldZoneCard_LocationTagDetails$data;
+  readonly " $fragmentSpreads": FragmentRefs<"oldZoneCard_LocationTagDetails">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "zoneCard_LocationTagDetails",
+  "name": "oldZoneCard_LocationTagDetails",
   "selections": [
     {
       "alias": null,
@@ -45,6 +45,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "fff997dfedc2d46e0a247a8a8dead657";
+(node as any).hash = "93de1a4fe753cdd243e488557aa4684b";
 
 export default node;

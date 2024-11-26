@@ -50,7 +50,7 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
         location(id: $locationId) {
           canModify
         }
-        ...zoneCard_Query
+        ...oldZoneCard_Query
       }
     `,
     rootDataRelay,
@@ -76,7 +76,7 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
           edges {
             node {
               id
-              ...zoneCard_LocationTagDetails
+              ...oldZoneCard_LocationTagDetails
             }
           }
         }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4c35e1de3fcaaae819acb6a81ddd43b0>>
+ * @generated SignedSource<<6a058352b98ee9ed7dbfe598dd30bdf3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type locationZonesTab_query$data = {
   readonly location: {
     readonly canModify: boolean;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"zoneCard_Query">;
+  readonly " $fragmentSpreads": FragmentRefs<"oldZoneCard_Query">;
   readonly " $fragmentType": "locationZonesTab_query";
 };
 export type locationZonesTab_query$key = {
@@ -60,13 +60,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "zoneCard_Query"
+      "name": "oldZoneCard_Query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "c099caa8b204fc3b78001cdcdf187811";
+(node as any).hash = "caf8b55fd334bc1e074816e89f425ccb";
 
 export default node;

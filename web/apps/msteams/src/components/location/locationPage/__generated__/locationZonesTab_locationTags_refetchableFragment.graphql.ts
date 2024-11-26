@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b47594b1939a684c359077f27a7d545a>>
+ * @generated SignedSource<<9942a9128991fa397f8ca43bdcc7abce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -269,16 +269,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "89b7cb7ca83a70ebbdee2b2eb6121251",
+    "cacheID": "86b40a89a6be356571519c7395c6cf66",
     "id": null,
     "metadata": {},
     "name": "locationZonesTab_locationTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationZonesTab_locationTags_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationExists: Boolean!\n  $locationId: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [LocationTagOrderInput!]\n  $zoneTagType: String\n) {\n  ...locationZonesTab_locationTags_query_1G22uz\n}\n\nfragment locationZonesTab_locationTags_query_1G22uz on Query {\n  locationTags(first: $count, after: $cursor, where: {locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_LocationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment zoneCard_LocationTagDetails on LocationTagDetails {\n  id\n  name\n}\n"
+    "text": "query locationZonesTab_locationTags_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationExists: Boolean!\n  $locationId: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [LocationTagOrderInput!]\n  $zoneTagType: String\n) {\n  ...locationZonesTab_locationTags_query_1G22uz\n}\n\nfragment locationZonesTab_locationTags_query_1G22uz on Query {\n  locationTags(first: $count, after: $cursor, where: {locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...oldZoneCard_LocationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment oldZoneCard_LocationTagDetails on LocationTagDetails {\n  id\n  name\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bb057c5b0d8fc3e5feb5746f2e9d3d3b";
+(node as any).hash = "4e585312299fd29704c690727d5920b3";
 
 export default node;
