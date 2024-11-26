@@ -10,7 +10,7 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Customer.Api.GraphQL;
 
-public class CustomerQuery
+public class CustomerQuery(IMapper mapper)
 {
     [UseServiceScope]
     public Version CustomerVersion()
@@ -29,7 +29,6 @@ public class CustomerQuery
     [UseServiceScope]
     public async Task<CustomerDetails?> MeAsync(
         [Service] ICustomerService customerService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
@@ -42,7 +41,6 @@ public class CustomerQuery
         CustomerWhereInput where,
         CustomerOrderInput[]? orderBy,
         [Service] ICustomerService customerService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);

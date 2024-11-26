@@ -7,7 +7,7 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Billing.Api.GraphQL;
 
-public class BillingQuery
+public class BillingQuery(IMapper mapper)
 {
     [UseServiceScope]
     public Version BillingVersion()
@@ -39,7 +39,6 @@ public class BillingQuery
         string organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationBillingService organizationBillingService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var customerExist = await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);

@@ -10,7 +10,7 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Team.Api.GraphQL;
 
-public class TeamQuery
+public class TeamQuery(IMapper mapper)
 {
     [UseServiceScope]
     public Version TeamVersion()
@@ -42,7 +42,6 @@ public class TeamQuery
     public async Task<TeamDetails?> TeamAsync(
         string id,
         [Service] ITeamService teamService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var team = await teamService.GetByIdAsync(id, false, cancellationToken);
@@ -59,7 +58,6 @@ public class TeamQuery
         TeamOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamService teamService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
@@ -108,7 +106,6 @@ public class TeamQuery
         string? organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamService teamService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
@@ -130,7 +127,6 @@ public class TeamQuery
         TeamMemberOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamMemberService teamMemberService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.TeamId);

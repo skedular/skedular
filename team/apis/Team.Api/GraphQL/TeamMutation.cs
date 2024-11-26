@@ -6,13 +6,12 @@ using Team.Api.Services;
 
 namespace Team.Api.GraphQL;
 
-public class TeamMutation
+public class TeamMutation(IMapper mapper)
 {
     [UseServiceScope]
     public async Task<TeamPayload?> AddTeamAsync(
         AddTeamInput input,
         [Service] ITeamService teamService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var team = await teamService.AddAsync(mapper.MapTo(input), false, cancellationToken);
@@ -23,7 +22,6 @@ public class TeamMutation
     public async Task<TeamPayload?> UpdateTeamAsync(
         UpdateTeamInput input,
         [Service] ITeamService teamService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var team = await teamService.UpdateAsync(mapper.MapTo(input), cancellationToken);
@@ -34,7 +32,6 @@ public class TeamMutation
     public async Task<TeamPayload?> DeleteTeamAsync(
         DeleteTeamInput input,
         [Service] ITeamService teamService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var team = await teamService.DeleteAsync(input.Id, cancellationToken);
@@ -45,7 +42,6 @@ public class TeamMutation
     public async Task<TeamMemberDetailsPayload?> ChangeTeamMemberOwnershipTypeAsync(
         ChangeTeamMemberOwnershipTypeInput input,
         [Service] ITeamMemberService teamMemberService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var teamMember =

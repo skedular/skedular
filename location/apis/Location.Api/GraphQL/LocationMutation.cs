@@ -6,13 +6,12 @@ using Location.Api.Services;
 
 namespace Location.Api.GraphQL;
 
-public class LocationMutation
+public class LocationMutation(IMapper mapper)
 {
     [UseServiceScope]
     public async Task<LocationPayload?> AddLocationAsync(
         AddLocationInput input,
         [Service] ILocationService locationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var location = await locationService.AddAsync(mapper.MapTo(input), false, cancellationToken);
@@ -23,7 +22,6 @@ public class LocationMutation
     public async Task<LocationPayload?> UpdateLocationAsync(
         UpdateLocationInput input,
         [Service] ILocationService locationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var location = await locationService.UpdateAsync(mapper.MapTo(input), cancellationToken);
@@ -34,7 +32,6 @@ public class LocationMutation
     public async Task<LocationPayload?> DeleteLocationAsync(
         DeleteLocationInput input,
         [Service] ILocationService locationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var location = await locationService.DeleteAsync(input.Id, cancellationToken);
@@ -45,7 +42,6 @@ public class LocationMutation
     public async Task<DeskPayload?> AddDeskAsync(
         AddDeskInput input,
         [Service] IDeskService deskService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var desk = await deskService.AddAsync(mapper.MapTo(input), false, cancellationToken);
@@ -56,7 +52,6 @@ public class LocationMutation
     public async Task<BulkDeskPayload?> BulkAddDeskAsync(
         BulkAddDeskInput input,
         [Service] IDeskService deskService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var desks = await deskService.BulkAddAsync(
@@ -78,7 +73,6 @@ public class LocationMutation
     public async Task<DeskPayload?> UpdateDeskAsync(
         UpdateDeskInput input,
         [Service] IDeskService deskService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var desk = await deskService.UpdateAsync(mapper.MapTo(input), cancellationToken);
@@ -89,7 +83,6 @@ public class LocationMutation
     public async Task<DeskPayload?> DeleteDeskAsync(
         DeleteDeskInput input,
         [Service] IDeskService deskService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var desk = await deskService.DeleteAsync(input.Id, cancellationToken);
@@ -100,7 +93,6 @@ public class LocationMutation
     public async Task<LocationTagPayload?> AddLocationTagAsync(
         AddLocationTagInput input,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var tag = await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken);
@@ -111,7 +103,6 @@ public class LocationMutation
     public async Task<LocationTagPayload?> UpdateLocationTagAsync(
         UpdateLocationTagInput input,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var tag = await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken);
@@ -122,7 +113,6 @@ public class LocationMutation
     public async Task<LocationTagPayload?> DeleteLocationTagAsync(
         DeleteLocationTagInput input,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var tag = await tagService.DeleteAsync(input.Id, cancellationToken);
@@ -133,7 +123,6 @@ public class LocationMutation
     public async Task<LocationMemberDetailsPayload?> ChangeLocationMemberOwnershipTypeAsync(
         ChangeLocationMemberOwnershipTypeInput input,
         [Service] ILocationMemberService locationMemberService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var locationMember =

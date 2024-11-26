@@ -10,7 +10,7 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Location.Api.GraphQL;
 
-public class LocationQuery
+public class LocationQuery(IMapper mapper)
 {
     [UseServiceScope]
     public Version LocationVersion()
@@ -45,7 +45,6 @@ public class LocationQuery
     public async Task<LocationDetails?> LocationAsync(
         string id,
         [Service] ILocationService locationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var location = await locationService.GetByIdAsync(id, false, cancellationToken);
@@ -62,7 +61,6 @@ public class LocationQuery
         LocationOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationService locationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
@@ -117,7 +115,6 @@ public class LocationQuery
         string? organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationService locationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
@@ -139,7 +136,6 @@ public class LocationQuery
         LocationMemberOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationMemberService locationMemberService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
@@ -199,7 +195,6 @@ public class LocationQuery
         LocationTagOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITagService tagService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
@@ -254,7 +249,6 @@ public class LocationQuery
         DeskOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IDeskService deskService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
@@ -303,7 +297,6 @@ public class LocationQuery
         DateTimeOffset from,
         DateTimeOffset until,
         [Service] ILocationAnalyticsService locationAnalyticsService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var (locationDesksOccupancyPercentages, locationDailyBookingsTotals) =

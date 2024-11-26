@@ -7,7 +7,7 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Payment.Api.GraphQL;
 
-public class PaymentQuery
+public class PaymentQuery(IMapper mapper)
 {
     [UseServiceScope]
     public Version PaymentVersion()
@@ -34,7 +34,6 @@ public class PaymentQuery
         string organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))

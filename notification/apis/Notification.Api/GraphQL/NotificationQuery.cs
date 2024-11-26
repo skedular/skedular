@@ -10,7 +10,7 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Notification.Api.GraphQL;
 
-public class NotificationQuery
+public class NotificationQuery(IMapper mapper)
 {
     [UseServiceScope]
     public Version NotificationVersion()
@@ -41,7 +41,6 @@ public class NotificationQuery
         NotificationOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] INotificationService notificationService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))

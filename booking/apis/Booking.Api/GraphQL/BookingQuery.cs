@@ -12,7 +12,7 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Booking.Api.GraphQL;
 
-public class BookingQuery
+public class BookingQuery(IMapper mapper)
 {
     [UseServiceScope]
     public Version BookingVersion()
@@ -31,7 +31,6 @@ public class BookingQuery
     [UseServiceScope]
     public async Task<bool> BookingCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
@@ -39,7 +38,6 @@ public class BookingQuery
     public async Task<BookingDetails?> BookingAsync(
         string id,
         [Service] IBookingService bookingService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var booking = await bookingService.GetByIdAsync(id, cancellationToken);
@@ -56,7 +54,6 @@ public class BookingQuery
         BookingOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IBookingService bookingService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
@@ -134,7 +131,6 @@ public class BookingQuery
         BookingWhereInput where,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IBookingService bookingService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var result = await BookingsAsync(
@@ -146,7 +142,6 @@ public class BookingQuery
             [],
             cachedCustomerService,
             bookingService,
-            mapper,
             cancellationToken);
         return result?.Edges.Select(item => item.Node).ToArray();
     }
@@ -158,7 +153,6 @@ public class BookingQuery
         string[] deskIdsToInclude,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IDeskService deskService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
@@ -177,7 +171,6 @@ public class BookingQuery
         string[] deskIdsToInclude,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IDeskService deskService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))

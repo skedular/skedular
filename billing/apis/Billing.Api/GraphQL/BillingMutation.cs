@@ -5,13 +5,12 @@ using HotChocolate.Types;
 
 namespace Billing.Api.GraphQL;
 
-public class BillingMutation
+public class BillingMutation(IMapper mapper)
 {
     [UseServiceScope]
     public async Task<OrganizationBillingInfoPayload?> SetOrganizationBillingInfoAsync(
         SetOrganizationBillingInfoInput input,
         [Service] IOrganizationBillingService organizationBillingService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var organization = await organizationBillingService.SetBillingInfoAsync(

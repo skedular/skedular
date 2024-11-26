@@ -5,13 +5,12 @@ using HotChocolate.Types;
 
 namespace Booking.Api.GraphQL;
 
-public class BookingMutation
+public class BookingMutation(IMapper mapper)
 {
     [UseServiceScope]
     public async Task<BookingPayload?> AddBookingAsync(
         AddBookingInput input,
         [Service] IBookingService bookingService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var booking = await bookingService.AddAsync(mapper.MapTo(input), false, false, cancellationToken);
@@ -22,7 +21,6 @@ public class BookingMutation
     public async Task<BookingPayload?> UpdateBookingAsync(
         UpdateBookingInput input,
         [Service] IBookingService bookingService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var booking = await bookingService.UpdateAsync(mapper.MapTo(input), false, cancellationToken);
@@ -33,7 +31,6 @@ public class BookingMutation
     public async Task<BookingPayload?> DeleteBookingAsync(
         DeleteBookingInput input,
         [Service] IBookingService bookingService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var booking = await bookingService.DeleteAsync(input.Id, cancellationToken);
