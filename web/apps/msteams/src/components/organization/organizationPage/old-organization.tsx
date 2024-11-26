@@ -25,6 +25,7 @@ import OrganizationLocationsTab from './organization-locations-tab';
 import OrganizationMembersTab from './organization-members-tab';
 import OrganizationOfferingTab from './organization-offering-tab';
 import OrganizationTeamsTab from './organization-teams-tab';
+import OrganizationZonesTab from './organization-zones-tab';
 
 type Props = {
   queryReference: PreloadedQuery<oldOrganization_rootQuery, Record<string, unknown>>;
@@ -67,6 +68,7 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
   const locationTabIndex = tabCount++;
   const teamTabIndex = tabCount++;
   const deskTypesTabIndex = tabCount++;
+  const zonesTabIndex = tabCount++;
   const offeringTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
   const billingTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
   const analyticsTabIndex = rootData.organization?.canViewAnalytics ? tabCount++ : -1;
@@ -83,6 +85,8 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
     initialTabIndex = teamTabIndex;
   } else if (tab === 'deskTypes') {
     initialTabIndex = deskTypesTabIndex;
+    initialTabIndex = deskTypesTabIndex;
+  } else if (tab === 'zones') {
   } else if (tab === 'offering') {
     initialTabIndex = offeringTabIndex;
   } else if (tab === 'billing') {
@@ -110,6 +114,8 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
       tab = 'teams';
     } else if (newValue === deskTypesTabIndex) {
       tab = 'deskTypes';
+    } else if (newValue === zonesTabIndex) {
+      tab = 'zones';
     } else if (newValue === offeringTabIndex) {
       tab = 'offering';
     } else if (newValue === billingTabIndex) {
@@ -141,6 +147,7 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
         <Tab label="Locations" />
         <Tab label="Teams" />
         <Tab label="Desk Types" />
+        <Tab label="Zones" />
         {rootData.organization.canModify && <Tab label="Offering" />}
         {rootData.organization.canModify && <Tab label="Billing" />}
         {rootData.organization.canViewAnalytics && <Tab label="Analytics" />}
@@ -152,6 +159,7 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
       {tabIndex === locationTabIndex && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === teamTabIndex && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === deskTypesTabIndex && <OrganizationDeskTypesTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === zonesTabIndex && <OrganizationZonesTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === offeringTabIndex && rootData.organization.canModify && (
         <OrganizationOfferingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
       )}

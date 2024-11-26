@@ -1,19 +1,18 @@
-import { NewZoneDialog, ZoneCard } from '@/components/oldZone';
-import type { locationZonesTab_locationTags_query$key } from '@/queries/__generated__/locationZonesTab_locationTags_query.graphql';
+import { NewZoneDialog, ZoneCard } from '@/components/zone';
+import type { organizationZonesTab_query$key } from '@/queries/__generated__/organizationZonesTab_query.graphql';
+import type { organizationZonesTab_rootQuery } from '@/queries/__generated__/organizationZonesTab_rootQuery.graphql';
+import type { organizationZonesTab_zones_query$key } from '@/queries/__generated__/organizationZonesTab_zones_query.graphql';
 import type {
-  LocationTagOrderField,
-  LocationTagOrderInput,
-  locationZonesTab_locationTags_refetchableFragment,
-} from '@/queries/__generated__/locationZonesTab_locationTags_refetchableFragment.graphql';
-import type { locationZonesTab_query$key } from '@/queries/__generated__/locationZonesTab_query.graphql';
-import type { locationZonesTab_rootQuery } from '@/queries/__generated__/locationZonesTab_rootQuery.graphql';
+  OrganizationTagOrderField,
+  OrganizationTagOrderInput,
+  organizationZonesTab_zones_refetchableFragment,
+} from '@/queries/__generated__/organizationZonesTab_zones_refetchableFragment.graphql';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/oldZone';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
@@ -24,59 +23,53 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
-  queryReference: PreloadedQuery<locationZonesTab_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<organizationZonesTab_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  locationId: string;
+  organizationId: string;
 };
 
 const RootQuery = graphql`
-  query locationZonesTab_rootQuery(
-    $locationId: String!
-    $locationExists: Boolean!
-    $zoneTagType: String!
-    $zoneNameSearchText: String
-    $zoneSortingValues: [LocationTagOrderInput!]!
-  ) {
-    ...locationZonesTab_query
-    ...locationZonesTab_locationTags_query
+  query organizationZonesTab_rootQuery($organizationId: String!, $zoneNameSearchText: String, $zoneSortingValues: [OrganizationTagOrderInput!]!) {
+    ...organizationZonesTab_query
+    ...organizationZonesTab_zones_query
   }
 `;
 
-const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Props) => {
-  const rootDataRelay = usePreloadedQuery<locationZonesTab_rootQuery>(RootQuery, queryReference);
-  const rootData = useFragment<locationZonesTab_query$key>(
+const OrganizationZonesTab = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+  const rootDataRelay = usePreloadedQuery<organizationZonesTab_rootQuery>(RootQuery, queryReference);
+  const rootData = useFragment<organizationZonesTab_query$key>(
     graphql`
-      fragment locationZonesTab_query on Query {
-        location(id: $locationId) {
+      fragment organizationZonesTab_query on Query {
+        organization(id: $organizationId) {
           canModify
         }
-        ...oldZoneCard_Query
+        ...zoneCard_Query
       }
     `,
     rootDataRelay,
   );
   const {
-    data: rootDataPaginatedLocationTags,
+    data: rootDataPaginatedOrganizationTags,
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<locationZonesTab_locationTags_refetchableFragment, locationZonesTab_locationTags_query$key>(
+  } = usePaginationFragment<organizationZonesTab_zones_refetchableFragment, organizationZonesTab_zones_query$key>(
     graphql`
-      fragment locationZonesTab_locationTags_query on Query
+      fragment organizationZonesTab_zones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationZonesTab_locationTags_refetchableFragment") {
-        locationTags(
+      @refetchable(queryName: "organizationZonesTab_zones_refetchableFragment") {
+        zones(
           first: $count
           after: $cursor
-          where: { locationId: $locationId, tagType: $zoneTagType, nameContains: $zoneNameSearchText }
+          where: { organizationId: $organizationId, nameContains: $zoneNameSearchText }
           orderBy: $zoneSortingValues
-        ) @connection(key: "locationZonesTab_locationTags") @include(if: $locationExists) {
+        ) @connection(key: "organizationZonesTab_zones") {
           __id
           totalCount
           edges {
             node {
               id
-              ...oldZoneCard_LocationTagDetails
+              ...zoneCard_OrganizationTagDetails
             }
           }
         }
@@ -86,7 +79,7 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
   );
 
   const [, startTransition] = useTransition();
-  const [sortingOrder, setSortingOrder] = useState<LocationTagOrderInput>({
+  const [sortingOrder, setSortingOrder] = useState<OrganizationTagOrderInput>({
     direction: 'Ascending',
     field: 'Name',
   });
@@ -110,14 +103,13 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
   };
 
   const handleRefetch = useCallback(
-    (pageSize: number, order: LocationTagOrderInput, zoneNameSearchText: string) => {
+    (pageSize: number, order: OrganizationTagOrderInput, zoneNameSearchText: string) => {
       startTransition(() => {
         refetch(
           {
             count: pageSize,
             zoneSortingValues: [order],
             zoneNameSearchText,
-            locationExists: !!locationId,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -128,7 +120,7 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
         );
       });
     },
-    [refetch, locationId],
+    [refetch],
   );
 
   const loadNextPage = useCallback(() => {
@@ -148,19 +140,19 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
   };
 
   const connectionIds = useMemo(
-    () => (rootDataPaginatedLocationTags.locationTags ? [rootDataPaginatedLocationTags.locationTags.__id] : []),
-    [rootDataPaginatedLocationTags.locationTags],
+    () => (rootDataPaginatedOrganizationTags.zones ? [rootDataPaginatedOrganizationTags.zones.__id] : []),
+    [rootDataPaginatedOrganizationTags.zones],
   );
   const [isAddZoneDialogOpen, setIsAddZoneDialogOpen] = useState(false);
 
-  if (!rootData.location || !rootDataPaginatedLocationTags.locationTags) {
+  if (!rootData.organization || !rootDataPaginatedOrganizationTags.zones) {
     return <></>;
   }
 
-  const locationTagEdges = rootDataPaginatedLocationTags.locationTags.edges;
-  const slicedEdges = locationTagEdges.slice(
+  const organizationTagEdges = rootDataPaginatedOrganizationTags.zones.edges;
+  const slicedEdges = organizationTagEdges.slice(
     page * pageSize,
-    page * pageSize + pageSize > locationTagEdges.length ? locationTagEdges.length : page * pageSize + pageSize,
+    page * pageSize + pageSize > organizationTagEdges.length ? organizationTagEdges.length : page * pageSize + pageSize,
   );
 
   const handleAddZoneClick = () => {
@@ -180,14 +172,14 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
   const handleSortingChanged = (direction: Direction, value: string) => {
     setSortingOrder({
       direction,
-      field: value as unknown as LocationTagOrderField,
+      field: value as unknown as OrganizationTagOrderField,
     });
 
     handleRefetch(
       pageSize,
       {
         direction,
-        field: value as unknown as LocationTagOrderField,
+        field: value as unknown as OrganizationTagOrderField,
       },
       zoneNameSearchText,
     );
@@ -195,7 +187,7 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
 
   return (
     <>
-      {rootData.location.canModify && (
+      {rootData.organization.canModify && (
         <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
           <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddZoneClick}>
             Add Zone
@@ -204,10 +196,10 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
       )}
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Search size="small" placeholder="Find a zone..." defaultValue={zoneNameSearchText} onChange={handleSearchTextChange} />
+        <Search size="small" placeholder="Find a desk type..." defaultValue={zoneNameSearchText} onChange={handleSearchTextChange} />
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
-            count={rootDataPaginatedLocationTags.locationTags.totalCount ? rootDataPaginatedLocationTags.locationTags.totalCount : 0}
+            count={rootDataPaginatedOrganizationTags.zones.totalCount ? rootDataPaginatedOrganizationTags.zones.totalCount : 0}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={pageSize}
@@ -225,7 +217,7 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
       <Grid container spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
-            <ZoneCard rootDataRelay={rootData} locationTagDetailsRelay={edge.node} connectionIds={connectionIds} />
+            <ZoneCard rootDataRelay={rootData} organizationTagDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}
       </Grid>
@@ -235,30 +227,28 @@ const LocationZonesTab = ({ queryReference, onReloadRequired, locationId }: Prop
         isDialogOpen={isAddZoneDialogOpen}
         onAddClicked={handleAddZoneDialogAddClick}
         onCancelClicked={handleAddZoneDialogCancelClick}
-        locationId={locationId}
+        organizationId={organizationId}
       />
     </>
   );
 };
 
-const MemoLocationZonesTab = memo(LocationZonesTab);
+const MemoOrganizationZonesTab = memo(OrganizationZonesTab);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  locationId: string;
+  organizationId: string;
 };
 
-const LocationZonesTabWithRelay = ({ onReloadRequired, locationId }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<locationZonesTab_rootQuery>(RootQuery);
+const OrganizationZonesTabWithRelay = ({ onReloadRequired, organizationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<organizationZonesTab_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
     loadQuery(
       {
-        locationId,
-        locationExists: !!locationId,
-        zoneTagType: LOCATION_TAG_TYPE_LOCATION_ZONE,
+        organizationId,
         zoneSortingValues: [
           {
             direction: 'Ascending',
@@ -270,7 +260,7 @@ const LocationZonesTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, locationId]);
+  }, [loadQuery, triggerReloadId, organizationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -286,9 +276,9 @@ const LocationZonesTabWithRelay = ({ onReloadRequired, locationId }: RelayProps)
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationZonesTab queryReference={queryReference} onReloadRequired={handleReloadRequired} locationId={locationId} />
+      <MemoOrganizationZonesTab queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(LocationZonesTabWithRelay);
+export default memo(OrganizationZonesTabWithRelay);

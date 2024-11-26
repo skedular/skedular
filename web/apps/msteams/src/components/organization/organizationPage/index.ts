@@ -8,3 +8,4 @@ export { default as OrganizationLocations } from './organization-locations-tab';
 export { default as OrganizationMembers } from './organization-members-tab';
 export { default as OrganizationOffering } from './organization-offering-tab';
 export { default as OrganizationTeams } from './organization-teams-tab';
+export { default as OrganizationZones } from './organization-zones-tab';
