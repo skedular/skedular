@@ -99,7 +99,8 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
         ICollection<LocationTag> preferredLocationTags,
-        ICollection<Desk> preferredDesks);
+        ICollection<Desk> preferredDesks,
+        ICollection<OrganizationTag> preferredOrganizationTags);
 
     Customer MergeToEntity(
         Shared.Models.Customer src,
@@ -109,7 +110,8 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
         ICollection<LocationTag> preferredLocationTags,
-        ICollection<Desk> preferredDesks);
+        ICollection<Desk> preferredDesks,
+        ICollection<OrganizationTag> preferredOrganizationTags);
 
     Identity MapToEntity(Shared.Models.Identity src, Customer? customer);
 
@@ -198,7 +200,13 @@ public class Mapper : IMapper
                     string.IsNullOrWhiteSpace(item.OrganizationId)
                         ? null
                         : new Organization { Id = item.OrganizationId }
-            }).ToList()
+            }).ToList(),
+            PreferredOrganizationTags = customer.DefaultOrganizationTags.Select(item =>
+                    new Shared.Models.OrganizationTag
+                    {
+                        Id = item.Id, Organization = new Organization { Id = item.OrganizationId }
+                    })
+                .ToList()
         };
     }
 
@@ -536,7 +544,8 @@ public class Mapper : IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
         ICollection<LocationTag> preferredLocationTags,
-        ICollection<Desk> preferredDesks) =>
+        ICollection<Desk> preferredDesks,
+        ICollection<OrganizationTag> preferredOrganizationTags) =>
         MergeToEntity(src,
             new Customer(),
             identities,
@@ -544,7 +553,8 @@ public class Mapper : IMapper
             defaultLocations,
             defaultTeams,
             preferredLocationTags,
-            preferredDesks);
+            preferredDesks,
+            preferredOrganizationTags);
 
     public Customer MergeToEntity(
         Shared.Models.Customer src,
@@ -554,7 +564,8 @@ public class Mapper : IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
         ICollection<LocationTag> preferredLocationTags,
-        ICollection<Desk> preferredDesks)
+        ICollection<Desk> preferredDesks,
+        ICollection<OrganizationTag> preferredOrganizationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -574,6 +585,7 @@ public class Mapper : IMapper
         dest.PreferredLocationTags = preferredLocationTags;
         dest.PreferredDesks = preferredDesks;
         dest.DefaultTeams = defaultTeams;
+        dest.PreferredOrganizationTags = preferredOrganizationTags;
         return dest;
     }
 
