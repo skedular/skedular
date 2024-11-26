@@ -41,8 +41,8 @@ import {
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
+import { ZonesLine } from '@repo/shared/components/oldZone';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { ZonesLine } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';

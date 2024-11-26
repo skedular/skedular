@@ -10,7 +10,7 @@ import {
   infoNotificationOptions,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/oldZone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { convertCalendarDayToStartOfDay, endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import type { Dayjs } from 'dayjs';

@@ -11,8 +11,8 @@ import {
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/oldZone';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE, ZoneName } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';

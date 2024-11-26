@@ -56,8 +56,8 @@
     "./components/transitions": {
       "default": "./dist/components/transitions/index.js"
     },
-    "./components/zone": {
-      "default": "./dist/components/zone/index.js"
+    "./components/oldZone": {
+      "default": "./dist/components/oldZone/index.js"
     },
     "./libs/logger": {
       "default": "./dist/libs/logger/index.js"

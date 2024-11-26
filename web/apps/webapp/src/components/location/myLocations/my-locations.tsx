@@ -14,7 +14,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE, Zones } from '@repo/shared/components/zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE, Zones } from '@repo/shared/components/oldZone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';

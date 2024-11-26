@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs';
 import { toHourAndMinute } from '../../libs/utils';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '../zone';
+import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '../oldZone';
 
 export type LocationDetails = {
   name: string;
