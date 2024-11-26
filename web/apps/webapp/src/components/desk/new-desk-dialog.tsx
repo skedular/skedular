@@ -38,13 +38,13 @@ type Props = {
 type DeskDetails = {
   name: string;
   locationTagIds: string[];
-  organizationTagIds: string[];
+  deskTypeIds: string[];
 };
 
 const deskSchema = object({
   name: string().required('Desk name is required'),
   locationTagIds: array().nullable(),
-  organizationTagIds: array().nullable(),
+  deskTypeIds: array().nullable(),
 });
 
 const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicked, onCancelClicked, locationId }: Props) => {
@@ -83,7 +83,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
 
-  const handleAddClick = ({ name, locationTagIds, organizationTagIds }: DeskDetails) => {
+  const handleAddClick = ({ name, locationTagIds, deskTypeIds }: DeskDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding desk '${name}'...`} />, infoNotificationOptions);
 
@@ -96,7 +96,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           locationId,
           name,
           locationTagIds,
-          deskTypeIds: [],
+          deskTypeIds,
           zoneIds: [],
         },
       },
@@ -154,7 +154,8 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
             <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
               <DeskName name="name" required={requiredFields.name} />
               <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
-              <DeskMultipleChoicesDeskTypes rootDataRelay={rootData} name="organizationTagIds" required={requiredFields.organizationTagIds} />
+              <DeskMultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+
               <DialogActions>
                 <Button color="secondary" variant="contained" onClick={onCancelClicked}>
                   Cancel
