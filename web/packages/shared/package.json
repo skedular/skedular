@@ -38,6 +38,9 @@
     "./components/loading": {
       "default": "./dist/components/loading/index.js"
     },
+    "./components/oldZone": {
+      "default": "./dist/components/oldZone/index.js"
+    },
     "./components/notification": {
       "default": "./dist/components/notification/index.js"
     },
@@ -56,8 +59,8 @@
     "./components/transitions": {
       "default": "./dist/components/transitions/index.js"
     },
-    "./components/oldZone": {
-      "default": "./dist/components/oldZone/index.js"
+    "./components/zone": {
+      "default": "./dist/components/zone/index.js"
     },
     "./libs/logger": {
       "default": "./dist/libs/logger/index.js"

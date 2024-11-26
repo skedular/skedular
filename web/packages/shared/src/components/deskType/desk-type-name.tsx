@@ -6,7 +6,7 @@ type Props = {
   required?: boolean;
 };
 
-const ZoneName = ({ name, required }: Props) => (
+const DeskTypeName = ({ name, required }: Props) => (
   <TextField
     label="Name"
     name={name}
@@ -20,4 +20,4 @@ const ZoneName = ({ name, required }: Props) => (
   />
 );
 
-export default memo(ZoneName);
+export default memo(DeskTypeName);
