@@ -16,6 +16,7 @@ public interface IRepositoryFactory
     IDeskRepository DeskRepository { get; }
     ITeamRepository TeamRepository { get; }
     ITeamMemberRepository TeamMemberRepository { get; }
+    IOrganizationTagRepository OrganizationTagRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -38,6 +39,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         DeskRepository = new DeskRepository(_dbContext, timeProvider);
         TeamRepository = new TeamRepository(_dbContext, timeProvider);
         TeamMemberRepository = new TeamMemberRepository(_dbContext, timeProvider);
+        OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -57,6 +59,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IDeskRepository DeskRepository { get; }
     public ITeamRepository TeamRepository { get; }
     public ITeamMemberRepository TeamMemberRepository { get; }
+    public IOrganizationTagRepository OrganizationTagRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 

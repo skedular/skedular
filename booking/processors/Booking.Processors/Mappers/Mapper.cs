@@ -134,6 +134,15 @@ public interface IMapper
         Shared.Database.Entities.Location? location,
         ICollection<Desk> desks,
         Shared.Database.Entities.Team? team);
+
+    OrganizationTag MergeToEntity(
+        Shared.Models.OrganizationTag src,
+        OrganizationTag dest,
+        Shared.Database.Entities.Organization organization);
+
+    OrganizationTag MapToEntity(
+        Shared.Models.OrganizationTag src,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -231,6 +240,16 @@ public class Mapper : IMapper
                 Customer = new Shared.Models.Customer { Id = item.CustomerId },
                 Organization = organization
             };
+        }).ToList();
+
+        organization.Tags = organizationAfterState.Tags.Select(item => new Shared.Models.OrganizationTag
+        {
+            Id = item.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = item.Name,
+            Type = item.TagType,
+            Organization = organization
         }).ToList();
 
         return organization;
@@ -606,4 +625,22 @@ public class Mapper : IMapper
         dest.Team = team;
         return dest;
     }
+
+    public OrganizationTag MergeToEntity(
+        Shared.Models.OrganizationTag src,
+        OrganizationTag dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Type = src.Type;
+        dest.Organization = organization;
+        return dest;
+    }
+
+    public OrganizationTag MapToEntity(
+        Shared.Models.OrganizationTag src,
+        Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new OrganizationTag(), organization);
 }

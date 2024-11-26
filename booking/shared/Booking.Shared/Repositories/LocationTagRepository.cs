@@ -18,8 +18,7 @@ public interface ILocationTagRepository : IRepository<LocationTag>
 public class LocationTagRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, LocationTag>(dbContext), ILocationTagRepository
 {
-    public async Task<LocationTag>
-        UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken)
+    public async Task<LocationTag> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken)
     {
         var existing = await GetByIdAsync(id, cancellationToken);
         if (existing is not null)
