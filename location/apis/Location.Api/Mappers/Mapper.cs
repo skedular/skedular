@@ -86,10 +86,8 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Tag MapToGrpcResponse(Shared.Models.Tag src);
     global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk MapToGrpcResponse(Shared.Models.Desk src);
     Shared.Models.Tag MapTo(AddTagInput src);
-    Shared.Models.Tag MapTo(Admin_AddTagInput src);
     Shared.Models.Tag MapTo(UpdateTagInput src);
     Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.AddDeskInput src);
-    Shared.Models.Desk MapTo(Admin_AddDeskInput src);
     Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.UpdateDeskInput src);
 
     DeskEdge MapTo(Edge<Shared.Models.Desk> src);
@@ -626,16 +624,6 @@ public class Mapper : IMapper
             Location = new Shared.Models.Location { Id = src.LocationId }
         };
 
-    public Shared.Models.Tag MapTo(Admin_AddTagInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
-            Type = src.Type.ToSafeString(),
-            Location = new Shared.Models.Location { Id = src.LocationId }
-        };
-
     public Shared.Models.Tag MapTo(UpdateTagInput src) =>
         new()
         {
@@ -646,18 +634,6 @@ public class Mapper : IMapper
         };
 
     public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.AddDeskInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Location = new Shared.Models.Location { Id = src.LocationId },
-            Tags = src.TagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
-        };
-
-    public Shared.Models.Desk MapTo(Admin_AddDeskInput src) =>
         new()
         {
             Id = src.Id,

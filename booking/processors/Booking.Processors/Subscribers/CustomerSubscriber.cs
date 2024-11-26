@@ -7,6 +7,7 @@ using Customer = Booking.Shared.Models.Customer;
 using Desk = Booking.Shared.Database.Entities.Desk;
 using Location = Booking.Shared.Database.Entities.Location;
 using LocationTag = Booking.Shared.Database.Entities.LocationTag;
+using OrganizationTag = Booking.Shared.Database.Entities.OrganizationTag;
 using Team = Booking.Shared.Database.Entities.Team;
 using Type = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Type;
 
@@ -91,7 +92,7 @@ public class CustomerSubscriber(
                     cancellationToken);
             defaultLocations.Add(
                 await repositoryFactory.LocationRepository.UpsertNakedAsync(
-                    item.Id, 
+                    item.Id,
                     organization,
                     cancellationToken));
 
@@ -108,7 +109,7 @@ public class CustomerSubscriber(
                     item.Organization!.Id,
                     cancellationToken);
             defaultTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(
-                item.Id, 
+                item.Id,
                 organization,
                 cancellationToken));
 
@@ -139,7 +140,7 @@ public class CustomerSubscriber(
         {
             var location =
                 await repositoryFactory.LocationRepository.UpsertNakedAsync(
-                    item.Location.Id, 
+                    item.Location.Id,
                     null,
                     cancellationToken);
             preferredDesks.Add(
@@ -150,7 +151,7 @@ public class CustomerSubscriber(
             await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        var preferredOrganizationTags = new List<Booking.Shared.Database.Entities.OrganizationTag>();
+        var preferredOrganizationTags = new List<OrganizationTag>();
         foreach (var item in customer.PreferredOrganizationTags)
         {
             var organization =

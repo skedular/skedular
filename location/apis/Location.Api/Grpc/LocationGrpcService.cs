@@ -112,8 +112,9 @@ public class LocationGrpcService(
                         .Name,
                     global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationOrderField.About => LocationOrderField
                         .About,
-                    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationOrderField.Timezone => LocationOrderField
-                        .Timezone,
+                    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationOrderField.Timezone =>
+                        LocationOrderField
+                            .Timezone,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -249,51 +250,6 @@ public class LocationGrpcService(
             await locationService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<TagConnection> GetPaginatedTags(GetPaginatedTagsInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
-            new TagSearchCriteria(request.Where.LocationId, request.Where.Type, request.Where.NameContains),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
-                {
-                    TagOrderField.TagName => Shared.Models.TagOrderField.Name,
-                    TagOrderField.TagDescription => Shared.Models.TagOrderField.Description,
-                    TagOrderField.TagTagType => Shared.Models.TagOrderField.TagType,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-                return new TagOrder(direction, field);
-            }).ToList(),
-            context.CancellationToken);
-
-        var connection = new TagConnection
-        {
-            PageInfo = new PageInfo
-            {
-                HasNextPage = paginatedInfo.HasNextPage,
-                HasPreviousPage = paginatedInfo.HasPreviousPage,
-                StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
-            },
-            TotalCount = totalCount
-        };
-
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
-        return connection;
-    }
-
     public override async Task<DeskConnection> GetPaginatedDesks(GetPaginatedDesksInput request,
         ServerCallContext context)
     {
@@ -339,62 +295,11 @@ public class LocationGrpcService(
         return connection;
     }
 
-    public override async Task<Tag> GetTag(GetTagInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await tagService.GetAsync(request.Id, context.CancellationToken));
-    }
-
-    public override async Task<Tag> Admin_AddTag(Admin_AddTagInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await tagService.AddAsync(
-            mapper.MapTo(request),
-            true,
-            context.CancellationToken));
-    }
-
-    public override async Task<Tag> AddTag(AddTagInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await tagService.AddAsync(
-            mapper.MapTo(request),
-            false,
-            context.CancellationToken));
-    }
-
-    public override async Task<Tag> UpdateTag(UpdateTagInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await tagService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
-    }
-
-    public override async Task<Tag> RemoveTag(RemoveTagInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await tagService.DeleteAsync(request.Id, context.CancellationToken));
-    }
-
     public override async Task<Desk> GetDesk(GetDeskInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(await deskService.GetAsync(request.Id, context.CancellationToken));
-    }
-
-    public override async Task<Desk> Admin_AddDesk(Admin_AddDeskInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await deskService.AddAsync(
-            mapper.MapTo(request),
-            true,
-            context.CancellationToken));
     }
 
     public override async Task<Desk> AddDesk(AddDeskInput request, ServerCallContext context)
@@ -441,5 +346,79 @@ public class LocationGrpcService(
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(await deskService.DeleteAsync(request.Id, context.CancellationToken));
+    }
+    
+    public override async Task<TagConnection> GetPaginatedTags(GetPaginatedTagsInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
+
+        var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
+            new PaginationInputParam(
+                request.After,
+                request.First.FromNullInt(),
+                request.Before,
+                request.Last.FromNullInt()),
+            new TagSearchCriteria(request.Where.LocationId, request.Where.Type, request.Where.NameContains),
+            request.OrderBy.Select(item =>
+            {
+                var direction = item.Direction ==
+                                global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirection.Ascending
+                    ? OrderDirection.Ascending
+                    : OrderDirection.Descending;
+                var field = item.Field switch
+                {
+                    TagOrderField.TagName => Shared.Models.TagOrderField.Name,
+                    TagOrderField.TagDescription => Shared.Models.TagOrderField.Description,
+                    TagOrderField.TagTagType => Shared.Models.TagOrderField.TagType,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                return new TagOrder(direction, field);
+            }).ToList(),
+            context.CancellationToken);
+
+        var connection = new TagConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor.ToSafeString(),
+                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+            },
+            TotalCount = totalCount
+        };
+
+        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
+        return connection;
+    }
+    
+    public override async Task<Tag> GetTag(GetTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(await tagService.GetAsync(request.Id, context.CancellationToken));
+    }
+
+    public override async Task<Tag> AddTag(AddTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(
+            await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+    }
+
+    public override async Task<Tag> UpdateTag(UpdateTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(await tagService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+    }
+
+    public override async Task<Tag> RemoveTag(RemoveTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(await tagService.DeleteAsync(request.Id, context.CancellationToken));
     }
 }

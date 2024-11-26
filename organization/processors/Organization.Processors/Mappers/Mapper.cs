@@ -170,7 +170,7 @@ public class Mapper : IMapper
             Website = organizationAfterState.Website,
             LogoUrl = organizationAfterState.LogoUrl
         };
-        
+
         organization.Tags = organizationAfterState.Tags.Select(item => new Shared.Models.Tag
         {
             Id = item.Id,

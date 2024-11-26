@@ -160,7 +160,8 @@ public class BookingQuery(IMapper mapper)
             return null;
         }
 
-        var desks = await deskService.GetAvailableDesksByOrganizationAsync(organizationId, date, deskIdsToInclude, cancellationToken);
+        var desks = await deskService.GetAvailableDesksByOrganizationAsync(organizationId, date, deskIdsToInclude,
+            cancellationToken);
         return mapper.MapTo(desks).ToArray();
     }
 
@@ -178,7 +179,8 @@ public class BookingQuery(IMapper mapper)
             return null;
         }
 
-        var desks = await deskService.GetAvailableDesksByLocationAsync(locationId, date, deskIdsToInclude, cancellationToken);
+        var desks = await deskService.GetAvailableDesksByLocationAsync(locationId, date, deskIdsToInclude,
+            cancellationToken);
         return mapper.MapTo(desks).ToArray();
     }
 

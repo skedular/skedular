@@ -28,7 +28,8 @@ public class OrganizationTagRepository(CustomerDbContext dbContext, TimeProvider
         }
 
         var now = timeProvider.GetUtcNow();
-        return DbContext.OrganizationTag.Add(new OrganizationTag { Id = id, CreatedAt = now, Organization = organization }).Entity;
+        return DbContext.OrganizationTag
+            .Add(new OrganizationTag { Id = id, CreatedAt = now, Organization = organization }).Entity;
     }
 
     public OrganizationTag Add(OrganizationTag organizationTag)

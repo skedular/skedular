@@ -72,8 +72,7 @@ public class BookingDeskDetails
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
 
-    [GraphQLName("location")]
-    public BookingLocationDetails? Location { get; set; }
+    [GraphQLName("location")] public BookingLocationDetails? Location { get; set; }
 
     [GraphQLName("locationTags")] public BookingLocationTagDetails[] LocationTags { get; set; }
 }

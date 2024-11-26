@@ -142,7 +142,7 @@ public class OrganizationSubscriber(
 
         return existingOrganization;
     }
-    
+
     private Organization RebuildOrganizationTags(
         Shared.Models.Organization organization,
         Organization existingOrganization)
@@ -170,5 +170,4 @@ public class OrganizationSubscriber(
 
         return existingOrganization;
     }
-
 }

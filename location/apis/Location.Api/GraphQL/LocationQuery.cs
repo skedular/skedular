@@ -72,7 +72,7 @@ public class LocationQuery(IMapper mapper)
             await locationService.GetPaginatedLocationsAsync(
                 new PaginationInputParam(after, first, before, last),
                 new LocationSearchCriteria(
-                    where.OrganizationId, 
+                    where.OrganizationId,
                     where.NameContains,
                     where.ZoneIds ?? [],
                     where.DeskTypeIds ?? []),

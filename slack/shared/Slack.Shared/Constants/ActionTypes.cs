@@ -101,3 +101,8 @@ public static class BillingActionTypes
     public const string Province = "Province";
     public const string Zipcode = "Zipcode";
 }
+
+public static class DeskTypeActionTypes
+{
+    public const string DeskTypes = "DeskTypes";
+}

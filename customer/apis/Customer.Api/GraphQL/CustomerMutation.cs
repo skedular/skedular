@@ -240,7 +240,7 @@ public class CustomerMutation(IMapper mapper)
             cancellationToken);
         return mapper.MapTo(customerFeedback, input.ClientMutationId);
     }
-    
+
     [UseServiceScope]
     public async Task<CustomerPayload?> AddCustomerDefaultOrganizationTagAsync(
         AddCustomerDefaultOrganizationTagInput input,

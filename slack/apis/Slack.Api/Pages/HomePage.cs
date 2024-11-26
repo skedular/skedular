@@ -740,6 +740,10 @@ public class HomePage(
                 new Option { Value = TeamActionTypes.Teams, Text = "Teams".ToPlainTextWithIcon(Icons.Teams) },
                 new Option
                 {
+                    Value = DeskTypeActionTypes.DeskTypes, Text = "Desk types".ToPlainTextWithIcon(Icons.Desks)
+                },
+                new Option
+                {
                     Value = SettingsActionTypes.Settings, Text = "Settings".ToPlainTextWithIcon(Icons.Settings)
                 }
             ]

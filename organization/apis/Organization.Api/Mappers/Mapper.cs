@@ -6,6 +6,8 @@ using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
 using Organization.Api.GraphQL;
 using Organization.Shared.Models;
+using AddDeskTypeInput = Organization.Api.GraphQL.AddDeskTypeInput;
+using AddZoneInput = Api.Shared.Services.Grpc.UnityHub.Organization.V1.AddZoneInput;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using DailyMemberCountRecording = Organization.Shared.Models.DailyMemberCountRecording;
@@ -22,6 +24,8 @@ using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
 using Tag = Organization.Shared.Models.Tag;
 using Team = Organization.Shared.Models.Team;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
+using UpdateDeskTypeInput = Organization.Api.GraphQL.UpdateDeskTypeInput;
+using UpdateZoneInput = Api.Shared.Services.Grpc.UnityHub.Organization.V1.UpdateZoneInput;
 
 namespace Organization.Api.Mappers;
 
@@ -105,10 +109,20 @@ public interface IMapper
 
     Tag MapTo(AddDeskTypeInput src);
     Tag MapTo(UpdateDeskTypeInput src);
-    Tag MapTo(AddZoneInput src);
-    Tag MapTo(UpdateZoneInput src);
+    Tag MapTo(GraphQL.AddZoneInput src);
+    Tag MapTo(GraphQL.UpdateZoneInput src);
     OrganizationTagDetails MapTo(Tag src);
     OrganizationTagEdge MapTo(Edge<Tag> src);
+
+    DeskType MapToGrpcResponseDeskType(Tag src);
+    DeskTypeEdge MapToGrpcResponseDeskType(Edge<Tag> src);
+    Tag MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.AddDeskTypeInput src);
+    Tag MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.UpdateDeskTypeInput src);
+
+    Zone MapToGrpcResponseZone(Tag src);
+    ZoneEdge MapToGrpcResponseZone(Edge<Tag> src);
+    Tag MapTo(AddZoneInput src);
+    Tag MapTo(UpdateZoneInput src);
 }
 
 public class Mapper : IMapper
@@ -526,7 +540,7 @@ public class Mapper : IMapper
     public Tag MapTo(UpdateDeskTypeInput src) =>
         new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = OrganizationTagType.DeskType };
 
-    public Tag MapTo(AddZoneInput src) =>
+    public Tag MapTo(GraphQL.AddZoneInput src) =>
         new()
         {
             Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
@@ -536,13 +550,63 @@ public class Mapper : IMapper
             Type = OrganizationTagType.Zone
         };
 
-    public Tag MapTo(UpdateZoneInput src) =>
+    public Tag MapTo(GraphQL.UpdateZoneInput src) =>
         new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = OrganizationTagType.Zone };
 
     public OrganizationTagDetails MapTo(Tag src) =>
         new() { Id = src.Id, Name = src.Name, Description = src.Description, TagType = src.Type };
 
     public OrganizationTagEdge MapTo(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+
+    public DeskType MapToGrpcResponseDeskType(Tag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
+
+    public DeskTypeEdge MapToGrpcResponseDeskType(Edge<Tag> src) =>
+        new() { Cursor = src.Cursor, Node = MapToGrpcResponseDeskType(src.Node) };
+
+    public Tag MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.AddDeskTypeInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Type = OrganizationTagType.DeskType,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+        };
+
+    public Tag MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.UpdateDeskTypeInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Type = OrganizationTagType.DeskType
+        };
+
+    public Zone MapToGrpcResponseZone(Tag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
+
+    public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) =>
+        new() { Cursor = src.Cursor, Node = MapToGrpcResponseZone(src.Node) };
+
+    public Tag MapTo(AddZoneInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Type = OrganizationTagType.Zone,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+        };
+
+    public Tag MapTo(UpdateZoneInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Type = OrganizationTagType.Zone
+        };
 
     private IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
 

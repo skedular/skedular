@@ -1,7 +1,7 @@
-using Location.Shared.Database;
-using Location.Shared.Database.Entities;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
+using Location.Shared.Database;
+using Location.Shared.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Location.Shared.Repositories;
@@ -28,7 +28,8 @@ public class OrganizationTagRepository(LocationDbContext dbContext, TimeProvider
         }
 
         var now = timeProvider.GetUtcNow();
-        return DbContext.OrganizationTag.Add(new OrganizationTag { Id = id, CreatedAt = now, Organization = organization }).Entity;
+        return DbContext.OrganizationTag
+            .Add(new OrganizationTag { Id = id, CreatedAt = now, Organization = organization }).Entity;
     }
 
     public OrganizationTag Add(OrganizationTag organizationTag)

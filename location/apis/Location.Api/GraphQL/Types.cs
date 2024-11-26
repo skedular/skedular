@@ -36,7 +36,7 @@ public class AddLocationInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
     [GraphQLName("timezone")] public string? Timezone { get; set; }
-    
+
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
 }
 
@@ -148,7 +148,7 @@ public class DeskDetails : Node
 
     [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
 
-    [GraphQLName("id")][ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("DeskEdge")]
@@ -214,7 +214,7 @@ public class LocationConnection : Connection<LocationEdge>;
 [GraphQLName("LocationCustomerDetails")]
 public class LocationCustomerDetails
 {
-    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
 
     [GraphQLName("name")] public string? Name { get; set; }
 
@@ -284,7 +284,7 @@ public class LocationDetails : Node
 
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
 
-    [GraphQLName("id")][ID] public string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; }
 }
 
 [GraphQLName("LocationEdge")]
@@ -300,7 +300,7 @@ public class LocationMemberDetails : Node
 
     [GraphQLName("customer")] public LocationCustomerDetails Customer { get; set; }
 
-    [GraphQLName("id")][ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("LocationMemberDetailsPayload")]
@@ -364,7 +364,7 @@ public class LocationOrderInput
 [GraphQLName("LocationOrganizationDetails")]
 public class LocationOrganizationDetails
 {
-    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
 
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
@@ -391,7 +391,7 @@ public class LocationTagDetails : Node
 
     [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
 
-    [GraphQLName("id")][ID] public required string Id { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("Organization_OrganizationTagDetails")]
@@ -401,7 +401,7 @@ public class OrganizationTagDetails
 
     [GraphQLName("tagType")] public string? TagType { get; set; }
 
-    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
 }
 
 [GraphQLName("LocationTagEdge")]
@@ -480,7 +480,7 @@ public class UpdateLocationInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
     [GraphQLName("timezone")] public string? Timezone { get; set; }
-    
+
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
 }
 
@@ -512,7 +512,7 @@ public class AddDeskInput
     [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 
     [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
-    
+
     [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
 }
 
@@ -533,7 +533,7 @@ public class UpdateDeskInput
     [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 
     [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
-    
+
     [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
 }
 

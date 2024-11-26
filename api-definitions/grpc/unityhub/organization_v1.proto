@@ -15,6 +15,18 @@ service OrganizationService {
     rpc Get (GetInput) returns (Organization);
     rpc GetPaginatedMembers (GetPaginatedMembersInput) returns (MemberConnection);
     rpc GetPermissions (GetPermissionsInput) returns (Permissions);
+
+    rpc GetPaginatedDeskTypes (GetPaginatedDeskTypesInput) returns (DeskTypeConnection);
+    rpc GetDeskType (GetDeskTypeInput) returns (DeskType);
+    rpc AddDeskType (AddDeskTypeInput) returns (DeskType);
+    rpc UpdateDeskType (UpdateDeskTypeInput) returns (DeskType);
+    rpc RemoveDeskType (RemoveDeskTypeInput) returns (DeskType);
+
+    rpc GetPaginatedZones (GetPaginatedZonesInput) returns (ZoneConnection);
+    rpc GetZone (GetZoneInput) returns (Zone);
+    rpc AddZone (AddZoneInput) returns (Zone);
+    rpc UpdateZone (UpdateZoneInput) returns (Zone);
+    rpc RemoveZone (RemoveZoneInput) returns (Zone);
 }
 
 message VersionInput {
@@ -197,5 +209,128 @@ message Tag {
     string id = 1;
     string name = 2;
     string description = 3;
-    string type = 4;
+}
+
+message DeskType {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+}
+
+message DeskTypeConnection {
+    PageInfo pageInfo = 1;
+    repeated DeskTypeEdge edges = 2;
+    int32 totalCount = 3;
+}
+
+message DeskTypeEdge {
+    DeskType node = 1;
+    string cursor = 2;
+}
+
+message GetPaginatedDeskTypesInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    DeskTypeWhereInput where = 5;
+    repeated DeskTypeOrderInput orderBy = 6;
+}
+
+message DeskTypeWhereInput {
+    string organizationId = 1;
+    string nameContains = 2;
+}
+
+message DeskTypeOrderInput {
+    OrderDirection direction = 1;
+    DeskTypeOrderField field = 2;
+}
+
+enum DeskTypeOrderField {
+    DeskTypeName = 0;
+    DeskTypeDescription = 1;
+}
+
+message GetDeskTypeInput {
+    string id = 1;
+}
+
+message AddDeskTypeInput {
+    string id = 1;
+    string organizationId = 2;
+    string name = 3;
+    string description = 4;
+}
+
+message UpdateDeskTypeInput {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+}
+
+message RemoveDeskTypeInput {
+    string id = 1;
+}
+
+message Zone {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+}
+
+message ZoneConnection {
+    PageInfo pageInfo = 1;
+    repeated ZoneEdge edges = 2;
+    int32 totalCount = 3;
+}
+
+message ZoneEdge {
+    Zone node = 1;
+    string cursor = 2;
+}
+
+message GetPaginatedZonesInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    ZoneWhereInput where = 5;
+    repeated ZoneOrderInput orderBy = 6;
+}
+
+message ZoneWhereInput {
+    string organizationId = 1;
+    string nameContains = 2;
+}
+
+message ZoneOrderInput {
+    OrderDirection direction = 1;
+    ZoneOrderField field = 2;
+}
+
+enum ZoneOrderField {
+    ZoneName = 0;
+    ZoneDescription = 1;
+}
+
+message GetZoneInput {
+    string id = 1;
+}
+
+message AddZoneInput {
+    string id = 1;
+    string organizationId = 2;
+    string name = 3;
+    string description = 4;
+}
+
+message UpdateZoneInput {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+}
+
+message RemoveZoneInput {
+    string id = 1;
 }

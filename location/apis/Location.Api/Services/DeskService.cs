@@ -354,10 +354,10 @@ public class DeskService(
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Desk>>, int)> GetPaginatedDesksAsync(
-            PaginationInputParam paginationInputParam,
-            DeskSearchCriteria searchCriteria,
-            ICollection<DeskOrder> orderByFields,
-            CancellationToken cancellationToken)
+        PaginationInputParam paginationInputParam,
+        DeskSearchCriteria searchCriteria,
+        ICollection<DeskOrder> orderByFields,
+        CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var location =

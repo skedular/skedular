@@ -474,7 +474,8 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) =>
+    public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src,
+        Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new OrganizationTag(), organization);
 
     private static Shared.Models.Location MapTo(Shared.Database.Entities.Location src)
