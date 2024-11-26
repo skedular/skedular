@@ -80,13 +80,15 @@ public interface IMapper
     Desk MapToEntity(
         Shared.Models.Desk src,
         Shared.Database.Entities.Location location,
-        ICollection<LocationTag> locationTags);
+        ICollection<LocationTag> locationTags,
+        ICollection<OrganizationTag> organizationTags);
 
     Desk MergeToEntity(
         Shared.Models.Desk src,
         Desk dest,
         Shared.Database.Entities.Location location,
-        ICollection<LocationTag> locationTags);
+        ICollection<LocationTag> locationTags,
+        ICollection<OrganizationTag> organizationTags);
 
     IEnumerable<Identity> MapToEntity(
         IEnumerable<Shared.Models.Identity> src,
@@ -310,6 +312,12 @@ public class Mapper : IMapper
             Location = location
         }).ToList();
 
+        var organizationTags = location.Organization is null
+            ? []
+            : locationAfterState.Desks
+                .SelectMany(item => item.OrganizationTagIds)
+                .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
+
         location.Desks = locationAfterState.Desks.Select(item => new Shared.Models.Desk
         {
             Id = item.Id,
@@ -319,6 +327,7 @@ public class Mapper : IMapper
             Deactivated = item.Deactivated,
             RequireBookingApproval = item.RequireBookingApproval,
             Tags = location.Tags.Where(tag => item.LocationTagIds.Contains(tag.Id)).ToList(),
+            OrganizationTags = organizationTags.Where(tag => item.OrganizationTagIds.Contains(tag.Id)).ToList(),
             Location = location
         }).ToList();
 
@@ -515,13 +524,15 @@ public class Mapper : IMapper
     public Desk MapToEntity(
         Shared.Models.Desk src,
         Shared.Database.Entities.Location location,
-        ICollection<LocationTag> locationTags) =>
-        MergeToEntity(src, new Desk(), location, locationTags);
+        ICollection<LocationTag> locationTags,
+        ICollection<OrganizationTag> organizationTags) =>
+        MergeToEntity(src, new Desk(), location, locationTags, organizationTags);
 
     public Desk MergeToEntity(
         Shared.Models.Desk src,
         Desk dest, Shared.Database.Entities.Location location,
-        ICollection<LocationTag> locationTags)
+        ICollection<LocationTag> locationTags,
+        ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -530,6 +541,7 @@ public class Mapper : IMapper
         dest.RequireBookingApproval = src.RequireBookingApproval;
         dest.Location = location;
         dest.Tags = locationTags;
+        dest.OrganizationTags = organizationTags;
         return dest;
     }
 

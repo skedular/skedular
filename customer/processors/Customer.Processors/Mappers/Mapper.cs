@@ -300,8 +300,9 @@ public class Mapper : IMapper
 
         var organizationTags = location.Organization is null
             ? []
-            : locationAfterState.Desks.SelectMany(item => item.OrganizationTagIds).Select(item =>
-                new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
+            : locationAfterState.Desks
+                .SelectMany(item => item.OrganizationTagIds)
+                .Select(item => new OrganizationTag { Id = item, Organization = location.Organization });
 
         location.Desks = locationAfterState.Desks.Select(item => new Desk
         {
@@ -404,7 +405,7 @@ public class Mapper : IMapper
                 PreferredLocationTags = MapTo(src.PreferredLocationTags, false).ToList(),
                 PreferredDesks = MapTo(src.PreferredDesks).ToList(),
                 DefaultTeams = MapTo(src.DefaultTeams).ToList(),
-                PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList(),
+                PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
             };
 
     public Shared.Database.Entities.Customer MapToEntity(
@@ -780,7 +781,7 @@ public class Mapper : IMapper
                 Name = src.Name,
                 Organization = MapTo(src.Organization)
             };
-    
+
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
 
@@ -795,7 +796,6 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Type = src.Type,
+                Type = src.Type
             };
-
 }
