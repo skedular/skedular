@@ -1,4 +1,3 @@
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
 using Api.Shared.Services.Grpc.UnityHub.Location.V1;
 using Enterprise.Shared;
@@ -372,14 +371,13 @@ public class EditBookingButtonHandler(
                 .Where(desk => desk.Location is not null && desk.Location.Id == item.Id)
                 .Select(desk =>
                 {
-                    var zones = desk.LocationTags
-                        .Where(locationTag => locationTag.TagType == LocationTagType.Zone &&
-                                              !string.IsNullOrWhiteSpace(locationTag.Name))
+                    var zones = desk.OrganizationZones
+                        .Where(locationTag => !string.IsNullOrWhiteSpace(locationTag.Name))
                         .ToList();
 
                     var optionText = zones.Count == 0
                         ? desk.Name.ToOptionTextWithIcon(Icons.Desk)
-                        : $"{desk.Name.ToTextWithIcon(Icons.Desk)} {string.Join(", ", zones.Select(zone => zone.Name)).ToTextWithIcon(Icons.Zones)}"
+                        : $"{desk.Name.ToTextWithIcon(Icons.Desk)} {string.Join(",", zones.Select(zone => zone.Name)).ToTextWithIcon(Icons.Zones)}"
                             .ToOptionText();
 
                     return new Option { Text = optionText, Value = desk.Id };

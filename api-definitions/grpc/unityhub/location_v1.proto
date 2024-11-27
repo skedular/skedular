@@ -23,12 +23,6 @@ service LocationService {
     rpc BulkAddDesks (BulkAddDesksInput) returns (BulkAddDesksResponse);
     rpc UpdateDesk (UpdateDeskInput) returns (Desk);
     rpc RemoveDesk (RemoveDeskInput) returns (Desk);
-
-    rpc GetPaginatedTags (GetPaginatedTagsInput) returns (TagConnection);
-    rpc GetTag (GetTagInput) returns (Tag);
-    rpc AddTag (AddTagInput) returns (Tag);
-    rpc UpdateTag (UpdateTagInput) returns (Tag);
-    rpc RemoveTag (RemoveTagInput) returns (Tag);
 }
 
 message VersionInput {
@@ -117,11 +111,10 @@ message Location {
     string about = 3;
     string organizationId = 4;
     string timezone = 5;
-    repeated Tag tags = 6;
-    repeated Desk desks = 7;
-    bool hasFutureBooking = 8;
-    Permissions permissions = 9;
-    repeated Member members = 10;
+    repeated Desk desks = 6;
+    bool hasFutureBooking = 7;
+    Permissions permissions = 8;
+    repeated Member members = 9;
 }
 
 message Admin_GetInput {
@@ -185,7 +178,6 @@ message Desk {
     bool requireBookingApproval = 4;
     repeated OrganizationDeskType organizationDeskTypes = 5;
     repeated OrganizationZone organizationZones = 6;
-    repeated Tag tags = 7;
 }
 
 message GetPermissionsInput {
@@ -294,72 +286,5 @@ message UpdateDeskInput {
 }
 
 message RemoveDeskInput {
-    string id = 1;
-}
-
-message Tag {
-    string id = 1;
-    string name = 2;
-    string description = 3;
-    string type = 4;
-}
-
-message TagConnection {
-    PageInfo pageInfo = 1;
-    repeated TagEdge edges = 2;
-    int32 totalCount = 3;
-}
-
-message TagEdge {
-    Tag node = 1;
-    string cursor = 2;
-}
-
-message GetPaginatedTagsInput {
-    string after = 1;
-    int32 first = 2;
-    string before = 3;
-    int32 last = 4;
-    TagWhereInput where = 5;
-    repeated TagOrderInput orderBy = 6;
-}
-
-message TagWhereInput {
-    string locationId = 1;
-    string nameContains = 2;
-    string type = 3;
-}
-
-message TagOrderInput {
-    OrderDirection direction = 1;
-    TagOrderField field = 2;
-}
-
-enum TagOrderField {
-    TagName = 0;
-    TagDescription = 1;
-    TagTagType = 2;
-}
-
-message GetTagInput {
-    string id = 1;
-}
-
-message AddTagInput {
-    string id = 1;
-    string locationId = 2;
-    string name = 3;
-    string description = 4;
-    string type = 5;
-}
-
-message UpdateTagInput {
-    string id = 1;
-    string name = 2;
-    string description = 3;
-    string type = 4;
-}
-
-message RemoveTagInput {
     string id = 1;
 }

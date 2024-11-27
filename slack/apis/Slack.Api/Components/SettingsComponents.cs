@@ -92,7 +92,7 @@ public class SettingsComponents(
 
         var locations = await locationService.GetLocationsAsync(workspace, workspaceMember, cancellationToken);
         var locationsWithZones = locations
-            .Where(item => item.Tags.Count(tag => tag.Type == LocationTagType.Zone) != 0)
+            .Where(item => item.Desks.Any(desk => desk.OrganizationZones.Count != 0))
             .ToList();
         if (locationsWithZones.Count == 0)
         {

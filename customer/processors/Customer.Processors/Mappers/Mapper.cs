@@ -6,7 +6,6 @@ using Desk = Customer.Shared.Models.Desk;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Identity = Customer.Shared.Models.Identity;
 using Location = Customer.Shared.Models.Location;
-using LocationTag = Customer.Shared.Models.LocationTag;
 using Organization = Customer.Shared.Models.Organization;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
 using Team = Customer.Shared.Models.Team;
@@ -27,7 +26,6 @@ public interface IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
-        ICollection<Shared.Database.Entities.LocationTag> preferredLocationTags,
         ICollection<Shared.Database.Entities.Desk> preferredDesks,
         ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags);
 
@@ -38,7 +36,6 @@ public interface IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
-        ICollection<Shared.Database.Entities.LocationTag> preferredLocationTags,
         ICollection<Shared.Database.Entities.Desk> preferredDesks,
         ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags);
 
@@ -62,13 +59,6 @@ public interface IMapper
         Location src,
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization? organization);
-
-    Shared.Database.Entities.LocationTag MapToEntity(LocationTag src, Shared.Database.Entities.Location location);
-
-    Shared.Database.Entities.LocationTag MergeToEntity(
-        LocationTag src,
-        Shared.Database.Entities.LocationTag dest,
-        Shared.Database.Entities.Location location);
 
     Shared.Database.Entities.Desk MapToEntity(Desk src, Shared.Database.Entities.Location location);
 
@@ -179,9 +169,6 @@ public class Mapper : IMapper
                         ? null
                         : new Organization { Id = item.OrganizationId }
             }).ToList(),
-            PreferredLocationTags = customer.DefaultLocationTags
-                .Select(item => new LocationTag { Id = item.Id, Location = new Location { Id = item.LocationId } })
-                .ToList(),
             PreferredDesks = customer.DefaultDesks.Select(item =>
                 new Desk { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
             DefaultTeams = customer.DefaultTeams.Select(item => new Team
@@ -282,22 +269,6 @@ public class Mapper : IMapper
             Location = location
         }).ToList();
 
-        location.Tags = locationAfterState.Tags.Select(item => new LocationTag
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
-            Type = item.TagType,
-            Location = location
-        }).ToList();
-
-        var organizationTags = location.Organization is null
-            ? []
-            : locationAfterState.Desks
-                .SelectMany(item => item.OrganizationTagIds)
-                .Select(item => new OrganizationTag { Id = item, Organization = location.Organization });
-
         location.Desks = locationAfterState.Desks.Select(item => new Desk
         {
             Id = item.Id,
@@ -394,76 +365,10 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList(),
                 DefaultOrganization = MapTo(src.DefaultOrganization),
                 DefaultLocations = MapTo(src.DefaultLocations).ToList(),
-                PreferredLocationTags = MapTo(src.PreferredLocationTags, false).ToList(),
                 PreferredDesks = MapTo(src.PreferredDesks).ToList(),
                 DefaultTeams = MapTo(src.DefaultTeams).ToList(),
                 PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
             };
-
-    public Shared.Database.Entities.Customer MapToEntity(
-        Shared.Models.Customer src,
-        ICollection<Shared.Database.Entities.Identity> identities,
-        Shared.Database.Entities.Organization? defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> defaultLocations,
-        ICollection<Shared.Database.Entities.Team> defaultTeams,
-        ICollection<Shared.Database.Entities.LocationTag> preferredLocationTags,
-        ICollection<Shared.Database.Entities.Desk> preferredDesks,
-        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags) =>
-        MergeToEntity(
-            src,
-            new Shared.Database.Entities.Customer(),
-            identities,
-            defaultOrganization,
-            defaultLocations,
-            defaultTeams,
-            preferredLocationTags,
-            preferredDesks,
-            preferredOrganizationTags);
-
-    public Shared.Database.Entities.Customer MergeToEntity(
-        Shared.Models.Customer src,
-        Shared.Database.Entities.Customer dest,
-        ICollection<Shared.Database.Entities.Identity> identities,
-        Shared.Database.Entities.Organization? defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> defaultLocations,
-        ICollection<Shared.Database.Entities.Team> defaultTeams,
-        ICollection<Shared.Database.Entities.LocationTag> preferredLocationTags,
-        ICollection<Shared.Database.Entities.Desk> preferredDesks,
-        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags)
-    {
-        dest.Id = src.Id;
-        dest.Designation = src.Designation;
-        dest.Title = src.Title;
-        dest.Name = src.Name;
-        dest.GivenName = src.GivenName;
-        dest.MiddleName = src.MiddleName;
-        dest.FamilyName = src.FamilyName;
-        dest.PhotoUrl = src.PhotoUrl;
-        dest.PhotoUrl24 = src.PhotoUrl24;
-        dest.PhotoUrl32 = src.PhotoUrl32;
-        dest.PhotoUrl48 = src.PhotoUrl48;
-        dest.PhotoUrl72 = src.PhotoUrl72;
-        dest.PhotoUrl192 = src.PhotoUrl192;
-        dest.PhotoUrl512 = src.PhotoUrl512;
-        dest.Timezone = src.Timezone;
-        dest.Locale = src.Locale;
-        dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
-        dest.IsLocationOnboardingDone = src.IsLocationOnboardingDone;
-        dest.IsTeamOnboardingDone = src.IsTeamOnboardingDone;
-        dest.IsDefaultOrganizationOnboardingDone =
-            src.IsDefaultOrganizationOnboardingDone;
-        dest.IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone;
-        dest.IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone;
-        dest.IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone;
-        dest.Identities = identities;
-        dest.DefaultOrganization = defaultOrganization;
-        dest.DefaultLocations = defaultLocations;
-        dest.PreferredLocationTags = preferredLocationTags;
-        dest.PreferredDesks = preferredDesks;
-        dest.DefaultTeams = defaultTeams;
-        dest.PreferredOrganizationTags = preferredOrganizationTags;
-        return dest;
-    }
 
     public Shared.Database.Entities.Identity MapToEntity(
         Identity src,
@@ -510,23 +415,6 @@ public class Mapper : IMapper
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
         dest.Organization = organization;
-        return dest;
-    }
-
-    public Shared.Database.Entities.LocationTag
-        MapToEntity(LocationTag src, Shared.Database.Entities.Location location) =>
-        MergeToEntity(src, new Shared.Database.Entities.LocationTag(), location);
-
-    public Shared.Database.Entities.LocationTag MergeToEntity(
-        LocationTag src,
-        Shared.Database.Entities.LocationTag dest,
-        Shared.Database.Entities.Location location)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
-        dest.Type = src.Type;
-        dest.Location = location;
         return dest;
     }
 
@@ -642,6 +530,67 @@ public class Mapper : IMapper
         MapToEntity(IEnumerable<Identity> src, Shared.Database.Entities.Customer? customer) =>
         src.Select(identity => MapToEntity(identity, customer));
 
+    public Shared.Database.Entities.Customer MapToEntity(
+        Shared.Models.Customer src,
+        ICollection<Shared.Database.Entities.Identity> identities,
+        Shared.Database.Entities.Organization? defaultOrganization,
+        ICollection<Shared.Database.Entities.Location> defaultLocations,
+        ICollection<Shared.Database.Entities.Team> defaultTeams,
+        ICollection<Shared.Database.Entities.Desk> preferredDesks,
+        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags) =>
+        MergeToEntity(
+            src,
+            new Shared.Database.Entities.Customer(),
+            identities,
+            defaultOrganization,
+            defaultLocations,
+            defaultTeams,
+            preferredDesks,
+            preferredOrganizationTags);
+
+    public Shared.Database.Entities.Customer MergeToEntity(
+        Shared.Models.Customer src,
+        Shared.Database.Entities.Customer dest,
+        ICollection<Shared.Database.Entities.Identity> identities,
+        Shared.Database.Entities.Organization? defaultOrganization,
+        ICollection<Shared.Database.Entities.Location> defaultLocations,
+        ICollection<Shared.Database.Entities.Team> defaultTeams,
+        ICollection<Shared.Database.Entities.Desk> preferredDesks,
+        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags)
+    {
+        dest.Id = src.Id;
+        dest.Designation = src.Designation;
+        dest.Title = src.Title;
+        dest.Name = src.Name;
+        dest.GivenName = src.GivenName;
+        dest.MiddleName = src.MiddleName;
+        dest.FamilyName = src.FamilyName;
+        dest.PhotoUrl = src.PhotoUrl;
+        dest.PhotoUrl24 = src.PhotoUrl24;
+        dest.PhotoUrl32 = src.PhotoUrl32;
+        dest.PhotoUrl48 = src.PhotoUrl48;
+        dest.PhotoUrl72 = src.PhotoUrl72;
+        dest.PhotoUrl192 = src.PhotoUrl192;
+        dest.PhotoUrl512 = src.PhotoUrl512;
+        dest.Timezone = src.Timezone;
+        dest.Locale = src.Locale;
+        dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
+        dest.IsLocationOnboardingDone = src.IsLocationOnboardingDone;
+        dest.IsTeamOnboardingDone = src.IsTeamOnboardingDone;
+        dest.IsDefaultOrganizationOnboardingDone =
+            src.IsDefaultOrganizationOnboardingDone;
+        dest.IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone;
+        dest.IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone;
+        dest.IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone;
+        dest.Identities = identities;
+        dest.DefaultOrganization = defaultOrganization;
+        dest.DefaultLocations = defaultLocations;
+        dest.PreferredDesks = preferredDesks;
+        dest.DefaultTeams = defaultTeams;
+        dest.PreferredOrganizationTags = preferredOrganizationTags;
+        return dest;
+    }
+
     private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(item => MapTo(item, true, true)))!;
 
@@ -686,27 +635,7 @@ public class Mapper : IMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
                 Organization = MapTo(src.Organization),
-                Tags = includeTags ? MapTo(src.Tags, true).ToList() : [],
                 Desks = includeDesks ? MapTo(src.Desks).ToList() : []
-            };
-
-    private static IEnumerable<LocationTag> MapTo(
-        IEnumerable<Shared.Database.Entities.LocationTag?>? src,
-        bool includeDesks) =>
-        (src is null ? [] : src.Where(item => item is not null).Select(item => MapTo(item, includeDesks)))!;
-
-    private static LocationTag? MapTo(Shared.Database.Entities.LocationTag? src, bool includeDesks) =>
-        src is null
-            ? null
-            : new LocationTag
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
-                Type = src.Type
             };
 
     private static IEnumerable<OrganizationTag> MapTo(

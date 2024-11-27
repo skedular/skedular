@@ -12,7 +12,6 @@ using Offering = Location.Shared.Models.Offering;
 using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
-using Tag = Location.Shared.Database.Entities.Tag;
 
 namespace Location.Processors.Mappers;
 
@@ -87,13 +86,6 @@ public interface IMapper
         LocationMember dest,
         Shared.Database.Entities.Location location,
         Shared.Database.Entities.Customer customer);
-
-    Tag MapToEntity(Shared.Models.Tag src, Shared.Database.Entities.Location location);
-
-    Tag MergeToEntity(
-        Shared.Models.Tag src,
-        Tag dest,
-        Shared.Database.Entities.Location location);
 
     Shared.Database.Entities.Desk MapToEntity(
         Desk src,
@@ -239,24 +231,17 @@ public class Mapper : IMapper
             }).ToList()
         };
 
-        location.Tags = locationAfterState.Tags.Select(item => new Shared.Models.Tag
+        location.Desks = locationAfterState.Desks.Select(item =>
         {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            Name = item.Name,
-            Description = item.Description,
-            Type = item.TagType,
-            Location = location
-        }).ToList();
+            var desk = new Desk { Id = item.Id, DeletedAt = deletedAt, Name = item.Name };
 
-        location.Desks = locationAfterState.Desks.Select(item => new Desk
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            Name = item.Name,
-            Tags =
-                item.LocationTagIds.Select(tagId =>
-                    new Shared.Models.Tag { Id = tagId, Location = location }).ToList()
+            if (location.Organization is not null)
+            {
+                desk.OrganizationTags = item.OrganizationTagIds.Select(tagId =>
+                    new Shared.Models.OrganizationTag { Id = tagId, Organization = location.Organization }).ToList();
+            }
+
+            return desk;
         }).ToList();
 
         return location;
@@ -423,22 +408,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Tag MapToEntity(Shared.Models.Tag src, Shared.Database.Entities.Location location) =>
-        MergeToEntity(src, new Tag(), location);
-
-    public Tag MergeToEntity(
-        Shared.Models.Tag src,
-        Tag dest,
-        Shared.Database.Entities.Location location)
-    {
-        dest.Id = src.Id;
-        dest.Name = src.Name;
-        dest.Description = src.Description;
-        dest.Type = src.Type;
-        dest.Location = location;
-        return dest;
-    }
-
     public Shared.Database.Entities.Desk MapToEntity(
         Desk src,
         Shared.Database.Entities.Location location,
@@ -456,7 +425,6 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Name = src.Name;
         dest.Location = location;
-        dest.Tags = tags;
         dest.OrganizationTags = organizationTags;
         return dest;
     }
@@ -493,7 +461,6 @@ public class Mapper : IMapper
         };
 
         location.LocationMembers = MapTo(src.LocationMembers, location).ToList();
-        location.Tags = MapTo(src.Tags, location).ToList();
         location.Desks = MapTo(src.Desks, location).ToList();
 
         return location;
@@ -537,22 +504,6 @@ public class Mapper : IMapper
             Invitee = MapTo(src.Invitee)
         };
 
-    private static IEnumerable<Shared.Models.Tag> MapTo(IEnumerable<Tag> src, Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
-
-    private static Shared.Models.Tag MapTo(Tag src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Description = src.Description,
-            Type = src.Type,
-            Location = location
-        };
-
     private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk> src,
         Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
@@ -567,7 +518,6 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            Tags = MapTo(src.Tags, location).ToList(),
             Location = location
         };
 

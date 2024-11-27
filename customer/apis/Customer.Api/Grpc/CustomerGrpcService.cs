@@ -21,7 +21,6 @@ public class CustomerGrpcService(
     ICustomerTeamSettingsService customerTeamSettingsService,
     ICustomerSettingsService customerSettingsService,
     ICustomerFeedbackService customerFeedbackService,
-    ICustomerLocationTagSettingsService customerLocationTagSettingsService,
     ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
     ICustomerDeskSettingsService customerDeskSettingsService,
     IMapper mapper,
@@ -265,26 +264,6 @@ public class CustomerGrpcService(
         return mapper.MapToGrpcResponse(
             await customerTeamSettingsService.RemoveCustomerDefaultTeamAsync(
                 request.TeamId, null, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> AddPreferredLocationTag(
-        AddPreferredLocationTagInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerLocationTagSettingsService.AddCustomerDefaultLocationTagAsync(
-                request.LocationTagId, null, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
-        RemovePreferredLocationTag(RemovePreferredLocationTagInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerLocationTagSettingsService.RemoveCustomerDefaultLocationTagAsync(
-                request.LocationTagId, null, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> AddPreferredDesk(

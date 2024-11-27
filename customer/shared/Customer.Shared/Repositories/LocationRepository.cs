@@ -37,7 +37,6 @@ public class LocationRepository(CustomerDbContext dbContext, TimeProvider timePr
                 query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Desks)
             .Include(query => query.Organization)
             .Include(query => query.DefaultedByCustomers)

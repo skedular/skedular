@@ -55,10 +55,6 @@ public class Mapper : IMapper
             src.PreferredDesks.Select(item =>
                 new Desk { Id = item.Id, LocationId = item.Location.Id })
         );
-        customer.DefaultLocationTags.AddRange(
-            src.PreferredLocationTags.Select(item =>
-                new LocationTag { Id = item.Id, LocationId = item.Location.Id })
-        );
         customer.DefaultTeams.AddRange(
             src.DefaultTeams.Select(item =>
                 new Team

@@ -11,7 +11,6 @@ using Enterprise.Shared.Random;
 using CustomerOrder = Customer.Shared.Models.CustomerOrder;
 using Desk = Customer.Shared.Database.Entities.Desk;
 using Location = Customer.Shared.Database.Entities.Location;
-using LocationTag = Customer.Shared.Database.Entities.LocationTag;
 using OrganizationTag = Customer.Shared.Database.Entities.OrganizationTag;
 using Team = Customer.Shared.Database.Entities.Team;
 
@@ -210,19 +209,6 @@ public class CustomerService(
                 cancellationToken));
         }
 
-        var preferredLocationTags = new List<LocationTag>();
-        foreach (var locationTag in customer.PreferredLocationTags)
-        {
-            var location =
-                await repositoryFactory.LocationRepository.UpsertNakedAsync(locationTag.Location.Id, null,
-                    cancellationToken);
-
-            preferredLocationTags.Add(await repositoryFactory.LocationTagRepository.UpsertNakedAsync(
-                locationTag.Id,
-                location,
-                cancellationToken));
-        }
-
         var preferredDesks = new List<Desk>();
         foreach (var desk in customer.PreferredDesks)
         {
@@ -252,7 +238,6 @@ public class CustomerService(
         await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -269,7 +254,6 @@ public class CustomerService(
                 defaultOrganization,
                 defaultLocations,
                 defaultTeams,
-                preferredLocationTags,
                 preferredDesks,
                 preferredOrganizationTags);
 

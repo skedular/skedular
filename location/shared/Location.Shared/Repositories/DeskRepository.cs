@@ -7,7 +7,7 @@ using Location.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Desk = Location.Shared.Database.Entities.Desk;
-using Tag = Location.Shared.Database.Entities.Tag;
+using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Shared.Repositories;
 
@@ -28,12 +28,11 @@ public interface IDeskRepository : IRepository<Desk>
 
 internal static class DeskExtensions
 {
-    internal static IIncludableQueryable<Desk, IEnumerable<Tag>> AddDependentObjects(
+    internal static IIncludableQueryable<Desk, IEnumerable<OrganizationTag>> AddDependentObjects(
         this IQueryable<Desk> originalQuery) =>
         originalQuery
             .Include(query => query.Location)
-            .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
-            .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue));
+            .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
 
     internal static IQueryable<Desk> AddSearchCriteria(
         this IQueryable<Desk> query,
@@ -44,8 +43,8 @@ internal static class DeskExtensions
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
         {
             query = query.Where(item =>
-                EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%") || item.Tags.Any(tag =>
-                    EF.Functions.ILike(tag.Name, $"%{searchCriteria.NameContains}%")));
+                EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%") ||
+                item.OrganizationTags.Any(tag => EF.Functions.ILike(tag.Name, $"%{searchCriteria.NameContains}%")));
         }
 
         return query;

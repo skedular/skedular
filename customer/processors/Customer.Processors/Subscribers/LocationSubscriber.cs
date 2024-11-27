@@ -90,12 +90,10 @@ public class LocationSubscriber(
             : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation,
                 organization));
 
-        existingLocation = RebuildLocationTags(location, existingLocation);
         existingLocation = await RebuildDesksAsync(location, existingLocation, organization, cancellationToken);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -110,28 +108,6 @@ public class LocationSubscriber(
         _ = repositoryFactory.LocationRepository.Remove(existingLocation);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-    }
-
-    private Location RebuildLocationTags(Shared.Models.Location location, Location existingLocation)
-    {
-        var itemsToRemove = existingLocation.Tags
-            .Where(tag => location.Tags.All(item => item.Id != tag.Id)).ToList();
-        var updatedItems = existingLocation.Tags
-            .Where(locationTag => location.Tags.Any(item => item.Id == locationTag.Id))
-            .Select(locationTag => repositoryFactory.LocationTagRepository.Update(mapper.MergeToEntity(
-                location.Tags.Single(item => item.Id == locationTag.Id),
-                locationTag, existingLocation)))
-            .ToList();
-        var addedItems = location.Tags
-            .Where(locationTag => existingLocation.Tags.All(item => item.Id != locationTag.Id))
-            .Select(locationTag =>
-                repositoryFactory.LocationTagRepository.Add(mapper.MapToEntity(locationTag, existingLocation)))
-            .ToList();
-
-        repositoryFactory.LocationTagRepository.RemoveRange(itemsToRemove);
-        existingLocation.Tags = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
-
-        return existingLocation;
     }
 
     private async Task<Location> RebuildDesksAsync(
@@ -228,9 +204,6 @@ public class LocationSubscriber(
             customer.DefaultLocations =
                 customer.DefaultLocations.Where(item => item.Id != existingLocation.Id).ToList();
 
-            customer.PreferredLocationTags =
-                customer.PreferredLocationTags.Where(item => item.Location.Id != existingLocation.Id).ToList();
-
             customer.PreferredDesks =
                 customer.PreferredDesks.Where(item => item.Location.Id != existingLocation.Id).ToList();
 
@@ -248,8 +221,6 @@ public class LocationSubscriber(
             ArgumentNullException.ThrowIfNull(customer);
 
             customer.DefaultLocations = customer.DefaultLocations.Where(item => item.Id != location.Id).ToList();
-            customer.PreferredLocationTags =
-                customer.PreferredLocationTags.Where(item => item.Location.Id != location.Id).ToList();
             customer.PreferredDesks = customer.PreferredDesks.Where(item => item.Location.Id != location.Id).ToList();
             _ = repositoryFactory.CustomerRepository.Update(customer);
         }

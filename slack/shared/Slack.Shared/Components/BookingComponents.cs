@@ -1,4 +1,3 @@
-using Api.Shared.Models;
 using Slack.Shared.Constants;
 using Slack.Shared.Models;
 using SlackNet.Blocks;
@@ -25,10 +24,16 @@ public class BookingComponents : IBookingComponents
         return booking.Desks.Select(item =>
         {
             var deskLabel = $"{Icons.Desks} {item.Name}";
-            var zones = item.Tags.Where(tag => tag.Type == LocationTagType.Zone).Select(tag => tag.Name).ToList();
-            if (zones.Count != 0)
+
+            if (item.OrganizationZones.Count != 0)
             {
-                deskLabel += $" {Icons.Zones} {string.Join(",", zones)}";
+                deskLabel += $" {Icons.Zones} {string.Join(",", item.OrganizationZones.Select(tag => tag.Name))}";
+            }
+
+            if (item.OrganizationDeskTypes.Count != 0)
+            {
+                deskLabel +=
+                    $" {Icons.DeskTypes} {string.Join(",", item.OrganizationDeskTypes.Select(tag => tag.Name))}";
             }
 
             return (Block)new SectionBlock { Text = deskLabel.ToMarkdown() };

@@ -54,7 +54,7 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
         _topicNames = topicNames;
         _formattedTopicNames = _topicNames.Count == 1
             ? _topicNames.First()
-            : $"\"{string.Join(", ", _topicNames)}\"";
+            : $"\"{string.Join(",", _topicNames)}\"";
 
         _logger = logger;
         _kafkaTelemetryConfiguration = kafkaTelemetryConfiguration;

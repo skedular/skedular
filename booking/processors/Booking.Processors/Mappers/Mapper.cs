@@ -8,7 +8,6 @@ using Desk = Booking.Shared.Database.Entities.Desk;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Location = Booking.Shared.Models.Location;
 using LocationMember = Booking.Shared.Database.Entities.LocationMember;
-using LocationTag = Booking.Shared.Database.Entities.LocationTag;
 using Offering = Booking.Shared.Models.Offering;
 using Organization = Booking.Shared.Models.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
@@ -70,24 +69,15 @@ public interface IMapper
         Shared.Database.Entities.Team team,
         Customer customer);
 
-    LocationTag MapToEntity(Shared.Models.LocationTag src, Shared.Database.Entities.Location location);
-
-    LocationTag MergeToEntity(
-        Shared.Models.LocationTag src,
-        LocationTag dest,
-        Shared.Database.Entities.Location location);
-
     Desk MapToEntity(
         Shared.Models.Desk src,
         Shared.Database.Entities.Location location,
-        ICollection<LocationTag> locationTags,
         ICollection<OrganizationTag> organizationTags);
 
     Desk MergeToEntity(
         Shared.Models.Desk src,
         Desk dest,
         Shared.Database.Entities.Location location,
-        ICollection<LocationTag> locationTags,
         ICollection<OrganizationTag> organizationTags);
 
     IEnumerable<Identity> MapToEntity(
@@ -100,7 +90,6 @@ public interface IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
-        ICollection<LocationTag> preferredLocationTags,
         ICollection<Desk> preferredDesks,
         ICollection<OrganizationTag> preferredOrganizationTags);
 
@@ -111,7 +100,6 @@ public interface IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
-        ICollection<LocationTag> preferredLocationTags,
         ICollection<Desk> preferredDesks,
         ICollection<OrganizationTag> preferredOrganizationTags);
 
@@ -190,9 +178,6 @@ public class Mapper : IMapper
                         ? null
                         : new Organization { Id = item.OrganizationId }
             }).ToList(),
-            PreferredLocationTags = customer.DefaultLocationTags.Select(item =>
-                    new Shared.Models.LocationTag { Id = item.Id, Location = new Location { Id = item.LocationId } })
-                .ToList(),
             PreferredDesks = customer.DefaultDesks.Select(item =>
                 new Shared.Models.Desk { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
             DefaultTeams = customer.DefaultTeams.Select(item => new Team
@@ -302,16 +287,6 @@ public class Mapper : IMapper
             Location = location
         }).ToList();
 
-        location.Tags = locationAfterState.Tags.Select(item => new Shared.Models.LocationTag
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
-            Type = item.TagType,
-            Location = location
-        }).ToList();
-
         var organizationTags = location.Organization is null
             ? []
             : locationAfterState.Desks
@@ -326,7 +301,6 @@ public class Mapper : IMapper
             Name = item.Name,
             Deactivated = item.Deactivated,
             RequireBookingApproval = item.RequireBookingApproval,
-            Tags = location.Tags.Where(tag => item.LocationTagIds.Contains(tag.Id)).ToList(),
             OrganizationTags = organizationTags.Where(tag => item.OrganizationTagIds.Contains(tag.Id)).ToList(),
             Location = location
         }).ToList();
@@ -505,33 +479,15 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public LocationTag MapToEntity(Shared.Models.LocationTag src, Shared.Database.Entities.Location location) =>
-        MergeToEntity(src, new LocationTag(), location);
-
-    public LocationTag MergeToEntity(
-        Shared.Models.LocationTag src,
-        LocationTag dest,
-        Shared.Database.Entities.Location location)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
-        dest.Type = src.Type;
-        dest.Location = location;
-        return dest;
-    }
-
     public Desk MapToEntity(
         Shared.Models.Desk src,
         Shared.Database.Entities.Location location,
-        ICollection<LocationTag> locationTags,
         ICollection<OrganizationTag> organizationTags) =>
-        MergeToEntity(src, new Desk(), location, locationTags, organizationTags);
+        MergeToEntity(src, new Desk(), location, organizationTags);
 
     public Desk MergeToEntity(
         Shared.Models.Desk src,
         Desk dest, Shared.Database.Entities.Location location,
-        ICollection<LocationTag> locationTags,
         ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
@@ -540,7 +496,6 @@ public class Mapper : IMapper
         dest.Deactivated = src.Deactivated;
         dest.RequireBookingApproval = src.RequireBookingApproval;
         dest.Location = location;
-        dest.Tags = locationTags;
         dest.OrganizationTags = organizationTags;
         return dest;
     }
@@ -555,7 +510,6 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
-        ICollection<LocationTag> preferredLocationTags,
         ICollection<Desk> preferredDesks,
         ICollection<OrganizationTag> preferredOrganizationTags) =>
         MergeToEntity(src,
@@ -564,7 +518,6 @@ public class Mapper : IMapper
             defaultOrganization,
             defaultLocations,
             defaultTeams,
-            preferredLocationTags,
             preferredDesks,
             preferredOrganizationTags);
 
@@ -575,7 +528,6 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
-        ICollection<LocationTag> preferredLocationTags,
         ICollection<Desk> preferredDesks,
         ICollection<OrganizationTag> preferredOrganizationTags)
     {
@@ -594,7 +546,6 @@ public class Mapper : IMapper
         dest.Identities = identities;
         dest.DefaultOrganization = defaultOrganization;
         dest.DefaultLocations = defaultLocations;
-        dest.PreferredLocationTags = preferredLocationTags;
         dest.PreferredDesks = preferredDesks;
         dest.DefaultTeams = defaultTeams;
         dest.PreferredOrganizationTags = preferredOrganizationTags;

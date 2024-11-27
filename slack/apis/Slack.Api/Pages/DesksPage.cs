@@ -1,7 +1,7 @@
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -19,6 +19,7 @@ using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
+using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
 using BookingService = Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingService;
 using Button = SlackNet.Blocks.Button;
 using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService;
@@ -45,11 +46,13 @@ public class DesksPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfiguration slackConfiguration,
     LocationConfiguration locationConfiguration,
-    CustomerConfiguration customerConfiguration,
-    BookingConfiguration bookingConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
+    CustomerConfiguration customerConfiguration,
     CustomerService.CustomerServiceClient customerServiceClient,
+    BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
+    OrganizationConfiguration organizationConfiguration,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
@@ -711,7 +714,7 @@ public class DesksPage(
         };
 
         var blocks = new List<Block> { name, deactivated, requireBookingApproval };
-        var zoneConnection = await GetZonesAsync(context.LocationId, workspaceMember, cancellationToken);
+        var zoneConnection = await GetZonesAsync(workspace, workspaceMember, cancellationToken);
         if (zoneConnection.Edges.Count != 0)
         {
             blocks.Add(new InputBlock
@@ -729,13 +732,14 @@ public class DesksPage(
                             string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList(),
                     InitialOptions = zoneConnection.Edges.Select(item => item.Node)
-                        .Where(item => desk.Tags.Select(tag => tag.Id).Contains(item.Id)).Select(item => new Option
-                        {
-                            Text = item.Name.ToOptionText(),
-                            Value = item.Id,
-                            Description =
-                                string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
-                        }).ToList()
+                        .Where(item => desk.OrganizationZones.Select(tag => tag.Id).Contains(item.Id)).Select(item =>
+                            new Option
+                            {
+                                Text = item.Name.ToOptionText(),
+                                Value = item.Id,
+                                Description =
+                                    string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
+                            }).ToList()
                 },
                 Optional = true
             });
@@ -829,29 +833,34 @@ public class DesksPage(
             cancellationToken);
     }
 
-    private async Task<TagConnection> GetZonesAsync(
-        string locationId,
+    private async Task<ZoneConnection> GetZonesAsync(
+        Workspace workspace,
         WorkspaceMember workspaceMember,
         CancellationToken cancellationToken)
     {
-        var getPaginatedTagsInput = new GetPaginatedTagsInput
+        var getPaginatedZonesInput = new GetPaginatedZonesInput
         {
             After = string.Empty,
             First = -1,
             Before = string.Empty,
             Last = -1,
-            Where = new TagWhereInput { LocationId = locationId, Type = LocationTagType.Zone }
+            Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
-        getPaginatedTagsInput.OrderBy.AddRange([
-            new TagOrderInput { Direction = OrderDirection.Ascending, Field = TagOrderField.TagName }
+        getPaginatedZonesInput.OrderBy.AddRange([
+            new ZoneOrderInput
+            {
+                Direction = global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection.Ascending,
+                Field = ZoneOrderField.ZoneName
+            }
         ]);
 
-        return await locationServiceClient.GetPaginatedTagsAsync(
-            getPaginatedTagsInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        return await organizationServiceClient.GetPaginatedZonesAsync(
+            getPaginatedZonesInput,
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
     }
+
 
     private async Task HandleDatePickerChangedAsync(
         Workspace workspace,

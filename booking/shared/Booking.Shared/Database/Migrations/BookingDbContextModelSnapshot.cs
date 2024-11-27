@@ -361,52 +361,6 @@ namespace Booking.Shared.Database.Migrations
                     b.ToTable("LocationMember");
                 });
 
-            modelBuilder.Entity("Booking.Shared.Database.Entities.LocationTag", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LocationId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Type")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("LocationTag");
-                });
-
             modelBuilder.Entity("Booking.Shared.Database.Entities.Organization", b =>
                 {
                     b.Property<string>("Id")
@@ -681,21 +635,6 @@ namespace Booking.Shared.Database.Migrations
                     b.ToTable("CustomerLocation");
                 });
 
-            modelBuilder.Entity("CustomerLocationTag", b =>
-                {
-                    b.Property<string>("PreferredByCustomersId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PreferredLocationTagsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("PreferredByCustomersId", "PreferredLocationTagsId");
-
-                    b.HasIndex("PreferredLocationTagsId");
-
-                    b.ToTable("CustomerLocationTag");
-                });
-
             modelBuilder.Entity("CustomerOrganizationTag", b =>
                 {
                     b.Property<string>("PreferredByCustomersId")
@@ -724,21 +663,6 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("DefaultedByCustomersId");
 
                     b.ToTable("CustomerTeam");
-                });
-
-            modelBuilder.Entity("DeskLocationTag", b =>
-                {
-                    b.Property<string>("TaggedDesksId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("TagsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("TaggedDesksId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("DeskLocationTag");
                 });
 
             modelBuilder.Entity("DeskOrganizationTag", b =>
@@ -887,15 +811,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("Location");
                 });
 
-            modelBuilder.Entity("Booking.Shared.Database.Entities.LocationTag", b =>
-                {
-                    b.HasOne("Booking.Shared.Database.Entities.Location", "Location")
-                        .WithMany("Tags")
-                        .HasForeignKey("LocationId");
-
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationMember", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Customer", "Customer")
@@ -999,21 +914,6 @@ namespace Booking.Shared.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CustomerLocationTag", b =>
-                {
-                    b.HasOne("Booking.Shared.Database.Entities.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("PreferredByCustomersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Booking.Shared.Database.Entities.LocationTag", null)
-                        .WithMany()
-                        .HasForeignKey("PreferredLocationTagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CustomerOrganizationTag", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Customer", null)
@@ -1040,21 +940,6 @@ namespace Booking.Shared.Database.Migrations
                     b.HasOne("Booking.Shared.Database.Entities.Customer", null)
                         .WithMany()
                         .HasForeignKey("DefaultedByCustomersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DeskLocationTag", b =>
-                {
-                    b.HasOne("Booking.Shared.Database.Entities.Desk", null)
-                        .WithMany()
-                        .HasForeignKey("TaggedDesksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Booking.Shared.Database.Entities.LocationTag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1094,8 +979,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("Desks");
 
                     b.Navigation("LocationMembers");
-
-                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Organization", b =>

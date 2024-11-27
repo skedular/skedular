@@ -42,9 +42,7 @@ internal static class LocationExtensions
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .Include(query => query.PhysicalAddress)
-            .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Desks.Where(desk => !desk.DeletedAt.HasValue))
-            .ThenInclude(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Desks.Where(desk => !desk.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
@@ -87,7 +85,8 @@ internal static class LocationExtensions
         if (searchCriteria.ZoneIds.Length != 0)
         {
             searchCriteria.ZoneIds.ForEach(zoneId =>
-                query = query.Where(item => item.Desks.Any(desk => desk.Tags.Select(tag => tag.Id).Contains(zoneId))));
+                query = query.Where(item =>
+                    item.Desks.Any(desk => desk.OrganizationTags.Select(tag => tag.Id).Contains(zoneId))));
         }
 
         if (searchCriteria.DeskTypeIds.Length != 0)
@@ -228,7 +227,8 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
             if (searchCriteria.ZoneIds.Length != 0)
             {
                 searchCriteria.ZoneIds.ForEach(zoneId =>
-                    edge.Node.Desks = edge.Node.Desks.Where(desk => desk.Tags.Select(tag => tag.Id).Contains(zoneId))
+                    edge.Node.Desks = edge.Node.Desks
+                        .Where(desk => desk.OrganizationTags.Select(tag => tag.Id).Contains(zoneId))
                         .ToList());
             }
 

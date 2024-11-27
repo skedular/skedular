@@ -124,13 +124,13 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
             new SectionBlock { Text = $"*RequireBookingApproval*: {desk.RequireBookingApproval}".ToMarkdown() }
         };
 
-        if (desk.Tags.Count != 0)
+        if (desk.OrganizationZones.Count != 0)
         {
             blocks.Add(new SectionBlock
             {
                 Text = string.Join(
                         ", ",
-                        desk.Tags.OrderBy(item => item.Name).Select(item => item.Name))
+                        desk.OrganizationZones.OrderBy(item => item.Name).Select(item => item.Name))
                     .ToMarkdownWithIcon(Icons.Zones)
             });
         }

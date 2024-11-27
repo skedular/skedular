@@ -10,7 +10,6 @@ using Desk = Customer.Shared.Models.Desk;
 using FeedbackChannel = Customer.Api.GraphQL.FeedbackChannel;
 using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
-using LocationTag = Customer.Shared.Models.LocationTag;
 using Organization = Customer.Shared.Models.Organization;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
 using Team = Customer.Shared.Models.Team;
@@ -33,7 +32,6 @@ public interface IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
-        ICollection<Shared.Database.Entities.LocationTag> preferredLocationTags,
         ICollection<Shared.Database.Entities.Desk> preferredDesks,
         ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags);
 
@@ -90,7 +88,6 @@ public class Mapper(IContext context) : IMapper
             DefaultOrganization = null,
             DefaultLocations = [],
             DefaultTeams = [],
-            PreferredLocationTags = [],
             PreferredOrganizationTags = [],
             PreferredDesks = []
         };
@@ -249,7 +246,6 @@ public class Mapper(IContext context) : IMapper
             Identities = MapTo(src.Identities).ToList(),
             DefaultOrganization = MapTo(src.DefaultOrganization),
             DefaultLocations = MapTo(src.DefaultLocations).ToList(),
-            PreferredLocationTags = MapTo(src.PreferredLocationTags).ToList(),
             PreferredDesks = MapTo(src.PreferredDesks).ToList(),
             DefaultTeams = MapTo(src.DefaultTeams).ToList(),
             PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
@@ -325,9 +321,6 @@ public class Mapper(IContext context) : IMapper
                             : new Organization { Id = item.Organization.Id }
                     })
                 .ToList(),
-            PreferredLocationTags = src.PreferredLocationTags.Select(item =>
-                    new LocationTag { Id = item.Id, Location = new Location { Id = item.Location.Id } })
-                .ToList(),
             PreferredDesks = src.PreferredDesks.Select(item =>
                     new Desk { Id = item.Id, Location = new Location { Id = item.Location.Id } })
                 .ToList(),
@@ -401,16 +394,6 @@ public class Mapper(IContext context) : IMapper
                         Id = item.Organization.Id
                     }
             }));
-        customer.PreferredLocationTags.AddRange(src.PreferredLocationTags.Select(item =>
-            new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.LocationTag
-            {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Location = new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Location
-                {
-                    Id = item.Location.Id
-                }
-            }));
         customer.PreferredDesks.AddRange(src.PreferredDesks.Select(item =>
             new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Desk
             {
@@ -479,7 +462,6 @@ public class Mapper(IContext context) : IMapper
             Shared.Database.Entities.Organization? defaultOrganization,
             ICollection<Shared.Database.Entities.Location> defaultLocations,
             ICollection<Shared.Database.Entities.Team> defaultTeams,
-            ICollection<Shared.Database.Entities.LocationTag> preferredLocationTags,
             ICollection<Shared.Database.Entities.Desk> preferredDesks,
             ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags) =>
         new()
@@ -512,7 +494,6 @@ public class Mapper(IContext context) : IMapper
             DefaultOrganization = defaultOrganization,
             DefaultLocations = defaultLocations,
             DefaultTeams = defaultTeams,
-            PreferredLocationTags = preferredLocationTags,
             PreferredDesks = preferredDesks,
             PreferredOrganizationTags = preferredOrganizationTags
         };
@@ -564,26 +545,7 @@ public class Mapper(IContext context) : IMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
                 Organization = MapTo(src.Organization),
-                Tags = MapTo(src.Tags).ToList(),
                 Desks = MapTo(src.Desks).ToList()
-            };
-
-    private static IEnumerable<LocationTag> MapTo(IEnumerable<Shared.Database.Entities.LocationTag?>? src) =>
-        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
-
-    private static LocationTag? MapTo(Shared.Database.Entities.LocationTag? src) =>
-        src is null
-            ? null
-            : new LocationTag
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
-                Type = src.Type,
-                Location = new Location { Id = src.Location.Id }
             };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag?>? src) =>

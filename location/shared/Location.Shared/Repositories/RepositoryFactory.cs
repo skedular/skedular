@@ -17,7 +17,6 @@ public interface IRepositoryFactory
     ILocationRepository LocationRepository { get; }
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     IOrganizationRepository OrganizationRepository { get; }
-    ITagRepository TagRepository { get; }
     IOrganizationTagRepository OrganizationTagRepository { get; }
 }
 
@@ -41,7 +40,6 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
-        TagRepository = new TagRepository(_dbContext, timeProvider);
         OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
     }
 
@@ -62,7 +60,6 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public ILocationRepository LocationRepository { get; }
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }
-    public ITagRepository TagRepository { get; }
     public IOrganizationTagRepository OrganizationTagRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);

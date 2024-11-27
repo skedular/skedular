@@ -26,8 +26,6 @@ service CustomerService {
     rpc ClearDefaultOrganization (ClearDefaultOrganizationInput) returns (Customer);
     rpc RemoveDefaultLocation (RemoveDefaultLocationInput) returns (Customer);
     rpc RemoveDefaultTeam (RemoveDefaultTeamInput) returns (Customer);
-    rpc AddPreferredLocationTag (AddPreferredLocationTagInput) returns (Customer);
-    rpc RemovePreferredLocationTag (RemovePreferredLocationTagInput) returns (Customer);
     rpc AddPreferredDesk (AddPreferredDeskInput) returns (Customer);
     rpc RemovePreferredDesk (RemovePreferredDeskInput) returns (Customer);
     rpc AddPreferredOrganizationTag (AddPreferredOrganizationTagInput) returns (Customer);
@@ -96,10 +94,9 @@ message Admin_AddInput {
     bool isPreferredDeskOnboardingDone = 24;
     Organization defaultOrganization = 25;
     repeated Location defaultLocations = 26;
-    repeated LocationTag preferredLocationTags = 27;
-    repeated Desk preferredDesks = 28;
-    repeated Team defaultTeams = 29;
-    repeated OrganizationTag preferredOrganizationTags = 30;
+    repeated Desk preferredDesks = 27;
+    repeated Team defaultTeams = 28;
+    repeated OrganizationTag preferredOrganizationTags = 29;
 }
 
 message Customer {
@@ -129,10 +126,9 @@ message Customer {
     bool isPreferredDeskOnboardingDone = 24;
     Organization defaultOrganization = 25;
     repeated Location defaultLocations = 26;
-    repeated LocationTag preferredLocationTags = 27;
-    repeated Desk preferredDesks = 28;
-    repeated Team defaultTeams = 29;
-    repeated OrganizationTag preferredOrganizationTags = 30;
+    repeated Desk preferredDesks = 27;
+    repeated Team defaultTeams = 28;
+    repeated OrganizationTag preferredOrganizationTags = 29;
 }
 
 message Identity {
@@ -150,12 +146,6 @@ message Location {
     string id = 1;
     string name = 2;
     Organization organization = 3;
-}
-
-message LocationTag {
-    string id = 1;
-    string name = 2;
-    Location location = 3;
 }
 
 message Desk {
@@ -245,14 +235,6 @@ message RemoveDefaultLocationInput {
 
 message RemoveDefaultTeamInput {
     string teamId = 1;
-}
-
-message AddPreferredLocationTagInput {
-    string locationTagId = 1;
-}
-
-message RemovePreferredLocationTagInput {
-    string locationTagId = 1;
 }
 
 message AddPreferredDeskInput {

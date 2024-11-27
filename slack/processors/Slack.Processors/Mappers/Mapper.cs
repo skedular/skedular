@@ -14,7 +14,6 @@ using Desk = Slack.Shared.Models.Desk;
 using OrganizationDeskType = Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationDeskType;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Identity = Slack.Shared.Models.Identity;
-using LocationTag = Slack.Shared.Models.LocationTag;
 using MembershipType = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.MembershipType;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
@@ -515,19 +514,12 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
-            Tags = MapTo(src.LocationTags).ToList(),
             OrganizationDeskTypes = MapTo(src.OrganizationDeskTypes).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList(),
             Location = string.IsNullOrWhiteSpace(src.Location?.Id)
                 ? null
                 : new Location { Id = src.Id, Name = src.Name }
         };
-
-    private static IEnumerable<LocationTag> MapTo(
-        IEnumerable<Api.Shared.Services.Grpc.UnityHub.Booking.V1.LocationTag> src) => src.Select(MapTo);
-
-    private static LocationTag MapTo(Api.Shared.Services.Grpc.UnityHub.Booking.V1.LocationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Type = src.TagType.ToSafeString() };
 
     private static IEnumerable<Shared.Models.OrganizationDeskType> MapTo(IEnumerable<OrganizationDeskType> src) =>
         src.Select(MapTo);

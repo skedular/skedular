@@ -14,7 +14,6 @@ public class Desk : EntityBaseWithDeleted
     public bool RequireBookingApproval { get; set; }
 
     public virtual Location Location { get; set; }
-    public virtual ICollection<Tag> Tags { get; set; } = [];
     public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public virtual ICollection<Booking> Bookings { get; set; } = [];
 }
@@ -30,10 +29,6 @@ public class DeskConfiguration : IEntityTypeConfiguration<Desk>
 
         builder
             .HasOne(item => item.Location)
-            .WithMany(item => item.Desks);
-
-        builder
-            .HasMany(item => item.Tags)
             .WithMany(item => item.Desks);
 
         builder

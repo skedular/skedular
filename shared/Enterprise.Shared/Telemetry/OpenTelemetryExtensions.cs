@@ -90,7 +90,7 @@ public static class OpenTelemetryExtensions
                                 activity.SetTag("db.type", command.CommandType);
                                 activity.SetTag("db.text", command.CommandText);
                                 activity.SetTag("db.parameters",
-                                    string.Join(", ",
+                                    string.Join(",",
                                         command.Parameters.OfType<DbParameter>().Select(parameter =>
                                             $"{parameter.ParameterName}={parameter.Value}")));
                             };

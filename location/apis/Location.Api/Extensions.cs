@@ -18,7 +18,6 @@ public static class Extensions
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<ILocationService, LocationService>()
             .AddScoped<ILocationMemberService, LocationMemberService>()
-            .AddScoped<ITagService, TagService>()
             .AddScoped<IDeskService, DeskService>()
             .AddScoped<ILocationAnalyticsService, LocationAnalyticsService>()
             .AddScoped<ILocationInvitationService, LocationInvitationService>()

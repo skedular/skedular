@@ -30,7 +30,6 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public ICollection<Identity> Identities { get; set; } = [];
     public Organization? DefaultOrganization { get; set; }
     public ICollection<Location> DefaultLocations { get; set; } = [];
-    public ICollection<LocationTag> PreferredLocationTags { get; set; } = [];
     public ICollection<Desk> PreferredDesks { get; set; } = [];
     public ICollection<Team> DefaultTeams { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];

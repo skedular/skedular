@@ -3,7 +3,6 @@ using Api.Shared.Models;
 using Enterprise.Shared;
 using Location.Shared.Models;
 using Desk = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Desk;
-using Tag = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Tag;
 
 namespace Location.Shared.Mappers;
 
@@ -40,14 +39,6 @@ public class Mapper : IMapper
             return new Member { Id = item.Id, CustomerId = item.Customer.Id, MembershipType = membershipType };
         }));
 
-        location.Tags.AddRange(src.Tags.Select(item => new Tag
-        {
-            Id = item.Id,
-            Name = item.Name.ToSafeString(),
-            Description = item.Description.ToSafeString(),
-            TagType = item.Type.ToSafeString()
-        }));
-
         location.Desks.AddRange(src.Desks.Select(item =>
         {
             var desk = new Desk
@@ -58,7 +49,6 @@ public class Mapper : IMapper
                 RequireBookingApproval = item.RequireBookingApproval
             };
 
-            desk.LocationTagIds.AddRange(item.Tags.Select(tag => tag.Id));
             desk.OrganizationTagIds.AddRange(item.OrganizationTags.Select(tag => tag.Id));
 
             return desk;

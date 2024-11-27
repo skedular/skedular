@@ -17,7 +17,6 @@ public class BookingDbContext(
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Location> Location { get; set; }
     public DbSet<LocationMember> LocationMember { get; set; }
-    public DbSet<LocationTag> LocationTag { get; set; }
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<OrganizationTag> OrganizationTag { get; set; }

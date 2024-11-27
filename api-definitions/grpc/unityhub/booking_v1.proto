@@ -159,12 +159,6 @@ message Team {
     string name = 2;
 }
 
-message LocationTag {
-    string id = 1;
-    string name = 2;
-    string tagType = 3;
-}
-
 message OrganizationDeskType {
     string id = 1;
     string name = 2;
@@ -181,7 +175,6 @@ message Desk {
     Location location = 3;
     repeated OrganizationDeskType organizationDeskTypes = 4;
     repeated OrganizationZone organizationZones = 5;
-    repeated LocationTag locationTags = 6;
 }
 
 message GetOrganizationPermissionsInput {

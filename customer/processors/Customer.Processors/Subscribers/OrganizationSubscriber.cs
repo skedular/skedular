@@ -182,9 +182,6 @@ public class OrganizationSubscriber(
             customer.DefaultLocations = customer.DefaultLocations
                 .Where(location => location.Organization is null || location.Organization.Id != organizationId)
                 .ToList();
-            customer.PreferredLocationTags = customer.PreferredLocationTags
-                .Where(locationTag => locationTag.Location.Organization is null ||
-                                      locationTag.Location.Organization.Id != organizationId).ToList();
             customer.PreferredDesks = customer.PreferredDesks
                 .Where(desk => desk.Location.Organization is null || desk.Location.Organization.Id != organizationId)
                 .ToList();

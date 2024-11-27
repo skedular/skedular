@@ -10,7 +10,6 @@ using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
-using Tag = Location.Shared.Database.Entities.Tag;
 
 namespace Location.Api.Services;
 
@@ -396,18 +395,6 @@ public class DeskService(
         {
             throw new DeskWithSameNameExist();
         }
-
-        var tagIds = desk.Tags.Select(item => item.Id).ToList();
-        var tags = tagIds.Count == 0
-            ? []
-            : await repositoryFactory.TagRepository
-                .Query(new Specification<Tag>
-                {
-                    Criteria = query => !query.DeletedAt.HasValue &&
-                                        query.Location.Id == locationId &&
-                                        tagIds.Contains(query.Id)
-                })
-                .ToListAsync(cancellationToken);
 
         var organizationTags = existingLocation.Organization is null
             ? []

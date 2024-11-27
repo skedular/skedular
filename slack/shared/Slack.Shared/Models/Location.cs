@@ -7,7 +7,6 @@ public class Location : ReplicatedModelBaseWithDeleted
     public string? Name { get; set; }
     public string? About { get; set; }
     public string? Timezone { get; set; }
-    public ICollection<LocationTag> Tags { get; set; } = [];
     public ICollection<Desk> Desks { get; set; } = [];
     public Organization? Organization { get; set; }
     public DateTimeOffset? SlackChannelDailyUpdateLastSentAt { get; set; }

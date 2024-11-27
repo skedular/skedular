@@ -1,5 +1,5 @@
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -16,6 +16,8 @@ using Slack.Shared.Repositories;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
+using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection;
+using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
 using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
 using Option = SlackNet.Blocks.Option;
 
@@ -26,6 +28,8 @@ public class BulkAddDesksButtonHandler(
     SlackConfiguration slackConfiguration,
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
+    OrganizationConfiguration organizationConfiguration,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
     ICustomerService customerService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
@@ -112,7 +116,7 @@ public class BulkAddDesksButtonHandler(
         };
 
         var blocks = new List<Block> { prefix, count, deactivated, requireBookingApproval };
-        var zoneConnection = await GetZonesAsync(context.LocationId, workspaceMember, cancellationToken);
+        var zoneConnection = await GetZonesAsync(workspace, workspaceMember, cancellationToken);
         if (zoneConnection.Edges.Count != 0)
         {
             blocks.Add(new InputBlock
@@ -330,27 +334,27 @@ public class BulkAddDesksButtonHandler(
 
     public Task HandleClose(ViewClosed viewClosed) => Task.CompletedTask;
 
-    private async Task<TagConnection> GetZonesAsync(
-        string locationId,
+    private async Task<ZoneConnection> GetZonesAsync(
+        Workspace workspace,
         WorkspaceMember workspaceMember,
         CancellationToken cancellationToken)
     {
-        var getPaginatedTagsInput = new GetPaginatedTagsInput
+        var getPaginatedZonesInput = new GetPaginatedZonesInput
         {
             After = string.Empty,
             First = -1,
             Before = string.Empty,
             Last = -1,
-            Where = new TagWhereInput { LocationId = locationId, Type = LocationTagType.Zone }
+            Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
-        getPaginatedTagsInput.OrderBy.AddRange([
-            new TagOrderInput { Direction = OrderDirection.Ascending, Field = TagOrderField.TagName }
+        getPaginatedZonesInput.OrderBy.AddRange([
+            new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.ZoneName }
         ]);
 
-        return await locationServiceClient.GetPaginatedTagsAsync(
-            getPaginatedTagsInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        return await organizationServiceClient.GetPaginatedZonesAsync(
+            getPaginatedZonesInput,
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
     }
 }

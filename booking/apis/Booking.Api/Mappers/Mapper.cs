@@ -1,6 +1,7 @@
 using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
 using Booking.Api.GraphQL;
+using Booking.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
@@ -9,7 +10,6 @@ using Customer = Booking.Shared.Models.Customer;
 using Desk = Booking.Shared.Database.Entities.Desk;
 using Identity = Booking.Shared.Models.Identity;
 using Location = Booking.Shared.Database.Entities.Location;
-using LocationTag = Api.Shared.Services.Grpc.UnityHub.Booking.V1.LocationTag;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using Team = Booking.Shared.Database.Entities.Team;
 
@@ -315,24 +315,6 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            Location = location,
-            Tags = MapTo(src.Tags, location).ToList()
-        };
-
-    private static IEnumerable<Shared.Models.LocationTag> MapTo(IEnumerable<Shared.Database.Entities.LocationTag> src,
-        Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
-
-    private static Shared.Models.LocationTag MapTo(Shared.Database.Entities.LocationTag src,
-        Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Type = src.Type,
             Location = location
         };
 
@@ -407,29 +389,22 @@ public class Mapper : IMapper
                 }
         };
 
-        desk.LocationTags.AddRange(MapToGrpcResponse(src.Tags));
         desk.OrganizationDeskTypes.AddRange(MapToGrpcResponseDeskTypes(src.OrganizationTags));
         desk.OrganizationZones.AddRange(MapToGrpcResponseZones(src.OrganizationTags));
 
         return desk;
     }
 
-    private static IEnumerable<LocationTag> MapToGrpcResponse(IEnumerable<Shared.Models.LocationTag> src) =>
-        src.Select(MapToGrpcResponse);
-
-    private static LocationTag MapToGrpcResponse(Shared.Models.LocationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), TagType = src.Type.ToSafeString() };
-
-    private static IEnumerable<OrganizationDeskType> MapToGrpcResponseDeskTypes(IEnumerable<Shared.Models.OrganizationTag> src) =>
+    private static IEnumerable<OrganizationDeskType> MapToGrpcResponseDeskTypes(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.DeskType).Select(MapToGrpcResponseDeskType);
 
-    private static OrganizationDeskType MapToGrpcResponseDeskType(Shared.Models.OrganizationTag src) =>
+    private static OrganizationDeskType MapToGrpcResponseDeskType(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static IEnumerable<OrganizationZone> MapToGrpcResponseZones(IEnumerable<Shared.Models.OrganizationTag> src) =>
+    private static IEnumerable<OrganizationZone> MapToGrpcResponseZones(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.Zone).Select(MapToGrpcResponseZone);
 
-    private static OrganizationZone MapToGrpcResponseZone(Shared.Models.OrganizationTag src) =>
+    private static OrganizationZone MapToGrpcResponseZone(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static BookingCustomerDetails MapTo(Customer src) =>
@@ -485,27 +460,19 @@ public class Mapper : IMapper
             Location = MapTo(src.Location)
         };
 
-    private static IEnumerable<BookingOrganizationDeskTypeDetails> 
-        MapToDeskTypes(IEnumerable<Shared.Models.OrganizationTag> src) => 
+    private static IEnumerable<BookingOrganizationDeskTypeDetails>
+        MapToDeskTypes(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.DeskType).Select(MapToDeskType);
 
-    private static BookingOrganizationDeskTypeDetails MapToDeskType(Shared.Models.OrganizationTag src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
-        };
+    private static BookingOrganizationDeskTypeDetails MapToDeskType(OrganizationTag src) =>
+        new() { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
 
-    private static IEnumerable<BookingOrganizationZoneDetails> 
-        MapToZones(IEnumerable<Shared.Models.OrganizationTag> src) => 
+    private static IEnumerable<BookingOrganizationZoneDetails>
+        MapToZones(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.Zone).Select(MapToZone);
 
-    private static BookingOrganizationZoneDetails MapToZone(Shared.Models.OrganizationTag src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
-        };
+    private static BookingOrganizationZoneDetails MapToZone(OrganizationTag src) =>
+        new() { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
 
     private static Shared.Models.Organization? MapTo(Organization? src) =>
         src is null
@@ -533,7 +500,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            Tags = MapTo(src.Tags).ToList()
+            OrganizationTags = MapTo(src.OrganizationTags).ToList()
         };
 
     private static Shared.Models.Team? MapTo(Team? src) =>
@@ -549,19 +516,9 @@ public class Mapper : IMapper
                 Name = src.Name
             };
 
-    private static IEnumerable<Shared.Models.LocationTag>
-        MapTo(IEnumerable<Shared.Database.Entities.LocationTag> src) =>
+    private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) =>
         src.Select(MapTo);
 
-    private static Shared.Models.LocationTag MapTo(Shared.Database.Entities.LocationTag src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Name = src.Name,
-            Type = src.Type
-        };
+    private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
+        new() { Id = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name, Type = src.Type };
 }

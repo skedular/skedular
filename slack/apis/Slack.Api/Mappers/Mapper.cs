@@ -15,14 +15,12 @@ using Desk = Slack.Shared.Models.Desk;
 using Identity = Api.Shared.Services.Grpc.UnityHub.Customer.V1.Identity;
 using Location = Slack.Shared.Database.Entities.Location;
 using LocationPermissions = Slack.Shared.Models.LocationPermissions;
-using LocationTag = Slack.Shared.Models.LocationTag;
 using Member = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Member;
 using MembershipType = Api.Shared.Services.Grpc.UnityHub.Organization.V1.MembershipType;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationPermissions = Slack.Shared.Models.OrganizationPermissions;
 using OrganizationTag = Slack.Shared.Models.OrganizationTag;
 using Permissions = Api.Shared.Services.Grpc.UnityHub.Location.V1.Permissions;
-using Tag = Api.Shared.Services.Grpc.UnityHub.Location.V1.Tag;
 using Team = Slack.Shared.Models.Team;
 using TeamPermissions = Slack.Shared.Models.TeamPermissions;
 using UpdateInput = Api.Shared.Services.Grpc.UnityHub.Booking.V1.UpdateInput;
@@ -71,7 +69,6 @@ public interface IMapper
     WorkspaceChannel MapTo(Conversation src, Workspace workspace);
     Shared.Models.WorkspaceChannel? MapTo(WorkspaceChannel? src);
     Customer MapTo(global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Customer src);
-    LocationTag MapTo(Tag src);
     Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk src);
 
     Workspace MapToEntity(Shared.Models.Workspace src, Organization organization);
@@ -242,14 +239,6 @@ public class Mapper : IMapper
                 Organization = string.IsNullOrWhiteSpace(item.Organization?.Id)
                     ? null
                     : new Shared.Models.Organization { Id = item.Organization.Id }
-            }).ToList();
-
-        customer.PreferredLocationTags =
-            src.PreferredLocationTags.Select(item => new LocationTag
-            {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Location = new Shared.Models.Location { Id = item.Location.Id }
             }).ToList();
 
         customer.PreferredDesks =
@@ -532,7 +521,6 @@ public class Mapper : IMapper
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
                 ? null
                 : new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = MapTo(src.Tags).ToList(),
             Desks = MapTo(src.Desks).ToList(),
             Permissions = new LocationPermissions
             {
@@ -560,15 +548,6 @@ public class Mapper : IMapper
             Team = MapTo(src.Team)
         };
 
-    public LocationTag MapTo(Tag src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
-            Type = src.Type.ToSafeString()
-        };
-
     public Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk src) =>
         new()
         {
@@ -576,7 +555,6 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            Tags = MapTo(src.Tags).ToList(),
             OrganizationDeskTypes = MapTo(src.OrganizationDeskTypes).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList()
         };
@@ -704,12 +682,6 @@ public class Mapper : IMapper
     private static Team? MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Team? src) =>
         string.IsNullOrWhiteSpace(src?.Id) ? null : new Team { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static IEnumerable<LocationTag> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.LocationTag> src) => src.Select(MapTo);
-
-    private static LocationTag MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.LocationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Type = src.TagType.ToSafeString() };
-
     private static IEnumerable<Desk> MapTo(
         IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Desk> src) => src.Select(MapTo);
 
@@ -718,7 +690,6 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
-            Tags = MapTo(src.LocationTags).ToList(),
             OrganizationDeskTypes = MapTo(src.OrganizationDeskTypes).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList(),
             Location = string.IsNullOrWhiteSpace(src.Location?.Id)
@@ -749,8 +720,6 @@ public class Mapper : IMapper
 
     private static Shared.Models.Identity MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
-
-    private IEnumerable<LocationTag> MapTo(IEnumerable<Tag> src) => src.Select(MapTo);
 
     private IEnumerable<Desk> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk> src) =>
         src.Select(MapTo);

@@ -30,7 +30,6 @@ public static class Extensions
             .AddScoped<IJoinInvitationRepository, JoinInvitationRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
-            .AddScoped<ITagRepository, TagRepository>()
             .AddScoped<ILocationMemberRepository, LocationMemberRepository>()
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>();

@@ -6,7 +6,6 @@ using Enterprise.Shared.Kafka.Consume;
 using Customer = Booking.Shared.Models.Customer;
 using Desk = Booking.Shared.Database.Entities.Desk;
 using Location = Booking.Shared.Database.Entities.Location;
-using LocationTag = Booking.Shared.Database.Entities.LocationTag;
 using OrganizationTag = Booking.Shared.Database.Entities.OrganizationTag;
 using Team = Booking.Shared.Database.Entities.Team;
 using Type = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Type;
@@ -117,38 +116,23 @@ public class CustomerSubscriber(
             await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        var preferredLocationTags = new List<LocationTag>();
-        foreach (var item in customer.PreferredLocationTags)
-        {
-            var location =
-                await repositoryFactory.LocationRepository.UpsertNakedAsync(
-                    item.Location.Id,
-                    null,
-                    cancellationToken);
-            preferredLocationTags.Add(
-                await repositoryFactory.LocationTagRepository.UpsertNakedAsync(
-                    item.Id,
-                    location,
-                    cancellationToken));
-
-            await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-            await repositoryFactory.LocationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        }
-
         var preferredDesks = new List<Desk>();
         foreach (var item in customer.PreferredDesks)
         {
-            var location =
-                await repositoryFactory.LocationRepository.UpsertNakedAsync(
-                    item.Location.Id,
-                    null,
-                    cancellationToken);
-            preferredDesks.Add(
-                await repositoryFactory.DeskRepository.UpsertNakedAsync(item.Id, location,
-                    cancellationToken));
+            if (item.Location is not null)
+            {
+                var location =
+                    await repositoryFactory.LocationRepository.UpsertNakedAsync(
+                        item.Location.Id,
+                        null,
+                        cancellationToken);
+                preferredDesks.Add(
+                    await repositoryFactory.DeskRepository.UpsertNakedAsync(item.Id, location,
+                        cancellationToken));
 
-            await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-            await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            }
         }
 
         var preferredOrganizationTags = new List<OrganizationTag>();
@@ -177,7 +161,6 @@ public class CustomerSubscriber(
                 defaultOrganization,
                 defaultLocations,
                 defaultTeams,
-                preferredLocationTags,
                 preferredDesks,
                 preferredOrganizationTags);
 
@@ -197,7 +180,6 @@ public class CustomerSubscriber(
                     defaultOrganization,
                     defaultLocations,
                     defaultTeams,
-                    preferredLocationTags,
                     preferredDesks,
                     preferredOrganizationTags)
             );
