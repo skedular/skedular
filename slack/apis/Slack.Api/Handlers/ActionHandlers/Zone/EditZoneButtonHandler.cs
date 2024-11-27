@@ -1,5 +1,4 @@
-using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -12,16 +11,16 @@ using Slack.Shared.Context;
 using Slack.Shared.Repositories;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Zone;
 
 public class EditZoneButtonHandler(
-    LocationConfiguration locationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
+    OrganizationConfiguration organizationConfiguration,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    ILocationService locationService,
+    IOrganizationService organizationService,
     IMapper mapper,
     IPageNavigator pageNavigator) : IViewSubmissionHandler
 {
@@ -46,15 +45,14 @@ public class EditZoneButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditZoneContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var permissions =
-            await locationService.GetPermissionsAsync(context.LocationId, workspaceMember, cancellationToken);
+            await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
             throw new Unauthorized();
         }
 
         var values = viewSubmission.View.State.Values;
-        var updateTagInput =
-            new UpdateTagInput { Id = context.ZoneId, Type = LocationTagType.Zone };
+        var updateZoneInput = new UpdateZoneInput { Id = context.ZoneId };
 
         if (values.TryGetValue(ZoneActionTypes.Name, out var nameBlock))
         {
@@ -63,7 +61,7 @@ public class EditZoneButtonHandler(
                 if (name is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    updateTagInput.Name = value.Value.ToSafeString();
+                    updateZoneInput.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -86,7 +84,7 @@ public class EditZoneButtonHandler(
             {
                 if (description is PlainTextInputValue value)
                 {
-                    updateTagInput.Description = value.Value.ToSafeString();
+                    updateZoneInput.Description = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -103,9 +101,9 @@ public class EditZoneButtonHandler(
             throw new InvalidOperationException("description block is missing");
         }
 
-        await locationServiceClient.UpdateTagAsync(
-            updateTagInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        await organizationServiceClient.UpdateZoneAsync(
+            updateZoneInput,
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
         await pageNavigator.BackAsync(

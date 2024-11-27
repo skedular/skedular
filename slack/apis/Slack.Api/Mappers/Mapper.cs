@@ -79,7 +79,8 @@ public interface IMapper
     Shared.Models.Workspace MapTo(Admin_AddWorkspaceInput src);
     global::Api.Shared.Services.Grpc.UnityHub.Slack.V1.Workspace MapTo(Shared.Models.Workspace src);
 
-    OrganizationDeskType MapToOrganizationDeskType(DeskType src);
+    OrganizationDeskType MapTo(DeskType src);
+    OrganizationZone MapTo(Zone src);
 }
 
 public class Mapper : IMapper
@@ -630,7 +631,10 @@ public class Mapper : IMapper
             AuthedRefreshToken = src.AuthedRefreshToken.ToSafeString()
         };
 
-    public OrganizationDeskType MapToOrganizationDeskType(DeskType src) =>
+    public OrganizationDeskType MapTo(DeskType src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
+
+    public OrganizationZone MapTo(Zone src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
 
     private IEnumerable<TeamMember> MapTo(

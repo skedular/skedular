@@ -306,7 +306,7 @@ public class RemoveDeskContext(PageContext pageContext, string locationId, strin
     }
 }
 
-public record AddZoneContext(PageContext PageContext, string? LocationId)
+public record AddZoneContext(PageContext PageContext)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 

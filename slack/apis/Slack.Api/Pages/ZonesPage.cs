@@ -1,6 +1,5 @@
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -19,7 +18,8 @@ using SlackNet.Interaction;
 using Button = SlackNet.Blocks.Button;
 using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService;
 using Icons = Slack.Shared.Constants.Icons;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection;
+using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 
@@ -38,15 +38,15 @@ public interface IZonesPage
 public class ZonesPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfiguration slackConfiguration,
-    LocationConfiguration locationConfiguration,
+    OrganizationConfiguration organizationConfiguration,
     CustomerConfiguration customerConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
     CustomerService.CustomerServiceClient customerServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
     IBookingService bookingService,
-    ILocationService locationService,
+    IOrganizationService organizationService,
     IZoneComponents zoneComponents,
     ICommonComponents commonComponents,
     IMapper mapper,
@@ -139,7 +139,9 @@ public class ZonesPage(
         }
     }
 
-    public async Task HandleAsync(StaticSelectAction action, BlockActionRequest request,
+    public async Task HandleAsync(
+        StaticSelectAction action,
+        BlockActionRequest request,
         CancellationToken cancellationToken)
     {
         var workspaceEntity =
@@ -186,8 +188,8 @@ public class ZonesPage(
             ArgumentNullException.ThrowIfNull(context.PageContext.ZonesPage);
 
             var zoneId = action.SelectedOption.Value[ZoneActionTypes.EditZone.Length..];
-            var permissions = await locationService.GetPermissionsAsync(
-                context.PageContext.ZonesPage.LocationId,
+            var permissions = await organizationService.GetPermissionsAsync(
+                workspace,
                 workspaceMember,
                 cancellationToken);
             if (!permissions.CanModify)
@@ -196,7 +198,6 @@ public class ZonesPage(
             }
 
             context.PageContext.PushCurrentPageToVisitedPages();
-            context.LocationId = context.PageContext.ZonesPage.LocationId;
             context.ZoneId = zoneId;
 
             await OpenEditZoneDialogAsync(
@@ -212,8 +213,8 @@ public class ZonesPage(
             ArgumentNullException.ThrowIfNull(context.PageContext.ZonesPage);
 
             var zoneId = action.SelectedOption.Value[ZoneActionTypes.RemoveZone.Length..];
-            var permissions = await locationService.GetPermissionsAsync(
-                context.PageContext.ZonesPage.LocationId,
+            var permissions = await organizationService.GetPermissionsAsync(
+                workspace,
                 workspaceMember,
                 cancellationToken);
             if (!permissions.CanDelete)
@@ -222,7 +223,6 @@ public class ZonesPage(
             }
 
             context.PageContext.PushCurrentPageToVisitedPages();
-            context.LocationId = context.PageContext.ZonesPage.LocationId;
             context.ZoneId = zoneId;
 
             await OpenRemoveZoneDialogAsync(
@@ -381,6 +381,7 @@ public class ZonesPage(
         commonPageContext.PageContext.CurrentPageType = PageType.Zones;
 
         var zoneConnection = await GetPaginatedZonesAsync(
+            workspace,
             workspaceMember,
             after,
             first,
@@ -390,11 +391,11 @@ public class ZonesPage(
             cancellationToken);
         var zones = zoneConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var asyncBlocks = await Task.WhenAll(GetToolbarAsync(
-            commonPageContext.PageContext.ZonesPage.LocationId,
+            workspace,
             workspaceMember,
             commonPageContext.PageContext,
             cancellationToken), zoneComponents.GetZoneCardsAsync(
-            commonPageContext.PageContext.ZonesPage.LocationId,
+            workspace,
             workspaceMember,
             zones,
             commonPageContext.PageContext,
@@ -440,14 +441,15 @@ public class ZonesPage(
     ];
 
     private async Task<ICollection<Block>> GetToolbarAsync(
-        string locationId,
+        Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
         var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
         var addZoneButton =
-            await zoneComponents.GetAddZoneButtonAsync(locationId, workspaceMember, pageContext, cancellationToken);
+            await zoneComponents.GetAddZoneButtonAsync(workspace, workspaceMember, pageContext,
+                cancellationToken);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
 
         return
@@ -463,7 +465,8 @@ public class ZonesPage(
         ];
     }
 
-    private async Task<TagConnection> GetPaginatedZonesAsync(
+    private async Task<ZoneConnection> GetPaginatedZonesAsync(
+        Workspace workspace,
         WorkspaceMember workspaceMember,
         string? after,
         int? first,
@@ -473,40 +476,37 @@ public class ZonesPage(
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.ZonesPage);
-        var getPaginatedTagsInput = new GetPaginatedTagsInput
+        var getPaginatedZonesInput = new GetPaginatedZonesInput
         {
             After = after.ToSafeString(),
             First = first.ToNullInt(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new TagWhereInput
-            {
-                LocationId = commonPageContext.PageContext.ZonesPage.LocationId, Type = LocationTagType.Zone
-            }
+            Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
-        getPaginatedTagsInput.OrderBy.AddRange([
-            new TagOrderInput { Direction = OrderDirection.Ascending, Field = TagOrderField.TagName }
+        getPaginatedZonesInput.OrderBy.AddRange([
+            new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.ZoneName }
         ]);
 
-        return await locationServiceClient.GetPaginatedTagsAsync(
-            getPaginatedTagsInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        return await organizationServiceClient.GetPaginatedZonesAsync(
+            getPaginatedZonesInput,
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
     }
 
     private static List<Block> GetZonesSearchCriteriaAndPaginationBlocks(
-        TagConnection tagConnection,
+        ZoneConnection zoneConnection,
         PageContext pageContext)
     {
-        if (tagConnection.Edges.Count == 0)
+        if (zoneConnection.Edges.Count == 0)
         {
             return [new SectionBlock { Text = "No zone found".ToMarkdown() }];
         }
 
         var totalZonesCount =
-            new SectionBlock { Text = $"Total zones: {tagConnection.TotalCount}".ToMarkdown() };
-        if (tagConnection.TotalCount <= ZonesPageSize)
+            new SectionBlock { Text = $"Total zones: {zoneConnection.TotalCount}".ToMarkdown() };
+        if (zoneConnection.TotalCount <= ZonesPageSize)
         {
             return [totalZonesCount];
         }
@@ -515,7 +515,7 @@ public class ZonesPage(
         ArgumentNullException.ThrowIfNull(pageContext.ZonesPage);
 
         var paginationButtons = new List<IActionElement>();
-        if (tagConnection.PageInfo.HasPreviousPage)
+        if (zoneConnection.PageInfo.HasPreviousPage)
         {
             pageContext.ZonesPage.Pagination.First = ZonesPageSize;
             pageContext.ZonesPage.Pagination.After = null;
@@ -531,7 +531,7 @@ public class ZonesPage(
 
             pageContext.ZonesPage.Pagination.First = null;
             pageContext.ZonesPage.Pagination.After = null;
-            pageContext.ZonesPage.Pagination.Before = tagConnection.PageInfo.StartCursor;
+            pageContext.ZonesPage.Pagination.Before = zoneConnection.PageInfo.StartCursor;
             pageContext.ZonesPage.Pagination.Last = ZonesPageSize;
 
             paginationButtons.Add(new Button
@@ -542,10 +542,10 @@ public class ZonesPage(
             });
         }
 
-        if (tagConnection.PageInfo.HasNextPage)
+        if (zoneConnection.PageInfo.HasNextPage)
         {
             pageContext.ZonesPage.Pagination.First = ZonesPageSize;
-            pageContext.ZonesPage.Pagination.After = tagConnection.PageInfo.EndCursor;
+            pageContext.ZonesPage.Pagination.After = zoneConnection.PageInfo.EndCursor;
             pageContext.ZonesPage.Pagination.Before = null;
             pageContext.ZonesPage.Pagination.Last = null;
 
@@ -581,9 +581,9 @@ public class ZonesPage(
         EditZoneContext context,
         CancellationToken cancellationToken)
     {
-        var zone = await locationServiceClient.GetTagAsync(
-            new GetTagInput { Id = context.ZoneId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        var zone = await organizationServiceClient.GetZoneAsync(
+            new GetZoneInput { Id = context.ZoneId },
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
         var name = new InputBlock
@@ -635,9 +635,9 @@ public class ZonesPage(
         RemoveZoneContext context,
         CancellationToken cancellationToken)
     {
-        var zone = await locationServiceClient.GetTagAsync(
-            new GetTagInput { Id = context.ZoneId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        var zone = await organizationServiceClient.GetZoneAsync(
+            new GetZoneInput { Id = context.ZoneId },
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
         var confirmationMessage = new SectionBlock
@@ -668,8 +668,8 @@ public class ZonesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.AddPreferredLocationTagAsync(
-            new AddPreferredLocationTagInput { LocationTagId = context.ZoneId },
+        await customerServiceClient.AddPreferredOrganizationTagAsync(
+            new AddPreferredOrganizationTagInput { OrganizationTagId = context.ZoneId },
             customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
@@ -688,8 +688,8 @@ public class ZonesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.RemovePreferredLocationTagAsync(
-            new RemovePreferredLocationTagInput { LocationTagId = context.ZoneId },
+        await customerServiceClient.RemovePreferredOrganizationTagAsync(
+            new RemovePreferredOrganizationTagInput { OrganizationTagId = context.ZoneId },
             customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 

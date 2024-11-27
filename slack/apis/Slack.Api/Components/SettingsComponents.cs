@@ -99,8 +99,7 @@ public class SettingsComponents(
             return [];
         }
 
-        var locationId = locationsWithZones.First().Id;
-        pageContext.ZonesPage = new ZonesPage(new PaginationContext(), locationId);
+        pageContext.ZonesPage = new ZonesPage(new PaginationContext());
 
         return
         [

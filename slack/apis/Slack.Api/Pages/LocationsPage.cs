@@ -231,9 +231,8 @@ public class LocationsPage(
         }
         else if (action.SelectedOption.Value.StartsWith(ZoneActionTypes.Zones))
         {
-            var locationId = action.SelectedOption.Value[ZoneActionTypes.Zones.Length..];
             var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
-            context.PageContext.ZonesPage = new Shared.Context.ZonesPage(new PaginationContext(), locationId);
+            context.PageContext.ZonesPage = new Shared.Context.ZonesPage(new PaginationContext());
             context.PageContext.PushCurrentPageToVisitedPages();
 
             await zonesPage.RenderWithContextAsync(

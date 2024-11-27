@@ -10,35 +10,36 @@ namespace Slack.Api.Components;
 public interface IZoneComponents
 {
     Task<ICollection<IActionElement>> GetAddZoneButtonAsync(
-        string locationId,
+        Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken);
 
     Task<ICollection<Block>> GetZoneCardsAsync(
-        string locationId,
+        Workspace workspace,
         WorkspaceMember workspaceMember,
-        ICollection<LocationTag> zones,
+        ICollection<OrganizationZone> zones,
         PageContext pageContext,
         CancellationToken cancellationToken);
 }
 
-public class ZoneComponents(ICustomerService customerService, ILocationService locationService) : IZoneComponents
+public class ZoneComponents(ICustomerService customerService, IOrganizationService organizationService)
+    : IZoneComponents
 {
     public async Task<ICollection<IActionElement>> GetAddZoneButtonAsync(
-        string locationId,
+        Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var permissions = await locationService.GetPermissionsAsync(locationId, workspaceMember, cancellationToken);
+        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
             return [];
         }
 
         pageContext = pageContext.PushCurrentPageToVisitedPagesAndClone();
-        var context = new AddZoneContext(pageContext, locationId).Serialize();
+        var context = new AddZoneContext(pageContext).Serialize();
 
         return
         [
@@ -52,18 +53,19 @@ public class ZoneComponents(ICustomerService customerService, ILocationService l
     }
 
     public async Task<ICollection<Block>> GetZoneCardsAsync(
-        string locationId,
+        Workspace workspace,
         WorkspaceMember workspaceMember,
-        ICollection<LocationTag> zones,
+        ICollection<OrganizationZone> zones,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
         var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        var permissions = await locationService.GetPermissionsAsync(locationId, workspaceMember, cancellationToken);
+        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
         var blocks = new List<Block>();
         foreach (var zone in zones)
         {
-            blocks.AddRange(GetZoneCard(zone, customer, permissions.CanModify, permissions.CanDelete, pageContext));
+            blocks.AddRange(
+                GetZoneCard(zone, customer, permissions.CanModify, permissions.CanDelete, pageContext));
             blocks.Add(new DividerBlock());
         }
 
@@ -71,7 +73,7 @@ public class ZoneComponents(ICustomerService customerService, ILocationService l
     }
 
     private static List<Block> GetZoneCard(
-        LocationTag zone,
+        OrganizationZone zone,
         Customer customer,
         bool canModify,
         bool canDelete,
@@ -87,7 +89,7 @@ public class ZoneComponents(ICustomerService customerService, ILocationService l
 
         var buttons = new List<IActionElement>();
 
-        if (customer.PreferredLocationTags.Any(item => item.Id == zone.Id))
+        if (customer.PreferredOrganizationTags.Any(item => item.Id == zone.Id))
         {
             buttons.Add(new Button
             {
@@ -117,7 +119,8 @@ public class ZoneComponents(ICustomerService customerService, ILocationService l
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{ZoneActionTypes.EditZone}{zone.Id}", Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
+                Value = $"{ZoneActionTypes.EditZone}{zone.Id}",
+                Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
             });
         }
 

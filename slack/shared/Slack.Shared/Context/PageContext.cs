@@ -32,7 +32,7 @@ public record LocationsPage(PaginationContext Pagination);
 
 public record TeamsPage(PaginationContext Pagination);
 
-public record ZonesPage(PaginationContext Pagination, string LocationId);
+public record ZonesPage(PaginationContext Pagination);
 
 public record DeskTypesPage(PaginationContext Pagination);
 

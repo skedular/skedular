@@ -1,5 +1,4 @@
-using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -15,15 +14,15 @@ using Slack.Shared.Repositories;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Zone;
 
 public class AddZoneButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfiguration slackConfiguration,
-    LocationConfiguration locationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
+    OrganizationConfiguration organizationConfiguration,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
     ICustomerService customerService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
@@ -117,7 +116,7 @@ public class AddZoneButtonHandler(
         var context = AddZoneContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var zoneId = randomHelper.Generate();
-        var addTagInput = new AddTagInput { Id = zoneId, LocationId = context.LocationId, Type = LocationTagType.Zone };
+        var addZoneInput = new AddZoneInput { Id = zoneId, OrganizationId = workspace.Organization.Id };
 
         if (values.TryGetValue(ZoneActionTypes.Name, out var nameBlock))
         {
@@ -126,7 +125,7 @@ public class AddZoneButtonHandler(
                 if (name is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    addTagInput.Name = value.Value.ToSafeString();
+                    addZoneInput.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -149,7 +148,7 @@ public class AddZoneButtonHandler(
             {
                 if (description is PlainTextInputValue value)
                 {
-                    addTagInput.Description = value.Value.ToSafeString();
+                    addZoneInput.Description = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -166,9 +165,9 @@ public class AddZoneButtonHandler(
             throw new InvalidOperationException("description block is missing");
         }
 
-        await locationServiceClient.AddTagAsync(
-            addTagInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        await organizationServiceClient.AddZoneAsync(
+            addZoneInput,
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
         await pageNavigator.BackAsync(

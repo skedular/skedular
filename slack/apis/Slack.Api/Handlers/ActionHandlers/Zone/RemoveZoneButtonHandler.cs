@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
@@ -8,16 +8,16 @@ using Slack.Shared.Configurations;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
 using SlackNet.Interaction;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Zone;
 
 public class RemoveZoneButtonHandler(
-    LocationConfiguration locationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
+    OrganizationConfiguration organizationConfiguration,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
-    ILocationService locationService,
+    IOrganizationService organizationService,
     IMapper mapper,
     IPageNavigator pageNavigator) : IViewSubmissionHandler
 {
@@ -41,16 +41,15 @@ public class RemoveZoneButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = RemoveZoneContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var permissions =
-            await locationService.GetPermissionsAsync(context.LocationId, workspaceMember, cancellationToken);
+        var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
             throw new Unauthorized();
         }
 
-        await locationServiceClient.RemoveTagAsync(
-            new RemoveTagInput { Id = context.ZoneId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        await organizationServiceClient.RemoveZoneAsync(
+            new RemoveZoneInput { Id = context.ZoneId },
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
         await pageNavigator.BackAsync(

@@ -49,6 +49,7 @@ public class HomePage(
     ILocationsPage locationsPage,
     ITeamsPage teamsPage,
     IDeskTypesPage deskTypesPage,
+    IZonesPage zonesPage,
     ISettingsPage settingsPage,
     IMapper mapper,
     ICommonComponents commonComponents,
@@ -290,6 +291,22 @@ public class HomePage(
 
                 break;
 
+            case TeamActionTypes.Teams:
+                {
+                    var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
+                    context.PageContext.TeamsPage = new Shared.Context.TeamsPage(new PaginationContext());
+                    context.PageContext.PushCurrentPageToVisitedPages();
+
+                    await teamsPage.RenderWithContextAsync(
+                        workspace,
+                        workspaceMember,
+                        new CommonPageContext(context.PageContext),
+                        request.View.Hash,
+                        cancellationToken);
+                }
+
+                break;
+
             case DeskTypeActionTypes.DeskTypes:
                 {
                     var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
@@ -305,14 +322,14 @@ public class HomePage(
                 }
 
                 break;
-
-            case TeamActionTypes.Teams:
+            
+            case ZoneActionTypes.Zones:
                 {
                     var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
-                    context.PageContext.TeamsPage = new Shared.Context.TeamsPage(new PaginationContext());
+                    context.PageContext.ZonesPage = new Shared.Context.ZonesPage(new PaginationContext());
                     context.PageContext.PushCurrentPageToVisitedPages();
 
-                    await teamsPage.RenderWithContextAsync(
+                    await zonesPage.RenderWithContextAsync(
                         workspace,
                         workspaceMember,
                         new CommonPageContext(context.PageContext),
@@ -759,6 +776,7 @@ public class HomePage(
                 {
                     Value = DeskTypeActionTypes.DeskTypes, Text = "Desk Types".ToPlainTextWithIcon(Icons.DeskTypes)
                 },
+                new Option { Value = ZoneActionTypes.Zones, Text = "Zones".ToPlainTextWithIcon(Icons.Zones) },
                 new Option
                 {
                     Value = SettingsActionTypes.Settings, Text = "Settings".ToPlainTextWithIcon(Icons.Settings)

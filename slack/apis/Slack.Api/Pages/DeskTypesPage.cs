@@ -389,7 +389,7 @@ public class DeskTypesPage(
             last,
             commonPageContext,
             cancellationToken);
-        var deskTypes = deskTypeConnection.Edges.Select(item => mapper.MapToOrganizationDeskType(item.Node)).ToList();
+        var deskTypes = deskTypeConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var asyncBlocks = await Task.WhenAll(GetToolbarAsync(
             workspace,
             workspaceMember,
