@@ -20,10 +20,10 @@ public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
     topicName: "location.v1.internal",
-    topicPartitionCount: 3,
+    topicPartitionCount: 10,
     retryTopicNamePrefix: "location.v1.internal.retry",
     retryTopicCount: 1,
-    retryTopicPartitionCount: 3,
+    retryTopicPartitionCount: 5,
     deadLetterTopicName: "location.v1.internal.deadletter",
     deadLetterTopicPartitionCount: 3,
     protobufSchema: "syntax = \"proto3\";package locationinternal;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Value\";enum Type {  RecordDailyDeskCount = 0;}message Event {  Metadata metadata = 1;  oneof payload {    string locationId = 2;  }}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}")]

@@ -20,10 +20,10 @@ public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
     topicName: "location.v1.internal",
-    topicPartitionCount: 3,
+    topicPartitionCount: 10,
     retryTopicNamePrefix: "location.v1.internal.retry",
     retryTopicCount: 1,
-    retryTopicPartitionCount: 3,
+    retryTopicPartitionCount: 5,
     deadLetterTopicName: "location.v1.internal.deadletter",
     deadLetterTopicPartitionCount: 3,
     protobufSchema: "syntax = \"proto3\";package locationinternal;option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Key\";message Key {    string locationId = 1;}")]

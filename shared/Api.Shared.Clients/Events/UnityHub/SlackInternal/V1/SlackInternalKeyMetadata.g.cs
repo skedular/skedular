@@ -20,10 +20,10 @@ public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
     topicName: "slack.v1.internal",
-    topicPartitionCount: 3,
+    topicPartitionCount: 10,
     retryTopicNamePrefix: "slack.v1.internal.retry",
     retryTopicCount: 1,
-    retryTopicPartitionCount: 3,
+    retryTopicPartitionCount: 5,
     deadLetterTopicName: "slack.v1.internal.deadletter",
     deadLetterTopicPartitionCount: 3,
     protobufSchema: "syntax = \"proto3\";package slackinternal;option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Key\";message Key {    string workspaceId = 1;    string workspaceMemberId = 2;    string locationId = 3;    string teamId = 4;}")]

@@ -39,29 +39,60 @@ public class KafkaHelper : IKafkaHelper
         var retryTopics = Enumerable.Range(0, @event.GetRetryTopicCount())
             .Select(idx => @event.GetRetryTopicName(_kafkaConfiguration.OutgoingTopicPrefix, idx)).ToArray();
         var deadLetterTopic = @event.GetDeadLetterTopicName(_kafkaConfiguration.OutgoingTopicPrefix);
-        string[] topics = [topic, ..retryTopics, deadLetterTopic];
+        string[] topics = [topic, .. retryTopics, deadLetterTopic];
         using var adminClient = new AdminClientBuilder(_adminConfig).Build();
         var existingTopics = adminClient
-            .GetMetadata(TimeSpan.FromSeconds(10)).Topics.Select(topicMetadata => topicMetadata.Topic).ToList();
-        var allTopicsToCreate = topics.Except(existingTopics).ToList();
+            .GetMetadata(TimeSpan.FromSeconds(10)).Topics
+            .Select(topicMetadata => topicMetadata)
+            .ToList();
+        var allTopicsToCreate = topics.Except(existingTopics.Select(topicMetadata => topicMetadata.Topic)).ToList();
+        var allTopicsToUpdate = topics.Except(allTopicsToCreate).ToList();
 
-        if (allTopicsToCreate.Count == 0)
+        if (allTopicsToCreate.Count != 0)
         {
-            return;
+            await adminClient.CreateTopicsAsync(
+                allTopicsToCreate
+                    .Distinct()
+                    .Select(topicName =>
+                    {
+                        var partitionCount = topicName == topic ? kafkaTopicInfo.TopicPartitionCount :
+                            topicName == deadLetterTopic ? kafkaTopicInfo.DeadLetterTopicPartitionCount :
+                            kafkaTopicInfo.RetryTopicPartitionCount;
+
+                        return new TopicSpecification { Name = topicName, NumPartitions = partitionCount };
+                    })
+                    .ToList());
         }
 
-        await adminClient.CreateTopicsAsync(
-            allTopicsToCreate
+        if (allTopicsToUpdate.Count != 0)
+        {
+            var newPartitionsSpecification = allTopicsToUpdate
                 .Distinct()
+                .Where(topicName =>
+                {
+                    var partitionCount = topicName == topic ? kafkaTopicInfo.TopicPartitionCount :
+                        topicName == deadLetterTopic ? kafkaTopicInfo.DeadLetterTopicPartitionCount :
+                        kafkaTopicInfo.RetryTopicPartitionCount;
+
+                    var existingTopic = existingTopics.Single(item => item.Topic == topicName);
+
+                    return existingTopic.Partitions.Count < partitionCount;
+                })
                 .Select(topicName =>
                 {
                     var partitionCount = topicName == topic ? kafkaTopicInfo.TopicPartitionCount :
                         topicName == deadLetterTopic ? kafkaTopicInfo.DeadLetterTopicPartitionCount :
                         kafkaTopicInfo.RetryTopicPartitionCount;
 
-                    return new TopicSpecification { Name = topicName, NumPartitions = partitionCount };
+                    return new PartitionsSpecification { Topic = topicName, IncreaseTo = partitionCount };
                 })
-                .ToList());
+                .ToList();
+
+            if (newPartitionsSpecification.Count != 0)
+            {
+                await adminClient.CreatePartitionsAsync(newPartitionsSpecification);
+            }
+        }
     }
 
     public async Task RegisterKeyProtobufSchemaAsync<TEvent>() where TEvent : IEvent, new()

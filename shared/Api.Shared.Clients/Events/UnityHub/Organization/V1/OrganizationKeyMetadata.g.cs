@@ -20,10 +20,10 @@ public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
     topicName: "organization.v1.event",
-    topicPartitionCount: 3,
+    topicPartitionCount: 10,
     retryTopicNamePrefix: "organization.v1.event.retry",
     retryTopicCount: 1,
-    retryTopicPartitionCount: 3,
+    retryTopicPartitionCount: 5,
     deadLetterTopicName: "organization.v1.event.deadletter",
     deadLetterTopicPartitionCount: 3,
     protobufSchema: "syntax = \"proto3\";package organization;option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.Organization.V1.Key\";message Key {  string organizationId = 1;  string organizationJoinInvitationId = 2;}")]
