@@ -95,7 +95,8 @@ public class AddLocationButtonHandler(
                 Submit = "Add",
                 Blocks = [name, about, timezone, updateChannel],
                 PrivateMetadata = action.Value
-            });
+            },
+            cancellationToken);
     }
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)

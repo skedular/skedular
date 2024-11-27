@@ -48,6 +48,7 @@ public class HomePage(
     IBookingsPage bookingsPage,
     ILocationsPage locationsPage,
     ITeamsPage teamsPage,
+    IDeskTypesPage deskTypesPage,
     ISettingsPage settingsPage,
     IMapper mapper,
     ICommonComponents commonComponents,
@@ -289,6 +290,22 @@ public class HomePage(
 
                 break;
 
+            case DeskTypeActionTypes.DeskTypes:
+                {
+                    var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
+                    context.PageContext.DeskTypesPage = new Shared.Context.DeskTypesPage(new PaginationContext());
+                    context.PageContext.PushCurrentPageToVisitedPages();
+
+                    await deskTypesPage.RenderWithContextAsync(
+                        workspace,
+                        workspaceMember,
+                        new CommonPageContext(context.PageContext),
+                        request.View.Hash,
+                        cancellationToken);
+                }
+
+                break;
+
             case TeamActionTypes.Teams:
                 {
                     var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
@@ -432,7 +449,7 @@ public class HomePage(
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.HomePage);
-        if (commonPageContext.PageContext.HomePage.BookingsPagination.IsEmpty())
+        if (commonPageContext.PageContext.HomePage.Pagination.IsEmpty())
         {
             await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
         }
@@ -441,10 +458,10 @@ public class HomePage(
             await RenderInternalAsync(
                 workspace,
                 workspaceMember,
-                commonPageContext.PageContext.HomePage.BookingsPagination.CurrentAfter,
-                commonPageContext.PageContext.HomePage.BookingsPagination.CurrentFirst,
-                commonPageContext.PageContext.HomePage.BookingsPagination.CurrentBefore,
-                commonPageContext.PageContext.HomePage.BookingsPagination.CurrentLast,
+                commonPageContext.PageContext.HomePage.Pagination.CurrentAfter,
+                commonPageContext.PageContext.HomePage.Pagination.CurrentFirst,
+                commonPageContext.PageContext.HomePage.Pagination.CurrentBefore,
+                commonPageContext.PageContext.HomePage.Pagination.CurrentLast,
                 commonPageContext,
                 hash,
                 cancellationToken);
@@ -498,7 +515,7 @@ public class HomePage(
             workspaceMember,
             null,
             null,
-            commonPageContext.PageContext.HomePage.BookingsPagination.Before,
+            commonPageContext.PageContext.HomePage.Pagination.Before,
             BookingsPageSize,
             commonPageContext,
             hash,
@@ -516,7 +533,7 @@ public class HomePage(
         await RenderInternalAsync(
             workspace,
             workspaceMember,
-            commonPageContext.PageContext.HomePage.BookingsPagination.After,
+            commonPageContext.PageContext.HomePage.Pagination.After,
             BookingsPageSize,
             null,
             null,
@@ -571,10 +588,10 @@ public class HomePage(
         ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.HomePage);
 
         commonPageContext.PageContext.CurrentPageType = PageType.Home;
-        commonPageContext.PageContext.HomePage.BookingsPagination.CurrentAfter = after;
-        commonPageContext.PageContext.HomePage.BookingsPagination.CurrentFirst = first;
-        commonPageContext.PageContext.HomePage.BookingsPagination.CurrentBefore = before;
-        commonPageContext.PageContext.HomePage.BookingsPagination.CurrentLast = last;
+        commonPageContext.PageContext.HomePage.Pagination.CurrentAfter = after;
+        commonPageContext.PageContext.HomePage.Pagination.CurrentFirst = first;
+        commonPageContext.PageContext.HomePage.Pagination.CurrentBefore = before;
+        commonPageContext.PageContext.HomePage.Pagination.CurrentLast = last;
 
         var from = commonPageContext.PageContext.HomePage.SelectedDate.StartOfWeek();
         var until = from.AddDays(6);
@@ -740,7 +757,7 @@ public class HomePage(
                 new Option { Value = TeamActionTypes.Teams, Text = "Teams".ToPlainTextWithIcon(Icons.Teams) },
                 new Option
                 {
-                    Value = DeskTypeActionTypes.DeskTypes, Text = "Desk types".ToPlainTextWithIcon(Icons.Desks)
+                    Value = DeskTypeActionTypes.DeskTypes, Text = "Desk Types".ToPlainTextWithIcon(Icons.DeskTypes)
                 },
                 new Option
                 {
@@ -868,10 +885,10 @@ public class HomePage(
 
         if (bookingConnection.PageInfo.HasPreviousPage)
         {
-            pageContext.HomePage.BookingsPagination.First = BookingsPageSize;
-            pageContext.HomePage.BookingsPagination.After = null;
-            pageContext.HomePage.BookingsPagination.Before = null;
-            pageContext.HomePage.BookingsPagination.Last = null;
+            pageContext.HomePage.Pagination.First = BookingsPageSize;
+            pageContext.HomePage.Pagination.After = null;
+            pageContext.HomePage.Pagination.Before = null;
+            pageContext.HomePage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
@@ -880,10 +897,10 @@ public class HomePage(
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.HomePage.BookingsPagination.First = null;
-            pageContext.HomePage.BookingsPagination.After = null;
-            pageContext.HomePage.BookingsPagination.Before = bookingConnection.PageInfo.StartCursor;
-            pageContext.HomePage.BookingsPagination.Last = BookingsPageSize;
+            pageContext.HomePage.Pagination.First = null;
+            pageContext.HomePage.Pagination.After = null;
+            pageContext.HomePage.Pagination.Before = bookingConnection.PageInfo.StartCursor;
+            pageContext.HomePage.Pagination.Last = BookingsPageSize;
 
             paginationButtons.Add(new Button
             {
@@ -895,10 +912,10 @@ public class HomePage(
 
         if (bookingConnection.PageInfo.HasNextPage)
         {
-            pageContext.HomePage.BookingsPagination.First = BookingsPageSize;
-            pageContext.HomePage.BookingsPagination.After = bookingConnection.PageInfo.EndCursor;
-            pageContext.HomePage.BookingsPagination.Before = null;
-            pageContext.HomePage.BookingsPagination.Last = null;
+            pageContext.HomePage.Pagination.First = BookingsPageSize;
+            pageContext.HomePage.Pagination.After = bookingConnection.PageInfo.EndCursor;
+            pageContext.HomePage.Pagination.Before = null;
+            pageContext.HomePage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
@@ -907,10 +924,10 @@ public class HomePage(
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.HomePage.BookingsPagination.First = null;
-            pageContext.HomePage.BookingsPagination.After = null;
-            pageContext.HomePage.BookingsPagination.Before = null;
-            pageContext.HomePage.BookingsPagination.Last = BookingsPageSize;
+            pageContext.HomePage.Pagination.First = null;
+            pageContext.HomePage.Pagination.After = null;
+            pageContext.HomePage.Pagination.Before = null;
+            pageContext.HomePage.Pagination.Last = BookingsPageSize;
 
             paginationButtons.Add(new Button
             {

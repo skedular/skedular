@@ -9,9 +9,10 @@ public enum PageType
     Locations = 2,
     Teams = 3,
     Settings = 4,
-    Zones = 5,
-    Desks = 6,
-    Billing = 7
+    DeskTypes = 6,
+    Zones = 7,
+    Desks = 8,
+    Billing = 9
 }
 
 public class DateRange(DateTimeOffset? from, DateTimeOffset? to)
@@ -20,29 +21,31 @@ public class DateRange(DateTimeOffset? from, DateTimeOffset? to)
     public DateTimeOffset? To { get; set; } = to;
 }
 
-public class HomePage(PaginationContext bookingsPagination, DateTimeOffset selectedDate, bool includeMyBookingsOnly)
+public class HomePage(PaginationContext pagination, DateTimeOffset selectedDate, bool includeMyBookingsOnly)
 {
-    public PaginationContext BookingsPagination { get; set; } = bookingsPagination;
+    public PaginationContext Pagination { get; set; } = pagination;
     public DateTimeOffset SelectedDate { get; set; } = selectedDate;
     public bool IncludeMyBookingsOnly { get; set; } = includeMyBookingsOnly;
 }
 
-public record LocationsPage(PaginationContext LocationsPagination);
+public record LocationsPage(PaginationContext Pagination);
 
-public record TeamsPage(PaginationContext TeamsPagination);
+public record TeamsPage(PaginationContext Pagination);
 
-public record ZonesPage(PaginationContext ZonesPagination, string LocationId);
+public record ZonesPage(PaginationContext Pagination, string LocationId);
 
-public class DesksPage(PaginationContext desksPagination, string locationId, DateTimeOffset selectedDate)
+public record DeskTypesPage(PaginationContext Pagination);
+
+public class DesksPage(PaginationContext pagination, string locationId, DateTimeOffset selectedDate)
 {
-    public PaginationContext DesksPagination { get; set; } = desksPagination;
+    public PaginationContext Pagination { get; set; } = pagination;
     public string LocationId { get; set; } = locationId;
     public DateTimeOffset SelectedDate { get; set; } = selectedDate;
 }
 
-public class BookingsPage(PaginationContext bookingsPagination, DateRange bookingsDateRange, bool includeMyBookingsOnly)
+public class BookingsPage(PaginationContext pagination, DateRange bookingsDateRange, bool includeMyBookingsOnly)
 {
-    public PaginationContext BookingsPagination { get; } = bookingsPagination;
+    public PaginationContext Pagination { get; } = pagination;
     public DateRange BookingsDateRange { get; } = bookingsDateRange;
     public ICollection<string> LocationIds { get; set; } = [];
     public ICollection<string> TeamIds { get; set; } = [];
@@ -60,6 +63,7 @@ public class PageContext
     public HomePage? HomePage { get; set; }
     public LocationsPage? LocationsPage { get; set; }
     public TeamsPage? TeamsPage { get; set; }
+    public DeskTypesPage? DeskTypesPage { get; set; }
     public ZonesPage? ZonesPage { get; set; }
     public DesksPage? DesksPage { get; set; }
     public BookingsPage? BookingsPage { get; set; }

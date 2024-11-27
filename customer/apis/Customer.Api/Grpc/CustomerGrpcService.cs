@@ -22,6 +22,7 @@ public class CustomerGrpcService(
     ICustomerSettingsService customerSettingsService,
     ICustomerFeedbackService customerFeedbackService,
     ICustomerLocationTagSettingsService customerLocationTagSettingsService,
+    ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
     ICustomerDeskSettingsService customerDeskSettingsService,
     IMapper mapper,
     IGrpcAuthenticator grpcAuthenticator) : CustomerService.CustomerServiceBase
@@ -277,8 +278,7 @@ public class CustomerGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
-        RemovePreferredLocationTag(
-            RemovePreferredLocationTagInput request, ServerCallContext context)
+        RemovePreferredLocationTag(RemovePreferredLocationTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -305,5 +305,26 @@ public class CustomerGrpcService(
         return mapper.MapToGrpcResponse(
             await customerDeskSettingsService.RemoveCustomerDefaultDeskAsync(
                 request.DeskId, null, context.CancellationToken));
+    }
+
+    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+        AddPreferredOrganizationTag(
+            AddPreferredOrganizationTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(
+            await customerOrganizationTagSettingsService.AddCustomerDefaultOrganizationTagAsync(
+                request.OrganizationTagId, null, context.CancellationToken));
+    }
+
+    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+        RemovePreferredOrganizationTag(RemovePreferredOrganizationTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(
+            await customerOrganizationTagSettingsService.RemoveCustomerDefaultOrganizationTagAsync(
+                request.OrganizationTagId, null, context.CancellationToken));
     }
 }

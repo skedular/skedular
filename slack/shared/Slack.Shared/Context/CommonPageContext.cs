@@ -341,3 +341,67 @@ public record BulkAddDesksContext(PageContext PageContext, string LocationId)
         return context;
     }
 }
+
+public record AddDeskTypeContext(PageContext PageContext)
+{
+    public string Serialize() => JsonSerializer.Serialize(this);
+
+    public static AddDeskTypeContext Deserialize(string value)
+    {
+        var context = JsonSerializer.Deserialize<AddDeskTypeContext>(value);
+        ArgumentNullException.ThrowIfNull(context);
+        return context;
+    }
+}
+
+public record RemovePreferredDeskTypeContext(PageContext PageContext, string DeskTypeId)
+{
+    public string Serialize() => JsonSerializer.Serialize(this);
+
+    public static RemovePreferredDeskTypeContext Deserialize(string value)
+    {
+        var context = JsonSerializer.Deserialize<RemovePreferredDeskTypeContext>(value);
+        ArgumentNullException.ThrowIfNull(context);
+        return context;
+    }
+}
+
+public record SetPreferredDeskTypeContext(PageContext PageContext, string DeskTypeId)
+{
+    public string Serialize() => JsonSerializer.Serialize(this);
+
+    public static SetPreferredDeskTypeContext Deserialize(string value)
+    {
+        var context = JsonSerializer.Deserialize<SetPreferredDeskTypeContext>(value);
+        ArgumentNullException.ThrowIfNull(context);
+        return context;
+    }
+}
+
+public class EditDeskTypeContext(PageContext pageContext, string deskTypeId)
+{
+    public PageContext PageContext { get; } = pageContext;
+    public string DeskTypeId { get; set; } = deskTypeId;
+    public string Serialize() => JsonSerializer.Serialize(this);
+
+    public static EditDeskTypeContext Deserialize(string value)
+    {
+        var context = JsonSerializer.Deserialize<EditDeskTypeContext>(value);
+        ArgumentNullException.ThrowIfNull(context);
+        return context;
+    }
+}
+
+public class RemoveDeskTypeContext(PageContext pageContext, string deskTypeId)
+{
+    public PageContext PageContext { get; } = pageContext;
+    public string DeskTypeId { get; set; } = deskTypeId;
+    public string Serialize() => JsonSerializer.Serialize(this);
+
+    public static RemoveDeskTypeContext Deserialize(string value)
+    {
+        var context = JsonSerializer.Deserialize<RemoveDeskTypeContext>(value);
+        ArgumentNullException.ThrowIfNull(context);
+        return context;
+    }
+}

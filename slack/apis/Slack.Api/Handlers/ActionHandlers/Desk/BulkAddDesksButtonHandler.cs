@@ -145,7 +145,8 @@ public class BulkAddDesksButtonHandler(
                 Submit = "Add",
                 Blocks = blocks,
                 PrivateMetadata = action.Value
-            });
+            },
+            cancellationToken);
     }
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)

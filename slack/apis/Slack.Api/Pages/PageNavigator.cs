@@ -29,6 +29,7 @@ public class PageNavigator(
     IBookingsPage bookingsPage,
     ILocationsPage locationsPage,
     ITeamsPage teamsPage,
+    IDeskTypesPage deskTypesPage,
     IZonesPage zonesPage,
     IDesksPage desksPage,
     ISettingsPage settingsPage,
@@ -138,6 +139,15 @@ public class PageNavigator(
 
             case PageType.Zones:
                 await zonesPage.RenderWithContextAsync(
+                    workspace,
+                    workspaceMember,
+                    new CommonPageContext(context.PageContext),
+                    hash,
+                    cancellationToken);
+                break;
+
+            case PageType.DeskTypes:
+                await deskTypesPage.RenderWithContextAsync(
                     workspace,
                     workspaceMember,
                     new CommonPageContext(context.PageContext),

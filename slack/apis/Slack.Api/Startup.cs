@@ -10,6 +10,7 @@ using Slack.Api.Handlers.ActionHandlers.Billing;
 using Slack.Api.Handlers.ActionHandlers.Booking;
 using Slack.Api.Handlers.ActionHandlers.Commons;
 using Slack.Api.Handlers.ActionHandlers.Desk;
+using Slack.Api.Handlers.ActionHandlers.DeskType;
 using Slack.Api.Handlers.ActionHandlers.Feedback;
 using Slack.Api.Handlers.ActionHandlers.Location;
 using Slack.Api.Handlers.ActionHandlers.Team;
@@ -55,6 +56,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                 HomePage.RegisterHandlers(options);
                 BookingsPage.RegisterHandlers(options);
                 LocationsPage.RegisterHandlers(options);
+                DeskTypesPage.RegisterHandlers(options);
                 TeamsPage.RegisterHandlers(options);
                 ZonesPage.RegisterHandlers(options);
                 DesksPage.RegisterHandlers(options);
@@ -112,6 +114,12 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                     .RegisterViewSubmissionHandler<AddTeamButtonHandler>(TeamCallbackTypes.AddTeam)
                     .RegisterViewSubmissionHandler<EditTeamButtonHandler>(TeamCallbackTypes.EditTeam)
                     .RegisterViewSubmissionHandler<RemoveTeamButtonHandler>(TeamCallbackTypes.RemoveTeam);
+
+                options
+                    .RegisterBlockActionHandler<ButtonAction, AddDeskTypeButtonHandler>(DeskTypeActionTypes.AddDeskType)
+                    .RegisterViewSubmissionHandler<AddDeskTypeButtonHandler>(DeskTypeCallbackTypes.AddDeskType)
+                    .RegisterViewSubmissionHandler<EditDeskTypeButtonHandler>(DeskTypeCallbackTypes.EditDeskType)
+                    .RegisterViewSubmissionHandler<RemoveDeskTypeButtonHandler>(DeskTypeCallbackTypes.RemoveDeskType);
 
                 options
                     .RegisterBlockActionHandler<ButtonAction, AddZoneButtonHandler>(ZoneActionTypes.AddZone)

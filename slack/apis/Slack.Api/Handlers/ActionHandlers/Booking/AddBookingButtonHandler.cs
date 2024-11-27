@@ -107,7 +107,8 @@ public class AddBookingButtonHandler(
                     .Concat(asyncBlocks[2])
                     .Concat([notes]).ToList(),
                 PrivateMetadata = action.Value
-            });
+            },
+            cancellationToken);
     }
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)

@@ -133,6 +133,25 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
             });
         }
 
+        if (desk.OrganizationDeskTypes.Count != 0)
+        {
+            blocks.Add(new SectionBlock
+            {
+                Text = string.Join(", ",
+                        desk.OrganizationDeskTypes.OrderBy(item => item.Name).Select(item => item.Name))
+                    .ToMarkdownWithIcon(Icons.DeskTypes)
+            });
+        }
+
+        if (desk.OrganizationZones.Count != 0)
+        {
+            blocks.Add(new SectionBlock
+            {
+                Text = string.Join(", ", desk.OrganizationZones.OrderBy(item => item.Name).Select(item => item.Name))
+                    .ToMarkdownWithIcon(Icons.Zones)
+            });
+        }
+
         blocks.Add(new SectionBlock
         {
             Text = (bookingWithSameDesk is null

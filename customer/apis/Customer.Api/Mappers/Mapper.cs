@@ -426,6 +426,7 @@ public class Mapper(IContext context) : IMapper
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
+                Type = item.Type.ToSafeString(),
                 Organization = new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization
                 {
                     Id = item.Organization.Id

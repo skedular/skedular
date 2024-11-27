@@ -79,7 +79,8 @@ public class SendUsFeedbackButtonHandler(
                 Submit = "Send",
                 Blocks = [greetings, feedback, notes],
                 PrivateMetadata = action.Value
-            });
+            },
+            cancellationToken);
     }
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)

@@ -1,3 +1,4 @@
+using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
 using Booking.Api.GraphQL;
 using Enterprise.Shared;
@@ -393,12 +394,6 @@ public class Mapper : IMapper
                 Id = src.Id, Name = src.Name.ToSafeString()
             };
 
-    private static IEnumerable<LocationTag> MapToGrpcResponse(IEnumerable<Shared.Models.LocationTag> src) =>
-        src.Select(MapToGrpcResponse);
-
-    private static LocationTag MapToGrpcResponse(Shared.Models.LocationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), TagType = src.Type.ToSafeString() };
-
     private static global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Desk MapToGrpcResponse(Shared.Models.Desk src)
     {
         var desk = new global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Desk
@@ -414,9 +409,29 @@ public class Mapper : IMapper
         };
 
         desk.LocationTags.AddRange(MapToGrpcResponse(src.Tags));
+        desk.OrganizationDeskTypes.AddRange(MapToGrpcResponseDeskTypes(src.OrganizationTags));
+        desk.OrganizationZones.AddRange(MapToGrpcResponseZones(src.OrganizationTags));
 
         return desk;
     }
+
+    private static IEnumerable<LocationTag> MapToGrpcResponse(IEnumerable<Shared.Models.LocationTag> src) =>
+        src.Select(MapToGrpcResponse);
+
+    private static LocationTag MapToGrpcResponse(Shared.Models.LocationTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), TagType = src.Type.ToSafeString() };
+
+    private static IEnumerable<OrganizationDeskType> MapToGrpcResponseDeskTypes(IEnumerable<Shared.Models.OrganizationTag> src) =>
+        src.Where(item => item.Type == OrganizationTagType.DeskType).Select(MapToGrpcResponseDeskType);
+
+    private static OrganizationDeskType MapToGrpcResponseDeskType(Shared.Models.OrganizationTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+
+    private static IEnumerable<OrganizationZone> MapToGrpcResponseZones(IEnumerable<Shared.Models.OrganizationTag> src) =>
+        src.Where(item => item.Type == OrganizationTagType.Zone).Select(MapToGrpcResponseZone);
+
+    private static OrganizationZone MapToGrpcResponseZone(Shared.Models.OrganizationTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static BookingCustomerDetails MapTo(Customer src) =>
         new()

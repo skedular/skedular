@@ -165,11 +165,23 @@ message LocationTag {
     string tagType = 3;
 }
 
+message OrganizationDeskType {
+    string id = 1;
+    string name = 2;
+}
+
+message OrganizationZone {
+    string id = 1;
+    string name = 2;
+}
+
 message Desk {
     string id = 1;
     string name = 2;
-    repeated LocationTag locationTags = 3;
-    Location location = 4;
+    Location location = 3;
+    repeated OrganizationDeskType organizationDeskTypes = 4;
+    repeated OrganizationZone organizationZones = 5;
+    repeated LocationTag locationTags = 6;
 }
 
 message GetOrganizationPermissionsInput {

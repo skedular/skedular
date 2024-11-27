@@ -30,6 +30,8 @@ service CustomerService {
     rpc RemovePreferredLocationTag (RemovePreferredLocationTagInput) returns (Customer);
     rpc AddPreferredDesk (AddPreferredDeskInput) returns (Customer);
     rpc RemovePreferredDesk (RemovePreferredDeskInput) returns (Customer);
+    rpc AddPreferredOrganizationTag (AddPreferredOrganizationTagInput) returns (Customer);
+    rpc RemovePreferredOrganizationTag (RemovePreferredOrganizationTagInput) returns (Customer);
 }
 
 message VersionInput {
@@ -264,5 +266,14 @@ message RemovePreferredDeskInput {
 message OrganizationTag {
     string id = 1;
     string name = 2;
-    Organization organization = 3;
+    string type = 3;
+    Organization organization = 4;
+}
+
+message AddPreferredOrganizationTagInput {
+    string organizationTagId = 1;
+}
+
+message RemovePreferredOrganizationTagInput {
+    string organizationTagId = 1;
 }

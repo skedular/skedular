@@ -291,7 +291,7 @@ public class LocationsPage(
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.LocationsPage);
-        if (commonPageContext.PageContext.LocationsPage.LocationsPagination.IsEmpty())
+        if (commonPageContext.PageContext.LocationsPage.Pagination.IsEmpty())
         {
             await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
         }
@@ -300,10 +300,10 @@ public class LocationsPage(
             await RenderInternalAsync(
                 workspace,
                 workspaceMember,
-                commonPageContext.PageContext.LocationsPage.LocationsPagination.CurrentAfter,
-                commonPageContext.PageContext.LocationsPage.LocationsPagination.CurrentFirst,
-                commonPageContext.PageContext.LocationsPage.LocationsPagination.CurrentBefore,
-                commonPageContext.PageContext.LocationsPage.LocationsPagination.CurrentLast,
+                commonPageContext.PageContext.LocationsPage.Pagination.CurrentAfter,
+                commonPageContext.PageContext.LocationsPage.Pagination.CurrentFirst,
+                commonPageContext.PageContext.LocationsPage.Pagination.CurrentBefore,
+                commonPageContext.PageContext.LocationsPage.Pagination.CurrentLast,
                 commonPageContext,
                 hash,
                 cancellationToken);
@@ -343,7 +343,7 @@ public class LocationsPage(
             workspaceMember,
             null,
             null,
-            commonPageContext.PageContext.LocationsPage.LocationsPagination.Before,
+            commonPageContext.PageContext.LocationsPage.Pagination.Before,
             LocationsPageSize,
             commonPageContext,
             hash,
@@ -361,7 +361,7 @@ public class LocationsPage(
         await RenderInternalAsync(
             workspace,
             workspaceMember,
-            commonPageContext.PageContext.LocationsPage.LocationsPagination.After,
+            commonPageContext.PageContext.LocationsPage.Pagination.After,
             LocationsPageSize,
             null,
             null,
@@ -559,10 +559,10 @@ public class LocationsPage(
         var paginationButtons = new List<IActionElement>();
         if (locationConnection.PageInfo.HasPreviousPage)
         {
-            pageContext.LocationsPage.LocationsPagination.First = LocationsPageSize;
-            pageContext.LocationsPage.LocationsPagination.After = null;
-            pageContext.LocationsPage.LocationsPagination.Before = null;
-            pageContext.LocationsPage.LocationsPagination.Last = null;
+            pageContext.LocationsPage.Pagination.First = LocationsPageSize;
+            pageContext.LocationsPage.Pagination.After = null;
+            pageContext.LocationsPage.Pagination.Before = null;
+            pageContext.LocationsPage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
@@ -571,10 +571,10 @@ public class LocationsPage(
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.LocationsPage.LocationsPagination.First = null;
-            pageContext.LocationsPage.LocationsPagination.After = null;
-            pageContext.LocationsPage.LocationsPagination.Before = locationConnection.PageInfo.StartCursor;
-            pageContext.LocationsPage.LocationsPagination.Last = LocationsPageSize;
+            pageContext.LocationsPage.Pagination.First = null;
+            pageContext.LocationsPage.Pagination.After = null;
+            pageContext.LocationsPage.Pagination.Before = locationConnection.PageInfo.StartCursor;
+            pageContext.LocationsPage.Pagination.Last = LocationsPageSize;
 
             paginationButtons.Add(new Button
             {
@@ -586,10 +586,10 @@ public class LocationsPage(
 
         if (locationConnection.PageInfo.HasNextPage)
         {
-            pageContext.LocationsPage.LocationsPagination.First = LocationsPageSize;
-            pageContext.LocationsPage.LocationsPagination.After = locationConnection.PageInfo.EndCursor;
-            pageContext.LocationsPage.LocationsPagination.Before = null;
-            pageContext.LocationsPage.LocationsPagination.Last = null;
+            pageContext.LocationsPage.Pagination.First = LocationsPageSize;
+            pageContext.LocationsPage.Pagination.After = locationConnection.PageInfo.EndCursor;
+            pageContext.LocationsPage.Pagination.Before = null;
+            pageContext.LocationsPage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
@@ -598,10 +598,10 @@ public class LocationsPage(
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.LocationsPage.LocationsPagination.First = null;
-            pageContext.LocationsPage.LocationsPagination.After = null;
-            pageContext.LocationsPage.LocationsPagination.Before = null;
-            pageContext.LocationsPage.LocationsPagination.Last = LocationsPageSize;
+            pageContext.LocationsPage.Pagination.First = null;
+            pageContext.LocationsPage.Pagination.After = null;
+            pageContext.LocationsPage.Pagination.Before = null;
+            pageContext.LocationsPage.Pagination.Last = LocationsPageSize;
 
             paginationButtons.Add(new Button
             {
@@ -699,7 +699,8 @@ public class LocationsPage(
                     name, about, timezone, updateChannel
                 ],
                 PrivateMetadata = context.Serialize()
-            });
+            },
+            cancellationToken);
     }
 
     private async Task OpenRemoveLocationDialogAsync(
@@ -731,7 +732,8 @@ public class LocationsPage(
                 Blocks =
                     [confirmationMessage],
                 PrivateMetadata = context.Serialize()
-            });
+            },
+            cancellationToken);
     }
 
     private async Task SetAsDefaultLocationAsync(

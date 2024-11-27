@@ -317,7 +317,7 @@ public class DesksPage(
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DesksPage);
-        if (commonPageContext.PageContext.DesksPage.DesksPagination.IsEmpty())
+        if (commonPageContext.PageContext.DesksPage.Pagination.IsEmpty())
         {
             await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
         }
@@ -326,10 +326,10 @@ public class DesksPage(
             await RenderInternalAsync(
                 workspace,
                 workspaceMember,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentAfter,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentFirst,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentBefore,
-                commonPageContext.PageContext.DesksPage.DesksPagination.CurrentLast,
+                commonPageContext.PageContext.DesksPage.Pagination.CurrentAfter,
+                commonPageContext.PageContext.DesksPage.Pagination.CurrentFirst,
+                commonPageContext.PageContext.DesksPage.Pagination.CurrentBefore,
+                commonPageContext.PageContext.DesksPage.Pagination.CurrentLast,
                 commonPageContext,
                 hash,
                 cancellationToken);
@@ -369,7 +369,7 @@ public class DesksPage(
             workspaceMember,
             null,
             null,
-            commonPageContext.PageContext.DesksPage.DesksPagination.Before,
+            commonPageContext.PageContext.DesksPage.Pagination.Before,
             DesksPageSize,
             commonPageContext,
             hash,
@@ -387,7 +387,7 @@ public class DesksPage(
         await RenderInternalAsync(
             workspace,
             workspaceMember,
-            commonPageContext.PageContext.DesksPage.DesksPagination.After,
+            commonPageContext.PageContext.DesksPage.Pagination.After,
             DesksPageSize,
             null,
             null,
@@ -594,10 +594,10 @@ public class DesksPage(
         var paginationButtons = new List<IActionElement>();
         if (deskConnection.PageInfo.HasPreviousPage)
         {
-            pageContext.DesksPage.DesksPagination.First = DesksPageSize;
-            pageContext.DesksPage.DesksPagination.After = null;
-            pageContext.DesksPage.DesksPagination.Before = null;
-            pageContext.DesksPage.DesksPagination.Last = null;
+            pageContext.DesksPage.Pagination.First = DesksPageSize;
+            pageContext.DesksPage.Pagination.After = null;
+            pageContext.DesksPage.Pagination.Before = null;
+            pageContext.DesksPage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
@@ -606,10 +606,10 @@ public class DesksPage(
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.DesksPage.DesksPagination.First = null;
-            pageContext.DesksPage.DesksPagination.After = null;
-            pageContext.DesksPage.DesksPagination.Before = deskConnection.PageInfo.StartCursor;
-            pageContext.DesksPage.DesksPagination.Last = DesksPageSize;
+            pageContext.DesksPage.Pagination.First = null;
+            pageContext.DesksPage.Pagination.After = null;
+            pageContext.DesksPage.Pagination.Before = deskConnection.PageInfo.StartCursor;
+            pageContext.DesksPage.Pagination.Last = DesksPageSize;
 
             paginationButtons.Add(new Button
             {
@@ -621,10 +621,10 @@ public class DesksPage(
 
         if (deskConnection.PageInfo.HasNextPage)
         {
-            pageContext.DesksPage.DesksPagination.First = DesksPageSize;
-            pageContext.DesksPage.DesksPagination.After = deskConnection.PageInfo.EndCursor;
-            pageContext.DesksPage.DesksPagination.Before = null;
-            pageContext.DesksPage.DesksPagination.Last = null;
+            pageContext.DesksPage.Pagination.First = DesksPageSize;
+            pageContext.DesksPage.Pagination.After = deskConnection.PageInfo.EndCursor;
+            pageContext.DesksPage.Pagination.Before = null;
+            pageContext.DesksPage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
@@ -633,10 +633,10 @@ public class DesksPage(
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.DesksPage.DesksPagination.First = null;
-            pageContext.DesksPage.DesksPagination.After = null;
-            pageContext.DesksPage.DesksPagination.Before = null;
-            pageContext.DesksPage.DesksPagination.Last = DesksPageSize;
+            pageContext.DesksPage.Pagination.First = null;
+            pageContext.DesksPage.Pagination.After = null;
+            pageContext.DesksPage.Pagination.Before = null;
+            pageContext.DesksPage.Pagination.Last = DesksPageSize;
 
             paginationButtons.Add(new Button
             {
@@ -752,7 +752,8 @@ public class DesksPage(
                 Submit = "Save",
                 Blocks = blocks,
                 PrivateMetadata = context.Serialize()
-            });
+            },
+            cancellationToken);
     }
 
     private async Task OpenRemoveDeskDialogAsync(
@@ -784,7 +785,8 @@ public class DesksPage(
                 Blocks =
                     [confirmationMessage],
                 PrivateMetadata = context.Serialize()
-            });
+            },
+            cancellationToken);
     }
 
     private async Task AddPreferredDeskAsync(

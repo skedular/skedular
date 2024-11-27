@@ -45,3 +45,10 @@ public class DeskCallbackTypes
     public const string EditDesk = "EditDesk";
     public const string RemoveDesk = "RemoveDesk";
 }
+
+public class DeskTypeCallbackTypes
+{
+    public const string AddDeskType = "AddDeskType";
+    public const string EditDeskType = "EditDeskType";
+    public const string RemoveDeskType = "RemoveDeskType";
+}

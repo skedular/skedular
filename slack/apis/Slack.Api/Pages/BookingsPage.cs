@@ -249,7 +249,7 @@ public class BookingsPage(
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.BookingsPage);
-        if (commonPageContext.PageContext.BookingsPage.BookingsPagination.IsEmpty())
+        if (commonPageContext.PageContext.BookingsPage.Pagination.IsEmpty())
         {
             await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
         }
@@ -258,10 +258,10 @@ public class BookingsPage(
             await RenderInternalAsync(
                 workspace,
                 workspaceMember,
-                commonPageContext.PageContext.BookingsPage.BookingsPagination.CurrentAfter,
-                commonPageContext.PageContext.BookingsPage.BookingsPagination.CurrentFirst,
-                commonPageContext.PageContext.BookingsPage.BookingsPagination.CurrentBefore,
-                commonPageContext.PageContext.BookingsPage.BookingsPagination.CurrentLast,
+                commonPageContext.PageContext.BookingsPage.Pagination.CurrentAfter,
+                commonPageContext.PageContext.BookingsPage.Pagination.CurrentFirst,
+                commonPageContext.PageContext.BookingsPage.Pagination.CurrentBefore,
+                commonPageContext.PageContext.BookingsPage.Pagination.CurrentLast,
                 commonPageContext,
                 hash,
                 cancellationToken);
@@ -301,7 +301,7 @@ public class BookingsPage(
             workspaceMember,
             null,
             null,
-            commonPageContext.PageContext.BookingsPage.BookingsPagination.Before,
+            commonPageContext.PageContext.BookingsPage.Pagination.Before,
             BookingsPageSize,
             commonPageContext,
             hash,
@@ -319,7 +319,7 @@ public class BookingsPage(
         await RenderInternalAsync(
             workspace,
             workspaceMember,
-            commonPageContext.PageContext.BookingsPage.BookingsPagination.After,
+            commonPageContext.PageContext.BookingsPage.Pagination.After,
             BookingsPageSize,
             null,
             null,
@@ -362,10 +362,10 @@ public class BookingsPage(
         ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.BookingsPage);
 
         commonPageContext.PageContext.CurrentPageType = PageType.Bookings;
-        commonPageContext.PageContext.BookingsPage.BookingsPagination.CurrentAfter = after;
-        commonPageContext.PageContext.BookingsPage.BookingsPagination.CurrentFirst = first;
-        commonPageContext.PageContext.BookingsPage.BookingsPagination.CurrentBefore = before;
-        commonPageContext.PageContext.BookingsPage.BookingsPagination.CurrentLast = last;
+        commonPageContext.PageContext.BookingsPage.Pagination.CurrentAfter = after;
+        commonPageContext.PageContext.BookingsPage.Pagination.CurrentFirst = first;
+        commonPageContext.PageContext.BookingsPage.Pagination.CurrentBefore = before;
+        commonPageContext.PageContext.BookingsPage.Pagination.CurrentLast = last;
 
         var bookingsDateRange = commonPageContext.PageContext.BookingsPage.BookingsDateRange;
         var from = bookingsDateRange.From?.StartOfDay(TimeZoneInfo.Utc) ??
@@ -593,10 +593,10 @@ public class BookingsPage(
         var paginationButtons = new List<IActionElement>();
         if (bookingConnection.PageInfo.HasPreviousPage)
         {
-            pageContext.BookingsPage.BookingsPagination.First = BookingsPageSize;
-            pageContext.BookingsPage.BookingsPagination.After = null;
-            pageContext.BookingsPage.BookingsPagination.Before = null;
-            pageContext.BookingsPage.BookingsPagination.Last = null;
+            pageContext.BookingsPage.Pagination.First = BookingsPageSize;
+            pageContext.BookingsPage.Pagination.After = null;
+            pageContext.BookingsPage.Pagination.Before = null;
+            pageContext.BookingsPage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
@@ -605,10 +605,10 @@ public class BookingsPage(
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.BookingsPage.BookingsPagination.First = null;
-            pageContext.BookingsPage.BookingsPagination.After = null;
-            pageContext.BookingsPage.BookingsPagination.Before = bookingConnection.PageInfo.StartCursor;
-            pageContext.BookingsPage.BookingsPagination.Last = BookingsPageSize;
+            pageContext.BookingsPage.Pagination.First = null;
+            pageContext.BookingsPage.Pagination.After = null;
+            pageContext.BookingsPage.Pagination.Before = bookingConnection.PageInfo.StartCursor;
+            pageContext.BookingsPage.Pagination.Last = BookingsPageSize;
 
             paginationButtons.Add(new Button
             {
@@ -620,10 +620,10 @@ public class BookingsPage(
 
         if (bookingConnection.PageInfo.HasNextPage)
         {
-            pageContext.BookingsPage.BookingsPagination.First = BookingsPageSize;
-            pageContext.BookingsPage.BookingsPagination.After = bookingConnection.PageInfo.EndCursor;
-            pageContext.BookingsPage.BookingsPagination.Before = null;
-            pageContext.BookingsPage.BookingsPagination.Last = null;
+            pageContext.BookingsPage.Pagination.First = BookingsPageSize;
+            pageContext.BookingsPage.Pagination.After = bookingConnection.PageInfo.EndCursor;
+            pageContext.BookingsPage.Pagination.Before = null;
+            pageContext.BookingsPage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
@@ -632,10 +632,10 @@ public class BookingsPage(
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.BookingsPage.BookingsPagination.First = null;
-            pageContext.BookingsPage.BookingsPagination.After = null;
-            pageContext.BookingsPage.BookingsPagination.Before = null;
-            pageContext.BookingsPage.BookingsPagination.Last = BookingsPageSize;
+            pageContext.BookingsPage.Pagination.First = null;
+            pageContext.BookingsPage.Pagination.After = null;
+            pageContext.BookingsPage.Pagination.Before = null;
+            pageContext.BookingsPage.Pagination.Last = BookingsPageSize;
 
             paginationButtons.Add(new Button
             {

@@ -1,6 +1,5 @@
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -19,13 +18,14 @@ using SlackNet.Interaction;
 using Button = SlackNet.Blocks.Button;
 using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService;
 using Icons = Slack.Shared.Constants.Icons;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection;
+using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 
 namespace Slack.Api.Pages;
 
-public interface IZonesPage
+public interface IDeskTypesPage
 {
     Task RenderWithContextAsync(
         Workspace workspace,
@@ -35,33 +35,33 @@ public interface IZonesPage
         CancellationToken cancellationToken);
 }
 
-public class ZonesPage(
+public class DeskTypesPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfiguration slackConfiguration,
-    LocationConfiguration locationConfiguration,
+    OrganizationConfiguration organizationConfiguration,
     CustomerConfiguration customerConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
     CustomerService.CustomerServiceClient customerServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
     IBookingService bookingService,
-    ILocationService locationService,
-    IZoneComponents zoneComponents,
+    IOrganizationService organizationService,
+    IDeskTypeComponents deskTypeComponents,
     ICommonComponents commonComponents,
     IMapper mapper,
     IBookingsPageContextService bookingsPageContextService) :
-    IZonesPage,
+    IDeskTypesPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<StaticSelectAction>,
     IBlockActionHandler<ButtonAction>
 {
-    private const int ZonesPageSize = 5;
-    private const string ZonesCallback = "Zones";
-    private const string FirstPageZones = "Zones_FirstPageZones";
-    private const string PreviousPageZones = "Zones_PreviousPageZones";
-    private const string NextPageZones = "Zones_NextPageZones";
-    private const string LastPageZones = "Zones_LastPageZones";
+    private const int DeskTypesPageSize = 5;
+    private const string DeskTypesCallback = "DeskTypes";
+    private const string FirstPageDeskTypes = "DeskTypes_FirstPageDeskTypes";
+    private const string PreviousPageDeskTypes = "DeskTypes_PreviousPageDeskTypes";
+    private const string NextPageDeskTypes = "DeskTypes_NextPageDeskTypes";
+    private const string LastPageDeskTypes = "DeskTypes_LastPageDeskTypes";
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
@@ -83,7 +83,7 @@ public class ZonesPage(
 
         switch (action.ActionId)
         {
-            case FirstPageZones:
+            case FirstPageDeskTypes:
                 await RenderFirstPageAsync(
                     workspace,
                     workspaceMember,
@@ -92,7 +92,7 @@ public class ZonesPage(
                     cancellationToken);
                 break;
 
-            case PreviousPageZones:
+            case PreviousPageDeskTypes:
                 await RenderPreviousPageAsync(
                     workspace,
                     workspaceMember,
@@ -101,7 +101,7 @@ public class ZonesPage(
                     cancellationToken);
                 break;
 
-            case NextPageZones:
+            case NextPageDeskTypes:
                 await RenderNextPageAsync(
                     workspace,
                     workspaceMember,
@@ -110,7 +110,7 @@ public class ZonesPage(
                     cancellationToken);
                 break;
 
-            case LastPageZones:
+            case LastPageDeskTypes:
                 await RenderLastPageAsync(
                     workspace,
                     workspaceMember,
@@ -119,27 +119,29 @@ public class ZonesPage(
                     cancellationToken);
                 break;
 
-            case ZoneActionTypes.SetPreferredZone:
-                await AddPreferredZoneAsync(
+            case DeskTypeActionTypes.SetPreferredDeskType:
+                await AddPreferredDeskTypeAsync(
                     workspace,
                     workspaceMember,
-                    SetPreferredZoneContext.Deserialize(action.Value),
+                    SetPreferredDeskTypeContext.Deserialize(action.Value),
                     request.View.Hash,
                     cancellationToken);
                 break;
 
-            case ZoneActionTypes.RemovePreferredZone:
-                await RemovePreferredZoneAsync(
+            case DeskTypeActionTypes.RemovePreferredDeskType:
+                await RemovePreferredDeskTypeAsync(
                     workspace,
                     workspaceMember,
-                    RemovePreferredZoneContext.Deserialize(action.Value),
+                    RemovePreferredDeskTypeContext.Deserialize(action.Value),
                     request.View.Hash,
                     cancellationToken);
                 break;
         }
     }
 
-    public async Task HandleAsync(StaticSelectAction action, BlockActionRequest request,
+    public async Task HandleAsync(
+        StaticSelectAction action,
+        BlockActionRequest request,
         CancellationToken cancellationToken)
     {
         var workspaceEntity =
@@ -180,14 +182,14 @@ public class ZonesPage(
                 request.View.Hash,
                 cancellationToken);
         }
-        else if (action.SelectedOption.Value.StartsWith(ZoneActionTypes.EditZone))
+        else if (action.SelectedOption.Value.StartsWith(DeskTypeActionTypes.EditDeskType))
         {
-            var context = EditZoneContext.Deserialize(request.View.PrivateMetadata);
-            ArgumentNullException.ThrowIfNull(context.PageContext.ZonesPage);
+            var context = EditDeskTypeContext.Deserialize(request.View.PrivateMetadata);
+            ArgumentNullException.ThrowIfNull(context.PageContext.DeskTypesPage);
 
-            var zoneId = action.SelectedOption.Value[ZoneActionTypes.EditZone.Length..];
-            var permissions = await locationService.GetPermissionsAsync(
-                context.PageContext.ZonesPage.LocationId,
+            var deskTypeId = action.SelectedOption.Value[DeskTypeActionTypes.EditDeskType.Length..];
+            var permissions = await organizationService.GetPermissionsAsync(
+                workspace,
                 workspaceMember,
                 cancellationToken);
             if (!permissions.CanModify)
@@ -196,24 +198,23 @@ public class ZonesPage(
             }
 
             context.PageContext.PushCurrentPageToVisitedPages();
-            context.LocationId = context.PageContext.ZonesPage.LocationId;
-            context.ZoneId = zoneId;
+            context.DeskTypeId = deskTypeId;
 
-            await OpenEditZoneDialogAsync(
+            await OpenEditDeskTypeDialogAsync(
                 workspace,
                 workspaceMember,
                 request.TriggerId,
                 context,
                 cancellationToken);
         }
-        else if (action.SelectedOption.Value.StartsWith(ZoneActionTypes.RemoveZone))
+        else if (action.SelectedOption.Value.StartsWith(DeskTypeActionTypes.RemoveDeskType))
         {
-            var context = RemoveZoneContext.Deserialize(request.View.PrivateMetadata);
-            ArgumentNullException.ThrowIfNull(context.PageContext.ZonesPage);
+            var context = RemoveDeskTypeContext.Deserialize(request.View.PrivateMetadata);
+            ArgumentNullException.ThrowIfNull(context.PageContext.DeskTypesPage);
 
-            var zoneId = action.SelectedOption.Value[ZoneActionTypes.RemoveZone.Length..];
-            var permissions = await locationService.GetPermissionsAsync(
-                context.PageContext.ZonesPage.LocationId,
+            var deskTypeId = action.SelectedOption.Value[DeskTypeActionTypes.RemoveDeskType.Length..];
+            var permissions = await organizationService.GetPermissionsAsync(
+                workspace,
                 workspaceMember,
                 cancellationToken);
             if (!permissions.CanDelete)
@@ -222,10 +223,9 @@ public class ZonesPage(
             }
 
             context.PageContext.PushCurrentPageToVisitedPages();
-            context.LocationId = context.PageContext.ZonesPage.LocationId;
-            context.ZoneId = zoneId;
+            context.DeskTypeId = deskTypeId;
 
-            await OpenRemoveZoneDialogAsync(
+            await OpenRemoveDeskTypeDialogAsync(
                 workspace,
                 workspaceMember,
                 request.TriggerId,
@@ -265,8 +265,8 @@ public class ZonesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.ZonesPage);
-        if (commonPageContext.PageContext.ZonesPage.Pagination.IsEmpty())
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DeskTypesPage);
+        if (commonPageContext.PageContext.DeskTypesPage.Pagination.IsEmpty())
         {
             await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
         }
@@ -275,10 +275,10 @@ public class ZonesPage(
             await RenderInternalAsync(
                 workspace,
                 workspaceMember,
-                commonPageContext.PageContext.ZonesPage.Pagination.CurrentAfter,
-                commonPageContext.PageContext.ZonesPage.Pagination.CurrentFirst,
-                commonPageContext.PageContext.ZonesPage.Pagination.CurrentBefore,
-                commonPageContext.PageContext.ZonesPage.Pagination.CurrentLast,
+                commonPageContext.PageContext.DeskTypesPage.Pagination.CurrentAfter,
+                commonPageContext.PageContext.DeskTypesPage.Pagination.CurrentFirst,
+                commonPageContext.PageContext.DeskTypesPage.Pagination.CurrentBefore,
+                commonPageContext.PageContext.DeskTypesPage.Pagination.CurrentLast,
                 commonPageContext,
                 hash,
                 cancellationToken);
@@ -292,12 +292,12 @@ public class ZonesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.ZonesPage);
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DeskTypesPage);
         await RenderInternalAsync(
             workspace,
             workspaceMember,
             null,
-            ZonesPageSize,
+            DeskTypesPageSize,
             null,
             null,
             commonPageContext,
@@ -312,14 +312,14 @@ public class ZonesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.ZonesPage);
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DeskTypesPage);
         await RenderInternalAsync(
             workspace,
             workspaceMember,
             null,
             null,
-            commonPageContext.PageContext.ZonesPage.Pagination.Before,
-            ZonesPageSize,
+            commonPageContext.PageContext.DeskTypesPage.Pagination.Before,
+            DeskTypesPageSize,
             commonPageContext,
             hash,
             cancellationToken);
@@ -332,12 +332,12 @@ public class ZonesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.ZonesPage);
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DeskTypesPage);
         await RenderInternalAsync(
             workspace,
             workspaceMember,
-            commonPageContext.PageContext.ZonesPage.Pagination.After,
-            ZonesPageSize,
+            commonPageContext.PageContext.DeskTypesPage.Pagination.After,
+            DeskTypesPageSize,
             null,
             null,
             commonPageContext,
@@ -352,14 +352,14 @@ public class ZonesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.ZonesPage);
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DeskTypesPage);
         await RenderInternalAsync(
             workspace,
             workspaceMember,
             null,
             null,
             null,
-            ZonesPageSize,
+            DeskTypesPageSize,
             commonPageContext,
             hash,
             cancellationToken);
@@ -376,11 +376,12 @@ public class ZonesPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.ZonesPage);
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DeskTypesPage);
 
-        commonPageContext.PageContext.CurrentPageType = PageType.Zones;
+        commonPageContext.PageContext.CurrentPageType = PageType.DeskTypes;
 
-        var zoneConnection = await GetPaginatedZonesAsync(
+        var deskTypeConnection = await GetPaginatedDeskTypesAsync(
+            workspace,
             workspaceMember,
             after,
             first,
@@ -388,15 +389,15 @@ public class ZonesPage(
             last,
             commonPageContext,
             cancellationToken);
-        var zones = zoneConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
+        var deskTypes = deskTypeConnection.Edges.Select(item => mapper.MapToOrganizationDeskType(item.Node)).ToList();
         var asyncBlocks = await Task.WhenAll(GetToolbarAsync(
-            commonPageContext.PageContext.ZonesPage.LocationId,
+            workspace,
             workspaceMember,
             commonPageContext.PageContext,
-            cancellationToken), zoneComponents.GetZoneCardsAsync(
-            commonPageContext.PageContext.ZonesPage.LocationId,
+            cancellationToken), deskTypeComponents.GetDeskTypeCardsAsync(
+            workspace,
             workspaceMember,
-            zones,
+            deskTypes,
             commonPageContext.PageContext,
             cancellationToken));
 
@@ -404,7 +405,7 @@ public class ZonesPage(
         [
             GetTitle(),
             asyncBlocks[0],
-            GetZonesSearchCriteriaAndPaginationBlocks(zoneConnection, commonPageContext.PageContext),
+            GetDeskTypesSearchCriteriaAndPaginationBlocks(deskTypeConnection, commonPageContext.PageContext),
             asyncBlocks[1]
         ];
 
@@ -413,7 +414,7 @@ public class ZonesPage(
             workspaceMember.Id,
             new HomeViewDefinition
             {
-                CallbackId = ZonesCallback,
+                CallbackId = DeskTypesCallback,
                 Blocks = blocks
                     .SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()]))
                     .SkipLast(1)
@@ -426,28 +427,29 @@ public class ZonesPage(
 
     public static void RegisterHandlers(AspNetSlackServiceConfiguration options) =>
         options
-            .RegisterBlockActionHandler<StaticSelectAction, ZonesPage>(ZoneActionTypes.ActionsMenu)
-            .RegisterBlockActionHandler<ButtonAction, ZonesPage>(FirstPageZones)
-            .RegisterBlockActionHandler<ButtonAction, ZonesPage>(LastPageZones)
-            .RegisterBlockActionHandler<ButtonAction, ZonesPage>(NextPageZones)
-            .RegisterBlockActionHandler<ButtonAction, ZonesPage>(PreviousPageZones)
-            .RegisterBlockActionHandler<ButtonAction, ZonesPage>(ZoneActionTypes.SetPreferredZone)
-            .RegisterBlockActionHandler<ButtonAction, ZonesPage>(ZoneActionTypes.RemovePreferredZone);
+            .RegisterBlockActionHandler<StaticSelectAction, DeskTypesPage>(DeskTypeActionTypes.ActionsMenu)
+            .RegisterBlockActionHandler<ButtonAction, DeskTypesPage>(FirstPageDeskTypes)
+            .RegisterBlockActionHandler<ButtonAction, DeskTypesPage>(LastPageDeskTypes)
+            .RegisterBlockActionHandler<ButtonAction, DeskTypesPage>(NextPageDeskTypes)
+            .RegisterBlockActionHandler<ButtonAction, DeskTypesPage>(PreviousPageDeskTypes)
+            .RegisterBlockActionHandler<ButtonAction, DeskTypesPage>(DeskTypeActionTypes.SetPreferredDeskType)
+            .RegisterBlockActionHandler<ButtonAction, DeskTypesPage>(DeskTypeActionTypes.RemovePreferredDeskType);
 
     private static ICollection<Block> GetTitle() =>
     [
-        new SectionBlock { Text = "*Zones*".ToMarkdown() }
+        new SectionBlock { Text = "*Desk Types*".ToMarkdown() }
     ];
 
     private async Task<ICollection<Block>> GetToolbarAsync(
-        string locationId,
+        Workspace workspace,
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
         var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
-        var addZoneButton =
-            await zoneComponents.GetAddZoneButtonAsync(locationId, workspaceMember, pageContext, cancellationToken);
+        var addDeskTypeButton =
+            await deskTypeComponents.GetAddDeskTypeButtonAsync(workspace, workspaceMember, pageContext,
+                cancellationToken);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
 
         return
@@ -456,14 +458,15 @@ public class ZonesPage(
             {
                 Elements = new List<IActionElement>()
                     .Concat(homeAndBackButtons)
-                    .Concat(addZoneButton)
+                    .Concat(addDeskTypeButton)
                     .Concat(feedbackButton)
                     .ToList()
             }
         ];
     }
 
-    private async Task<TagConnection> GetPaginatedZonesAsync(
+    private async Task<DeskTypeConnection> GetPaginatedDeskTypesAsync(
+        Workspace workspace,
         WorkspaceMember workspaceMember,
         string? after,
         int? first,
@@ -472,98 +475,95 @@ public class ZonesPage(
         CommonPageContext commonPageContext,
         CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.ZonesPage);
-        var getPaginatedTagsInput = new GetPaginatedTagsInput
+        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.DeskTypesPage);
+        var getPaginatedDeskTypesInput = new GetPaginatedDeskTypesInput
         {
             After = after.ToSafeString(),
             First = first.ToNullInt(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new TagWhereInput
-            {
-                LocationId = commonPageContext.PageContext.ZonesPage.LocationId, Type = LocationTagType.Zone
-            }
+            Where = new DeskTypeWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
-        getPaginatedTagsInput.OrderBy.AddRange([
-            new TagOrderInput { Direction = OrderDirection.Ascending, Field = TagOrderField.TagName }
+        getPaginatedDeskTypesInput.OrderBy.AddRange([
+            new DeskTypeOrderInput { Direction = OrderDirection.Ascending, Field = DeskTypeOrderField.DeskTypeName }
         ]);
 
-        return await locationServiceClient.GetPaginatedTagsAsync(
-            getPaginatedTagsInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        return await organizationServiceClient.GetPaginatedDeskTypesAsync(
+            getPaginatedDeskTypesInput,
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
     }
 
-    private static List<Block> GetZonesSearchCriteriaAndPaginationBlocks(
-        TagConnection tagConnection,
+    private static List<Block> GetDeskTypesSearchCriteriaAndPaginationBlocks(
+        DeskTypeConnection deskTypeConnection,
         PageContext pageContext)
     {
-        if (tagConnection.Edges.Count == 0)
+        if (deskTypeConnection.Edges.Count == 0)
         {
-            return [new SectionBlock { Text = "No zone found".ToMarkdown() }];
+            return [new SectionBlock { Text = "No desk type found".ToMarkdown() }];
         }
 
-        var totalZonesCount =
-            new SectionBlock { Text = $"Total zones: {tagConnection.TotalCount}".ToMarkdown() };
-        if (tagConnection.TotalCount <= ZonesPageSize)
+        var totalDeskTypesCount =
+            new SectionBlock { Text = $"Total desk types: {deskTypeConnection.TotalCount}".ToMarkdown() };
+        if (deskTypeConnection.TotalCount <= DeskTypesPageSize)
         {
-            return [totalZonesCount];
+            return [totalDeskTypesCount];
         }
 
         pageContext = pageContext.Clone();
-        ArgumentNullException.ThrowIfNull(pageContext.ZonesPage);
+        ArgumentNullException.ThrowIfNull(pageContext.DeskTypesPage);
 
         var paginationButtons = new List<IActionElement>();
-        if (tagConnection.PageInfo.HasPreviousPage)
+        if (deskTypeConnection.PageInfo.HasPreviousPage)
         {
-            pageContext.ZonesPage.Pagination.First = ZonesPageSize;
-            pageContext.ZonesPage.Pagination.After = null;
-            pageContext.ZonesPage.Pagination.Before = null;
-            pageContext.ZonesPage.Pagination.Last = null;
+            pageContext.DeskTypesPage.Pagination.First = DeskTypesPageSize;
+            pageContext.DeskTypesPage.Pagination.After = null;
+            pageContext.DeskTypesPage.Pagination.Before = null;
+            pageContext.DeskTypesPage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageZones,
+                ActionId = FirstPageDeskTypes,
                 Text = Icons.FirstPage.ToPlainText(),
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.ZonesPage.Pagination.First = null;
-            pageContext.ZonesPage.Pagination.After = null;
-            pageContext.ZonesPage.Pagination.Before = tagConnection.PageInfo.StartCursor;
-            pageContext.ZonesPage.Pagination.Last = ZonesPageSize;
+            pageContext.DeskTypesPage.Pagination.First = null;
+            pageContext.DeskTypesPage.Pagination.After = null;
+            pageContext.DeskTypesPage.Pagination.Before = deskTypeConnection.PageInfo.StartCursor;
+            pageContext.DeskTypesPage.Pagination.Last = DeskTypesPageSize;
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageZones,
+                ActionId = PreviousPageDeskTypes,
                 Text = Icons.PreviousPage.ToPlainText(),
                 Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
-        if (tagConnection.PageInfo.HasNextPage)
+        if (deskTypeConnection.PageInfo.HasNextPage)
         {
-            pageContext.ZonesPage.Pagination.First = ZonesPageSize;
-            pageContext.ZonesPage.Pagination.After = tagConnection.PageInfo.EndCursor;
-            pageContext.ZonesPage.Pagination.Before = null;
-            pageContext.ZonesPage.Pagination.Last = null;
+            pageContext.DeskTypesPage.Pagination.First = DeskTypesPageSize;
+            pageContext.DeskTypesPage.Pagination.After = deskTypeConnection.PageInfo.EndCursor;
+            pageContext.DeskTypesPage.Pagination.Before = null;
+            pageContext.DeskTypesPage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageZones,
+                ActionId = NextPageDeskTypes,
                 Text = Icons.NextPage.ToPlainText(),
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.ZonesPage.Pagination.First = null;
-            pageContext.ZonesPage.Pagination.After = null;
-            pageContext.ZonesPage.Pagination.Before = null;
-            pageContext.ZonesPage.Pagination.Last = ZonesPageSize;
+            pageContext.DeskTypesPage.Pagination.First = null;
+            pageContext.DeskTypesPage.Pagination.After = null;
+            pageContext.DeskTypesPage.Pagination.Before = null;
+            pageContext.DeskTypesPage.Pagination.Last = DeskTypesPageSize;
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageZones,
+                ActionId = LastPageDeskTypes,
                 Text = Icons.LastPage.ToPlainText(),
                 Value = new CommonPageContext(pageContext).Serialize()
             });
@@ -571,40 +571,40 @@ public class ZonesPage(
 
         var paginationActionBlock = new ActionsBlock { Elements = paginationButtons };
 
-        return [totalZonesCount, paginationActionBlock];
+        return [totalDeskTypesCount, paginationActionBlock];
     }
 
-    private async Task OpenEditZoneDialogAsync(
+    private async Task OpenEditDeskTypeDialogAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         string triggerId,
-        EditZoneContext context,
+        EditDeskTypeContext context,
         CancellationToken cancellationToken)
     {
-        var zone = await locationServiceClient.GetTagAsync(
-            new GetTagInput { Id = context.ZoneId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        var deskType = await organizationServiceClient.GetDeskTypeAsync(
+            new GetDeskTypeInput { Id = context.DeskTypeId },
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
         var name = new InputBlock
         {
-            BlockId = ZoneActionTypes.Name,
+            BlockId = DeskTypeActionTypes.Name,
             Label = "Name".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = ZoneActionTypes.Name, InitialValue = zone.Name.ToSafeString()
+                ActionId = DeskTypeActionTypes.Name, InitialValue = deskType.Name.ToSafeString()
             },
             Optional = false
         };
 
         var description = new InputBlock
         {
-            BlockId = ZoneActionTypes.Description,
+            BlockId = DeskTypeActionTypes.Description,
             Label = "Description".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = ZoneActionTypes.Description,
-                InitialValue = zone.Description.ToSafeString(),
+                ActionId = DeskTypeActionTypes.Description,
+                InitialValue = deskType.Description.ToSafeString(),
                 Multiline = true
             },
             Optional = true
@@ -615,8 +615,8 @@ public class ZonesPage(
             triggerId,
             new ModalViewDefinition
             {
-                CallbackId = ZoneCallbackTypes.EditZone,
-                Title = "Edit Zone",
+                CallbackId = DeskTypeCallbackTypes.EditDeskType,
+                Title = "Edit Desk Type",
                 Close = "Cancel",
                 Submit = "Save",
                 Blocks =
@@ -628,21 +628,21 @@ public class ZonesPage(
             cancellationToken);
     }
 
-    private async Task OpenRemoveZoneDialogAsync(
+    private async Task OpenRemoveDeskTypeDialogAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         string triggerId,
-        RemoveZoneContext context,
+        RemoveDeskTypeContext context,
         CancellationToken cancellationToken)
     {
-        var zone = await locationServiceClient.GetTagAsync(
-            new GetTagInput { Id = context.ZoneId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        var deskType = await organizationServiceClient.GetDeskTypeAsync(
+            new GetDeskTypeInput { Id = context.DeskTypeId },
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
         var confirmationMessage = new SectionBlock
         {
-            Text = $"Are you sure you want to remove the zone {zone.Name.ToSafeString()}?"
+            Text = $"Are you sure you want to remove the desk type {deskType.Name.ToSafeString()}?"
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -650,8 +650,8 @@ public class ZonesPage(
             triggerId,
             new ModalViewDefinition
             {
-                CallbackId = ZoneCallbackTypes.RemoveZone,
-                Title = "Remove Zone",
+                CallbackId = DeskTypeCallbackTypes.RemoveDeskType,
+                Title = "Remove Desk Type",
                 Close = "No",
                 Submit = "Yes",
                 Blocks =
@@ -661,15 +661,15 @@ public class ZonesPage(
             cancellationToken);
     }
 
-    private async Task AddPreferredZoneAsync(
+    private async Task AddPreferredDeskTypeAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        SetPreferredZoneContext context,
+        SetPreferredDeskTypeContext context,
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.AddPreferredLocationTagAsync(
-            new AddPreferredLocationTagInput { LocationTagId = context.ZoneId },
+        await customerServiceClient.AddPreferredOrganizationTagAsync(
+            new AddPreferredOrganizationTagInput { OrganizationTagId = context.DeskTypeId },
             customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
@@ -681,15 +681,15 @@ public class ZonesPage(
             cancellationToken);
     }
 
-    private async Task RemovePreferredZoneAsync(
+    private async Task RemovePreferredDeskTypeAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        RemovePreferredZoneContext context,
+        RemovePreferredDeskTypeContext context,
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.RemovePreferredLocationTagAsync(
-            new RemovePreferredLocationTagInput { LocationTagId = context.ZoneId },
+        await customerServiceClient.RemovePreferredOrganizationTagAsync(
+            new RemovePreferredOrganizationTagInput { OrganizationTagId = context.DeskTypeId },
             customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 

@@ -23,8 +23,7 @@ public interface IZoneComponents
         CancellationToken cancellationToken);
 }
 
-public class ZoneComponentsComponents(ICustomerService customerService, ILocationService locationService)
-    : IZoneComponents
+public class ZoneComponents(ICustomerService customerService, ILocationService locationService) : IZoneComponents
 {
     public async Task<ICollection<IActionElement>> GetAddZoneButtonAsync(
         string locationId,

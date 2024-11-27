@@ -257,7 +257,7 @@ public class TeamsPage(
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.TeamsPage);
-        if (commonPageContext.PageContext.TeamsPage.TeamsPagination.IsEmpty())
+        if (commonPageContext.PageContext.TeamsPage.Pagination.IsEmpty())
         {
             await RenderFirstPageAsync(workspace, workspaceMember, commonPageContext, hash, cancellationToken);
         }
@@ -266,10 +266,10 @@ public class TeamsPage(
             await RenderInternalAsync(
                 workspace,
                 workspaceMember,
-                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentAfter,
-                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentFirst,
-                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentBefore,
-                commonPageContext.PageContext.TeamsPage.TeamsPagination.CurrentLast,
+                commonPageContext.PageContext.TeamsPage.Pagination.CurrentAfter,
+                commonPageContext.PageContext.TeamsPage.Pagination.CurrentFirst,
+                commonPageContext.PageContext.TeamsPage.Pagination.CurrentBefore,
+                commonPageContext.PageContext.TeamsPage.Pagination.CurrentLast,
                 commonPageContext,
                 hash,
                 cancellationToken);
@@ -309,7 +309,7 @@ public class TeamsPage(
             workspaceMember,
             null,
             null,
-            commonPageContext.PageContext.TeamsPage.TeamsPagination.Before,
+            commonPageContext.PageContext.TeamsPage.Pagination.Before,
             TeamsPageSize,
             commonPageContext,
             hash,
@@ -327,7 +327,7 @@ public class TeamsPage(
         await RenderInternalAsync(
             workspace,
             workspaceMember,
-            commonPageContext.PageContext.TeamsPage.TeamsPagination.After,
+            commonPageContext.PageContext.TeamsPage.Pagination.After,
             TeamsPageSize,
             null,
             null,
@@ -524,10 +524,10 @@ public class TeamsPage(
         var paginationButtons = new List<IActionElement>();
         if (teamConnection.PageInfo.HasPreviousPage)
         {
-            pageContext.TeamsPage.TeamsPagination.First = TeamsPageSize;
-            pageContext.TeamsPage.TeamsPagination.After = null;
-            pageContext.TeamsPage.TeamsPagination.Before = null;
-            pageContext.TeamsPage.TeamsPagination.Last = null;
+            pageContext.TeamsPage.Pagination.First = TeamsPageSize;
+            pageContext.TeamsPage.Pagination.After = null;
+            pageContext.TeamsPage.Pagination.Before = null;
+            pageContext.TeamsPage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
@@ -536,10 +536,10 @@ public class TeamsPage(
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.TeamsPage.TeamsPagination.First = null;
-            pageContext.TeamsPage.TeamsPagination.After = null;
-            pageContext.TeamsPage.TeamsPagination.Before = teamConnection.PageInfo.StartCursor;
-            pageContext.TeamsPage.TeamsPagination.Last = TeamsPageSize;
+            pageContext.TeamsPage.Pagination.First = null;
+            pageContext.TeamsPage.Pagination.After = null;
+            pageContext.TeamsPage.Pagination.Before = teamConnection.PageInfo.StartCursor;
+            pageContext.TeamsPage.Pagination.Last = TeamsPageSize;
 
             paginationButtons.Add(new Button
             {
@@ -551,10 +551,10 @@ public class TeamsPage(
 
         if (teamConnection.PageInfo.HasNextPage)
         {
-            pageContext.TeamsPage.TeamsPagination.First = TeamsPageSize;
-            pageContext.TeamsPage.TeamsPagination.After = teamConnection.PageInfo.EndCursor;
-            pageContext.TeamsPage.TeamsPagination.Before = null;
-            pageContext.TeamsPage.TeamsPagination.Last = null;
+            pageContext.TeamsPage.Pagination.First = TeamsPageSize;
+            pageContext.TeamsPage.Pagination.After = teamConnection.PageInfo.EndCursor;
+            pageContext.TeamsPage.Pagination.Before = null;
+            pageContext.TeamsPage.Pagination.Last = null;
 
             paginationButtons.Add(new Button
             {
@@ -563,10 +563,10 @@ public class TeamsPage(
                 Value = new CommonPageContext(pageContext).Serialize()
             });
 
-            pageContext.TeamsPage.TeamsPagination.First = null;
-            pageContext.TeamsPage.TeamsPagination.After = null;
-            pageContext.TeamsPage.TeamsPagination.Before = null;
-            pageContext.TeamsPage.TeamsPagination.Last = TeamsPageSize;
+            pageContext.TeamsPage.Pagination.First = null;
+            pageContext.TeamsPage.Pagination.After = null;
+            pageContext.TeamsPage.Pagination.Before = null;
+            pageContext.TeamsPage.Pagination.Last = TeamsPageSize;
 
             paginationButtons.Add(new Button
             {
@@ -684,7 +684,8 @@ public class TeamsPage(
                     name, about, timezone, updateChannel, organizationMembers
                 ],
                 PrivateMetadata = context.Serialize()
-            });
+            },
+            cancellationToken);
     }
 
     private async Task OpenRemoveTeamDialogAsync(
@@ -716,7 +717,8 @@ public class TeamsPage(
                 Blocks =
                     [confirmationMessage],
                 PrivateMetadata = context.Serialize()
-            });
+            },
+            cancellationToken);
     }
 
     private async Task SetAsDefaultTeamAsync(

@@ -107,7 +107,8 @@ public class AddTeamButtonHandler(
                 Submit = "Add",
                 Blocks = [name, about, timezone, updateChannel, organizationMembers],
                 PrivateMetadata = action.Value
-            });
+            },
+            cancellationToken);
     }
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)

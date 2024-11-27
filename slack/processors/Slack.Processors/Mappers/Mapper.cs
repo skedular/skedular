@@ -1,18 +1,21 @@
 using Api.Shared;
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
 using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
 using Enterprise.Shared;
 using Slack.Shared.Models;
 using SlackNet;
+using Admin_AddInput = Api.Shared.Services.Grpc.UnityHub.Customer.V1.Admin_AddInput;
+using Booking = Slack.Shared.Models.Booking;
 using Location = Slack.Shared.Models.Location;
 using Team = Slack.Shared.Models.Team;
 using Organization = Slack.Shared.Models.Organization;
 using Customer = Slack.Shared.Models.Customer;
 using Desk = Slack.Shared.Models.Desk;
+using OrganizationDeskType = Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationDeskType;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Identity = Slack.Shared.Models.Identity;
 using LocationTag = Slack.Shared.Models.LocationTag;
+using MembershipType = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.MembershipType;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceChannel = Slack.Shared.Database.Entities.WorkspaceChannel;
@@ -513,6 +516,8 @@ public class Mapper : IMapper
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Tags = MapTo(src.LocationTags).ToList(),
+            OrganizationDeskTypes = MapTo(src.OrganizationDeskTypes).ToList(),
+            OrganizationZones = MapTo(src.OrganizationZones).ToList(),
             Location = string.IsNullOrWhiteSpace(src.Location?.Id)
                 ? null
                 : new Location { Id = src.Id, Name = src.Name }
@@ -523,6 +528,18 @@ public class Mapper : IMapper
 
     private static LocationTag MapTo(Api.Shared.Services.Grpc.UnityHub.Booking.V1.LocationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Type = src.TagType.ToSafeString() };
+
+    private static IEnumerable<Shared.Models.OrganizationDeskType> MapTo(IEnumerable<OrganizationDeskType> src) =>
+        src.Select(MapTo);
+
+    private static Shared.Models.OrganizationDeskType MapTo(OrganizationDeskType src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+
+    private static IEnumerable<OrganizationZone> MapTo(
+        IEnumerable<Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationZone> src) => src.Select(MapTo);
+
+    private static OrganizationZone MapTo(Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationZone src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static Team? MapTo(Api.Shared.Services.Grpc.UnityHub.Booking.V1.Team? src) =>
         string.IsNullOrWhiteSpace(src?.Id) ? null : new Team { Id = src.Id, Name = src.Name.ToSafeString() };

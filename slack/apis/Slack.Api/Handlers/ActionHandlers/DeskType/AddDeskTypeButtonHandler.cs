@@ -1,5 +1,4 @@
-using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -15,15 +14,15 @@ using Slack.Shared.Repositories;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
 
-namespace Slack.Api.Handlers.ActionHandlers.Zone;
+namespace Slack.Api.Handlers.ActionHandlers.DeskType;
 
-public class AddZoneButtonHandler(
+public class AddDeskTypeButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfiguration slackConfiguration,
-    LocationConfiguration locationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
+    OrganizationConfiguration organizationConfiguration,
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
     ICustomerService customerService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
@@ -54,17 +53,17 @@ public class AddZoneButtonHandler(
 
         var name = new InputBlock
         {
-            BlockId = ZoneActionTypes.Name,
+            BlockId = DeskTypeActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = ZoneActionTypes.Name },
+            Element = new PlainTextInput { ActionId = DeskTypeActionTypes.Name },
             Optional = false
         };
 
         var description = new InputBlock
         {
-            BlockId = ZoneActionTypes.Description,
+            BlockId = DeskTypeActionTypes.Description,
             Label = "Description".ToPlainText(),
-            Element = new PlainTextInput { ActionId = ZoneActionTypes.Description, Multiline = true },
+            Element = new PlainTextInput { ActionId = DeskTypeActionTypes.Description, Multiline = true },
             Optional = true
         };
 
@@ -73,8 +72,8 @@ public class AddZoneButtonHandler(
             request.TriggerId,
             new ModalViewDefinition
             {
-                CallbackId = ZoneCallbackTypes.AddZone,
-                Title = "Add Zone",
+                CallbackId = DeskTypeCallbackTypes.AddDeskType,
+                Title = "Add Desk Type",
                 Close = "Cancel",
                 Submit = "Add",
                 Blocks = [name, description],
@@ -114,19 +113,19 @@ public class AddZoneButtonHandler(
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
-        var context = AddZoneContext.Deserialize(viewSubmission.View.PrivateMetadata);
+        var context = AddDeskTypeContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
-        var zoneId = randomHelper.Generate();
-        var addTagInput = new AddTagInput { Id = zoneId, LocationId = context.LocationId, Type = LocationTagType.Zone };
+        var deskTypeId = randomHelper.Generate();
+        var addDeskTypeInput = new AddDeskTypeInput { Id = deskTypeId, OrganizationId = workspace.Organization.Id };
 
-        if (values.TryGetValue(ZoneActionTypes.Name, out var nameBlock))
+        if (values.TryGetValue(DeskTypeActionTypes.Name, out var nameBlock))
         {
-            if (nameBlock.TryGetValue(ZoneActionTypes.Name, out var name))
+            if (nameBlock.TryGetValue(DeskTypeActionTypes.Name, out var name))
             {
                 if (name is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    addTagInput.Name = value.Value.ToSafeString();
+                    addDeskTypeInput.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -143,13 +142,13 @@ public class AddZoneButtonHandler(
             throw new InvalidOperationException("name block is missing");
         }
 
-        if (values.TryGetValue(ZoneActionTypes.Description, out var descriptionBlock))
+        if (values.TryGetValue(DeskTypeActionTypes.Description, out var descriptionBlock))
         {
-            if (descriptionBlock.TryGetValue(ZoneActionTypes.Description, out var description))
+            if (descriptionBlock.TryGetValue(DeskTypeActionTypes.Description, out var description))
             {
                 if (description is PlainTextInputValue value)
                 {
-                    addTagInput.Description = value.Value.ToSafeString();
+                    addDeskTypeInput.Description = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -166,9 +165,9 @@ public class AddZoneButtonHandler(
             throw new InvalidOperationException("description block is missing");
         }
 
-        await locationServiceClient.AddTagAsync(
-            addTagInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+        await organizationServiceClient.AddDeskTypeAsync(
+            addDeskTypeInput,
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
         await pageNavigator.BackAsync(

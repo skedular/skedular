@@ -16,6 +16,7 @@ public static class Icons
     public const string Zones = ":world_map:";
     public const string Desk = ":desktop_computer:";
     public const string Desks = ":desktop_computer:";
+    public const string DeskTypes = ":desktop_computer:";
     public const string Back = ":back:";
     public const string New = ":heavy_plus_sign:";
     public const string Edit = ":pencil2:";

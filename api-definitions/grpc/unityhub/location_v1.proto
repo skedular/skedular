@@ -168,19 +168,24 @@ enum LocationOrderField {
     Timezone = 2;
 }
 
-message OrganizationTag {
+message OrganizationDeskType {
     string id = 1;
     string name = 2;
-    string type = 3;
+}
+
+message OrganizationZone {
+    string id = 1;
+    string name = 2;
 }
 
 message Desk {
     string id = 1;
     string name = 2;
-    repeated Tag tags = 3;
-    bool deactivated = 4;
-    bool requireBookingApproval = 5;
-    repeated OrganizationTag organizationTags = 6;
+    bool deactivated = 3;
+    bool requireBookingApproval = 4;
+    repeated OrganizationDeskType organizationDeskTypes = 5;
+    repeated OrganizationZone organizationZones = 6;
+    repeated Tag tags = 7;
 }
 
 message GetPermissionsInput {

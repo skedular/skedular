@@ -105,4 +105,12 @@ public static class BillingActionTypes
 public static class DeskTypeActionTypes
 {
     public const string DeskTypes = "DeskTypes";
+    public const string AddDeskType = "AddDeskType";
+    public const string SetPreferredDeskType = "SetPreferredDeskType";
+    public const string RemovePreferredDeskType = "RemovePreferredDeskType";
+    public const string EditDeskType = "EditDeskType";
+    public const string RemoveDeskType = "RemoveDeskType";
+    public const string ActionsMenu = "DeskType_ActionsMenu";
+    public const string Name = "DeskTypeName";
+    public const string Description = "DeskTypeDescription";
 }

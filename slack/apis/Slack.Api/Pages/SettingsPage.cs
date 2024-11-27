@@ -393,7 +393,8 @@ public class SettingsPage(
                     email, new DividerBlock(), addressLine1, addressLine2, suburb, city, province, zipcode, country
                 ],
                 PrivateMetadata = commonPageContext.Serialize()
-            });
+            },
+            cancellationToken);
     }
 
     private async Task OpenEditBillingInfoDialogAsync(
@@ -519,6 +520,7 @@ public class SettingsPage(
                     email, new DividerBlock(), addressLine1, addressLine2, suburb, city, province, zipcode, country
                 ],
                 PrivateMetadata = commonPageContext.Serialize()
-            });
+            },
+            cancellationToken);
     }
 }

@@ -153,7 +153,8 @@ public class EditBookingButtonHandler(
                 Submit = "Save",
                 Blocks = blocks,
                 PrivateMetadata = action.Value
-            });
+            },
+            cancellationToken);
     }
 
     public async Task Handle(ButtonAction action, BlockActionRequest request)

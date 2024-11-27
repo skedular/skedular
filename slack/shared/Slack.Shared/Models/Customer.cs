@@ -34,4 +34,5 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public ICollection<Desk> PreferredDesks { get; set; } = [];
     public ICollection<Team> DefaultTeams { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
 }

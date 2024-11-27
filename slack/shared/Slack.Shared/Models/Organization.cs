@@ -10,6 +10,7 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public bool AgreedToTermsOfUse { get; set; }
     public string? LogoUrl { get; set; }
     public bool HasAttachedPaymentMethod { get; set; }
+    public ICollection<OrganizationDeskType> Tags { get; set; } = [];
     public ICollection<Location> Locations { get; set; } = [];
     public ICollection<Team> Teams { get; set; } = [];
     public DateTimeOffset? SlackChannelDailyUpdateLastSentAt { get; set; }

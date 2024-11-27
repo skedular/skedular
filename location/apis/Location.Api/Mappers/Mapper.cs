@@ -609,7 +609,8 @@ public class Mapper : IMapper
         };
 
         desk.Tags.AddRange(MapToGrpcResponse(src.Tags));
-        desk.OrganizationTags.AddRange(MapToGrpcResponse(src.OrganizationTags));
+        desk.OrganizationDeskTypes.AddRange(MapToGrpcResponseOrganizationDeskTypes(src.OrganizationTags));
+        desk.OrganizationZones.AddRange(MapToGrpcResponseOrganizationZones(src.OrganizationTags));
 
         return desk;
     }
@@ -686,9 +687,11 @@ public class Mapper : IMapper
                 Location = location
             };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrganizationTag MapToGrpcResponse(
-        OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Type = src.Type.ToSafeString() };
+    private static OrganizationDeskType MapToGrpcResponseOrganizationDeskType(OrganizationTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+
+    private static OrganizationZone MapToGrpcResponseOrganizationZone(OrganizationTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static LocationMember MapTo(Member src, Shared.Models.Location location) =>
         new()
@@ -734,8 +737,16 @@ public class Mapper : IMapper
     private IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Tag> MapToGrpcResponse(
         IEnumerable<Shared.Models.Tag> src) => src.Select(MapToGrpcResponse);
 
-    private IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrganizationTag> MapToGrpcResponse(
-        IEnumerable<OrganizationTag> src) => src.Select(MapToGrpcResponse);
+    private static IEnumerable<OrganizationDeskType> MapToGrpcResponseOrganizationDeskTypes(
+        IEnumerable<OrganizationTag> src) =>
+        src
+            .Where(item => item.Type == OrganizationTagType.DeskType)
+            .Select(MapToGrpcResponseOrganizationDeskType);
+
+    private static IEnumerable<OrganizationZone> MapToGrpcResponseOrganizationZones(IEnumerable<OrganizationTag> src) =>
+        src
+            .Where(item => item.Type == OrganizationTagType.Zone)
+            .Select(MapToGrpcResponseOrganizationZone);
 
     private IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk> MapToGrpcResponse(
         IEnumerable<Shared.Models.Desk> src) => src.Select(MapToGrpcResponse);
