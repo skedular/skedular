@@ -14,7 +14,7 @@ import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { MultipleChoicesDeskTypes } from 'components/organization';
+import { MultipleChoicesDeskTypes, MultipleChoicesZones } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext } from 'react';
@@ -40,6 +40,7 @@ type DeskDetails = {
   count: number;
   locationTagIds: string[];
   deskTypeIds: string[];
+  zoneIds: string[];
 };
 
 const deskSchema = object({
@@ -47,6 +48,7 @@ const deskSchema = object({
   count: number().positive().integer().required('Desk count is required'),
   locationTagIds: array().nullable(),
   deskTypeIds: array().nullable(),
+  zoneIds: array().nullable(),
 });
 
 const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicked, onCancelClicked, locationId }: Props) => {
@@ -55,6 +57,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
       fragment bulkNewDeskDialog_query on Query {
         ...deskMultipleChoicesZones_query
         ...multipleChoicesDeskTypes_query
+        ...multipleChoicesZones_query
       }
     `,
     rootDataRelay,
@@ -97,11 +100,11 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
           namePrefix,
           locationId,
           count: parseInt(count.toString()),
-          locationTagIds: locationTagIds ? locationTagIds : [],
-          deskTypeIds: deskTypeIds ? deskTypeIds : [],
-          zoneIds: [],
           deactivated: false,
           requireBookingApproval: false,
+          locationTagIds,
+          deskTypeIds,
+          zoneIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -146,6 +149,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
             count: 0,
             locationTagIds: [],
             deskTypeIds: [],
+            zoneIds: [],
           }}
           validate={validate}
           render={({ handleSubmit }) => (
@@ -154,6 +158,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
               <TextField label="Count" name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
               <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
               <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+              <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
 
               <DialogActions>
                 <Button color="secondary" variant="contained" onClick={onCancelClicked}>

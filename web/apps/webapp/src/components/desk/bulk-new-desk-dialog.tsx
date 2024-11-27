@@ -1,4 +1,4 @@
-import { MultipleChoicesDeskTypes } from '@/components/organization';
+import { MultipleChoicesDeskTypes, MultipleChoicesZones } from '@/components/organization';
 import type { bulkNewDeskDialog_bulkAddDeskMutation } from '@/queries/__generated__/bulkNewDeskDialog_bulkAddDeskMutation.graphql';
 import type { bulkNewDeskDialog_query$key } from '@/queries/__generated__/bulkNewDeskDialog_query.graphql';
 import Button from '@mui/material/Button';
@@ -39,6 +39,7 @@ type DeskDetails = {
   count: number;
   locationTagIds: string[];
   deskTypeIds: string[];
+  zoneIds: string[];
 };
 
 const deskSchema = object({
@@ -46,6 +47,7 @@ const deskSchema = object({
   count: number().positive().integer().required('Desk count is required'),
   locationTagIds: array().nullable(),
   deskTypeIds: array().nullable(),
+  zoneIds: array().nullable(),
 });
 
 const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicked, onCancelClicked, locationId }: Props) => {
@@ -54,6 +56,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
       fragment bulkNewDeskDialog_query on Query {
         ...deskMultipleChoicesZones_query
         ...multipleChoicesDeskTypes_query
+        ...multipleChoicesZones_query
       }
     `,
     rootDataRelay,
@@ -84,7 +87,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
 
-  const handleAddClick = ({ namePrefix, count, locationTagIds, deskTypeIds }: DeskDetails) => {
+  const handleAddClick = ({ namePrefix, count, locationTagIds, deskTypeIds, zoneIds }: DeskDetails) => {
     const ids = Array.from(Array(count).keys()).map((_) => nanoid());
     const toastId = themedToast(<NotificationContent content={`Adding desks...`} />, infoNotificationOptions);
 
@@ -96,11 +99,11 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
           namePrefix,
           locationId,
           count: parseInt(count.toString()),
-          locationTagIds: locationTagIds ? locationTagIds : [],
-          deskTypeIds: deskTypeIds ? deskTypeIds : [],
-          zoneIds: [],
           deactivated: false,
           requireBookingApproval: false,
+          locationTagIds,
+          deskTypeIds,
+          zoneIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -145,6 +148,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
             count: 0,
             locationTagIds: [],
             deskTypeIds: [],
+            zoneIds: [],
           }}
           validate={validate}
           render={({ handleSubmit }) => (
@@ -153,6 +157,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
               <TextField label="Count" name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
               <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
               <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+              <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
 
               <DialogActions>
                 <Button color="secondary" variant="contained" onClick={onCancelClicked}>
