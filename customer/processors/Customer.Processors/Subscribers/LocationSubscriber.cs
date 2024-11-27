@@ -140,65 +140,21 @@ public class LocationSubscriber(
         Organization? organization,
         CancellationToken cancellationToken)
     {
-        var organizationTags = new List<OrganizationTag>();
-        if (organization is not null)
-        {
-            var organizationTagIds =
-                location.Desks.SelectMany(item => item.OrganizationTags.Select(tag => tag.Id)).ToList();
-
-            foreach (var tagId in organizationTagIds)
-            {
-                organizationTags.Add(
-                    await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(
-                        tagId,
-                        organization,
-                        cancellationToken));
-            }
-        }
-
         var itemsToRemove = existingLocation.Desks
             .Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
         var updatedItems = existingLocation.Desks
             .Where(desk => location.Desks.Any(item => item.Id == desk.Id))
             .Select(desk =>
-            {
-                var locationTags = existingLocation.Tags
-                    .Where(tag => location.Desks
-                        .Single(item => item.Id == desk.Id).Tags
-                        .Any(locationTag => locationTag.Id == tag.Id))
-                    .ToList();
-
-                var filteredOrganizationTags = organizationTags
-                    .Where(tag =>
-                        location.Desks
-                            .Single(item => item.Id == desk.Id).OrganizationTags
-                            .Any(organizationTag => organizationTag.Id == tag.Id))
-                    .ToList();
-
-                return repositoryFactory.DeskRepository.Update(
+                repositoryFactory.DeskRepository.Update(
                     mapper.MergeToEntity(
                         location.Desks.Single(item => item.Id == desk.Id),
                         desk,
-                        existingLocation,
-                        locationTags,
-                        filteredOrganizationTags));
-            })
+                        existingLocation)))
             .ToList();
         var addedItems = location.Desks
             .Where(desk => existingLocation.Desks.All(item => item.Id != desk.Id))
             .Select(desk =>
-            {
-                var locationTags = existingLocation.Tags
-                    .Where(tag => desk.Tags.Any(locationTag => locationTag.Id == tag.Id))
-                    .ToList();
-
-                var filteredOrganizationTags = organizationTags
-                    .Where(tag => desk.OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
-                    .ToList();
-
-                return repositoryFactory.DeskRepository.Add(
-                    mapper.MapToEntity(desk, existingLocation, locationTags, filteredOrganizationTags));
-            })
+                repositoryFactory.DeskRepository.Add(mapper.MapToEntity(desk, existingLocation)))
             .ToList();
 
         repositoryFactory.DeskRepository.RemoveRange(itemsToRemove);

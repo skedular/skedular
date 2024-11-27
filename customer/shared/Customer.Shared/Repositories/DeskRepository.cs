@@ -55,8 +55,6 @@ public class DeskRepository(CustomerDbContext dbContext, TimeProvider timeProvid
         await DbContext.Desk
             .Where(query => query.Id == id)
             .Include(query => query.Location)
-            .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .OrderBy(query => query.Id)
             .FirstOrDefaultAsync(cancellationToken);
 }
