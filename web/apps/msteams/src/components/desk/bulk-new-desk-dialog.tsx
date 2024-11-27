@@ -88,7 +88,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
 
-  const handleAddClick = ({ namePrefix, count, locationTagIds, deskTypeIds }: DeskDetails) => {
+  const handleAddClick = ({ namePrefix, count, locationTagIds, deskTypeIds, zoneIds }: DeskDetails) => {
     const ids = Array.from(Array(count).keys()).map((_) => nanoid());
     const toastId = themedToast(<NotificationContent content={`Adding desks...`} />, infoNotificationOptions);
 
