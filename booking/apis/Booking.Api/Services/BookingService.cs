@@ -937,7 +937,7 @@ public class BookingService(
                 var desk = GetFirstAvailableDeskUsingPreferredDesks(bookings, customer, location);
                 if (desk is null)
                 {
-                    desk = GetFirstAvailableDeskUsingPreferredLocationTags(bookings, customer, location);
+                    desk = GetFirstAvailableDeskUsingPreferredOrganizationZones(bookings, customer, location);
                     if (desk is null)
                     {
                         desk = GetFirstAvailableDesk(bookings, location);
@@ -994,23 +994,22 @@ public class BookingService(
         return availableDeskIds.Count == 0 ? null : location.Desks.First(item => item.Id == availableDeskIds.First());
     }
 
-    private static Desk? GetFirstAvailableDeskUsingPreferredLocationTags(
+    private static Desk? GetFirstAvailableDeskUsingPreferredOrganizationZones(
         ICollection<Shared.Database.Entities.Booking> bookings,
         Customer customer,
         Location location)
     {
-        var preferredLocationTagIds = customer.PreferredLocationTags
-            .Where(item =>
-                item.Location != null && item.Location.Id == location.Id && item.Type == LocationTagType.Zone)
+        var preferredZoneIds = customer.PreferredOrganizationTags
+            .Where(item => item.Type == OrganizationTagType.Zone)
             .Select(item => item.Id)
             .ToList();
-        if (preferredLocationTagIds.Count == 0)
+        if (preferredZoneIds.Count == 0)
         {
             return null;
         }
 
         var allDesks = location.Desks
-            .Where(item => item.Tags.Any(tag => preferredLocationTagIds.Contains(tag.Id)))
+            .Where(item => item.OrganizationTags.Any(tag => preferredZoneIds.Contains(tag.Id)))
             .ToList();
 
         if (allDesks.Count == 0)

@@ -24,7 +24,8 @@ public class KafkaMessageHandler<TKey, TEvent>(
     : IKafkaMessageHandler<TKey, TEvent>
     where TKey : IEvent, new() where TEvent : IEvent, new()
 {
-    public async Task HandleMessageAsync(ConsumeResult<byte[], byte[]> consumeResult,
+    public async Task HandleMessageAsync(
+        ConsumeResult<byte[], byte[]> consumeResult,
         CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
@@ -61,13 +62,16 @@ public class KafkaMessageHandler<TKey, TEvent>(
                          ex.InnerException is TimeoutException or NpgsqlException && (
                              ex.InnerException.Message.Contains("The operation has timed out") ||
                              ex.InnerException.Message.Contains("Exception while reading from stream"))))
-                    .WaitAndRetryAsync(10, retryAttempt =>
-                    {
-                        logger.LogWarning("Failed to call eventSubscriber.HandleAsync - Retry attempt: {retryAttempt}",
-                            retryAttempt);
+                    .WaitAndRetryAsync(
+                        5,
+                        retryAttempt =>
+                        {
+                            logger.LogWarning(
+                                "Failed to call eventSubscriber.HandleAsync - Retry attempt: {retryAttempt}",
+                                retryAttempt);
 
-                        return TimeSpan.FromSeconds(1);
-                    })
+                            return TimeSpan.FromSeconds(1);
+                        })
                     .ExecuteAsync(async () =>
                     {
                         _ = await eventSubscriber.HandleAsync(eventContext, key, @event, cancellationToken);
