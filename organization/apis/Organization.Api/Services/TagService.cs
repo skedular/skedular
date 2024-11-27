@@ -1,3 +1,4 @@
+using Api.Shared.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -115,10 +116,21 @@ public class TagService(
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
                                     query.Organization.Id == tag.Organization.Id &&
+                                    query.Type == tag.Type &&
                                     EF.Functions.ILike(query.Name, tag.Name)
             }).AnyAsync(cancellationToken);
         if (matchingTagFound)
         {
+            if (tag.Type == OrganizationTagType.DeskType)
+            {
+                throw new DeskTypeWithSameNameExist();
+            }
+
+            if (tag.Type == OrganizationTagType.Zone)
+            {
+                throw new ZoneWithSameNameExist();
+            }
+
             throw new OrganizationTagWithSameNameExist();
         }
 
@@ -246,18 +258,30 @@ public class TagService(
 
         var tagId = tag.Id;
         var tagName = tag.Name;
+        var tagType = tag.Type;
         var organizationId = existingTag.Organization.Id;
-        var matchingDeskFound = await repositoryFactory.TagRepository
+        var matchingTagFound = await repositoryFactory.TagRepository
             .Query(new Specification<Shared.Database.Entities.Tag>
             {
                 Criteria = query =>
                     !query.DeletedAt.HasValue &&
                     query.Organization.Id == organizationId &&
+                    query.Type == tagType &&
                     EF.Functions.ILike(query.Name, tagName) &&
                     query.Id != tagId
             }).AnyAsync(cancellationToken);
-        if (matchingDeskFound)
+        if (matchingTagFound)
         {
+            if (tagType == OrganizationTagType.DeskType)
+            {
+                throw new DeskTypeWithSameNameExist();
+            }
+
+            if (tagType == OrganizationTagType.Zone)
+            {
+                throw new ZoneWithSameNameExist();
+            }
+
             throw new OrganizationTagWithSameNameExist();
         }
 

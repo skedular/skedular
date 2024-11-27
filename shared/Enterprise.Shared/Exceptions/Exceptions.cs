@@ -56,4 +56,8 @@ public class SlackWorkspaceMemberTypeNotSupported() : Exception("Slack workspace
 
 public class OrganizationTagNotFound() : Exception("Organization tag not found");
 
+public class DeskTypeWithSameNameExist() : Exception("Desk type with same name exist");
+
+public class ZoneWithSameNameExist() : Exception("Zone with same name exist");
+
 public class OrganizationTagWithSameNameExist() : Exception("Organization tag with same name exist");
