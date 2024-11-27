@@ -34,7 +34,7 @@ internal static class BookingExtensions
             .ThenInclude(query => query.Identities)
             .Include(query => query.Organization)
             .Include(query => query.Location)
-            .Include(query => query.Desks)
+            .Include(query => query.Desks.Where(desk => !desk.DeletedAt.HasValue))
             .ThenInclude(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Team);
 

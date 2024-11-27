@@ -128,7 +128,9 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
         {
             blocks.Add(new SectionBlock
             {
-                Text = string.Join(", ", desk.Tags.OrderBy(item => item.Name).Select(item => item.Name))
+                Text = string.Join(
+                        ", ",
+                        desk.Tags.OrderBy(item => item.Name).Select(item => item.Name))
                     .ToMarkdownWithIcon(Icons.Zones)
             });
         }
@@ -137,7 +139,8 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
         {
             blocks.Add(new SectionBlock
             {
-                Text = string.Join(", ",
+                Text = string.Join(
+                        ", ",
                         desk.OrganizationDeskTypes.OrderBy(item => item.Name).Select(item => item.Name))
                     .ToMarkdownWithIcon(Icons.DeskTypes)
             });
@@ -147,7 +150,9 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
         {
             blocks.Add(new SectionBlock
             {
-                Text = string.Join(", ", desk.OrganizationZones.OrderBy(item => item.Name).Select(item => item.Name))
+                Text = string.Join(
+                        ", ",
+                        desk.OrganizationZones.OrderBy(item => item.Name).Select(item => item.Name))
                     .ToMarkdownWithIcon(Icons.Zones)
             });
         }
