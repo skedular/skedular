@@ -26,13 +26,13 @@ public class ProtobufEventMetadataGenerateOptions
     public string TopicName { get; set; } = string.Empty;
 
     [Option("topic-partition-count", Required = false, HelpText = "Specify the topic partition count")]
-    public int TopicPartitionCount { get; set; } = 10;
+    public int TopicPartitionCount { get; set; } = 3;
 
     [Option("retry-topic-name-prefix", Required = true, HelpText = "Specify the retry topic name prefix")]
     public string RetryTopicNamePrefix { get; set; } = string.Empty;
 
     [Option("retry-topic-partition-count", Required = false, HelpText = "Specify the retry topic partition count")]
-    public int RetryTopicPartitionCount { get; set; } = 5;
+    public int RetryTopicPartitionCount { get; set; } = 3;
 
     [Option("retry-topic-count", Required = false, HelpText = "Specify the retry topic count")]
     public int RetryTopicCount { get; set; }

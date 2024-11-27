@@ -20,10 +20,10 @@ public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
     topicName: "billing.v1.event",
-    topicPartitionCount: 10,
+    topicPartitionCount: 3,
     retryTopicNamePrefix: "billing.v1.event.retry",
     retryTopicCount: 1,
-    retryTopicPartitionCount: 5,
+    retryTopicPartitionCount: 3,
     deadLetterTopicName: "billing.v1.event.deadletter",
     deadLetterTopicPartitionCount: 3,
     protobufSchema: "syntax = \"proto3\";package billing;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.UnityHub.Billing.V1.Value\";enum Type {  BillingOrganizationOfferingUpserted = 0;  BillingOrganizationOfferingDeleted = 1;  OrganizationBillingInfoUpdated = 2;}message Event {  Metadata metadata = 1;  Data data = 2;}message Metadata {  string id = 1;  google.protobuf.Timestamp deletedAt = 2;  string domainSource = 3;  string appSource = 4;  Type type = 5;  google.protobuf.Timestamp time = 6;  string correlationId = 7;}message Data {  OrganizationOfferingBilling organizationOfferingBillingAfterState = 1;  OrganizationBillingInfo organizationBillingInfoAfterState = 2;}message OrganizationOfferingBilling {  string offeringId = 1;  string organizationId = 2;  int64 totalCost = 3;  google.protobuf.Timestamp invoiceDate = 4;}message OrganizationBillingInfo {  string organizationId = 1;  string billingContactEmail = 2;  string billingContactAddressLine1 = 3;  string billingContactAddressLine2 = 4;  string billingContactSuburb = 5;  string billingContactCity = 6;  string billingContactProvince = 7;  string billingContactZipcode = 8;  string billingContactCountry = 9;}")]

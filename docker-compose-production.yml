@@ -471,6 +471,9 @@ services:
         condition: service_completed_successfully
       prod-apis-01:
         condition: service_healthy
+    deploy:
+      mode: replicated
+      replicas: 3
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: prod
