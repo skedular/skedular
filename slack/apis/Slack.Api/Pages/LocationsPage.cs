@@ -51,6 +51,7 @@ public class LocationsPage(
     LocationService.LocationServiceClient locationServiceClient,
     IBookingsPage bookingsPage,
     IZonesPage zonesPage,
+    IDeskTypesPage deskTypesPage,
     IDesksPage desksPage,
     ILocationComponents locationComponents,
     ILocationService locationService,
@@ -236,6 +237,19 @@ public class LocationsPage(
             context.PageContext.PushCurrentPageToVisitedPages();
 
             await zonesPage.RenderWithContextAsync(
+                workspace,
+                workspaceMember,
+                new CommonPageContext(context.PageContext),
+                request.View.Hash,
+                cancellationToken);
+        }
+        else if (action.SelectedOption.Value.StartsWith(DeskTypeActionTypes.DeskTypes))
+        {
+            var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
+            context.PageContext.DeskTypesPage = new Shared.Context.DeskTypesPage(new PaginationContext());
+            context.PageContext.PushCurrentPageToVisitedPages();
+
+            await deskTypesPage.RenderWithContextAsync(
                 workspace,
                 workspaceMember,
                 new CommonPageContext(context.PageContext),
