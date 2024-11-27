@@ -1,6 +1,5 @@
 import { Dayjs } from 'dayjs';
 import { toHourAndMinute } from '../../libs/utils';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '../oldZone';
 
 export type LocationDetails = {
   name: string;
@@ -10,7 +9,7 @@ export type TeamDetails = {
   name: string;
 };
 
-export type LocationTagDetails = {
+export type ZoneDetails = {
   uniqueId: string;
   name: string;
   tagType?: string | undefined | null;
@@ -18,7 +17,7 @@ export type LocationTagDetails = {
 
 export type DeskDetails = {
   name: string;
-  locationTags: readonly LocationTagDetails[];
+  zones: readonly ZoneDetails[];
 };
 
 export type BookingDetails = {
@@ -42,7 +41,7 @@ export const getBookingSummaryMessage = (booking: BookingDetails, includeTime: b
   if (booking.desks.length > 0) {
     message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
 
-    const zones = booking.desks.flatMap(({ locationTags }) => locationTags).filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
+    const zones = booking.desks.flatMap(({ zones }) => zones);
     if (zones.length > 0) {
       const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
 

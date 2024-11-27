@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a81c8a85c3f69dce2208b37bfae840db>>
+ * @generated SignedSource<<25d341e49a47aeb1425776fb2728225f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -247,29 +247,33 @@ v27 = [
 ],
 v28 = [
   (v17/*: any*/),
+  (v12/*: any*/)
+],
+v29 = [
+  (v17/*: any*/),
   (v12/*: any*/),
   {
     "alias": null,
     "args": null,
-    "concreteType": "BookingLocationTagDetails",
+    "concreteType": "BookingOrganizationDeskTypeDetails",
     "kind": "LinkedField",
-    "name": "locationTags",
+    "name": "deskTypes",
     "plural": true,
-    "selections": [
-      (v17/*: any*/),
-      (v12/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "tagType",
-        "storageKey": null
-      }
-    ],
+    "selections": (v28/*: any*/),
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "BookingOrganizationZoneDetails",
+    "kind": "LinkedField",
+    "name": "zones",
+    "plural": true,
+    "selections": (v28/*: any*/),
     "storageKey": null
   }
 ],
-v29 = [
+v30 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -301,10 +305,6 @@ v29 = [
     "kind": "ObjectValue",
     "name": "where"
   }
-],
-v30 = [
-  (v17/*: any*/),
-  (v12/*: any*/)
 ];
 return {
   "fragment": {
@@ -577,14 +577,14 @@ return {
             "kind": "LinkedField",
             "name": "availableLocationDesks",
             "plural": true,
-            "selections": (v28/*: any*/),
+            "selections": (v29/*: any*/),
             "storageKey": null
           }
         ]
       },
       {
         "alias": null,
-        "args": (v29/*: any*/),
+        "args": (v30/*: any*/),
         "concreteType": "BookingConnection",
         "kind": "LinkedField",
         "name": "bookings",
@@ -645,7 +645,7 @@ return {
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
-                    "selections": (v30/*: any*/),
+                    "selections": (v28/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -655,7 +655,7 @@ return {
                     "kind": "LinkedField",
                     "name": "location",
                     "plural": false,
-                    "selections": (v30/*: any*/),
+                    "selections": (v28/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -665,7 +665,7 @@ return {
                     "kind": "LinkedField",
                     "name": "team",
                     "plural": false,
-                    "selections": (v30/*: any*/),
+                    "selections": (v28/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -675,7 +675,7 @@ return {
                     "kind": "LinkedField",
                     "name": "desks",
                     "plural": true,
-                    "selections": (v28/*: any*/),
+                    "selections": (v29/*: any*/),
                     "storageKey": null
                   },
                   (v23/*: any*/)
@@ -693,7 +693,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v29/*: any*/),
+        "args": (v30/*: any*/),
         "filters": (v27/*: any*/),
         "handle": "connection",
         "key": "SmallMonthlyViewCalendar_bookings",
@@ -703,12 +703,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "824b9e2c86786087b931c5d92f364dc5",
+    "cacheID": "76be225f5abb5e3f3f30748b3ae09d69",
     "id": null,
     "metadata": {},
     "name": "smallMonthlyViewCalendar_rootQuery",
     "operationKind": "query",
-    "text": "query smallMonthlyViewCalendar_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $locationId: String!\n  $locationExists: Boolean!\n  $monthlyCalendarDateFrom: DateTime!\n  $monthlyCalendarDateTo: DateTime!\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $bookingPeopleNameSearchText: String\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  ...smallMonthlyViewCalendar_query\n  ...smallMonthlyViewCalendar_bookings_query\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    preferredDesks {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canUpdateBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  ...bookingDetailsSelector_query\n  ...bookingDetailsSelector_organizationMembers_query\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) @include(if: $locationExists) {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment bookingDetailsSelector_organizationMembers_query on Query {\n  organizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_bookings_query on Query {\n  bookings(first: 1000, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          uniqueId\n          name\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  ...bookingCard_query\n}\n"
+    "text": "query smallMonthlyViewCalendar_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $locationId: String!\n  $locationExists: Boolean!\n  $monthlyCalendarDateFrom: DateTime!\n  $monthlyCalendarDateTo: DateTime!\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $bookingPeopleNameSearchText: String\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  ...smallMonthlyViewCalendar_query\n  ...smallMonthlyViewCalendar_bookings_query\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    preferredDesks {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canUpdateBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  ...bookingDetailsSelector_query\n  ...bookingDetailsSelector_organizationMembers_query\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) @include(if: $locationExists) {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n\nfragment bookingDetailsSelector_organizationMembers_query on Query {\n  organizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_bookings_query on Query {\n  bookings(first: 1000, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          uniqueId\n          name\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n    defaultOrganization {\n      uniqueId\n    }\n  }\n  myOrganizations {\n    id\n    name\n  }\n  ...bookingCard_query\n}\n"
   }
 };
 })();

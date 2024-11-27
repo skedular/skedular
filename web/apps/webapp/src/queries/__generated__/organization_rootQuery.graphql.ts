@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d9682e9f7c196384f4a55b1f44912994>>
+ * @generated SignedSource<<5a46ace0ad220146d1ac345c0de92fa3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -533,21 +533,21 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingLocationTagDetails",
+                        "concreteType": "BookingOrganizationDeskTypeDetails",
                         "kind": "LinkedField",
-                        "name": "locationTags",
+                        "name": "deskTypes",
                         "plural": true,
-                        "selections": [
-                          (v10/*: any*/),
-                          (v7/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "tagType",
-                            "storageKey": null
-                          }
-                        ],
+                        "selections": (v11/*: any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "BookingOrganizationZoneDetails",
+                        "kind": "LinkedField",
+                        "name": "zones",
+                        "plural": true,
+                        "selections": (v11/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -566,12 +566,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "81926f6ceb92b73bb56e4f04261309db",
+    "cacheID": "e03c7cd5b24bfd3590df49e737b8c3ac",
     "id": null,
     "metadata": {},
     "name": "organization_rootQuery",
     "operationKind": "query",
-    "text": "query organization_rootQuery(\n  $organizationId: String!\n  $locationIds: [String!]!\n  $teamIds: [String!]!\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n) {\n  organization(id: $organizationId) {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  ...locationSelector_allLocations_query\n  ...teamSelector_allTeams_query\n  ...gettingStarted_query\n  ...myBookings_query\n  ...myBookings_bookings_query\n}\n\nfragment gettingStarted_query on Query {\n  organization(id: $organizationId) {\n    isMyOnboardingDone\n    id\n  }\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myBookings_bookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, includeFutureBookingsOnly: true, combineOrganizationsLocationsTeams: true}, orderBy: [{field: From, direction: Ascending}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment myBookings_query on Query {\n  me {\n    id\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query organization_rootQuery(\n  $organizationId: String!\n  $locationIds: [String!]!\n  $teamIds: [String!]!\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n) {\n  organization(id: $organizationId) {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  ...locationSelector_allLocations_query\n  ...teamSelector_allTeams_query\n  ...gettingStarted_query\n  ...myBookings_query\n  ...myBookings_bookings_query\n}\n\nfragment gettingStarted_query on Query {\n  organization(id: $organizationId) {\n    isMyOnboardingDone\n    id\n  }\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myBookings_bookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, includeFutureBookingsOnly: true, combineOrganizationsLocationsTeams: true}, orderBy: [{field: From, direction: Ascending}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment myBookings_query on Query {\n  me {\n    id\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();

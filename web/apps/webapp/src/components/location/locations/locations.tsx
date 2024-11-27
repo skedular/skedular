@@ -24,6 +24,7 @@ const RootQuery = graphql`
   query locations_rootQuery(
     $organizationId: String!
     $locationsSortingValues: [LocationOrderInput!]!
+    $zonesSortingValues: [OrganizationTagOrderInput!]!
     $todayDate: DateTime!
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $zoneIds: [String!]!
@@ -102,6 +103,12 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
       {
         organizationId: organizationId ?? '',
         locationsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        zonesSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<42b18927fac59b36c9344dd7833a2559>>
+ * @generated SignedSource<<867b60d664021c13db0c995daf8d1dac>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,10 +17,6 @@ export type deskCard_DeskDetails$data = {
     readonly uniqueId: string;
   }>;
   readonly id: string;
-  readonly locationTags: ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-  }>;
   readonly name: string;
   readonly requireBookingApproval: boolean;
   readonly zones: ReadonlyArray<{
@@ -39,17 +35,10 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = [
+v1 = [
   {
     "alias": null,
     "args": null,
@@ -57,7 +46,7 @@ v2 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v1/*: any*/)
+  (v0/*: any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -65,8 +54,14 @@ return {
   "metadata": null,
   "name": "deskCard_DeskDetails",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     (v0/*: any*/),
-    (v1/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -84,24 +79,11 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "LocationTagDetails",
-      "kind": "LinkedField",
-      "name": "locationTags",
-      "plural": true,
-      "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/)
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "Organization_OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "deskTypes",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": (v1/*: any*/),
       "storageKey": null
     },
     {
@@ -111,7 +93,7 @@ return {
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": (v1/*: any*/),
       "storageKey": null
     }
   ],
@@ -120,6 +102,6 @@ return {
 };
 })();
 
-(node as any).hash = "511d4bd1c583d97a0b9f0e0eb1428720";
+(node as any).hash = "d55c7670ad137d40b02467ff94e5e998";
 
 export default node;

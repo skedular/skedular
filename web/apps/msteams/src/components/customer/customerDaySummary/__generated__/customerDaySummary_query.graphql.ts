@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aa834c9aede5a0ba1e19e430b23d54f1>>
+ * @generated SignedSource<<3cdc58d1d4a7bd326278461796865620>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,13 +21,16 @@ export type customerDaySummary_query$data = {
       readonly uniqueId: string;
     };
     readonly desks: ReadonlyArray<{
-      readonly locationTags: ReadonlyArray<{
+      readonly deskTypes: ReadonlyArray<{
         readonly name: string;
-        readonly tagType: string | null | undefined;
         readonly uniqueId: string;
       }>;
       readonly name: string;
       readonly uniqueId: string;
+      readonly zones: ReadonlyArray<{
+        readonly name: string;
+        readonly uniqueId: string;
+      }>;
     }>;
     readonly from: any;
     readonly id: string;
@@ -223,21 +226,21 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "BookingLocationTagDetails",
+              "concreteType": "BookingOrganizationDeskTypeDetails",
               "kind": "LinkedField",
-              "name": "locationTags",
+              "name": "deskTypes",
               "plural": true,
-              "selections": [
-                (v0/*: any*/),
-                (v1/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "tagType",
-                  "storageKey": null
-                }
-              ],
+              "selections": (v2/*: any*/),
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "BookingOrganizationZoneDetails",
+              "kind": "LinkedField",
+              "name": "zones",
+              "plural": true,
+              "selections": (v2/*: any*/),
               "storageKey": null
             }
           ],
@@ -252,6 +255,6 @@ return {
 };
 })();
 
-(node as any).hash = "933716058bd8485716847079dc7467bf";
+(node as any).hash = "40c327e3147c9063f6ed531090d1570c";
 
 export default node;

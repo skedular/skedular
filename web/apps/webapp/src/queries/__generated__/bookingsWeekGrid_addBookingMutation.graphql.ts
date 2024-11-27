@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c900371b35b83e18999cc12a4b661c1d>>
+ * @generated SignedSource<<50b3a54e95d49315c744585d78bcf3f0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,12 +36,15 @@ export type bookingsWeekGrid_addBookingMutation$data = {
         readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
-        readonly locationTags: ReadonlyArray<{
+        readonly deskTypes: ReadonlyArray<{
           readonly name: string;
-          readonly tagType: string | null | undefined;
           readonly uniqueId: string;
         }>;
         readonly name: string;
+        readonly zones: ReadonlyArray<{
+          readonly name: string;
+          readonly uniqueId: string;
+        }>;
       }>;
       readonly from: any;
       readonly id: string;
@@ -72,12 +75,15 @@ export type bookingsWeekGrid_addBookingMutation$rawResponse = {
         readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
-        readonly locationTags: ReadonlyArray<{
+        readonly deskTypes: ReadonlyArray<{
           readonly name: string;
-          readonly tagType: string | null | undefined;
           readonly uniqueId: string;
         }>;
         readonly name: string;
+        readonly zones: ReadonlyArray<{
+          readonly name: string;
+          readonly uniqueId: string;
+        }>;
       }>;
       readonly from: any;
       readonly id: string;
@@ -246,21 +252,21 @@ v5 = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingLocationTagDetails",
+          "concreteType": "BookingOrganizationDeskTypeDetails",
           "kind": "LinkedField",
-          "name": "locationTags",
+          "name": "deskTypes",
           "plural": true,
-          "selections": [
-            (v2/*: any*/),
-            (v3/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "tagType",
-              "storageKey": null
-            }
-          ],
+          "selections": (v4/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingOrganizationZoneDetails",
+          "kind": "LinkedField",
+          "name": "zones",
+          "plural": true,
+          "selections": (v4/*: any*/),
           "storageKey": null
         }
       ],
@@ -334,16 +340,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "87030422eb217a0accd1483ffce8fa91",
+    "cacheID": "7f2deaf73e6b4ed7d0c22b53d24cbdcf",
     "id": null,
     "metadata": {},
     "name": "bookingsWeekGrid_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingsWeekGrid_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        name\n        locationTags {\n          uniqueId\n          name\n          tagType\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingsWeekGrid_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "20cccbf18d7fa0e39210ecd2b7c43a6b";
+(node as any).hash = "b2c17e32205f4721d7498c050d764fc1";
 
 export default node;

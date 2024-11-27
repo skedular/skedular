@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<caaa42dc34c3e932e13bf72ac6bf6151>>
+ * @generated SignedSource<<676d35786d548f68e6442c7493bc5473>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,6 +68,10 @@ v2 = {
   "storageKey": null
 },
 v3 = [
+  (v2/*: any*/)
+],
+v4 = [
+  (v1/*: any*/),
   (v2/*: any*/)
 ];
 return {
@@ -272,21 +276,21 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingLocationTagDetails",
+                        "concreteType": "BookingOrganizationDeskTypeDetails",
                         "kind": "LinkedField",
-                        "name": "locationTags",
+                        "name": "deskTypes",
                         "plural": true,
-                        "selections": [
-                          (v1/*: any*/),
-                          (v2/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "tagType",
-                            "storageKey": null
-                          }
-                        ],
+                        "selections": (v4/*: any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "BookingOrganizationZoneDetails",
+                        "kind": "LinkedField",
+                        "name": "zones",
+                        "plural": true,
+                        "selections": (v4/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -316,16 +320,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9a04451935fd389c95e6f8a49ca479f4",
+    "cacheID": "826f7262b5ffee36ecf45379920e84c0",
     "id": null,
     "metadata": {},
     "name": "bookingsWeekGrid_allBookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookingsWeekGrid_allBookings_refetchableFragment(\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $teamId: String!\n  $to: DateTime\n) {\n  ...bookingsWeekGrid_allBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query bookingsWeekGrid_allBookings_refetchableFragment(\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $teamId: String!\n  $to: DateTime\n) {\n  ...bookingsWeekGrid_allBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d5c3c8cf71a286ead174724e137316df";
+(node as any).hash = "b302b01d00e21ba0ffdfef59c4ea33fc";
 
 export default node;

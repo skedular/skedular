@@ -12,7 +12,6 @@ using Desk = Location.Shared.Database.Entities.Desk;
 using DeskEdge = Location.Api.GraphQL.DeskEdge;
 using Identity = Location.Shared.Models.Identity;
 using JoinInvitation = Location.Shared.Models.JoinInvitation;
-using LocationTagEdge = Location.Api.GraphQL.LocationTagEdge;
 using LocationEdge = Location.Api.GraphQL.LocationEdge;
 using LocationDailyBookingsTotal = Location.Shared.Models.LocationDailyBookingsTotal;
 using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOccupancyPercentage;
@@ -44,14 +43,12 @@ public interface IMapper
     Desk MapTo(
         Shared.Models.Desk src,
         Shared.Database.Entities.Location location,
-        ICollection<Tag> tags,
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Desk MergeTo(
         Shared.Models.Desk src,
         Desk dest,
         Shared.Database.Entities.Location location,
-        ICollection<Tag> tags,
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Shared.Models.Desk MapTo(Desk src, Shared.Models.Location location);
@@ -64,7 +61,6 @@ public interface IMapper
     LocationMemberDetails MapTo(LocationMember src);
     LocationDetails? MapTo(Shared.Models.Location? src);
     DeskDetails MapTo(Shared.Models.Desk src);
-    LocationTagDetails MapTo(Shared.Models.Tag src);
     OrganizationTagDetails MapTo(OrganizationTag src);
     IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src);
 
@@ -74,8 +70,6 @@ public interface IMapper
 
     Shared.Models.Location MapTo(AddLocationInput src);
     Shared.Models.Location MapTo(UpdateLocationInput src);
-    Shared.Models.Tag MapTo(AddLocationTagInput src);
-    Shared.Models.Tag MapTo(UpdateLocationTagInput src);
     Shared.Models.Desk MapTo(AddDeskInput src);
     Shared.Models.Desk MapTo(UpdateDeskInput src);
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
@@ -94,7 +88,6 @@ public interface IMapper
     IEnumerable<Edge<Shared.Models.Desk>> MapTo(IEnumerable<Edge<Desk>> src, Shared.Models.Location location);
     global::Api.Shared.Services.Grpc.UnityHub.Location.V1.DeskEdge MapToGrpcResponse(Edge<Shared.Models.Desk> src);
 
-    LocationTagEdge MapTo(Edge<Shared.Models.Tag> src);
     IEnumerable<Edge<Shared.Models.Tag>> MapTo(IEnumerable<Edge<Tag>> src, Shared.Models.Location location);
     TagEdge MapToGrpcResponse(Edge<Shared.Models.Tag> src);
     LocationEdge MapTo(Edge<Shared.Models.Location> src);
@@ -215,7 +208,6 @@ public class Mapper : IMapper
                 HasFutureBooking = src.HasFutureBooking,
                 DeskCapacity = src.Desks.Count,
                 Organization = MapTo(src.Organization),
-                LocationTags = MapTo(src.Tags).ToArray(),
                 Desks = MapTo(src.Desks).ToArray(),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress)
             };
@@ -262,22 +254,19 @@ public class Mapper : IMapper
     public Desk MapTo(
         Shared.Models.Desk src,
         Shared.Database.Entities.Location location,
-        ICollection<Tag> tags,
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags) =>
-        MergeTo(src, new Desk(), location, tags, organizationTags);
+        MergeTo(src, new Desk(), location, organizationTags);
 
     public Desk MergeTo(
         Shared.Models.Desk src,
         Desk dest,
         Shared.Database.Entities.Location location,
-        ICollection<Tag> tags,
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
         dest.Deactivated = src.Deactivated;
         dest.RequireBookingApproval = src.RequireBookingApproval;
-        dest.Tags = tags;
         dest.OrganizationTags = organizationTags;
         dest.Location = location;
         return dest;
@@ -314,9 +303,6 @@ public class Mapper : IMapper
             Customer = MapTo(src.Customer)
         };
 
-    public LocationTagDetails MapTo(Shared.Models.Tag src) =>
-        new() { Id = src.Id, Name = src.Name, Description = src.Description, TagType = src.Type };
-
     public OrganizationTagDetails MapTo(OrganizationTag src) =>
         new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type };
 
@@ -330,7 +316,6 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            LocationTags = MapTo(src.Tags).ToArray(),
             DeskTypes =
                 MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.DeskType)).ToArray(),
             Zones =
@@ -340,9 +325,6 @@ public class Mapper : IMapper
     public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.DeskEdge MapToGrpcResponse(
         Edge<Shared.Models.Desk> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
-
-    public LocationTagEdge MapTo(Edge<Shared.Models.Tag> src) =>
-        new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
     public IEnumerable<Edge<Shared.Models.Tag>> MapTo(IEnumerable<Edge<Tag>> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
@@ -452,19 +434,6 @@ public class Mapper : IMapper
         return location;
     }
 
-    public Shared.Models.Tag MapTo(AddLocationTagInput src) =>
-        new()
-        {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
-            Name = src.Name,
-            Description = src.Description,
-            Location = new Shared.Models.Location { Id = src.LocationId },
-            Type = src.TagType
-        };
-
-    public Shared.Models.Tag MapTo(UpdateLocationTagInput src) =>
-        new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = src.TagType };
-
     public Shared.Models.Desk MapTo(AddDeskInput src) =>
         new()
         {
@@ -472,7 +441,6 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = false,
             RequireBookingApproval = false,
-            Tags = src.LocationTagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
             OrganizationTags = src.DeskTypeIds
                 .Concat(src.ZoneIds)
                 .Select(item => new OrganizationTag { Id = item })
@@ -487,7 +455,6 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            Tags = src.LocationTagIds.Select(item => new Shared.Models.Tag { Id = item }).ToList(),
             OrganizationTags = src.DeskTypeIds
                 .Concat(src.ZoneIds)
                 .Select(item => new OrganizationTag { Id = item })
@@ -758,8 +725,6 @@ public class Mapper : IMapper
             {
                 UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl
             };
-
-    private IEnumerable<LocationTagDetails> MapTo(IEnumerable<Shared.Models.Tag> src) => src.Select(MapTo);
 
     private IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 

@@ -38,9 +38,6 @@
     "./components/loading": {
       "default": "./dist/components/loading/index.js"
     },
-    "./components/oldZone": {
-      "default": "./dist/components/oldZone/index.js"
-    },
     "./components/notification": {
       "default": "./dist/components/notification/index.js"
     },

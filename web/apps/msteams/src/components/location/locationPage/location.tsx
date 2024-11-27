@@ -6,7 +6,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
 import { Bookings } from 'components/booking/bookingsPage';
 import { LocationLink } from 'components/location';
-import { OrganizationDeskTypes } from 'components/organization/organizationPage';
+import { OrganizationDeskTypes, OrganizationZones } from 'components/organization/organizationPage';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -16,7 +16,6 @@ import type { location_rootQuery } from './__generated__/location_rootQuery.grap
 import LocationAboutTab from './location-about-tab';
 import LocationAnalyticsTab from './location-analytics-tab';
 import LocationDesksTab from './location-desks-tab';
-import LocationZonesTab from './location-zones-tab';
 
 type Props = {
   queryReference: PreloadedQuery<location_rootQuery, Record<string, unknown>>;
@@ -118,7 +117,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
         {tabIndex === aboutTabIndex && (
           <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />
         )}
-        {tabIndex === zonesTabIndex && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+        {tabIndex === zonesTabIndex && <OrganizationZones onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === deskTypesTabIndex && <OrganizationDeskTypes onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === desksTabIndex && (
           <LocationDesksTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />

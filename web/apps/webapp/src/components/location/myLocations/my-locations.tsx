@@ -14,7 +14,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE, Zones } from '@repo/shared/components/oldZone';
+import { Zones } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
@@ -39,7 +39,7 @@ type DesksAvailabilityDetails = {
 
 type ZoneDetails = {
   id: string;
-  name: string;
+  name: string | null | undefined;
 };
 
 type CustomerDetails = {
@@ -101,12 +101,14 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               id
               name
               desks {
-                id
-              }
-              locationTags {
-                id
-                name
-                tagType
+                deskTypes {
+                  uniqueId
+                  name
+                }
+                zones {
+                  uniqueId
+                  name
+                }
               }
               physicalAddress {
                 formattedAddress
@@ -165,7 +167,9 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       ? rootDataRefetchable.availableOrganizationDesks.filter((desk) => desk.location?.uniqueId === location.id).length
       : 0;
     const availablePercentage = (availableDesksCount / desksCount) * 100;
-    const zones = location.locationTags.filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
+    const zones = Array.from(
+      new Map(location.desks.flatMap(({ zones }) => zones).map(({ uniqueId, name }) => [uniqueId, { id: uniqueId, name }])).values(),
+    );
 
     return {
       id: location.id,
@@ -273,7 +277,9 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               ? rootDataRefetchable.availableOrganizationDesks.filter((desk) => desk.location?.uniqueId === location.id).length
               : 0;
             const availablePercentage = (availableDesksCount / desksCount) * 100;
-            const zones = location.locationTags.filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
+            const zones = Array.from(
+              new Map(location.desks.flatMap(({ zones }) => zones).map(({ uniqueId, name }) => [uniqueId, { id: uniqueId, name }])).values(),
+            );
 
             return (
               <Grid key={location.id}>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<864c9280e712c4b9465cb150921f201d>>
+ * @generated SignedSource<<2b46d2ae956aa06ceac94b5ed69c96d9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,12 +24,15 @@ export type bookingsWeekGrid_allBookings_query$data = {
           readonly uniqueId: string;
         };
         readonly desks: ReadonlyArray<{
-          readonly locationTags: ReadonlyArray<{
+          readonly deskTypes: ReadonlyArray<{
             readonly name: string;
-            readonly tagType: string | null | undefined;
             readonly uniqueId: string;
           }>;
           readonly name: string;
+          readonly zones: ReadonlyArray<{
+            readonly name: string;
+            readonly uniqueId: string;
+          }>;
         }>;
         readonly from: any;
         readonly id: string;
@@ -67,6 +70,10 @@ v1 = {
   "storageKey": null
 },
 v2 = [
+  (v1/*: any*/)
+],
+v3 = [
+  (v0/*: any*/),
   (v1/*: any*/)
 ];
 return {
@@ -282,21 +289,21 @@ return {
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "BookingLocationTagDetails",
+                      "concreteType": "BookingOrganizationDeskTypeDetails",
                       "kind": "LinkedField",
-                      "name": "locationTags",
+                      "name": "deskTypes",
                       "plural": true,
-                      "selections": [
-                        (v0/*: any*/),
-                        (v1/*: any*/),
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "tagType",
-                          "storageKey": null
-                        }
-                      ],
+                      "selections": (v3/*: any*/),
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "BookingOrganizationZoneDetails",
+                      "kind": "LinkedField",
+                      "name": "zones",
+                      "plural": true,
+                      "selections": (v3/*: any*/),
                       "storageKey": null
                     }
                   ],
@@ -329,6 +336,6 @@ return {
 };
 })();
 
-(node as any).hash = "d5c3c8cf71a286ead174724e137316df";
+(node as any).hash = "b302b01d00e21ba0ffdfef59c4ea33fc";
 
 export default node;

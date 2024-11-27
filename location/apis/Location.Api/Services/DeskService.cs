@@ -27,7 +27,6 @@ public interface IDeskService
         string locationId,
         string? namePrefix,
         int count,
-        ICollection<string> tagIds,
         ICollection<string> organizationTagIds,
         bool deactivated,
         bool requireBookingApproval,
@@ -147,18 +146,6 @@ public class DeskService(
             throw new DeskWithSameNameExist();
         }
 
-        var tagIds = desk.Tags.Select(item => item.Id).ToList();
-        var tags = tagIds.Count == 0
-            ? []
-            : await repositoryFactory.TagRepository
-                .Query(new Specification<Tag>
-                {
-                    Criteria = query =>
-                        !query.DeletedAt.HasValue && query.Location.Id == desk.Location.Id &&
-                        tagIds.Contains(query.Id)
-                })
-                .ToListAsync(cancellationToken);
-
         var organizationTags = existingLocation.Organization is null
             ? []
             : await repositoryFactory.OrganizationTagRepository
@@ -175,7 +162,7 @@ public class DeskService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationRepository.UnitOfWork,
                 cancellationToken);
 
-        var deskEntity = mapper.MapTo(desk, existingLocation, tags, organizationTags);
+        var deskEntity = mapper.MapTo(desk, existingLocation, organizationTags);
         _ = repositoryFactory.DeskRepository.Add(deskEntity);
 
         await locationOutboxPublisher.PublishLocationAsync(
@@ -191,7 +178,6 @@ public class DeskService(
         string locationId,
         string? namePrefix,
         int count,
-        ICollection<string> tagIds,
         ICollection<string> organizationTagIds,
         bool deactivated,
         bool requireBookingApproval,
@@ -222,17 +208,6 @@ public class DeskService(
         {
             throw new Unauthorized();
         }
-
-        var tags = tagIds.Count == 0
-            ? []
-            : await repositoryFactory.TagRepository
-                .Query(new Specification<Tag>
-                {
-                    Criteria = query => !query.DeletedAt.HasValue &&
-                                        query.Location.Id == locationId &&
-                                        tagIds.Contains(query.Id)
-                })
-                .ToListAsync(cancellationToken);
 
         var organizationTags = existingLocation.Organization is null
             ? []
@@ -273,7 +248,6 @@ public class DeskService(
             var deskEntity = mapper.MapTo(
                 new Desk { Id = randomHelper.Generate(), Name = finalDeskName },
                 existingLocation,
-                tags,
                 organizationTags);
 
             deskEntity.Deactivated = deactivated;
@@ -454,7 +428,7 @@ public class DeskService(
         desk =
             mapper.MapTo(
                 repositoryFactory.DeskRepository.Update(
-                    mapper.MergeTo(desk, existingDesk, existingLocation, tags, organizationTags)),
+                    mapper.MergeTo(desk, existingDesk, existingLocation, organizationTags)),
                 mapper.MapTo(existingLocation));
 
         await locationOutboxPublisher.PublishLocationAsync(

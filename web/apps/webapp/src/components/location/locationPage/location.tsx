@@ -1,6 +1,6 @@
 import { Bookings } from '@/components/booking/bookingsPage';
 import { LocationLink } from '@/components/location';
-import { OrganizationDeskTypes } from '@/components/organization/organizationPage';
+import { OrganizationDeskTypes, OrganizationZones } from '@/components/organization/organizationPage';
 import type { location_rootQuery } from '@/queries/__generated__/location_rootQuery.graphql';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -17,7 +17,6 @@ import LocationAboutTab from './location-about-tab';
 import LocationAnalyticsTab from './location-analytics-tab';
 import LocationDesksTab from './location-desks-tab';
 import LocationMembersTab from './location-members-tab';
-import LocationZonesTab from './location-zones-tab';
 
 type Props = {
   queryReference: PreloadedQuery<location_rootQuery, Record<string, unknown>>;
@@ -54,7 +53,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
   const bookingTabIndex = tabCount++;
   const aboutTabIndex = tabCount++;
   const membersTabIndex = organizationId ? -1 : tabCount++;
-  const zonesTabIndex = tabCount++;
+  const zonesTabIndex = organizationId ? tabCount++ : -1;
   const deskTypesTabIndex = organizationId ? tabCount++ : -1;
   const desksTabIndex = tabCount++;
   const analyticsTabIndex = rootData.location?.canViewAnalytics ? tabCount++ : -1;
@@ -115,7 +114,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
         <Tab label="Bookings" />
         <Tab label="About" />
         {!organizationId && <Tab label="Members" />}
-        <Tab label="Zones" />
+        {organizationId && <Tab label="Zones" />}
         {organizationId && <Tab label="Desk Types" />}
         <Tab label="Desks" />
         {rootData.location.canViewAnalytics && <Tab label="Analytics" />}
@@ -124,7 +123,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
       {tabIndex === bookingTabIndex && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
       {tabIndex === aboutTabIndex && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
       {tabIndex === membersTabIndex && !organizationId && <LocationMembersTab onReloadRequired={onReloadRequired} locationId={locationId} />}
-      {tabIndex === zonesTabIndex && <LocationZonesTab onReloadRequired={onReloadRequired} locationId={locationId} />}
+      {tabIndex === zonesTabIndex && organizationId && <OrganizationZones onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === deskTypesTabIndex && organizationId && (
         <OrganizationDeskTypes onReloadRequired={onReloadRequired} organizationId={organizationId} />
       )}

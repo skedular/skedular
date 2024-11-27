@@ -127,10 +127,13 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
               desks {
                 uniqueId
                 name
-                locationTags {
+                deskTypes {
                   uniqueId
                   name
-                  tagType
+                }
+                zones {
+                  uniqueId
+                  name
                 }
               }
               ...bookingCard_BookingDetails

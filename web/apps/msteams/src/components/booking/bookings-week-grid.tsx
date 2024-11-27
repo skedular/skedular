@@ -9,7 +9,6 @@ import {
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/oldZone';
 import { GlobalReloadIdContext, PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -47,7 +46,7 @@ type LocationDetails = {
   name?: string | null | undefined;
 };
 
-type LocationTagDetails = {
+type ZoneDetails = {
   uniqueId: string;
   name?: string | null | undefined;
   tagType?: string | null | undefined;
@@ -55,7 +54,7 @@ type LocationTagDetails = {
 
 type DeskDetails = {
   name?: string | null | undefined;
-  locationTags: ReadonlyArray<LocationTagDetails>;
+  zones: ReadonlyArray<ZoneDetails>;
 };
 
 type TeamDetails = {
@@ -154,10 +153,13 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
               }
               desks {
                 name
-                locationTags {
+                deskTypes {
                   uniqueId
                   name
-                  tagType
+                }
+                zones {
+                  uniqueId
+                  name
                 }
               }
             }
@@ -196,10 +198,13 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
           }
           desks {
             name
-            locationTags {
+            deskTypes {
               uniqueId
               name
-              tagType
+            }
+            zones {
+              uniqueId
+              name
             }
           }
         }
@@ -518,9 +523,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
           if (booking.desks.length > 0) {
             message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
 
-            const zones = booking.desks
-              .flatMap(({ locationTags }) => locationTags)
-              .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
+            const zones = booking.desks.flatMap(({ zones }) => zones);
             if (zones.length > 0) {
               const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
 

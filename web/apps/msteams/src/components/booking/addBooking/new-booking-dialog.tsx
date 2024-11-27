@@ -10,7 +10,6 @@ import {
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/oldZone';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
@@ -128,10 +127,13 @@ const NewBookingDialog = ({
           desks {
             uniqueId
             name
-            locationTags {
+            deskTypes {
               uniqueId
               name
-              tagType
+            }
+            zones {
+              uniqueId
+              name
             }
           }
         }
@@ -207,9 +209,7 @@ const NewBookingDialog = ({
         if (booking.desks.length > 0) {
           message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
 
-          const zones = booking.desks
-            .flatMap(({ locationTags }) => locationTags)
-            .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
+          const zones = booking.desks.flatMap(({ zones }) => zones);
           if (zones.length > 0) {
             const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0590eb2ed2130a00798f9f0e8c833db6>>
+ * @generated SignedSource<<4501a113cc9dfbe79c7ae83adff9bdf1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,13 +12,16 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingDetailsSelector_availableLocationDesks_query$data = {
   readonly availableLocationDesks?: ReadonlyArray<{
-    readonly locationTags: ReadonlyArray<{
+    readonly deskTypes: ReadonlyArray<{
       readonly name: string;
-      readonly tagType: string | null | undefined;
       readonly uniqueId: string;
     }>;
     readonly name: string;
     readonly uniqueId: string;
+    readonly zones: ReadonlyArray<{
+      readonly name: string;
+      readonly uniqueId: string;
+    }>;
   }> | null | undefined;
   readonly " $fragmentType": "bookingDetailsSelector_availableLocationDesks_query";
 };
@@ -41,7 +44,11 @@ v1 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-};
+},
+v2 = [
+  (v0/*: any*/),
+  (v1/*: any*/)
+];
 return {
   "argumentDefinitions": [
     {
@@ -105,21 +112,21 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "BookingLocationTagDetails",
+              "concreteType": "BookingOrganizationDeskTypeDetails",
               "kind": "LinkedField",
-              "name": "locationTags",
+              "name": "deskTypes",
               "plural": true,
-              "selections": [
-                (v0/*: any*/),
-                (v1/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "tagType",
-                  "storageKey": null
-                }
-              ],
+              "selections": (v2/*: any*/),
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "BookingOrganizationZoneDetails",
+              "kind": "LinkedField",
+              "name": "zones",
+              "plural": true,
+              "selections": (v2/*: any*/),
               "storageKey": null
             }
           ],
@@ -133,6 +140,6 @@ return {
 };
 })();
 
-(node as any).hash = "763e9cf8411b3f953b8d4b6da9b2455b";
+(node as any).hash = "d0a4117b6ac7364783b2a009a02138f3";
 
 export default node;

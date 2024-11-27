@@ -159,33 +159,6 @@ public class CustomerMutation(IMapper mapper)
     }
 
     [UseServiceScope]
-    public async Task<CustomerPayload?> AddCustomerDefaultLocationTagAsync(
-        AddCustomerDefaultLocationTagInput input,
-        [Service] ICustomerLocationTagSettingsService customerLocationTagSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerLocationTagSettingsService.AddCustomerDefaultLocationTagAsync(
-            input.LocationTagId,
-            null,
-            cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
-    }
-
-    [UseServiceScope]
-    public async Task<CustomerPayload?> RemoveCustomerDefaultLocationTagAsync(
-        RemoveCustomerDefaultLocationTagInput input,
-        [Service] ICustomerLocationTagSettingsService customerLocationTagSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer =
-            await customerLocationTagSettingsService.RemoveCustomerDefaultLocationTagAsync(
-                input.LocationTagId,
-                null,
-                cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
-    }
-
-    [UseServiceScope]
     public async Task<CustomerPayload?> AddCustomerDefaultDeskAsync(
         AddCustomerDefaultDeskInput input,
         [Service] ICustomerDeskSettingsService customerDeskSettingsService,

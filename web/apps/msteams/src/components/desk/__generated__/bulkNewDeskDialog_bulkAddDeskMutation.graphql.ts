@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b4fc39bd7e7576b93cecf4ff3d5fbe42>>
+ * @generated SignedSource<<0bdeccf342e53dffbcd0cffc9b188d35>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type BulkAddDeskInput = {
   deskTypeIds: ReadonlyArray<string>;
   id?: string | null | undefined;
   locationId: string;
-  locationTagIds: ReadonlyArray<string>;
   namePrefix?: string | null | undefined;
   requireBookingApproval: boolean;
   zoneIds: ReadonlyArray<string>;
@@ -32,9 +31,6 @@ export type bulkNewDeskDialog_bulkAddDeskMutation$data = {
         readonly uniqueId: string;
       }>;
       readonly id: string;
-      readonly locationTags: ReadonlyArray<{
-        readonly id: string;
-      }>;
       readonly name: string;
       readonly zones: ReadonlyArray<{
         readonly uniqueId: string;
@@ -49,9 +45,6 @@ export type bulkNewDeskDialog_bulkAddDeskMutation$rawResponse = {
         readonly uniqueId: string;
       }>;
       readonly id: string;
-      readonly locationTags: ReadonlyArray<{
-        readonly id: string;
-      }>;
       readonly name: string;
       readonly zones: ReadonlyArray<{
         readonly uniqueId: string;
@@ -85,14 +78,7 @@ v1 = [
     "variableName": "input"
   }
 ],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v3 = [
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -101,7 +87,7 @@ v3 = [
     "storageKey": null
   }
 ],
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "concreteType": "DeskDetails",
@@ -109,7 +95,13 @@ v4 = {
   "name": "desks",
   "plural": true,
   "selections": [
-    (v2/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -120,23 +112,11 @@ v4 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "LocationTagDetails",
-      "kind": "LinkedField",
-      "name": "locationTags",
-      "plural": true,
-      "selections": [
-        (v2/*: any*/)
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "Organization_OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "deskTypes",
       "plural": true,
-      "selections": (v3/*: any*/),
+      "selections": (v2/*: any*/),
       "storageKey": null
     },
     {
@@ -146,7 +126,7 @@ v4 = {
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,
-      "selections": (v3/*: any*/),
+      "selections": (v2/*: any*/),
       "storageKey": null
     }
   ],
@@ -167,7 +147,7 @@ return {
         "name": "bulkAddDesk",
         "plural": false,
         "selections": [
-          (v4/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
@@ -189,7 +169,7 @@ return {
         "name": "bulkAddDesk",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -217,16 +197,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "94618f67587e60abd0e067f7891998c2",
+    "cacheID": "2b8ec82180efd5834d455f9f187898ea",
     "id": null,
     "metadata": {},
     "name": "bulkNewDeskDialog_bulkAddDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation bulkNewDeskDialog_bulkAddDeskMutation(\n  $input: BulkAddDeskInput!\n) {\n  bulkAddDesk(input: $input) {\n    desks {\n      id\n      name\n      locationTags {\n        id\n      }\n      deskTypes {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation bulkNewDeskDialog_bulkAddDeskMutation(\n  $input: BulkAddDeskInput!\n) {\n  bulkAddDesk(input: $input) {\n    desks {\n      id\n      name\n      deskTypes {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "eec0e0f83ff467dd7fa8a93ec25c0e6c";
+(node as any).hash = "d224cd6ca6296aa256e606298d9cceca";
 
 export default node;

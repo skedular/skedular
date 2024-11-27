@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b00df3224168e844a34b0c8daed817f>>
+ * @generated SignedSource<<30b10d981070d1a2ed6b3b6449f2d490>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -142,6 +142,10 @@ v13 = [
   }
 ],
 v14 = [
+  (v11/*: any*/),
+  (v12/*: any*/)
+],
+v15 = [
   {
     "alias": null,
     "args": null,
@@ -157,7 +161,7 @@ v14 = [
     "storageKey": null
   }
 ],
-v15 = [
+v16 = [
   (v12/*: any*/)
 ];
 return {
@@ -324,10 +328,7 @@ return {
             "kind": "LinkedField",
             "name": "organization",
             "plural": false,
-            "selections": [
-              (v11/*: any*/),
-              (v12/*: any*/)
-            ],
+            "selections": (v14/*: any*/),
             "storageKey": null
           },
           (v10/*: any*/)
@@ -352,7 +353,7 @@ return {
             "kind": "LinkedField",
             "name": "organizationBookingPermissions",
             "plural": false,
-            "selections": (v14/*: any*/),
+            "selections": (v15/*: any*/),
             "storageKey": null
           }
         ]
@@ -375,7 +376,7 @@ return {
             "kind": "LinkedField",
             "name": "locationBookingPermissions",
             "plural": false,
-            "selections": (v14/*: any*/),
+            "selections": (v15/*: any*/),
             "storageKey": null
           }
         ]
@@ -392,7 +393,7 @@ return {
             "kind": "LinkedField",
             "name": "teamBookingPermissions",
             "plural": false,
-            "selections": (v14/*: any*/),
+            "selections": (v15/*: any*/),
             "storageKey": null
           }
         ]
@@ -515,7 +516,7 @@ return {
                     "kind": "LinkedField",
                     "name": "location",
                     "plural": false,
-                    "selections": (v15/*: any*/),
+                    "selections": (v16/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -525,7 +526,7 @@ return {
                     "kind": "LinkedField",
                     "name": "team",
                     "plural": false,
-                    "selections": (v15/*: any*/),
+                    "selections": (v16/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -540,21 +541,21 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingLocationTagDetails",
+                        "concreteType": "BookingOrganizationDeskTypeDetails",
                         "kind": "LinkedField",
-                        "name": "locationTags",
+                        "name": "deskTypes",
                         "plural": true,
-                        "selections": [
-                          (v11/*: any*/),
-                          (v12/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "tagType",
-                            "storageKey": null
-                          }
-                        ],
+                        "selections": (v14/*: any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "BookingOrganizationZoneDetails",
+                        "kind": "LinkedField",
+                        "name": "zones",
+                        "plural": true,
+                        "selections": (v14/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -584,12 +585,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1830b661eb166e112343cf4462c7f011",
+    "cacheID": "7b2163332cfe513a161c6149d72b207a",
     "id": null,
     "metadata": {},
     "name": "teamBookingsCard_rootQuery",
     "operationKind": "query",
-    "text": "query teamBookingsCard_rootQuery(\n  $peopleSortingValues: [TeamMemberOrderInput!]!\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $locationId: String!\n  $locationExists: Boolean!\n  $teamId: String!\n  $teamExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...teamMembersBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment bookingsWeekGrid_query on Query {\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  teamBookingPermissions(teamId: $teamId) @include(if: $teamExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n}\n\nfragment teamMembersBookings_query on Query {\n  teamMembers(where: {teamId: $teamId}, orderBy: $peopleSortingValues) {\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n  team(id: $teamId) {\n    name\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  ...bookingsWeekGrid_query\n  ...bookingsWeekGrid_allBookings_query\n}\n"
+    "text": "query teamBookingsCard_rootQuery(\n  $peopleSortingValues: [TeamMemberOrderInput!]!\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $locationId: String!\n  $locationExists: Boolean!\n  $teamId: String!\n  $teamExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...teamMembersBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment bookingsWeekGrid_query on Query {\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n  teamBookingPermissions(teamId: $teamId) @include(if: $teamExists) {\n    canAddBookingOnBehalf\n    canDeleteBookingOnBehalf\n  }\n}\n\nfragment teamMembersBookings_query on Query {\n  teamMembers(where: {teamId: $teamId}, orderBy: $peopleSortingValues) {\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n  me {\n    id\n    defaultTeams {\n      uniqueId\n    }\n  }\n  team(id: $teamId) {\n    name\n    hasFutureBooking\n    canModify\n    canDelete\n    organization {\n      uniqueId\n      name\n    }\n    id\n  }\n  ...bookingsWeekGrid_query\n  ...bookingsWeekGrid_allBookings_query\n}\n"
   }
 };
 })();

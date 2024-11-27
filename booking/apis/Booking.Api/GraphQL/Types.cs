@@ -74,7 +74,9 @@ public class BookingDeskDetails
 
     [GraphQLName("location")] public BookingLocationDetails? Location { get; set; }
 
-    [GraphQLName("locationTags")] public BookingLocationTagDetails[] LocationTags { get; set; }
+    [GraphQLName("deskTypes")] public BookingOrganizationDeskTypeDetails[] DeskTypes { get; set; } = [];
+
+    [GraphQLName("zones")] public BookingOrganizationZoneDetails[] Zones { get; set; } = [];
 }
 
 [GraphQLName("BookingDetails")]
@@ -110,14 +112,20 @@ public class BookingLocationDetails
     [GraphQLName("name")] public string Name { get; set; }
 }
 
-[GraphQLName("BookingLocationTagDetails")]
-public class BookingLocationTagDetails
+[GraphQLName("BookingOrganizationDeskTypeDetails")]
+public class BookingOrganizationDeskTypeDetails
 {
     [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; }
 
     [GraphQLName("name")] public string Name { get; set; }
+}
 
-    [GraphQLName("tagType")] public string? TagType { get; set; }
+[GraphQLName("BookingOrganizationZoneDetails")]
+public class BookingOrganizationZoneDetails
+{
+    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; }
+
+    [GraphQLName("name")] public string Name { get; set; }
 }
 
 public enum BookingOrderField

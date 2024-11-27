@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1d8c60fec0bcc08816a6fecd45a8f42a>>
+ * @generated SignedSource<<1b220a31b30a333dcbebd8c6e1b04a21>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bulkNewDeskDialog_query$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"deskMultipleChoicesZones_query" | "multipleChoicesDeskTypes_query" | "multipleChoicesZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesDeskTypes_query" | "multipleChoicesZones_query">;
   readonly " $fragmentType": "bulkNewDeskDialog_query";
 };
 export type bulkNewDeskDialog_query$key = {
@@ -28,11 +28,6 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "deskMultipleChoicesZones_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "multipleChoicesDeskTypes_query"
     },
     {
@@ -45,6 +40,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f8d8cc8a79528149414f81d476c1d33d";
+(node as any).hash = "aed5ecb3f55fed8899bb4908ae2e4664";
 
 export default node;

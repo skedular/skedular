@@ -33,7 +33,6 @@ import {
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
-import { ZonesLine as OldZonesLine } from '@repo/shared/components/oldZone';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { ZonesLine } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
@@ -55,14 +54,11 @@ import type { deskCard_deleteLocationMutation } from './__generated__/deskCard_d
 import type { deskCard_query$key } from './__generated__/deskCard_query.graphql';
 import type { deskCard_removeCustomerDefaultDeskMutation } from './__generated__/deskCard_removeCustomerDefaultDeskMutation.graphql';
 import type { deskCard_updateDeskMutation } from './__generated__/deskCard_updateDeskMutation.graphql';
-import type { deskMultipleChoicesZones_query$key } from './__generated__/deskMultipleChoicesZones_query.graphql';
-import DeskMultipleChoicesZones from './desk-multiple-choices-zones';
 import DeskName from './desk-name';
 
 type Props = {
   rootDataRelay: deskCard_query$key;
   deskDetailsRelay: deskCard_DeskDetails$key;
-  deskMultipleChoicesZonesData: deskMultipleChoicesZones_query$key;
   multipleChoicesDeskTypesData: multipleChoicesDeskTypes_query$key;
   multipleChoicesZonesData: multipleChoicesZones_query$key;
   connectionIds: string[];
@@ -80,14 +76,12 @@ type CustomerDetails = {
 
 type DeskDetails = {
   name: string;
-  locationTagIds: string[];
   deskTypeIds: string[];
   zoneIds: string[];
 };
 
 const deskSchema = object({
   name: string().required('Desk name is required'),
-  locationTagIds: array().nullable(),
   deskTypeIds: array().nullable(),
   zoneIds: array().nullable(),
 });
@@ -126,7 +120,6 @@ const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMe
 const DeskCard = ({
   rootDataRelay,
   deskDetailsRelay,
-  deskMultipleChoicesZonesData,
   multipleChoicesDeskTypesData,
   multipleChoicesZonesData,
   connectionIds,
@@ -156,10 +149,6 @@ const DeskCard = ({
         name
         deactivated
         requireBookingApproval
-        locationTags {
-          id
-          name
-        }
         deskTypes {
           uniqueId
           name
@@ -181,10 +170,6 @@ const DeskCard = ({
           name
           deactivated
           requireBookingApproval
-          locationTags {
-            id
-            name
-          }
           deskTypes {
             uniqueId
             name
@@ -336,7 +321,6 @@ const DeskCard = ({
   const handleConfirmDeactivatingDeskClick = () => {
     setDeskDeactivateConfirmationDialogOpen(false);
 
-    const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
     const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
     const zoneIds = deskDetails.zones.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(<NotificationContent content={`Deactivating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
@@ -349,7 +333,6 @@ const DeskCard = ({
           name: deskDetails.name,
           deactivated: true,
           requireBookingApproval: deskDetails.requireBookingApproval,
-          locationTagIds,
           deskTypeIds,
           zoneIds,
         },
@@ -382,7 +365,6 @@ const DeskCard = ({
             name: deskDetails.name,
             deactivated: true,
             requireBookingApproval: deskDetails.requireBookingApproval,
-            locationTags: deskDetails.locationTags,
             deskTypes: deskDetails.deskTypes,
             zones: deskDetails.zones,
           },
@@ -402,7 +384,6 @@ const DeskCard = ({
   const handleConfirmActivatingDeskClick = () => {
     setDeskActivateConfirmationDialogOpen(false);
 
-    const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
     const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
     const zoneIds = deskDetails.zones.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(<NotificationContent content={`Activating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
@@ -415,7 +396,6 @@ const DeskCard = ({
           name: deskDetails.name,
           deactivated: false,
           requireBookingApproval: deskDetails.requireBookingApproval,
-          locationTagIds,
           deskTypeIds,
           zoneIds,
         },
@@ -448,7 +428,6 @@ const DeskCard = ({
             name: deskDetails.name,
             deactivated: false,
             requireBookingApproval: deskDetails.requireBookingApproval,
-            locationTags: deskDetails.locationTags,
             deskTypes: deskDetails.deskTypes,
             zones: deskDetails.zones,
           },
@@ -465,7 +444,7 @@ const DeskCard = ({
     setEditing(false);
   };
 
-  const handleSaveClick = ({ name, locationTagIds, deskTypeIds, zoneIds }: DeskDetails) => {
+  const handleSaveClick = ({ name, deskTypeIds, zoneIds }: DeskDetails) => {
     const toastId = themedToast(<NotificationContent content={`Updating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
@@ -476,7 +455,6 @@ const DeskCard = ({
           name,
           deactivated: deskDetails.deactivated,
           requireBookingApproval: deskDetails.requireBookingApproval,
-          locationTagIds,
           deskTypeIds,
           zoneIds,
         },
@@ -511,7 +489,6 @@ const DeskCard = ({
             name,
             deactivated: deskDetails.deactivated,
             requireBookingApproval: deskDetails.requireBookingApproval,
-            locationTags: [],
             deskTypes: [],
             zones: [],
           },
@@ -642,7 +619,6 @@ const DeskCard = ({
   const handleSetDeskApprovalRequirementClick = () => {
     setSetDeskApprovalRequirementConfirmationDialogOpen(false);
 
-    const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
     const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
     const zoneIds = deskDetails.zones.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(
@@ -658,7 +634,6 @@ const DeskCard = ({
           name: deskDetails.name,
           deactivated: deskDetails.deactivated,
           requireBookingApproval: true,
-          locationTagIds,
           deskTypeIds,
           zoneIds,
         },
@@ -693,7 +668,6 @@ const DeskCard = ({
             name: deskDetails.name,
             deactivated: deskDetails.deactivated,
             requireBookingApproval: true,
-            locationTags: deskDetails.locationTags,
             deskTypes: deskDetails.deskTypes,
             zones: deskDetails.zones,
           },
@@ -713,7 +687,6 @@ const DeskCard = ({
   const handleConfirmRemoveDeskApprovalRequirementDeskClick = () => {
     setRemoveDeskApprovalRequirementConfirmationDialogOpen(false);
 
-    const locationTagIds = deskDetails.locationTags.map(({ id }) => id);
     const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
     const zoneIds = deskDetails.zones.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(
@@ -729,7 +702,6 @@ const DeskCard = ({
           name: deskDetails.name,
           deactivated: deskDetails.deactivated,
           requireBookingApproval: false,
-          locationTagIds,
           deskTypeIds,
           zoneIds,
         },
@@ -764,7 +736,6 @@ const DeskCard = ({
             name: deskDetails.name,
             deactivated: deskDetails.deactivated,
             requireBookingApproval: false,
-            locationTags: deskDetails.locationTags,
             deskTypes: deskDetails.deskTypes,
             zones: deskDetails.zones,
           },
@@ -827,7 +798,6 @@ const DeskCard = ({
 
           <CardContent>
             <Stack direction="column" spacing={1}>
-              <OldZonesLine zones={deskDetails.locationTags} />
               <DeskTypesLine deskTypes={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
               <ZonesLine zones={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
             </Stack>
@@ -885,18 +855,13 @@ const DeskCard = ({
             onSubmit={handleSaveClick}
             initialValues={{
               name: deskDetails.name,
-              locationTagIds: deskDetails.locationTags.map(({ id }) => id),
               deskTypeIds: deskDetails.deskTypes.map(({ uniqueId }) => uniqueId),
+              zoneIds: deskDetails.zones.map(({ uniqueId }) => uniqueId),
             }}
             validate={validate}
             render={({ handleSubmit }) => (
               <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
                 <DeskName name="name" required={requiredFields.name} />
-                <DeskMultipleChoicesZones
-                  rootDataRelay={deskMultipleChoicesZonesData}
-                  name="locationTagIds"
-                  required={requiredFields.locationTagIds}
-                />
                 <MultipleChoicesDeskTypes rootDataRelay={multipleChoicesDeskTypesData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
                 <MultipleChoicesZones rootDataRelay={multipleChoicesZonesData} name="zoneIds" required={requiredFields.zoneIds} />
 

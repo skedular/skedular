@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a327a2efabdbebe4a08b724b81a2aab>>
+ * @generated SignedSource<<176c38e101811a3d156bb8c98c6d0f00>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -284,21 +284,21 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingLocationTagDetails",
+                        "concreteType": "BookingOrganizationDeskTypeDetails",
                         "kind": "LinkedField",
-                        "name": "locationTags",
+                        "name": "deskTypes",
                         "plural": true,
-                        "selections": [
-                          (v1/*: any*/),
-                          (v2/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "tagType",
-                            "storageKey": null
-                          }
-                        ],
+                        "selections": (v3/*: any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "BookingOrganizationZoneDetails",
+                        "kind": "LinkedField",
+                        "name": "zones",
+                        "plural": true,
+                        "selections": (v3/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -328,16 +328,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1c5460c1288794abefa27961152828b9",
+    "cacheID": "c97f5fe5dedbfce39a9f04afe1d1dc3a",
     "id": null,
     "metadata": {},
     "name": "myBookings_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query myBookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $locationIds: [String!]\n  $organizationId: String!\n  $teamIds: [String!]\n) {\n  ...myBookings_bookings_query\n}\n\nfragment myBookings_bookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, includeFutureBookingsOnly: true, combineOrganizationsLocationsTeams: true}, orderBy: [{field: From, direction: Ascending}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query myBookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $locationIds: [String!]\n  $organizationId: String!\n  $teamIds: [String!]\n) {\n  ...myBookings_bookings_query\n}\n\nfragment myBookings_bookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, includeFutureBookingsOnly: true, combineOrganizationsLocationsTeams: true}, orderBy: [{field: From, direction: Ascending}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "31569185e78d2675b2dabaac413b282f";
+(node as any).hash = "3a8c214a922b98e598283458fce1508d";
 
 export default node;

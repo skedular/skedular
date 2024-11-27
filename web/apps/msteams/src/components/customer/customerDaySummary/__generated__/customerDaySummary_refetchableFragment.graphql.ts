@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0abd50be84522e142dc1802c24f6c0ca>>
+ * @generated SignedSource<<bde1688b8aea7b6522b4f3f97c753e77>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -212,21 +212,21 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "BookingLocationTagDetails",
+                "concreteType": "BookingOrganizationDeskTypeDetails",
                 "kind": "LinkedField",
-                "name": "locationTags",
+                "name": "deskTypes",
                 "plural": true,
-                "selections": [
-                  (v1/*: any*/),
-                  (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "tagType",
-                    "storageKey": null
-                  }
-                ],
+                "selections": (v3/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "BookingOrganizationZoneDetails",
+                "kind": "LinkedField",
+                "name": "zones",
+                "plural": true,
+                "selections": (v3/*: any*/),
                 "storageKey": null
               }
             ],
@@ -238,16 +238,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9cf815a0588f2e518850026adddcfad9",
+    "cacheID": "7529cecf5452e7a7dd10df42fbb01f10",
     "id": null,
     "metadata": {},
     "name": "customerDaySummary_refetchableFragment",
     "operationKind": "query",
-    "text": "query customerDaySummary_refetchableFragment(\n  $from: DateTime\n  $organizationId: String!\n  $to: DateTime\n) {\n  ...customerDaySummary_query\n}\n\nfragment customerDaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to, organizationIds: [$organizationId]}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query customerDaySummary_refetchableFragment(\n  $from: DateTime\n  $organizationId: String!\n  $to: DateTime\n) {\n  ...customerDaySummary_query\n}\n\nfragment customerDaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to, organizationIds: [$organizationId]}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      deskTypes {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "933716058bd8485716847079dc7467bf";
+(node as any).hash = "40c327e3147c9063f6ed531090d1570c";
 
 export default node;

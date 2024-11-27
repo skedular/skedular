@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b485a45ba6010bd1748f535f06acf11f>>
+ * @generated SignedSource<<67e73205b26b902027b1bead457a9872>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,12 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type zoneSelector_allZones_query$data = {
-  readonly zonesLocations: {
+  readonly zones: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly locationTags: ReadonlyArray<{
-          readonly id: string;
-          readonly name: string;
-        }>;
+        readonly id: string;
+        readonly name: string;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -34,11 +32,11 @@ const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "locationsSortingValues"
+      "name": "organizationId"
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "zonesSortingValues"
     }
   ],
   "kind": "Fragment",
@@ -46,12 +44,12 @@ const node: ReaderFragment = {
   "name": "zoneSelector_allZones_query",
   "selections": [
     {
-      "alias": "zonesLocations",
+      "alias": null,
       "args": [
         {
           "kind": "Variable",
           "name": "orderBy",
-          "variableName": "locationsSortingValues"
+          "variableName": "zonesSortingValues"
         },
         {
           "fields": [
@@ -65,9 +63,9 @@ const node: ReaderFragment = {
           "name": "where"
         }
       ],
-      "concreteType": "LocationConnection",
+      "concreteType": "OrganizationTagConnection",
       "kind": "LinkedField",
-      "name": "locations",
+      "name": "zones",
       "plural": false,
       "selections": [
         {
@@ -80,7 +78,7 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationEdge",
+          "concreteType": "OrganizationTagEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -88,7 +86,7 @@ const node: ReaderFragment = {
             {
               "alias": null,
               "args": null,
-              "concreteType": "LocationDetails",
+              "concreteType": "OrganizationTagDetails",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
@@ -96,26 +94,15 @@ const node: ReaderFragment = {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "LocationTagDetails",
-                  "kind": "LinkedField",
-                  "name": "locationTags",
-                  "plural": true,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "id",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "name",
-                      "storageKey": null
-                    }
-                  ],
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "name",
                   "storageKey": null
                 }
               ],
@@ -144,6 +131,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6cfbe4537f19009c2f0822e9eb4108c1";
+(node as any).hash = "ac300df49696807e5ceba6eb1be11744";
 
 export default node;

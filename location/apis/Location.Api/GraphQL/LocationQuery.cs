@@ -186,60 +186,6 @@ public class LocationQuery(IMapper mapper)
     }
 
     [UseServiceScope]
-    public async Task<LocationTagConnection?> LocationTagsAsync(
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        LocationTagWhereInput where,
-        LocationTagOrderInput[]? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] ITagService tagService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        var (paginatedInfo, edges, totalCount) =
-            await tagService.GetPaginatedTagsAsync(
-                new PaginationInputParam(after, first, before, last),
-                new TagSearchCriteria(where.LocationId, where.TagType, where.NameContains),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending
-                            ? OrderDirection.Ascending
-                            : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            LocationTagOrderField.Name => TagOrderField.Name,
-                            LocationTagOrderField.Description => TagOrderField.Description,
-                            LocationTagOrderField.TagType => TagOrderField.TagType,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new TagOrder(direction, field);
-                    }).ToList(),
-                cancellationToken);
-
-        return new LocationTagConnection
-        {
-            PageInfo = new PageInfo
-            {
-                HasNextPage = paginatedInfo.HasNextPage,
-                HasPreviousPage = paginatedInfo.HasPreviousPage,
-                StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
-            },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
-            TotalCount = totalCount
-        };
-    }
-
-    [UseServiceScope]
     public async Task<DeskConnection?> LocationDesksAsync(
         string? after,
         int? first,

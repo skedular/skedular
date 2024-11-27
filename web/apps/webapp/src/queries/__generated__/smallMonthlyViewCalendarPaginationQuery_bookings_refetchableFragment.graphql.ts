@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6b84d3bb010fa9667ebfd1d46709af0e>>
+ * @generated SignedSource<<4ce491c832ba075cf8c9e2d5c99308ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -284,21 +284,21 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingLocationTagDetails",
+                        "concreteType": "BookingOrganizationDeskTypeDetails",
                         "kind": "LinkedField",
-                        "name": "locationTags",
+                        "name": "deskTypes",
                         "plural": true,
-                        "selections": [
-                          (v2/*: any*/),
-                          (v3/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "tagType",
-                            "storageKey": null
-                          }
-                        ],
+                        "selections": (v4/*: any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "BookingOrganizationZoneDetails",
+                        "kind": "LinkedField",
+                        "name": "zones",
+                        "plural": true,
+                        "selections": (v4/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -379,16 +379,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1e9fe938360447869de1e1ed1ae53003",
+    "cacheID": "7ddff6ae0654cd369f946512208e608f",
     "id": null,
     "metadata": {},
     "name": "smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment(\n  $count: Int = 1000\n  $cursor: String\n  $monthlyCalendarDateFrom: DateTime\n  $monthlyCalendarDateTo: DateTime\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  ...smallMonthlyViewCalendar_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          uniqueId\n          name\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          locationTags {\n            uniqueId\n            name\n            tagType\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment(\n  $count: Int = 1000\n  $cursor: String\n  $monthlyCalendarDateFrom: DateTime\n  $monthlyCalendarDateTo: DateTime\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  ...smallMonthlyViewCalendar_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          uniqueId\n          name\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "65a9f460ce2a6cb0cf5d7081f375dcff";
+(node as any).hash = "f169a5e55e8145fb63ab330268257a28";
 
 export default node;

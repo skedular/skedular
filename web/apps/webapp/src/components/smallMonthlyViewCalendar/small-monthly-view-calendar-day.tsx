@@ -10,7 +10,6 @@ import {
   infoNotificationOptions,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/oldZone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { convertCalendarDayToStartOfDay, endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import type { Dayjs } from 'dayjs';
@@ -60,10 +59,13 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
           desks {
             uniqueId
             name
-            locationTags {
+            deskTypes {
               uniqueId
               name
-              tagType
+            }
+            zones {
+              uniqueId
+              name
             }
           }
         }
@@ -190,9 +192,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
                 if (booking.desks.length > 0) {
                   message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
 
-                  const zones = booking.desks
-                    .flatMap(({ locationTags }) => locationTags)
-                    .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
+                  const zones = booking.desks.flatMap(({ zones }) => zones);
                   if (zones.length > 0) {
                     const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
 

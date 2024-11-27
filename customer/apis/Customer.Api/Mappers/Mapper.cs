@@ -165,9 +165,14 @@ public class Mapper(IContext context) : IMapper
                         }
             }).ToArray(),
             PreferredZones =
-                src.PreferredLocationTags
-                    .Where(item => item.Type == LocationTagType.Zone)
-                    .Select(item => new CustomerLocationTagDetails { UniqueId = item.Id, Name = item.Name })
+                src.PreferredOrganizationTags
+                    .Where(item => item.Type == OrganizationTagType.Zone)
+                    .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name })
+                    .ToArray(),
+            PreferredDeskTypes =
+                src.PreferredOrganizationTags
+                    .Where(item => item.Type == OrganizationTagType.DeskType)
+                    .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name })
                     .ToArray(),
             PreferredDesks =
                 src.PreferredDesks
@@ -186,12 +191,7 @@ public class Mapper(IContext context) : IMapper
                             Name = item.Organization.Name,
                             LogoUrl = item.Organization.LogoUrl
                         }
-            }).ToArray(),
-            PreferredDeskTypes =
-                src.PreferredOrganizationTags
-                    .Where(item => item.Type == OrganizationTagType.DeskType)
-                    .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name })
-                    .ToArray()
+            }).ToArray()
         };
     }
 

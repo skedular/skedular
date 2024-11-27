@@ -21,14 +21,6 @@ public class AddCustomerDefaultLocationInput
     [GraphQLName("locationId")] public string LocationId { get; set; }
 }
 
-[GraphQLName("AddCustomerDefaultLocationTagInput")]
-public class AddCustomerDefaultLocationTagInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
-    [GraphQLName("locationTagId")] public string LocationTagId { get; set; }
-}
-
 [GraphQLName("AddCustomerDefaultOrganizationTagInput")]
 public class AddCustomerDefaultOrganizationTagInput
 {
@@ -167,7 +159,7 @@ public class CustomerDetails : Node
 
     [GraphQLName("defaultOrganization")] public CustomerOrganizationDetails? DefaultOrganization { get; set; }
 
-    [GraphQLName("preferredZones")] public CustomerLocationTagDetails[] PreferredZones { get; set; }
+    [GraphQLName("preferredZones")] public CustomerOrganizationTagDetails[] PreferredZones { get; set; }
 
     [GraphQLName("preferredDeskTypes")] public CustomerOrganizationTagDetails[] PreferredDeskTypes { get; set; }
 
@@ -197,14 +189,6 @@ public class CustomerLocationDetails
     [GraphQLName("name")] public string? Name { get; set; }
 
     [GraphQLName("organization")] public CustomerOrganizationDetails? Organization { get; set; }
-}
-
-[GraphQLName("CustomerLocationTagDetails")]
-public class CustomerLocationTagDetails
-{
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; }
-
-    [GraphQLName("name")] public string? Name { get; set; }
 }
 
 [GraphQLName("CustomerOrganizationTagDetails")]
@@ -292,14 +276,6 @@ public class RemoveCustomerDefaultLocationInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
     [GraphQLName("locationId")] public string LocationId { get; set; }
-}
-
-[GraphQLName("RemoveCustomerDefaultLocationTagInput")]
-public class RemoveCustomerDefaultLocationTagInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
-    [GraphQLName("locationTagId")] public string LocationTagId { get; set; }
 }
 
 [GraphQLName("RemoveCustomerDefaultOrganizationTagInput")]

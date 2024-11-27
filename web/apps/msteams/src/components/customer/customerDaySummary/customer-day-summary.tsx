@@ -11,9 +11,9 @@ import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getBookingSummaryMessage } from '@repo/shared/components/booking';
 import { DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/oldZone';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { ZonesLine } from '@repo/shared/components/zone';
 import { GlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, isTodayDate, isTomorrowDate, toShortDateWithDayAndMonthOnly } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -76,7 +76,7 @@ type LocationDetails = {
   readonly name?: string | null | undefined;
 };
 
-type LocationTagDetails = {
+type ZoneDetails = {
   readonly uniqueId: string;
   readonly name?: string | null | undefined;
   readonly tagType?: string | null | undefined;
@@ -85,7 +85,7 @@ type LocationTagDetails = {
 type DeskDetails = {
   readonly uniqueId: string;
   readonly name?: string | null | undefined;
-  readonly locationTags: ReadonlyArray<LocationTagDetails>;
+  readonly zones: ReadonlyArray<ZoneDetails>;
 };
 
 type TeamDetails = {
@@ -129,10 +129,13 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth, 
           desks {
             uniqueId
             name
-            locationTags {
+            deskTypes {
               uniqueId
               name
-              tagType
+            }
+            zones {
+              uniqueId
+              name
             }
           }
         }
@@ -227,19 +230,15 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth, 
         </Stack>
       )}
 
-      {booking.desks?.map(({ uniqueId, name, locationTags }) => {
-        const zones = locationTags.filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
-
-        return (
-          <Stack key={uniqueId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <DeskIcon />
-            <Typography variant="body1" component="div">
-              {name}
-            </Typography>
-            <ZonesLine zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
-          </Stack>
-        );
-      })}
+      {booking.desks?.map(({ uniqueId, name, zones }) => (
+        <Stack key={uniqueId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <DeskIcon />
+          <Typography variant="body1" component="div">
+            {name}
+          </Typography>
+          <ZonesLine zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
+        </Stack>
+      ))}
     </Stack>
   );
 

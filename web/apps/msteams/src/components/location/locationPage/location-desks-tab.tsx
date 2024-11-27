@@ -5,7 +5,6 @@ import TablePagination from '@mui/material/TablePagination';
 import { DayPicker } from '@repo/shared/components/datePickers';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE } from '@repo/shared/components/oldZone';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
@@ -39,12 +38,10 @@ const RootQuery = graphql`
   query locationDesksTab_rootQuery(
     $organizationId: String!
     $locationId: String!
-    $zoneTagType: String!
     $fromToGetBookings: DateTime
     $toToGetBookings: DateTime
     $deskNameSearchText: String
     $deskSortingValues: [DeskOrderInput!]!
-    $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
     $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
@@ -63,7 +60,6 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
           canModify
         }
         ...deskCard_query
-        ...deskMultipleChoicesZones_query
         ...multipleChoicesDeskTypes_query
         ...multipleChoicesZones_query
         ...newDeskDialog_query
@@ -326,7 +322,6 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
             <Grid key={edge.node.id}>
               <DeskCard
                 rootDataRelay={rootData}
-                deskMultipleChoicesZonesData={rootData}
                 multipleChoicesDeskTypesData={rootData}
                 multipleChoicesZonesData={rootData}
                 deskDetailsRelay={edge.node}
@@ -380,16 +375,9 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, organizationId, locationI
       {
         organizationId,
         locationId,
-        zoneTagType: LOCATION_TAG_TYPE_LOCATION_ZONE,
         fromToGetBookings: from,
         toToGetBookings: to,
         deskSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'Name',
-          },
-        ],
-        deskMultipleChoicesZonesSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

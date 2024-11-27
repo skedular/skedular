@@ -24,7 +24,6 @@ import { toast } from 'react-toastify';
 import { array, number, object, string } from 'yup';
 import type { bulkNewDeskDialog_bulkAddDeskMutation } from './__generated__/bulkNewDeskDialog_bulkAddDeskMutation.graphql';
 import type { bulkNewDeskDialog_query$key } from './__generated__/bulkNewDeskDialog_query.graphql';
-import DeskMultipleChoicesZones from './desk-multiple-choices-zones';
 
 type Props = {
   rootDataRelay: bulkNewDeskDialog_query$key;
@@ -38,7 +37,6 @@ type Props = {
 type DeskDetails = {
   namePrefix: string;
   count: number;
-  locationTagIds: string[];
   deskTypeIds: string[];
   zoneIds: string[];
 };
@@ -46,7 +44,6 @@ type DeskDetails = {
 const deskSchema = object({
   namePrefix: string(),
   count: number().positive().integer().required('Desk count is required'),
-  locationTagIds: array().nullable(),
   deskTypeIds: array().nullable(),
   zoneIds: array().nullable(),
 });
@@ -55,7 +52,6 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
   const rootData = useFragment(
     graphql`
       fragment bulkNewDeskDialog_query on Query {
-        ...deskMultipleChoicesZones_query
         ...multipleChoicesDeskTypes_query
         ...multipleChoicesZones_query
       }
@@ -69,9 +65,6 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
         desks @appendNode(connections: $connectionIds, edgeTypeName: "DeskDetails") {
           id
           name
-          locationTags {
-            id
-          }
           deskTypes {
             uniqueId
           }
@@ -88,7 +81,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
 
-  const handleAddClick = ({ namePrefix, count, locationTagIds, deskTypeIds, zoneIds }: DeskDetails) => {
+  const handleAddClick = ({ namePrefix, count, deskTypeIds, zoneIds }: DeskDetails) => {
     const ids = Array.from(Array(count).keys()).map((_) => nanoid());
     const toastId = themedToast(<NotificationContent content={`Adding desks...`} />, infoNotificationOptions);
 
@@ -102,7 +95,6 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
           count: parseInt(count.toString()),
           deactivated: false,
           requireBookingApproval: false,
-          locationTagIds,
           deskTypeIds,
           zoneIds,
         },
@@ -132,7 +124,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
       },
       optimisticResponse: {
         bulkAddDesk: {
-          desks: ids.map((id) => ({ id, name: namePrefix, locationTags: [], deskTypes: [], zones: [] })),
+          desks: ids.map((id) => ({ id, name: namePrefix, deskTypes: [], zones: [] })),
         },
       },
     });
@@ -147,7 +139,6 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
           initialValues={{
             namePrefix: '',
             count: 0,
-            locationTagIds: [],
             deskTypeIds: [],
             zoneIds: [],
           }}
@@ -156,7 +147,6 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
             <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
               <TextField label="Optional name prefix" name="namePrefix" required={requiredFields.namePrefix} helperText="Add your desk name prefix" />
               <TextField label="Count" name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
-              <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
               <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
               <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
 

@@ -322,7 +322,6 @@ public class LocationGrpcService(
             request.LocationId,
             request.NamePrefix,
             request.Count,
-            request.TagIds,
             request.OrganizationTagIds,
             request.Deactivated,
             request.RequireBookingApproval,

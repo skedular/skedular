@@ -29,7 +29,6 @@ type Query {
   locations(after: String, first: Int, before: String, last: Int, where: LocationWhereInput!, orderBy: [LocationOrderInput!]): LocationConnection
   myLocations(organizationId: String): [LocationDetails!]
   locationMembers(after: String, first: Int, before: String, last: Int, where: LocationMemberWhereInput!, orderBy: [LocationMemberOrderInput!]): LocationMemberConnection
-  locationTags(after: String, first: Int, before: String, last: Int, where: LocationTagWhereInput!, orderBy: [LocationTagOrderInput!]): LocationTagConnection
   locationDesks(after: String, first: Int, before: String, last: Int, where: DeskWhereInput!, orderBy: [DeskOrderInput!]): DeskConnection
   locationAnalytics(locationId: String!, from: DateTime!, until: DateTime!): LocationAnalytics
   msTeamsVersion: Version!
@@ -83,8 +82,6 @@ type Mutation {
   removeCustomerDefaultTeam(input: RemoveCustomerDefaultTeamInput!): CustomerPayload
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload
   clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload
-  addCustomerDefaultLocationTag(input: AddCustomerDefaultLocationTagInput!): CustomerPayload
-  removeCustomerDefaultLocationTag(input: RemoveCustomerDefaultLocationTagInput!): CustomerPayload
   addCustomerDefaultDesk(input: AddCustomerDefaultDeskInput!): CustomerPayload
   removeCustomerDefaultDesk(input: RemoveCustomerDefaultDeskInput!): CustomerPayload
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload
@@ -98,9 +95,6 @@ type Mutation {
   bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload
   updateDesk(input: UpdateDeskInput!): DeskPayload
   deleteDesk(input: DeleteDeskInput!): DeskPayload
-  addLocationTag(input: AddLocationTagInput!): LocationTagPayload
-  updateLocationTag(input: UpdateLocationTagInput!): LocationTagPayload
-  deleteLocationTag(input: DeleteLocationTagInput!): LocationTagPayload
   changeLocationMemberOwnershipType(input: ChangeLocationMemberOwnershipTypeInput!): LocationMemberDetailsPayload
   inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload
   acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload
@@ -188,7 +182,8 @@ type BookingDeskDetails {
   deactivated: Boolean!
   requireBookingApproval: Boolean!
   location: BookingLocationDetails
-  locationTags: [BookingLocationTagDetails!]!
+  deskTypes: [BookingOrganizationDeskTypeDetails!]!
+  zones: [BookingOrganizationZoneDetails!]!
 }
 type BookingDetails {
   from: DateTime!
@@ -209,12 +204,15 @@ type BookingLocationDetails {
   uniqueId: ID!
   name: String!
 }
-type BookingLocationTagDetails {
+type BookingOrganizationDeskTypeDetails {
   uniqueId: ID!
   name: String!
-  tagType: String
 }
 type BookingOrganizationDetails {
+  uniqueId: ID!
+  name: String!
+}
+type BookingOrganizationZoneDetails {
   uniqueId: ID!
   name: String!
 }
@@ -293,7 +291,7 @@ type CustomerDetails {
   defaultLocations: [CustomerLocationDetails!]!
   defaultTeams: [CustomerTeamDetails!]!
   defaultOrganization: CustomerOrganizationDetails
-  preferredZones: [CustomerLocationTagDetails!]!
+  preferredZones: [CustomerOrganizationTagDetails!]!
   preferredDeskTypes: [CustomerOrganizationTagDetails!]!
   preferredDesks: [CustomerDeskDetails!]!
   id: ID!
@@ -311,10 +309,6 @@ type CustomerLocationDetails {
   uniqueId: ID!
   name: String
   organization: CustomerOrganizationDetails
-}
-type CustomerLocationTagDetails {
-  uniqueId: ID!
-  name: String
 }
 type CustomerOrganizationDetails {
   uniqueId: ID!
@@ -357,7 +351,6 @@ type DeskDetails {
   name: String!
   deactivated: Boolean!
   requireBookingApproval: Boolean!
-  locationTags: [LocationTagDetails!]!
   deskTypes: [Organization_OrganizationTagDetails!]!
   zones: [Organization_OrganizationTagDetails!]!
   id: ID!
@@ -425,7 +418,6 @@ type LocationDetails {
   canDelete: Boolean!
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
-  locationTags: [LocationTagDetails!]!
   desks: [DeskDetails!]!
   physicalAddress: LocationAddressDetails
   id: ID!
@@ -460,25 +452,6 @@ type LocationOrganizationDetails {
 type LocationPayload {
   clientMutationId: String
   location: LocationDetails!
-}
-type LocationTagConnection {
-  pageInfo: PageInfo!
-  edges: [LocationTagEdge!]!
-  totalCount: Int
-}
-type LocationTagDetails {
-  name: String!
-  description: String
-  tagType: String!
-  id: ID!
-}
-type LocationTagEdge {
-  node: LocationTagDetails!
-  cursor: String!
-}
-type LocationTagPayload {
-  clientMutationId: String
-  locationTag: LocationTagDetails!
 }
 type Organization_OrganizationTagDetails {
   name: String
@@ -840,11 +813,6 @@ enum LocationOrderField {
   About
   Timezone
 }
-enum LocationTagOrderField {
-  Name
-  Description
-  TagType
-}
 enum OrganizationMemberMembershipType {
   Owner
   Administrator
@@ -960,10 +928,6 @@ input AddCustomerDefaultLocationInput {
   clientMutationId: String
   locationId: String!
 }
-input AddCustomerDefaultLocationTagInput {
-  clientMutationId: String
-  locationTagId: String!
-}
 input AddCustomerDefaultOrganizationTagInput {
   clientMutationId: String
   organizationTagId: String!
@@ -1012,10 +976,6 @@ input RemoveCustomerDefaultLocationInput {
   clientMutationId: String
   locationId: String!
 }
-input RemoveCustomerDefaultLocationTagInput {
-  clientMutationId: String
-  locationTagId: String!
-}
 input RemoveCustomerDefaultOrganizationTagInput {
   clientMutationId: String
   organizationTagId: String!
@@ -1053,7 +1013,6 @@ input AddDeskInput {
   id: String
   name: String!
   locationId: String!
-  locationTagIds: [String!]!
   deskTypeIds: [String!]!
   zoneIds: [String!]!
 }
@@ -1066,21 +1025,12 @@ input AddLocationInput {
   timezone: String
   physicalAddress: LocationAddressDetailsInput
 }
-input AddLocationTagInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  description: String
-  tagType: String!
-  locationId: String!
-}
 input BulkAddDeskInput {
   clientMutationId: String
   id: String
   namePrefix: String
   locationId: String!
   count: Int!
-  locationTagIds: [String!]!
   deskTypeIds: [String!]!
   zoneIds: [String!]!
   deactivated: Boolean!
@@ -1100,10 +1050,6 @@ input DeleteDeskInput {
   id: String!
 }
 input DeleteLocationInput {
-  clientMutationId: String
-  id: String!
-}
-input DeleteLocationTagInput {
   clientMutationId: String
   id: String!
 }
@@ -1142,15 +1088,6 @@ input LocationOrderInput {
   direction: OrderDirection!
   field: LocationOrderField!
 }
-input LocationTagOrderInput {
-  direction: OrderDirection!
-  field: LocationTagOrderField!
-}
-input LocationTagWhereInput {
-  locationId: String!
-  tagType: String
-  nameContains: String
-}
 input LocationWhereInput {
   organizationId: String
   nameContains: String
@@ -1167,7 +1104,6 @@ input UpdateDeskInput {
   name: String!
   deactivated: Boolean!
   requireBookingApproval: Boolean!
-  locationTagIds: [String!]!
   deskTypeIds: [String!]!
   zoneIds: [String!]!
 }
@@ -1179,13 +1115,6 @@ input UpdateLocationInput {
   organizationId: String
   timezone: String
   physicalAddress: LocationAddressDetailsInput
-}
-input UpdateLocationTagInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  description: String
-  tagType: String!
 }
 input AcceptInvitationToJoinOrganizationInput {
   clientMutationId: String

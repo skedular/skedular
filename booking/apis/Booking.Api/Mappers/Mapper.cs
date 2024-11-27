@@ -55,8 +55,7 @@ public interface IMapper
     Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src);
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
 
-    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingEdge MapToGrpcResponse(
-        Edge<Shared.Models.Booking> src);
+    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
 }
 
 public class Mapper : IMapper
@@ -479,21 +478,33 @@ public class Mapper : IMapper
         {
             UniqueId = src.Id,
             Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
-            LocationTags = MapTo(src.Tags).ToArray(),
+            DeskTypes = MapToDeskTypes(src.OrganizationTags).ToArray(),
+            Zones = MapToZones(src.OrganizationTags).ToArray(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Location = MapTo(src.Location)
         };
 
-    private static IEnumerable<BookingLocationTagDetails> MapTo(IEnumerable<Shared.Models.LocationTag> src) =>
-        src.Select(MapTo);
+    private static IEnumerable<BookingOrganizationDeskTypeDetails> 
+        MapToDeskTypes(IEnumerable<Shared.Models.OrganizationTag> src) => 
+        src.Where(item => item.Type == OrganizationTagType.DeskType).Select(MapToDeskType);
 
-    private static BookingLocationTagDetails MapTo(Shared.Models.LocationTag src) =>
+    private static BookingOrganizationDeskTypeDetails MapToDeskType(Shared.Models.OrganizationTag src) =>
         new()
         {
             UniqueId = src.Id,
             Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
-            TagType = src.Type
+        };
+
+    private static IEnumerable<BookingOrganizationZoneDetails> 
+        MapToZones(IEnumerable<Shared.Models.OrganizationTag> src) => 
+        src.Where(item => item.Type == OrganizationTagType.Zone).Select(MapToZone);
+
+    private static BookingOrganizationZoneDetails MapToZone(Shared.Models.OrganizationTag src) =>
+        new()
+        {
+            UniqueId = src.Id,
+            Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
         };
 
     private static Shared.Models.Organization? MapTo(Organization? src) =>

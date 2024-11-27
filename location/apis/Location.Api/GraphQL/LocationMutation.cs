@@ -58,7 +58,6 @@ public class LocationMutation(IMapper mapper)
             input.LocationId,
             input.NamePrefix,
             input.Count,
-            input.LocationTagIds,
             input.DeskTypeIds.Concat(input.ZoneIds).ToList(),
             input.Deactivated,
             input.RequireBookingApproval,
@@ -87,36 +86,6 @@ public class LocationMutation(IMapper mapper)
     {
         var desk = await deskService.DeleteAsync(input.Id, cancellationToken);
         return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
-    }
-
-    [UseServiceScope]
-    public async Task<LocationTagPayload?> AddLocationTagAsync(
-        AddLocationTagInput input,
-        [Service] ITagService tagService,
-        CancellationToken cancellationToken)
-    {
-        var tag = await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken);
-        return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
-    }
-
-    [UseServiceScope]
-    public async Task<LocationTagPayload?> UpdateLocationTagAsync(
-        UpdateLocationTagInput input,
-        [Service] ITagService tagService,
-        CancellationToken cancellationToken)
-    {
-        var tag = await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
-    }
-
-    [UseServiceScope]
-    public async Task<LocationTagPayload?> DeleteLocationTagAsync(
-        DeleteLocationTagInput input,
-        [Service] ITagService tagService,
-        CancellationToken cancellationToken)
-    {
-        var tag = await tagService.DeleteAsync(input.Id, cancellationToken);
-        return new LocationTagPayload { ClientMutationId = input.ClientMutationId, LocationTag = mapper.MapTo(tag) };
     }
 
     [UseServiceScope]

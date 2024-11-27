@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/oldZone';
+import { ZonesLine } from '@repo/shared/components/zone';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { Dayjs } from 'dayjs';
@@ -177,10 +177,13 @@ const BookingDetailsSelector = ({
           @include(if: $locationExists) {
           uniqueId
           name
-          locationTags {
+          deskTypes {
             uniqueId
             name
-            tagType
+          }
+          zones {
+            uniqueId
+            name
           }
         }
       }
@@ -218,15 +221,10 @@ const BookingDetailsSelector = ({
       return [];
     }
 
-    return rootDataAvailableLocationDesks.availableLocationDesks.map(({ uniqueId, name, locationTags }) => ({
+    return rootDataAvailableLocationDesks.availableLocationDesks.map(({ uniqueId, name, zones }) => ({
       uniqueId,
       name,
-      zones: locationTags
-        .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE)
-        .map(({ uniqueId: id, name }) => ({
-          id,
-          name,
-        })),
+      zones: zones.map(({ uniqueId: id, name }) => ({ id, name })),
     }));
   }, [rootDataAvailableLocationDesks.availableLocationDesks]);
 

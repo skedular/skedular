@@ -34,7 +34,7 @@ import {
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE, ZonesLine } from '@repo/shared/components/oldZone';
+import { ZonesLine } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
@@ -141,10 +141,13 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
         desks {
           uniqueId
           name
-          locationTags {
+          deskTypes {
             uniqueId
             name
-            tagType
+          }
+          zones {
+            uniqueId
+            name
           }
         }
       }
@@ -183,10 +186,13 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           desks {
             uniqueId
             name
-            locationTags {
+            deskTypes {
               uniqueId
               name
-              tagType
+            }
+            zones {
+              uniqueId
+              name
             }
           }
         }
@@ -225,10 +231,13 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           desks {
             uniqueId
             name
-            locationTags {
+            deskTypes {
               uniqueId
               name
-              tagType
+            }
+            zones {
+              uniqueId
+              name
             }
           }
         }
@@ -325,9 +334,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
         if (booking.desks.length > 0) {
           message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
 
-          const zones = booking.desks
-            .flatMap(({ locationTags }) => locationTags)
-            .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
+          const zones = booking.desks.flatMap(({ zones }) => zones);
           if (zones.length > 0) {
             const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
 
@@ -690,8 +697,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
               </Stack>
             )}
 
-            {bookingDetails.desks?.map(({ uniqueId, name, locationTags }) => {
-              const zones = locationTags.filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE);
+            {bookingDetails.desks?.map(({ uniqueId, name, zones }) => {
               const isPreferredDesk = !!rootData.me?.preferredDesks.find((desk) => desk.uniqueId === uniqueId);
 
               return (

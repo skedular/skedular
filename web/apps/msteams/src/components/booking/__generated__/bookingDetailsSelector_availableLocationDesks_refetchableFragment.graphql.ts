@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8dd36f8bff39ab3128431a87d827e457>>
+ * @generated SignedSource<<4591cbb0babc89e42dbadff954fea69f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -60,7 +60,11 @@ v2 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-};
+},
+v3 = [
+  (v1/*: any*/),
+  (v2/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -117,21 +121,21 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "BookingLocationTagDetails",
+                "concreteType": "BookingOrganizationDeskTypeDetails",
                 "kind": "LinkedField",
-                "name": "locationTags",
+                "name": "deskTypes",
                 "plural": true,
-                "selections": [
-                  (v1/*: any*/),
-                  (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "tagType",
-                    "storageKey": null
-                  }
-                ],
+                "selections": (v3/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "BookingOrganizationZoneDetails",
+                "kind": "LinkedField",
+                "name": "zones",
+                "plural": true,
+                "selections": (v3/*: any*/),
                 "storageKey": null
               }
             ],
@@ -142,16 +146,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4c8aa69903cfab981bda87b538fce194",
+    "cacheID": "47acdf118cb4e25ceb84b616bfd76158",
     "id": null,
     "metadata": {},
     "name": "bookingDetailsSelector_availableLocationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookingDetailsSelector_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $locationExists: Boolean!\n  $locationId: String!\n) {\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) @include(if: $locationExists) {\n    uniqueId\n    name\n    locationTags {\n      uniqueId\n      name\n      tagType\n    }\n  }\n}\n"
+    "text": "query bookingDetailsSelector_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $locationExists: Boolean!\n  $locationId: String!\n) {\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) @include(if: $locationExists) {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "763e9cf8411b3f953b8d4b6da9b2455b";
+(node as any).hash = "d0a4117b6ac7364783b2a009a02138f3";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d14fe13022580a65d80a9a1477cdde46>>
+ * @generated SignedSource<<f9845349eb372ecbcae8c932be8d903e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,14 +21,16 @@ export type myLocations_locations_availableOrganizationDesks_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly desks: ReadonlyArray<{
-          readonly id: string;
+          readonly deskTypes: ReadonlyArray<{
+            readonly name: string | null | undefined;
+            readonly uniqueId: string;
+          }>;
+          readonly zones: ReadonlyArray<{
+            readonly name: string | null | undefined;
+            readonly uniqueId: string;
+          }>;
         }>;
         readonly id: string;
-        readonly locationTags: ReadonlyArray<{
-          readonly id: string;
-          readonly name: string;
-          readonly tagType: string;
-        }>;
         readonly name: string;
         readonly physicalAddress: {
           readonly formattedAddress: string | null | undefined;
@@ -54,16 +56,20 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "name",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "uniqueId",
   "storageKey": null
-};
+},
+v3 = [
+  (v2/*: any*/),
+  (v1/*: any*/)
+];
 return {
   "argumentDefinitions": [
     {
@@ -151,8 +157,14 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
                 (v1/*: any*/),
-                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -161,25 +173,24 @@ return {
                   "name": "desks",
                   "plural": true,
                   "selections": [
-                    (v1/*: any*/)
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "LocationTagDetails",
-                  "kind": "LinkedField",
-                  "name": "locationTags",
-                  "plural": true,
-                  "selections": [
-                    (v1/*: any*/),
-                    (v2/*: any*/),
                     {
                       "alias": null,
                       "args": null,
-                      "kind": "ScalarField",
-                      "name": "tagType",
+                      "concreteType": "Organization_OrganizationTagDetails",
+                      "kind": "LinkedField",
+                      "name": "deskTypes",
+                      "plural": true,
+                      "selections": (v3/*: any*/),
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "Organization_OrganizationTagDetails",
+                      "kind": "LinkedField",
+                      "name": "zones",
+                      "plural": true,
+                      "selections": (v3/*: any*/),
                       "storageKey": null
                     }
                   ],
@@ -252,13 +263,7 @@ return {
           "name": "location",
           "plural": false,
           "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "uniqueId",
-              "storageKey": null
-            }
+            (v2/*: any*/)
           ],
           "storageKey": null
         }
@@ -271,6 +276,6 @@ return {
 };
 })();
 
-(node as any).hash = "8b62b81da8ca4732ccf0de4318fe922d";
+(node as any).hash = "520a7ba3049eba3702d671d388e54eba";
 
 export default node;

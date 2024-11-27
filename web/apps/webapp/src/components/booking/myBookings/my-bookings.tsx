@@ -13,7 +13,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { CalendarIcon, DeskIcon, LocationIcon, TeamIcon, ZoneIcon } from '@repo/shared/components/icons';
-import { LOCATION_TAG_TYPE_LOCATION_ZONE, Zones } from '@repo/shared/components/oldZone';
+import { Zones } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
@@ -44,15 +44,15 @@ type LocationDetails = {
   name: string;
 };
 
-type LocationTagDetails = {
+type ZoneDetails = {
   uniqueId: string;
-  name: string;
+  name: string | null | undefined;
   tagType?: string | null | undefined;
 };
 
 type DeskDetails = {
   name: string;
-  locationTags: ReadonlyArray<LocationTagDetails>;
+  zones: ReadonlyArray<ZoneDetails>;
 };
 
 type TeamDetails = {
@@ -64,7 +64,7 @@ type RowType = {
   location?: LocationDetails | null | undefined;
   team?: TeamDetails | null | undefined;
   desks: ReadonlyArray<DeskDetails>;
-  zones: ReadonlyArray<LocationTagDetails>;
+  zones: ReadonlyArray<ZoneDetails>;
   teammates: ReadonlyArray<CustomerDetails>;
 };
 
@@ -122,10 +122,13 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
               desks {
                 uniqueId
                 name
-                locationTags {
+                deskTypes {
                   uniqueId
                   name
-                  tagType
+                }
+                zones {
+                  uniqueId
+                  name
                 }
               }
             }
@@ -188,9 +191,8 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
 
   const rows: RowType[] = myBookings.map((myBooking) => {
     const zones = myBooking.desks
-      .flatMap((desk) => desk.locationTags)
-      .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE)
-      .reduce((acc: LocationTagDetails[], zone) => {
+      .flatMap(({ zones }) => zones)
+      .reduce((acc: ZoneDetails[], zone) => {
         if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
           acc.push(zone);
         }
@@ -254,7 +256,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       renderCell: (params) => (
         <>
           {params.value.length === 0 && 'N/A'}
-          {params.value.length !== 0 && <Zones zones={params.value.map((zone: LocationTagDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
+          {params.value.length !== 0 && <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
         </>
       ),
       display: 'flex',
@@ -309,21 +311,20 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
           {myBookings.map((myBooking) => {
             const date = dayjs(myBooking.from);
             const key = convertDateToKey(myBooking.from);
-            const otherTeammatesBookings = groupedBookingsByFromDate[key]?.filter(
-              (booking) => booking.customer?.uniqueId !== rootData.me?.id && booking.location?.uniqueId === myBooking.location?.uniqueId,
-            );
-
             const desks = myBooking.desks.map((desk) => desk.name).join(', ');
             const zones = myBooking.desks
-              .flatMap((desk) => desk.locationTags)
-              .filter(({ tagType }) => tagType === LOCATION_TAG_TYPE_LOCATION_ZONE)
-              .reduce((acc: LocationTagDetails[], zone) => {
+              .flatMap(({ zones }) => zones)
+              .reduce((acc: ZoneDetails[], zone) => {
                 if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
                   acc.push(zone);
                 }
 
                 return acc;
               }, []);
+
+            const otherTeammatesBookings = groupedBookingsByFromDate[key]?.filter(
+              (booking) => booking.customer?.uniqueId !== rootData.me?.id && booking.location?.uniqueId === myBooking.location?.uniqueId,
+            );
 
             return (
               <Grid key={myBooking.id}>
@@ -361,7 +362,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
                     <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
                       <ZoneIcon fontSize="medium" />
                       {zones.length === 0 && <Typography variant="body1">{desks.length === 0 ? 'N/A' : desks}</Typography>}
-                      {zones.length !== 0 && <Zones zones={zones.map((zone: LocationTagDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
+                      {zones.length !== 0 && <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
                     </Stack>
 
                     <Divider />

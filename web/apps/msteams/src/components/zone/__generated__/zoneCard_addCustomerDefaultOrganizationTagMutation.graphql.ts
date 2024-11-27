@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<499b253437880c2ab4d1bd1d276ce728>>
+ * @generated SignedSource<<f72e3e51515c0678ec04a619884dee2e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -72,7 +72,7 @@ v1 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "CustomerLocationTagDetails",
+            "concreteType": "CustomerOrganizationTagDetails",
             "kind": "LinkedField",
             "name": "preferredZones",
             "plural": true,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<50643ed2ec7b327a30bb38995de6a7ab>>
+ * @generated SignedSource<<05ba8452332746885600a1a9544830bc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type AddDeskInput = {
   deskTypeIds: ReadonlyArray<string>;
   id?: string | null | undefined;
   locationId: string;
-  locationTagIds: ReadonlyArray<string>;
   name: string;
   zoneIds: ReadonlyArray<string>;
 };
@@ -29,9 +28,6 @@ export type newDeskDialog_addDeskMutation$data = {
         readonly uniqueId: string;
       }>;
       readonly id: string;
-      readonly locationTags: ReadonlyArray<{
-        readonly id: string;
-      }>;
       readonly name: string;
       readonly zones: ReadonlyArray<{
         readonly uniqueId: string;
@@ -46,9 +42,6 @@ export type newDeskDialog_addDeskMutation$rawResponse = {
         readonly uniqueId: string;
       }>;
       readonly id: string;
-      readonly locationTags: ReadonlyArray<{
-        readonly id: string;
-      }>;
       readonly name: string;
       readonly zones: ReadonlyArray<{
         readonly uniqueId: string;
@@ -82,14 +75,7 @@ v1 = [
     "variableName": "input"
   }
 ],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v3 = [
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -98,7 +84,7 @@ v3 = [
     "storageKey": null
   }
 ],
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "concreteType": "DeskDetails",
@@ -106,7 +92,13 @@ v4 = {
   "name": "desk",
   "plural": false,
   "selections": [
-    (v2/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -117,23 +109,11 @@ v4 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "LocationTagDetails",
-      "kind": "LinkedField",
-      "name": "locationTags",
-      "plural": true,
-      "selections": [
-        (v2/*: any*/)
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "Organization_OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "deskTypes",
       "plural": true,
-      "selections": (v3/*: any*/),
+      "selections": (v2/*: any*/),
       "storageKey": null
     },
     {
@@ -143,7 +123,7 @@ v4 = {
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,
-      "selections": (v3/*: any*/),
+      "selections": (v2/*: any*/),
       "storageKey": null
     }
   ],
@@ -164,7 +144,7 @@ return {
         "name": "addDesk",
         "plural": false,
         "selections": [
-          (v4/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
@@ -186,7 +166,7 @@ return {
         "name": "addDesk",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -214,16 +194,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "471175e40f40b1d812a73d2fa770a358",
+    "cacheID": "bcdf2f655a1b6c2e1c30d74cf391a224",
     "id": null,
     "metadata": {},
     "name": "newDeskDialog_addDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation newDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      locationTags {\n        id\n      }\n      deskTypes {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation newDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      deskTypes {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4f3c66cd3f948f25b5bba75b5b99f8c5";
+(node as any).hash = "2a66b8f87bbd0f51dafd6f01f5ddb90a";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ec4301959ca0595440846cb4d2f33c0a>>
+ * @generated SignedSource<<c160a5dc84d387955115b4b78a262fe7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,13 +37,16 @@ export type smallMonthlyViewCalendarDay_addBookingMutation$data = {
         readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
-        readonly locationTags: ReadonlyArray<{
+        readonly deskTypes: ReadonlyArray<{
           readonly name: string;
-          readonly tagType: string | null | undefined;
           readonly uniqueId: string;
         }>;
         readonly name: string;
         readonly uniqueId: string;
+        readonly zones: ReadonlyArray<{
+          readonly name: string;
+          readonly uniqueId: string;
+        }>;
       }>;
       readonly from: any;
       readonly id: string;
@@ -76,13 +79,16 @@ export type smallMonthlyViewCalendarDay_addBookingMutation$rawResponse = {
         readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
-        readonly locationTags: ReadonlyArray<{
+        readonly deskTypes: ReadonlyArray<{
           readonly name: string;
-          readonly tagType: string | null | undefined;
           readonly uniqueId: string;
         }>;
         readonly name: string;
         readonly uniqueId: string;
+        readonly zones: ReadonlyArray<{
+          readonly name: string;
+          readonly uniqueId: string;
+        }>;
       }>;
       readonly from: any;
       readonly id: string;
@@ -267,21 +273,21 @@ v5 = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingLocationTagDetails",
+          "concreteType": "BookingOrganizationDeskTypeDetails",
           "kind": "LinkedField",
-          "name": "locationTags",
+          "name": "deskTypes",
           "plural": true,
-          "selections": [
-            (v2/*: any*/),
-            (v3/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "tagType",
-              "storageKey": null
-            }
-          ],
+          "selections": (v4/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingOrganizationZoneDetails",
+          "kind": "LinkedField",
+          "name": "zones",
+          "plural": true,
+          "selections": (v4/*: any*/),
           "storageKey": null
         }
       ],
@@ -355,16 +361,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f4d894596f31c88df54ebcb7d61bb544",
+    "cacheID": "f4810c87063fbafd3d39934cd0e5c5af",
     "id": null,
     "metadata": {},
     "name": "smallMonthlyViewCalendarDay_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation smallMonthlyViewCalendarDay_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        locationTags {\n          uniqueId\n          name\n          tagType\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation smallMonthlyViewCalendarDay_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ffdc46d6927c7feea022d75bcccb3f7e";
+(node as any).hash = "07be451eb8b10726576332fa77ba14ae";
 
 export default node;

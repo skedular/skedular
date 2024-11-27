@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<94c3d269a24e18918841b21d2b221e47>>
+ * @generated SignedSource<<48b39f7a5aa80b3b501e891d412e7bb7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -309,21 +309,21 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "BookingLocationTagDetails",
+                "concreteType": "BookingOrganizationDeskTypeDetails",
                 "kind": "LinkedField",
-                "name": "locationTags",
+                "name": "deskTypes",
                 "plural": true,
-                "selections": [
-                  (v7/*: any*/),
-                  (v6/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "tagType",
-                    "storageKey": null
-                  }
-                ],
+                "selections": (v8/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "BookingOrganizationZoneDetails",
+                "kind": "LinkedField",
+                "name": "zones",
+                "plural": true,
+                "selections": (v8/*: any*/),
                 "storageKey": null
               }
             ],
@@ -335,12 +335,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a4527b9bdacf5aeed90576ef670b0657",
+    "cacheID": "8643dda3f1c986a96c4a8d055913587c",
     "id": null,
     "metadata": {},
     "name": "customerDaySummary_rootQuery",
     "operationKind": "query",
-    "text": "query customerDaySummary_rootQuery(\n  $organizationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  ...customerDaySummary_query\n}\n\nfragment customerDaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to, organizationIds: [$organizationId]}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      locationTags {\n        uniqueId\n        name\n        tagType\n      }\n    }\n  }\n}\n"
+    "text": "query customerDaySummary_rootQuery(\n  $organizationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  ...customerDaySummary_query\n}\n\nfragment customerDaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to, organizationIds: [$organizationId]}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      deskTypes {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();

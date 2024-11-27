@@ -40,22 +40,6 @@ public class AddLocationInput
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
 }
 
-[GraphQLName("AddLocationTagInput")]
-public class AddLocationTagInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
-    [GraphQLName("id")] public string? Id { get; set; }
-
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-
-    [GraphQLName("description")] public string? Description { get; set; }
-
-    [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
-
-    [GraphQLName("locationId")] public required string LocationId { get; set; }
-}
-
 [GraphQLName("BulkAddDeskInput")]
 public class BulkAddDeskInput
 {
@@ -68,8 +52,6 @@ public class BulkAddDeskInput
     [GraphQLName("locationId")] public required string LocationId { get; set; }
 
     [GraphQLName("count")] public int Count { get; set; }
-
-    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 
     [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
 
@@ -121,14 +103,6 @@ public class DeleteLocationInput
     [GraphQLName("id")] public required string Id { get; set; }
 }
 
-[GraphQLName("DeleteLocationTagInput")]
-public class DeleteLocationTagInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
-    [GraphQLName("id")] public required string Id { get; set; }
-}
-
 [GraphQLName("DeskConnection")]
 public class DeskConnection : Connection<DeskEdge>;
 
@@ -141,8 +115,6 @@ public class DeskDetails : Node
 
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
-
-    [GraphQLName("locationTags")] public LocationTagDetails[] LocationTags { get; set; } = [];
 
     [GraphQLName("deskTypes")] public OrganizationTagDetails[] DeskTypes { get; set; } = [];
 
@@ -278,8 +250,6 @@ public class LocationDetails : Node
 
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
 
-    [GraphQLName("locationTags")] public LocationTagDetails[] LocationTags { get; set; } = [];
-
     [GraphQLName("desks")] public DeskDetails[] Desks { get; set; } = [];
 
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
@@ -379,21 +349,6 @@ public class LocationPayload
     [GraphQLName("location")] public LocationDetails Location { get; set; }
 }
 
-[GraphQLName("LocationTagConnection")]
-public class LocationTagConnection : Connection<LocationTagEdge>;
-
-[GraphQLName("LocationTagDetails")]
-public class LocationTagDetails : Node
-{
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-
-    [GraphQLName("description")] public string? Description { get; set; }
-
-    [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
-
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
-}
-
 [GraphQLName("Organization_OrganizationTagDetails")]
 public class OrganizationTagDetails
 {
@@ -402,42 +357,6 @@ public class OrganizationTagDetails
     [GraphQLName("tagType")] public string? TagType { get; set; }
 
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
-}
-
-[GraphQLName("LocationTagEdge")]
-public class LocationTagEdge : Edge<LocationTagDetails>;
-
-public enum LocationTagOrderField
-{
-    Name,
-    Description,
-    TagType
-}
-
-[GraphQLName("LocationTagOrderInput")]
-public class LocationTagOrderInput
-{
-    [GraphQLName("direction")] public OrderDirection Direction { get; set; }
-
-    [GraphQLName("field")] public LocationTagOrderField Field { get; set; }
-}
-
-[GraphQLName("LocationTagPayload")]
-public class LocationTagPayload
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
-    [GraphQLName("locationTag")] public LocationTagDetails LocationTag { get; set; }
-}
-
-[GraphQLName("LocationTagWhereInput")]
-public class LocationTagWhereInput
-{
-    [GraphQLName("locationId")] public required string LocationId { get; set; }
-
-    [GraphQLName("tagType")] public string? TagType { get; set; }
-
-    [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
 
 [GraphQLName("LocationWhereInput")]
@@ -484,20 +403,6 @@ public class UpdateLocationInput
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
 }
 
-[GraphQLName("UpdateLocationTagInput")]
-public class UpdateLocationTagInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-
-    [GraphQLName("id")] public required string Id { get; set; }
-
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-
-    [GraphQLName("description")] public string? Description { get; set; }
-
-    [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
-}
-
 [GraphQLName("AddDeskInput")]
 public class AddDeskInput
 {
@@ -508,8 +413,6 @@ public class AddDeskInput
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
     [GraphQLName("locationId")] public required string LocationId { get; set; }
-
-    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 
     [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
 
@@ -529,8 +432,6 @@ public class UpdateDeskInput
 
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
-
-    [GraphQLName("locationTagIds")] public string[] LocationTagIds { get; set; } = [];
 
     [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<81d10d8b1bccb6aa305cc924f9d90c7d>>
+ * @generated SignedSource<<e9b9534bb662202ef30ddc2b9e8fcb6a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,13 +24,16 @@ export type smallMonthlyViewCalendar_bookings_query$data = {
           readonly uniqueId: string;
         };
         readonly desks: ReadonlyArray<{
-          readonly locationTags: ReadonlyArray<{
+          readonly deskTypes: ReadonlyArray<{
             readonly name: string;
-            readonly tagType: string | null | undefined;
             readonly uniqueId: string;
           }>;
           readonly name: string;
           readonly uniqueId: string;
+          readonly zones: ReadonlyArray<{
+            readonly name: string;
+            readonly uniqueId: string;
+          }>;
         }>;
         readonly from: any;
         readonly id: string;
@@ -294,21 +297,21 @@ return {
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "BookingLocationTagDetails",
+                      "concreteType": "BookingOrganizationDeskTypeDetails",
                       "kind": "LinkedField",
-                      "name": "locationTags",
+                      "name": "deskTypes",
                       "plural": true,
-                      "selections": [
-                        (v1/*: any*/),
-                        (v2/*: any*/),
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "tagType",
-                          "storageKey": null
-                        }
-                      ],
+                      "selections": (v3/*: any*/),
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "BookingOrganizationZoneDetails",
+                      "kind": "LinkedField",
+                      "name": "zones",
+                      "plural": true,
+                      "selections": (v3/*: any*/),
                       "storageKey": null
                     }
                   ],
@@ -385,6 +388,6 @@ return {
 };
 })();
 
-(node as any).hash = "65a9f460ce2a6cb0cf5d7081f375dcff";
+(node as any).hash = "f169a5e55e8145fb63ab330268257a28";
 
 export default node;
