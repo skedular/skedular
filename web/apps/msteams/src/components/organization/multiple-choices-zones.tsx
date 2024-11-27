@@ -53,7 +53,7 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
 
   return (
     <Autocomplete
-      label="Desk types"
+      label="Organization Zones"
       name={name}
       multiple={true}
       required={required}

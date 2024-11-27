@@ -43,8 +43,9 @@ import {
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
-import { ZonesLine } from '@repo/shared/components/oldZone';
+import { ZonesLine as OldZonesLine } from '@repo/shared/components/oldZone';
 import { DialogTransition } from '@repo/shared/components/transitions';
+import { ZonesLine } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate } from 'mui-rff';
@@ -824,8 +825,9 @@ const DeskCard = ({
 
           <CardContent>
             <Stack direction="column" spacing={1}>
-              <ZonesLine zones={deskDetails.locationTags} />
+              <OldZonesLine zones={deskDetails.locationTags} />
               <DeskTypesLine deskTypes={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
+              <ZonesLine zones={deskDetails.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
             </Stack>
 
             {extraInfo.length > 0 && (
