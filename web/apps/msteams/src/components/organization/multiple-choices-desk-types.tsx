@@ -5,10 +5,10 @@ import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
 import { useFragment } from 'react-relay';
-import type { deskMultipleChoicesDeskTypes_query$key } from './__generated__/deskMultipleChoicesDeskTypes_query.graphql';
+import type { multipleChoicesDeskTypes_query$key } from './__generated__/multipleChoicesDeskTypes_query.graphql';
 
 type Props = {
-  rootDataRelay: deskMultipleChoicesDeskTypes_query$key;
+  rootDataRelay: multipleChoicesDeskTypes_query$key;
   name: string;
   required?: boolean;
 };
@@ -18,11 +18,11 @@ type DeskTypeDetails = {
   name: string;
 };
 
-const DeskMultipleChoicesDeskTypes = ({ rootDataRelay, name, required }: Props) => {
-  const rootData = useFragment<deskMultipleChoicesDeskTypes_query$key>(
+const MultipleChoicesDeskTypes = ({ rootDataRelay, name, required }: Props) => {
+  const rootData = useFragment<multipleChoicesDeskTypes_query$key>(
     graphql`
-      fragment deskMultipleChoicesDeskTypes_query on Query {
-        deskTypes(where: { organizationId: $organizationId }, orderBy: $deskMultipleChoicesDeskTypesSortingValues) {
+      fragment multipleChoicesDeskTypes_query on Query {
+        deskTypes(where: { organizationId: $organizationId }, orderBy: $multipleChoicesDeskTypesSortingValues) {
           __id
           totalCount
           edges {
@@ -81,4 +81,4 @@ const DeskMultipleChoicesDeskTypes = ({ rootDataRelay, name, required }: Props) 
   );
 };
 
-export default memo(DeskMultipleChoicesDeskTypes);
+export default memo(MultipleChoicesDeskTypes);

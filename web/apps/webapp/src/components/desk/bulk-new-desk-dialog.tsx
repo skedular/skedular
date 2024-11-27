@@ -1,3 +1,4 @@
+import { MultipleChoicesDeskTypes } from '@/components/organization';
 import type { bulkNewDeskDialog_bulkAddDeskMutation } from '@/queries/__generated__/bulkNewDeskDialog_bulkAddDeskMutation.graphql';
 import type { bulkNewDeskDialog_query$key } from '@/queries/__generated__/bulkNewDeskDialog_query.graphql';
 import Button from '@mui/material/Button';
@@ -22,7 +23,6 @@ import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { array, number, object, string } from 'yup';
-import DeskMultipleChoicesDeskTypes from './desk-multiple-choices-desk-types';
 import DeskMultipleChoicesZones from './desk-multiple-choices-zones';
 
 type Props = {
@@ -53,7 +53,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
     graphql`
       fragment bulkNewDeskDialog_query on Query {
         ...deskMultipleChoicesZones_query
-        ...deskMultipleChoicesDeskTypes_query
+        ...multipleChoicesDeskTypes_query
       }
     `,
     rootDataRelay,
@@ -152,7 +152,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
               <TextField label="Optional name prefix" name="namePrefix" required={requiredFields.namePrefix} helperText="Add your desk name prefix" />
               <TextField label="Count" name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
               <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
-              <DeskMultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+              <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
 
               <DialogActions>
                 <Button color="secondary" variant="contained" onClick={onCancelClicked}>

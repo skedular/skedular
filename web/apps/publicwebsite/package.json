@@ -35,7 +35,7 @@
     "@vercel/analytics": "^1.4.1",
     "@vercel/otel": "^1.10.0",
     "@vercel/speed-insights": "^1.1.0",
-    "babel-plugin-react-compiler": "19.0.0-beta-a7bf2bd-20241110",
+    "babel-plugin-react-compiler": "19.0.0-beta-df7b47d-20241124",
     "cookies-next": "^5.0.2",
     "countries-list": "^3.1.1",
     "date-fns": "^4.1.0",
@@ -64,7 +64,7 @@
     "@repo/typescript-config": "workspace:^",
     "@types/lodash.debounce": "^4.0.9",
     "@types/logrocket-react": "^3.0.3",
-    "@types/node": "^22.9.1",
+    "@types/node": "^22.10.0",
     "@types/pino": "^7.0.5",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -75,10 +75,10 @@
     "eslint": "8.57.0",
     "eslint-config-next": "^15.0.3",
     "graphql": "^16.9.0",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.1",
     "relay-compiler": "^18.2.0",
     "relay-compiler-language-typescript": "^15.0.1",
     "relay-config": "^12.0.1",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   }
 }

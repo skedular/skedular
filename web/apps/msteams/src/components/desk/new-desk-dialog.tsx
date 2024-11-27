@@ -14,6 +14,7 @@ import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { MultipleChoicesDeskTypes, MultipleChoicesZones } from 'components/organization';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext } from 'react';
@@ -23,7 +24,6 @@ import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 import type { newDeskDialog_addDeskMutation } from './__generated__/newDeskDialog_addDeskMutation.graphql';
 import type { newDeskDialog_query$key } from './__generated__/newDeskDialog_query.graphql';
-import DeskMultipleChoicesDeskTypes from './desk-multiple-choices-desk-types';
 import DeskMultipleChoicesZones from './desk-multiple-choices-zones';
 import DeskName from './desk-name';
 
@@ -40,12 +40,14 @@ type DeskDetails = {
   name: string;
   locationTagIds: string[];
   deskTypeIds: string[];
+  zoneIds: string[];
 };
 
 const deskSchema = object({
   name: string().required('Desk name is required'),
   locationTagIds: array().nullable(),
   deskTypeIds: array().nullable(),
+  zoneIds: array().nullable(),
 });
 
 const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicked, onCancelClicked, locationId }: Props) => {
@@ -53,7 +55,8 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
     graphql`
       fragment newDeskDialog_query on Query {
         ...deskMultipleChoicesZones_query
-        ...deskMultipleChoicesDeskTypes_query
+        ...multipleChoicesDeskTypes_query
+        ...multipleChoicesZones_query
       }
     `,
     rootDataRelay,
@@ -84,7 +87,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
 
-  const handleAddClick = ({ name, locationTagIds,deskTypeIds }: DeskDetails) => {
+  const handleAddClick = ({ name, locationTagIds, deskTypeIds, zoneIds }: DeskDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding desk '${name}'...`} />, infoNotificationOptions);
 
@@ -98,7 +101,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           name,
           locationTagIds,
           deskTypeIds,
-          zoneIds: [],
+          zoneIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -155,7 +158,8 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
             <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
               <DeskName name="name" required={requiredFields.name} />
               <DeskMultipleChoicesZones rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} />
-              <DeskMultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+              <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+              <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
 
               <DialogActions>
                 <Button color="secondary" variant="contained" onClick={onCancelClicked}>

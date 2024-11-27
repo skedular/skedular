@@ -38,14 +38,14 @@ const RootQuery = graphql`
   query locationDesksTab_rootQuery(
     $organizationId: String!
     $locationId: String!
-    $organizationExists: Boolean!
     $zoneTagType: String!
     $fromToGetBookings: DateTime
     $toToGetBookings: DateTime
     $deskNameSearchText: String
     $deskSortingValues: [DeskOrderInput!]!
     $deskMultipleChoicesZonesSortingValues: [LocationTagOrderInput!]
-    $deskMultipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
     ...locationDesksTab_query
     ...locationDesksTab_locationDesks_query
@@ -63,7 +63,8 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
         }
         ...deskCard_query
         ...deskMultipleChoicesZones_query
-        ...deskMultipleChoicesDeskTypes_query
+        ...multipleChoicesDeskTypes_query
+        ...multipleChoicesZones_query
         ...newDeskDialog_query
         ...bulkNewDeskDialog_query
       }
@@ -325,11 +326,11 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
               <DeskCard
                 rootDataRelay={rootData}
                 deskMultipleChoicesZonesData={rootData}
-                deskMultipleChoicesDeskTypesData={rootData}
+                multipleChoicesDeskTypesData={rootData}
+                multipleChoicesZonesData={rootData}
                 deskDetailsRelay={edge.node}
                 connectionIds={connectionIds}
                 customerDetails={foundBooking ? foundBooking.customer : null}
-                locationId={locationId}
               />
             </Grid>
           );
@@ -377,7 +378,6 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, locationId, organizationI
     loadQuery(
       {
         organizationId: organizationId ?? '',
-        organizationExists: !!organizationId,
         locationId,
         zoneTagType: LOCATION_TAG_TYPE_LOCATION_ZONE,
         fromToGetBookings: from,
@@ -394,7 +394,13 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, locationId, organizationI
             field: 'Name',
           },
         ],
-        deskMultipleChoicesDeskTypesSortingValues: [
+        multipleChoicesDeskTypesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        multipleChoicesZonesSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

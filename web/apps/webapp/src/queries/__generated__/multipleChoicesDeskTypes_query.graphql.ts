@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d36f05885f256536dfdcaf5141e2df5d>>
+ * @generated SignedSource<<fa57443203531a2c584204d1e4cea248>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type deskMultipleChoicesDeskTypes_query$data = {
+export type multipleChoicesDeskTypes_query$data = {
   readonly deskTypes: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -21,18 +21,18 @@ export type deskMultipleChoicesDeskTypes_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "deskMultipleChoicesDeskTypes_query";
+  readonly " $fragmentType": "multipleChoicesDeskTypes_query";
 };
-export type deskMultipleChoicesDeskTypes_query$key = {
-  readonly " $data"?: deskMultipleChoicesDeskTypes_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"deskMultipleChoicesDeskTypes_query">;
+export type multipleChoicesDeskTypes_query$key = {
+  readonly " $data"?: multipleChoicesDeskTypes_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesDeskTypes_query">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "deskMultipleChoicesDeskTypesSortingValues"
+      "name": "multipleChoicesDeskTypesSortingValues"
     },
     {
       "kind": "RootArgument",
@@ -41,7 +41,7 @@ const node: ReaderFragment = {
   ],
   "kind": "Fragment",
   "metadata": null,
-  "name": "deskMultipleChoicesDeskTypes_query",
+  "name": "multipleChoicesDeskTypes_query",
   "selections": [
     {
       "alias": null,
@@ -49,7 +49,7 @@ const node: ReaderFragment = {
         {
           "kind": "Variable",
           "name": "orderBy",
-          "variableName": "deskMultipleChoicesDeskTypesSortingValues"
+          "variableName": "multipleChoicesDeskTypesSortingValues"
         },
         {
           "fields": [
@@ -131,6 +131,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "0c9f5423f7b49aee84c26f6548df4355";
+(node as any).hash = "fef6a93cc625556ffdcfb2860fd721e2";
 
 export default node;

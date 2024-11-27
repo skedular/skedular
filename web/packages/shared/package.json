@@ -104,7 +104,7 @@
     "@mui/x-tree-view-pro": "^7.22.1",
     "@stripe/react-stripe-js": "^3.0.0",
     "@stripe/stripe-js": "^5.2.0",
-    "@vis.gl/react-google-maps": "^1.4.0",
+    "@vis.gl/react-google-maps": "^1.4.1",
     "countries-list": "^3.1.1",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
@@ -133,7 +133,7 @@
     "@repo/typescript-config": "workspace:^",
     "@types/lodash.debounce": "^4.0.9",
     "@types/logrocket-react": "^3.0.3",
-    "@types/node": "^22.9.1",
+    "@types/node": "^22.10.0",
     "@types/pino": "^7.0.5",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -143,11 +143,11 @@
     "eslint": "9.15.0",
     "globals": "^15.12.0",
     "graphql": "^16.9.0",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.1",
     "relay-compiler": "^18.2.0",
     "relay-compiler-language-typescript": "^15.0.1",
     "relay-config": "^12.0.1",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.15.0"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.16.0"
   }
 }
