@@ -122,8 +122,8 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in existingOrganization.OrganizationMembers.Where(organizationMember =>
                      organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
-            var customer =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id,
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
+                organizationMember.Customer.Id,
                     cancellationToken);
             updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(
                 mapper.MergeToEntity(
@@ -138,13 +138,12 @@ public class OrganizationSubscriber(
                      .Where(organizationMember =>
                          existingOrganization.OrganizationMembers.All(item => item.Id != organizationMember.Id)))
         {
-            var customer =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id,
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
+                organizationMember.Customer.Id,
                     cancellationToken);
-            addedItems.Add(repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(
-                organizationMember,
-                existingOrganization,
-                customer)));
+            addedItems.Add(
+                repositoryFactory.OrganizationMemberRepository.Add(
+                    mapper.MapToEntity(organizationMember, existingOrganization, customer)));
         }
 
         await UpdateOrganizationMembersDefaultOrganizationAsync(organization.Id, itemsToRemove,
