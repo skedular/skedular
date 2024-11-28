@@ -72,7 +72,6 @@ public interface IMapper
     Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk src);
 
     Workspace MapToEntity(Shared.Models.Workspace src, Organization organization);
-    Workspace MergeToEntity(Shared.Models.Workspace src, Workspace dest, Organization organization);
     Shared.Models.Workspace MapTo(Admin_AddWorkspaceInput src);
     global::Api.Shared.Services.Grpc.UnityHub.Slack.V1.Workspace MapTo(Shared.Models.Workspace src);
 
@@ -562,7 +561,7 @@ public class Mapper : IMapper
     public Workspace MapToEntity(Shared.Models.Workspace src, Organization organization) =>
         MergeToEntity(src, new Workspace(), organization);
 
-    public Workspace MergeToEntity(Shared.Models.Workspace src, Workspace dest, Organization organization)
+    private static Workspace MergeToEntity(Shared.Models.Workspace src, Workspace dest, Organization organization)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;

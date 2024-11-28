@@ -24,7 +24,8 @@ public interface IMapper
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
 
-    IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src,
+    IEnumerable<Identity> MapToEntity(
+        IEnumerable<Shared.Models.Identity> src,
         Shared.Database.Entities.Customer? customer);
 
     Shared.Database.Entities.Organization MapToEntity(Organization src);

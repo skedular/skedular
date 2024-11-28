@@ -19,7 +19,6 @@ public interface IMapper
     Shared.Database.Entities.Team MapTo(Shared.Models.Team src, Organization? organization);
     Shared.Database.Entities.Team MergeTo(Shared.Models.Team src, Shared.Database.Entities.Team dest);
     TeamDetails? MapTo(Shared.Models.Team? src);
-    IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src, Shared.Models.Team team);
     TeamMember MapTo(Shared.Database.Entities.TeamMember src, Shared.Models.Team team);
     TeamMemberDetails MapTo(TeamMember src);
     IEnumerable<TeamDetails> MapTo(IEnumerable<Shared.Models.Team> src);
@@ -139,12 +138,11 @@ public class Mapper : IMapper
                 Members = MapTo(src.TeamMembers).ToArray()
             };
 
-    public IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src,
+    private IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src,
         Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
-    public TeamMember
-        MapTo(Shared.Database.Entities.TeamMember src, Shared.Models.Team team) =>
+    public TeamMember MapTo(Shared.Database.Entities.TeamMember src, Shared.Models.Team team) =>
         new()
         {
             Id = src.Id,

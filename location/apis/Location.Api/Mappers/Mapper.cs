@@ -48,16 +48,10 @@ public interface IMapper
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Shared.Models.Desk MapTo(Desk src, Shared.Models.Location location);
-
-    IEnumerable<LocationMember> MapTo(
-        IEnumerable<Shared.Database.Entities.LocationMember> src,
-        Shared.Models.Location location);
-
     LocationMember MapTo(Shared.Database.Entities.LocationMember src, Shared.Models.Location location);
     LocationMemberDetails MapTo(LocationMember src);
     LocationDetails? MapTo(Shared.Models.Location? src);
     DeskDetails MapTo(Shared.Models.Desk src);
-    OrganizationTagDetails MapTo(OrganizationTag src);
     IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src);
 
     LocationAnalytics MapTo(
@@ -236,10 +230,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<LocationMember> MapTo(IEnumerable<Shared.Database.Entities.LocationMember> src,
-        Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
-
     public LocationMember
         MapTo(Shared.Database.Entities.LocationMember src, Shared.Models.Location location) =>
         new()
@@ -266,9 +256,6 @@ public class Mapper : IMapper
             },
             Customer = MapTo(src.Customer)
         };
-
-    public OrganizationTagDetails MapTo(OrganizationTag src) =>
-        new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type };
 
     public DeskEdge MapTo(Edge<Shared.Models.Desk> src) =>
         new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
@@ -551,7 +538,14 @@ public class Mapper : IMapper
     public IEnumerable<Edge<Shared.Models.Desk>> MapTo(IEnumerable<Edge<Desk>> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
 
-    public OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
+    private IEnumerable<LocationMember> MapTo(IEnumerable<Shared.Database.Entities.LocationMember> src,
+        Shared.Models.Location location) =>
+        src.Select(item => MapTo(item, location));
+
+    private static OrganizationTagDetails MapTo(OrganizationTag src) =>
+        new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type };
+
+    private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
         new()
         {
             Id = src.Id,
@@ -632,7 +626,7 @@ public class Mapper : IMapper
                 UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl
             };
 
-    private IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
+    private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 
     private IEnumerable<DeskDetails> MapTo(IEnumerable<Shared.Models.Desk> src) => src.Select(MapTo);
 
@@ -668,8 +662,7 @@ public class Mapper : IMapper
                 Offering = src.Offering
             };
 
-    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) =>
-        src.Select(MapTo);
+    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
         new()
@@ -762,7 +755,8 @@ public class Mapper : IMapper
         return organizationTag;
     }
 
-    private Edge<LocationMember> MapTo(Edge<Shared.Database.Entities.LocationMember> src,
+    private Edge<LocationMember> MapTo(
+        Edge<Shared.Database.Entities.LocationMember> src,
         Shared.Models.Location location) =>
         new(src.Cursor, MapTo(src.Node, location));
 

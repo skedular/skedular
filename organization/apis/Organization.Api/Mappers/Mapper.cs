@@ -45,13 +45,9 @@ public interface IMapper
         Shared.Database.Entities.Organization dest,
         ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories);
 
-    IEnumerable<OrganizationMember> MapTo(
-        IEnumerable<Shared.Database.Entities.OrganizationMember> src, Shared.Models.Organization organization);
-
     Shared.Models.TermsOfUse? MapTo(TermsOfUse? src);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
     IEnumerable<IndustryMainCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustryMainCategory> src);
-
     OrganizationTermsOfUse? MapTo(Shared.Models.TermsOfUse? src);
     IEnumerable<OrganizationIndustryMainCategoryReferenceDetails> MapTo(IEnumerable<IndustryMainCategory> src);
     IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src);
@@ -86,7 +82,6 @@ public interface IMapper
 
     ICollection<OrganizationMember> MapTo(Admin_UpdateMembersInput src);
     OrganizationMember MapTo(Admin_AddMemberInput src);
-    Member MapToGrpcResponse(OrganizationMember src);
     OrganizationEdge MapTo(Edge<Shared.Models.Organization> src);
 
     IEnumerable<Edge<OrganizationMember>> MapTo(
@@ -221,7 +216,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<OrganizationMember> MapTo(IEnumerable<Shared.Database.Entities.OrganizationMember> src,
+    private IEnumerable<OrganizationMember> MapTo(IEnumerable<Shared.Database.Entities.OrganizationMember> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
@@ -465,7 +460,7 @@ public class Mapper : IMapper
     public OrganizationMember MapTo(Admin_AddMemberInput src) =>
         MapTo(src.Member, new Shared.Models.Organization { Id = src.Id });
 
-    public Member MapToGrpcResponse(OrganizationMember src) =>
+    private Member MapToGrpcResponse(OrganizationMember src) =>
         new()
         {
             Id = src.Id,

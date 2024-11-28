@@ -19,9 +19,7 @@ public interface IMapper
 {
     Customer MapTo(Event src);
     Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
-    Shared.Models.Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
     Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src);
-
     Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities);
 
     Shared.Database.Entities.Customer MergeToEntity(
@@ -66,39 +64,6 @@ public interface IMapper
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
-
-    Shared.Database.Entities.Location MapToEntity(
-        Shared.Models.Location src,
-        Shared.Database.Entities.Organization? organization);
-
-    Shared.Database.Entities.Location MergeToEntity(
-        Shared.Models.Location src,
-        Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization? organization);
-
-    LocationMember MapToEntity(
-        Shared.Models.LocationMember src,
-        Shared.Database.Entities.Location location,
-        Shared.Database.Entities.Customer customer);
-
-    LocationMember MergeToEntity(
-        Shared.Models.LocationMember src,
-        LocationMember dest,
-        Shared.Database.Entities.Location location,
-        Shared.Database.Entities.Customer customer);
-
-    Shared.Database.Entities.Desk MapToEntity(
-        Desk src,
-        Shared.Database.Entities.Location location,
-        ICollection<Tag> tags,
-        ICollection<OrganizationTag> organizationTags);
-
-    Shared.Database.Entities.Desk MergeToEntity(
-        Desk src,
-        Shared.Database.Entities.Desk dest,
-        Shared.Database.Entities.Location location,
-        ICollection<Tag> tags,
-        ICollection<OrganizationTag> organizationTags);
 
     OrganizationTag MergeToEntity(
         Shared.Models.OrganizationTag src,
@@ -196,56 +161,7 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Shared.Models.Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
-    {
-        var locationAfterState = src.Data.LocationAfterState;
-        var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
 
-        var location = new Shared.Models.Location
-        {
-            Id = locationAfterState.Id,
-            DeletedAt = deletedAt,
-            Name = locationAfterState.Name,
-            About = locationAfterState.About,
-            Timezone = locationAfterState.Timezone,
-            Organization = string.IsNullOrWhiteSpace(locationAfterState.OrganizationId)
-                ? null
-                : new Organization { Id = locationAfterState.OrganizationId },
-            LocationMembers = locationAfterState.Members.Select(item =>
-            {
-                return new Shared.Models.LocationMember
-                {
-                    Id = item.Id,
-                    MembershipType = item.MembershipType switch
-                    {
-                        Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType.Owner =>
-                            LocationMembershipType.Owner,
-                        Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType.Administrator =>
-                            LocationMembershipType.Administrator,
-                        Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType.Member =>
-                            LocationMembershipType.Member,
-                        _ => throw new ArgumentOutOfRangeException()
-                    },
-                    Customer = new Customer { Id = item.CustomerId }
-                };
-            }).ToList()
-        };
-
-        location.Desks = locationAfterState.Desks.Select(item =>
-        {
-            var desk = new Desk { Id = item.Id, DeletedAt = deletedAt, Name = item.Name };
-
-            if (location.Organization is not null)
-            {
-                desk.OrganizationTags = item.OrganizationTagIds.Select(tagId =>
-                    new Shared.Models.OrganizationTag { Id = tagId, Organization = location.Organization }).ToList();
-            }
-
-            return desk;
-        }).ToList();
-
-        return location;
-    }
 
     public Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src)
     {
@@ -368,64 +284,6 @@ public class Mapper : IMapper
         dest.MembershipType = src.MembershipType;
         dest.Organization = organization;
         dest.Customer = customer;
-        return dest;
-    }
-
-    public Shared.Database.Entities.Location MapToEntity(
-        Shared.Models.Location src,
-        Shared.Database.Entities.Organization? organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.Location(), organization);
-
-    public Shared.Database.Entities.Location MergeToEntity(
-        Shared.Models.Location src,
-        Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization? organization)
-    {
-        dest.Id = src.Id;
-        dest.Name = src.Name;
-        dest.About = src.About;
-        dest.Timezone = src.Timezone;
-        dest.Organization = organization;
-        return dest;
-    }
-
-    public LocationMember MapToEntity(
-        Shared.Models.LocationMember src,
-        Shared.Database.Entities.Location location,
-        Shared.Database.Entities.Customer customer) =>
-        MergeToEntity(src, new LocationMember(), location, customer);
-
-    public LocationMember MergeToEntity(
-        Shared.Models.LocationMember src,
-        LocationMember dest,
-        Shared.Database.Entities.Location location,
-        Shared.Database.Entities.Customer customer)
-    {
-        dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType;
-        dest.Location = location;
-        dest.Customer = customer;
-        return dest;
-    }
-
-    public Shared.Database.Entities.Desk MapToEntity(
-        Desk src,
-        Shared.Database.Entities.Location location,
-        ICollection<Tag> tags,
-        ICollection<OrganizationTag> organizationTags) =>
-        MergeToEntity(src, new Shared.Database.Entities.Desk(), location, tags, organizationTags);
-
-    public Shared.Database.Entities.Desk MergeToEntity(
-        Desk src,
-        Shared.Database.Entities.Desk dest,
-        Shared.Database.Entities.Location location,
-        ICollection<Tag> tags,
-        ICollection<OrganizationTag> organizationTags)
-    {
-        dest.Id = src.Id;
-        dest.Name = src.Name;
-        dest.Location = location;
-        dest.OrganizationTags = organizationTags;
         return dest;
     }
 
@@ -580,8 +438,7 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList()
             };
 
-    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Identity> src) =>
-        src.Select(MapTo);
+    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Identity> src) => src.Select(MapTo);
 
     private static Shared.Models.Identity MapTo(Identity src) =>
         new()

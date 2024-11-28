@@ -17,7 +17,6 @@ public interface IMapper
 {
     Customer MapTo(Event src);
     Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
-    Shared.Models.Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
     Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src);
 
     Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities);
@@ -60,28 +59,6 @@ public interface IMapper
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
-
-    Shared.Database.Entities.Team MapToEntity(
-        Shared.Models.Team src,
-        Shared.Database.Entities.Organization? organization);
-
-    Shared.Database.Entities.Team MergeToEntity(
-        Shared.Models.Team src,
-        Shared.Database.Entities.Team dest,
-        Shared.Database.Entities.Organization? organization);
-
-    TeamMember MapToEntity(
-        Shared.Models.TeamMember src,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        OrganizationMember? organizationMember);
-
-    TeamMember MergeToEntity(
-        Shared.Models.TeamMember src,
-        TeamMember dest,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        OrganizationMember? organizationMember);
 }
 
 public class Mapper : IMapper
@@ -158,52 +135,6 @@ public class Mapper : IMapper
         }).ToList();
 
         return organization;
-    }
-
-    public Shared.Models.Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src)
-    {
-        var team = src.Data.TeamAfterState;
-        var deletedAt = team.DeletedAt?.ToDateTimeOffset();
-
-        return new Shared.Models.Team
-        {
-            Id = team.Id,
-            DeletedAt = deletedAt,
-            Name = team.Name,
-            About = team.About,
-            Timezone = team.Timezone,
-            Organization = string.IsNullOrWhiteSpace(team.OrganizationId)
-                ? null
-                : new Organization { Id = team.OrganizationId },
-            TeamMembers = team.Members.Select(item =>
-            {
-                return new Shared.Models.TeamMember
-                {
-                    Id = item.Id,
-                    MembershipType = item.MembershipType switch
-                    {
-                        Api.Shared.Clients.Events.UnityHub.Team.V1.Value.MembershipType.Owner =>
-                            TeamMembershipType.Owner,
-                        Api.Shared.Clients.Events.UnityHub.Team.V1.Value.MembershipType.Administrator =>
-                            TeamMembershipType.Administrator,
-                        Api.Shared.Clients.Events.UnityHub.Team.V1.Value.MembershipType.Member =>
-                            TeamMembershipType.Member,
-                        _ => throw new ArgumentOutOfRangeException()
-                    },
-                    Customer = new Customer { Id = item.CustomerId },
-                    OrganizationMember =
-                        string.IsNullOrWhiteSpace(item.OrganizationMember?.OrganizationId) ||
-                        string.IsNullOrWhiteSpace(item.OrganizationMember?.OrganizationMemberId)
-                            ? null
-                            : new Shared.Models.OrganizationMember
-                            {
-                                Id = item.OrganizationMember.OrganizationMemberId,
-                                Organization = new Organization { Id = item.OrganizationMember.OrganizationId },
-                                Customer = new Customer { Id = item.OrganizationMember.CustomerId }
-                            }
-                };
-            }).ToList()
-        };
     }
 
     public Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src)
@@ -321,46 +252,6 @@ public class Mapper : IMapper
         dest.MembershipType = src.MembershipType;
         dest.Organization = organization;
         dest.Customer = customer;
-        return dest;
-    }
-
-    public Shared.Database.Entities.Team MapToEntity(
-        Shared.Models.Team src,
-        Shared.Database.Entities.Organization? organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.Team(), organization);
-
-    public Shared.Database.Entities.Team MergeToEntity(
-        Shared.Models.Team src,
-        Shared.Database.Entities.Team dest,
-        Shared.Database.Entities.Organization? organization)
-    {
-        dest.Id = src.Id;
-        dest.Name = src.Name;
-        dest.About = src.About;
-        dest.Timezone = src.Timezone;
-        dest.Organization = organization;
-        return dest;
-    }
-
-    public TeamMember MapToEntity(
-        Shared.Models.TeamMember src,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        OrganizationMember? organizationMember) =>
-        MergeToEntity(src, new TeamMember(), team, customer, organizationMember);
-
-    public TeamMember MergeToEntity(
-        Shared.Models.TeamMember src,
-        TeamMember dest,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        OrganizationMember? organizationMember)
-    {
-        dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType;
-        dest.Team = team;
-        dest.Customer = customer;
-        dest.OrganizationMember = organizationMember;
         return dest;
     }
 

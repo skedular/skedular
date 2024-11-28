@@ -7,7 +7,6 @@ namespace Notification.Api.Mappers;
 public interface IMapper
 {
     Customer? MapTo(Shared.Database.Entities.Customer? src);
-    GraphQL.Notification MapTo(Shared.Models.Notification src);
     Edge<Shared.Models.Notification> MapTo(Edge<Shared.Database.Entities.Notification> src);
     NotificationEdge MapTo(Edge<Shared.Models.Notification> src);
 }
@@ -38,7 +37,7 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList()
             };
 
-    public GraphQL.Notification MapTo(Shared.Models.Notification src) =>
+    private GraphQL.Notification MapTo(Shared.Models.Notification src) =>
         new()
         {
             Id = src.Id,

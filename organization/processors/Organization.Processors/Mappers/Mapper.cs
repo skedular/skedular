@@ -1,7 +1,4 @@
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Microsoft.Graph.Models;
 using Organization.Shared.Models;
@@ -15,14 +12,12 @@ using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
-using Tag = Organization.Shared.Database.Entities.Tag;
 
 namespace Organization.Processors.Mappers;
 
 public interface IMapper
 {
     Customer MapTo(Event src);
-    Shared.Models.Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
     Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
     Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
     Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src);
@@ -47,30 +42,10 @@ public interface IMapper
         Shared.Database.Entities.Identity dest,
         Shared.Database.Entities.Customer? customer);
 
-    Shared.Database.Entities.Organization MapToEntity(Shared.Models.Organization src);
-
-    Shared.Database.Entities.Organization MergeToEntity(Shared.Models.Organization src,
-        Shared.Database.Entities.Organization dest);
-
     OrganizationMember MapToEntity(
         Shared.Models.OrganizationMember src,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
-
-    OrganizationMember MergeToEntity(
-        Shared.Models.OrganizationMember src,
-        OrganizationMember dest,
-        Shared.Database.Entities.Organization organization,
-        Shared.Database.Entities.Customer customer);
-
-    OrganizationOffering MapToEntity(
-        Shared.Models.OrganizationOffering src,
-        Shared.Database.Entities.Organization organization);
-
-    OrganizationOffering MergeToEntity(
-        Shared.Models.OrganizationOffering src,
-        OrganizationOffering dest,
-        Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization);
 
@@ -114,13 +89,6 @@ public interface IMapper
         Shared.Models.AzureTenantMember src,
         AzureTenantMember dest,
         AzureTenant azureTenant);
-
-    Tag MapToEntity(Shared.Models.Tag src, Shared.Database.Entities.Organization location);
-
-    Tag MergeToEntity(
-        Shared.Models.Tag src,
-        Tag dest,
-        Shared.Database.Entities.Organization location);
 }
 
 public class Mapper : IMapper
@@ -156,65 +124,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Shared.Models.Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src)
-    {
-        var organizationAfterState = src.Data.OrganizationAfterState;
-        var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
 
-        var organization = new Shared.Models.Organization
-        {
-            Id = organizationAfterState.Id,
-            DeletedAt = deletedAt,
-            Name = organizationAfterState.Name,
-            About = organizationAfterState.About,
-            Website = organizationAfterState.Website,
-            LogoUrl = organizationAfterState.LogoUrl
-        };
-
-        organization.Tags = organizationAfterState.Tags.Select(item => new Shared.Models.Tag
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            Name = item.Name,
-            Description = item.Description,
-            Type = item.TagType,
-            Organization = organization
-        }).ToList();
-
-        organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
-        {
-            return new Shared.Models.OrganizationMember
-            {
-                Id = item.Id,
-                MembershipType = item.MembershipType switch
-                {
-                    MembershipType.Owner => OrganizationMembershipType.Owner,
-                    MembershipType.Administrator => OrganizationMembershipType.Administrator,
-                    MembershipType.Member => OrganizationMembershipType.Member,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                IsOrganizationOnboardingDone = true,
-                Customer = new Customer { Id = item.CustomerId },
-                Organization = organization
-            };
-        }).ToList();
-
-        organization.OrganizationOfferings =
-        [
-            new Shared.Models.OrganizationOffering
-            {
-                Id = organizationAfterState.Offering.Id,
-                Code = organizationAfterState.Offering.Code.ToOfferingCode(),
-                Start = organizationAfterState.Offering.Start.ToDateTimeOffset(),
-                End = organizationAfterState.Offering.End.ToDateTimeOffset(),
-                AutoRenew = organizationAfterState.Offering.AutoRenew,
-                UnitPrice = organizationAfterState.Offering.UnitPrice,
-                Organization = organization
-            }
-        ];
-
-        return organization;
-    }
 
     public Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
     {
@@ -309,27 +219,13 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Organization MapToEntity(Shared.Models.Organization src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Organization());
-
-    public Shared.Database.Entities.Organization MergeToEntity(Shared.Models.Organization src,
-        Shared.Database.Entities.Organization dest)
-    {
-        dest.Id = src.Id;
-        dest.Name = src.Name;
-        dest.About = src.About;
-        dest.Website = src.Website;
-        dest.LogoUrl = src.LogoUrl;
-        return dest;
-    }
-
     public OrganizationMember MapToEntity(
         Shared.Models.OrganizationMember src,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer) =>
         MergeToEntity(src, new OrganizationMember(), organization, customer);
 
-    public OrganizationMember MergeToEntity(
+    private OrganizationMember MergeToEntity(
         Shared.Models.OrganizationMember src,
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
@@ -340,26 +236,6 @@ public class Mapper : IMapper
         dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
         dest.Organization = organization;
         dest.Customer = customer;
-        return dest;
-    }
-
-    public OrganizationOffering MapToEntity(
-        Shared.Models.OrganizationOffering src,
-        Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new OrganizationOffering(), organization);
-
-    public OrganizationOffering MergeToEntity(
-        Shared.Models.OrganizationOffering src,
-        OrganizationOffering dest,
-        Shared.Database.Entities.Organization organization)
-    {
-        dest.Id = src.Id;
-        dest.Code = src.Code;
-        dest.Start = src.Start;
-        dest.End = src.End;
-        dest.AutoRenew = src.AutoRenew;
-        dest.UnitPrice = src.UnitPrice;
-        dest.Organization = organization;
         return dest;
     }
 
@@ -526,22 +402,6 @@ public class Mapper : IMapper
         dest.PhotoUrl504 = src.PhotoUrl504;
         dest.PhotoUrl648 = src.PhotoUrl648;
         dest.AzureTenant = azureTenant;
-        return dest;
-    }
-
-    public Tag MapToEntity(Shared.Models.Tag src, Shared.Database.Entities.Organization location) =>
-        MergeToEntity(src, new Tag(), location);
-
-    public Tag MergeToEntity(
-        Shared.Models.Tag src,
-        Tag dest,
-        Shared.Database.Entities.Organization organization)
-    {
-        dest.Id = src.Id;
-        dest.Name = src.Name;
-        dest.Description = src.Description;
-        dest.Type = src.Type;
-        dest.Organization = organization;
         return dest;
     }
 

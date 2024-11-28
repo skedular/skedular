@@ -111,7 +111,8 @@ public class Mapper : IMapper
         Organization organization)
         => src.Select(item => MapTo(item, organization));
 
-    private static OrganizationOffering MapTo(Shared.Database.Entities.OrganizationOffering src,
+    private static OrganizationOffering MapTo(
+        Shared.Database.Entities.OrganizationOffering src,
         Organization organization) =>
         new()
         {

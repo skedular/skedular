@@ -22,7 +22,6 @@ public interface IMapper
     Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
     Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
     Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
-    Shared.Models.Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src);
     Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
     Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization? organization);
@@ -109,23 +108,6 @@ public interface IMapper
         Shared.Models.Identity src,
         Identity dest,
         Customer? customer);
-
-    Shared.Database.Entities.Booking MapToEntity(
-        Shared.Models.Booking src,
-        Customer customer,
-        Shared.Database.Entities.Organization? organization,
-        Shared.Database.Entities.Location? location,
-        ICollection<Desk> desks,
-        Shared.Database.Entities.Team? team);
-
-    Shared.Database.Entities.Booking MergeToEntity(
-        Shared.Models.Booking src,
-        Shared.Database.Entities.Booking dest,
-        Customer customer,
-        Shared.Database.Entities.Organization? organization,
-        Shared.Database.Entities.Location? location,
-        ICollection<Desk> desks,
-        Shared.Database.Entities.Team? team);
 
     OrganizationTag MergeToEntity(
         Shared.Models.OrganizationTag src,
@@ -348,30 +330,6 @@ public class Mapper : IMapper
         return team;
     }
 
-    public Shared.Models.Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src)
-    {
-        var booking = src.Data.AfterState;
-        var deletedAt = booking.DeletedAt?.ToDateTimeOffset();
-
-        return new Shared.Models.Booking
-        {
-            Id = booking.Id,
-            DeletedAt = deletedAt,
-            From = booking.From.ToDateTimeOffset(),
-            To = booking.To.ToDateTimeOffset(),
-            Notes = booking.Notes,
-            Customer = new Shared.Models.Customer { Id = booking.CustomerId },
-            Organization =
-                string.IsNullOrWhiteSpace(booking.OrganizationId)
-                    ? null
-                    : new Organization { Id = booking.OrganizationId },
-            Location =
-                string.IsNullOrWhiteSpace(booking.LocationId) ? null : new Location { Id = booking.LocationId },
-            Desks = booking.DeskIds.Select(item => new Shared.Models.Desk { Id = item }).ToList(),
-            Team = string.IsNullOrWhiteSpace(booking.TeamId) ? null : new Team { Id = booking.TeamId }
-        };
-    }
-
     public Shared.Database.Entities.Organization MapToEntity(Organization src) =>
         MergeToEntity(src, new Shared.Database.Entities.Organization());
 
@@ -568,36 +526,6 @@ public class Mapper : IMapper
             dest.Customer = customer;
         }
 
-        return dest;
-    }
-
-    public Shared.Database.Entities.Booking MapToEntity(
-        Shared.Models.Booking src,
-        Customer customer,
-        Shared.Database.Entities.Organization? organization,
-        Shared.Database.Entities.Location? location,
-        ICollection<Desk> desks,
-        Shared.Database.Entities.Team? team) =>
-        MergeToEntity(src, new Shared.Database.Entities.Booking(), customer, organization, location, desks, team);
-
-    public Shared.Database.Entities.Booking MergeToEntity(
-        Shared.Models.Booking src,
-        Shared.Database.Entities.Booking dest,
-        Customer customer,
-        Shared.Database.Entities.Organization? organization,
-        Shared.Database.Entities.Location? location,
-        ICollection<Desk> desks,
-        Shared.Database.Entities.Team? team)
-    {
-        dest.Id = src.Id;
-        dest.From = src.From;
-        dest.To = src.To;
-        dest.Notes = src.Notes;
-        dest.Customer = customer;
-        dest.Organization = organization;
-        dest.Location = location;
-        dest.Desks = desks;
-        dest.Team = team;
         return dest;
     }
 
