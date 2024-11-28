@@ -111,7 +111,7 @@ const Dashboard = ({ queryReference, onReloadRequired, organizationId, defaultSt
       >
         <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
         <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
-        <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} disablePastWeeksSelection />
+        <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
         <NewBookingButton

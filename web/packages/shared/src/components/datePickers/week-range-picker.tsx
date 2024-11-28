@@ -73,10 +73,9 @@ const Day = (
 type Props = {
   defaultStartWeek?: Dayjs;
   onWeekChanged: (date: Dayjs) => void;
-  disablePastWeeksSelection?: boolean;
 };
 
-const WeekRangePicker = ({ defaultStartWeek, onWeekChanged, disablePastWeeksSelection }: Props) => {
+const WeekRangePicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
   const [hoveredDay, setHoveredDay] = useState<Dayjs | null>(null);
   const [start, setStart] = useState(defaultStartWeek ?? startOfWeek());
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -91,14 +90,6 @@ const WeekRangePicker = ({ defaultStartWeek, onWeekChanged, disablePastWeeksSele
 
   const handleChange = (date: Dayjs) => {
     const newStart = startOfWeek(date);
-
-    if (disablePastWeeksSelection) {
-      const thisWeek = startOfWeek();
-
-      if (newStart.isBefore(thisWeek)) {
-        return;
-      }
-    }
 
     setStart(newStart);
     handleClose();
