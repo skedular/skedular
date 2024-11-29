@@ -108,7 +108,7 @@ internal static class LocationMemberExtensions
 }
 
 public class LocationMemberRepository(LocationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<LocationDbContext, LocationMember>(dbContext), ILocationMemberRepository
+    : RepositoryBase<LocationDbContext, LocationMember>(dbContext, timeProvider), ILocationMemberRepository
 {
     public async Task<LocationMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.LocationMember
@@ -119,28 +119,28 @@ public class LocationMemberRepository(LocationDbContext dbContext, TimeProvider 
 
     public LocationMember Add(LocationMember locationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         locationMember.CreatedAt = now;
         return DbContext.LocationMember.Add(locationMember).Entity;
     }
 
     public void AddRange(ICollection<LocationMember> locationMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         locationMembers.ForEach(locationMember => locationMember.CreatedAt = now);
         DbContext.LocationMember.AddRange(locationMembers);
     }
 
     public void RemoveRange(ICollection<LocationMember> locationMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         locationMembers.ForEach(locationMember => locationMember.DeletedAt = now);
         DbContext.LocationMember.UpdateRange(locationMembers);
     }
 
     public LocationMember Update(LocationMember locationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         locationMember.ModifiedAt = now;
         return DbContext.LocationMember.Update(locationMember).Entity;
     }

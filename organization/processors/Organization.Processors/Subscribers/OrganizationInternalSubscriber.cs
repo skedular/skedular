@@ -177,7 +177,7 @@ public class OrganizationInternalSubscriber(
             .Where(azureTenantMember => azureTenantMembers.Any(item => item.Id == azureTenantMember.Id))
             .Select(azureTenantMember => repositoryFactory.AzureTenantMemberRepository.Update(
                 mapper.MergeToEntity(
-                    azureTenantMembers.Single(item => item.Id == azureTenantMember.Id),
+                    azureTenantMembers.First(item => item.Id == azureTenantMember.Id),
                     azureTenantMember,
                     existingTenant)))
             .ToList();

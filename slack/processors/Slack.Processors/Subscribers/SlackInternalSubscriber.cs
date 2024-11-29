@@ -124,7 +124,7 @@ public class SlackInternalSubscriber(
         var updatedItems = workspace.WorkspaceMembers
             .Where(workspaceMember => users.Any(item => item.Id == workspaceMember.Id)).Select(
                 workspaceMember => repositoryFactory.WorkspaceMemberRepository.Update(
-                    mapper.MergeToEntity(users.Single(item => item.Id == workspaceMember.Id), workspaceMember,
+                    mapper.MergeToEntity(users.First(item => item.Id == workspaceMember.Id), workspaceMember,
                         workspace))).ToList();
         var addedItems = users.Where(user => workspace.WorkspaceMembers.All(item => item.Id != user.Id))
             .Select(user => repositoryFactory.WorkspaceMemberRepository.Add(mapper.MapToEntity(user, workspace)))
@@ -169,7 +169,7 @@ public class SlackInternalSubscriber(
             .ToList();
         var updatedItems = workspace.Channels.Where(channel => channels.Any(item => item.Id == channel.Id)).Select(
             channel => repositoryFactory.WorkspaceChannelRepository.Update(
-                mapper.MergeToEntity(channels.Single(item => item.Id == channel.Id), channel, workspace))).ToList();
+                mapper.MergeToEntity(channels.First(item => item.Id == channel.Id), channel, workspace))).ToList();
         var addedItems = channels.Where(channel => workspace.Channels.All(item => item.Id != channel.Id))
             .Select(channel => repositoryFactory.WorkspaceChannelRepository.Add(mapper.MapToEntity(channel, workspace)))
             .ToList();

@@ -30,8 +30,8 @@ public class CustomerSubscriber(
                 {
                     var customer = mapper.MapTo(@event);
                     var existingCustomer =
-                        await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken);
-                    if (existingCustomer is not null && existingCustomer.EventRaisedAt > customer.EventRaisedAt)
+                        await repositoryFactory.CustomerRepository.UpsertNakedAsync(customer.Id, cancellationToken);
+                    if (existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
                         logger.LogInformation(
                             "Ignoring Customer event. Event timestamp is older that what is already processed.");
@@ -207,7 +207,7 @@ public class CustomerSubscriber(
             .Where(identity => customer.Identities.Any(item => item.Id == identity.Id))
             .Select(identity => repositoryFactory.IdentityRepository.Update(
                 mapper.MergeToEntity(
-                    customer.Identities.Single(item => item.Id == identity.Id),
+                    customer.Identities.First(item => item.Id == identity.Id),
                     identity,
                     existingCustomer)))
             .ToList();

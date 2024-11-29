@@ -29,9 +29,16 @@ public class LocationSubscriber(
             case Type.LocationUpserted:
                 {
                     var location = mapper.MapTo(@event);
-                    var existingLocation =
-                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
-                    if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
+                    var organization = location.Organization is null
+                        ? null
+                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                            location.Organization.Id,
+                            cancellationToken);
+                    var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(
+                        location.Id,
+                        organization,
+                        cancellationToken);
+                    if (existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation(
                             "Ignoring Location event. Event timestamp is older that what is already processed.");
@@ -80,17 +87,16 @@ public class LocationSubscriber(
     {
         var organization = location.Organization is null
             ? null
-            : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+            : await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 location.Organization.Id,
                 cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         existingLocation = existingLocation is null
             ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, organization))
             : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation,
                 organization));
 
-        existingLocation = await RebuildDesksAsync(location, existingLocation, organization, cancellationToken);
+        existingLocation = RebuildDesks(location, existingLocation);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -110,11 +116,7 @@ public class LocationSubscriber(
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task<Location> RebuildDesksAsync(
-        Shared.Models.Location location,
-        Location existingLocation,
-        Organization? organization,
-        CancellationToken cancellationToken)
+    private Location RebuildDesks(Shared.Models.Location location,Location existingLocation)
     {
         var itemsToRemove = existingLocation.Desks
             .Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
@@ -123,7 +125,7 @@ public class LocationSubscriber(
             .Select(desk =>
                 repositoryFactory.DeskRepository.Update(
                     mapper.MergeToEntity(
-                        location.Desks.Single(item => item.Id == desk.Id),
+                        location.Desks.First(item => item.Id == desk.Id),
                         desk,
                         existingLocation)))
             .ToList();
@@ -152,12 +154,11 @@ public class LocationSubscriber(
                      .Where(locationMember => location.LocationMembers.Any(item => item.Id == locationMember.Id)))
         {
             var customer =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id,
-                    cancellationToken);
-            await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await repositoryFactory.CustomerRepository.GetByIdAsync(locationMember.Customer.Id, cancellationToken);
+            ArgumentNullException.ThrowIfNull(customer);
 
             updatedItems.Add(repositoryFactory.LocationMemberRepository.Update(mapper.MergeToEntity(
-                location.LocationMembers.Single(item => item.Id == locationMember.Id),
+                location.LocationMembers.First(item => item.Id == locationMember.Id),
                 locationMember,
                 existingLocation,
                 customer)));
@@ -169,9 +170,8 @@ public class LocationSubscriber(
                          existingLocation.LocationMembers.All(item => item.Id != locationMember.Id)))
         {
             var customer =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id,
-                    cancellationToken);
-            await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await repositoryFactory.CustomerRepository.GetByIdAsync(locationMember.Customer.Id, cancellationToken);
+            ArgumentNullException.ThrowIfNull(customer);
 
             addedItems.Add(repositoryFactory.LocationMemberRepository.Add(
                 mapper.MapToEntity(locationMember, existingLocation, customer)));

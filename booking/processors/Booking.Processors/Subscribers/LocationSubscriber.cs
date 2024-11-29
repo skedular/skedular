@@ -25,9 +25,16 @@ public class LocationSubscriber(
             case Type.LocationUpserted:
                 {
                     var location = mapper.MapTo(@event);
-                    var existingLocation =
-                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
-                    if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
+                    var organization = location.Organization is null
+                        ? null
+                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                            location.Organization.Id,
+                            cancellationToken);
+                    var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(
+                        location.Id,
+                        organization,
+                        cancellationToken);
+                    if (existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation(
                             "Ignoring Location event. Event timestamp is older that what is already processed.");
@@ -76,10 +83,9 @@ public class LocationSubscriber(
     {
         var organization = location.Organization is null
             ? null
-            : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+            : await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 location.Organization.Id,
                 cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         existingLocation = existingLocation is null
             ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, organization))
@@ -131,13 +137,13 @@ public class LocationSubscriber(
                 var filteredOrganizationTags = organizationTags
                     .Where(tag =>
                         location.Desks
-                            .Single(item => item.Id == desk.Id).OrganizationTags
+                            .First(item => item.Id == desk.Id).OrganizationTags
                             .Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
                 return repositoryFactory.DeskRepository.Update(
                     mapper.MergeToEntity(
-                        location.Desks.Single(item => item.Id == desk.Id),
+                        location.Desks.First(item => item.Id == desk.Id),
                         desk,
                         existingLocation,
                         filteredOrganizationTags));
@@ -180,7 +186,7 @@ public class LocationSubscriber(
             await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             updatedItems.Add(repositoryFactory.LocationMemberRepository.Update(mapper.MergeToEntity(
-                location.LocationMembers.Single(item => item.Id == locationMember.Id),
+                location.LocationMembers.First(item => item.Id == locationMember.Id),
                 locationMember,
                 existingLocation,
                 customer)));

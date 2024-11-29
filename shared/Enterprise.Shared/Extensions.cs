@@ -56,4 +56,6 @@ public static class Extensions
         services
             .AddSingleton(new System.Random())
             .AddSingleton<IRandomHelper, RandomHelper>();
+
+    public static string ToFullName(this Type type) => type.FullName ?? type.Name;
 }

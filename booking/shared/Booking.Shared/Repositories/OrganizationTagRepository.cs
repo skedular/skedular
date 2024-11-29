@@ -16,39 +16,35 @@ public interface IOrganizationTagRepository : IRepository<OrganizationTag>
 }
 
 public class OrganizationTagRepository(BookingDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<BookingDbContext, OrganizationTag>(dbContext), IOrganizationTagRepository
+    : RepositoryBase<BookingDbContext, OrganizationTag>(dbContext, timeProvider), IOrganizationTagRepository
 {
-    public async Task<OrganizationTag>
-        UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken)
+    public async Task<OrganizationTag> UpsertNakedAsync(
+        string id,
+        Organization organization, 
+        CancellationToken cancellationToken)
     {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
+        await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        return DbContext.OrganizationTag
-            .Add(new OrganizationTag { Id = id, CreatedAt = now, Organization = organization }).Entity;
+        return (await GetByIdAsync(id, cancellationToken))!;
     }
 
     public OrganizationTag Add(OrganizationTag organizationTag)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationTag.CreatedAt = now;
         return DbContext.OrganizationTag.Add(organizationTag).Entity;
     }
 
     public void RemoveRange(ICollection<OrganizationTag> organizationTags)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationTags.ForEach(organizationTag => organizationTag.DeletedAt = now);
         DbContext.OrganizationTag.UpdateRange(organizationTags);
     }
 
     public OrganizationTag Update(OrganizationTag organizationTag)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationTag.ModifiedAt = now;
         return DbContext.OrganizationTag.Update(organizationTag).Entity;
     }

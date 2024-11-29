@@ -321,8 +321,8 @@ public class CustomerService(
                 repositoryFactory.CustomerRepository.UnitOfWork,
                 cancellationToken);
 
-            await repositoryFactory.IdentityRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.IdentityRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }
 
@@ -345,7 +345,7 @@ public class CustomerService(
             throw new CustomerNotFound();
         }
 
-        var identityToUpdate = existingCustomer.Identities.Single(item => item.Id == identity.Id);
+        var identityToUpdate = existingCustomer.Identities.First(item => item.Id == identity.Id);
 
         await using var transaction =
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.CustomerRepository.UnitOfWork,

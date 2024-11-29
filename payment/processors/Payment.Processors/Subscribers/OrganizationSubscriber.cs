@@ -149,7 +149,7 @@ public class OrganizationSubscriber(
                     cancellationToken);
             updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(
                 mapper.MergeToEntity(
-                    organization.OrganizationMembers.Single(item => item.Id == organizationMember.Id),
+                    organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
                     organizationMember,
                     existingOrganization,
                     customer)));
@@ -186,7 +186,7 @@ public class OrganizationSubscriber(
                 organizationOffering =>
                 {
                     var mappedUpdatedOffering = mapper.MergeToEntity(
-                        organization.OrganizationOfferings.Single(item => item.Id == organizationOffering.Id),
+                        organization.OrganizationOfferings.First(item => item.Id == organizationOffering.Id),
                         organizationOffering, existingOrganization);
                     mappedUpdatedOffering.DeletedAt = null;
                     return repositoryFactory.OrganizationOfferingRepository.Update(mappedUpdatedOffering);

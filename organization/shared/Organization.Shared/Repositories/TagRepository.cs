@@ -85,32 +85,32 @@ internal static class TagExtensions
 }
 
 public class TagRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, Tag>(dbContext), ITagRepository
+    : RepositoryBase<OrganizationDbContext, Tag>(dbContext, timeProvider), ITagRepository
 {
     public Tag Add(Tag tag)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         tag.CreatedAt = now;
         return DbContext.Tag.Add(tag).Entity;
     }
 
     public void RemoveRange(ICollection<Tag> tags)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         tags.ForEach(tag => tag.DeletedAt = now);
         DbContext.Tag.UpdateRange(tags);
     }
 
     public Tag Remove(Tag tag)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         tag.DeletedAt = now;
         return DbContext.Tag.Update(tag).Entity;
     }
 
     public Tag Update(Tag tag)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         tag.ModifiedAt = now;
         return DbContext.Tag.Update(tag).Entity;
     }

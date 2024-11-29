@@ -108,7 +108,7 @@ internal static class OrganizationMemberExtensions
 }
 
 public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, OrganizationMember>(dbContext), IOrganizationMemberRepository
+    : RepositoryBase<OrganizationDbContext, OrganizationMember>(dbContext, timeProvider), IOrganizationMemberRepository
 {
     public async Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
@@ -119,28 +119,28 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
 
     public OrganizationMember Add(OrganizationMember organizationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMember.CreatedAt = now;
         return DbContext.OrganizationMember.Add(organizationMember).Entity;
     }
 
     public void AddRange(ICollection<OrganizationMember> organizationMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.CreatedAt = now);
         DbContext.OrganizationMember.AddRange(organizationMembers);
     }
 
     public void RemoveRange(ICollection<OrganizationMember> organizationMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
         DbContext.OrganizationMember.UpdateRange(organizationMembers);
     }
 
     public OrganizationMember Update(OrganizationMember organizationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMember.ModifiedAt = now;
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }

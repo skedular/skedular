@@ -10,11 +10,11 @@ public interface ICustomerFeedbackRepository : IRepository<Database.Entities.Cus
 }
 
 public class CustomerFeedbackRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<CustomerDbContext, Database.Entities.Customer>(dbContext), ICustomerFeedbackRepository
+    : RepositoryBase<CustomerDbContext, Database.Entities.Customer>(dbContext, timeProvider), ICustomerFeedbackRepository
 {
     public CustomerFeedback Add(CustomerFeedback customerFeedback)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         customerFeedback.CreatedAt = now;
         return DbContext.CustomerFeedback.Add(customerFeedback).Entity;
     }

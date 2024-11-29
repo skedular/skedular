@@ -78,32 +78,32 @@ internal static class DeskExtensions
 }
 
 public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<LocationDbContext, Desk>(dbContext), IDeskRepository
+    : RepositoryBase<LocationDbContext, Desk>(dbContext, timeProvider), IDeskRepository
 {
     public Desk Add(Desk desk)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         desk.CreatedAt = now;
         return DbContext.Desk.Add(desk).Entity;
     }
 
     public void RemoveRange(ICollection<Desk> desks)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         desks.ForEach(desk => desk.DeletedAt = now);
         DbContext.Desk.UpdateRange(desks);
     }
 
     public Desk Remove(Desk desk)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         desk.DeletedAt = now;
         return DbContext.Desk.Update(desk).Entity;
     }
 
     public Desk Update(Desk desk)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         desk.ModifiedAt = now;
         return DbContext.Desk.Update(desk).Entity;
     }

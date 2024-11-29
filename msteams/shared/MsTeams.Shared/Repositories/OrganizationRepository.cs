@@ -25,18 +25,13 @@ internal static class OrganizationExtensions
 }
 
 public class OrganizationRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<MsTeamsDbContext, Organization>(dbContext), IOrganizationRepository
+    : RepositoryBase<MsTeamsDbContext, Organization>(dbContext, timeProvider), IOrganizationRepository
 {
-    public async Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public override async Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
+        await base.UpsertNakedAsync(id, cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Organization.Add(new Organization { Id = id, CreatedAt = now }).Entity;
+        return (await GetByIdAsync(id, cancellationToken))!;
     }
 
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -48,21 +43,21 @@ public class OrganizationRepository(MsTeamsDbContext dbContext, TimeProvider tim
 
     public Organization Add(Organization organization)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organization.CreatedAt = now;
         return DbContext.Organization.Add(organization).Entity;
     }
 
     public Organization Update(Organization organization)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organization.ModifiedAt = now;
         return DbContext.Organization.Update(organization).Entity;
     }
 
     public Organization Remove(Organization organization)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organization.DeletedAt = now;
         return DbContext.Organization.Update(organization).Entity;
     }

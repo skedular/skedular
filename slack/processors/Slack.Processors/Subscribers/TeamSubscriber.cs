@@ -25,8 +25,8 @@ public class TeamSubscriber(
                 {
                     var team = mapper.MapTo(@event);
                     var existingTeam =
-                        await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
-                    if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
+                        await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, cancellationToken);
+                    if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
                         logger.LogInformation(
                             "Ignoring Team event. Event timestamp is older that what is already processed.");

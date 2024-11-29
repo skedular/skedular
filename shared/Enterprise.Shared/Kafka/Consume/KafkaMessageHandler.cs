@@ -33,7 +33,8 @@ public class KafkaMessageHandler<TKey, TEvent>(
             scope.ServiceProvider.GetRequiredService<IEventSubscriber<TKey, TEvent>>();
         var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.IncomingActivitySourceName);
 
-        using (activitySource.StartActivity($"handler {eventSubscriber.GetType().Name}"))
+        var className = eventSubscriber.GetType().ToFullName();
+        using (activitySource.StartActivity($"handler {className}"))
         {
             var key = keyDeserializer.Deserialize(
                 consumeResult.Message.Value,
@@ -63,14 +64,15 @@ public class KafkaMessageHandler<TKey, TEvent>(
                              ex.InnerException.Message.Contains("The operation has timed out") ||
                              ex.InnerException.Message.Contains("Exception while reading from stream"))))
                     .WaitAndRetryAsync(
-                        5,
-                        retryAttempt =>
+                        2,
+                        _ => TimeSpan.FromSeconds(1),
+                        (exception, _, retryAttempt, _) =>
                         {
-                            logger.LogWarning(
-                                "Failed to call eventSubscriber.HandleAsync - Retry attempt: {retryAttempt}",
+                            logger.LogError(
+                                exception,
+                                "An exception occurred to call eventSubscriber.HandleAsync: {className} - Retry attempt: {retryAttempt}",
+                                className,
                                 retryAttempt);
-
-                            return TimeSpan.FromSeconds(1);
                         })
                     .ExecuteAsync(async () =>
                     {

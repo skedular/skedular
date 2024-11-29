@@ -98,11 +98,8 @@ public class BookingSubscriber(
                 }).ToListAsync(cancellationToken);
         }
 
-        var location =
-            await repositoryFactory.LocationRepository.UpsertNakedAsync(
-                booking.Location.Id,
-                cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, cancellationToken);
+        ArgumentNullException.ThrowIfNull(location);
 
         _ = existingBooking is null
             ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, location, desks))

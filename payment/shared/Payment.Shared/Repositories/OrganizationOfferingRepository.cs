@@ -14,32 +14,32 @@ public interface IOrganizationOfferingRepository : IRepository<OrganizationOffer
 }
 
 public class OrganizationOfferingRepository(PaymentDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<PaymentDbContext, OrganizationOffering>(dbContext), IOrganizationOfferingRepository
+    : RepositoryBase<PaymentDbContext, OrganizationOffering>(dbContext, timeProvider), IOrganizationOfferingRepository
 {
     public OrganizationOffering Add(OrganizationOffering organizationOffering)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOffering.CreatedAt = now;
         return DbContext.OrganizationOffering.Add(organizationOffering).Entity;
     }
 
     public OrganizationOffering Update(OrganizationOffering organizationOffering)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOffering.ModifiedAt = now;
         return DbContext.OrganizationOffering.Update(organizationOffering).Entity;
     }
 
     public void UpdateRange(ICollection<OrganizationOffering> organizationOfferings)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOfferings.ForEach(organizationOffering => organizationOffering.ModifiedAt = now);
         DbContext.OrganizationOffering.UpdateRange(organizationOfferings);
     }
 
     public void RemoveRange(ICollection<OrganizationOffering> organizationOfferings)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOfferings.ForEach(organizationOffering => organizationOffering.DeletedAt = now);
         DbContext.OrganizationOffering.UpdateRange(organizationOfferings);
     }

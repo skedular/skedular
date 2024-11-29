@@ -12,18 +12,18 @@ public interface IAddressRepository : IRepository<Address>
 }
 
 public class AddressRepository(LocationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<LocationDbContext, Address>(dbContext), IAddressRepository
+    : RepositoryBase<LocationDbContext, Address>(dbContext, timeProvider), IAddressRepository
 {
     public Address Add(Address address)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         address.CreatedAt = now;
         return DbContext.Address.Add(address).Entity;
     }
 
     public Address Update(Address address)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         address.ModifiedAt = now;
         return DbContext.Address.Update(address).Entity;
     }

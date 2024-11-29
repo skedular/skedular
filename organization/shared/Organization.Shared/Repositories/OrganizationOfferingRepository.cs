@@ -16,46 +16,46 @@ public interface IOrganizationOfferingRepository : IRepository<OrganizationOffer
 }
 
 public class OrganizationOfferingRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, OrganizationOffering>(dbContext), IOrganizationOfferingRepository
+    : RepositoryBase<OrganizationDbContext, OrganizationOffering>(dbContext, timeProvider), IOrganizationOfferingRepository
 {
     public OrganizationOffering Add(OrganizationOffering organizationOffering)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOffering.CreatedAt = now;
         return DbContext.OrganizationOffering.Add(organizationOffering).Entity;
     }
 
     public OrganizationOffering Update(OrganizationOffering organizationOffering)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOffering.ModifiedAt = now;
         return DbContext.OrganizationOffering.Update(organizationOffering).Entity;
     }
 
     public void UpdateRange(ICollection<OrganizationOffering> organizationOfferings)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOfferings.ForEach(organizationOffering => organizationOffering.ModifiedAt = now);
         DbContext.OrganizationOffering.UpdateRange(organizationOfferings);
     }
 
     public OrganizationOffering Remove(OrganizationOffering organizationOffering)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOffering.DeletedAt = now;
         return DbContext.OrganizationOffering.Update(organizationOffering).Entity;
     }
 
     public void RemoveRange(ICollection<OrganizationOffering> organizationOfferings)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOfferings.ForEach(organizationOffering => organizationOffering.DeletedAt = now);
         DbContext.OrganizationOffering.UpdateRange(organizationOfferings);
     }
 
     public OrganizationOffering Undelete(OrganizationOffering organizationOffering)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOffering.DeletedAt = null;
         return DbContext.OrganizationOffering.Update(organizationOffering).Entity;
     }

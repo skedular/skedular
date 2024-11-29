@@ -41,20 +41,22 @@ public class ProducerFactory(
         if (!KafkaSerialization.CanSerializeNatively<TKey>())
         {
             var serializer = serviceProvider.GetRequiredService<ISerializer<TKey>>();
+            var className = serializer.GetType().ToFullName();
 
             logger.LogTrace(
                 "Setting serializer for {KeyType}: {SerializerType}", typeof(TKey),
-                serializer.GetType().Name);
+                className);
             builder.SetKeySerializer(serializer);
         }
 
         if (!KafkaSerialization.CanSerializeNatively<TValue>())
         {
             var serializer = serviceProvider.GetRequiredService<ISerializer<TValue>>();
+            var className = serializer.GetType().ToFullName();
 
             logger.LogTrace(
                 "Setting serializer for {KeyType}: {SerializerType}", typeof(TKey),
-                serializer.GetType().Name);
+                className);
             builder.SetValueSerializer(serializer);
         }
 

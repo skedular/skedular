@@ -12,7 +12,6 @@ namespace Location.Shared.Repositories;
 
 public interface ILocationRepository : IRepository<Database.Entities.Location>
 {
-    Task<Database.Entities.Location> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
@@ -133,30 +132,18 @@ internal static class LocationExtensions
 }
 
 public class LocationRepository(LocationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<LocationDbContext, Database.Entities.Location>(dbContext), ILocationRepository
+    : RepositoryBase<LocationDbContext, Database.Entities.Location>(dbContext, timeProvider), ILocationRepository
 {
-    public async Task<Database.Entities.Location> UpsertNakedAsync(string id, CancellationToken cancellationToken)
-    {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
-
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Location.Add(new Database.Entities.Location { Id = id, CreatedAt = now }).Entity;
-    }
-
     public Database.Entities.Location Add(Database.Entities.Location location)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         location.CreatedAt = now;
         return DbContext.Location.Add(location).Entity;
     }
 
     public Database.Entities.Location Update(Database.Entities.Location location)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         location.ModifiedAt = now;
         return DbContext.Location.Update(location).Entity;
     }
@@ -204,7 +191,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
 
     public Database.Entities.Location Remove(Database.Entities.Location location)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         location.DeletedAt = now;
         return DbContext.Location.Update(location).Entity;
     }

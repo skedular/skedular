@@ -25,8 +25,16 @@ public class TeamSubscriber(
             case Type.TeamUpserted:
                 {
                     var team = mapper.MapTo(@event);
-                    var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
-                    if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
+                    var organization = team.Organization is null
+                        ? null
+                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                            team.Organization.Id,
+                            cancellationToken);
+                    var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(
+                        team.Id,
+                        organization,
+                        cancellationToken);
+                    if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
                         logger.LogInformation(
                             "Ignoring Team event. Event timestamp is older that what is already processed.");
@@ -74,8 +82,7 @@ public class TeamSubscriber(
     {
         var organization = team.Organization is null
             ? null
-            : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            : await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, cancellationToken);
 
         existingTeam = existingTeam is null
             ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team, organization))
@@ -113,7 +120,7 @@ public class TeamSubscriber(
                     cancellationToken);
 
             updatedItems.Add(repositoryFactory.TeamMemberRepository.Update(mapper.MergeToEntity(
-                team.TeamMembers.Single(item => item.Id == teamMember.Id),
+                team.TeamMembers.First(item => item.Id == teamMember.Id),
                 teamMember,
                 existingTeam,
                 customer)));

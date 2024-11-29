@@ -88,7 +88,7 @@ internal static class NotificationExtensions
 }
 
 public class NotificationRepository(NotificationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<NotificationDbContext, Database.Entities.Notification>(dbContext), INotificationRepository
+    : RepositoryBase<NotificationDbContext, Database.Entities.Notification>(dbContext, timeProvider), INotificationRepository
 {
     public async Task<Database.Entities.Notification?> GetBySourceIdAsync(string sourceId,
         CancellationToken cancellationToken) =>
@@ -100,21 +100,21 @@ public class NotificationRepository(NotificationDbContext dbContext, TimeProvide
 
     public Database.Entities.Notification Add(Database.Entities.Notification notification)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         notification.CreatedAt = now;
         return DbContext.Notification.Add(notification).Entity;
     }
 
     public Database.Entities.Notification Update(Database.Entities.Notification notification)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         notification.ModifiedAt = now;
         return DbContext.Notification.Update(notification).Entity;
     }
 
     public Database.Entities.Notification Remove(Database.Entities.Notification notification)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         notification.DeletedAt = now;
         return DbContext.Notification.Update(notification).Entity;
     }

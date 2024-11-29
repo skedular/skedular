@@ -14,25 +14,25 @@ public interface IIdentityRepository : IRepository<Identity>
 }
 
 public class IdentityRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<CustomerDbContext, Identity>(dbContext), IIdentityRepository
+    : RepositoryBase<CustomerDbContext, Identity>(dbContext, timeProvider), IIdentityRepository
 {
     public Identity Add(Identity identity)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         identity.CreatedAt = now;
         return DbContext.Identity.Add(identity).Entity;
     }
 
     public void AddRange(ICollection<Identity> identities)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         identities.ForEach(identity => identity.CreatedAt = now);
         DbContext.Identity.AddRange(identities);
     }
 
     public Identity Update(Identity identity)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         identity.ModifiedAt = now;
         return DbContext.Identity.Update(identity).Entity;
     }

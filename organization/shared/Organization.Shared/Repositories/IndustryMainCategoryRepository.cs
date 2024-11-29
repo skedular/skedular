@@ -6,5 +6,6 @@ namespace Organization.Shared.Repositories;
 
 public interface IIndustryMainCategoryRepository : IRepository<IndustryMainCategory>;
 
-public class IndustryMainCategoryRepository(OrganizationDbContext dbContext)
-    : RepositoryBase<OrganizationDbContext, IndustryMainCategory>(dbContext), IIndustryMainCategoryRepository;
+public class IndustryMainCategoryRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
+    : RepositoryBase<OrganizationDbContext, IndustryMainCategory>(dbContext, timeProvider),
+        IIndustryMainCategoryRepository;

@@ -26,18 +26,13 @@ internal static class AzureTenantExtensions
 }
 
 public class AzureTenantRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, AzureTenant>(dbContext), IAzureTenantRepository
+    : RepositoryBase<OrganizationDbContext, AzureTenant>(dbContext, timeProvider), IAzureTenantRepository
 {
-    public async Task<AzureTenant> UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public override async Task<AzureTenant> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
+        await base.UpsertNakedAsync(id, cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        return DbContext.AzureTenant.Add(new AzureTenant { Id = id, CreatedAt = now }).Entity;
+        return (await GetByIdAsync(id, cancellationToken))!;
     }
 
     public async Task<AzureTenant?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -49,14 +44,14 @@ public class AzureTenantRepository(OrganizationDbContext dbContext, TimeProvider
 
     public AzureTenant Add(AzureTenant azureTenant)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         azureTenant.CreatedAt = now;
         return DbContext.AzureTenant.Add(azureTenant).Entity;
     }
 
     public AzureTenant Update(AzureTenant azureTenant)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         azureTenant.ModifiedAt = now;
         return DbContext.AzureTenant.Update(azureTenant).Entity;
     }

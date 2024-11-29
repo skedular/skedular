@@ -16,37 +16,32 @@ public interface IDeskRepository : IRepository<Desk>
 }
 
 public class DeskRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<CustomerDbContext, Desk>(dbContext), IDeskRepository
+    : RepositoryBase<CustomerDbContext, Desk>(dbContext, timeProvider), IDeskRepository
 {
     public async Task<Desk> UpsertNakedAsync(string id, Location location, CancellationToken cancellationToken)
     {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
+        await UpsertNakedAsync<Location>(id, location, cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Desk.Add(new Desk { Id = id, CreatedAt = now, Location = location }).Entity;
+        return (await GetByIdAsync(id, cancellationToken))!;
     }
 
     public Desk Add(Desk desk)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         desk.CreatedAt = now;
         return DbContext.Desk.Add(desk).Entity;
     }
 
     public void RemoveRange(ICollection<Desk> desks)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         desks.ForEach(desk => desk.DeletedAt = now);
         DbContext.Desk.UpdateRange(desks);
     }
 
     public Desk Update(Desk desk)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         desk.ModifiedAt = now;
         return DbContext.Desk.Update(desk).Entity;
     }

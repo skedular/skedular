@@ -49,7 +49,7 @@ public class MsTeamsInternalSubscriber(
             .Where(azureTenantTeam => azureTenantTeams.Any(item => item.Id == azureTenantTeam.Id))
             .Select(azureTenantTeam => repositoryFactory.AzureTenantTeamRepository.Update(
                 mapper.MergeToEntity(
-                    azureTenantTeams.Single(item => item.Id == azureTenantTeam.Id),
+                    azureTenantTeams.First(item => item.Id == azureTenantTeam.Id),
                     azureTenantTeam,
                     existingTenant)))
             .ToList();
@@ -75,7 +75,7 @@ public class MsTeamsInternalSubscriber(
                     azureTenantTeamChannels.Any(item => item.Id == azureTenantTeamChannel.Id))
                 .Select(azureTenantTeamChannel => repositoryFactory.AzureTenantTeamChannelRepository.Update(
                     mapper.MergeToEntity(
-                        azureTenantTeamChannels.Single(item => item.Id == azureTenantTeamChannel.Id),
+                        azureTenantTeamChannels.First(item => item.Id == azureTenantTeamChannel.Id),
                         azureTenantTeamChannel,
                         existingAzureTenantTeam)))
                 .ToList();

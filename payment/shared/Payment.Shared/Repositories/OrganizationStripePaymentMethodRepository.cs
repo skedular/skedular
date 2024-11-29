@@ -16,33 +16,33 @@ public interface IOrganizationStripePaymentMethodRepository : IRepository<Organi
 }
 
 public class OrganizationStripePaymentMethodRepository(PaymentDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<PaymentDbContext, OrganizationStripePaymentMethod>(dbContext),
+    : RepositoryBase<PaymentDbContext, OrganizationStripePaymentMethod>(dbContext, timeProvider),
         IOrganizationStripePaymentMethodRepository
 {
     public OrganizationStripePaymentMethod Add(OrganizationStripePaymentMethod organizationStripePaymentMethod)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationStripePaymentMethod.CreatedAt = now;
         return DbContext.OrganizationStripePaymentMethod.Add(organizationStripePaymentMethod).Entity;
     }
 
     public OrganizationStripePaymentMethod Update(OrganizationStripePaymentMethod organizationStripePaymentMethod)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationStripePaymentMethod.ModifiedAt = now;
         return DbContext.OrganizationStripePaymentMethod.Update(organizationStripePaymentMethod).Entity;
     }
 
     public OrganizationStripePaymentMethod Remove(OrganizationStripePaymentMethod organizationStripePaymentMethod)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationStripePaymentMethod.DeletedAt = now;
         return DbContext.OrganizationStripePaymentMethod.Update(organizationStripePaymentMethod).Entity;
     }
 
     public void RemoveRange(ICollection<OrganizationStripePaymentMethod> organizationStripePaymentMethods)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationStripePaymentMethods.ForEach(organizationStripePaymentMethod =>
             organizationStripePaymentMethod.DeletedAt = now);
         DbContext.OrganizationStripePaymentMethod.UpdateRange(organizationStripePaymentMethods);

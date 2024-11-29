@@ -241,7 +241,7 @@ internal static class BookingExtensions
 }
 
 public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<BookingDbContext, Database.Entities.Booking>(dbContext), IBookingRepository
+    : RepositoryBase<BookingDbContext, Database.Entities.Booking>(dbContext, timeProvider), IBookingRepository
 {
     public async Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
@@ -258,21 +258,21 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
 
     public Database.Entities.Booking Add(Database.Entities.Booking booking)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         booking.CreatedAt = now;
         return DbContext.Booking.Add(booking).Entity;
     }
 
     public Database.Entities.Booking Update(Database.Entities.Booking booking)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         booking.ModifiedAt = now;
         return DbContext.Booking.Update(booking).Entity;
     }
 
     public Database.Entities.Booking Remove(Database.Entities.Booking booking)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         booking.DeletedAt = now;
         return DbContext.Booking.Update(booking).Entity;
     }

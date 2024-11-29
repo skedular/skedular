@@ -160,9 +160,8 @@ public class BookingSubscriber(
         }
 
         var organization =
-            await repositoryFactory.OrganizationRepository.UpsertNakedAsync(booking.Organization.Id,
-                cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.Organization.Id, cancellationToken);
+        ArgumentNullException.ThrowIfNull(organization);
 
         _ = existingBooking is null
             ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, organization))

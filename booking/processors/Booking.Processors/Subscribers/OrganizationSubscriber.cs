@@ -26,10 +26,10 @@ public class OrganizationSubscriber(
             case Type.OrganizationUpserted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
-                    if (existingOrganization is not null &&
-                        existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                        organization.Id,
+                        cancellationToken);
+                    if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation(
                             "Ignoring Organization event. Event timestamp is older that what is already processed.");
@@ -118,7 +118,7 @@ public class OrganizationSubscriber(
                     cancellationToken);
             updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(
                 mapper.MergeToEntity(
-                    organization.OrganizationMembers.Single(item => item.Id == organizationMember.Id),
+                    organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
                     organizationMember,
                     existingOrganization,
                     customer)));
@@ -153,7 +153,7 @@ public class OrganizationSubscriber(
             .Where(organizationTag => organization.Tags.Any(item => item.Id == organizationTag.Id))
             .Select(organizationTag => repositoryFactory.OrganizationTagRepository.Update(
                 mapper.MergeToEntity(
-                    organization.Tags.Single(item => item.Id == organizationTag.Id),
+                    organization.Tags.First(item => item.Id == organizationTag.Id),
                     organizationTag,
                     existingOrganization)))
             .ToList();

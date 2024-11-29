@@ -11,7 +11,6 @@ namespace Customer.Shared.Repositories;
 
 public interface ICustomerRepository : IRepository<Database.Entities.Customer>
 {
-    Task<Database.Entities.Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
     Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(
@@ -145,7 +144,7 @@ internal static class CustomerExtensions
 }
 
 public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<CustomerDbContext, Database.Entities.Customer>(dbContext), ICustomerRepository
+    : RepositoryBase<CustomerDbContext, Database.Entities.Customer>(dbContext, timeProvider), ICustomerRepository
 {
     private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
         s_getByIdQueryAsync =
@@ -188,18 +187,6 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                     .OrderBy(query => query.Id)
                     .FirstOrDefault());
 
-    public async Task<Database.Entities.Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
-    {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
-
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Customer.Add(new Database.Entities.Customer { Id = id, CreatedAt = now }).Entity;
-    }
-
     public async Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await s_getByIdQueryAsync(DbContext, id, cancellationToken);
 
@@ -220,21 +207,21 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
 
     public Database.Entities.Customer Add(Database.Entities.Customer customer)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         customer.CreatedAt = now;
         return DbContext.Customer.Add(customer).Entity;
     }
 
     public Database.Entities.Customer Update(Database.Entities.Customer customer)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
         return DbContext.Customer.Update(customer).Entity;
     }
 
     public Database.Entities.Customer Remove(Database.Entities.Customer customer)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         customer.DeletedAt = now;
         return DbContext.Customer.Update(customer).Entity;
     }

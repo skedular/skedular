@@ -13,25 +13,25 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 }
 
 public class OrganizationMemberRepository(SlackDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<SlackDbContext, OrganizationMember>(dbContext), IOrganizationMemberRepository
+    : RepositoryBase<SlackDbContext, OrganizationMember>(dbContext, timeProvider), IOrganizationMemberRepository
 {
     public OrganizationMember Add(OrganizationMember organizationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMember.CreatedAt = now;
         return DbContext.OrganizationMember.Add(organizationMember).Entity;
     }
 
     public void RemoveRange(ICollection<OrganizationMember> organizationMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
         DbContext.OrganizationMember.UpdateRange(organizationMembers);
     }
 
     public OrganizationMember Update(OrganizationMember organizationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMember.ModifiedAt = now;
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }

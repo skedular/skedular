@@ -13,25 +13,25 @@ public interface IAzureTenantMemberRepository : IRepository<AzureTenantMember>
 }
 
 public class AzureTenantMemberRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, AzureTenantMember>(dbContext), IAzureTenantMemberRepository
+    : RepositoryBase<OrganizationDbContext, AzureTenantMember>(dbContext, timeProvider), IAzureTenantMemberRepository
 {
     public AzureTenantMember Add(AzureTenantMember azureTenantMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         azureTenantMember.CreatedAt = now;
         return DbContext.AzureTenantMember.Add(azureTenantMember).Entity;
     }
 
     public AzureTenantMember Update(AzureTenantMember azureTenantMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         azureTenantMember.ModifiedAt = now;
         return DbContext.AzureTenantMember.Update(azureTenantMember).Entity;
     }
 
     public void RemoveRange(ICollection<AzureTenantMember> tenantMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         tenantMembers.ForEach(teamMember => teamMember.DeletedAt = now);
         DbContext.AzureTenantMember.UpdateRange(tenantMembers);
     }

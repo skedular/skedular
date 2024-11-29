@@ -13,25 +13,25 @@ public interface IAzureTenantTeamChannelRepository : IRepository<AzureTenantTeam
 }
 
 public class AzureTenantTeamChannelRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<MsTeamsDbContext, AzureTenantTeamChannel>(dbContext), IAzureTenantTeamChannelRepository
+    : RepositoryBase<MsTeamsDbContext, AzureTenantTeamChannel>(dbContext, timeProvider), IAzureTenantTeamChannelRepository
 {
     public AzureTenantTeamChannel Add(AzureTenantTeamChannel azureTenantTeamChannel)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         azureTenantTeamChannel.CreatedAt = now;
         return DbContext.AzureTenantTeamChannel.Add(azureTenantTeamChannel).Entity;
     }
 
     public AzureTenantTeamChannel Update(AzureTenantTeamChannel azureTenantTeamChannel)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         azureTenantTeamChannel.ModifiedAt = now;
         return DbContext.AzureTenantTeamChannel.Update(azureTenantTeamChannel).Entity;
     }
 
     public void RemoveRange(ICollection<AzureTenantTeamChannel> tenantMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         tenantMembers.ForEach(teamMember => teamMember.DeletedAt = now);
         DbContext.AzureTenantTeamChannel.UpdateRange(tenantMembers);
     }

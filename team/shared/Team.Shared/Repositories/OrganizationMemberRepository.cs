@@ -21,7 +21,7 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 }
 
 public class OrganizationMemberRepository(TeamDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<TeamDbContext, OrganizationMember>(dbContext), IOrganizationMemberRepository
+    : RepositoryBase<TeamDbContext, OrganizationMember>(dbContext, timeProvider), IOrganizationMemberRepository
 {
     public async Task<OrganizationMember> UpsertNakedAsync(
         string id,
@@ -29,16 +29,9 @@ public class OrganizationMemberRepository(TeamDbContext dbContext, TimeProvider 
         Customer customer,
         CancellationToken cancellationToken)
     {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
+        await UpsertNakedAsync<Organization, Database.Entities.Customer>(id, organization, customer, cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        return DbContext.OrganizationMember
-            .Add(new OrganizationMember { Id = id, Organization = organization, Customer = customer, CreatedAt = now })
-            .Entity;
+        return (await GetByIdAsync(id, cancellationToken))!;
     }
 
     public async Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -48,21 +41,21 @@ public class OrganizationMemberRepository(TeamDbContext dbContext, TimeProvider 
 
     public OrganizationMember Add(OrganizationMember organizationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMember.CreatedAt = now;
         return DbContext.OrganizationMember.Add(organizationMember).Entity;
     }
 
     public void RemoveRange(ICollection<OrganizationMember> organizationMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
         DbContext.OrganizationMember.UpdateRange(organizationMembers);
     }
 
     public OrganizationMember Update(OrganizationMember organizationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMember.ModifiedAt = now;
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }

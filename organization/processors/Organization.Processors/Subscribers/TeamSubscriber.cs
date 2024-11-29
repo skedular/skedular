@@ -24,8 +24,22 @@ public class TeamSubscriber(
             case Type.TeamUpserted:
                 {
                     var team = mapper.MapTo(@event);
-                    var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
-                    if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
+                    if (string.IsNullOrWhiteSpace(@event.Data.TeamAfterState.OrganizationId))
+                    {
+                        break;
+                    }
+
+                    var existingOrganization =
+                        await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                            team.Organization.Id,
+                            cancellationToken);
+                    ArgumentNullException.ThrowIfNull(existingOrganization);
+
+                    var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(
+                        team.Id,
+                        existingOrganization,
+                        cancellationToken);
+                    if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
                         logger.LogInformation(
                             "Ignoring Team event. Event timestamp is older that what is already processed.");
@@ -33,7 +47,7 @@ public class TeamSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleTeamUpsertedEventAsync(team, existingTeam, cancellationToken);
+                    await HandleTeamUpsertedEventAsync(team, existingTeam, existingOrganization, cancellationToken);
                 }
                 break;
 
@@ -69,6 +83,7 @@ public class TeamSubscriber(
     private async Task HandleTeamUpsertedEventAsync(
         Shared.Models.Team team,
         Team? existingTeam,
+        Shared.Database.Entities.Organization existingOrganization,
         CancellationToken cancellationToken)
     {
         if (existingTeam is not null && string.IsNullOrWhiteSpace(team.Organization.Id))
@@ -86,15 +101,10 @@ public class TeamSubscriber(
             return;
         }
 
-        var organization =
-            await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id,
-                cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-
         _ = existingTeam is null
-            ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team, organization))
+            ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team, existingOrganization))
             : repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam,
-                organization));
+                existingOrganization));
 
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

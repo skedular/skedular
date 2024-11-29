@@ -15,18 +15,13 @@ public interface ILocationRepository : IRepository<Location>
 }
 
 public class LocationRepository(NotificationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<NotificationDbContext, Location>(dbContext), ILocationRepository
+    : RepositoryBase<NotificationDbContext, Location>(dbContext, timeProvider), ILocationRepository
 {
-    public async Task<Location> UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public override async Task<Location> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
+        await base.UpsertNakedAsync(id, cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Location.Add(new Location { Id = id, CreatedAt = now }).Entity;
+        return (await GetByIdAsync(id, cancellationToken))!;
     }
 
     public async Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -37,21 +32,21 @@ public class LocationRepository(NotificationDbContext dbContext, TimeProvider ti
 
     public Location Add(Location location)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         location.CreatedAt = now;
         return DbContext.Location.Add(location).Entity;
     }
 
     public Location Remove(Location location)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         location.DeletedAt = now;
         return DbContext.Location.Update(location).Entity;
     }
 
     public Location Update(Location location)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         location.ModifiedAt = now;
         return DbContext.Location.Update(location).Entity;
     }

@@ -42,8 +42,8 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         DailyMemberCountRecordingRepository = new DailyMemberCountRecordingRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
-        IndustryMainCategoryRepository = new IndustryMainCategoryRepository(_dbContext);
-        IndustrySubCategoryRepository = new IndustrySubCategoryRepository(_dbContext);
+        IndustryMainCategoryRepository = new IndustryMainCategoryRepository(_dbContext, timeProvider);
+        IndustrySubCategoryRepository = new IndustrySubCategoryRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         OrganizationOfferingActiveMemberRepository =
@@ -51,7 +51,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         TeamRepository = new TeamRepository(_dbContext, timeProvider);
-        TermsOfUseRepository = new TermsOfUseRepository(_dbContext);
+        TermsOfUseRepository = new TermsOfUseRepository(_dbContext, timeProvider);
         JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
         TagRepository = new TagRepository(_dbContext, timeProvider);
     }

@@ -13,7 +13,7 @@ public interface IAzureInstallStateUserIdLookupRepository : IRepository<AzureIns
 }
 
 public class AzureInstallStateUserIdLookupRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, AzureInstallStateUserIdLookup>(dbContext),
+    : RepositoryBase<OrganizationDbContext, AzureInstallStateUserIdLookup>(dbContext, timeProvider),
         IAzureInstallStateUserIdLookupRepository
 {
     public async Task<AzureInstallStateUserIdLookup?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -24,7 +24,7 @@ public class AzureInstallStateUserIdLookupRepository(OrganizationDbContext dbCon
 
     public AzureInstallStateUserIdLookup Add(AzureInstallStateUserIdLookup azureInstallStateUserIdLookup)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         azureInstallStateUserIdLookup.CreatedAt = now;
         return DbContext.AzureInstallStateUserIdLookup.Add(azureInstallStateUserIdLookup).Entity;
     }

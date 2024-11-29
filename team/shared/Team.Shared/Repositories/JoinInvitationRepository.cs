@@ -31,7 +31,7 @@ internal static class IJoinInvitationExtensions
 }
 
 public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<TeamDbContext, JoinInvitation>(dbContext), IJoinInvitationRepository
+    : RepositoryBase<TeamDbContext, JoinInvitation>(dbContext, timeProvider), IJoinInvitationRepository
 {
     public async Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
@@ -52,21 +52,21 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
 
     public JoinInvitation Add(JoinInvitation joinInvitation)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         joinInvitation.CreatedAt = now;
         return DbContext.JoinInvitation.Add(joinInvitation).Entity;
     }
 
     public JoinInvitation Update(JoinInvitation joinInvitation)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         joinInvitation.ModifiedAt = now;
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }
 
     public JoinInvitation Remove(JoinInvitation joinInvitation)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         joinInvitation.DeletedAt = now;
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }

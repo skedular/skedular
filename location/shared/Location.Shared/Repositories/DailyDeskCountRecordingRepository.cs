@@ -10,11 +10,11 @@ public interface IDailyDeskCountRecordingRepository : IRepository<DailyDeskCount
 }
 
 public class DailyDeskCountRecordingRepository(LocationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<LocationDbContext, DailyDeskCountRecording>(dbContext), IDailyDeskCountRecordingRepository
+    : RepositoryBase<LocationDbContext, DailyDeskCountRecording>(dbContext, timeProvider), IDailyDeskCountRecordingRepository
 {
     public DailyDeskCountRecording Add(DailyDeskCountRecording dailyDeskCountRecording)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         dailyDeskCountRecording.CreatedAt = now;
         return DbContext.DailyDeskCountRecording.Add(dailyDeskCountRecording).Entity;
     }

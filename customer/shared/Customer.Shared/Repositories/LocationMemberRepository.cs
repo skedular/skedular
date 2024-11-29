@@ -13,25 +13,25 @@ public interface ILocationMemberRepository : IRepository<LocationMember>
 }
 
 public class LocationMemberRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<CustomerDbContext, LocationMember>(dbContext), ILocationMemberRepository
+    : RepositoryBase<CustomerDbContext, LocationMember>(dbContext, timeProvider), ILocationMemberRepository
 {
     public LocationMember Add(LocationMember locationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         locationMember.CreatedAt = now;
         return DbContext.LocationMember.Add(locationMember).Entity;
     }
 
     public void RemoveRange(ICollection<LocationMember> locationMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         locationMembers.ForEach(locationMember => locationMember.DeletedAt = now);
         DbContext.LocationMember.UpdateRange(locationMembers);
     }
 
     public LocationMember Update(LocationMember locationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         locationMember.ModifiedAt = now;
         return DbContext.LocationMember.Update(locationMember).Entity;
     }

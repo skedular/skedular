@@ -19,19 +19,16 @@ public interface ITeamRepository : IRepository<Team>
 }
 
 public class TeamRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, Team>(dbContext), ITeamRepository
+    : RepositoryBase<OrganizationDbContext, Team>(dbContext, timeProvider), ITeamRepository
 {
-    public async Task<Team>
-        UpsertNakedAsync(string id, Database.Entities.Organization organization, CancellationToken cancellationToken)
+    public async Task<Team> UpsertNakedAsync(
+        string id,
+        Database.Entities.Organization organization,
+        CancellationToken cancellationToken)
     {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
+        await UpsertNakedAsync<Database.Entities.Organization>(id, organization, cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Team.Add(new Team { Id = id, CreatedAt = now, Organization = organization }).Entity;
+        return (await GetByIdAsync(id, cancellationToken))!;
     }
 
     public async Task<Team?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -43,21 +40,21 @@ public class TeamRepository(OrganizationDbContext dbContext, TimeProvider timePr
 
     public Team Add(Team team)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         team.CreatedAt = now;
         return DbContext.Team.Add(team).Entity;
     }
 
     public Team Update(Team team)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         team.ModifiedAt = now;
         return DbContext.Team.Update(team).Entity;
     }
 
     public Team Remove(Team team)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         team.DeletedAt = now;
         return DbContext.Team.Update(team).Entity;
     }

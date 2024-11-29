@@ -15,7 +15,7 @@ public interface ITeamRepository : IRepository<Team>
 }
 
 public class TeamRepository(SlackDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<SlackDbContext, Team>(dbContext), ITeamRepository
+    : RepositoryBase<SlackDbContext, Team>(dbContext, timeProvider), ITeamRepository
 {
     public async Task<Team?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Team
@@ -26,34 +26,29 @@ public class TeamRepository(SlackDbContext dbContext, TimeProvider timeProvider)
 
     public Team Add(Team team)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         team.CreatedAt = now;
         return DbContext.Team.Add(team).Entity;
     }
 
     public Team Update(Team team)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         team.ModifiedAt = now;
         return DbContext.Team.Update(team).Entity;
     }
 
     public Team Remove(Team team)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         team.DeletedAt = now;
         return DbContext.Team.Update(team).Entity;
     }
 
-    public async Task<Team> UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public override async Task<Team> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
+        await base.UpsertNakedAsync(id, cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Team.Add(new Team { Id = id, CreatedAt = now }).Entity;
+        return (await GetByIdAsync(id, cancellationToken))!;
     }
 }

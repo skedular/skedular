@@ -13,8 +13,9 @@ public class GraphqlErrorFilter(IOpenTelemetryInstrumentation meters, ILogger<Gr
 
     public IError OnError(IError error)
     {
-        _graphqlExceptionsCounter.Add(1, GetTags(GetType().Name));
-        logger.LogWarning(error.Exception, "[{Type}] - Error ", GetType().Name);
+        var className = GetType().ToFullName();
+        _graphqlExceptionsCounter.Add(1, GetTags(className));
+        logger.LogWarning(error.Exception, "[{Type}] - Error ", className);
 
         return error.WithMessage(error.Exception?.Message ?? string.Empty);
     }

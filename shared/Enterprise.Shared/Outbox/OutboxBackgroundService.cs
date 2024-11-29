@@ -63,7 +63,7 @@ public class OutboxBackgroundService<TDbContext>(
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var className = GetType().Name;
+        var className = GetType().ToFullName();
 
         logger.LogInformation("Starting Outbox - {Class}", className);
 

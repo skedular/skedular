@@ -26,9 +26,8 @@ public class OrganizationSubscriber(
                 {
                     var organization = mapper.MapTo(@event);
                     var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
-                    if (existingOrganization is not null &&
-                        existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                        await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
+                    if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation(
                             "Ignoring Organization event. Event timestamp is older that what is already processed.");

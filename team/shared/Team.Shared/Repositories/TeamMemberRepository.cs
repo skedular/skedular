@@ -112,7 +112,7 @@ internal static class TeamMemberExtensions
 }
 
 public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<TeamDbContext, TeamMember>(dbContext), ITeamMemberRepository
+    : RepositoryBase<TeamDbContext, TeamMember>(dbContext, timeProvider), ITeamMemberRepository
 {
     public async Task<TeamMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.TeamMember
@@ -123,28 +123,28 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
 
     public TeamMember Add(TeamMember teamMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         teamMember.CreatedAt = now;
         return DbContext.TeamMember.Add(teamMember).Entity;
     }
 
     public void AddRange(ICollection<TeamMember> teamMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.CreatedAt = now);
         DbContext.TeamMember.AddRange(teamMembers);
     }
 
     public void RemoveRange(ICollection<TeamMember> teamMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.DeletedAt = now);
         DbContext.TeamMember.UpdateRange(teamMembers);
     }
 
     public TeamMember Update(TeamMember teamMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         teamMember.ModifiedAt = now;
         return DbContext.TeamMember.Update(teamMember).Entity;
     }

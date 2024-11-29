@@ -13,25 +13,25 @@ public interface ITeamMemberRepository : IRepository<TeamMember>
 }
 
 public class TeamMemberRepository(BookingDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<BookingDbContext, TeamMember>(dbContext), ITeamMemberRepository
+    : RepositoryBase<BookingDbContext, TeamMember>(dbContext, timeProvider), ITeamMemberRepository
 {
     public TeamMember Add(TeamMember teamMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         teamMember.CreatedAt = now;
         return DbContext.TeamMember.Add(teamMember).Entity;
     }
 
     public void RemoveRange(ICollection<TeamMember> teamMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.DeletedAt = now);
         DbContext.TeamMember.UpdateRange(teamMembers);
     }
 
     public TeamMember Update(TeamMember teamMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         teamMember.ModifiedAt = now;
         return DbContext.TeamMember.Update(teamMember).Entity;
     }

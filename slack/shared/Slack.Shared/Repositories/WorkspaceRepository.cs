@@ -29,7 +29,7 @@ internal static class WorkspaceExtensions
 }
 
 public class WorkspaceRepository(SlackDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<SlackDbContext, Workspace>(dbContext), IWorkspaceRepository
+    : RepositoryBase<SlackDbContext, Workspace>(dbContext, timeProvider), IWorkspaceRepository
 {
     public async Task<Workspace?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Workspace
@@ -69,21 +69,21 @@ public class WorkspaceRepository(SlackDbContext dbContext, TimeProvider timeProv
 
     public Workspace Add(Workspace workspace)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         workspace.CreatedAt = now;
         return DbContext.Workspace.Add(workspace).Entity;
     }
 
     public Workspace Update(Workspace workspace)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         workspace.ModifiedAt = now;
         return DbContext.Workspace.Update(workspace).Entity;
     }
 
     public Workspace Remove(Workspace workspace)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         workspace.DeletedAt = now;
         return DbContext.Workspace.Update(workspace).Entity;
     }

@@ -108,7 +108,7 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
     /// <returns>A <see cref="Task" /> that represents the long-running operations.</returns>
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        var typeName = GetType().Name;
+        var typeName = GetType().ToFullName();
 
         try
         {

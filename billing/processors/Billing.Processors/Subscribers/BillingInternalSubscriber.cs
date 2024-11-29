@@ -28,7 +28,8 @@ public class BillingInternalSubscriber(
         switch (@event.Metadata.Type)
         {
             case Type.GenerateOrganizationOfferingInvoice:
-                await HandleGenerateOrganizationOfferingInvoiceEventAsync(@event.OrganizationOfferingId,
+                await HandleGenerateOrganizationOfferingInvoiceEventAsync(
+                    @event.OrganizationOfferingId,
                     cancellationToken);
                 break;
         }

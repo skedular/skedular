@@ -11,7 +11,6 @@ namespace Team.Shared.Repositories;
 
 public interface ITeamRepository : IRepository<Database.Entities.Team>
 {
-    Task<Database.Entities.Team> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Database.Entities.Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
     Task<IEnumerable<Database.Entities.Team>> GetByCustomerIdAsync(
@@ -121,30 +120,18 @@ internal static class TeamExtensions
 }
 
 public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<TeamDbContext, Database.Entities.Team>(dbContext), ITeamRepository
+    : RepositoryBase<TeamDbContext, Database.Entities.Team>(dbContext, timeProvider), ITeamRepository
 {
-    public async Task<Database.Entities.Team> UpsertNakedAsync(string id, CancellationToken cancellationToken)
-    {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
-
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Team.Add(new Database.Entities.Team { Id = id, CreatedAt = now }).Entity;
-    }
-
     public Database.Entities.Team Add(Database.Entities.Team organization)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organization.CreatedAt = now;
         return DbContext.Team.Add(organization).Entity;
     }
 
     public Database.Entities.Team Update(Database.Entities.Team organization)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organization.ModifiedAt = now;
         return DbContext.Team.Update(organization).Entity;
     }
@@ -186,7 +173,7 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
 
     public Database.Entities.Team Remove(Database.Entities.Team organization)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organization.DeletedAt = now;
         return DbContext.Team.Update(organization).Entity;
     }

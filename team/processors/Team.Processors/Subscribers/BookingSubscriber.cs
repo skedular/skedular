@@ -84,10 +84,8 @@ public class BookingSubscriber(
             return;
         }
 
-        var team =
-            await repositoryFactory.TeamRepository.UpsertNakedAsync(booking.Team.Id,
-                cancellationToken);
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(booking.Team.Id,cancellationToken);
+        ArgumentNullException.ThrowIfNull(team);
 
         _ = existingBooking is null
             ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, team))

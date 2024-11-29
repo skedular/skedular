@@ -26,7 +26,7 @@ internal static class CustomerExtensions
 }
 
 public class CustomerRepository(BillingDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<BillingDbContext, Customer>(dbContext), ICustomerRepository
+    : RepositoryBase<BillingDbContext, Customer>(dbContext, timeProvider), ICustomerRepository
 {
     private static readonly Func<BillingDbContext, string, CancellationToken, Task<Customer?>>
         s_getByIdQueryAsync =
@@ -54,16 +54,11 @@ public class CustomerRepository(BillingDbContext dbContext, TimeProvider timePro
                     .OrderBy(query => query.Id)
                     .FirstOrDefault());
 
-    public async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public override async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
+        await base.UpsertNakedAsync(id, cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Customer.Add(new Customer { Id = id, CreatedAt = now }).Entity;
+        return (await GetByIdAsync(id, cancellationToken))!;
     }
 
     public async Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -82,21 +77,21 @@ public class CustomerRepository(BillingDbContext dbContext, TimeProvider timePro
 
     public Customer Add(Customer customer)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         customer.CreatedAt = now;
         return DbContext.Customer.Add(customer).Entity;
     }
 
     public Customer Update(Customer customer)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
         return DbContext.Customer.Update(customer).Entity;
     }
 
     public Customer Remove(Customer customer)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         customer.DeletedAt = now;
         return DbContext.Customer.Update(customer).Entity;
     }

@@ -25,8 +25,8 @@ public class LocationSubscriber(
                 {
                     var location = mapper.MapTo(@event);
                     var existingLocation =
-                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
-                    if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
+                        await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, cancellationToken);
+                    if (existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation(
                             "Ignoring Location event. Event timestamp is older that what is already processed.");

@@ -11,19 +11,19 @@ public interface IOrganizationOfferingActiveMemberRepository : IRepository<Organ
 }
 
 public class OrganizationOfferingActiveMemberRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, OrganizationOfferingActiveMember>(dbContext),
+    : RepositoryBase<OrganizationDbContext, OrganizationOfferingActiveMember>(dbContext, timeProvider),
         IOrganizationOfferingActiveMemberRepository
 {
     public OrganizationOfferingActiveMember Add(OrganizationOfferingActiveMember organizationOfferingActiveMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOfferingActiveMember.CreatedAt = now;
         return DbContext.OrganizationOfferingActiveMember.Add(organizationOfferingActiveMember).Entity;
     }
 
     public OrganizationOfferingActiveMember Update(OrganizationOfferingActiveMember organizationOfferingActiveMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOfferingActiveMember.ModifiedAt = now;
         return DbContext.OrganizationOfferingActiveMember.Update(organizationOfferingActiveMember).Entity;
     }

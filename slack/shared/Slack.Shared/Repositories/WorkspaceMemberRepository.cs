@@ -27,7 +27,7 @@ internal static class WorkspaceMemberExtensions
 }
 
 public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<SlackDbContext, WorkspaceMember>(dbContext), IWorkspaceMemberRepository
+    : RepositoryBase<SlackDbContext, WorkspaceMember>(dbContext, timeProvider), IWorkspaceMemberRepository
 {
     public async Task<WorkspaceMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.WorkspaceMember
@@ -46,28 +46,28 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
 
     public WorkspaceMember Add(WorkspaceMember workspaceMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         workspaceMember.CreatedAt = now;
         return DbContext.WorkspaceMember.Add(workspaceMember).Entity;
     }
 
     public WorkspaceMember Update(WorkspaceMember workspaceMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         workspaceMember.ModifiedAt = now;
         return DbContext.WorkspaceMember.Update(workspaceMember).Entity;
     }
 
     public WorkspaceMember Remove(WorkspaceMember workspaceMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         workspaceMember.DeletedAt = now;
         return DbContext.WorkspaceMember.Update(workspaceMember).Entity;
     }
 
     public void RemoveRange(ICollection<WorkspaceMember> workspaceMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         workspaceMembers.ForEach(workspaceMember => workspaceMember.DeletedAt = now);
         DbContext.WorkspaceMember.UpdateRange(workspaceMembers);
     }

@@ -31,9 +31,10 @@ public class OrganizationSubscriber(
                 {
                     var organization = mapper.MapTo(@event);
                     var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
-                    if (existingOrganization is not null &&
-                        existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                        await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                            organization.Id,
+                            cancellationToken);
+                    if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation(
                             "Ignoring Organization event. Event timestamp is older that what is already processed.");
@@ -122,12 +123,13 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in existingOrganization.OrganizationMembers.Where(organizationMember =>
                      organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(
                 organizationMember.Customer.Id,
-                    cancellationToken);
+                cancellationToken);
+            ArgumentNullException.ThrowIfNull(customer);
             updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(
                 mapper.MergeToEntity(
-                    organization.OrganizationMembers.Single(item => item.Id == organizationMember.Id),
+                    organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
                     organizationMember,
                     existingOrganization,
                     customer)));
@@ -138,9 +140,10 @@ public class OrganizationSubscriber(
                      .Where(organizationMember =>
                          existingOrganization.OrganizationMembers.All(item => item.Id != organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(
                 organizationMember.Customer.Id,
-                    cancellationToken);
+                cancellationToken);
+            ArgumentNullException.ThrowIfNull(customer);
             addedItems.Add(
                 repositoryFactory.OrganizationMemberRepository.Add(
                     mapper.MapToEntity(organizationMember, existingOrganization, customer)));
@@ -217,7 +220,7 @@ public class OrganizationSubscriber(
             .Where(organizationTag => organization.Tags.Any(item => item.Id == organizationTag.Id))
             .Select(organizationTag => repositoryFactory.OrganizationTagRepository.Update(
                 mapper.MergeToEntity(
-                    organization.Tags.Single(item => item.Id == organizationTag.Id),
+                    organization.Tags.First(item => item.Id == organizationTag.Id),
                     organizationTag,
                     existingOrganization)))
             .ToList();

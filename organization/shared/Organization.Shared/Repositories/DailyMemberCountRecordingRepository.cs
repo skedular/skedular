@@ -10,11 +10,11 @@ public interface IDailyMemberCountRecordingRepository : IRepository<DailyMemberC
 }
 
 public class DailyMemberCountRecordingRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, DailyMemberCountRecording>(dbContext), IDailyMemberCountRecordingRepository
+    : RepositoryBase<OrganizationDbContext, DailyMemberCountRecording>(dbContext, timeProvider), IDailyMemberCountRecordingRepository
 {
     public DailyMemberCountRecording Add(DailyMemberCountRecording dailyMemberCountRecording)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         dailyMemberCountRecording.CreatedAt = now;
         return DbContext.DailyMemberCountRecording.Add(dailyMemberCountRecording).Entity;
     }

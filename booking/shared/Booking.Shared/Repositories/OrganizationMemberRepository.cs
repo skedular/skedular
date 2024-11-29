@@ -18,7 +18,7 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 }
 
 public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<BookingDbContext, OrganizationMember>(dbContext), IOrganizationMemberRepository
+    : RepositoryBase<BookingDbContext, OrganizationMember>(dbContext, timeProvider), IOrganizationMemberRepository
 {
     public async Task<ICollection<OrganizationMember>> GetByCustomerIdAsync(
         string customerId,
@@ -32,21 +32,21 @@ public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvid
 
     public OrganizationMember Add(OrganizationMember organizationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMember.CreatedAt = now;
         return DbContext.OrganizationMember.Add(organizationMember).Entity;
     }
 
     public void RemoveRange(ICollection<OrganizationMember> organizationMembers)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMembers.ForEach(organizationMember => organizationMember.DeletedAt = now);
         DbContext.OrganizationMember.UpdateRange(organizationMembers);
     }
 
     public OrganizationMember Update(OrganizationMember organizationMember)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationMember.ModifiedAt = now;
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }

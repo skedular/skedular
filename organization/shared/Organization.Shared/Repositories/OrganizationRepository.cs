@@ -11,8 +11,6 @@ namespace Organization.Shared.Repositories;
 
 public interface IOrganizationRepository : IRepository<Database.Entities.Organization>
 {
-    Task<Database.Entities.Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
-
     Task<Database.Entities.Organization?> GetByIdAsync(
         string id,
         CancellationToken cancellationToken);
@@ -129,30 +127,18 @@ internal static class OrganizationExtensions
 }
 
 public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, Database.Entities.Organization>(dbContext), IOrganizationRepository
+    : RepositoryBase<OrganizationDbContext, Database.Entities.Organization>(dbContext, timeProvider), IOrganizationRepository
 {
-    public async Task<Database.Entities.Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken)
-    {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
-
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Organization.Add(new Database.Entities.Organization { Id = id, CreatedAt = now }).Entity;
-    }
-
     public Database.Entities.Organization Add(Database.Entities.Organization organization)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organization.CreatedAt = now;
         return DbContext.Organization.Add(organization).Entity;
     }
 
     public Database.Entities.Organization Update(Database.Entities.Organization organization)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organization.ModifiedAt = now;
         return DbContext.Organization.Update(organization).Entity;
     }
@@ -198,7 +184,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
 
     public Database.Entities.Organization Remove(Database.Entities.Organization organization)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organization.DeletedAt = now;
         return DbContext.Organization.Update(organization).Entity;
     }

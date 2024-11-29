@@ -19,19 +19,16 @@ public interface ILocationRepository : IRepository<Location>
 }
 
 public class LocationRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, Location>(dbContext), ILocationRepository
+    : RepositoryBase<OrganizationDbContext, Location>(dbContext, timeProvider), ILocationRepository
 {
-    public async Task<Location>
-        UpsertNakedAsync(string id, Database.Entities.Organization organization, CancellationToken cancellationToken)
+    public async Task<Location> UpsertNakedAsync(
+        string id,
+        Database.Entities.Organization organization,
+        CancellationToken cancellationToken)
     {
-        var existing = await GetByIdAsync(id, cancellationToken);
-        if (existing is not null)
-        {
-            return existing;
-        }
+        await UpsertNakedAsync<Database.Entities.Organization>(id, organization, cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        return DbContext.Location.Add(new Location { Id = id, CreatedAt = now, Organization = organization }).Entity;
+        return (await GetByIdAsync(id, cancellationToken))!;
     }
 
     public async Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -43,21 +40,21 @@ public class LocationRepository(OrganizationDbContext dbContext, TimeProvider ti
 
     public Location Add(Location location)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         location.CreatedAt = now;
         return DbContext.Location.Add(location).Entity;
     }
 
     public Location Remove(Location location)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         location.DeletedAt = now;
         return DbContext.Location.Update(location).Entity;
     }
 
     public Location Update(Location location)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         location.ModifiedAt = now;
         return DbContext.Location.Update(location).Entity;
     }

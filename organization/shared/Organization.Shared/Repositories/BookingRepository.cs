@@ -14,7 +14,7 @@ public interface IBookingRepository : IRepository<Booking>
 }
 
 public class BookingRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, Booking>(dbContext), IBookingRepository
+    : RepositoryBase<OrganizationDbContext, Booking>(dbContext, timeProvider), IBookingRepository
 {
     public async Task<Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
@@ -25,21 +25,21 @@ public class BookingRepository(OrganizationDbContext dbContext, TimeProvider tim
 
     public Booking Add(Booking booking)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         booking.CreatedAt = now;
         return DbContext.Booking.Add(booking).Entity;
     }
 
     public Booking Update(Booking booking)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         booking.ModifiedAt = now;
         return DbContext.Booking.Update(booking).Entity;
     }
 
     public Booking Remove(Booking booking)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         booking.DeletedAt = now;
         return DbContext.Booking.Update(booking).Entity;
     }

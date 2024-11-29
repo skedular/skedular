@@ -12,13 +12,13 @@ public interface
 }
 
 public class OrganizationOfferingStripePaymentIntentRepository(PaymentDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<PaymentDbContext, OrganizationOfferingStripePaymentIntent>(dbContext),
+    : RepositoryBase<PaymentDbContext, OrganizationOfferingStripePaymentIntent>(dbContext, timeProvider),
         IOrganizationOfferingStripePaymentIntentRepository
 {
     public OrganizationOfferingStripePaymentIntent Add(
         OrganizationOfferingStripePaymentIntent organizationOfferingStripePaymentIntent)
     {
-        var now = timeProvider.GetUtcNow();
+        var now = TimeProvider.GetUtcNow();
         organizationOfferingStripePaymentIntent.CreatedAt = now;
         return DbContext.OrganizationOfferingStripePaymentIntent.Add(organizationOfferingStripePaymentIntent).Entity;
     }
