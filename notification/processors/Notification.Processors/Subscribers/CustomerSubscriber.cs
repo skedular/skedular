@@ -82,7 +82,7 @@ public class CustomerSubscriber(
         }
         else
         {
-            _ = await RebuildIdentitiesAsync(customer, existingCustomer, cancellationToken);
+            _ = RebuildIdentities(customer, existingCustomer);
             repositoryFactory.CustomerRepository.Update(
                 mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
         }
@@ -99,10 +99,9 @@ public class CustomerSubscriber(
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task<Shared.Database.Entities.Customer> RebuildIdentitiesAsync(
+    private Shared.Database.Entities.Customer RebuildIdentities(
         Customer customer,
-        Shared.Database.Entities.Customer existingCustomer,
-        CancellationToken cancellationToken)
+        Shared.Database.Entities.Customer existingCustomer)
     {
         var itemsToRemove = existingCustomer.Identities
             .Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
@@ -120,7 +119,6 @@ public class CustomerSubscriber(
             .ToList();
 
         repositoryFactory.IdentityRepository.RemoveRange(itemsToRemove);
-        await repositoryFactory.IdentityRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         existingCustomer.Identities = addedItems.Concat(updatedItems).ToList();
 
         return existingCustomer;
