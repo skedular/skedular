@@ -116,6 +116,29 @@ public class BulkAddDesksButtonHandler(
         };
 
         var blocks = new List<Block> { prefix, count, deactivated, requireBookingApproval };
+
+        var deskTypeConnection = await GetDeskTypesAsync(workspace, workspaceMember, cancellationToken);
+        if (deskTypeConnection.Edges.Count != 0)
+        {
+            blocks.Add(new InputBlock
+            {
+                BlockId = DeskTypeActionTypes.DeskTypes,
+                Label = "Desk Types".ToPlainText(),
+                Element = new StaticMultiSelectMenu
+                {
+                    ActionId = DeskTypeActionTypes.DeskTypes,
+                    Options = deskTypeConnection.Edges.Select(item => item.Node).Select(item => new Option
+                    {
+                        Text = item.Name.ToOptionText(),
+                        Value = item.Id,
+                        Description =
+                            string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
+                    }).ToList()
+                },
+                Optional = true
+            });
+        }
+
         var zoneConnection = await GetZonesAsync(workspace, workspaceMember, cancellationToken);
         if (zoneConnection.Edges.Count != 0)
         {
@@ -299,13 +322,32 @@ public class BulkAddDesksButtonHandler(
             throw new InvalidOperationException("requireBookingApproval block is missing");
         }
 
+        if (values.TryGetValue(DeskTypeActionTypes.DeskTypes, out var deskTypesBlock))
+        {
+            if (deskTypesBlock.TryGetValue(DeskTypeActionTypes.DeskTypes, out var deskTypes))
+            {
+                if (deskTypes is StaticMultiSelectValue value)
+                {
+                    bulkAddDesksInput.DeskTypeIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                }
+                else
+                {
+                    throw new InvalidOperationException("deskTypes must be StaticMultiSelectValue");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("deskTypes block is missing");
+            }
+        }
+
         if (values.TryGetValue(ZoneActionTypes.Zones, out var zonesBlock))
         {
             if (zonesBlock.TryGetValue(ZoneActionTypes.Zones, out var zones))
             {
                 if (zones is StaticMultiSelectValue value)
                 {
-                    bulkAddDesksInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    bulkAddDesksInput.ZoneIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {
@@ -334,6 +376,30 @@ public class BulkAddDesksButtonHandler(
 
     public Task HandleClose(ViewClosed viewClosed) => Task.CompletedTask;
 
+    private async Task<DeskTypeConnection> GetDeskTypesAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CancellationToken cancellationToken)
+    {
+        var getPaginatedDeskTypesInput = new GetPaginatedDeskTypesInput
+        {
+            After = string.Empty,
+            First = -1,
+            Before = string.Empty,
+            Last = -1,
+            Where = new DeskTypeWhereInput { OrganizationId = workspace.Organization.Id }
+        };
+
+        getPaginatedDeskTypesInput.OrderBy.AddRange([
+            new DeskTypeOrderInput { Direction = OrderDirection.Ascending, Field = DeskTypeOrderField.DeskTypeName }
+        ]);
+
+        return await organizationServiceClient.GetPaginatedDeskTypesAsync(
+            getPaginatedDeskTypesInput,
+            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+            cancellationToken: cancellationToken);
+    }
+    
     private async Task<ZoneConnection> GetZonesAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,

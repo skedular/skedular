@@ -104,7 +104,8 @@ public class EditDeskButtonHandler(
 
         if (values.TryGetValue(DeskActionTypes.RequireBookingApproval, out var requireBookingApprovalBlock))
         {
-            if (requireBookingApprovalBlock.TryGetValue(DeskActionTypes.RequireBookingApproval,
+            if (requireBookingApprovalBlock.TryGetValue(
+                    DeskActionTypes.RequireBookingApproval,
                     out var requireBookingApproval))
             {
                 if (requireBookingApproval is CheckboxGroupValue value)
@@ -127,13 +128,32 @@ public class EditDeskButtonHandler(
             throw new InvalidOperationException("requireBookingApproval block is missing");
         }
 
+        if (values.TryGetValue(DeskTypeActionTypes.DeskTypes, out var deskTypesBlock))
+        {
+            if (deskTypesBlock.TryGetValue(DeskTypeActionTypes.DeskTypes, out var deskTypes))
+            {
+                if (deskTypes is StaticMultiSelectValue value)
+                {
+                    updateDeskInput.DeskTypeIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                }
+                else
+                {
+                    throw new InvalidOperationException("deskTypes must be StaticMultiSelectValue");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("deskTypes block is missing");
+            }
+        }
+
         if (values.TryGetValue(ZoneActionTypes.Zones, out var zonesBlock))
         {
             if (zonesBlock.TryGetValue(ZoneActionTypes.Zones, out var zones))
             {
                 if (zones is StaticMultiSelectValue value)
                 {
-                    updateDeskInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    updateDeskInput.ZoneIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {

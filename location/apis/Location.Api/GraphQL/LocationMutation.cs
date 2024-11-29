@@ -58,7 +58,8 @@ public class LocationMutation(IMapper mapper)
             input.LocationId,
             input.NamePrefix,
             input.Count,
-            input.DeskTypeIds.Concat(input.ZoneIds).ToList(),
+            input.DeskTypeIds,
+            input.ZoneIds,
             input.Deactivated,
             input.RequireBookingApproval,
             cancellationToken);

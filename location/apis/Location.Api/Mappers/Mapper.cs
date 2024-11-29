@@ -522,7 +522,7 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Location = new Shared.Models.Location { Id = src.LocationId },
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            OrganizationTags = src.DeskTypeIds.Concat(src.ZoneIds).Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.UpdateDeskInput src) =>
@@ -532,7 +532,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            OrganizationTags = src.DeskTypeIds.Concat(src.ZoneIds).Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public IEnumerable<Edge<Shared.Models.Desk>> MapTo(IEnumerable<Edge<Desk>> src, Shared.Models.Location location) =>

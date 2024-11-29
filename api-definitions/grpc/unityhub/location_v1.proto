@@ -256,10 +256,10 @@ message BulkAddDesksInput {
     string locationId = 2;
     string namePrefix = 3;
     int32 count = 4;
-    repeated string tagIds = 5;
-    bool deactivated = 6;
-    bool requireBookingApproval = 7;
-    repeated string organizationTagIds = 8;
+    bool deactivated = 5;
+    bool requireBookingApproval = 6;
+    repeated string deskTypeIds = 7;
+    repeated string zoneIds = 8;
 }
 
 message BulkAddDesksResponse {
@@ -272,8 +272,8 @@ message AddDeskInput {
     string name = 3;
     bool deactivated = 4;
     bool requireBookingApproval = 5;
-    repeated string tagIds = 6;
-    repeated string organizationTagIds = 7;
+    repeated string deskTypeIds = 6;
+    repeated string zoneIds = 7;
 }
 
 message UpdateDeskInput {
@@ -281,8 +281,8 @@ message UpdateDeskInput {
     string name = 2;
     bool deactivated = 3;
     bool requireBookingApproval = 4;
-    repeated string tagIds = 5;
-    repeated string organizationTagIds = 6;
+    repeated string deskTypeIds = 5;
+    repeated string zoneIds = 6;
 }
 
 message RemoveDeskInput {

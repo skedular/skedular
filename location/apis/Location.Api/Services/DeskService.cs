@@ -26,7 +26,8 @@ public interface IDeskService
         string locationId,
         string? namePrefix,
         int count,
-        ICollection<string> organizationTagIds,
+        ICollection<string> deskTypeIds,
+        ICollection<string> zoneIds,
         bool deactivated,
         bool requireBookingApproval,
         CancellationToken cancellationToken);
@@ -177,7 +178,8 @@ public class DeskService(
         string locationId,
         string? namePrefix,
         int count,
-        ICollection<string> organizationTagIds,
+        ICollection<string> deskTypeIds,
+        ICollection<string> zoneIds,
         bool deactivated,
         bool requireBookingApproval,
         CancellationToken cancellationToken)
@@ -215,7 +217,7 @@ public class DeskService(
                 {
                     Criteria = query =>
                         !query.DeletedAt.HasValue &&
-                        organizationTagIds.Contains(query.Id) &&
+                        deskTypeIds.Concat(zoneIds).Contains(query.Id) &&
                         query.Organization.Id == existingLocation.Organization.Id &&
                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);

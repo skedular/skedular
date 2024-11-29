@@ -319,7 +319,8 @@ public class LocationGrpcService(
             request.LocationId,
             request.NamePrefix,
             request.Count,
-            request.OrganizationTagIds,
+            request.DeskTypeIds,
+            request.ZoneIds,
             request.Deactivated,
             request.RequireBookingApproval,
             context.CancellationToken);
