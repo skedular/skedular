@@ -7,7 +7,7 @@ namespace Enterprise.Shared.Outbox;
 internal static class OutboxParameters
 {
     public const int CriticalRetryThreshold = 5;
-    public static readonly TimeSpan RetryTime = TimeSpan.FromSeconds(2);
+    public static readonly TimeSpan RetryTime = TimeSpan.FromSeconds(1);
 
     public static readonly AsyncRetryPolicy DatabasePolicy = Policy.Handle<Exception>()
         .WaitAndRetryForeverAsync(
