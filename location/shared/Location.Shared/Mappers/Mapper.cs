@@ -49,7 +49,8 @@ public class Mapper : IMapper
                 RequireBookingApproval = item.RequireBookingApproval
             };
 
-            desk.OrganizationTagIds.AddRange(item.OrganizationTags.Select(tag => tag.Id));
+            desk.DeskTypeIds.AddRange(item.DeskTypes.Select(tag => tag.Id));
+            desk.ZoneIds.AddRange(item.Zones.Select(tag => tag.Id));
 
             return desk;
         }));

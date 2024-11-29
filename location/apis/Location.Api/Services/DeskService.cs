@@ -153,7 +153,7 @@ public class DeskService(
                 {
                     Criteria = query =>
                         !query.DeletedAt.HasValue &&
-                        desk.OrganizationTags.Select(item => item.Id).Contains(query.Id) &&
+                        desk.DeskTypes.Concat(desk.Zones).Select(item => item.Id).Contains(query.Id) &&
                         query.Organization.Id == existingLocation.Organization.Id &&
                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
@@ -383,6 +383,8 @@ public class DeskService(
 
         var deskId = desk.Id;
         var deskName = desk.Name;
+        var deskTypes = desk.DeskTypes;
+        var zones = desk.Zones;
         var locationId = existingDesk.Location.Id;
         var matchingDeskFound = await repositoryFactory.DeskRepository
             .Query(new Specification<Shared.Database.Entities.Desk>
@@ -405,7 +407,7 @@ public class DeskService(
                 {
                     Criteria = query =>
                         !query.DeletedAt.HasValue &&
-                        desk.OrganizationTags.Select(item => item.Id).Contains(query.Id) &&
+                        deskTypes.Concat(zones).Select(item => item.Id).Contains(query.Id) &&
                         query.Organization.Id == existingLocation.Organization.Id &&
                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);

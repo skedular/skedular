@@ -272,7 +272,7 @@ public class Mapper : IMapper
         var organizationTags = location.Organization is null
             ? []
             : locationAfterState.Desks
-                .SelectMany(item => item.OrganizationTagIds)
+                .SelectMany(item => item.DeskTypeIds.Concat(item.ZoneIds))
                 .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
 
         location.Desks = locationAfterState.Desks.Select(item => new Shared.Models.Desk
@@ -283,7 +283,8 @@ public class Mapper : IMapper
             Name = item.Name,
             Deactivated = item.Deactivated,
             RequireBookingApproval = item.RequireBookingApproval,
-            OrganizationTags = organizationTags.Where(tag => item.OrganizationTagIds.Contains(tag.Id)).ToList(),
+            OrganizationTags =
+                organizationTags.Where(tag => item.DeskTypeIds.Concat(item.ZoneIds).Contains(tag.Id)).ToList(),
             Location = location
         }).ToList();
 

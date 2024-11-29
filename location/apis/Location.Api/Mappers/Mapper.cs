@@ -206,7 +206,8 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationTags = MapTo(src.OrganizationTags).ToList()
+            DeskTypes = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.DeskType)).ToList(),
+            Zones = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Zone)).ToList()
         };
 
     public Desk MapTo(
@@ -267,10 +268,8 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            DeskTypes =
-                MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.DeskType)).ToArray(),
-            Zones =
-                MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Zone)).ToArray()
+            DeskTypes = MapTo(src.DeskTypes).ToArray(),
+            Zones = MapTo(src.Zones).ToArray()
         };
 
     public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.DeskEdge MapToGrpcResponse(
@@ -386,10 +385,8 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = false,
             RequireBookingApproval = false,
-            OrganizationTags = src.DeskTypeIds
-                .Concat(src.ZoneIds)
-                .Select(item => new OrganizationTag { Id = item })
-                .ToList(),
+            DeskTypes = src.DeskTypeIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Location = new Shared.Models.Location { Id = src.LocationId }
         };
 
@@ -400,10 +397,8 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationTags = src.DeskTypeIds
-                .Concat(src.ZoneIds)
-                .Select(item => new OrganizationTag { Id = item })
-                .ToList()
+            DeskTypes = src.DeskTypeIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
@@ -494,7 +489,14 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Location = location,
-            OrganizationTags = MapTo(src.OrganizationTags, location.Organization).ToList()
+            DeskTypes = MapTo(
+                    src.OrganizationTags.Where(item => item.Type == OrganizationTagType.DeskType),
+                    location.Organization)
+                .ToList(),
+            Zones = MapTo(
+                    src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Zone),
+                    location.Organization)
+                .ToList()
         };
 
     public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk MapToGrpcResponse(
@@ -508,8 +510,8 @@ public class Mapper : IMapper
             RequireBookingApproval = src.RequireBookingApproval
         };
 
-        desk.OrganizationDeskTypes.AddRange(MapToGrpcResponseOrganizationDeskTypes(src.OrganizationTags));
-        desk.OrganizationZones.AddRange(MapToGrpcResponseOrganizationZones(src.OrganizationTags));
+        desk.OrganizationDeskTypes.AddRange(MapToGrpcResponseOrganizationDeskTypes(src.DeskTypes));
+        desk.OrganizationZones.AddRange(MapToGrpcResponseOrganizationZones(src.Zones));
 
         return desk;
     }
@@ -522,7 +524,8 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Location = new Shared.Models.Location { Id = src.LocationId },
-            OrganizationTags = src.DeskTypeIds.Concat(src.ZoneIds).Select(item => new OrganizationTag { Id = item }).ToList()
+            DeskTypes = src.DeskTypeIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.UpdateDeskInput src) =>
@@ -532,7 +535,8 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationTags = src.DeskTypeIds.Concat(src.ZoneIds).Select(item => new OrganizationTag { Id = item }).ToList()
+            DeskTypes = src.DeskTypeIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public IEnumerable<Edge<Shared.Models.Desk>> MapTo(IEnumerable<Edge<Desk>> src, Shared.Models.Location location) =>
@@ -606,14 +610,10 @@ public class Mapper : IMapper
 
     private static IEnumerable<OrganizationDeskType> MapToGrpcResponseOrganizationDeskTypes(
         IEnumerable<OrganizationTag> src) =>
-        src
-            .Where(item => item.Type == OrganizationTagType.DeskType)
-            .Select(MapToGrpcResponseOrganizationDeskType);
+        src.Select(MapToGrpcResponseOrganizationDeskType);
 
     private static IEnumerable<OrganizationZone> MapToGrpcResponseOrganizationZones(IEnumerable<OrganizationTag> src) =>
-        src
-            .Where(item => item.Type == OrganizationTagType.Zone)
-            .Select(MapToGrpcResponseOrganizationZone);
+        src.Select(MapToGrpcResponseOrganizationZone);
 
     private IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk> MapToGrpcResponse(
         IEnumerable<Shared.Models.Desk> src) => src.Select(MapToGrpcResponse);
