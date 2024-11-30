@@ -116,7 +116,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
             }
           }
         }
-        availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {
+        availableDesks(where: { organizationId: $organizationId, date: $todayDate, deskIdsToInclude: [] }) {
           location {
             uniqueId
           }
@@ -163,8 +163,8 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
 
   const rows: RowType[] = locations.map((location) => {
     const desksCount = location.desks.length;
-    const availableDesksCount = rootDataRefetchable.availableOrganizationDesks
-      ? rootDataRefetchable.availableOrganizationDesks.filter((desk) => desk.location?.uniqueId === location.id).length
+    const availableDesksCount = rootDataRefetchable.availableDesks
+      ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length
       : 0;
     const availablePercentage = (availableDesksCount / desksCount) * 100;
     const zones = Array.from(
@@ -251,7 +251,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     },
   ];
 
-  if (!rootDataRefetchable.locations || !rootDataRefetchable.availableOrganizationDesks || !rootData.organizationMembers) {
+  if (!rootDataRefetchable.locations || !rootDataRefetchable.availableDesks || !rootData.organizationMembers) {
     return <></>;
   }
 
@@ -273,8 +273,8 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
         <Grid container spacing={defaultSpacing} sx={{ alignItems: 'flex-start' }}>
           {locations.map((location) => {
             const desksCount = location.desks.length;
-            const availableDesksCount = rootDataRefetchable.availableOrganizationDesks
-              ? rootDataRefetchable.availableOrganizationDesks.filter((desk) => desk.location?.uniqueId === location.id).length
+            const availableDesksCount = rootDataRefetchable.availableDesks
+              ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length
               : 0;
             const availablePercentage = (availableDesksCount / desksCount) * 100;
             const zones = Array.from(

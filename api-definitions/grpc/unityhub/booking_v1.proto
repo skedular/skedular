@@ -18,8 +18,7 @@ service BookingService {
     rpc Add (AddInput) returns (Booking);
     rpc Update (UpdateInput) returns (Booking);
     rpc Delete (DeleteInput) returns (Booking);
-    rpc GetAvailableDesksByOrganization (GetAvailableDesksByOrganizationInput) returns (AvailableDesks);
-    rpc GetAvailableLocationDesks (GetAvailableLocationDesksInput) returns (AvailableDesks);
+    rpc GetAvailableDesks (GetAvailableDesksInput) returns (AvailableDesks);
 }
 
 message VersionInput {
@@ -264,16 +263,14 @@ message DeleteInput {
     string id = 1;
 }
 
-message GetAvailableDesksByOrganizationInput {
+message GetAvailableDesksInput {
     string organizationId = 1;
+    string locationId = 2;
     google.protobuf.Timestamp date = 3;
     repeated string deskIdsToInclude = 4;
-}
-
-message GetAvailableLocationDesksInput {
-    string locationId = 1;
-    google.protobuf.Timestamp date = 2;
-    repeated string deskIdsToInclude = 3;
+    repeated string DeskTypeIds = 5;
+    repeated string ZoneIds = 6;
+    bool combineDeskTypesZones = 7;
 }
 
 message AvailableDesks {

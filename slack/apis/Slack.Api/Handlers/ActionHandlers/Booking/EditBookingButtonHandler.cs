@@ -339,15 +339,15 @@ public class EditBookingButtonHandler(
         Shared.Models.Booking booking,
         CancellationToken cancellationToken)
     {
-        var getAvailableDesksByOrganizationInput = new GetAvailableDesksByOrganizationInput
+        var getAvailableDesksInput = new GetAvailableDesksInput
         {
             OrganizationId = workspace.Organization.Id, Date = booking.From.ToDate().ToTimestamp()
         };
 
-        getAvailableDesksByOrganizationInput.DeskIdsToInclude.AddRange(booking.Desks.Select(item => item.Id));
+        getAvailableDesksInput.DeskIdsToInclude.AddRange(booking.Desks.Select(item => item.Id));
 
-        var availableDesks = (await bookingServiceClient.GetAvailableDesksByOrganizationAsync(
-                getAvailableDesksByOrganizationInput,
+        var availableDesks = (await bookingServiceClient.GetAvailableDesksAsync(
+                getAvailableDesksInput,
                 bookingConfiguration.ApiKey.CreateMetadata(request.User.Id),
                 cancellationToken: cancellationToken)).Desks
             .Where(item => item.Location is not null)

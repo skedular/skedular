@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4591cbb0babc89e42dbadff954fea69f>>
+ * @generated SignedSource<<109b9f2f563745f5886d76f20a4fdbba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,9 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingDetailsSelector_availableLocationDesks_refetchableFragment$variables = {
   dateToGetAvailableDesks: any;
-  deskIdsToIncludeToGetAvailableDesks: ReadonlyArray<string>;
+  deskIdsToIncludeToGetAvailableDesks?: ReadonlyArray<string> | null | undefined;
   locationExists: boolean;
-  locationId: string;
+  locationId?: string | null | undefined;
 };
 export type bookingDetailsSelector_availableLocationDesks_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_availableLocationDesks_query">;
@@ -96,24 +96,30 @@ return {
             "alias": null,
             "args": [
               {
-                "kind": "Variable",
-                "name": "date",
-                "variableName": "dateToGetAvailableDesks"
-              },
-              {
-                "kind": "Variable",
-                "name": "deskIdsToInclude",
-                "variableName": "deskIdsToIncludeToGetAvailableDesks"
-              },
-              {
-                "kind": "Variable",
-                "name": "locationId",
-                "variableName": "locationId"
+                "fields": [
+                  {
+                    "kind": "Variable",
+                    "name": "date",
+                    "variableName": "dateToGetAvailableDesks"
+                  },
+                  {
+                    "kind": "Variable",
+                    "name": "deskIdsToInclude",
+                    "variableName": "deskIdsToIncludeToGetAvailableDesks"
+                  },
+                  {
+                    "kind": "Variable",
+                    "name": "locationId",
+                    "variableName": "locationId"
+                  }
+                ],
+                "kind": "ObjectValue",
+                "name": "where"
               }
             ],
             "concreteType": "BookingDeskDetails",
             "kind": "LinkedField",
-            "name": "availableLocationDesks",
+            "name": "availableDesks",
             "plural": true,
             "selections": [
               (v1/*: any*/),
@@ -146,16 +152,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "47acdf118cb4e25ceb84b616bfd76158",
+    "cacheID": "7fa869ee345fc26f3b06f1c0687bf49c",
     "id": null,
     "metadata": {},
     "name": "bookingDetailsSelector_availableLocationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookingDetailsSelector_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $locationExists: Boolean!\n  $locationId: String!\n) {\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks) @include(if: $locationExists) {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n"
+    "text": "query bookingDetailsSelector_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]\n  $locationExists: Boolean!\n  $locationId: String\n) {\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableDesks(where: {locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d0a4117b6ac7364783b2a009a02138f3";
+(node as any).hash = "34eab7b420217dc18af7331afb203430";
 
 export default node;

@@ -316,35 +316,20 @@ public class BookingGrpcService(
         return mapper.MapToGrpcResponse(await bookingService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<AvailableDesks> GetAvailableDesksByOrganization(
-        GetAvailableDesksByOrganizationInput request,
+    public override async Task<AvailableDesks> GetAvailableDesks(
+        GetAvailableDesksInput request,
         ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        var desks = await deskService.GetAvailableDesksByOrganizationAsync(
+        var desks = await deskService.GetAvailableDesksAsync(
             request.OrganizationId,
-            request.Date.ToDateTimeOffset(),
-            request.DeskIdsToInclude,
-            context.CancellationToken);
-
-        var availableDesks = new AvailableDesks();
-
-        availableDesks.Desks.AddRange(mapper.MapToGrpcResponse(desks));
-
-        return availableDesks;
-    }
-
-    public override async Task<AvailableDesks> GetAvailableLocationDesks(
-        GetAvailableLocationDesksInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
-
-        var desks = await deskService.GetAvailableDesksByLocationAsync(
             request.LocationId,
             request.Date.ToDateTimeOffset(),
             request.DeskIdsToInclude,
+            request.DeskTypeIds,
+            request.ZoneIds,
+            request.CombineDeskTypesZones,
             context.CancellationToken);
 
         var availableDesks = new AvailableDesks();

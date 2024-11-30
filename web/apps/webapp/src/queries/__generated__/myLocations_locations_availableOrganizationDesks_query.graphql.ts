@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f9845349eb372ecbcae8c932be8d903e>>
+ * @generated SignedSource<<c1abd511b4b776532a5411a48fa802e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type myLocations_locations_availableOrganizationDesks_query$data = {
-  readonly availableOrganizationDesks: ReadonlyArray<{
+  readonly availableDesks: ReadonlyArray<{
     readonly location: {
       readonly uniqueId: string;
     } | null | undefined;
@@ -239,20 +239,26 @@ return {
       "alias": null,
       "args": [
         {
-          "kind": "Variable",
-          "name": "date",
-          "variableName": "todayDate"
-        },
-        {
-          "kind": "Literal",
-          "name": "deskIdsToInclude",
-          "value": []
-        },
-        (v0/*: any*/)
+          "fields": [
+            {
+              "kind": "Variable",
+              "name": "date",
+              "variableName": "todayDate"
+            },
+            {
+              "kind": "Literal",
+              "name": "deskIdsToInclude",
+              "value": []
+            },
+            (v0/*: any*/)
+          ],
+          "kind": "ObjectValue",
+          "name": "where"
+        }
       ],
       "concreteType": "BookingDeskDetails",
       "kind": "LinkedField",
-      "name": "availableOrganizationDesks",
+      "name": "availableDesks",
       "plural": true,
       "selections": [
         {
@@ -276,6 +282,6 @@ return {
 };
 })();
 
-(node as any).hash = "520a7ba3049eba3702d671d388e54eba";
+(node as any).hash = "bf6b8655ae2a5936caddee6146f24a46";
 
 export default node;

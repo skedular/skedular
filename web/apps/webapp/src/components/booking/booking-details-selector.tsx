@@ -172,7 +172,7 @@ const BookingDetailsSelector = ({
     graphql`
       fragment bookingDetailsSelector_availableLocationDesks_query on Query
       @refetchable(queryName: "bookingDetailsSelector_availableLocationDesks_refetchableFragment") {
-        availableLocationDesks(locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks)
+        availableDesks(where: { locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks })
           @include(if: $locationExists) {
           uniqueId
           name
@@ -216,16 +216,16 @@ const BookingDetailsSelector = ({
   }, [rootData.myLocations, organizationId]);
 
   const desks = useMemo<DeskDetails[]>(() => {
-    if (!rootDataAvailableLocationDesks.availableLocationDesks) {
+    if (!rootDataAvailableLocationDesks.availableDesks) {
       return [];
     }
 
-    return rootDataAvailableLocationDesks.availableLocationDesks.map(({ uniqueId, name, zones }) => ({
+    return rootDataAvailableLocationDesks.availableDesks.map(({ uniqueId, name, zones }) => ({
       uniqueId,
       name,
       zones: zones.map(({ uniqueId: id, name }) => ({ id, name })),
     }));
-  }, [rootDataAvailableLocationDesks.availableLocationDesks]);
+  }, [rootDataAvailableLocationDesks.availableDesks]);
 
   const handleRefetchPaginatedOrganizationMembers = useCallback(
     (bookingPeopleNameSearchText: string, organizationId?: string) => {

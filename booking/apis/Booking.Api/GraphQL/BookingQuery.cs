@@ -147,10 +147,8 @@ public class BookingQuery(IMapper mapper)
     }
 
     [UseServiceScope]
-    public async Task<BookingDeskDetails[]?> AvailableOrganizationDesksAsync(
-        string organizationId,
-        DateTimeOffset date,
-        string[] deskIdsToInclude,
+    public async Task<BookingDeskDetails[]?> AvailableDesksAsync(
+        AvailableDesksWhereInput where,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IDeskService deskService,
         CancellationToken cancellationToken)
@@ -160,26 +158,14 @@ public class BookingQuery(IMapper mapper)
             return null;
         }
 
-        var desks = await deskService.GetAvailableDesksByOrganizationAsync(organizationId, date, deskIdsToInclude,
-            cancellationToken);
-        return mapper.MapTo(desks).ToArray();
-    }
-
-    [UseServiceScope]
-    public async Task<BookingDeskDetails[]?> AvailableLocationDesksAsync(
-        string locationId,
-        DateTimeOffset date,
-        string[] deskIdsToInclude,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        var desks = await deskService.GetAvailableDesksByLocationAsync(locationId, date, deskIdsToInclude,
+        var desks = await deskService.GetAvailableDesksAsync(
+            where.OrganizationId,
+            where.LocationId,
+            where.Date,
+            where.DeskIdsToInclude ?? [],
+            where.DeskTypeIds ?? [],
+            where.ZoneIds ?? [],
+            where.CombineDeskTypesZones ?? false,
             cancellationToken);
         return mapper.MapTo(desks).ToArray();
     }

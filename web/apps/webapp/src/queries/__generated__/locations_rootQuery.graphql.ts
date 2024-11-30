@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<088fc4b9971f38d0677ff00eb04f5c64>>
+ * @generated SignedSource<<bbf0ff0dff694b1523212efd47e47e65>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -443,20 +443,26 @@ return {
         "alias": null,
         "args": [
           {
-            "kind": "Variable",
-            "name": "date",
-            "variableName": "todayDate"
-          },
-          {
-            "kind": "Literal",
-            "name": "deskIdsToInclude",
-            "value": []
-          },
-          (v7/*: any*/)
+            "fields": [
+              {
+                "kind": "Variable",
+                "name": "date",
+                "variableName": "todayDate"
+              },
+              {
+                "kind": "Literal",
+                "name": "deskIdsToInclude",
+                "value": []
+              },
+              (v7/*: any*/)
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
         ],
         "concreteType": "BookingDeskDetails",
         "kind": "LinkedField",
-        "name": "availableOrganizationDesks",
+        "name": "availableDesks",
         "plural": true,
         "selections": [
           {
@@ -477,12 +483,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "79bf94dc67551bbd4a1bc64c094f719d",
+    "cacheID": "f9f7d359d5ce72905d4ba568b5aaa6db",
     "id": null,
     "metadata": {},
     "name": "locations_rootQuery",
     "operationKind": "query",
-    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $zonesSortingValues: [OrganizationTagOrderInput!]!\n  $todayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $zoneIds: [String!]!\n  $deskTypeIds: [String!]!\n) {\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n  ...myLocations_query\n  ...myLocations_locations_availableOrganizationDesks_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment myLocations_query on Query {\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $zonesSortingValues: [OrganizationTagOrderInput!]!\n  $todayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $zoneIds: [String!]!\n  $deskTypeIds: [String!]!\n) {\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n  ...myLocations_query\n  ...myLocations_locations_availableOrganizationDesks_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n      }\n    }\n  }\n  availableDesks(where: {organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []}) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment myLocations_query on Query {\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();

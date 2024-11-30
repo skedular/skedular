@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4501a113cc9dfbe79c7ae83adff9bdf1>>
+ * @generated SignedSource<<8469fc735f74aee26db156e0edbef5e7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingDetailsSelector_availableLocationDesks_query$data = {
-  readonly availableLocationDesks?: ReadonlyArray<{
+  readonly availableDesks?: ReadonlyArray<{
     readonly deskTypes: ReadonlyArray<{
       readonly name: string;
       readonly uniqueId: string;
@@ -87,24 +87,30 @@ return {
           "alias": null,
           "args": [
             {
-              "kind": "Variable",
-              "name": "date",
-              "variableName": "dateToGetAvailableDesks"
-            },
-            {
-              "kind": "Variable",
-              "name": "deskIdsToInclude",
-              "variableName": "deskIdsToIncludeToGetAvailableDesks"
-            },
-            {
-              "kind": "Variable",
-              "name": "locationId",
-              "variableName": "locationId"
+              "fields": [
+                {
+                  "kind": "Variable",
+                  "name": "date",
+                  "variableName": "dateToGetAvailableDesks"
+                },
+                {
+                  "kind": "Variable",
+                  "name": "deskIdsToInclude",
+                  "variableName": "deskIdsToIncludeToGetAvailableDesks"
+                },
+                {
+                  "kind": "Variable",
+                  "name": "locationId",
+                  "variableName": "locationId"
+                }
+              ],
+              "kind": "ObjectValue",
+              "name": "where"
             }
           ],
           "concreteType": "BookingDeskDetails",
           "kind": "LinkedField",
-          "name": "availableLocationDesks",
+          "name": "availableDesks",
           "plural": true,
           "selections": [
             (v0/*: any*/),
@@ -140,6 +146,6 @@ return {
 };
 })();
 
-(node as any).hash = "d0a4117b6ac7364783b2a009a02138f3";
+(node as any).hash = "34eab7b420217dc18af7331afb203430";
 
 export default node;

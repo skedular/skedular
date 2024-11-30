@@ -2,25 +2,21 @@ using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Enterprise.Shared.Time;
-using Microsoft.EntityFrameworkCore;
+using ArgumentException = System.ArgumentException;
 
 namespace Booking.Api.Services;
 
 public interface IDeskService
 {
-    Task<ICollection<Desk>> GetAvailableDesksByOrganizationAsync(
-        string organizationId,
+    Task<ICollection<Desk>> GetAvailableDesksAsync(
+        string? organizationId,
+        string? locationId,
         DateTimeOffset date,
         ICollection<string> deskIdsToInclude,
-        CancellationToken cancellationToken);
-
-    Task<ICollection<Desk>> GetAvailableDesksByLocationAsync(
-        string locationId,
-        DateTimeOffset date,
-        ICollection<string> deskIdsToInclude,
+        ICollection<string> deskTypeIds,
+        ICollection<string> zoneIds,
+        bool combineDeskTypesZones,
         CancellationToken cancellationToken);
 }
 
@@ -31,65 +27,64 @@ public class DeskService(
     ILocationAuthorizationService locationAuthorizationService,
     IMapper mapper) : IDeskService
 {
-    public async Task<ICollection<Desk>> GetAvailableDesksByOrganizationAsync(
-        string organizationId,
+    public async Task<ICollection<Desk>> GetAvailableDesksAsync(
+        string? organizationId,
+        string? locationId,
         DateTimeOffset date,
         ICollection<string> deskIdsToInclude,
+        ICollection<string> deskTypeIds,
+        ICollection<string> zoneIds,
+        bool combineDeskTypesZones,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(organizationId))
+        if (string.IsNullOrWhiteSpace(organizationId) && string.IsNullOrWhiteSpace(locationId))
         {
-            return [];
+            throw new ArgumentException(
+                $"Both {nameof(organizationId)} and {nameof(locationId)} cannot be null or empty.");
         }
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
+        if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            throw new OrganizationNotFound();
+            var organization =
+                await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+            if (organization is null)
+            {
+                throw new OrganizationNotFound();
+            }
+
+            if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
+            {
+                throw new Unauthorized();
+            }
         }
 
-        if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
+        if (!string.IsNullOrWhiteSpace(locationId))
         {
-            throw new Unauthorized();
+            var location =
+                await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAsync(
+                    locationId,
+                    cancellationToken);
+            if (location is null)
+            {
+                throw new LocationNotFound();
+            }
+
+            if (!locationAuthorizationService.CanViewLocationDetails(location, customer))
+            {
+                throw new Unauthorized();
+            }
         }
 
-        var desks = deskIdsToInclude.Count == 0
-            ? await repositoryFactory.DeskRepository.Query(new Specification<Shared.Database.Entities.Desk>
-                    {
-                        Criteria = query =>
-                            !query.DeletedAt.HasValue &&
-                            !query.Deactivated &&
-                            query.Location != null &&
-                            query.Location.Organization != null &&
-                            query.Location.Organization.Id == organizationId &&
-                            !query.Bookings.Any(booking =>
-                                !booking.DeletedAt.HasValue && booking.From >= date && booking.To < date.Tomorrow() &&
-                                booking.Location != null && booking.Location.Organization != null &&
-                                booking.Location.Organization.Id == organizationId)
-                    }
-                    .AddInclude(query => query.Location))
-                .ToListAsync(cancellationToken)
-            : await repositoryFactory.DeskRepository.Query(new Specification<Shared.Database.Entities.Desk>
-                    {
-                        Criteria = query =>
-                            (!query.DeletedAt.HasValue && !query.Deactivated &&
-                             query.Location != null &&
-                             query.Location.Organization != null &&
-                             query.Location.Organization.Id == organizationId &&
-                             !query.Bookings.Any(booking =>
-                                 !booking.DeletedAt.HasValue &&
-                                 booking.From >= date &&
-                                 booking.To < date.Tomorrow() &&
-                                 booking.Location != null &&
-                                 booking.Location.Organization != null &&
-                                 booking.Location.Organization.Id == organizationId)) ||
-                            deskIdsToInclude.Contains(query.Id)
-                    }
-                    .AddInclude(query => query.Location)
-                    .ApplyOrderBy(query => query.Location.Name))
-                .ToListAsync(cancellationToken);
+        var desks = await repositoryFactory.DeskRepository.GetAvailableDesksAsync(
+            organizationId,
+            locationId,
+            date,
+            deskIdsToInclude,
+            deskTypeIds,
+            zoneIds,
+            combineDeskTypesZones,
+            cancellationToken);
 
         return mapper.MapTo(desks).Select(item =>
         {
@@ -97,55 +92,5 @@ public class DeskService(
 
             return item;
         }).ToList();
-    }
-
-    public async Task<ICollection<Desk>> GetAvailableDesksByLocationAsync(
-        string locationId,
-        DateTimeOffset date,
-        ICollection<string> deskIdsToInclude,
-        CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(locationId))
-        {
-            return [];
-        }
-
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var location =
-            await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAsync(
-                locationId,
-                cancellationToken);
-        if (location is null)
-        {
-            throw new LocationNotFound();
-        }
-
-        if (!locationAuthorizationService.CanViewLocationDetails(location, customer))
-        {
-            throw new Unauthorized();
-        }
-
-        var desks = deskIdsToInclude.Count == 0
-            ? await repositoryFactory.DeskRepository.Query(new Specification<Shared.Database.Entities.Desk>
-                {
-                    Criteria = query =>
-                        !query.DeletedAt.HasValue && !query.Deactivated && query.Location.Id == locationId &&
-                        !query.Bookings.Any(booking =>
-                            !booking.DeletedAt.HasValue && booking.From >= date && booking.To < date.Tomorrow() &&
-                            booking.Location.Id == locationId)
-                })
-                .ToListAsync(cancellationToken)
-            : await repositoryFactory.DeskRepository.Query(new Specification<Shared.Database.Entities.Desk>
-                {
-                    Criteria = query =>
-                        (!query.DeletedAt.HasValue && !query.Deactivated && query.Location.Id == locationId &&
-                         !query.Bookings.Any(booking =>
-                             !booking.DeletedAt.HasValue && booking.From >= date && booking.To < date.Tomorrow() &&
-                             booking.Location.Id == locationId)) ||
-                        deskIdsToInclude.Contains(query.Id)
-                })
-                .ToListAsync(cancellationToken);
-
-        return mapper.MapTo(desks, mapper.MapTo(location)!).ToList();
     }
 }

@@ -14,8 +14,7 @@ type Query {
   booking(id: String!): BookingDetails
   bookings(after: String, first: Int, before: String, last: Int, where: BookingWhereInput!, orderBy: [BookingOrderInput!]): BookingConnection
   allBookings(where: BookingWhereInput!): [BookingDetails!]
-  availableOrganizationDesks(organizationId: String!, date: DateTime!, deskIdsToInclude: [String!]!): [BookingDeskDetails!]
-  availableLocationDesks(locationId: String!, date: DateTime!, deskIdsToInclude: [String!]!): [BookingDeskDetails!]
+  availableDesks(where: AvailableDesksWhereInput!): [BookingDeskDetails!]
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions
   locationBookingPermissions(locationId: String!): LocationBookingPermissions
   teamBookingPermissions(teamId: String!): TeamBookingPermissions
@@ -881,6 +880,15 @@ input AddBookingInput {
   locationId: String
   deskIds: [String!]!
   teamId: String
+}
+input AvailableDesksWhereInput {
+  organizationId: String
+  locationId: String
+  date: DateTime!
+  deskIdsToInclude: [String!]
+  deskTypeIds: [String!]
+  zoneIds: [String!]
+  combineDeskTypesZones: Boolean
 }
 input BookingOrderInput {
   direction: OrderDirection!

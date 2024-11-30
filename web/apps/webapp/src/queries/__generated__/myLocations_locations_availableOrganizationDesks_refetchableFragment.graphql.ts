@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4e03cb4da8ed25de14b050fd70eefb6b>>
+ * @generated SignedSource<<80243bfd56e824d1de3e41a54185c295>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type LocationOrderInput = {
 export type myLocations_locations_availableOrganizationDesks_refetchableFragment$variables = {
   deskTypeIds?: ReadonlyArray<string> | null | undefined;
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
-  organizationId: string;
+  organizationId?: string | null | undefined;
   todayDate: any;
   zoneIds?: ReadonlyArray<string> | null | undefined;
 };
@@ -242,20 +242,26 @@ return {
         "alias": null,
         "args": [
           {
-            "kind": "Variable",
-            "name": "date",
-            "variableName": "todayDate"
-          },
-          {
-            "kind": "Literal",
-            "name": "deskIdsToInclude",
-            "value": []
-          },
-          (v1/*: any*/)
+            "fields": [
+              {
+                "kind": "Variable",
+                "name": "date",
+                "variableName": "todayDate"
+              },
+              {
+                "kind": "Literal",
+                "name": "deskIdsToInclude",
+                "value": []
+              },
+              (v1/*: any*/)
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
         ],
         "concreteType": "BookingDeskDetails",
         "kind": "LinkedField",
-        "name": "availableOrganizationDesks",
+        "name": "availableDesks",
         "plural": true,
         "selections": [
           {
@@ -276,16 +282,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "88e2289a4654ba446ccf3b242126239c",
+    "cacheID": "5d2553a170e69ed7dccc2f36724c3e99",
     "id": null,
     "metadata": {},
     "name": "myLocations_locations_availableOrganizationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query myLocations_locations_availableOrganizationDesks_refetchableFragment(\n  $deskTypeIds: [String!]\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String!\n  $todayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...myLocations_locations_availableOrganizationDesks_query\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n      }\n    }\n  }\n  availableOrganizationDesks(organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query myLocations_locations_availableOrganizationDesks_refetchableFragment(\n  $deskTypeIds: [String!]\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String\n  $todayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...myLocations_locations_availableOrganizationDesks_query\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        desks {\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n      }\n    }\n  }\n  availableDesks(where: {organizationId: $organizationId, date: $todayDate, deskIdsToInclude: []}) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "520a7ba3049eba3702d671d388e54eba";
+(node as any).hash = "bf6b8655ae2a5936caddee6146f24a46";
 
 export default node;
