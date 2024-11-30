@@ -193,9 +193,10 @@ public class Mapper : IMapper
                 DeskCapacity = src.Desks.Count,
                 Organization = MapTo(src.Organization),
                 Desks = MapTo(src.Desks).ToArray(),
+                DeskTypes = MapTo(src.DeskTypes).ToArray(),
+                Zones = MapTo(src.Zones).ToArray(),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress)
             };
-
     public Shared.Models.Desk MapTo(Desk src) =>
         new()
         {
@@ -450,6 +451,8 @@ public class Mapper : IMapper
         };
 
         location.Desks.AddRange(MapToGrpcResponse(src.Desks));
+        location.DeskTypes.AddRange(MapToGrpcResponseOrganizationDeskTypes(src.DeskTypes));
+        location.Zones.AddRange(MapToGrpcResponseOrganizationZones(src.Zones));
 
         return location;
     }

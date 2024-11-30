@@ -100,15 +100,16 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
             node {
               id
               name
+              deskTypes {
+                uniqueId
+                name
+              }
+              zones {
+                uniqueId
+                name
+              }
               desks {
-                deskTypes {
-                  uniqueId
-                  name
-                }
-                zones {
-                  uniqueId
-                  name
-                }
+                id
               }
               physicalAddress {
                 formattedAddress
@@ -116,7 +117,16 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
             }
           }
         }
-        availableDesks(where: { organizationId: $organizationId, date: $todayDate, deskIdsToInclude: [] }) {
+        availableDesks(
+          where: {
+            organizationId: $organizationId
+            date: $todayDate
+            deskIdsToInclude: []
+            zoneIds: $zoneIds
+            deskTypeIds: $deskTypeIds
+            combineDeskTypesZones: true
+          }
+        ) {
           location {
             uniqueId
           }
@@ -167,9 +177,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length
       : 0;
     const availablePercentage = (availableDesksCount / desksCount) * 100;
-    const zones = Array.from(
-      new Map(location.desks.flatMap(({ zones }) => zones).map(({ uniqueId, name }) => [uniqueId, { id: uniqueId, name }])).values(),
-    );
+    const zones = location.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }));
 
     return {
       id: location.id,
@@ -277,9 +285,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length
               : 0;
             const availablePercentage = (availableDesksCount / desksCount) * 100;
-            const zones = Array.from(
-              new Map(location.desks.flatMap(({ zones }) => zones).map(({ uniqueId, name }) => [uniqueId, { id: uniqueId, name }])).values(),
-            );
+            const zones = location.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }));
 
             return (
               <Grid key={location.id}>

@@ -145,10 +145,8 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
             }
 
             var organizationTagIds = item.OrganizationTags.Select(tag => tag.Id).ToList();
-            var deskTypeMatchResult =
-                organizationTagIds.All(organizationTagId => deskTypeIds.Any(id => id == organizationTagId));
-            var zoneMatchResult =
-                organizationTagIds.All(organizationTagId => zoneIds.Any(id => id == organizationTagId));
+            var deskTypeMatchResult = deskTypeIds.All(deskTypeId => organizationTagIds.Any(id => id == deskTypeId));
+            var zoneMatchResult = zoneIds.All(zoneId => organizationTagIds.Any(id => id == zoneId));
 
             return combineDeskTypesZones
                 ? deskTypeMatchResult && zoneMatchResult

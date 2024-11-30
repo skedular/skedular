@@ -82,16 +82,18 @@ internal static class LocationExtensions
 
         if (searchCriteria.ZoneIds.Length != 0)
         {
-            searchCriteria.ZoneIds.ForEach(zoneId =>
+            searchCriteria.ZoneIds.ForEach(id =>
                 query = query.Where(item =>
-                    item.Desks.Any(desk => desk.OrganizationTags.Select(tag => tag.Id).Contains(zoneId))));
+                    item.Desks.Any(desk =>
+                        !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
         }
 
         if (searchCriteria.DeskTypeIds.Length != 0)
         {
-            searchCriteria.DeskTypeIds.ForEach(deskTypeId =>
-                query = query.Where(item => item.Desks.Any(desk =>
-                    desk.OrganizationTags.Select(organizationTag => organizationTag.Id).Contains(deskTypeId))));
+            searchCriteria.DeskTypeIds.ForEach(id =>
+                query = query.Where(item =>
+                    item.Desks.Any(desk =>
+                        !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
         }
 
         return query;
@@ -199,36 +201,11 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
         ICollection<LocationOrder> orderByFields,
-        CancellationToken cancellationToken)
-    {
-        var result = (await DbContext.Location
-                .AddSearchCriteria(searchCriteria)
-                .AddSortingOrders(orderByFields)
-                .AddDependentObjects()
-                .ToListAsync(cancellationToken))
-            .ToPaginated(paginationInputParam);
-
-        result.Item2 = result.Item2.Select(edge =>
-        {
-            if (searchCriteria.ZoneIds.Length != 0)
-            {
-                searchCriteria.ZoneIds.ForEach(zoneId =>
-                    edge.Node.Desks = edge.Node.Desks
-                        .Where(desk => desk.OrganizationTags.Select(tag => tag.Id).Contains(zoneId))
-                        .ToList());
-            }
-
-            if (searchCriteria.DeskTypeIds.Length != 0)
-            {
-                searchCriteria.DeskTypeIds.ForEach(deskTypeId =>
-                    edge.Node.Desks = edge.Node.Desks.Where(desk =>
-                            desk.OrganizationTags.Select(organizationTag => organizationTag.Id).Contains(deskTypeId))
-                        .ToList());
-            }
-
-            return edge;
-        }).ToList();
-
-        return result;
-    }
+        CancellationToken cancellationToken) =>
+        (await DbContext.Location
+            .AddSearchCriteria(searchCriteria)
+            .AddSortingOrders(orderByFields)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken))
+        .ToPaginated(paginationInputParam);
 }

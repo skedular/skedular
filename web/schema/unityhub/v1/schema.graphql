@@ -419,6 +419,8 @@ type LocationDetails {
   canViewAnalytics: Boolean!
   desks: [DeskDetails!]!
   physicalAddress: LocationAddressDetails
+  deskTypes: [Organization_OrganizationTagDetails!]!
+  zones: [Organization_OrganizationTagDetails!]!
   id: ID!
 }
 type LocationEdge {

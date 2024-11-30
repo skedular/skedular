@@ -1,4 +1,5 @@
 using Api.Shared.Models;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -185,9 +186,7 @@ public class LocationService(
         return await UpdateInternalAsync(location, existingLocation, customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Location> DeleteAsync(
-        string locationId,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Location> DeleteAsync(string locationId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
@@ -249,13 +248,12 @@ public class LocationService(
         return await EnrichLocationAsync(customer, location, cancellationToken);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int)>
-        GetPaginatedLocationsAsync(
-            PaginationInputParam paginationInputParam,
-            LocationSearchCriteria searchCriteria,
-            ICollection<LocationOrder> orderByFields,
-            bool ignoreAuthorizationCheck,
-            CancellationToken cancellationToken)
+    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
+        PaginationInputParam paginationInputParam,
+        LocationSearchCriteria searchCriteria,
+        ICollection<LocationOrder> orderByFields,
+        bool ignoreAuthorizationCheck,
+        CancellationToken cancellationToken)
     {
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
@@ -265,20 +263,28 @@ public class LocationService(
             searchCriteria.CustomerId = customer.Id;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await repositoryFactory.LocationRepository.GetPaginatedLocationsAsync(
-                paginationInputParam,
-                searchCriteria,
-                orderByFields,
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.LocationRepository.GetPaginatedLocationsAsync(
+            paginationInputParam,
+            searchCriteria,
+            orderByFields,
+            cancellationToken);
 
         var mappedLocations = new List<Edge<Shared.Models.Location>>();
         foreach (var edge in edges)
         {
-            mappedLocations.Add(
-                new Edge<Shared.Models.Location>(
-                    edge.Cursor,
-                    await EnrichLocationAsync(customer, edge.Node, cancellationToken)));
+            var enrichedLocation = await EnrichLocationAsync(customer, edge.Node, cancellationToken);
+
+            searchCriteria.DeskTypeIds.ForEach(id =>
+                enrichedLocation.Desks = enrichedLocation.Desks
+                    .Where(desk => desk.DeskTypes.Select(tag => tag.Id).Contains(id))
+                    .ToList());
+
+            searchCriteria.ZoneIds.ForEach(id =>
+                enrichedLocation.Desks = enrichedLocation.Desks
+                    .Where(desk => desk.Zones.Select(tag => tag.Id).Contains(id))
+                    .ToList());
+
+            mappedLocations.Add(new Edge<Shared.Models.Location>(edge.Cursor, enrichedLocation));
         }
 
         return (paginatedInfo, mappedLocations, totalCount);
@@ -374,6 +380,24 @@ public class LocationService(
         }
 
         var mappedLocation = mapper.MapTo(locationEdge);
+
+        mappedLocation.DeskTypes = mappedLocation.Desks
+            .SelectMany(item => item.DeskTypes.Select(deskType => new OrganizationTag
+            {
+                Id = deskType.Id, Name = deskType.Name, Type = OrganizationTagType.DeskType
+            }))
+            .GroupBy(item => item.Id)
+            .Select(group => group.First())
+            .ToList();
+
+        mappedLocation.Zones = mappedLocation.Desks
+            .SelectMany(item => item.Zones.Select(zone => new OrganizationTag
+            {
+                Id = zone.Id, Name = zone.Name, Type = OrganizationTagType.Zone
+            }))
+            .GroupBy(item => item.Id)
+            .Select(group => group.First())
+            .ToList();
 
         if (customer is not null)
         {

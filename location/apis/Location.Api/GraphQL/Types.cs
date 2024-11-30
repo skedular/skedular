@@ -254,6 +254,10 @@ public class LocationDetails : Node
 
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
 
+    [GraphQLName("deskTypes")] public OrganizationTagDetails[] DeskTypes { get; set; } = [];
+
+    [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
+
     [GraphQLName("id")] [ID] public string Id { get; set; }
 }
 

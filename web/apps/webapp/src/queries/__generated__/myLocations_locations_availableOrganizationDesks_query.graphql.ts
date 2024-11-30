@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c1abd511b4b776532a5411a48fa802e6>>
+ * @generated SignedSource<<a13ed94265c9e8cfaac1866c52a254d7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,21 +20,22 @@ export type myLocations_locations_availableOrganizationDesks_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly deskTypes: ReadonlyArray<{
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
         readonly desks: ReadonlyArray<{
-          readonly deskTypes: ReadonlyArray<{
-            readonly name: string | null | undefined;
-            readonly uniqueId: string;
-          }>;
-          readonly zones: ReadonlyArray<{
-            readonly name: string | null | undefined;
-            readonly uniqueId: string;
-          }>;
+          readonly id: string;
         }>;
         readonly id: string;
         readonly name: string;
         readonly physicalAddress: {
           readonly formattedAddress: string | null | undefined;
         } | null | undefined;
+        readonly zones: ReadonlyArray<{
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -49,26 +50,43 @@ export type myLocations_locations_availableOrganizationDesks_query$key = {
 const node: ReaderFragment = (function(){
 var v0 = {
   "kind": "Variable",
+  "name": "deskTypeIds",
+  "variableName": "deskTypeIds"
+},
+v1 = {
+  "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
 },
-v1 = {
+v2 = {
+  "kind": "Variable",
+  "name": "zoneIds",
+  "variableName": "zoneIds"
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v3 = [
-  (v2/*: any*/),
-  (v1/*: any*/)
+v6 = [
+  (v5/*: any*/),
+  (v4/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -113,17 +131,9 @@ return {
         },
         {
           "fields": [
-            {
-              "kind": "Variable",
-              "name": "deskTypeIds",
-              "variableName": "deskTypeIds"
-            },
             (v0/*: any*/),
-            {
-              "kind": "Variable",
-              "name": "zoneIds",
-              "variableName": "zoneIds"
-            }
+            (v1/*: any*/),
+            (v2/*: any*/)
           ],
           "kind": "ObjectValue",
           "name": "where"
@@ -157,14 +167,28 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v3/*: any*/),
+                (v4/*: any*/),
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
+                  "concreteType": "Organization_OrganizationTagDetails",
+                  "kind": "LinkedField",
+                  "name": "deskTypes",
+                  "plural": true,
+                  "selections": (v6/*: any*/),
                   "storageKey": null
                 },
-                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Organization_OrganizationTagDetails",
+                  "kind": "LinkedField",
+                  "name": "zones",
+                  "plural": true,
+                  "selections": (v6/*: any*/),
+                  "storageKey": null
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -173,26 +197,7 @@ return {
                   "name": "desks",
                   "plural": true,
                   "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "Organization_OrganizationTagDetails",
-                      "kind": "LinkedField",
-                      "name": "deskTypes",
-                      "plural": true,
-                      "selections": (v3/*: any*/),
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "Organization_OrganizationTagDetails",
-                      "kind": "LinkedField",
-                      "name": "zones",
-                      "plural": true,
-                      "selections": (v3/*: any*/),
-                      "storageKey": null
-                    }
+                    (v3/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -241,6 +246,11 @@ return {
         {
           "fields": [
             {
+              "kind": "Literal",
+              "name": "combineDeskTypesZones",
+              "value": true
+            },
+            {
               "kind": "Variable",
               "name": "date",
               "variableName": "todayDate"
@@ -250,7 +260,9 @@ return {
               "name": "deskIdsToInclude",
               "value": []
             },
-            (v0/*: any*/)
+            (v0/*: any*/),
+            (v1/*: any*/),
+            (v2/*: any*/)
           ],
           "kind": "ObjectValue",
           "name": "where"
@@ -269,7 +281,7 @@ return {
           "name": "location",
           "plural": false,
           "selections": [
-            (v2/*: any*/)
+            (v5/*: any*/)
           ],
           "storageKey": null
         }
@@ -282,6 +294,6 @@ return {
 };
 })();
 
-(node as any).hash = "bf6b8655ae2a5936caddee6146f24a46";
+(node as any).hash = "9025cee5ba325270ac15144a037a3f6c";
 
 export default node;

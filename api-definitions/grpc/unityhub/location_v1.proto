@@ -115,6 +115,8 @@ message Location {
     bool hasFutureBooking = 7;
     Permissions permissions = 8;
     repeated Member members = 9;
+    repeated OrganizationDeskType deskTypes = 10;
+    repeated OrganizationZone zones = 11;
 }
 
 message Admin_GetInput {
