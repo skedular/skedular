@@ -116,7 +116,7 @@ public class LocationSubscriber(
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private Location RebuildDesks(Shared.Models.Location location,Location existingLocation)
+    private Location RebuildDesks(Shared.Models.Location location, Location existingLocation)
     {
         var itemsToRemove = existingLocation.Desks
             .Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
@@ -201,14 +201,25 @@ public class LocationSubscriber(
                 await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
+            var existingLocationIds = customer.DefaultLocations.Select(item => item.Id).Distinct().ToList();
             customer.DefaultLocations =
                 customer.DefaultLocations.Where(item => item.Id != existingLocation.Id).ToList();
+            var newLocationIds = customer.DefaultLocations.Select(item => item.Id).Distinct().ToList();
 
+            var existingDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
             customer.PreferredDesks =
                 customer.PreferredDesks.Where(item => item.Location.Id != existingLocation.Id).ToList();
+            var newDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
 
             customer = repositoryFactory.CustomerRepository.Update(customer);
-            await customerPublisher.PublishCustomerAsync([mapper.MapTo(customer)!], cancellationToken);
+
+            if (newLocationIds.Count != existingLocationIds.Count ||
+                newLocationIds.Except(existingLocationIds).Any() ||
+                newDeskIds.Count != existingDeskIds.Count ||
+                newDeskIds.Except(existingDeskIds).Any())
+            {
+                await customerPublisher.PublishCustomerAsync([mapper.MapTo(customer)!], cancellationToken);
+            }
         }
     }
 

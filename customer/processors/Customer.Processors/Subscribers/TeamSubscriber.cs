@@ -215,9 +215,15 @@ public class TeamSubscriber(
                 cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
-            customer.DefaultTeams = customer.DefaultTeams.Where(team => team.Id != existingTeam.Id).ToList();
+            var existingTeamIds  = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
+            customer.DefaultTeams = customer.DefaultTeams.Where(item => item.Id != existingTeam.Id).ToList();
+            var newTeamIds  = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
             customer = repositoryFactory.CustomerRepository.Update(customer);
-            await customerPublisher.PublishCustomerAsync([mapper.MapTo(customer)!], cancellationToken);
+
+            if (newTeamIds.Count != existingTeamIds.Count || newTeamIds.Except(existingTeamIds).Any())
+            {
+                await customerPublisher.PublishCustomerAsync([mapper.MapTo(customer)!], cancellationToken);
+            }
         }
     }
 

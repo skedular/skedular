@@ -176,22 +176,44 @@ public class OrganizationSubscriber(
                 await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
+            var existingOrganizationId = customer.DefaultOrganization?.Id; 
+            
             if (customer.DefaultOrganization is not null && customer.DefaultOrganization.Id == organizationId)
             {
                 customer.DefaultOrganization = null;
             }
 
+            var newOrganizationId = customer.DefaultOrganization?.Id; 
+
+            var existingLocationIds = customer.DefaultLocations.Select(item => item.Id).Distinct().ToList();
             customer.DefaultLocations = customer.DefaultLocations
                 .Where(location => location.Organization is null || location.Organization.Id != organizationId)
                 .ToList();
+            var newLocationIds = customer.DefaultLocations.Select(item => item.Id).Distinct().ToList();
+
+            var existingDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
             customer.PreferredDesks = customer.PreferredDesks
                 .Where(desk => desk.Location.Organization is null || desk.Location.Organization.Id != organizationId)
                 .ToList();
+            var newDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
+
+            var existingTeamIds  = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
             customer.DefaultTeams = customer.DefaultTeams
                 .Where(team => team.Organization is null || team.Organization.Id != organizationId).ToList();
+            var newTeamIds  = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
 
             customer = repositoryFactory.CustomerRepository.Update(customer);
-            await customerPublisher.PublishCustomerAsync([mapper.MapTo(customer)!], cancellationToken);
+
+            if (existingOrganizationId != newOrganizationId ||
+                newLocationIds.Count != existingLocationIds.Count ||
+                newLocationIds.Except(existingLocationIds).Any() ||
+                newDeskIds.Count != existingDeskIds.Count ||
+                newDeskIds.Except(existingDeskIds).Any() ||
+                newTeamIds.Count != existingTeamIds.Count ||
+                newTeamIds.Except(existingTeamIds).Any())
+            {
+                await customerPublisher.PublishCustomerAsync([mapper.MapTo(customer)!], cancellationToken);
+            }
         }
     }
 
