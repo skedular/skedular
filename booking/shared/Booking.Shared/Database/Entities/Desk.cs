@@ -27,6 +27,8 @@ public class DeskConfiguration : IEntityTypeConfiguration<Desk>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxDeskNameLength);
+        builder.Property(item => item.Deactivated).HasDefaultValue(false);
+        builder.Property(item => item.RequireBookingApproval).HasDefaultValue(false);
 
         builder
             .HasOne(item => item.Location)
