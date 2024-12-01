@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<516e045ddb24f9a79b6f9a776167314d>>
+ * @generated SignedSource<<e493d22925e431b0df3f7c4d53be6780>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,59 +16,40 @@ export type LocationOrderInput = {
   direction: OrderDirection;
   field: LocationOrderField;
 };
-export type locations_refetchableFragment$variables = {
-  count?: number | null | undefined;
-  cursor?: string | null | undefined;
+export type oldLocations_rootQuery$variables = {
   locationNameSearchText?: string | null | undefined;
-  locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
-  organizationId?: string | null | undefined;
+  locationsSortingValues: ReadonlyArray<LocationOrderInput>;
+  organizationId: string;
 };
-export type locations_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locations_query">;
+export type oldLocations_rootQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"oldLocations_query">;
 };
-export type locations_refetchableFragment = {
-  response: locations_refetchableFragment$data;
-  variables: locations_refetchableFragment$variables;
+export type oldLocations_rootQuery = {
+  response: oldLocations_rootQuery$data;
+  variables: oldLocations_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "locationNameSearchText"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "locationsSortingValues"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationId"
+},
+v3 = [
   {
-    "defaultValue": 50,
-    "kind": "LocalArgument",
-    "name": "count"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "cursor"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "locationNameSearchText"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "locationsSortingValues"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "organizationId"
-  }
-],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "cursor"
-  },
-  {
-    "kind": "Variable",
+    "kind": "Literal",
     "name": "first",
-    "variableName": "count"
+    "value": 50
   },
   {
     "kind": "Variable",
@@ -92,7 +73,7 @@ v1 = [
     "name": "where"
   }
 ],
-v2 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -101,26 +82,19 @@ v2 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "locations_refetchableFragment",
+    "name": "oldLocations_rootQuery",
     "selections": [
       {
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "count",
-            "variableName": "count"
-          },
-          {
-            "kind": "Variable",
-            "name": "cursor",
-            "variableName": "cursor"
-          }
-        ],
+        "args": null,
         "kind": "FragmentSpread",
-        "name": "locations_query"
+        "name": "oldLocations_query"
       }
     ],
     "type": "Query",
@@ -128,13 +102,17 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v2/*: any*/),
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
-    "name": "locations_refetchableFragment",
+    "name": "oldLocations_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v3/*: any*/),
         "concreteType": "LocationConnection",
         "kind": "LinkedField",
         "name": "locations",
@@ -170,7 +148,7 @@ return {
                     "name": "id",
                     "storageKey": null
                   },
-                  (v2/*: any*/),
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -186,7 +164,7 @@ return {
                         "name": "uniqueId",
                         "storageKey": null
                       },
-                      (v2/*: any*/)
+                      (v4/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -252,29 +230,29 @@ return {
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v3/*: any*/),
         "filters": [
           "where",
           "orderBy"
         ],
         "handle": "connection",
-        "key": "locations_locations",
+        "key": "oldLocations_locations",
         "kind": "LinkedHandle",
         "name": "locations"
       }
     ]
   },
   "params": {
-    "cacheID": "ffb23ac78b64029d92ef249039471ce4",
+    "cacheID": "8bf9d5c2a2140bd2180a4343e2b49569",
     "id": null,
     "metadata": {},
-    "name": "locations_refetchableFragment",
+    "name": "oldLocations_rootQuery",
     "operationKind": "query",
-    "text": "query locations_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationNameSearchText: String\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String\n) {\n  ...locations_query_1G22uz\n}\n\nfragment locations_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query oldLocations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String\n) {\n  ...oldLocations_query\n}\n\nfragment oldLocations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0ed02916bfb2778f813f0d431cc89edf";
+(node as any).hash = "8fd3cf50a267015e214da13db906d515";
 
 export default node;

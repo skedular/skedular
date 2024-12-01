@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<42f425db08cbea0f35e61971305a109e>>
+ * @generated SignedSource<<e3aa9425de95d1a48f4086a4d958546a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type locations_query$data = {
+export type oldLocations_query$data = {
   readonly locations: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -25,11 +25,11 @@ export type locations_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "locations_query";
+  readonly " $fragmentType": "oldLocations_query";
 };
-export type locations_query$key = {
-  readonly " $data"?: locations_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"locations_query">;
+export type oldLocations_query$key = {
+  readonly " $data"?: oldLocations_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"oldLocations_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -88,10 +88,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./locations_refetchableFragment.graphql')
+      "operation": require('./oldLocations_refetchableFragment.graphql')
     }
   },
-  "name": "locations_query",
+  "name": "oldLocations_query",
   "selections": [
     {
       "alias": "locations",
@@ -120,7 +120,7 @@ return {
       ],
       "concreteType": "LocationConnection",
       "kind": "LinkedField",
-      "name": "__locations_locations_connection",
+      "name": "__oldLocations_locations_connection",
       "plural": false,
       "selections": [
         {
@@ -239,6 +239,6 @@ return {
 };
 })();
 
-(node as any).hash = "0ed02916bfb2778f813f0d431cc89edf";
+(node as any).hash = "a706ee8205e9a80a93864ad42ef02e3c";
 
 export default node;

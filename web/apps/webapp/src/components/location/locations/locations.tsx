@@ -1,6 +1,6 @@
 import { NewLocationButton } from '@/components/location/addLocation';
 import { MyLocations } from '@/components/location/myLocations';
-import { ZoneSelector } from '@/components/location/zoneSelector';
+import { ZoneSelector } from '@/components/organization/zoneSelector';
 import { DeskTypeSelector } from '@/components/organization/deskTypeSelector';
 import type { locations_rootQuery } from '@/queries/__generated__/locations_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -19,7 +19,7 @@ import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'reac
 type Props = {
   queryReference: PreloadedQuery<locations_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
 };
 
 const RootQuery = graphql`
@@ -92,7 +92,7 @@ const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) 
 const MemoLocations = memo(Locations);
 
 type RelayProps = {
-  organizationId?: string;
+  organizationId: string;
 };
 
 const LocationsWithRelay = ({ organizationId }: RelayProps) => {
@@ -105,7 +105,7 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
 
     loadQuery(
       {
-        organizationId: organizationId ?? '',
+        organizationId,
         locationsSortingValues: [
           {
             direction: 'Ascending',

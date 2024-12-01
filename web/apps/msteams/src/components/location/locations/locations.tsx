@@ -1,20 +1,20 @@
-import Grid from '@mui/material/Grid2';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import TablePagination from '@mui/material/TablePagination';
+import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { Search } from '@repo/shared/components/search';
-import { Direction, Sorting } from '@repo/shared/components/sorting';
+import { defaultPadding } from '@repo/shared/libs/theme';
+import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewLocationButton } from 'components/location/addLocation';
-import { LocationBookingsCard } from 'components/location/locationBookingCard';
+import { MyLocations } from 'components/location/myLocations';
+import { ZoneSelector } from 'components/organization/zoneSelector';
+import { DeskTypeSelector } from 'components/organization/deskTypeSelector';
 import { nanoid } from 'nanoid';
-import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { locations_query$key } from './__generated__/locations_query.graphql';
-import type { LocationOrderField, LocationOrderInput, locations_refetchableFragment } from './__generated__/locations_refetchableFragment.graphql';
+import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { locations_rootQuery } from './__generated__/locations_rootQuery.graphql';
 
 type Props = {
@@ -24,176 +24,69 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query locations_rootQuery($organizationId: String!, $locationsSortingValues: [LocationOrderInput!]!, $locationNameSearchText: String) {
-    ...locations_query
+  query locations_rootQuery(
+    $organizationId: String!
+    $locationsSortingValues: [LocationOrderInput!]!
+    $zonesSortingValues: [OrganizationTagOrderInput!]!
+    $todayDate: DateTime!
+    $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $zoneIds: [String!]!
+    $deskTypeIds: [String!]!
+  ) {
+    ...deskTypeSelector_allDeskTypes_query
+    ...zoneSelector_allZones_query
+    ...myLocations_query
+    ...myLocations_locations_availableOrganizationDesks_query
   }
 `;
 
-const Locations = ({ queryReference, organizationId }: Props) => {
-  const rootDataRelay = usePreloadedQuery<locations_rootQuery>(RootQuery, queryReference);
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<locations_refetchableFragment, locations_query$key>(
-    graphql`
-      fragment locations_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locations_refetchableFragment") {
-        locations(
-          first: $count
-          after: $cursor
-          where: { organizationId: $organizationId, nameContains: $locationNameSearchText }
-          orderBy: $locationsSortingValues
-        ) @connection(key: "locations_locations") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              organization {
-                uniqueId
-                name
-              }
-            }
-          }
-        }
-      }
-    `,
-    rootDataRelay,
-  );
+const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+  const rootData = usePreloadedQuery<locations_rootQuery>(RootQuery, queryReference);
+  const [deskTypeIds, setDeskTypeIds] = useState<string[]>([]);
+  const [zoneIds, setZoneIds] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
 
-  const [, startTransition] = useTransition();
-  const [sortingOrder, setSortingOrder] = useState<LocationOrderInput>({
-    direction: 'Ascending',
-    field: 'Name',
-  });
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(50);
-  const [locationNameSearchText, setLocationNameSearchText] = useState<string>('');
-  const handleSearchTextChange = (str: string) => {
-    setLocationNameSearchText(str);
-
-    handleRefetch(pageSize, sortingOrder, str);
+  const handleDeskTypeChanged = (id?: string) => {
+    setDeskTypeIds(id ? [id] : []);
   };
 
-  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    if (newPage > page) {
-      loadNextPage();
-    }
-
-    setPage(newPage);
+  const handleZoneTypeChanged = (id?: string) => {
+    setZoneIds(id ? [id] : []);
   };
 
-  const handlePageSizeChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const pageSize = parseInt(event.target.value, 10);
-
-    setPageSize(parseInt(event.target.value, 10));
-
-    handleRefetch(pageSize, sortingOrder, locationNameSearchText);
-  };
-
-  const handleRefetch = useCallback(
-    (pageSize: number, order: LocationOrderInput, locationNameSearchText: string) => {
-      startTransition(() => {
-        refetch(
-          {
-            count: pageSize,
-            locationsSortingValues: [order],
-            organizationId,
-            locationNameSearchText,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-            onComplete: () => {
-              setPage(0);
-            },
-          },
-        );
-      });
-    },
-    [refetch, organizationId],
-  );
-
-  const loadNextPage = useCallback(() => {
-    if (isLoadingNext) {
-      return;
-    }
-
-    loadNext(pageSize);
-  }, [loadNext, isLoadingNext, pageSize]);
-
-  const connectionIds = useMemo(() => (rootData.locations ? [rootData.locations.__id] : []), [rootData.locations]);
-  if (!rootData.locations) {
-    return <></>;
-  }
-
-  const slicedEdges = rootData.locations.edges?.slice(
-    page * pageSize,
-    page * pageSize + pageSize > rootData.locations.edges.length ? rootData.locations.edges.length : page * pageSize + pageSize,
-  );
-
-  const handleSortingChanged = (direction: Direction, value: string) => {
-    setSortingOrder({
-      direction,
-      field: value as unknown as LocationOrderField,
-    });
-
-    handleRefetch(
-      pageSize,
-      {
-        direction,
-        field: value as unknown as LocationOrderField,
-      },
-      locationNameSearchText,
-    );
+  const handlViewModeChanged = (newViewMode: 'list' | 'grid') => {
+    setViewMode(newViewMode);
   };
 
   return (
-    <>
-      <NewLocationButton organizationId={organizationId} />
-
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Search size="small" placeholder="Find a location..." defaultValue={locationNameSearchText} onChange={handleSearchTextChange} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <TablePagination
-            count={rootData.locations.totalCount ? rootData.locations.totalCount : 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-          />
-          <Sorting
-            options={[{ id: 'Name', label: 'Name' }]}
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
-          />
-        </Stack>
+    <Stack direction="column" spacing={1}>
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          paddingLeft: defaultPadding,
+          paddingRight: defaultPadding,
+          paddingBottom: defaultPadding,
+          paddingTop: defaultPadding,
+        }}
+      >
+        <DeskTypeSelector rootDataRelay={rootData} onChange={handleDeskTypeChanged} />
+        <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
+        <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
+        <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
+        <NewLocationButton organizationId={organizationId} />
       </Stack>
-
-      <Grid container spacing={1}>
-        {slicedEdges.map((edge) => {
-          if (!edge.node.organization) {
-            return <></>;
-          }
-
-          return (
-            <Grid key={edge.node.id}>
-              <LocationBookingsCard
-                organizationId={edge.node.organization?.uniqueId}
-                organizationName={edge.node.organization?.name}
-                locationId={edge.node.id}
-                locationName={edge.node.name}
-                locationsConnectionIds={connectionIds}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
-    </>
+      <MyLocations
+        rootDataRelay={rootData}
+        rootDataRefetchableRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        deskTypeIds={deskTypeIds}
+        zoneIds={zoneIds}
+        viewMode={viewMode}
+      />
+    </Stack>
   );
 };
 
@@ -209,6 +102,8 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
   const [, startTransition] = useTransition();
 
   useEffect(() => {
+    const today = startOfDay();
+
     loadQuery(
       {
         organizationId,
@@ -218,6 +113,21 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
             field: 'Name',
           },
         ],
+        zonesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        todayDate: today.toISOString(),
+        organizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        deskTypeIds: [],
+        zoneIds: [],
       },
       {
         fetchPolicy: 'store-and-network',

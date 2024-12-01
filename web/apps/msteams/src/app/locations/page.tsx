@@ -1,9 +1,11 @@
-import { Locations } from 'components/location/locations';
+import { Locations, OldLocations } from 'components/location/locations';
 import { RootShell } from 'components/rootShell';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 
 const LocationsPage = () => {
+  const switchToModernUI = useContext(SwitchToModernUIContext);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -21,7 +23,8 @@ const LocationsPage = () => {
 
   return (
     <RootShell>
-      <Locations organizationId={finalOrganizationId} />
+      {!switchToModernUI && <OldLocations organizationId={finalOrganizationId} />}
+      {switchToModernUI && <Locations organizationId={finalOrganizationId} />}
     </RootShell>
   );
 };
