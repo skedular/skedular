@@ -1,4 +1,4 @@
-import { getOrganizationAddLink } from '@/components/organization';
+import { NewOrganizationButton } from '@/components/organization/addOrganization';
 import { OrganizationBookingsCard } from '@/components/organization/organizationBookingCard';
 import type { organizations_query$key } from '@/queries/__generated__/organizations_query.graphql';
 import type {
@@ -7,19 +7,15 @@ import type {
   organizations_refetchableFragment,
 } from '@/queries/__generated__/organizations_refetchableFragment.graphql';
 import type { organizations_rootQuery } from '@/queries/__generated__/organizations_rootQuery.graphql';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { nanoid } from 'nanoid';
-import NextLink from 'next/link';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -150,11 +146,7 @@ const Organizations = ({ queryReference }: Props) => {
 
   return (
     <>
-      <Link component={NextLink} href={getOrganizationAddLink()}>
-        <Button variant="contained" size="small" startIcon={<AddIcon />}>
-          Add Organization
-        </Button>
-      </Link>
+      <NewOrganizationButton />
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Search size="small" placeholder="Find an organization..." defaultValue={organizationNameSearchText} onChange={handleSearchTextChange} />
