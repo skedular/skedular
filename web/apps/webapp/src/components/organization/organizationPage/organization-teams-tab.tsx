@@ -1,6 +1,5 @@
-import { getTeamAddLink } from '@/components/team';
+import { NewTeamButton } from '@/components/team/addTeam';
 import { TeamBookingsCard } from '@/components/team/teamBookingCard';
-import type { organizationTeamsTab_query$key } from '@/queries/__generated__/organizationTeamsTab_query.graphql';
 import type { organizationTeamsTab_rootQuery } from '@/queries/__generated__/organizationTeamsTab_rootQuery.graphql';
 import type { organizationTeamsTab_teams_query$key } from '@/queries/__generated__/organizationTeamsTab_teams_query.graphql';
 import type {
@@ -8,50 +7,35 @@ import type {
   TeamOrderInput,
   organizationTeamsTab_teams_refetchableFragment,
 } from '@/queries/__generated__/organizationTeamsTab_teams_refetchableFragment.graphql';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { nanoid } from 'nanoid';
-import NextLink from 'next/link';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
   queryReference: PreloadedQuery<organizationTeamsTab_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
+  organizationId: string;
 };
 
 const RootQuery = graphql`
   query organizationTeamsTab_rootQuery($organizationId: String!, $organizationTeamsSortingValues: [TeamOrderInput!]!, $teamNameSearchText: String) {
-    ...organizationTeamsTab_query
     ...organizationTeamsTab_teams_query
   }
 `;
 
-const OrganizationTeamsTab = ({ queryReference }: Props) => {
+const OrganizationTeamsTab = ({ queryReference, organizationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<organizationTeamsTab_rootQuery>(RootQuery, queryReference);
-  const rootData = useFragment<organizationTeamsTab_query$key>(
-    graphql`
-      fragment organizationTeamsTab_query on Query {
-        organization(id: $organizationId) {
-          id
-          canModify
-        }
-      }
-    `,
-    rootDataRelay,
-  );
   const {
-    data: rootDataTeams,
+    data: rootData,
     loadNext,
     isLoadingNext,
     refetch,
@@ -138,8 +122,8 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
 
-  const connectionIds = useMemo(() => (rootDataTeams.teams ? [rootDataTeams.teams.__id] : []), [rootDataTeams.teams]);
-  const teamEdges = rootDataTeams.teams ? rootDataTeams.teams.edges : [];
+  const connectionIds = useMemo(() => (rootData.teams ? [rootData.teams.__id] : []), [rootData.teams]);
+  const teamEdges = rootData.teams ? rootData.teams.edges : [];
   const slicedEdges = teamEdges.slice(page * pageSize, page * pageSize + pageSize > teamEdges.length ? teamEdges.length : page * pageSize + pageSize);
 
   const handleSortingChanged = (direction: Direction, value: string) => {
@@ -164,27 +148,15 @@ const OrganizationTeamsTab = ({ queryReference }: Props) => {
     handleRefetch(pageSize, sortingOrder, str);
   };
 
-  if (!rootData.organization) {
-    return <></>;
-  }
-
   return (
     <>
-      {rootData.organization.canModify && (
-        <Stack direction="row" sx={{ width: 'auto' }}>
-          <Link component={NextLink} href={getTeamAddLink(rootData.organization.id)}>
-            <Button variant="contained" size="small" startIcon={<AddIcon />}>
-              Add Team
-            </Button>
-          </Link>
-        </Stack>
-      )}
+      <NewTeamButton organizationId={organizationId} />
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Search size="small" placeholder="Find a team..." defaultValue={teamNameSearchText} onChange={handleSearchTextChange} />
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
-            count={rootDataTeams.teams?.totalCount ? rootDataTeams.teams.totalCount : 0}
+            count={rootData.teams?.totalCount ? rootData.teams.totalCount : 0}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={pageSize}
@@ -265,7 +237,7 @@ const OrganizationTeamsTabWithRelay = ({ onReloadRequired, organizationId }: Rel
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationTeamsTab queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+      <MemoOrganizationTeamsTab queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
     </ErrorBoundary>
   );
 };

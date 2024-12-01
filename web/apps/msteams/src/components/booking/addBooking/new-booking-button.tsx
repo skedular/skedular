@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import { NewIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -54,35 +53,35 @@ const NewBookingButton = ({
   fullWidth,
 }: Props) => {
   const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
-  const [isAddBookingDialogOpen, setIsAddBookingDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  const handleAddBookingClick = () => {
-    setIsAddBookingDialogOpen(true);
+  const handleAddClick = () => {
+    setIsAddDialogOpen(true);
   };
 
-  const handleAddBookingDialogAddClick = () => {
-    setIsAddBookingDialogOpen(false);
+  const handleAddDialogAddClick = () => {
+    setIsAddDialogOpen(false);
 
     if (onReloadRequired) {
       onReloadRequired();
     }
   };
 
-  const handleAddBookingDialogCancelClick = () => {
-    setIsAddBookingDialogOpen(false);
+  const handleAddDialogCancelClick = () => {
+    setIsAddDialogOpen(false);
   };
 
   return (
-    <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-      <Button variant="text" size="large" onClick={handleAddBookingClick} fullWidth={fullWidth} endIcon={<NewIcon />}>
+    <>
+      <Button variant="text" size="large" onClick={handleAddClick} fullWidth={fullWidth} endIcon={<NewIcon />}>
         Add Booking
       </Button>
       <NewBookingDialog
         rootDataRelay={rootData}
         connectionIds={connectionIds ?? []}
-        isDialogOpen={isAddBookingDialogOpen}
-        onAddClicked={handleAddBookingDialogAddClick}
-        onCancelClicked={handleAddBookingDialogCancelClick}
+        isDialogOpen={isAddDialogOpen}
+        onAddClicked={handleAddDialogAddClick}
+        onCancelClicked={handleAddDialogCancelClick}
         organizationId={organizationId}
         locationId={locationId}
         defaultTeamId={defaultTeamId}
@@ -90,7 +89,7 @@ const NewBookingButton = ({
         hideLocationControl={hideLocationControl}
         defaultDate={defaultDate}
       />
-    </Stack>
+    </>
   );
 };
 

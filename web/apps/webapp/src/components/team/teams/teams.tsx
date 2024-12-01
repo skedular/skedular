@@ -1,21 +1,17 @@
-import { getTeamAddLink } from '@/components/team';
+import { NewTeamButton } from '@/components/team/addTeam';
 import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type { teams_query$key } from '@/queries/__generated__/teams_query.graphql';
 import type { TeamOrderField, TeamOrderInput, teams_refetchableFragment } from '@/queries/__generated__/teams_refetchableFragment.graphql';
 import type { teams_rootQuery } from '@/queries/__generated__/teams_rootQuery.graphql';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import { nanoid } from 'nanoid';
-import NextLink from 'next/link';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -150,11 +146,7 @@ const Teams = ({ queryReference }: Props) => {
 
   return (
     <>
-      <Link component={NextLink} href={getTeamAddLink()}>
-        <Button variant="contained" size="small" startIcon={<AddIcon />}>
-          Add Team
-        </Button>
-      </Link>
+      <NewTeamButton />
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Search size="small" placeholder="Find a team..." defaultValue={teamNameSearchText} onChange={handleSearchTextChange} />

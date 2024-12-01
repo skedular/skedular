@@ -1,7 +1,9 @@
+import { NewLocationButton } from '@/components/location/addLocation';
 import { MyLocations } from '@/components/location/myLocations';
 import { ZoneSelector } from '@/components/location/zoneSelector';
 import { DeskTypeSelector } from '@/components/organization/deskTypeSelector';
 import type { locations_rootQuery } from '@/queries/__generated__/locations_rootQuery.graphql';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
@@ -37,7 +39,7 @@ const RootQuery = graphql`
   }
 `;
 
-const Locations = ({ queryReference, onReloadRequired }: Props) => {
+const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<locations_rootQuery>(RootQuery, queryReference);
   const [deskTypeIds, setDeskTypeIds] = useState<string[]>([]);
   const [zoneIds, setZoneIds] = useState<string[]>([]);
@@ -72,6 +74,8 @@ const Locations = ({ queryReference, onReloadRequired }: Props) => {
         <DeskTypeSelector rootDataRelay={rootData} onChange={handleDeskTypeChanged} />
         <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
+        <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
+        <NewLocationButton organizationId={organizationId} />
       </Stack>
       <MyLocations
         rootDataRelay={rootData}
@@ -142,7 +146,7 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocations queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+      <MemoLocations queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
     </ErrorBoundary>
   );
 };

@@ -1,16 +1,13 @@
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
 import graphql from 'babel-plugin-relay/macro';
-import { getLocationAddLink } from 'components/location';
+import { NewLocationButton } from 'components/location/addLocation';
 import { LocationBookingsCard } from 'components/location/locationBookingCard';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
@@ -177,15 +174,7 @@ const OrganizationLocationsTab = ({ queryReference }: Props) => {
 
   return (
     <>
-      {rootData.organization.canModify && (
-        <Stack direction="row" sx={{ width: 'auto' }}>
-          <Link href={getLocationAddLink(rootData.organization.id)}>
-            <Button variant="contained" size="small" startIcon={<AddIcon />}>
-              Add Location
-            </Button>
-          </Link>
-        </Stack>
-      )}
+      {rootData.organization.canModify && <NewLocationButton organizationId={rootData.organization.id} />}
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Search size="small" placeholder="Find a location..." defaultValue={locationNameSearchText} onChange={handleSearchTextChange} />

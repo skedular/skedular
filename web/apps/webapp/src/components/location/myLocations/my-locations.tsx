@@ -141,7 +141,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       return [];
     }
 
-    return rootDataRefetchable.locations.edges.map((edge) => edge.node);
+    return rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name));
   }, [rootDataRefetchable.locations]);
 
   const organizationMembers = useMemo(() => {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5553b7ee2c975567a943df2db13550b2>>
+ * @generated SignedSource<<ade75dc01e71b592725645bf3f9342db>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type organizationTeamsTab_rootQuery$variables = {
   teamNameSearchText?: string | null | undefined;
 };
 export type organizationTeamsTab_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationTeamsTab_query" | "organizationTeamsTab_teams_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationTeamsTab_teams_query">;
 };
 export type organizationTeamsTab_rootQuery = {
   response: organizationTeamsTab_rootQuery$data;
@@ -47,14 +47,7 @@ var v0 = [
     "name": "teamNameSearchText"
   }
 ],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v2 = [
+v1 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -82,7 +75,7 @@ v2 = [
     "name": "where"
   }
 ],
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -96,11 +89,6 @@ return {
     "metadata": null,
     "name": "organizationTeamsTab_rootQuery",
     "selections": [
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "organizationTeamsTab_query"
-      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -118,32 +106,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "organizationId"
-          }
-        ],
-        "concreteType": "OrganizationDetails",
-        "kind": "LinkedField",
-        "name": "organization",
-        "plural": false,
-        "selections": [
-          (v1/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "canModify",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "TeamConnection",
         "kind": "LinkedField",
         "name": "teams",
@@ -172,8 +135,14 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v1/*: any*/),
-                  (v3/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "id",
+                    "storageKey": null
+                  },
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -189,7 +158,7 @@ return {
                         "name": "uniqueId",
                         "storageKey": null
                       },
-                      (v3/*: any*/)
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -255,7 +224,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v1/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -268,16 +237,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6a19baf2b4de9ae5c3864b1cb3876afb",
+    "cacheID": "fe99995301a5fea3a0e7d4ba76f1a38c",
     "id": null,
     "metadata": {},
     "name": "organizationTeamsTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationTeamsTab_rootQuery(\n  $organizationId: String!\n  $organizationTeamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String\n) {\n  ...organizationTeamsTab_query\n  ...organizationTeamsTab_teams_query\n}\n\nfragment organizationTeamsTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    canModify\n  }\n}\n\nfragment organizationTeamsTab_teams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $organizationTeamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationTeamsTab_rootQuery(\n  $organizationId: String!\n  $organizationTeamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String\n) {\n  ...organizationTeamsTab_teams_query\n}\n\nfragment organizationTeamsTab_teams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $organizationTeamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5c1b046e5369d556a2de26358d5bc177";
+(node as any).hash = "1dd154ec91d4f435eec36624497c492f";
 
 export default node;
