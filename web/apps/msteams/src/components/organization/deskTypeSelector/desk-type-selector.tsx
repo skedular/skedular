@@ -1,13 +1,13 @@
-import type { deskTypeSelector_allDeskTypes_query$key } from './__generated__/deskTypeSelector_allDeskTypes_query.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { DeskIcon } from '@repo/shared/components/icons';
+import graphql from 'babel-plugin-relay/macro';
 import { memo, useMemo, useState } from 'react';
 import { useFragment } from 'react-relay';
-import graphql from 'babel-plugin-relay/macro';
+import type { deskTypeSelector_allDeskTypes_query$key } from './__generated__/deskTypeSelector_allDeskTypes_query.graphql';
 
 type Props = {
   rootDataRelay: deskTypeSelector_allDeskTypes_query$key;
@@ -55,7 +55,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
         },
         width: {
           xs: '100%',
-          sm: 'min(100%, 300px)',
+          sm: 'min(100%, 250px)',
         },
       }}
       size="small"

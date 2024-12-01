@@ -119,7 +119,7 @@ const WeekRangePicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
           },
           width: {
             xs: '100%',
-            sm: 'min(100%, 300px)',
+            sm: 'min(100%, 250px)',
           },
         }}
         size="small"
