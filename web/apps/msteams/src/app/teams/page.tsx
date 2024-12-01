@@ -1,9 +1,11 @@
+import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { RootShell } from 'components/rootShell';
-import { Teams } from 'components/team/teams';
-import { memo } from 'react';
+import { OldTeams } from 'components/team/teams';
+import { memo, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 const TeamsPage = () => {
+  const switchToModernUI = useContext(SwitchToModernUIContext);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -21,7 +23,8 @@ const TeamsPage = () => {
 
   return (
     <RootShell>
-      <Teams organizationId={finalOrganizationId} />
+      {!switchToModernUI && <OldTeams organizationId={finalOrganizationId} />}
+      {switchToModernUI && <></>}
     </RootShell>
   );
 };

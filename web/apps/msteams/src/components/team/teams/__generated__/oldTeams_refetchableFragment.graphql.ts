@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<27f81712ac1be0b861f1afce74c3667a>>
+ * @generated SignedSource<<238a719f5957c66ad7b9d6d304e22845>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,19 +16,19 @@ export type TeamOrderInput = {
   direction: OrderDirection;
   field: TeamOrderField;
 };
-export type teams_refetchableFragment$variables = {
+export type oldTeams_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationId?: string | null | undefined;
   teamNameSearchText?: string | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
-export type teams_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"teams_query">;
+export type oldTeams_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"oldTeams_query">;
 };
-export type teams_refetchableFragment = {
-  response: teams_refetchableFragment$data;
-  variables: teams_refetchableFragment$variables;
+export type oldTeams_refetchableFragment = {
+  response: oldTeams_refetchableFragment$data;
+  variables: oldTeams_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -104,7 +104,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "teams_refetchableFragment",
+    "name": "oldTeams_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -120,7 +120,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "teams_query"
+        "name": "oldTeams_query"
       }
     ],
     "type": "Query",
@@ -130,7 +130,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "teams_refetchableFragment",
+    "name": "oldTeams_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -258,23 +258,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "teams_teams",
+        "key": "oldTeams_teams",
         "kind": "LinkedHandle",
         "name": "teams"
       }
     ]
   },
   "params": {
-    "cacheID": "9e81a6103e76857cbdf81790a097a77a",
+    "cacheID": "0c1178ab69bbc3748f6a1a139c7cdddc",
     "id": null,
     "metadata": {},
-    "name": "teams_refetchableFragment",
+    "name": "oldTeams_refetchableFragment",
     "operationKind": "query",
-    "text": "query teams_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $organizationId: String\n  $teamNameSearchText: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...teams_query_1G22uz\n}\n\nfragment teams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query oldTeams_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $organizationId: String\n  $teamNameSearchText: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...oldTeams_query_1G22uz\n}\n\nfragment oldTeams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c2a25b2e3fc248c34be1d76372506cfd";
+(node as any).hash = "20907cb7685e1380e587a9886ce45a74";
 
 export default node;

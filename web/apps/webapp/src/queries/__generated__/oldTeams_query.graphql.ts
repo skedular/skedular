@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f038d7cd2a1ac36a953eff5e670344af>>
+ * @generated SignedSource<<0c88b5b6a76b5d65dd49f3627db25b0e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type teams_query$data = {
+export type oldTeams_query$data = {
   readonly teams: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -25,11 +25,11 @@ export type teams_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "teams_query";
+  readonly " $fragmentType": "oldTeams_query";
 };
-export type teams_query$key = {
-  readonly " $data"?: teams_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"teams_query">;
+export type oldTeams_query$key = {
+  readonly " $data"?: oldTeams_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"oldTeams_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -84,10 +84,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./teams_refetchableFragment.graphql')
+      "operation": require('./oldTeams_refetchableFragment.graphql')
     }
   },
-  "name": "teams_query",
+  "name": "oldTeams_query",
   "selections": [
     {
       "alias": "teams",
@@ -111,7 +111,7 @@ return {
       ],
       "concreteType": "TeamConnection",
       "kind": "LinkedField",
-      "name": "__teams_teams_connection",
+      "name": "__oldTeams_teams_connection",
       "plural": false,
       "selections": [
         {
@@ -230,6 +230,6 @@ return {
 };
 })();
 
-(node as any).hash = "deba3ee64b0247e3852980dc43d7b5b0";
+(node as any).hash = "0b5adae3aed2164c0b9ebd308f2fd8b8";
 
 export default node;

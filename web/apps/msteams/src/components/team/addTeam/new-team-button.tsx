@@ -10,7 +10,7 @@ type Props = {
 
 const NewTeamButton = ({ organizationId, fullWidth }: Props) => (
   <Button href={getTeamAddLink(organizationId)} variant="text" size="large" fullWidth={fullWidth} endIcon={<NewIcon />}>
-    Add Team
+    Create a Team
   </Button>
 );
 

@@ -1,13 +1,19 @@
 'use client';
 
 import { RootShell } from '@/components/rootShell';
-import { Teams } from '@/components/team/teams';
-import { memo } from 'react';
+import { OldTeams } from '@/components/team/teams';
+import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
+import { memo, useContext } from 'react';
 
-const TeamsPage = () => (
-  <RootShell>
-    <Teams />
-  </RootShell>
-);
+const TeamsPage = () => {
+  const switchToModernUI = useContext(SwitchToModernUIContext);
+
+  return (
+    <RootShell>
+      {!switchToModernUI && <OldTeams />}
+      {switchToModernUI && <></>}
+    </RootShell>
+  );
+};
 
 export default memo(TeamsPage);

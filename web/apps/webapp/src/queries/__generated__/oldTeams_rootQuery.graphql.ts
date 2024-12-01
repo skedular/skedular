@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a8ea86fad5b8db074c724b0e58a1ac69>>
+ * @generated SignedSource<<e03ed6262eb0d4954eed36385318a5f1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,16 +16,16 @@ export type TeamOrderInput = {
   direction: OrderDirection;
   field: TeamOrderField;
 };
-export type teams_rootQuery$variables = {
+export type oldTeams_rootQuery$variables = {
   teamNameSearchText?: string | null | undefined;
   teamsSortingValues: ReadonlyArray<TeamOrderInput>;
 };
-export type teams_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"teams_query">;
+export type oldTeams_rootQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"oldTeams_query">;
 };
-export type teams_rootQuery = {
-  response: teams_rootQuery$data;
-  variables: teams_rootQuery$variables;
+export type oldTeams_rootQuery = {
+  response: oldTeams_rootQuery$data;
+  variables: oldTeams_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -77,12 +77,12 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "teams_rootQuery",
+    "name": "oldTeams_rootQuery",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "teams_query"
+        "name": "oldTeams_query"
       }
     ],
     "type": "Query",
@@ -95,7 +95,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "teams_rootQuery",
+    "name": "oldTeams_rootQuery",
     "selections": [
       {
         "alias": null,
@@ -223,23 +223,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "teams_teams",
+        "key": "oldTeams_teams",
         "kind": "LinkedHandle",
         "name": "teams"
       }
     ]
   },
   "params": {
-    "cacheID": "34e74c78a84a2957c77ccead3f2dcfc7",
+    "cacheID": "2ff542e92616a48412b860f900a0bf79",
     "id": null,
     "metadata": {},
-    "name": "teams_rootQuery",
+    "name": "oldTeams_rootQuery",
     "operationKind": "query",
-    "text": "query teams_rootQuery(\n  $teamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String\n) {\n  ...teams_query\n}\n\nfragment teams_query on Query {\n  teams(first: 50, where: {nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query oldTeams_rootQuery(\n  $teamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String\n) {\n  ...oldTeams_query\n}\n\nfragment oldTeams_query on Query {\n  teams(first: 50, where: {nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5e281d85bf4c7429f1b4fcd9d42d2fce";
+(node as any).hash = "e2688a0c02125ca9ced6610367f635f0";
 
 export default node;

@@ -1,3 +1,8 @@
+import { NewTeamButton } from '@/components/team/addTeam';
+import { TeamBookingsCard } from '@/components/team/teamBookingCard';
+import type { oldTeams_query$key } from '@/queries/__generated__/oldTeams_query.graphql';
+import type { TeamOrderField, TeamOrderInput, oldTeams_refetchableFragment } from '@/queries/__generated__/oldTeams_refetchableFragment.graphql';
+import type { oldTeams_rootQuery } from '@/queries/__generated__/oldTeams_rootQuery.graphql';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
@@ -6,47 +11,36 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import graphql from 'babel-plugin-relay/macro';
-import { NewTeamButton } from 'components/team/addTeam';
-import { TeamBookingsCard } from 'components/team/teamBookingCard';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import type { teams_query$key } from './__generated__/teams_query.graphql';
-import type { TeamOrderField, TeamOrderInput, teams_refetchableFragment } from './__generated__/teams_refetchableFragment.graphql';
-import type { teams_rootQuery } from './__generated__/teams_rootQuery.graphql';
+import { PreloadedQuery, graphql, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
-  queryReference: PreloadedQuery<teams_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<oldTeams_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
 };
 
 const RootQuery = graphql`
-  query teams_rootQuery($organizationId: String!, $teamsSortingValues: [TeamOrderInput!]!, $teamNameSearchText: String) {
-    ...teams_query
+  query oldTeams_rootQuery($teamsSortingValues: [TeamOrderInput!]!, $teamNameSearchText: String) {
+    ...oldTeams_query
   }
 `;
 
-const Teams = ({ queryReference, organizationId }: Props) => {
-  const rootDataRelay = usePreloadedQuery<teams_rootQuery>(RootQuery, queryReference);
+const OldTeams = ({ queryReference }: Props) => {
+  const rootDataRelay = usePreloadedQuery<oldTeams_rootQuery>(RootQuery, queryReference);
   const {
     data: rootData,
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<teams_refetchableFragment, teams_query$key>(
+  } = usePaginationFragment<oldTeams_refetchableFragment, oldTeams_query$key>(
     graphql`
-      fragment teams_query on Query
+      fragment oldTeams_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "teams_refetchableFragment") {
-        teams(
-          first: $count
-          after: $cursor
-          where: { organizationId: $organizationId, nameContains: $teamNameSearchText }
-          orderBy: $teamsSortingValues
-        ) @connection(key: "teams_teams") {
+      @refetchable(queryName: "oldTeams_refetchableFragment") {
+        teams(first: $count, after: $cursor, where: { nameContains: $teamNameSearchText }, orderBy: $teamsSortingValues)
+          @connection(key: "oldTeams_teams") {
           __id
           totalCount
           edges {
@@ -102,7 +96,6 @@ const Teams = ({ queryReference, organizationId }: Props) => {
           {
             count: pageSize,
             teamsSortingValues: [order],
-            organizationId,
             teamNameSearchText,
           },
           {
@@ -114,7 +107,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
         );
       });
     },
-    [refetch, organizationId],
+    [refetch],
   );
 
   const loadNextPage = useCallback(() => {
@@ -153,7 +146,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
 
   return (
     <>
-      <NewTeamButton organizationId={organizationId} />
+      <NewTeamButton />
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Search size="small" placeholder="Find a team..." defaultValue={teamNameSearchText} onChange={handleSearchTextChange} />
@@ -175,43 +168,32 @@ const Teams = ({ queryReference, organizationId }: Props) => {
       </Stack>
 
       <Grid container spacing={1}>
-        {slicedEdges.map((edge) => {
-          if (!edge.node.organization) {
-            return <></>;
-          }
-
-          return (
-            <Grid key={edge.node.id}>
-              <TeamBookingsCard
-                organizationId={edge.node.organization?.uniqueId}
-                organizationName={edge.node.organization?.name}
-                teamId={edge.node.id}
-                teamName={edge.node.name}
-                teamsConnectionIds={connectionIds}
-              />
-            </Grid>
-          );
-        })}
+        {slicedEdges.map((edge) => (
+          <Grid key={edge.node.id}>
+            <TeamBookingsCard
+              organizationId={edge.node.organization?.uniqueId}
+              organizationName={edge.node.organization?.name}
+              teamId={edge.node.id}
+              teamName={edge.node.name}
+              teamsConnectionIds={connectionIds}
+            />
+          </Grid>
+        ))}
       </Grid>
     </>
   );
 };
 
-const MemoTeams = memo(Teams);
+const MemoOldTeams = memo(OldTeams);
 
-type RelayProps = {
-  organizationId: string;
-};
-
-const TeamsWithRelay = ({ organizationId }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<teams_rootQuery>(RootQuery);
+const OldTeamsWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<oldTeams_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
   useEffect(() => {
     loadQuery(
       {
-        organizationId,
         teamsSortingValues: [
           {
             direction: 'Ascending',
@@ -223,7 +205,7 @@ const TeamsWithRelay = ({ organizationId }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationId]);
+  }, [loadQuery, triggerReloadId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -237,9 +219,9 @@ const TeamsWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeams queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoOldTeams queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };
 
-export default memo(TeamsWithRelay);
+export default memo(OldTeamsWithRelay);

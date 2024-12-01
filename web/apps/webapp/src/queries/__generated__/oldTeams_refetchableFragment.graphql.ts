@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3ead4dc0a9a890c1714b7609a02f66b6>>
+ * @generated SignedSource<<7932d604e96c2064538d34186eaa015c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,40 +16,53 @@ export type TeamOrderInput = {
   direction: OrderDirection;
   field: TeamOrderField;
 };
-export type teams_rootQuery$variables = {
-  organizationId: string;
+export type oldTeams_refetchableFragment$variables = {
+  count?: number | null | undefined;
+  cursor?: string | null | undefined;
   teamNameSearchText?: string | null | undefined;
-  teamsSortingValues: ReadonlyArray<TeamOrderInput>;
+  teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
-export type teams_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"teams_query">;
+export type oldTeams_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"oldTeams_query">;
 };
-export type teams_rootQuery = {
-  response: teams_rootQuery$data;
-  variables: teams_rootQuery$variables;
+export type oldTeams_refetchableFragment = {
+  response: oldTeams_refetchableFragment$data;
+  variables: oldTeams_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationId"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "teamNameSearchText"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "teamsSortingValues"
-},
-v3 = [
+var v0 = [
   {
-    "kind": "Literal",
+    "defaultValue": 50,
+    "kind": "LocalArgument",
+    "name": "count"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "teamNameSearchText"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "teamsSortingValues"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "cursor"
+  },
+  {
+    "kind": "Variable",
     "name": "first",
-    "value": 50
+    "variableName": "count"
   },
   {
     "kind": "Variable",
@@ -62,18 +75,13 @@ v3 = [
         "kind": "Variable",
         "name": "nameContains",
         "variableName": "teamNameSearchText"
-      },
-      {
-        "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
       }
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v4 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -82,19 +90,26 @@ v4 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "teams_rootQuery",
+    "name": "oldTeams_refetchableFragment",
     "selections": [
       {
-        "args": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "count",
+            "variableName": "count"
+          },
+          {
+            "kind": "Variable",
+            "name": "cursor",
+            "variableName": "cursor"
+          }
+        ],
         "kind": "FragmentSpread",
-        "name": "teams_query"
+        "name": "oldTeams_query"
       }
     ],
     "type": "Query",
@@ -102,17 +117,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v2/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "teams_rootQuery",
+    "name": "oldTeams_refetchableFragment",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "TeamConnection",
         "kind": "LinkedField",
         "name": "teams",
@@ -148,7 +159,7 @@ return {
                     "name": "id",
                     "storageKey": null
                   },
-                  (v4/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -164,7 +175,7 @@ return {
                         "name": "uniqueId",
                         "storageKey": null
                       },
-                      (v4/*: any*/)
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -230,29 +241,29 @@ return {
       },
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v1/*: any*/),
         "filters": [
           "where",
           "orderBy"
         ],
         "handle": "connection",
-        "key": "teams_teams",
+        "key": "oldTeams_teams",
         "kind": "LinkedHandle",
         "name": "teams"
       }
     ]
   },
   "params": {
-    "cacheID": "09c577cd2326bbdce88e4fa6332a150c",
+    "cacheID": "995ae1ae9abc20b5d73e0c4c846ffa76",
     "id": null,
     "metadata": {},
-    "name": "teams_rootQuery",
+    "name": "oldTeams_refetchableFragment",
     "operationKind": "query",
-    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $teamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String\n) {\n  ...teams_query\n}\n\nfragment teams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query oldTeams_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $teamNameSearchText: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...oldTeams_query_1G22uz\n}\n\nfragment oldTeams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3409048f8d35425f6e4e5d7581243894";
+(node as any).hash = "0b5adae3aed2164c0b9ebd308f2fd8b8";
 
 export default node;
