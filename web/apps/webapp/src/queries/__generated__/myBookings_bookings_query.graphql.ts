@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<800e5b594e861760b3fe86f449fb6445>>
+ * @generated SignedSource<<63d51b0c981d3d58e9ad2c77d7439ba2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -47,6 +47,7 @@ export type myBookings_bookings_query$data = {
           readonly uniqueId: string;
         } | null | undefined;
         readonly to: any;
+        readonly " $fragmentSpreads": FragmentRefs<"myBookingCard_BookingDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -59,23 +60,26 @@ export type myBookings_bookings_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = {
+var v0 = [
+  "bookings"
+],
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = [
-  (v0/*: any*/),
-  (v1/*: any*/)
+v3 = [
+  (v1/*: any*/),
+  (v2/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -86,6 +90,16 @@ return {
     {
       "kind": "RootArgument",
       "name": "bookingsSearchCriteriaTo"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "count"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "cursor"
     },
     {
       "kind": "RootArgument",
@@ -102,8 +116,23 @@ return {
   ],
   "kind": "Fragment",
   "metadata": {
+    "connection": [
+      {
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
+        "path": (v0/*: any*/)
+      }
+    ],
     "refetch": {
-      "connection": null,
+      "connection": {
+        "forward": {
+          "count": "count",
+          "cursor": "cursor"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
       "fragmentPathInResult": [],
       "operation": require('./myBookings_bookings_refetchableFragment.graphql')
     }
@@ -111,7 +140,7 @@ return {
   "name": "myBookings_bookings_query",
   "selections": [
     {
-      "alias": null,
+      "alias": "bookings",
       "args": [
         {
           "kind": "Literal",
@@ -141,11 +170,6 @@ return {
               "variableName": "bookingsSearchCriteriaTo"
             },
             {
-              "kind": "Literal",
-              "name": "includeFutureBookingsOnly",
-              "value": true
-            },
-            {
               "kind": "Variable",
               "name": "locationIds",
               "variableName": "locationIds"
@@ -173,7 +197,7 @@ return {
       ],
       "concreteType": "BookingConnection",
       "kind": "LinkedField",
-      "name": "bookings",
+      "name": "__myBookings_bookings_connection",
       "plural": false,
       "selections": [
         {
@@ -235,8 +259,8 @@ return {
                   "name": "customer",
                   "plural": false,
                   "selections": [
-                    (v0/*: any*/),
                     (v1/*: any*/),
+                    (v2/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -275,7 +299,7 @@ return {
                   "kind": "LinkedField",
                   "name": "location",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v3/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -285,7 +309,7 @@ return {
                   "kind": "LinkedField",
                   "name": "team",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v3/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -296,8 +320,8 @@ return {
                   "name": "desks",
                   "plural": true,
                   "selections": [
-                    (v0/*: any*/),
                     (v1/*: any*/),
+                    (v2/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -305,7 +329,7 @@ return {
                       "kind": "LinkedField",
                       "name": "deskTypes",
                       "plural": true,
-                      "selections": (v2/*: any*/),
+                      "selections": (v3/*: any*/),
                       "storageKey": null
                     },
                     {
@@ -315,13 +339,57 @@ return {
                       "kind": "LinkedField",
                       "name": "zones",
                       "plural": true,
-                      "selections": (v2/*: any*/),
+                      "selections": (v3/*: any*/),
                       "storageKey": null
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "myBookingCard_BookingDetails"
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
               "storageKey": null
             }
           ],
@@ -348,6 +416,6 @@ return {
 };
 })();
 
-(node as any).hash = "3a8c214a922b98e598283458fce1508d";
+(node as any).hash = "77911de0ffb8f6de582be2b782a228f8";
 
 export default node;

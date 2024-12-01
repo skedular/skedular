@@ -146,7 +146,7 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
         paddingTop: defaultPadding,
       }}
     >
-      <Typography variant="h5">My Locations</Typography>
+      <Typography variant="h5">My Teams</Typography>
 
       <Divider />
 

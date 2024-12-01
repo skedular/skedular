@@ -1,7 +1,4 @@
 import AvatarGroup from '@mui/material/AvatarGroup';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
@@ -9,17 +6,17 @@ import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { CalendarIcon, DeskIcon, LocationIcon, TeamIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { Zones } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import dayjs, { Dayjs } from 'dayjs';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
-import { useFragment, useRefetchableFragment } from 'react-relay';
+import { useFragment, usePaginationFragment } from 'react-relay';
 import type { myBookings_bookings_query$key } from './__generated__/myBookings_bookings_query.graphql';
 import type { myBookings_bookings_refetchableFragment } from './__generated__/myBookings_bookings_refetchableFragment.graphql';
 import type { myBookings_query$key } from './__generated__/myBookings_query.graphql';
+import MyBookingCard from './my-booking-card';
 
 type Props = {
   rootDataRelay: myBookings_query$key;
@@ -81,21 +78,27 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
     rootDataRelay,
   );
 
-  const [rootDataBookings, refetchBookings] = useRefetchableFragment<myBookings_bookings_refetchableFragment, myBookings_bookings_query$key>(
+  const { data: rootDataBookings, refetch: refetchBookings } = usePaginationFragment<
+    myBookings_bookings_refetchableFragment,
+    myBookings_bookings_query$key
+  >(
     graphql`
-      fragment myBookings_bookings_query on Query @refetchable(queryName: "myBookings_bookings_refetchableFragment") {
+      fragment myBookings_bookings_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
+      @refetchable(queryName: "myBookings_bookings_refetchableFragment") {
         bookings(
+          first: $count
+          after: $cursor
           where: {
             organizationIds: [$organizationId]
             locationIds: $locationIds
             teamIds: $teamIds
             fromGTE: $bookingsSearchCriteriaFrom
             fromLTE: $bookingsSearchCriteriaTo
-            includeFutureBookingsOnly: true
             combineOrganizationsLocationsTeams: true
           }
           orderBy: [{ field: From, direction: Ascending }]
-        ) {
+        ) @connection(key: "myBookings_bookings") {
           __id
           totalCount
           edges {
@@ -132,6 +135,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
                   name
                 }
               }
+              ...myBookingCard_BookingDetails
             }
           }
         }
@@ -148,6 +152,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
     return rootDataBookings.bookings.edges.map((edge) => edge.node);
   }, [rootDataBookings.bookings]);
 
+  const connectionIds = useMemo(() => (rootDataBookings.bookings ? [rootDataBookings.bookings.__id] : []), [rootDataBookings.bookings]);
   const myBookings = useMemo(() => bookings.filter((booking) => booking.customer?.uniqueId === rootData.me?.id), [bookings, rootData.me?.id]);
 
   const convertDateToKey = (date: Dayjs) => dayjs(date).format('YYYY-MM-DD');
@@ -310,82 +315,18 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       {viewMode === 'grid' && (
         <Grid container spacing={defaultSpacing} sx={{ alignItems: 'flex-start' }}>
           {myBookings.map((myBooking) => {
-            const date = dayjs(myBooking.from);
             const key = convertDateToKey(myBooking.from);
-            const desks = myBooking.desks.map((desk) => desk.name).join(', ');
-            const zones = myBooking.desks
-              .flatMap(({ zones }) => zones)
-              .reduce((acc: ZoneDetails[], zone) => {
-                if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
-                  acc.push(zone);
-                }
-
-                return acc;
-              }, []);
-
-            const otherTeammatesBookings = groupedBookingsByFromDate[key]?.filter(
+            const otherTeammates = groupedBookingsByFromDate[key]?.filter(
               (booking) => booking.customer?.uniqueId !== rootData.me?.id && booking.location?.uniqueId === myBooking.location?.uniqueId,
             );
 
             return (
               <Grid key={myBooking.id}>
-                <Card sx={{ width: 250 }}>
-                  <CardHeader
-                    title={
-                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                        <LocationIcon fontSize="medium" />
-                        <Typography variant="h6">{myBooking.location?.name}</Typography>
-                      </Stack>
-                    }
-                  />
-                  <CardContent>
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-                      <CalendarIcon fontSize="medium" />
-                      <Typography variant="body1">{toShortDateWithAdditionalDayInfo(date)}</Typography>
-                    </Stack>
-
-                    <Divider />
-
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-                      <TeamIcon fontSize="medium" />
-                      <Typography variant="body1">{myBooking.team ? myBooking.team.name : 'N/A'}</Typography>
-                    </Stack>
-
-                    <Divider />
-
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-                      <DeskIcon fontSize="medium" />
-                      <Typography variant="body1">{desks.length === 0 ? 'N/A' : desks}</Typography>
-                    </Stack>
-
-                    <Divider />
-
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-                      <ZoneIcon fontSize="medium" />
-                      {zones.length === 0 && <Typography variant="body1">{desks.length === 0 ? 'N/A' : desks}</Typography>}
-                      {zones.length !== 0 && <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
-                    </Stack>
-
-                    <Divider />
-
-                    <Stack direction="column" spacing={1} sx={{ paddingTop: 1, paddingBottom: 1 }}>
-                      <Typography variant="body1">Other teammates coming</Typography>
-                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                        <AvatarGroup max={5}>
-                          {otherTeammatesBookings?.map((booking) => (
-                            <CustomerAvatar
-                              key={booking.customer?.uniqueId}
-                              name={booking.customer}
-                              photo={{ url: booking.customer?.photoUrl }}
-                              size="medium"
-                              showFullName
-                            />
-                          ))}
-                        </AvatarGroup>
-                      </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
+                <MyBookingCard
+                  bookingDetailsRelay={myBooking}
+                  connectionIds={connectionIds}
+                  otherTeammates={otherTeammates!.map(({ customer }) => customer)}
+                />
               </Grid>
             );
           })}
