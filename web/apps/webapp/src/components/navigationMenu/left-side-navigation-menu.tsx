@@ -1,7 +1,7 @@
 import {
   getModernOrganizationLocationsBaseLink,
+  getModernOrganizationTeamsBaseLink,
   getOrganizationBaseLink,
-  getOrganizationTeamsBaseLink,
 } from '@/components/organization/organization-link';
 import type { leftSideNavigationMenu_query$key } from '@/queries/__generated__/leftSideNavigationMenu_query.graphql';
 import Link from '@mui/material/Link';
@@ -52,7 +52,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
   const organizationBaseLink = getOrganizationBaseLink(rootData.organization.id);
   const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
-  const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(rootData.organization.id);
+  const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
   const styles = {
     width: maxWidth - 30,
     marginLeft: 2,
