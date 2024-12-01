@@ -138,7 +138,8 @@ public class Mapper : IMapper
                 Members = MapTo(src.TeamMembers).ToArray()
             };
 
-    private IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src,
+    private IEnumerable<TeamMember> MapTo(
+        IEnumerable<Shared.Database.Entities.TeamMember> src,
         Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 

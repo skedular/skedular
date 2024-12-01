@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2031ad0d69dfa4a8a8f75166d27594e2>>
+ * @generated SignedSource<<6a4cfeef48ff49da47ce57721d382f69>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,16 +16,16 @@ export type TeamOrderInput = {
   direction: OrderDirection;
   field: TeamOrderField;
 };
-export type teams_rootQuery$variables = {
-  organizationId: string;
-  teamsSortingValues: ReadonlyArray<TeamOrderInput>;
+export type myTeams_teams_availableOrganizationDesks_refetchableFragment$variables = {
+  organizationId?: string | null | undefined;
+  teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
-export type teams_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationSelector_allLocations_query" | "myTeams_teams_availableOrganizationDesks_query">;
+export type myTeams_teams_availableOrganizationDesks_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"myTeams_teams_availableOrganizationDesks_query">;
 };
-export type teams_rootQuery = {
-  response: teams_rootQuery$data;
-  variables: teams_rootQuery$variables;
+export type myTeams_teams_availableOrganizationDesks_refetchableFragment = {
+  response: myTeams_teams_availableOrganizationDesks_refetchableFragment$data;
+  variables: myTeams_teams_availableOrganizationDesks_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -42,50 +42,20 @@ var v0 = [
   }
 ],
 v1 = {
-  "fields": [
-    {
-      "kind": "Variable",
-      "name": "organizationId",
-      "variableName": "organizationId"
-    }
-  ],
-  "kind": "ObjectValue",
-  "name": "where"
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "totalCount",
-  "storageKey": null
-},
-v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v5 = {
-  "kind": "ClientExtension",
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "__id",
-      "storageKey": null
-    }
-  ]
-},
-v6 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -97,13 +67,8 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "teams_rootQuery",
+    "name": "myTeams_teams_availableOrganizationDesks_refetchableFragment",
     "selections": [
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "locationSelector_allLocations_query"
-      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -117,47 +82,8 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "teams_rootQuery",
+    "name": "myTeams_teams_availableOrganizationDesks_refetchableFragment",
     "selections": [
-      {
-        "alias": null,
-        "args": [
-          (v1/*: any*/)
-        ],
-        "concreteType": "LocationConnection",
-        "kind": "LinkedField",
-        "name": "locations",
-        "plural": false,
-        "selections": [
-          (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "LocationEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "LocationDetails",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
-                  (v4/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          (v5/*: any*/)
-        ],
-        "storageKey": null
-      },
       {
         "alias": null,
         "args": [
@@ -166,14 +92,30 @@ return {
             "name": "orderBy",
             "variableName": "teamsSortingValues"
           },
-          (v1/*: any*/)
+          {
+            "fields": [
+              {
+                "kind": "Variable",
+                "name": "organizationId",
+                "variableName": "organizationId"
+              }
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
         ],
         "concreteType": "TeamConnection",
         "kind": "LinkedField",
         "name": "teams",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "totalCount",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -190,8 +132,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
-                  (v4/*: any*/),
+                  (v1/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -208,7 +150,7 @@ return {
                         "name": "organizationMember",
                         "plural": false,
                         "selections": [
-                          (v6/*: any*/),
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -217,7 +159,7 @@ return {
                             "name": "customer",
                             "plural": false,
                             "selections": [
-                              (v6/*: any*/),
+                              (v3/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -239,7 +181,7 @@ return {
                                 "name": "familyName",
                                 "storageKey": null
                               },
-                              (v4/*: any*/),
+                              (v2/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -253,7 +195,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v3/*: any*/)
+                      (v1/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -263,23 +205,34 @@ return {
             ],
             "storageKey": null
           },
-          (v5/*: any*/)
+          {
+            "kind": "ClientExtension",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__id",
+                "storageKey": null
+              }
+            ]
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "786224e60440b5618a4e7737d74c4df6",
+    "cacheID": "11f3f6f4e953001fb828d7009690a65f",
     "id": null,
     "metadata": {},
-    "name": "teams_rootQuery",
+    "name": "myTeams_teams_availableOrganizationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $teamsSortingValues: [TeamOrderInput!]!\n) {\n  ...locationSelector_allLocations_query\n  ...myTeams_teams_availableOrganizationDesks_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query on Query {\n  teams(where: {organizationId: $organizationId}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query myTeams_teams_availableOrganizationDesks_refetchableFragment(\n  $organizationId: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...myTeams_teams_availableOrganizationDesks_query\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query on Query {\n  teams(where: {organizationId: $organizationId}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8946693da0739cd980bc2de15b104255";
+(node as any).hash = "261d6faac4b436f09069cf68fbf73dcb";
 
 export default node;

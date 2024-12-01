@@ -1,7 +1,3 @@
-import { LocationSelector } from '@/components/location/locationSelector';
-import { NewTeamButton } from '@/components/team/addTeam';
-import { MyTeams } from '@/components/team/myTeams';
-import type { teams_rootQuery } from '@/queries/__generated__/teams_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
@@ -10,10 +6,15 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { defaultPadding } from '@repo/shared/libs/theme';
 import { startOfDay } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
+import { LocationSelector } from 'components/location/locationSelector';
+import { NewTeamButton } from 'components/team/addTeam';
+import { MyTeams } from 'components/team/myTeams';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import type { teams_rootQuery } from './__generated__/teams_rootQuery.graphql';
 
 type Props = {
   queryReference: PreloadedQuery<teams_rootQuery, Record<string, unknown>>;
