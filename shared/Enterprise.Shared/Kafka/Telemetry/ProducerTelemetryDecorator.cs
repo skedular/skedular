@@ -30,7 +30,7 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
             }
             catch (Exception ex)
             {
-                activityAccessor.RecordException(ex);
+                activityAccessor.AddException(ex);
 
                 throw;
             }
@@ -51,7 +51,7 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
             }
             catch (Exception ex)
             {
-                activityAccessor.RecordException(ex);
+                activityAccessor.AddException(ex);
 
                 throw;
             }
@@ -71,7 +71,7 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
             }
             catch (Exception ex)
             {
-                activityAccessor.RecordException(ex);
+                activityAccessor.AddException(ex);
 
                 throw;
             }
@@ -92,7 +92,7 @@ public class ProducerTelemetryDecorator<TKey, TValue>(
             }
             catch (Exception ex)
             {
-                activityAccessor.RecordException(ex);
+                activityAccessor.AddException(ex);
 
                 throw;
             }

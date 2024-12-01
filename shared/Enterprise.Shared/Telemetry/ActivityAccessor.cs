@@ -7,7 +7,7 @@ namespace Enterprise.Shared.Telemetry;
 public interface IActivityAccessor
 {
     void AddEvent(string name, string tagPrefix, IDictionary<string, string> tags);
-    void RecordException(Exception exception);
+    void AddException(Exception exception);
     IActivitySource GetActivitySource(string activitySourceName);
 }
 
@@ -31,7 +31,7 @@ public class ActivityAccessor : IActivityAccessor
         _activitySources = activitySources.ToDictionary(source => source.Name);
     }
 
-    public void RecordException(Exception exception)
+    public void AddException(Exception exception)
     {
         var activity = _activityGetter.GetCurrent();
 
@@ -41,7 +41,7 @@ public class ActivityAccessor : IActivityAccessor
         }
 
         activity.SetStatus(ActivityStatusCode.Error, exception.Message);
-        activity.RecordException(exception);
+        activity.AddException(exception);
     }
 
     /// <summary>

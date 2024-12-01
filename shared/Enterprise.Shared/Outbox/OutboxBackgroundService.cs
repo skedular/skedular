@@ -135,7 +135,7 @@ public class OutboxBackgroundService<TDbContext>(
                         ? LogLevel.Warning
                         : LogLevel.Critical;
 
-                    activityAccessor.RecordException(ex);
+                    activityAccessor.AddException(ex);
 
                     activityAccessor.AddEvent(
                         "Retry",

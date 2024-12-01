@@ -52,7 +52,7 @@ public class KafkaPublisher<TKey, TValue>(
         }
         catch (Exception ex)
         {
-            activityAccessor.RecordException(ex);
+            activityAccessor.AddException(ex);
 
             throw;
         }

@@ -86,7 +86,7 @@ public abstract class WebHostServiceBase<TProgram>
     {
         if (Activity.Current is { } activity && e.ExceptionObject is Exception ex)
         {
-            activity.RecordException(ex);
+            activity.AddException(ex);
         }
     }
 }

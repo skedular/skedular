@@ -216,7 +216,7 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
                 }
                 catch (Exception ex)
                 {
-                    activity?.RecordException(ex);
+                    activity?.AddException(ex);
                     throw;
                 }
                 finally

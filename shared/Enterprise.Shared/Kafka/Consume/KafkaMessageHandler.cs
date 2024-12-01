@@ -81,7 +81,7 @@ public class KafkaMessageHandler<TKey, TEvent>(
             }
             catch (Exception ex)
             {
-                activityAccessor.RecordException(ex);
+                activityAccessor.AddException(ex);
 
                 throw;
             }
