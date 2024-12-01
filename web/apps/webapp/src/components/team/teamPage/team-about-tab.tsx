@@ -68,7 +68,7 @@ type TeamDetails = {
 const teamSchema = object({
   name: string().min(3, 'Team name must be at least three charcters long.').required('Team name is required'),
   about: string().nullable(),
-  timezone: string().required('Timezone is required'),
+  timezone: string().nullable(),
 });
 
 const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
