@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2031ad0d69dfa4a8a8f75166d27594e2>>
+ * @generated SignedSource<<f307a1cacb9e894a928bce665da7e2b1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -85,7 +85,15 @@ v5 = {
     }
   ]
 },
-v6 = {
+v6 = [
+  {
+    "kind": "Variable",
+    "name": "orderBy",
+    "variableName": "teamsSortingValues"
+  },
+  (v1/*: any*/)
+],
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -160,14 +168,7 @@ return {
       },
       {
         "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "orderBy",
-            "variableName": "teamsSortingValues"
-          },
-          (v1/*: any*/)
-        ],
+        "args": (v6/*: any*/),
         "concreteType": "TeamConnection",
         "kind": "LinkedField",
         "name": "teams",
@@ -208,7 +209,7 @@ return {
                         "name": "organizationMember",
                         "plural": false,
                         "selections": [
-                          (v6/*: any*/),
+                          (v7/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -217,7 +218,7 @@ return {
                             "name": "customer",
                             "plural": false,
                             "selections": [
-                              (v6/*: any*/),
+                              (v7/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -256,8 +257,47 @@ return {
                       (v3/*: any*/)
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__typename",
+                    "storageKey": null
                   }
                 ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "cursor",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PageInfo",
+            "kind": "LinkedField",
+            "name": "pageInfo",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "endCursor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "hasNextPage",
                 "storageKey": null
               }
             ],
@@ -266,16 +306,28 @@ return {
           (v5/*: any*/)
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v6/*: any*/),
+        "filters": [
+          "where",
+          "orderBy"
+        ],
+        "handle": "connection",
+        "key": "myTeams_teams",
+        "kind": "LinkedHandle",
+        "name": "teams"
       }
     ]
   },
   "params": {
-    "cacheID": "786224e60440b5618a4e7737d74c4df6",
+    "cacheID": "c63be8a2206d72e48fe3c3b5067345fe",
     "id": null,
     "metadata": {},
     "name": "teams_rootQuery",
     "operationKind": "query",
-    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $teamsSortingValues: [TeamOrderInput!]!\n) {\n  ...locationSelector_allLocations_query\n  ...myTeams_teams_availableOrganizationDesks_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query on Query {\n  teams(where: {organizationId: $organizationId}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $teamsSortingValues: [TeamOrderInput!]!\n) {\n  ...locationSelector_allLocations_query\n  ...myTeams_teams_availableOrganizationDesks_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query on Query {\n  teams(where: {organizationId: $organizationId}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

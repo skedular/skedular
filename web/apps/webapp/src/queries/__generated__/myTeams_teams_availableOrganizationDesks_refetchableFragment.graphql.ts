@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6a4cfeef48ff49da47ce57721d382f69>>
+ * @generated SignedSource<<05849006b69f1bc6605f70cca7d0b258>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,8 @@ export type TeamOrderInput = {
   field: TeamOrderField;
 };
 export type myTeams_teams_availableOrganizationDesks_refetchableFragment$variables = {
+  count?: number | null | undefined;
+  cursor?: string | null | undefined;
   organizationId?: string | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
@@ -33,6 +35,16 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
+    "name": "count"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
     "name": "organizationId"
   },
   {
@@ -41,21 +53,49 @@ var v0 = [
     "name": "teamsSortingValues"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "cursor"
+  },
+  {
+    "kind": "Variable",
+    "name": "first",
+    "variableName": "count"
+  },
+  {
+    "kind": "Variable",
+    "name": "orderBy",
+    "variableName": "teamsSortingValues"
+  },
+  {
+    "fields": [
+      {
+        "kind": "Variable",
+        "name": "organizationId",
+        "variableName": "organizationId"
+      }
+    ],
+    "kind": "ObjectValue",
+    "name": "where"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -70,7 +110,18 @@ return {
     "name": "myTeams_teams_availableOrganizationDesks_refetchableFragment",
     "selections": [
       {
-        "args": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "count",
+            "variableName": "count"
+          },
+          {
+            "kind": "Variable",
+            "name": "cursor",
+            "variableName": "cursor"
+          }
+        ],
         "kind": "FragmentSpread",
         "name": "myTeams_teams_availableOrganizationDesks_query"
       }
@@ -86,24 +137,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "orderBy",
-            "variableName": "teamsSortingValues"
-          },
-          {
-            "fields": [
-              {
-                "kind": "Variable",
-                "name": "organizationId",
-                "variableName": "organizationId"
-              }
-            ],
-            "kind": "ObjectValue",
-            "name": "where"
-          }
-        ],
+        "args": (v1/*: any*/),
         "concreteType": "TeamConnection",
         "kind": "LinkedField",
         "name": "teams",
@@ -132,8 +166,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v1/*: any*/),
                   (v2/*: any*/),
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -150,7 +184,7 @@ return {
                         "name": "organizationMember",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -159,7 +193,7 @@ return {
                             "name": "customer",
                             "plural": false,
                             "selections": [
-                              (v3/*: any*/),
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -181,7 +215,7 @@ return {
                                 "name": "familyName",
                                 "storageKey": null
                               },
-                              (v2/*: any*/),
+                              (v3/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -195,11 +229,50 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v1/*: any*/)
+                      (v2/*: any*/)
                     ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__typename",
                     "storageKey": null
                   }
                 ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "cursor",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PageInfo",
+            "kind": "LinkedField",
+            "name": "pageInfo",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "endCursor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "hasNextPage",
                 "storageKey": null
               }
             ],
@@ -219,20 +292,32 @@ return {
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "filters": [
+          "where",
+          "orderBy"
+        ],
+        "handle": "connection",
+        "key": "myTeams_teams",
+        "kind": "LinkedHandle",
+        "name": "teams"
       }
     ]
   },
   "params": {
-    "cacheID": "11f3f6f4e953001fb828d7009690a65f",
+    "cacheID": "c5fa2baf6d6ff922a531360fe9d789d7",
     "id": null,
     "metadata": {},
     "name": "myTeams_teams_availableOrganizationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query myTeams_teams_availableOrganizationDesks_refetchableFragment(\n  $organizationId: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...myTeams_teams_availableOrganizationDesks_query\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query on Query {\n  teams(where: {organizationId: $organizationId}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query myTeams_teams_availableOrganizationDesks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...myTeams_teams_availableOrganizationDesks_query_1G22uz\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {organizationId: $organizationId}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "261d6faac4b436f09069cf68fbf73dcb";
+(node as any).hash = "ce2b5c41c7ff3b3720634ea85c91919b";
 
 export default node;

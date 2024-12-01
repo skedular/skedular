@@ -2,9 +2,6 @@ import type { myLocations_locations_availableOrganizationDesks_query$key } from 
 import type { myLocations_locations_availableOrganizationDesks_refetchableFragment } from '@/queries/__generated__/myLocations_locations_availableOrganizationDesks_refetchableFragment.graphql';
 import type { myLocations_query$key } from '@/queries/__generated__/myLocations_query.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -13,11 +10,11 @@ import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { Zones } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
+import MyLocationCard from './my-location-card';
 
 type Props = {
   rootDataRelay: myLocations_query$key;
@@ -92,8 +89,14 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
   >(
     graphql`
       fragment myLocations_locations_availableOrganizationDesks_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "myLocations_locations_availableOrganizationDesks_refetchableFragment") {
-        locations(where: { organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds }, orderBy: $locationsSortingValues) {
+        locations(
+          first: $count
+          after: $cursor
+          where: { organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds }
+          orderBy: $locationsSortingValues
+        ) @connection(key: "myLocations_locations") {
           __id
           totalCount
           edges {
@@ -114,6 +117,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               physicalAddress {
                 formattedAddress
               }
+              ...myLocationCard_LocationDetails
             }
           }
         }
@@ -136,6 +140,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     rootDataRefetchableRelay,
   );
 
+  const connectionIds = useMemo(() => (rootDataRefetchable.locations ? [rootDataRefetchable.locations.__id] : []), [rootDataRefetchable.locations]);
   const locations = useMemo(() => {
     if (!rootDataRefetchable.locations) {
       return [];
@@ -152,7 +157,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     return rootData.organizationMembers.edges.map((edge) => edge.node);
   }, [rootData.organizationMembers]);
 
-  const handleRefetchAllBookings = useCallback(
+  const handleRefetch = useCallback(
     (deskTypeIds: string[], zoneIds: string[]) => {
       startTransition(() => {
         refetch(
@@ -169,7 +174,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     [refetch],
   );
 
-  useEffect(() => handleRefetchAllBookings(deskTypeIds, zoneIds), [handleRefetchAllBookings, deskTypeIds, zoneIds]);
+  useEffect(() => handleRefetch(deskTypeIds, zoneIds), [handleRefetch, deskTypeIds, zoneIds]);
 
   const rows: RowType[] = locations.map((location) => {
     const desksCount = location.desks.length;
@@ -285,67 +290,16 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length
               : 0;
             const availablePercentage = (availableDesksCount / desksCount) * 100;
-            const zones = location.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }));
 
             return (
               <Grid key={location.id}>
-                <Card sx={{ width: 600 }}>
-                  <CardHeader
-                    title={
-                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                        <LocationIcon fontSize="medium" />
-                        <Typography variant="h6">{location.name}</Typography>
-                      </Stack>
-                    }
-                  />
-                  <CardContent>
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1, width: '100%' }}>
-                      <DeskIcon fontSize="medium" />
-                      <Typography variant="body1" sx={{ flexGrow: 0, flexShrink: 0 }}>{`${desksCount} Desks`}</Typography>
-
-                      <Stack direction="column" sx={{ paddingLeft: 20, alignItems: 'flex-end', width: '100%' }}>
-                        <Typography variant="body2">{`${availableDesksCount} Available Today`}</Typography>
-                        <LinearProgress value={availablePercentage} variant="determinate" sx={{ width: '100%' }} />
-                      </Stack>
-                    </Stack>
-
-                    <Divider />
-
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-                      <ZoneIcon fontSize="medium" />
-                      <Zones zones={zones} />
-                    </Stack>
-
-                    <Divider />
-
-                    <Stack direction="row" spacing={1}>
-                      <Stack direction="column" spacing={1}>
-                        <Typography variant="body1">Shared with teammates</Typography>
-                        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                          <AvatarGroup max={5}>
-                            {organizationMembers.map(({ customer }) => (
-                              <CustomerAvatar
-                                key={customer?.uniqueId}
-                                name={customer}
-                                photo={{ url: customer?.photoUrl }}
-                                size="medium"
-                                showFullName
-                              />
-                            ))}
-                          </AvatarGroup>
-                        </Stack>
-                      </Stack>
-
-                      <Divider orientation="vertical" flexItem />
-
-                      <Stack direction="column" spacing={1}>
-                        <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
-                          {location.physicalAddress?.formattedAddress ? location.physicalAddress?.formattedAddress : 'N/A'}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
+                <MyLocationCard
+                  locationDetailsRelay={location}
+                  connectionIds={connectionIds}
+                  availableDesksCount={availableDesksCount}
+                  availablePercentage={availablePercentage}
+                  sharedWithTeammates={organizationMembers!.map(({ customer }) => customer)}
+                />
               </Grid>
             );
           })}

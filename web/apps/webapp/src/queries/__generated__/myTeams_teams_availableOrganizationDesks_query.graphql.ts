@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f0b7467f024eee5a28d073155dad8d0d>>
+ * @generated SignedSource<<a0b6782059a8dac4fb7e8b1ae0ca1cf8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,6 +30,7 @@ export type myTeams_teams_availableOrganizationDesks_query$data = {
           } | null | undefined;
         }>;
         readonly name: string;
+        readonly " $fragmentSpreads": FragmentRefs<"myTeamCard_TeamDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -42,14 +43,17 @@ export type myTeams_teams_availableOrganizationDesks_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = {
+var v0 = [
+  "teams"
+],
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -58,6 +62,16 @@ v1 = {
 };
 return {
   "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "count"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "cursor"
+    },
     {
       "kind": "RootArgument",
       "name": "organizationId"
@@ -69,8 +83,23 @@ return {
   ],
   "kind": "Fragment",
   "metadata": {
+    "connection": [
+      {
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
+        "path": (v0/*: any*/)
+      }
+    ],
     "refetch": {
-      "connection": null,
+      "connection": {
+        "forward": {
+          "count": "count",
+          "cursor": "cursor"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
       "fragmentPathInResult": [],
       "operation": require('./myTeams_teams_availableOrganizationDesks_refetchableFragment.graphql')
     }
@@ -78,7 +107,7 @@ return {
   "name": "myTeams_teams_availableOrganizationDesks_query",
   "selections": [
     {
-      "alias": null,
+      "alias": "teams",
       "args": [
         {
           "kind": "Variable",
@@ -99,7 +128,7 @@ return {
       ],
       "concreteType": "TeamConnection",
       "kind": "LinkedField",
-      "name": "teams",
+      "name": "__myTeams_teams_connection",
       "plural": false,
       "selections": [
         {
@@ -132,7 +161,7 @@ return {
                   "name": "id",
                   "storageKey": null
                 },
-                (v0/*: any*/),
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -149,7 +178,7 @@ return {
                       "name": "organizationMember",
                       "plural": false,
                       "selections": [
-                        (v1/*: any*/),
+                        (v2/*: any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -158,7 +187,7 @@ return {
                           "name": "customer",
                           "plural": false,
                           "selections": [
-                            (v1/*: any*/),
+                            (v2/*: any*/),
                             {
                               "alias": null,
                               "args": null,
@@ -180,7 +209,7 @@ return {
                               "name": "familyName",
                               "storageKey": null
                             },
-                            (v0/*: any*/),
+                            (v1/*: any*/),
                             {
                               "alias": null,
                               "args": null,
@@ -196,8 +225,52 @@ return {
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "myTeamCard_TeamDetails"
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
               "storageKey": null
             }
           ],
@@ -224,6 +297,6 @@ return {
 };
 })();
 
-(node as any).hash = "261d6faac4b436f09069cf68fbf73dcb";
+(node as any).hash = "ce2b5c41c7ff3b3720634ea85c91919b";
 
 export default node;

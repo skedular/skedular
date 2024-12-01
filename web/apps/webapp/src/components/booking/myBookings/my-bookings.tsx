@@ -14,7 +14,7 @@ import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
-import { graphql, useFragment, usePaginationFragment } from 'react-relay';
+import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 import MyBookingCard from './my-booking-card';
 
 type Props = {
@@ -77,10 +77,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
     rootDataRelay,
   );
 
-  const { data: rootDataBookings, refetch: refetchBookings } = usePaginationFragment<
-    myBookings_bookings_refetchableFragment,
-    myBookings_bookings_query$key
-  >(
+  const [rootDataRefetchable, refetch] = useRefetchableFragment<myBookings_bookings_refetchableFragment, myBookings_bookings_query$key>(
     graphql`
       fragment myBookings_bookings_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
@@ -144,14 +141,14 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
   );
 
   const bookings = useMemo(() => {
-    if (!rootDataBookings.bookings) {
+    if (!rootDataRefetchable.bookings) {
       return [];
     }
 
-    return rootDataBookings.bookings.edges.map((edge) => edge.node);
-  }, [rootDataBookings.bookings]);
+    return rootDataRefetchable.bookings.edges.map((edge) => edge.node);
+  }, [rootDataRefetchable.bookings]);
 
-  const connectionIds = useMemo(() => (rootDataBookings.bookings ? [rootDataBookings.bookings.__id] : []), [rootDataBookings.bookings]);
+  const connectionIds = useMemo(() => (rootDataRefetchable.bookings ? [rootDataRefetchable.bookings.__id] : []), [rootDataRefetchable.bookings]);
   const myBookings = useMemo(() => bookings.filter((booking) => booking.customer?.uniqueId === rootData.me?.id), [bookings, rootData.me?.id]);
 
   const convertDateToKey = (date: Dayjs) => dayjs(date).format('YYYY-MM-DD');
@@ -173,10 +170,10 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
     );
   }, [bookings]);
 
-  const handleRefetchAllBookings = useCallback(
+  const handleRefetch = useCallback(
     (from: Dayjs, to: Dayjs, locationIds: string[], teamIds: string[]) => {
       startTransition(() => {
-        refetchBookings(
+        refetch(
           {
             bookingsSearchCriteriaFrom: from.toISOString(),
             bookingsSearchCriteriaTo: to.toISOString(),
@@ -189,10 +186,10 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
         );
       });
     },
-    [refetchBookings],
+    [refetch],
   );
 
-  useEffect(() => handleRefetchAllBookings(from, to, locationIds, teamIds), [handleRefetchAllBookings, from, to, locationIds, teamIds]);
+  useEffect(() => handleRefetch(from, to, locationIds, teamIds), [handleRefetch, from, to, locationIds, teamIds]);
 
   const rows: RowType[] = myBookings.map((myBooking) => {
     const zones = myBooking.desks
@@ -293,7 +290,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
     },
   ];
 
-  if (!rootDataBookings.bookings) {
+  if (!rootDataRefetchable.bookings) {
     return <></>;
   }
 

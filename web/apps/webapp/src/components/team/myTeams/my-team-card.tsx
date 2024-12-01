@@ -1,0 +1,78 @@
+import type { myTeamCard_TeamDetails$key } from '@/queries/__generated__/myTeamCard_TeamDetails.graphql';
+import AvatarGroup from '@mui/material/AvatarGroup';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { LocationIcon } from '@repo/shared/components/icons';
+import { memo } from 'react';
+import { graphql, useFragment } from 'react-relay';
+
+type Props = {
+  teamDetailsRelay: myTeamCard_TeamDetails$key;
+  connectionIds: string[];
+  teammates: CustomerDetails[];
+};
+
+type CustomerDetails = {
+  uniqueId: string;
+  givenName?: string | null | undefined;
+  middleName?: string | null | undefined;
+  familyName?: string | null | undefined;
+  name?: string | null | undefined;
+  photoUrl?: string | null | undefined;
+};
+
+const MyTeamCard = ({ teamDetailsRelay, teammates }: Props) => {
+  const teamDetails = useFragment(
+    graphql`
+      fragment myTeamCard_TeamDetails on TeamDetails {
+        id
+        name
+        members {
+          organizationMember {
+            uniqueId
+            customer {
+              uniqueId
+              givenName
+              middleName
+              familyName
+              name
+              photoUrl
+            }
+          }
+        }
+      }
+    `,
+    teamDetailsRelay,
+  );
+
+  return (
+    <Card sx={{ width: 600 }}>
+      <CardHeader
+        title={
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            <LocationIcon fontSize="medium" />
+            <Typography variant="h6">{teamDetails.name}</Typography>
+          </Stack>
+        }
+      />
+      <CardContent>
+        <Stack direction="column" spacing={1} sx={{ paddingTop: 1, paddingBottom: 1 }}>
+          <Typography variant="body1">Members of this team</Typography>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+            <AvatarGroup max={5}>
+              {teammates.map((item) => (
+                <CustomerAvatar key={item.uniqueId} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
+              ))}
+            </AvatarGroup>
+          </Stack>
+        </Stack>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default memo(MyTeamCard);

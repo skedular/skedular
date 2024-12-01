@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a13ed94265c9e8cfaac1866c52a254d7>>
+ * @generated SignedSource<<d36928563f026656526fadd004756947>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,6 +36,7 @@ export type myLocations_locations_availableOrganizationDesks_query$data = {
           readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
+        readonly " $fragmentSpreads": FragmentRefs<"myLocationCard_LocationDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -48,48 +49,61 @@ export type myLocations_locations_availableOrganizationDesks_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = {
+var v0 = [
+  "locations"
+],
+v1 = {
   "kind": "Variable",
   "name": "deskTypeIds",
   "variableName": "deskTypeIds"
 },
-v1 = {
+v2 = {
   "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
 },
-v2 = {
+v3 = {
   "kind": "Variable",
   "name": "zoneIds",
   "variableName": "zoneIds"
 },
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v6 = [
-  (v5/*: any*/),
-  (v4/*: any*/)
+v7 = [
+  (v6/*: any*/),
+  (v5/*: any*/)
 ];
 return {
   "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "count"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "cursor"
+    },
     {
       "kind": "RootArgument",
       "name": "deskTypeIds"
@@ -113,8 +127,23 @@ return {
   ],
   "kind": "Fragment",
   "metadata": {
+    "connection": [
+      {
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
+        "path": (v0/*: any*/)
+      }
+    ],
     "refetch": {
-      "connection": null,
+      "connection": {
+        "forward": {
+          "count": "count",
+          "cursor": "cursor"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
       "fragmentPathInResult": [],
       "operation": require('./myLocations_locations_availableOrganizationDesks_refetchableFragment.graphql')
     }
@@ -122,7 +151,7 @@ return {
   "name": "myLocations_locations_availableOrganizationDesks_query",
   "selections": [
     {
-      "alias": null,
+      "alias": "locations",
       "args": [
         {
           "kind": "Variable",
@@ -131,9 +160,9 @@ return {
         },
         {
           "fields": [
-            (v0/*: any*/),
             (v1/*: any*/),
-            (v2/*: any*/)
+            (v2/*: any*/),
+            (v3/*: any*/)
           ],
           "kind": "ObjectValue",
           "name": "where"
@@ -141,7 +170,7 @@ return {
       ],
       "concreteType": "LocationConnection",
       "kind": "LinkedField",
-      "name": "locations",
+      "name": "__myLocations_locations_connection",
       "plural": false,
       "selections": [
         {
@@ -167,8 +196,8 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v3/*: any*/),
                 (v4/*: any*/),
+                (v5/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -176,7 +205,7 @@ return {
                   "kind": "LinkedField",
                   "name": "deskTypes",
                   "plural": true,
-                  "selections": (v6/*: any*/),
+                  "selections": (v7/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -186,7 +215,7 @@ return {
                   "kind": "LinkedField",
                   "name": "zones",
                   "plural": true,
-                  "selections": (v6/*: any*/),
+                  "selections": (v7/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -197,7 +226,7 @@ return {
                   "name": "desks",
                   "plural": true,
                   "selections": [
-                    (v3/*: any*/)
+                    (v4/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -218,8 +247,52 @@ return {
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "myLocationCard_LocationDetails"
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
               "storageKey": null
             }
           ],
@@ -260,9 +333,9 @@ return {
               "name": "deskIdsToInclude",
               "value": []
             },
-            (v0/*: any*/),
             (v1/*: any*/),
-            (v2/*: any*/)
+            (v2/*: any*/),
+            (v3/*: any*/)
           ],
           "kind": "ObjectValue",
           "name": "where"
@@ -281,7 +354,7 @@ return {
           "name": "location",
           "plural": false,
           "selections": [
-            (v5/*: any*/)
+            (v6/*: any*/)
           ],
           "storageKey": null
         }
@@ -294,6 +367,6 @@ return {
 };
 })();
 
-(node as any).hash = "9025cee5ba325270ac15144a037a3f6c";
+(node as any).hash = "e80b87ea2f2a8c6afe8a5a02f879ded5";
 
 export default node;

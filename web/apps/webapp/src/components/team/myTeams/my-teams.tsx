@@ -1,9 +1,6 @@
 import type { myTeams_teams_availableOrganizationDesks_query$key } from '@/queries/__generated__/myTeams_teams_availableOrganizationDesks_query.graphql';
 import type { myTeams_teams_availableOrganizationDesks_refetchableFragment } from '@/queries/__generated__/myTeams_teams_availableOrganizationDesks_refetchableFragment.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
@@ -11,10 +8,10 @@ import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { LocationIcon } from '@repo/shared/components/icons';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
+import MyTeamCard from './my-team-card';
 
 type Props = {
   rootDataRelay: myTeams_teams_availableOrganizationDesks_query$key;
@@ -42,14 +39,16 @@ type RowType = {
 };
 
 const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment<
+  const [rootDataRefetchable, refetch] = useRefetchableFragment<
     myTeams_teams_availableOrganizationDesks_refetchableFragment,
     myTeams_teams_availableOrganizationDesks_query$key
   >(
     graphql`
       fragment myTeams_teams_availableOrganizationDesks_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "myTeams_teams_availableOrganizationDesks_refetchableFragment") {
-        teams(where: { organizationId: $organizationId }, orderBy: $teamsSortingValues) {
+        teams(first: $count, after: $cursor, where: { organizationId: $organizationId }, orderBy: $teamsSortingValues)
+          @connection(key: "myTeams_teams") {
           __id
           totalCount
           edges {
@@ -69,6 +68,7 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
                   }
                 }
               }
+              ...myTeamCard_TeamDetails
             }
           }
         }
@@ -77,15 +77,16 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
     rootDataRelay,
   );
 
+  const connectionIds = useMemo(() => (rootDataRefetchable.teams ? [rootDataRefetchable.teams.__id] : []), [rootDataRefetchable.teams]);
   const teams = useMemo(() => {
-    if (!rootData.teams) {
+    if (!rootDataRefetchable.teams) {
       return [];
     }
 
-    return rootData.teams.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name));
-  }, [rootData.teams]);
+    return rootDataRefetchable.teams.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name));
+  }, [rootDataRefetchable.teams]);
 
-  const handleRefetchAllBookings = useCallback(() => {
+  const handleRefetch = useCallback(() => {
     startTransition(() => {
       refetch(
         {},
@@ -96,7 +97,7 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
     });
   }, [refetch]);
 
-  useEffect(() => handleRefetchAllBookings(), [handleRefetchAllBookings]);
+  useEffect(() => handleRefetch(), [handleRefetch]);
 
   const rows: RowType[] = teams.map((team) => {
     return {
@@ -131,7 +132,7 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
     },
   ];
 
-  if (!rootData.teams) {
+  if (!rootDataRefetchable.teams) {
     return <></>;
   }
 
@@ -151,42 +152,17 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
 
       {viewMode === 'grid' && (
         <Grid container spacing={defaultSpacing} sx={{ alignItems: 'flex-start' }}>
-          {teams.map((team) => {
-            return (
-              <Grid key={team.id}>
-                <Card sx={{ width: 600 }}>
-                  <CardHeader
-                    title={
-                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                        <LocationIcon fontSize="medium" />
-                        <Typography variant="h6">{team.name}</Typography>
-                      </Stack>
-                    }
-                  />
-                  <CardContent>
-                    <Stack direction="column" spacing={1} sx={{ paddingTop: 1, paddingBottom: 1 }}>
-                      <Typography variant="body1">Members of this team</Typography>
-                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                        <AvatarGroup max={5}>
-                          {team.members
-                            .filter(({ organizationMember }) => !!organizationMember)
-                            .map(({ organizationMember }) => (
-                              <CustomerAvatar
-                                key={organizationMember!.customer?.uniqueId}
-                                name={organizationMember!.customer}
-                                photo={{ url: organizationMember!.customer?.photoUrl }}
-                                size="medium"
-                                showFullName
-                              />
-                            ))}
-                        </AvatarGroup>
-                      </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-            );
-          })}
+          {teams.map((team) => (
+            <Grid key={team.id}>
+              <MyTeamCard
+                teamDetailsRelay={team}
+                connectionIds={connectionIds}
+                teammates={team.members
+                  .filter(({ organizationMember }) => !!organizationMember)!
+                  .map(({ organizationMember }) => organizationMember!.customer)}
+              />
+            </Grid>
+          ))}
         </Grid>
       )}
 
