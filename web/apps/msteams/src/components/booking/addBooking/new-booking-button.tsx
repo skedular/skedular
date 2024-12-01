@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import { NewIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
@@ -75,12 +74,9 @@ const NewBookingButton = ({
 
   return (
     <Stack direction="row" sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-      <Button variant="text" size="large" onClick={handleAddBookingClick} fullWidth={fullWidth}>
+      <Button variant="text" size="large" onClick={handleAddBookingClick} fullWidth={fullWidth} endIcon={<NewIcon />}>
         Add Booking
       </Button>
-      <IconButton color="inherit" onClick={handleAddBookingClick}>
-        <NewIcon fontSize="large" />
-      </IconButton>
       <NewBookingDialog
         rootDataRelay={rootData}
         connectionIds={connectionIds ?? []}
