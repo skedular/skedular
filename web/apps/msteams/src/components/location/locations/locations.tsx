@@ -9,8 +9,8 @@ import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewLocationButton } from 'components/location/addLocation';
 import { MyLocations } from 'components/location/myLocations';
-import { ZoneSelector } from 'components/organization/zoneSelector';
 import { DeskTypeSelector } from 'components/organization/deskTypeSelector';
+import { ZoneSelector } from 'components/organization/zoneSelector';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -82,6 +82,7 @@ const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) 
         rootDataRelay={rootData}
         rootDataRefetchableRelay={rootData}
         onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
         deskTypeIds={deskTypeIds}
         zoneIds={zoneIds}
         viewMode={viewMode}

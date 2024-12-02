@@ -12,7 +12,8 @@ import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { Zones } from '@repo/shared/components/zone';
 import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
-import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
+import { startOfDay } from '@repo/shared/libs/utils';
+import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 import MyLocationCard from './my-location-card';
 
@@ -20,6 +21,7 @@ type Props = {
   rootDataRelay: myLocations_query$key;
   rootDataRefetchableRelay: myLocations_locations_availableOrganizationDesks_query$key;
   onReloadRequired: () => void;
+  organizationId: string;
   deskTypeIds: string[];
   zoneIds: string[];
   viewMode: 'list' | 'grid';
@@ -57,7 +59,7 @@ type RowType = {
   teammates: ReadonlyArray<CustomerDetails>;
 };
 
-const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, deskTypeIds, zoneIds, viewMode }: Props) => {
+const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, organizationId, deskTypeIds, zoneIds, viewMode }: Props) => {
   const rootData = useFragment<myLocations_query$key>(
     graphql`
       fragment myLocations_query on Query {
@@ -140,6 +142,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     rootDataRefetchableRelay,
   );
 
+  const [today] = useState(startOfDay());
   const connectionIds = useMemo(() => (rootDataRefetchable.locations ? [rootDataRefetchable.locations.__id] : []), [rootDataRefetchable.locations]);
   const locations = useMemo(() => {
     if (!rootDataRefetchable.locations) {
@@ -295,6 +298,9 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               <Grid key={location.id}>
                 <MyLocationCard
                   locationDetailsRelay={location}
+                  onReloadRequired={onReloadRequired}
+                  organizationId={organizationId}
+                  defaultDate={today}
                   connectionIds={connectionIds}
                   availableDesksCount={availableDesksCount}
                   availablePercentage={availablePercentage}

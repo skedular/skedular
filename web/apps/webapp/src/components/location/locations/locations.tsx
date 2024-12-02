@@ -1,7 +1,7 @@
 import { NewLocationButton } from '@/components/location/addLocation';
 import { MyLocations } from '@/components/location/myLocations';
-import { ZoneSelector } from '@/components/organization/zoneSelector';
 import { DeskTypeSelector } from '@/components/organization/deskTypeSelector';
+import { ZoneSelector } from '@/components/organization/zoneSelector';
 import type { locations_rootQuery } from '@/queries/__generated__/locations_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -81,6 +81,7 @@ const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) 
         rootDataRelay={rootData}
         rootDataRefetchableRelay={rootData}
         onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
         deskTypeIds={deskTypeIds}
         zoneIds={zoneIds}
         viewMode={viewMode}

@@ -10,7 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { DeskIcon, HomeIcon, LocationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
+import { DeskIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import Image from 'next/image';
 import NextLink from 'next/link';
@@ -111,12 +111,25 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
       {rootData.organization.canModify && (
         <ListItem disablePadding>
-          <Link component={NextLink} href="/notifications">
-            <ListItemButton selected={pathName === '/notifications'} sx={{ ...styles, borderRadius: pathName === '/notifications' ? 4 : 0 }}>
+          <Link component={NextLink} href="/manageseats">
+            <ListItemButton selected={pathName === '/manageseats'} sx={{ ...styles, borderRadius: pathName === '/manageseats' ? 4 : 0 }}>
               <ListItemIcon>
                 <DeskIcon excludeTooltip />
               </ListItemIcon>
               <ListItemText>Manage Seats</ListItemText>
+            </ListItemButton>
+          </Link>
+        </ListItem>
+      )}
+
+      {rootData.organization.canModify && (
+        <ListItem disablePadding>
+          <Link component={NextLink} href="/managemembers">
+            <ListItemButton selected={pathName === '/managemembers'} sx={{ ...styles, borderRadius: pathName === '/managemembers' ? 4 : 0 }}>
+              <ListItemIcon>
+                <MembersIcon excludeTooltip />
+              </ListItemIcon>
+              <ListItemText>Manage Members</ListItemText>
             </ListItemButton>
           </Link>
         </ListItem>

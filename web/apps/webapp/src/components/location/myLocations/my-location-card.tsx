@@ -1,5 +1,7 @@
+import { NewBookingButton } from '@/components/booking/addBooking';
 import type { myLocationCard_LocationDetails$key } from '@/queries/__generated__/myLocationCard_LocationDetails.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -10,15 +12,19 @@ import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { Zones } from '@repo/shared/components/zone';
+import { Dayjs } from 'dayjs';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   locationDetailsRelay: myLocationCard_LocationDetails$key;
+  onReloadRequired: () => void;
+  organizationId: string;
   connectionIds: string[];
   sharedWithTeammates: CustomerDetails[];
   availableDesksCount: number;
   availablePercentage: number;
+  defaultDate: Dayjs;
 };
 
 type CustomerDetails = {
@@ -30,7 +36,15 @@ type CustomerDetails = {
   photoUrl?: string | null | undefined;
 };
 
-const MyLocationCard = ({ locationDetailsRelay, sharedWithTeammates, availableDesksCount, availablePercentage }: Props) => {
+const MyLocationCard = ({
+  locationDetailsRelay,
+  onReloadRequired,
+  organizationId,
+  sharedWithTeammates,
+  availableDesksCount,
+  availablePercentage,
+  defaultDate,
+}: Props) => {
   const locationDetails = useFragment(
     graphql`
       fragment myLocationCard_LocationDetails on LocationDetails {
@@ -65,6 +79,19 @@ const MyLocationCard = ({ locationDetailsRelay, sharedWithTeammates, availableDe
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <LocationIcon fontSize="medium" />
             <Typography variant="h6">{locationDetails.name}</Typography>
+            <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
+            <NewBookingButton
+              hideLocationControl={false}
+              hideOrganizationControl={true}
+              onReloadRequired={onReloadRequired}
+              defaultDate={defaultDate}
+              organizationId={organizationId}
+              locationId={locationDetails.id}
+              label="Book Now"
+              hideIcon
+              variant="contained"
+              size="small"
+            />
           </Stack>
         }
       />

@@ -23,6 +23,10 @@ type Props = {
   hideLocationControl?: boolean;
   defaultDate?: Dayjs;
   fullWidth?: boolean;
+  label?: string;
+  hideIcon?: boolean;
+  variant?: 'text' | 'outlined' | 'contained';
+  size?: 'small' | 'medium' | 'large';
 };
 
 const RootQuery = graphql`
@@ -51,6 +55,10 @@ const NewBookingButton = ({
   hideLocationControl,
   defaultDate,
   fullWidth,
+  label,
+  hideIcon,
+  variant,
+  size,
 }: Props) => {
   const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -73,8 +81,15 @@ const NewBookingButton = ({
 
   return (
     <>
-      <Button variant="text" size="large" onClick={handleAddClick} fullWidth={fullWidth} endIcon={<NewIcon />}>
-        Add Booking
+      <Button
+        variant={variant ?? 'text'}
+        size={size ?? 'large'}
+        onClick={handleAddClick}
+        fullWidth={fullWidth}
+        endIcon={hideIcon ? null : <NewIcon />}
+        sx={{ borderRadius: 4 }}
+      >
+        {label ?? 'Add Booking'}
       </Button>
       <NewBookingDialog
         rootDataRelay={rootData}
@@ -105,6 +120,10 @@ type RelayProps = {
   hideLocationControl?: boolean;
   defaultDate?: Dayjs;
   fullWidth?: boolean;
+  label?: string;
+  hideIcon?: boolean;
+  variant?: 'text' | 'outlined' | 'contained';
+  size?: 'small' | 'medium' | 'large';
 };
 
 const NewBookingButtonWithRelay = ({
@@ -117,6 +136,10 @@ const NewBookingButtonWithRelay = ({
   hideLocationControl,
   defaultDate,
   fullWidth,
+  label,
+  hideIcon,
+  variant,
+  size,
 }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<newBookingButton_rootQuery>(RootQuery);
 
@@ -161,6 +184,10 @@ const NewBookingButtonWithRelay = ({
         onReloadRequired={onReloadRequired}
         defaultDate={defaultDate}
         fullWidth={fullWidth}
+        label={label}
+        hideIcon={hideIcon}
+        variant={variant}
+        size={size}
       />
     </ErrorBoundary>
   );
