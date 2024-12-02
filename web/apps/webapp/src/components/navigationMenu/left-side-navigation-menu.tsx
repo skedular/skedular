@@ -22,9 +22,10 @@ type Props = {
   rootDataRelay: leftSideNavigationMenu_query$key;
   onReloadRequired: () => void;
   maxWidth: number;
+  showIconsOnly?: boolean;
 };
 
-const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
+const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Props) => {
   const rootData = useFragment<leftSideNavigationMenu_query$key>(
     graphql`
       fragment leftSideNavigationMenu_query on Query {
@@ -39,20 +40,19 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
 
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
-  const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
+  const logoUrl =
+    paletteMode === 'dark'
+      ? showIconsOnly
+        ? '/images/skedular-icon-inverse.svg'
+        : '/images/skedular-logo-inverse.svg'
+      : showIconsOnly
+        ? '/images/skedular-icon-primary.svg'
+        : '/images/skedular-logo-primary.svg';
   const originalWidth = 779;
   const originalHeight = 163;
   const percentage = ((maxWidth - 30) * 100) / originalWidth;
-  const width = (originalWidth * percentage) / 100;
-  const height = (originalHeight * percentage) / 100;
-
-  if (!rootData?.organization) {
-    return <></>;
-  }
-
-  const organizationBaseLink = getOrganizationBaseLink(rootData.organization.id);
-  const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
-  const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
+  const width = showIconsOnly ? 30 : (originalWidth * percentage) / 100;
+  const height = showIconsOnly ? 30 : (originalHeight * percentage) / 100;
   const styles = {
     width: maxWidth - 30,
     marginLeft: 2,
@@ -63,6 +63,14 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
       marginLeft: 2,
     },
   };
+
+  if (!rootData?.organization) {
+    return <></>;
+  }
+
+  const organizationBaseLink = getOrganizationBaseLink(rootData.organization.id);
+  const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
+  const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
 
   return (
     <List>
@@ -76,7 +84,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
             <ListItemIcon>
               <HomeIcon excludeTooltip />
             </ListItemIcon>
-            <ListItemText>Home</ListItemText>
+            {!showIconsOnly && <ListItemText>Home</ListItemText>}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -90,7 +98,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
             <ListItemIcon>
               <LocationIcon excludeTooltip />
             </ListItemIcon>
-            <ListItemText>Locations</ListItemText>
+            {!showIconsOnly && <ListItemText>Locations</ListItemText>}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -104,7 +112,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
             <ListItemIcon>
               <TeamIcon excludeTooltip />
             </ListItemIcon>
-            <ListItemText>Teams</ListItemText>
+            {!showIconsOnly && <ListItemText>Teams</ListItemText>}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -116,7 +124,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
               <ListItemIcon>
                 <DeskIcon excludeTooltip />
               </ListItemIcon>
-              <ListItemText>Manage Seats</ListItemText>
+              {!showIconsOnly && <ListItemText>Manage Seats</ListItemText>}
             </ListItemButton>
           </Link>
         </ListItem>
@@ -129,7 +137,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
               <ListItemIcon>
                 <MembersIcon excludeTooltip />
               </ListItemIcon>
-              <ListItemText>Manage Members</ListItemText>
+              {!showIconsOnly && <ListItemText>Manage Members</ListItemText>}
             </ListItemButton>
           </Link>
         </ListItem>
@@ -142,7 +150,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth }: Props) => {
               <ListItemIcon>
                 <SettingsIcon excludeTooltip />
               </ListItemIcon>
-              <ListItemText>Admin</ListItemText>
+              {!showIconsOnly && <ListItemText>Admin</ListItemText>}
             </ListItemButton>
           </Link>
         </ListItem>

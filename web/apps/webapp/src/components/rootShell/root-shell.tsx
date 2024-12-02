@@ -53,7 +53,8 @@ const RootQuery = graphql`
 `;
 
 const maxRetryAttemptsToReload = 20;
-const drawerWidth = 250;
+const drawerWithTextWidth = 250;
+const drawerWithoutTextWidth = 80;
 
 const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
@@ -128,23 +129,25 @@ const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
         <Drawer
           sx={{
             display: { xs: 'none', sm: 'block' },
-            width: drawerWidth,
+            width: drawerWithTextWidth,
             flexShrink: 0,
             '& .MuiDrawer-paper': {
-              width: drawerWidth,
+              width: drawerWithTextWidth,
               boxSizing: 'border-box',
             },
           }}
           variant="persistent"
           open={true}
         >
-          {!switchToModernUI && <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />}
-          {switchToModernUI && <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />}
+          {!switchToModernUI && <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />}
+          {switchToModernUI && <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />}
         </Drawer>
         <Grid container>
           <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, display: { xs: 'block', sm: 'none' } }}>
-            {!switchToModernUI && <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />}
-            {switchToModernUI && <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWidth} />}
+            {!switchToModernUI && <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />}
+            {switchToModernUI && (
+              <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />
+            )}
           </Grid>
           <Stack direction="column" sx={{ width: '100vw' }}>
             {!switchToModernUI && <OldAppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}

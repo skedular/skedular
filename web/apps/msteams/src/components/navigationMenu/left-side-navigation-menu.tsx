@@ -13,18 +13,26 @@ import { useLocation, useParams } from 'react-router-dom';
 type Props = {
   onReloadRequired: () => void;
   maxWidth: number;
+  showIconsOnly?: boolean;
 };
 
-const LeftSideNavigationMenu = ({ maxWidth }: Props) => {
+const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
   const location = useLocation();
   const pathName = location.pathname;
   const paletteMode = useContext(PaletteModeContext);
-  const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
+  const logoUrl =
+    paletteMode === 'dark'
+      ? showIconsOnly
+        ? '/images/skedular-icon-inverse.svg'
+        : '/images/skedular-logo-inverse.svg'
+      : showIconsOnly
+        ? '/images/skedular-icon-primary.svg'
+        : '/images/skedular-logo-primary.svg';
   const originalWidth = 779;
   const originalHeight = 163;
   const percentage = ((maxWidth - 30) * 100) / originalWidth;
-  const width = (originalWidth * percentage) / 100;
-  const height = (originalHeight * percentage) / 100;
+  const width = showIconsOnly ? 30 : (originalWidth * percentage) / 100;
+  const height = showIconsOnly ? 30 : (originalHeight * percentage) / 100;
   const styles = {
     width: maxWidth - 30,
     marginLeft: 2,
