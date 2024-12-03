@@ -1,4 +1,5 @@
 using Enterprise.Shared.Context;
+using Enterprise.Shared.Http;
 using Microsoft.AspNetCore.Http;
 
 namespace Enterprise.Shared.Security.Token;
@@ -12,7 +13,7 @@ public class SecurityContextEnricherMiddleware(RequestDelegate next, IEnumerable
         {
             var token = splitToken[1];
             await Task.WhenAll(tokenServices.Select(tokenService =>
-                tokenService.VerifyTokenAsync(token, httpContext?.RequestAborted ?? CancellationToken.None)));
+                tokenService.VerifyTokenAsync(token, httpContext.GetCancellationToken())));
         }
 
         await next(httpContext);
