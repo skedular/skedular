@@ -14,7 +14,8 @@ public class PaginationContext
 
 public static class PaginationContextExtensions
 {
-    public static bool IsEmpty(this PaginationContext paginationContext) =>
+    public static bool IsEmpty(this PaginationContext? paginationContext) =>
+        paginationContext is not null &&
         paginationContext.After is null &&
         paginationContext.First is null &&
         paginationContext.Before is null &&
