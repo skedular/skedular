@@ -98,8 +98,9 @@ public class SlackInternalSubscriber(
 
     private async Task HandleRefreshWorkspaceMembersEventAsync(string workspaceId, CancellationToken cancellationToken)
     {
-        var workspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
-        if (workspace is null)
+        var existingWorkspace =
+            await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
+        if (existingWorkspace is null)
         {
             return;
         }
@@ -109,7 +110,7 @@ public class SlackInternalSubscriber(
 
         do
         {
-            var response = await workspace.GetApiClient().Users.List(
+            var response = await existingWorkspace.GetApiClient().Users.List(
                 nextCursor,
                 true,
                 100,
@@ -118,25 +119,29 @@ public class SlackInternalSubscriber(
             nextCursor = response.ResponseMetadata.NextCursor;
         } while (!string.IsNullOrWhiteSpace(nextCursor));
 
-        var itemsToRemove = workspace.WorkspaceMembers
+        var itemsToRemove = existingWorkspace.WorkspaceMembers
             .Where(workspaceMember => users.All(item => item.Id != workspaceMember.Id))
             .ToList();
-        var updatedItems = workspace.WorkspaceMembers
-            .Where(workspaceMember => users.Any(item => item.Id == workspaceMember.Id)).Select(
-                workspaceMember => repositoryFactory.WorkspaceMemberRepository.Update(
-                    mapper.MergeToEntity(users.First(item => item.Id == workspaceMember.Id), workspaceMember,
-                        workspace))).ToList();
-        var addedItems = users.Where(user => workspace.WorkspaceMembers.All(item => item.Id != user.Id))
-            .Select(user => repositoryFactory.WorkspaceMemberRepository.Add(mapper.MapToEntity(user, workspace)))
+        var updatedItems = existingWorkspace.WorkspaceMembers
+            .Where(workspaceMember => users.Any(item => item.Id == workspaceMember.Id))
+            .Select(workspaceMember => repositoryFactory.WorkspaceMemberRepository.Update(
+                mapper.MergeToEntity(
+                    users.First(item => item.Id == workspaceMember.Id),
+                    workspaceMember,
+                    existingWorkspace))).ToList();
+        var addedItems = users.Where(user => existingWorkspace.WorkspaceMembers.All(item => item.Id != user.Id))
+            .Select(user =>
+                repositoryFactory.WorkspaceMemberRepository.Add(
+                    mapper.MapToEntity(user, existingWorkspace)))
             .ToList();
 
         repositoryFactory.WorkspaceMemberRepository.RemoveRange(itemsToRemove);
-        workspace.WorkspaceMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingWorkspace.WorkspaceMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
-        await SyncCustomersAndOrganizationMembersAsync(workspace, cancellationToken);
+        await SyncCustomersAndOrganizationMembersAsync(existingWorkspace, cancellationToken);
 
-        workspace.MembersLastRefreshedAt = timeProvider.GetUtcNow();
-        repositoryFactory.WorkspaceRepository.Update(workspace);
+        existingWorkspace.MembersLastRefreshedAt = timeProvider.GetUtcNow();
+        repositoryFactory.WorkspaceRepository.Update(existingWorkspace);
 
         await repositoryFactory.WorkspaceMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -144,8 +149,9 @@ public class SlackInternalSubscriber(
 
     private async Task HandleRefreshWorkspaceChannelsEventAsync(string workspaceId, CancellationToken cancellationToken)
     {
-        var workspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
-        if (workspace is null)
+        var existingWorkspace =
+            await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
+        if (existingWorkspace is null)
         {
             return;
         }
@@ -155,7 +161,7 @@ public class SlackInternalSubscriber(
 
         do
         {
-            var response = await workspace.GetApiClient().Conversations.List(
+            var response = await existingWorkspace.GetApiClient().Conversations.List(
                 true,
                 cursor: nextCursor,
                 types: [ConversationType.PublicChannel],
@@ -164,21 +170,27 @@ public class SlackInternalSubscriber(
             nextCursor = response.ResponseMetadata.NextCursor;
         } while (!string.IsNullOrWhiteSpace(nextCursor));
 
-        var itemsToRemove = workspace.Channels
+        var itemsToRemove = existingWorkspace.Channels
             .Where(channel => channels.All(item => item.Id != channel.Id))
             .ToList();
-        var updatedItems = workspace.Channels.Where(channel => channels.Any(item => item.Id == channel.Id)).Select(
-            channel => repositoryFactory.WorkspaceChannelRepository.Update(
-                mapper.MergeToEntity(channels.First(item => item.Id == channel.Id), channel, workspace))).ToList();
-        var addedItems = channels.Where(channel => workspace.Channels.All(item => item.Id != channel.Id))
-            .Select(channel => repositoryFactory.WorkspaceChannelRepository.Add(mapper.MapToEntity(channel, workspace)))
+        var updatedItems = existingWorkspace.Channels
+            .Where(channel => channels.Any(item => item.Id == channel.Id))
+            .Select(channel => repositoryFactory.WorkspaceChannelRepository.Update(
+                mapper.MergeToEntity(
+                    channels.First(item => item.Id == channel.Id), channel, existingWorkspace)))
+            .ToList();
+        var addedItems = channels
+            .Where(channel => existingWorkspace.Channels.All(item => item.Id != channel.Id))
+            .Select(channel =>
+                repositoryFactory.WorkspaceChannelRepository.Add(
+                    mapper.MapToEntity(channel, existingWorkspace)))
             .ToList();
 
         repositoryFactory.WorkspaceChannelRepository.RemoveRange(itemsToRemove);
-        workspace.Channels = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingWorkspace.Channels = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
-        workspace.ChannelsLastRefreshedAt = timeProvider.GetUtcNow();
-        repositoryFactory.WorkspaceRepository.Update(workspace);
+        existingWorkspace.ChannelsLastRefreshedAt = timeProvider.GetUtcNow();
+        repositoryFactory.WorkspaceRepository.Update(existingWorkspace);
 
         await repositoryFactory.WorkspaceChannelRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

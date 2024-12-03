@@ -148,7 +148,8 @@ public class OrganizationSubscriber(
         Organization existingOrganization)
     {
         var itemsToRemove = existingOrganization.Tags
-            .Where(tag => organization.Tags.All(item => item.Id != tag.Id)).ToList();
+            .Where(tag => organization.Tags.All(item => item.Id != tag.Id))
+            .ToList();
         var updatedItems = existingOrganization.Tags
             .Where(organizationTag => organization.Tags.Any(item => item.Id == organizationTag.Id))
             .Select(organizationTag => repositoryFactory.OrganizationTagRepository.Update(
