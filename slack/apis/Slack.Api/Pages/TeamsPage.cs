@@ -418,7 +418,7 @@ public class TeamsPage(
         ];
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.PublishAsync(
+        await slackApiClient.ViewsPublishAsync(
             workspaceMember.Id,
             new HomeViewDefinition
             {
@@ -671,7 +671,7 @@ public class TeamsPage(
         };
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Open(
+        await slackApiClient.ViewsOpenAsync(
             triggerId,
             new ModalViewDefinition
             {
@@ -706,7 +706,7 @@ public class TeamsPage(
         };
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Open(
+        await slackApiClient.ViewsOpenAsync(
             triggerId,
             new ModalViewDefinition
             {

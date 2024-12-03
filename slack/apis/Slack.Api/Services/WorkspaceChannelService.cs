@@ -28,7 +28,9 @@ public class WorkspaceChannelService(IRepositoryFactory repositoryFactory, IMapp
         }
 
         var slackApiClient = workspace.GetApiClient();
-        var workspaceChannel = await slackApiClient.Conversations.Info(workspaceChannelId, true,
+        var workspaceChannel = await slackApiClient.Conversations.Info(
+            workspaceChannelId, 
+            true,
             false,
             cancellationToken);
         channel = repositoryFactory.WorkspaceChannelRepository.Add(mapper.MapTo(workspaceChannel, workspace));

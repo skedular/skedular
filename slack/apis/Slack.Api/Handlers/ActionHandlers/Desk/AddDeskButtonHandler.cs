@@ -151,7 +151,7 @@ public class AddDeskButtonHandler(
         }
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Open(
+        await slackApiClient.ViewsOpenAsync(
             request.TriggerId,
             new ModalViewDefinition
             {

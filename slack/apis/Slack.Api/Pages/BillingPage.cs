@@ -42,7 +42,7 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
         ];
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.PublishAsync(
+        await slackApiClient.ViewsPublishAsync(
             workspaceMember.Id,
             new HomeViewDefinition
             {

@@ -465,7 +465,7 @@ public class LocationsPage(
         ];
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.PublishAsync(
+        await slackApiClient.ViewsPublishAsync(
             workspaceMember.Id,
             new HomeViewDefinition
             {
@@ -699,7 +699,7 @@ public class LocationsPage(
         };
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Open(
+        await slackApiClient.ViewsOpenAsync(
             triggerId,
             new ModalViewDefinition
             {
@@ -734,7 +734,7 @@ public class LocationsPage(
         };
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Open(
+        await slackApiClient.ViewsOpenAsync(
             triggerId,
             new ModalViewDefinition
             {

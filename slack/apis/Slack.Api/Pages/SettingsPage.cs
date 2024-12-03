@@ -229,7 +229,7 @@ public class SettingsPage(
         ];
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.PublishAsync(
+        await slackApiClient.ViewsPublishAsync(
             workspaceMember.Id,
             new HomeViewDefinition
             {
@@ -380,7 +380,7 @@ public class SettingsPage(
         var country = new SectionBlock { Text = $"Country: {billingInfo.Country.ToSafeString()}".ToPlainText() };
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Open(
+        await slackApiClient.ViewsOpenAsync(
             triggerId,
             new ModalViewDefinition
             {
@@ -507,7 +507,7 @@ public class SettingsPage(
         };
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.Open(
+        await slackApiClient.ViewsOpenAsync(
             triggerId,
             new ModalViewDefinition
             {

@@ -411,7 +411,7 @@ public class BookingsPage(
         ];
 
         var slackApiClient = workspace.GetApiClient();
-        await slackApiClient.Views.PublishAsync(
+        await slackApiClient.ViewsPublishAsync(
             workspaceMember.Id,
             new HomeViewDefinition
             {
