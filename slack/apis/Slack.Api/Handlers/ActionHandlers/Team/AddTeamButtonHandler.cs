@@ -74,7 +74,20 @@ public class AddTeamButtonHandler(
             BlockId = OptionLoaderKeys.TimezoneKey,
             Label = "Timezone".ToPlainText(),
             Element = new ExternalSelectMenu { ActionId = OptionLoaderKeys.TimezoneKey, MinQueryLength = 3 },
-            Optional = false
+            Optional = true
+        };
+
+        var primaryLocation = new InputBlock
+        {
+            BlockId = TeamActionTypes.PrimaryLocation,
+            Label = "Primary Location".ToPlainText(),
+            Element =new ExternalSelectMenu
+            {
+                ActionId = OptionLoaderKeys.OrganizationLocationKey,
+                InitialOption = null,
+                MinQueryLength = 0
+            },
+            Optional = true
         };
 
         var updateChannel = new InputBlock
@@ -105,7 +118,7 @@ public class AddTeamButtonHandler(
                 Title = "Add Team",
                 Close = "Cancel",
                 Submit = "Add",
-                Blocks = [name, about, timezone, updateChannel, organizationMembers],
+                Blocks = [name, about, timezone, primaryLocation, updateChannel, organizationMembers],
                 PrivateMetadata = action.Value
             },
             cancellationToken);
@@ -200,8 +213,9 @@ public class AddTeamButtonHandler(
             {
                 if (timezone is ExternalSelectValue value)
                 {
-                    ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption.Value);
-                    addInput.Timezone = value.SelectedOption.Value;
+                    addInput.Timezone = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
+                        ? string.Empty
+                        : value.SelectedOption.Value;
                 }
                 else
                 {
@@ -216,6 +230,31 @@ public class AddTeamButtonHandler(
         else
         {
             throw new InvalidOperationException("timezone block is missing");
+        }
+
+        if (values.TryGetValue(TeamActionTypes.PrimaryLocation, out var primaryLocationBlock))
+        {
+            if (primaryLocationBlock.TryGetValue(OptionLoaderKeys.OrganizationLocationKey, out var primaryLocation))
+            {
+                if (primaryLocation is ExternalSelectValue value)
+                {
+                    addInput.PrimaryLocationId = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
+                        ? string.Empty
+                        : value.SelectedOption.Value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("primary location must be ExternalSelectValue");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("primaryLocation block is missing");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException("primaryLocation block is missing");
         }
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationMemberAndCustomerPairKey, out var organizationMembersBlock))

@@ -77,12 +77,14 @@ public class TeamComponents(ICustomerService customerService, IOrganizationServi
 
         var dailyUpdateChannel =
             team.DailyUpdateChannel is null ? string.Empty : team.DailyUpdateChannel.Name.ToSafeString();
+        var primaryLocation = team.PrimaryLocation is null ? "N/A" : team.PrimaryLocation.Name;
         var blocks = new List<Block>
         {
             new SectionBlock { Text = $"*Name*: {team.Name.ToSafeString()}".ToMarkdown() },
             new SectionBlock { Text = $"*About*: {team.About.ToSafeString()}".ToMarkdown() },
             new SectionBlock { Text = $"*Timezone*: {team.Timezone.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*Daily update channel*: {dailyUpdateChannel}".ToMarkdown() }
+            new SectionBlock { Text = $"*Daily update channel*: {dailyUpdateChannel}".ToMarkdown() },
+            new SectionBlock { Text = $"*Primary Location*: {primaryLocation}".ToMarkdown() }
         };
 
         var buttons = new List<IActionElement>();

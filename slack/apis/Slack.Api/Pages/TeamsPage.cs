@@ -628,7 +628,26 @@ public class TeamsPage(
                         : new Option { Text = team.Timezone.ToOptionText(), Value = team.Timezone },
                 MinQueryLength = 3
             },
-            Optional = false
+            Optional = true
+        };
+
+        var primaryLocation = new InputBlock
+        {
+            BlockId = TeamActionTypes.PrimaryLocation,
+            Label = "Primary Location".ToPlainText(),
+            Element = new ExternalSelectMenu
+            {
+                ActionId = OptionLoaderKeys.OrganizationLocationKey,
+                InitialOption =
+                    team.PrimaryLocation is null
+                        ? null
+                        : new Option
+                        {
+                            Text = team.PrimaryLocation.Name.ToOptionText(), Value = team.PrimaryLocation.Id
+                        },
+                MinQueryLength = 3
+            },
+            Optional = true
         };
 
         var teamEntity = await repositoryFactory.TeamRepository
@@ -681,7 +700,7 @@ public class TeamsPage(
                 Submit = "Save",
                 Blocks =
                 [
-                    name, about, timezone, updateChannel, organizationMembers
+                    name, about, timezone, primaryLocation, updateChannel, organizationMembers
                 ],
                 PrivateMetadata = context.Serialize()
             },

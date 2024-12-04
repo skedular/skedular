@@ -42,6 +42,7 @@ public static class TeamActionTypes
     public const string ActionsMenu = "Team_ActionsMenu";
     public const string Name = "TeamName";
     public const string About = "TeamAbout";
+    public const string PrimaryLocation = "PrimaryLocation";
     public const string SlackUpdateChannel = "SlackUpdateChannel";
 }
 

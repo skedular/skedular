@@ -115,8 +115,9 @@ public class EditTeamButtonHandler(
             {
                 if (timezone is ExternalSelectValue value)
                 {
-                    ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption.Value);
-                    updateInput.Timezone = value.SelectedOption.Value;
+                    updateInput.Timezone = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
+                        ? string.Empty
+                        : value.SelectedOption.Value;
                 }
                 else
                 {
@@ -131,6 +132,31 @@ public class EditTeamButtonHandler(
         else
         {
             throw new InvalidOperationException("timezone block is missing");
+        }
+
+        if (values.TryGetValue(TeamActionTypes.PrimaryLocation, out var primaryLocationBlock))
+        {
+            if (primaryLocationBlock.TryGetValue(OptionLoaderKeys.OrganizationLocationKey, out var primaryLocation))
+            {
+                if (primaryLocation is ExternalSelectValue value)
+                {
+                    updateInput.PrimaryLocationId = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
+                        ? string.Empty
+                        : value.SelectedOption.Value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("primary location must be ExternalSelectValue");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("primaryLocation block is missing");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException("primaryLocation block is missing");
         }
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationMemberAndCustomerPairKey, out var organizationMembersBlock))

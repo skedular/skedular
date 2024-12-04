@@ -334,6 +334,9 @@ public class Mapper : IMapper
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
                 ? null
                 : new Shared.Models.Organization { Id = src.OrganizationId },
+            PrimaryLocation = src.PrimaryLocation is null
+                ? null
+                : new Shared.Models.Location { Id = src.PrimaryLocation.Id, Name = src.PrimaryLocation.Name },
             Permissions = new TeamPermissions
             {
                 CanView = src.Permissions.CanView,
@@ -561,22 +564,6 @@ public class Mapper : IMapper
     public Workspace MapToEntity(Shared.Models.Workspace src, Organization organization) =>
         MergeToEntity(src, new Workspace(), organization);
 
-    private static Workspace MergeToEntity(Shared.Models.Workspace src, Workspace dest, Organization organization)
-    {
-        dest.Id = src.Id;
-        dest.Name = src.Name;
-        dest.BotUserId = src.BotUserId;
-        dest.BotUserScope = src.BotUserScope;
-        dest.BotUserAccessToken = src.BotUserAccessToken;
-        dest.BotRefreshToken = src.BotRefreshToken;
-        dest.AuthedUserId = src.AuthedUserId;
-        dest.AuthedUserScope = src.AuthedUserScope;
-        dest.AuthedUserAccessToken = src.AuthedUserAccessToken;
-        dest.AuthedRefreshToken = src.AuthedRefreshToken;
-        dest.Organization = organization;
-        return dest;
-    }
-
     public Shared.Models.Workspace MapTo(Admin_AddWorkspaceInput src) =>
         new()
         {
@@ -613,6 +600,22 @@ public class Mapper : IMapper
 
     public OrganizationZone MapTo(Zone src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
+
+    private static Workspace MergeToEntity(Shared.Models.Workspace src, Workspace dest, Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.Name = src.Name;
+        dest.BotUserId = src.BotUserId;
+        dest.BotUserScope = src.BotUserScope;
+        dest.BotUserAccessToken = src.BotUserAccessToken;
+        dest.BotRefreshToken = src.BotRefreshToken;
+        dest.AuthedUserId = src.AuthedUserId;
+        dest.AuthedUserScope = src.AuthedUserScope;
+        dest.AuthedUserAccessToken = src.AuthedUserAccessToken;
+        dest.AuthedRefreshToken = src.AuthedRefreshToken;
+        dest.Organization = organization;
+        return dest;
+    }
 
     private IEnumerable<TeamMember> MapTo(
         IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Member> src,

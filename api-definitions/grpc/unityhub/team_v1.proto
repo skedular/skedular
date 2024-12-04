@@ -60,7 +60,7 @@ message Team {
     repeated Member members = 6;
     bool hasFutureBooking = 7;
     Permissions permissions = 8;
-    string primaryLocationId = 9;
+    Location primaryLocation = 9;
 }
 
 message Admin_GetInput {
@@ -183,4 +183,9 @@ message UpdateMembersInput {
 message Admin_UpdateMembersInput {
     string id = 1;
     repeated Member members = 2;
+}
+
+message Location {
+    string id = 1;
+    string name = 2;
 }

@@ -3,11 +3,11 @@ using Api.Shared.Services.Grpc.UnityHub.Team.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Team.Api.GraphQL;
-using Team.Shared.Database.Entities;
 using Booking = Team.Shared.Models.Booking;
 using Customer = Team.Shared.Models.Customer;
 using Identity = Team.Shared.Models.Identity;
 using JoinInvitation = Team.Shared.Models.JoinInvitation;
+using Location = Team.Shared.Database.Entities.Location;
 using Organization = Team.Shared.Database.Entities.Organization;
 using OrganizationMember = Team.Shared.Models.OrganizationMember;
 using Permissions = Api.Shared.Services.Grpc.UnityHub.Team.V1.Permissions;
@@ -252,7 +252,13 @@ public class Mapper : IMapper
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
             OrganizationId = string.IsNullOrWhiteSpace(src.Organization?.Id) ? string.Empty : src.Organization.Id,
-            PrimaryLocationId = string.IsNullOrWhiteSpace(src.PrimaryLocation?.Id) ? string.Empty : src.PrimaryLocation.Id,
+            PrimaryLocation =
+                string.IsNullOrWhiteSpace(src.PrimaryLocation?.Id)
+                    ? null
+                    : new global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Location
+                    {
+                        Id = src.PrimaryLocation.Id, Name = src.PrimaryLocation.Name.ToSafeString()
+                    },
             Permissions = new Permissions
             {
                 CanView = src.Permissions.CanView,
