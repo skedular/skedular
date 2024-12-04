@@ -218,7 +218,8 @@ public class OrganizationService(
 
         var deletedOrganization = mapper.MapTo(repositoryFactory.OrganizationRepository.Remove(organization));
 
-        await organizationOutboxPublisher.PublishOrganizationAsync([deletedOrganization],
+        await organizationOutboxPublisher.PublishOrganizationAsync(
+            [deletedOrganization],
             repositoryFactory.OrganizationRepository.UnitOfWork,
             cancellationToken);
         await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

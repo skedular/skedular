@@ -17,8 +17,7 @@ public class WorkaroundService(
 {
     public async Task RepublishTeamAsync(string teamId, CancellationToken cancellationToken)
     {
-        var team =
-            await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
         if (team is null)
         {
             return;

@@ -12,6 +12,7 @@ using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Booking = Team.Shared.Database.Entities.Booking;
 using Customer = Team.Shared.Models.Customer;
+using Location = Team.Shared.Database.Entities.Location;
 using TeamMember = Team.Shared.Database.Entities.TeamMember;
 using Organization = Team.Shared.Database.Entities.Organization;
 
@@ -62,6 +63,34 @@ public class TeamService(
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
+
+        Location? primaryLocation = null;
+        if (team.PrimaryLocation is not null)
+        {
+            if (team.Organization is null)
+            {
+                throw new TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup();
+            }
+
+            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(
+                team.PrimaryLocation.Id,
+                cancellationToken);
+            if (primaryLocation is null)
+            {
+                throw new LocationNotFound();
+            }
+
+            if (primaryLocation.Organization is null)
+            {
+                throw new TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup();
+            }
+
+            if (primaryLocation.Organization.Id == team.Organization.Id)
+            {
+                throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
+            }
+        }
+
         Organization? organization = null;
         if (team.Organization is not null)
         {
@@ -105,6 +134,7 @@ public class TeamService(
                     existingTeam,
                     customer,
                     organization,
+                    primaryLocation,
                     cancellationToken);
             }
         }
@@ -113,7 +143,8 @@ public class TeamService(
             team.Id = randomHelper.Generate();
         }
 
-        var teamEntity = mapper.MapTo(team, organization);
+        var teamEntity = mapper.MapTo(team, organization, primaryLocation);
+        teamEntity.PrimaryLocation = primaryLocation;
         var teamMembers = await BuildTeamMembersAsync(team, teamEntity, customer, organization, cancellationToken);
 
         await using var transaction =
@@ -143,11 +174,37 @@ public class TeamService(
         ArgumentException.ThrowIfNullOrWhiteSpace(team.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingTeam =
-            await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
         if (existingTeam is null)
         {
             throw new TeamNotFound();
+        }
+
+        Location? primaryLocation = null;
+        if (team.PrimaryLocation is not null)
+        {
+            if (team.Organization is null)
+            {
+                throw new TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup();
+            }
+
+            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(
+                team.PrimaryLocation.Id,
+                cancellationToken);
+            if (primaryLocation is null)
+            {
+                throw new LocationNotFound();
+            }
+
+            if (primaryLocation.Organization is null)
+            {
+                throw new TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup();
+            }
+
+            if (primaryLocation.Organization.Id == team.Organization.Id)
+            {
+                throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
+            }
         }
 
         Organization? organization = null;
@@ -163,7 +220,13 @@ public class TeamService(
             }
         }
 
-        return await UpdateInternalAsync(team, existingTeam, customer, organization, cancellationToken);
+        return await UpdateInternalAsync(
+            team,
+            existingTeam,
+            customer,
+            organization,
+            primaryLocation,
+            cancellationToken);
     }
 
     public async Task<Shared.Models.Team> DeleteAsync(
@@ -197,7 +260,8 @@ public class TeamService(
 
         var deletedTeam = mapper.MapTo(repositoryFactory.TeamRepository.Remove(existingTeam));
 
-        await teamOutboxPublisher.PublishTeamAsync([deletedTeam],
+        await teamOutboxPublisher.PublishTeamAsync(
+            [deletedTeam],
             repositoryFactory.TeamRepository.UnitOfWork,
             cancellationToken);
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -293,6 +357,7 @@ public class TeamService(
         Shared.Database.Entities.Team existingTeam,
         Customer? customer,
         Organization? organization,
+        Location? primaryLocation,
         CancellationToken cancellationToken)
     {
         if (customer is not null && !teamAuthorizationService.CanModify(existingTeam, customer))
@@ -321,7 +386,8 @@ public class TeamService(
 
         team =
             mapper.MapTo(
-                repositoryFactory.TeamRepository.Update(mapper.MergeTo(team, existingTeam)));
+                repositoryFactory.TeamRepository.Update(
+                    mapper.MergeTo(team, existingTeam, organization, primaryLocation)));
 
         await teamOutboxPublisher.PublishTeamAsync(
             [team],

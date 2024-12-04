@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<224a7a6f4ae4cf1e0051d0e9f1fc5254>>
+ * @generated SignedSource<<f2bdc1c9989337d2e610332ebc55d551>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type AddTeamInput = {
   name: string;
   organizationId?: string | null | undefined;
   organizationMemberIds: ReadonlyArray<string>;
+  primaryLocationId?: string | null | undefined;
   timezone?: string | null | undefined;
 };
 export type addTeam_addTeamMutation$variables = {

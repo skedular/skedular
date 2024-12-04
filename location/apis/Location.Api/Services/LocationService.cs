@@ -215,7 +215,8 @@ public class LocationService(
 
         var deletedLocation = mapper.MapTo(repositoryFactory.LocationRepository.Remove(existingLocation));
 
-        await locationOutboxPublisher.PublishLocationAsync([deletedLocation],
+        await locationOutboxPublisher.PublishLocationAsync(
+            [deletedLocation],
             repositoryFactory.LocationRepository.UnitOfWork,
             cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -720,6 +720,7 @@ type TeamDetails {
   about: String
   members: [TeamMemberDetails!]!
   organization: TeamOrganizationDetails
+  primaryLocation: TeamLocationDetails
   timezone: String
   hasFutureBooking: Boolean!
   canModify: Boolean!
@@ -730,6 +731,10 @@ type TeamDetails {
 type TeamEdge {
   node: TeamDetails!
   cursor: String!
+}
+type TeamLocationDetails {
+  uniqueId: ID!
+  name: String!
 }
 type TeamMemberConnection {
   pageInfo: PageInfo!
@@ -1267,6 +1272,7 @@ input AddTeamInput {
   about: String
   customerIds: [String!]!
   organizationId: String
+  primaryLocationId: String
   timezone: String
   organizationMemberIds: [String!]!
 }
@@ -1315,6 +1321,7 @@ input UpdateTeamInput {
   about: String
   customerIds: [String!]!
   organizationId: String
+  primaryLocationId: String
   timezone: String
   organizationMemberIds: [String!]!
 }

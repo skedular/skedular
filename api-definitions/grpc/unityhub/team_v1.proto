@@ -60,6 +60,7 @@ message Team {
     repeated Member members = 6;
     bool hasFutureBooking = 7;
     Permissions permissions = 8;
+    string primaryLocationId = 9;
 }
 
 message Admin_GetInput {
@@ -113,6 +114,7 @@ message Admin_AddInput {
     string organizationId = 4;
     string timezone = 5;
     repeated Member members = 6;
+    string primaryLocationId = 7;
 }
 
 message AddInput {
@@ -122,6 +124,7 @@ message AddInput {
     string organizationId = 4;
     string timezone = 5;
     repeated Member members = 6;
+    string primaryLocationId = 7;
 }
 
 message UpdateInput {
@@ -131,6 +134,7 @@ message UpdateInput {
     string organizationId = 4;
     string timezone = 5;
     repeated Member members = 6;
+    string primaryLocationId = 7;
 }
 
 message RemoveInput {

@@ -223,7 +223,8 @@ public class BookingService(
         _ = repositoryFactory.BookingRepository.Update(existingBooking);
         var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
 
-        await bookingOutboxPublisher.PublishBookingAsync([deletedBooking],
+        await bookingOutboxPublisher.PublishBookingAsync(
+            [deletedBooking],
             repositoryFactory.BookingRepository.UnitOfWork,
             cancellationToken);
         await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

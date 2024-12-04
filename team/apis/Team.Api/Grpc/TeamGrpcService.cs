@@ -40,7 +40,8 @@ public class TeamGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team> Admin_Get(
-        Admin_GetInput request, ServerCallContext context)
+        Admin_GetInput request, 
+        ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
@@ -54,7 +55,8 @@ public class TeamGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team> Get(
-        GetInput request, ServerCallContext context)
+        GetInput request, 
+        ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 

@@ -35,6 +35,7 @@ internal static class TeamExtensions
     internal static IIncludableQueryable<Database.Entities.Team, Customer> AddDependentObjects(
         this IQueryable<Database.Entities.Team> originalQuery) =>
         originalQuery
+            .Include(query => query.PrimaryLocation)
             .Include(query => query.Organization)
             .ThenInclude(query =>
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
