@@ -144,7 +144,7 @@ const BookingDetailsSelector = ({
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText }
           orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues
-        ) @connection(key: "bookingDetailsSelectorQuery_organizationMembers") @include(if: $organizationExists) {
+        ) @connection(key: "bookingDetailsSelectorQuery_organizationMembers") {
           __id
           totalCount
           edges {
@@ -235,8 +235,7 @@ const BookingDetailsSelector = ({
           {
             count: pageSize,
             bookingPeopleNameSearchText,
-            organizationId: organizationId ?? '',
-            organizationExists: !!organizationId,
+            organizationId,
           },
           {
             fetchPolicy: 'store-and-network',

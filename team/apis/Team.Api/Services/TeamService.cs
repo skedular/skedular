@@ -85,7 +85,7 @@ public class TeamService(
                 throw new TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup();
             }
 
-            if (primaryLocation.Organization.Id == team.Organization.Id)
+            if (primaryLocation.Organization.Id != team.Organization.Id)
             {
                 throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
             }
@@ -201,7 +201,7 @@ public class TeamService(
                 throw new TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup();
             }
 
-            if (primaryLocation.Organization.Id == team.Organization.Id)
+            if (primaryLocation.Organization.Id != team.Organization.Id)
             {
                 throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
             }
@@ -236,8 +236,7 @@ public class TeamService(
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingTeam =
-            await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
         if (existingTeam is null)
         {
             throw new TeamNotFound();

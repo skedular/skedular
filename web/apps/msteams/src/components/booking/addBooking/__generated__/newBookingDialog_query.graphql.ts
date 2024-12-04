@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c13389f6f16d75ec5e0793385b2976ef>>
+ * @generated SignedSource<<aba65e52c6ed6a971625539cf40b8138>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type newBookingDialog_query$data = {
   readonly me: {
     readonly id: string;
   } | null | undefined;
-  readonly organizationBookingPermissions?: {
+  readonly organizationBookingPermissions: {
     readonly canAddBookingOnBehalf: boolean;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_availableLocationDesks_query" | "bookingDetailsSelector_organizationMembers_query" | "bookingDetailsSelector_query">;
@@ -27,10 +27,6 @@ export type newBookingDialog_query$key = {
 
 const node: ReaderFragment = {
   "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "organizationExists"
-    },
     {
       "kind": "RootArgument",
       "name": "organizationId"
@@ -59,35 +55,28 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "condition": "organizationExists",
-      "kind": "Condition",
-      "passingValue": true,
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "organizationId",
+          "variableName": "organizationId"
+        }
+      ],
+      "concreteType": "OrganizationBookingPermissions",
+      "kind": "LinkedField",
+      "name": "organizationBookingPermissions",
+      "plural": false,
       "selections": [
         {
           "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "organizationId",
-              "variableName": "organizationId"
-            }
-          ],
-          "concreteType": "OrganizationBookingPermissions",
-          "kind": "LinkedField",
-          "name": "organizationBookingPermissions",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "canAddBookingOnBehalf",
-              "storageKey": null
-            }
-          ],
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canAddBookingOnBehalf",
           "storageKey": null
         }
-      ]
+      ],
+      "storageKey": null
     },
     {
       "args": null,
@@ -109,6 +98,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "c86b3efd02d24421a082c4bf5d4a1390";
+(node as any).hash = "f50610b0736332adce3f0605e092082f";
 
 export default node;

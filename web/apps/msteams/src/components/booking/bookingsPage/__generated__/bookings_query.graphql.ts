@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3cfc7ff344e45b9621551bcd4bc0339e>>
+ * @generated SignedSource<<a73ef3b3f2df75a2aaaadeb9cc187dad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type bookings_query$data = {
   readonly me: {
     readonly id: string;
   } | null | undefined;
-  readonly organization?: {
+  readonly organization: {
     readonly id: string;
     readonly name: string;
   } | null | undefined;
@@ -64,10 +64,6 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationExists"
-    },
-    {
-      "kind": "RootArgument",
       "name": "organizationId"
     },
     {
@@ -96,27 +92,20 @@ return {
       "storageKey": null
     },
     {
-      "condition": "organizationExists",
-      "kind": "Condition",
-      "passingValue": true,
-      "selections": [
+      "alias": null,
+      "args": [
         {
-          "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "id",
-              "variableName": "organizationId"
-            }
-          ],
-          "concreteType": "OrganizationDetails",
-          "kind": "LinkedField",
-          "name": "organization",
-          "plural": false,
-          "selections": (v1/*: any*/),
-          "storageKey": null
+          "kind": "Variable",
+          "name": "id",
+          "variableName": "organizationId"
         }
-      ]
+      ],
+      "concreteType": "OrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": (v1/*: any*/),
+      "storageKey": null
     },
     {
       "condition": "locationExists",
@@ -180,6 +169,6 @@ return {
 };
 })();
 
-(node as any).hash = "6fd86c9a5c0e3ad7817d6bbb08325beb";
+(node as any).hash = "60c8d03d6eecb1a2537bb30f6ce69971";
 
 export default node;

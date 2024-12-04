@@ -25,8 +25,8 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query location_rootQuery($organizationId: String!, $organizationExists: Boolean!, $locationId: String!) {
-    organization(id: $organizationId) @include(if: $organizationExists) {
+  query location_rootQuery($organizationId: String!, $locationId: String!) {
+    organization(id: $organizationId) {
       id
       name
     }
@@ -151,7 +151,6 @@ const LocationWithRelay = ({ organizationId, locationId }: RelayProps) => {
     loadQuery(
       {
         organizationId,
-        organizationExists: !!organizationId,
         locationId,
       },
       {

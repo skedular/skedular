@@ -45,13 +45,11 @@ import type { organizationMembersTab_rootQuery } from './__generated__/organizat
 type Props = {
   queryReference: PreloadedQuery<organizationMembersTab_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
 };
 
 const RootQuery = graphql`
   query organizationMembersTab_rootQuery(
     $organizationId: String!
-    $organizationExists: Boolean!
     $peopleNameSearchText: String
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
@@ -77,7 +75,7 @@ const membersToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
+const OrganizationMembersTab = ({ queryReference }: Props) => {
   const rootDataRelay = usePreloadedQuery<organizationMembersTab_rootQuery>(RootQuery, queryReference);
   const rootData = useFragment<organizationMembersTab_query$key>(
     graphql`
@@ -108,7 +106,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }
           orderBy: $organizationMembersSortingValues
-        ) @connection(key: "organizationMembersTab_organizationMembers") @include(if: $organizationExists) {
+        ) @connection(key: "organizationMembersTab_organizationMembers") {
           __id
           totalCount
           edges {
@@ -234,7 +232,6 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
         refetch(
           {
             count: pageSize,
-            organizationExists: !!organizationId,
             organizationMembersSortingValues: [order],
             peopleNameSearchText,
           },
@@ -247,7 +244,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
         );
       });
     },
-    [refetch, organizationId],
+    [refetch],
   );
 
   const loadNextPage = useCallback(() => {
@@ -398,7 +395,6 @@ const OrganizationMembersTabWithRelay = ({ onReloadRequired, organizationId }: R
     loadQuery(
       {
         organizationId,
-        organizationExists: !!organizationId,
         organizationMembersSortingValues: [
           {
             direction: 'Ascending',
@@ -426,7 +422,7 @@ const OrganizationMembersTabWithRelay = ({ onReloadRequired, organizationId }: R
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationMembersTab queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoOrganizationMembersTab queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

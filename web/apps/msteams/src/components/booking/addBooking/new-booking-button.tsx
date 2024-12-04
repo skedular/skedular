@@ -32,7 +32,6 @@ type Props = {
 const RootQuery = graphql`
   query newBookingButton_rootQuery(
     $organizationId: String!
-    $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
@@ -148,8 +147,7 @@ const NewBookingButtonWithRelay = ({
 
     loadQuery(
       {
-        organizationId: organizationId ?? '',
-        organizationExists: !!organizationId,
+        organizationId,
         locationId: locationId ?? '',
         locationExists: !!locationId,
         deskIdsToIncludeToGetAvailableDesks: [],

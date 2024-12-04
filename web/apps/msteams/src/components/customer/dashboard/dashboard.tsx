@@ -21,8 +21,8 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query dashboard_rootQuery($organizationId: String!, $organizationExists: Boolean!) {
-    organization(id: $organizationId) @include(if: $organizationExists) {
+  query dashboard_rootQuery($organizationId: String!) {
+    organization(id: $organizationId) {
       id
       name
     }
@@ -140,8 +140,7 @@ const DashboardWithRelay = ({ organizationId }: RelayProps) => {
   useEffect(() => {
     loadQuery(
       {
-        organizationId: organizationId ?? '',
-        organizationExists: !!organizationId,
+        organizationId,
       },
       {
         fetchPolicy: 'store-and-network',

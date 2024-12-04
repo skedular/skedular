@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { SingleChoinceTimezone } from '@repo/shared/components/forms';
+import { SingleChoiceTimezone } from '@repo/shared/components/forms';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -168,7 +168,7 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
           <TextField label="Given Name" name="givenName" required={requiredFields.givenName} />
           <TextField label="Middle Name" name="middleName" required={requiredFields.middleName} />
           <TextField label="Family Name" name="familyName" required={requiredFields.familyName} />
-          <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+          <SingleChoiceTimezone name="timezone" required={requiredFields.timezone} />
 
           <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
             <Button color="primary" variant="contained" type="submit">

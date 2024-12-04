@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bf59b63de6b30757d230e6c26dbc8c48>>
+ * @generated SignedSource<<0379b5359541409ef0345894e4952cba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,7 +30,7 @@ export type bookingCard_query$data = {
     readonly id: string;
     readonly name: string;
   }> | null | undefined;
-  readonly organizationBookingPermissions?: {
+  readonly organizationBookingPermissions: {
     readonly canDeleteBookingOnBehalf: boolean;
     readonly canUpdateBookingOnBehalf: boolean;
   } | null | undefined;
@@ -70,10 +70,6 @@ v3 = [
 ];
 return {
   "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "organizationExists"
-    },
     {
       "kind": "RootArgument",
       "name": "organizationId"
@@ -163,36 +159,29 @@ return {
       "storageKey": null
     },
     {
-      "condition": "organizationExists",
-      "kind": "Condition",
-      "passingValue": true,
+      "alias": null,
+      "args": (v3/*: any*/),
+      "concreteType": "OrganizationBookingPermissions",
+      "kind": "LinkedField",
+      "name": "organizationBookingPermissions",
+      "plural": false,
       "selections": [
         {
           "alias": null,
-          "args": (v3/*: any*/),
-          "concreteType": "OrganizationBookingPermissions",
-          "kind": "LinkedField",
-          "name": "organizationBookingPermissions",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "canUpdateBookingOnBehalf",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "canDeleteBookingOnBehalf",
-              "storageKey": null
-            }
-          ],
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canUpdateBookingOnBehalf",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canDeleteBookingOnBehalf",
           "storageKey": null
         }
-      ]
+      ],
+      "storageKey": null
     },
     {
       "args": null,
@@ -215,6 +204,6 @@ return {
 };
 })();
 
-(node as any).hash = "4d40610663727653db8efd87b6a731a9";
+(node as any).hash = "d30a4b7d138483da4464024eeb540d3c";
 
 export default node;

@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { SingleChoinceTimezone } from '@repo/shared/components/forms';
+import { SingleChoiceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -163,7 +163,7 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
         <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
           <TextField label="Name" name="name" required={requiredFields.name} />
           <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-          <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+          <SingleChoiceTimezone name="timezone" required={requiredFields.timezone} />
           <TextField label="Physical Address" name="physicalAddress" required={requiredFields.physicalAddress} multiline={true} />
 
           <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>

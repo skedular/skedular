@@ -5,7 +5,7 @@ import type { addTeam_rootQuery } from '@/queries/__generated__/addTeam_rootQuer
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { SingleChoinceTimezone } from '@repo/shared/components/forms';
+import { SingleChoiceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -212,7 +212,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
           <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
             <TextField label="Name" name="name" required={requiredFields.name} />
             <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+            <SingleChoiceTimezone name="timezone" required={requiredFields.timezone} />
 
             {organizationId && (
               <OrganizationMemberSelector

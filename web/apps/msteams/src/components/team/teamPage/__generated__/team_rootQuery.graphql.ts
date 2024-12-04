@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a60d4a6a4ea650c4911a48b05d58424c>>
+ * @generated SignedSource<<c32a7f95ee77476f52ee5bdc664343a7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,12 +10,11 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type team_rootQuery$variables = {
-  organizationExists: boolean;
   organizationId: string;
   teamId: string;
 };
 export type team_rootQuery$data = {
-  readonly organization?: {
+  readonly organization: {
     readonly id: string;
     readonly name: string;
   } | null | undefined;
@@ -33,61 +32,51 @@ export type team_rootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationExists"
-},
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "teamId"
+  }
+],
 v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationId"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "teamId"
-},
-v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v5 = [
+v3 = [
   {
-    "condition": "organizationExists",
-    "kind": "Condition",
-    "passingValue": true,
-    "selections": [
+    "alias": null,
+    "args": [
       {
-        "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "organizationId"
-          }
-        ],
-        "concreteType": "OrganizationDetails",
-        "kind": "LinkedField",
-        "name": "organization",
-        "plural": false,
-        "selections": [
-          (v3/*: any*/),
-          (v4/*: any*/)
-        ],
-        "storageKey": null
+        "kind": "Variable",
+        "name": "id",
+        "variableName": "organizationId"
       }
-    ]
+    ],
+    "concreteType": "OrganizationDetails",
+    "kind": "LinkedField",
+    "name": "organization",
+    "plural": false,
+    "selections": [
+      (v1/*: any*/),
+      (v2/*: any*/)
+    ],
+    "storageKey": null
   },
   {
     "alias": null,
@@ -103,8 +92,8 @@ v5 = [
     "name": "team",
     "plural": false,
     "selections": [
-      (v3/*: any*/),
-      (v4/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -129,40 +118,32 @@ v5 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "team_rootQuery",
-    "selections": (v5/*: any*/),
+    "selections": (v3/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "team_rootQuery",
-    "selections": (v5/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "95e953f0635367e0b6406d509903d31b",
+    "cacheID": "8cc1de8e5852aea97ba18b3d6ced169c",
     "id": null,
     "metadata": {},
     "name": "team_rootQuery",
     "operationKind": "query",
-    "text": "query team_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $teamId: String!\n) {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    name\n  }\n  team(id: $teamId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query team_rootQuery(\n  $organizationId: String!\n  $teamId: String!\n) {\n  organization(id: $organizationId) {\n    id\n    name\n  }\n  team(id: $teamId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0113139c76bb85baa37874e54bd5742d";
+(node as any).hash = "8f4413b385a9a76b242dc5b08df9d6ae";
 
 export default node;

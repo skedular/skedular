@@ -14,7 +14,7 @@ interface TimezoneDetails {
   label: string;
 }
 
-const SingleChoinceTimezone = ({ name, required }: Props) => {
+const SingleChoiceTimezone = ({ name, required }: Props) => {
   const timezones = useMemo<TimezoneDetails[]>(
     () =>
       Intl.supportedValuesOf('timeZone').map((item) => ({
@@ -56,4 +56,4 @@ const SingleChoinceTimezone = ({ name, required }: Props) => {
   );
 };
 
-export default memo(SingleChoinceTimezone);
+export default memo(SingleChoiceTimezone);

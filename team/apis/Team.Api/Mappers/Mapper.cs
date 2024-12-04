@@ -152,6 +152,7 @@ public class Mapper : IMapper
                 CanInvitePeople = src.Permissions.CanInvitePeople,
                 HasFutureBooking = src.HasFutureBooking,
                 Organization = MapTo(src.Organization),
+                PrimaryLocation = MapTo(src.PrimaryLocation),
                 Members = MapTo(src.TeamMembers).ToArray()
             };
 
@@ -478,6 +479,11 @@ public class Mapper : IMapper
         src is null
             ? null
             : new TeamOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
+
+    private static TeamLocationDetails? MapTo(Shared.Models.Location? src) =>
+        src is null
+            ? null
+            : new TeamLocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static TeamCustomerDetails MapTo(Customer src) =>
         new()

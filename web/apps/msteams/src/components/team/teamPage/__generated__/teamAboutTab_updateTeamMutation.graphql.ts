@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<411870141b080fdd6f9464f6dd52423f>>
+ * @generated SignedSource<<7ea2a206a571960d4e811d8543d57ff7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,6 +40,10 @@ export type teamAboutTab_updateTeamMutation$data = {
       readonly organization: {
         readonly name: string;
       } | null | undefined;
+      readonly primaryLocation: {
+        readonly name: string;
+        readonly uniqueId: string;
+      } | null | undefined;
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -61,6 +65,10 @@ export type teamAboutTab_updateTeamMutation$rawResponse = {
       readonly name: string;
       readonly organization: {
         readonly name: string;
+      } | null | undefined;
+      readonly primaryLocation: {
+        readonly name: string;
+        readonly uniqueId: string;
       } | null | undefined;
       readonly timezone: string | null | undefined;
     };
@@ -127,33 +135,47 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  }
-],
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "uniqueId",
+  "storageKey": null
+},
 v8 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "TeamLocationDetails",
+  "kind": "LinkedField",
+  "name": "primaryLocation",
+  "plural": false,
+  "selections": [
+    (v7/*: any*/),
+    (v3/*: any*/)
+  ],
+  "storageKey": null
+},
+v9 = [
+  (v7/*: any*/)
+],
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "TeamCustomerDetails",
   "kind": "LinkedField",
   "name": "customer",
   "plural": false,
-  "selections": (v7/*: any*/),
+  "selections": (v9/*: any*/),
   "storageKey": null
 },
-v9 = {
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "TeamOrganizationMemberDetails",
   "kind": "LinkedField",
   "name": "organizationMember",
   "plural": false,
-  "selections": (v7/*: any*/),
+  "selections": (v9/*: any*/),
   "storageKey": null
 };
 return {
@@ -184,6 +206,7 @@ return {
               (v4/*: any*/),
               (v5/*: any*/),
               (v6/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -192,8 +215,8 @@ return {
                 "name": "members",
                 "plural": true,
                 "selections": [
-                  (v8/*: any*/),
-                  (v9/*: any*/)
+                  (v10/*: any*/),
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -234,6 +257,7 @@ return {
               (v4/*: any*/),
               (v5/*: any*/),
               (v6/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -242,8 +266,8 @@ return {
                 "name": "members",
                 "plural": true,
                 "selections": [
-                  (v8/*: any*/),
-                  (v9/*: any*/),
+                  (v10/*: any*/),
+                  (v11/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -257,16 +281,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a6c5344e80df5ab03654f3f8a2b26a88",
+    "cacheID": "3b23b279ae4ba90c083929030535da6f",
     "id": null,
     "metadata": {},
     "name": "teamAboutTab_updateTeamMutation",
     "operationKind": "mutation",
-    "text": "mutation teamAboutTab_updateTeamMutation(\n  $input: UpdateTeamInput!\n) {\n  updateTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      organization {\n        name\n      }\n      members {\n        customer {\n          uniqueId\n        }\n        organizationMember {\n          uniqueId\n        }\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation teamAboutTab_updateTeamMutation(\n  $input: UpdateTeamInput!\n) {\n  updateTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      organization {\n        name\n      }\n      primaryLocation {\n        uniqueId\n        name\n      }\n      members {\n        customer {\n          uniqueId\n        }\n        organizationMember {\n          uniqueId\n        }\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "48ae6e4fd051150a9836bbbf7619fa95";
+(node as any).hash = "92dc8949524470f00dbec84a32a0ddaa";
 
 export default node;

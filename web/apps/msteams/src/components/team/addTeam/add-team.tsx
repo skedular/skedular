@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { SingleChoinceTimezone } from '@repo/shared/components/forms';
+import { SingleChoiceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -39,14 +39,13 @@ type Props = {
 const RootQuery = graphql`
   query addTeam_rootQuery(
     $organizationId: String!
-    $organizationExists: Boolean!
     $bookingPeopleNameSearchText: String
     $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
     me {
       id
     }
-    organization(id: $organizationId) @include(if: $organizationExists) {
+    organization(id: $organizationId) {
       id
       name
     }
@@ -213,12 +212,11 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
           <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
             <TextField label="Name" name="name" required={requiredFields.name} />
             <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+            <SingleChoiceTimezone name="timezone" required={requiredFields.timezone} />
 
             {organizationId && (
               <OrganizationMemberSelector
                 rootDataRelay={rootData}
-                organizationId={organizationId}
                 name="organizationMemberIds"
                 required={requiredFields.organizationMemberIds}
                 multiple={true}
@@ -259,8 +257,7 @@ const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancell
   useEffect(() => {
     loadQuery(
       {
-        organizationId: organizationId ?? '',
-        organizationExists: !!organizationId,
+        organizationId,
         organizationMemberSelectorOrganizationMembersSortingValues: [
           {
             direction: 'Ascending',

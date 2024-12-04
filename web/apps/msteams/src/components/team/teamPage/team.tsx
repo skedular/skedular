@@ -23,8 +23,8 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query team_rootQuery($organizationId: String!, $organizationExists: Boolean!, $teamId: String!) {
-    organization(id: $organizationId) @include(if: $organizationExists) {
+  query team_rootQuery($organizationId: String!, $teamId: String!) {
+    organization(id: $organizationId) {
       id
       name
     }
@@ -113,8 +113,7 @@ const TeamWithRelay = ({ organizationId, teamId }: RelayProps) => {
   useEffect(() => {
     loadQuery(
       {
-        organizationId: organizationId ?? '',
-        organizationExists: !!organizationId,
+        organizationId,
         teamId,
       },
       {

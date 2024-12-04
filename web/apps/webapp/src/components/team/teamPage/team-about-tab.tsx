@@ -1,8 +1,9 @@
+import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import type { teamAboutTab_rootQuery } from '@/queries/__generated__/teamAboutTab_rootQuery.graphql';
 import type { teamAboutTab_updateTeamMutation } from '@/queries/__generated__/teamAboutTab_updateTeamMutation.graphql';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { SingleChoinceTimezone } from '@repo/shared/components/forms';
+import { SingleChoiceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -45,6 +46,10 @@ const RootQuery = graphql`
       organization {
         name
       }
+      primaryLocation {
+        uniqueId
+        name
+      }
       canModify
       members {
         customer {
@@ -56,6 +61,7 @@ const RootQuery = graphql`
       }
     }
     ...organizationMemberSelector_query
+    ...singleChoiceLocation_locations_query
   }
 `;
 
@@ -63,12 +69,14 @@ type TeamDetails = {
   name: string;
   about: string | null;
   timezone: string;
+  primaryLocationId?: string;
 };
 
 const teamSchema = object({
   name: string().min(3, 'Team name must be at least three charcters long.').required('Team name is required'),
   about: string().nullable(),
   timezone: string().nullable(),
+  primaryLocationId: string().nullable(),
 });
 
 const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
@@ -82,6 +90,10 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
           about
           timezone
           organization {
+            name
+          }
+          primaryLocation {
+            uniqueId
             name
           }
           members {
@@ -102,7 +114,7 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
   const validate = makeValidate(teamSchema);
   const requiredFields = makeRequired(teamSchema);
 
-  const handleTeamUpdateClick = ({ name, about, timezone }: TeamDetails) => {
+  const handleTeamUpdateClick = ({ name, about, timezone, primaryLocationId }: TeamDetails) => {
     if (!rootData.team) {
       return;
     }
@@ -122,6 +134,7 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
           organizationMemberIds: rootData.team.members
             .filter((member) => member.organizationMember)
             .map((member) => member.organizationMember!.uniqueId),
+          primaryLocationId,
         },
       },
       onCompleted: (_, errors) => {
@@ -154,6 +167,7 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
             timezone,
             organization: null,
             members: [],
+            primaryLocation: null,
           },
         },
       },
@@ -176,13 +190,20 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
         organizationMemberIds: rootData.team.members
           .filter((member) => member.organizationMember)
           .map(({ organizationMember }) => organizationMember!.uniqueId),
+        primaryLocationId: rootData.team.primaryLocation ? rootData.team.primaryLocation.uniqueId : null,
       }}
       validate={validate}
       render={({ handleSubmit }) => (
         <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
           <TextField label="Name" name="name" required={requiredFields.name} />
           <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-          <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+          <SingleChoiceTimezone name="timezone" required={requiredFields.timezone} />
+          <SingleChoiceLocation
+            rootDataRelay={rootData}
+            id="primaryLocationId"
+            required={requiredFields.primaryLocationId}
+            label="Primary Location"
+          />
 
           <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
             <Button color="primary" variant="contained" type="submit">

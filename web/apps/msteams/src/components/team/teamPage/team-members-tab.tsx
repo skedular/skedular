@@ -55,7 +55,6 @@ type Props = {
 const RootQuery = graphql`
   query teamMembersTab_rootQuery(
     $organizationId: String!
-    $organizationExists: Boolean!
     $teamId: String!
     $teamExists: Boolean!
     $bookingPeopleNameSearchText: String
@@ -483,7 +482,6 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
                 {rootData.team?.organization && (
                   <OrganizationMemberSelector
                     rootDataRelay={rootData}
-                    organizationId={organizationId}
                     name="organizationMemberIds"
                     required={requiredTeamFields.organizationMemberIds}
                     multiple={true}
@@ -559,8 +557,7 @@ const TeamMembersTabWithRelay = ({ onReloadRequired, organizationId, teamId }: R
       {
         teamId,
         teamExists: !!teamId,
-        organizationId: organizationId ?? '',
-        organizationExists: !!organizationId,
+        organizationId,
         teamMembersSortingValues: [
           {
             direction: 'Ascending',
