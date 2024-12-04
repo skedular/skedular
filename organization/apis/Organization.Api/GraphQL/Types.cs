@@ -209,6 +209,8 @@ public class OrganizationDetails : Node
 
     [GraphQLName("isMyOnboardingDone")] public bool IsMyOnboardingDone { get; set; }
 
+    [GraphQLName("members")] public OrganizationMemberDetails[] Members { get; set; } = [];
+
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 

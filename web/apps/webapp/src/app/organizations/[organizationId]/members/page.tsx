@@ -1,6 +1,6 @@
 'use client';
 
-import { OrganizationMembers } from '@/components/organization/organizationPage';
+import { OrganizationMembers } from '@/components/organization/organizationMembers';
 import { RootShell } from '@/components/rootShell';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
@@ -21,11 +21,9 @@ const OrganizationsPage = () => {
     throw new Error('organizationId is required');
   }
 
-  const handleReloadRequired = () => {};
-
   return (
     <RootShell>
-      <OrganizationMembers onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <OrganizationMembers organizationId={finalOrganizationId} />
     </RootShell>
   );
 };

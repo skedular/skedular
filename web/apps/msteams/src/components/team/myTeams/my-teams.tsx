@@ -10,12 +10,12 @@ import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
 import graphql from 'babel-plugin-relay/macro';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { useRefetchableFragment } from 'react-relay';
-import type { myTeams_teams_availableOrganizationDesks_query$key } from './__generated__/myTeams_teams_availableOrganizationDesks_query.graphql';
-import type { myTeams_teams_availableOrganizationDesks_refetchableFragment } from './__generated__/myTeams_teams_availableOrganizationDesks_refetchableFragment.graphql';
+import type { myTeams_teams_query$key } from './__generated__/myTeams_teams_query.graphql';
+import type { myTeams_teams_refetchableFragment } from './__generated__/myTeams_teams_refetchableFragment.graphql';
 import MyTeamCard from './my-team-card';
 
 type Props = {
-  rootDataRelay: myTeams_teams_availableOrganizationDesks_query$key;
+  rootDataRelay: myTeams_teams_query$key;
   onReloadRequired: () => void;
   primaryLocationIds: string[];
   viewMode: 'list' | 'grid';
@@ -40,15 +40,15 @@ type RowType = {
   teammates: ReadonlyArray<CustomerDetails>;
 };
 
-const MyLocations = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode }: Props) => {
+const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode }: Props) => {
   const [rootDataRefetchable, refetch] = useRefetchableFragment<
-    myTeams_teams_availableOrganizationDesks_refetchableFragment,
-    myTeams_teams_availableOrganizationDesks_query$key
+    myTeams_teams_refetchableFragment,
+    myTeams_teams_query$key
   >(
     graphql`
-      fragment myTeams_teams_availableOrganizationDesks_query on Query
+      fragment myTeams_teams_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "myTeams_teams_availableOrganizationDesks_refetchableFragment") {
+      @refetchable(queryName: "myTeams_teams_refetchableFragment") {
         teams(
           first: $count
           after: $cursor
@@ -206,4 +206,4 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, primaryLocationIds, view
   );
 };
 
-export default memo(MyLocations);
+export default memo(MyTeams);

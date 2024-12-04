@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f62c4c5de1e8f5e4c056c0ead5dd4db6>>
+ * @generated SignedSource<<8c1e1f98acba8248c5f9ac5aadd59660>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type myTeams_teams_availableOrganizationDesks_query$data = {
+export type myTeams_teams_query$data = {
   readonly teams: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -35,11 +35,11 @@ export type myTeams_teams_availableOrganizationDesks_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "myTeams_teams_availableOrganizationDesks_query";
+  readonly " $fragmentType": "myTeams_teams_query";
 };
-export type myTeams_teams_availableOrganizationDesks_query$key = {
-  readonly " $data"?: myTeams_teams_availableOrganizationDesks_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"myTeams_teams_availableOrganizationDesks_query">;
+export type myTeams_teams_query$key = {
+  readonly " $data"?: myTeams_teams_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"myTeams_teams_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -105,10 +105,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./myTeams_teams_availableOrganizationDesks_refetchableFragment.graphql')
+      "operation": require('./myTeams_teams_refetchableFragment.graphql')
     }
   },
-  "name": "myTeams_teams_availableOrganizationDesks_query",
+  "name": "myTeams_teams_query",
   "selections": [
     {
       "alias": "teams",
@@ -306,6 +306,6 @@ return {
 };
 })();
 
-(node as any).hash = "b13bc08a0fae4078c0a8326be50e08d6";
+(node as any).hash = "b0975b57ca3ea93ab7a14a0d4ee22c70";
 
 export default node;

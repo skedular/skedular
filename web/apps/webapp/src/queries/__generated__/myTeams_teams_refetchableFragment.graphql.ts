@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8486c4d60a873cc5939acfed9a7f77f6>>
+ * @generated SignedSource<<98ddd01fd01643d657f689237f273a06>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,19 +16,19 @@ export type TeamOrderInput = {
   direction: OrderDirection;
   field: TeamOrderField;
 };
-export type myTeams_teams_availableOrganizationDesks_refetchableFragment$variables = {
+export type myTeams_teams_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationId?: string | null | undefined;
   primaryLocationIds?: ReadonlyArray<string> | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
-export type myTeams_teams_availableOrganizationDesks_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"myTeams_teams_availableOrganizationDesks_query">;
+export type myTeams_teams_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"myTeams_teams_query">;
 };
-export type myTeams_teams_availableOrganizationDesks_refetchableFragment = {
-  response: myTeams_teams_availableOrganizationDesks_refetchableFragment$data;
-  variables: myTeams_teams_availableOrganizationDesks_refetchableFragment$variables;
+export type myTeams_teams_refetchableFragment = {
+  response: myTeams_teams_refetchableFragment$data;
+  variables: myTeams_teams_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -118,7 +118,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "myTeams_teams_availableOrganizationDesks_refetchableFragment",
+    "name": "myTeams_teams_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -134,7 +134,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "myTeams_teams_availableOrganizationDesks_query"
+        "name": "myTeams_teams_query"
       }
     ],
     "type": "Query",
@@ -144,7 +144,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "myTeams_teams_availableOrganizationDesks_refetchableFragment",
+    "name": "myTeams_teams_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -319,16 +319,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d790fc9d1492c0aaead51f3177fb65b7",
+    "cacheID": "a1f50c945a09dfd2e0d43376a58ffd08",
     "id": null,
     "metadata": {},
-    "name": "myTeams_teams_availableOrganizationDesks_refetchableFragment",
+    "name": "myTeams_teams_refetchableFragment",
     "operationKind": "query",
-    "text": "query myTeams_teams_availableOrganizationDesks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...myTeams_teams_availableOrganizationDesks_query_1G22uz\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {organizationId: $organizationId, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query myTeams_teams_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...myTeams_teams_query_1G22uz\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment myTeams_teams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {organizationId: $organizationId, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b13bc08a0fae4078c0a8326be50e08d6";
+(node as any).hash = "b0975b57ca3ea93ab7a14a0d4ee22c70";
 
 export default node;

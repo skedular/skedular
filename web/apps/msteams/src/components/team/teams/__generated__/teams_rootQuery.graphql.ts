@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<03be2eeb99b079a8b3b09b258266b913>>
+ * @generated SignedSource<<e71d22f68ee73c94c6c4c7edf9df55c2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type teams_rootQuery$variables = {
   teamsSortingValues: ReadonlyArray<TeamOrderInput>;
 };
 export type teams_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationSelector_allLocations_query" | "myTeams_teams_availableOrganizationDesks_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"locationSelector_allLocations_query" | "myTeams_teams_query">;
 };
 export type teams_rootQuery = {
   response: teams_rootQuery$data;
@@ -126,7 +126,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "myTeams_teams_availableOrganizationDesks_query"
+        "name": "myTeams_teams_query"
       }
     ],
     "type": "Query",
@@ -339,16 +339,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "71023d2156090a8298345c195858f4be",
+    "cacheID": "b90aec0b840dacb835b278cdb8c36cc1",
     "id": null,
     "metadata": {},
     "name": "teams_rootQuery",
     "operationKind": "query",
-    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]!\n) {\n  ...locationSelector_allLocations_query\n  ...myTeams_teams_availableOrganizationDesks_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query on Query {\n  teams(where: {organizationId: $organizationId, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]!\n) {\n  ...locationSelector_allLocations_query\n  ...myTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment myTeams_teams_query on Query {\n  teams(where: {organizationId: $organizationId, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3f0d87402964ecb96b68ca6f8e7fefce";
+(node as any).hash = "97c08bd5d1000f6050dd101a63e4b634";
 
 export default node;

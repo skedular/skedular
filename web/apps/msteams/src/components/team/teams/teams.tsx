@@ -24,7 +24,7 @@ type Props = {
 const RootQuery = graphql`
   query teams_rootQuery($organizationId: String!, $primaryLocationIds: [String!], $teamsSortingValues: [TeamOrderInput!]!) {
     ...locationSelector_allLocations_query
-    ...myTeams_teams_availableOrganizationDesks_query
+    ...myTeams_teams_query
   }
 `;
 

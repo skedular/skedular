@@ -527,6 +527,7 @@ type OrganizationDetails {
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
   isMyOnboardingDone: Boolean!
+  members: [OrganizationMemberDetails!]!
   id: ID!
 }
 type OrganizationEdge {

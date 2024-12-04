@@ -216,10 +216,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    private IEnumerable<OrganizationMember> MapTo(IEnumerable<Shared.Database.Entities.OrganizationMember> src,
-        Shared.Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
     public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
         src is null
             ? null
@@ -313,7 +309,8 @@ public class Mapper : IMapper
             HasLocation = src.HasLocation,
             HasTeam = src.HasTeam,
             HasFutureBooking = src.HasFutureBooking,
-            IsMyOnboardingDone = src.IsMyOnboardingDone
+            IsMyOnboardingDone = src.IsMyOnboardingDone,
+            Members = MapTo(src.OrganizationMembers).ToArray()
         };
     }
 
@@ -460,21 +457,6 @@ public class Mapper : IMapper
     public OrganizationMember MapTo(Admin_AddMemberInput src) =>
         MapTo(src.Member, new Shared.Models.Organization { Id = src.Id });
 
-    private Member MapToGrpcResponse(OrganizationMember src) =>
-        new()
-        {
-            Id = src.Id,
-            MembershipType = src.MembershipType switch
-            {
-                OrganizationMembershipType.Owner => MembershipType.Owner,
-                OrganizationMembershipType.Administrator => MembershipType.Administrator,
-                OrganizationMembershipType.Member => MembershipType.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-            Customer = MapToGrpcResponse(src.Customer)
-        };
-
     public OrganizationEdge MapTo(Edge<Shared.Models.Organization> src) =>
         new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
 
@@ -601,6 +583,25 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
             Type = OrganizationTagType.Zone
+        };
+
+    private IEnumerable<OrganizationMember> MapTo(IEnumerable<Shared.Database.Entities.OrganizationMember> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private Member MapToGrpcResponse(OrganizationMember src) =>
+        new()
+        {
+            Id = src.Id,
+            MembershipType = src.MembershipType switch
+            {
+                OrganizationMembershipType.Owner => MembershipType.Owner,
+                OrganizationMembershipType.Administrator => MembershipType.Administrator,
+                OrganizationMembershipType.Member => MembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
+            Customer = MapToGrpcResponse(src.Customer)
         };
 
     private IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
@@ -979,4 +980,7 @@ public class Mapper : IMapper
             Type = src.Type,
             Organization = organization
         };
+
+    private IEnumerable<OrganizationMemberDetails> MapTo(IEnumerable<OrganizationMember> src) =>
+        src.Select(MapTo);
 }
