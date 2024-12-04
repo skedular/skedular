@@ -1,5 +1,6 @@
 import {
   getModernOrganizationLocationsBaseLink,
+  getModernOrganizationMembersBaseLink,
   getModernOrganizationTeamsBaseLink,
   getOrganizationBaseLink,
 } from '@/components/organization/organization-link';
@@ -10,7 +11,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { DeskIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
+import { HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import Image from 'next/image';
 import NextLink from 'next/link';
@@ -71,6 +72,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
   const organizationBaseLink = getOrganizationBaseLink(rootData.organization.id);
   const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
   const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
+  const organizationMembersBaseLink = getModernOrganizationMembersBaseLink(rootData.organization.id);
 
   return (
     <List>
@@ -117,31 +119,19 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
         </Link>
       </ListItem>
 
-      {rootData.organization.canModify && (
-        <ListItem disablePadding>
-          <Link component={NextLink} href="/manageseats">
-            <ListItemButton selected={pathName === '/manageseats'} sx={{ ...styles, borderRadius: pathName === '/manageseats' ? 4 : 0 }}>
-              <ListItemIcon>
-                <DeskIcon excludeTooltip />
-              </ListItemIcon>
-              {!showIconsOnly && <ListItemText>Manage Seats</ListItemText>}
-            </ListItemButton>
-          </Link>
-        </ListItem>
-      )}
-
-      {rootData.organization.canModify && (
-        <ListItem disablePadding>
-          <Link component={NextLink} href="/managemembers">
-            <ListItemButton selected={pathName === '/managemembers'} sx={{ ...styles, borderRadius: pathName === '/managemembers' ? 4 : 0 }}>
-              <ListItemIcon>
-                <MembersIcon excludeTooltip />
-              </ListItemIcon>
-              {!showIconsOnly && <ListItemText>Manage Members</ListItemText>}
-            </ListItemButton>
-          </Link>
-        </ListItem>
-      )}
+      <ListItem disablePadding>
+        <Link component={NextLink} href={organizationMembersBaseLink}>
+          <ListItemButton
+            selected={pathName === organizationMembersBaseLink}
+            sx={{ ...styles, borderRadius: pathName === organizationMembersBaseLink ? 4 : 0 }}
+          >
+            <ListItemIcon>
+              <MembersIcon excludeTooltip />
+            </ListItemIcon>
+            {!showIconsOnly && <ListItemText>Members</ListItemText>}
+          </ListItemButton>
+        </Link>
+      </ListItem>
 
       {rootData.organization.canModify && (
         <ListItem disablePadding>

@@ -10,7 +10,7 @@ import Link from '@mui/icons-material/Link';
 import LocalOffer from '@mui/icons-material/LocalOffer';
 import Notes from '@mui/icons-material/Notes';
 import NotificationsActive from '@mui/icons-material/NotificationsActive';
-import People from '@mui/icons-material/People';
+import Person from '@mui/icons-material/Person';
 import Place from '@mui/icons-material/Place';
 import Refresh from '@mui/icons-material/Refresh';
 import Settings from '@mui/icons-material/Settings';
@@ -66,10 +66,10 @@ type Props = {
 
 export const MembersIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
   excludeTooltip ? (
-    <People fontSize={fontSize} color={color} />
+    <Person fontSize={fontSize} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Members'}>
-      <People fontSize={fontSize} color={color} />
+      <Person fontSize={fontSize} color={color} />
     </TooltipIcon>
   );
 
