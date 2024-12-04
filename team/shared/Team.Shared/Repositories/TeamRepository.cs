@@ -87,6 +87,12 @@ internal static class TeamExtensions
             query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
         }
 
+        if (searchCriteria.PrimaryLocationIds is not null && searchCriteria.PrimaryLocationIds.Count != 0)
+        {
+            query = query.Where(item =>
+                item.PrimaryLocation != null && searchCriteria.PrimaryLocationIds!.Contains(item.PrimaryLocation.Id));
+        }
+
         return query;
     }
 

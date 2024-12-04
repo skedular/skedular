@@ -68,7 +68,7 @@ public class TeamQuery(IMapper mapper)
         var (paginatedInfo, edges, totalCount) =
             await teamService.GetPaginatedTeamsAsync(
                 new PaginationInputParam(after, first, before, last),
-                new TeamSearchCriteria(where.OrganizationId, where.NameContains),
+                new TeamSearchCriteria(where.OrganizationId, where.NameContains, where.PrimaryLocationIds),
                 orderBy is null
                     ? []
                     : orderBy.Select(item =>

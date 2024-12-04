@@ -17,6 +17,7 @@ import MyTeamCard from './my-team-card';
 type Props = {
   rootDataRelay: myTeams_teams_availableOrganizationDesks_query$key;
   onReloadRequired: () => void;
+  primaryLocationIds: string[];
   viewMode: 'list' | 'grid';
 };
 
@@ -39,7 +40,7 @@ type RowType = {
   teammates: ReadonlyArray<CustomerDetails>;
 };
 
-const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
+const MyLocations = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode }: Props) => {
   const [rootDataRefetchable, refetch] = useRefetchableFragment<
     myTeams_teams_availableOrganizationDesks_refetchableFragment,
     myTeams_teams_availableOrganizationDesks_query$key
@@ -48,8 +49,12 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
       fragment myTeams_teams_availableOrganizationDesks_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "myTeams_teams_availableOrganizationDesks_refetchableFragment") {
-        teams(first: $count, after: $cursor, where: { organizationId: $organizationId }, orderBy: $teamsSortingValues)
-          @connection(key: "myTeams_teams") {
+        teams(
+          first: $count
+          after: $cursor
+          where: { organizationId: $organizationId, primaryLocationIds: $primaryLocationIds }
+          orderBy: $teamsSortingValues
+        ) @connection(key: "myTeams_teams") {
           __id
           totalCount
           edges {
@@ -87,18 +92,23 @@ const MyLocations = ({ rootDataRelay, onReloadRequired, viewMode }: Props) => {
     return rootDataRefetchable.teams.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name));
   }, [rootDataRefetchable.teams]);
 
-  const handleRefetch = useCallback(() => {
-    startTransition(() => {
-      refetch(
-        {},
-        {
-          fetchPolicy: 'store-and-network',
-        },
-      );
-    });
-  }, [refetch]);
+  const handleRefetch = useCallback(
+    (primaryLocationIds: string[]) => {
+      startTransition(() => {
+        refetch(
+          {
+            primaryLocationIds,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetch],
+  );
 
-  useEffect(() => handleRefetch(), [handleRefetch]);
+  useEffect(() => handleRefetch(primaryLocationIds), [handleRefetch, primaryLocationIds]);
 
   const rows: RowType[] = teams.map((team) => {
     return {

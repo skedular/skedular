@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a0b6782059a8dac4fb7e8b1ae0ca1cf8>>
+ * @generated SignedSource<<f62c4c5de1e8f5e4c056c0ead5dd4db6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -78,6 +78,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "primaryLocationIds"
+    },
+    {
+      "kind": "RootArgument",
       "name": "teamsSortingValues"
     }
   ],
@@ -120,6 +124,11 @@ return {
               "kind": "Variable",
               "name": "organizationId",
               "variableName": "organizationId"
+            },
+            {
+              "kind": "Variable",
+              "name": "primaryLocationIds",
+              "variableName": "primaryLocationIds"
             }
           ],
           "kind": "ObjectValue",
@@ -297,6 +306,6 @@ return {
 };
 })();
 
-(node as any).hash = "ce2b5c41c7ff3b3720634ea85c91919b";
+(node as any).hash = "b13bc08a0fae4078c0a8326be50e08d6";
 
 export default node;

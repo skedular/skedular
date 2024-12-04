@@ -9,7 +9,6 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { defaultPadding } from '@repo/shared/libs/theme';
-import { startOfDay } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -22,7 +21,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query teams_rootQuery($organizationId: String!, $teamsSortingValues: [TeamOrderInput!]!) {
+  query teams_rootQuery($organizationId: String!, $primaryLocationIds: [String!], $teamsSortingValues: [TeamOrderInput!]!) {
     ...locationSelector_allLocations_query
     ...myTeams_teams_availableOrganizationDesks_query
   }
@@ -60,7 +59,7 @@ const Teams = ({ queryReference, onReloadRequired, organizationId }: Props) => {
         <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
         <NewTeamButton organizationId={organizationId} />
       </Stack>
-      <MyTeams rootDataRelay={rootData} onReloadRequired={onReloadRequired} viewMode={viewMode} />
+      <MyTeams rootDataRelay={rootData} onReloadRequired={onReloadRequired} primaryLocationIds={locationIds} viewMode={viewMode} />
     </Stack>
   );
 };
@@ -77,8 +76,6 @@ const TeamsWithRelay = ({ organizationId }: RelayProps) => {
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    const today = startOfDay();
-
     loadQuery(
       {
         organizationId,

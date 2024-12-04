@@ -1313,6 +1313,7 @@ input TeamOrderInput {
 input TeamWhereInput {
   organizationId: String
   nameContains: String
+  primaryLocationIds: [String!]
 }
 input UpdateTeamInput {
   clientMutationId: String

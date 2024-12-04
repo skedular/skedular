@@ -81,7 +81,10 @@ public class TeamGrpcService(
                 request.First.FromNullInt(),
                 request.Before,
                 request.Last.FromNullInt()),
-            new TeamSearchCriteria(request.Where.OrganizationId, request.Where.NameContains),
+            new TeamSearchCriteria(
+                request.Where.OrganizationId,
+                request.Where.NameContains,
+                request.Where.PrimaryLocationIds),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == OrderDirection.Ascending

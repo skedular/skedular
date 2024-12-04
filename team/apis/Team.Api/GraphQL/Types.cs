@@ -221,6 +221,7 @@ public class TeamWhereInput
 {
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
+    [GraphQLName("primaryLocationIds")] public string[]? PrimaryLocationIds { get; set; }
 }
 
 [GraphQLName("UpdateTeamInput")]

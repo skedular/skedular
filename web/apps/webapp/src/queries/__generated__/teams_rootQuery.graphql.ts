@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f307a1cacb9e894a928bce665da7e2b1>>
+ * @generated SignedSource<<03be2eeb99b079a8b3b09b258266b913>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type TeamOrderInput = {
 };
 export type teams_rootQuery$variables = {
   organizationId: string;
+  primaryLocationIds?: ReadonlyArray<string> | null | undefined;
   teamsSortingValues: ReadonlyArray<TeamOrderInput>;
 };
 export type teams_rootQuery$data = {
@@ -38,19 +39,18 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
+    "name": "primaryLocationIds"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
     "name": "teamsSortingValues"
   }
 ],
 v1 = {
-  "fields": [
-    {
-      "kind": "Variable",
-      "name": "organizationId",
-      "variableName": "organizationId"
-    }
-  ],
-  "kind": "ObjectValue",
-  "name": "where"
+  "kind": "Variable",
+  "name": "organizationId",
+  "variableName": "organizationId"
 },
 v2 = {
   "alias": null,
@@ -91,7 +91,18 @@ v6 = [
     "name": "orderBy",
     "variableName": "teamsSortingValues"
   },
-  (v1/*: any*/)
+  {
+    "fields": [
+      (v1/*: any*/),
+      {
+        "kind": "Variable",
+        "name": "primaryLocationIds",
+        "variableName": "primaryLocationIds"
+      }
+    ],
+    "kind": "ObjectValue",
+    "name": "where"
+  }
 ],
 v7 = {
   "alias": null,
@@ -130,7 +141,13 @@ return {
       {
         "alias": null,
         "args": [
-          (v1/*: any*/)
+          {
+            "fields": [
+              (v1/*: any*/)
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
         ],
         "concreteType": "LocationConnection",
         "kind": "LinkedField",
@@ -322,16 +339,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c63be8a2206d72e48fe3c3b5067345fe",
+    "cacheID": "71023d2156090a8298345c195858f4be",
     "id": null,
     "metadata": {},
     "name": "teams_rootQuery",
     "operationKind": "query",
-    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $teamsSortingValues: [TeamOrderInput!]!\n) {\n  ...locationSelector_allLocations_query\n  ...myTeams_teams_availableOrganizationDesks_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query on Query {\n  teams(where: {organizationId: $organizationId}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]!\n) {\n  ...locationSelector_allLocations_query\n  ...myTeams_teams_availableOrganizationDesks_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query on Query {\n  teams(where: {organizationId: $organizationId, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8946693da0739cd980bc2de15b104255";
+(node as any).hash = "3f0d87402964ecb96b68ca6f8e7fefce";
 
 export default node;

@@ -83,6 +83,7 @@ message GetPaginatedTeamsInput {
 message TeamWhereInput {
     string organizationId = 1;
     string nameContains = 2;
+    repeated string primaryLocationIds = 3;
 }
 
 message TeamOrderInput {

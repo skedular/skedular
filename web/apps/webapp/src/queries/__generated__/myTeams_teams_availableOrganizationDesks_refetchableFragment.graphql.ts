@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<05849006b69f1bc6605f70cca7d0b258>>
+ * @generated SignedSource<<8486c4d60a873cc5939acfed9a7f77f6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,7 @@ export type myTeams_teams_availableOrganizationDesks_refetchableFragment$variabl
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationId?: string | null | undefined;
+  primaryLocationIds?: ReadonlyArray<string> | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
 export type myTeams_teams_availableOrganizationDesks_refetchableFragment$data = {
@@ -50,6 +51,11 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
+    "name": "primaryLocationIds"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
     "name": "teamsSortingValues"
   }
 ],
@@ -75,6 +81,11 @@ v1 = [
         "kind": "Variable",
         "name": "organizationId",
         "variableName": "organizationId"
+      },
+      {
+        "kind": "Variable",
+        "name": "primaryLocationIds",
+        "variableName": "primaryLocationIds"
       }
     ],
     "kind": "ObjectValue",
@@ -308,16 +319,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c5fa2baf6d6ff922a531360fe9d789d7",
+    "cacheID": "d790fc9d1492c0aaead51f3177fb65b7",
     "id": null,
     "metadata": {},
     "name": "myTeams_teams_availableOrganizationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query myTeams_teams_availableOrganizationDesks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...myTeams_teams_availableOrganizationDesks_query_1G22uz\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {organizationId: $organizationId}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query myTeams_teams_availableOrganizationDesks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...myTeams_teams_availableOrganizationDesks_query_1G22uz\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment myTeams_teams_availableOrganizationDesks_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {organizationId: $organizationId, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ce2b5c41c7ff3b3720634ea85c91919b";
+(node as any).hash = "b13bc08a0fae4078c0a8326be50e08d6";
 
 export default node;
