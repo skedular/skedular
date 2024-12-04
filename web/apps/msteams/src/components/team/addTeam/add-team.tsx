@@ -14,6 +14,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { SingleChoiceLocation } from 'components/location/locationSelector';
 import { OrganizationMemberSelector } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -50,6 +51,7 @@ const RootQuery = graphql`
       name
     }
     ...organizationMemberSelector_query
+    ...singleChoiceLocation_locations_query
   }
 `;
 
@@ -58,6 +60,7 @@ type TeamDetails = {
   about: string | null;
   timezone: string | null;
   organizationMemberIds: string[];
+  primaryLocationId?: string;
 };
 
 const teamSchema = object({
@@ -65,6 +68,7 @@ const teamSchema = object({
   about: string().nullable(),
   timezone: string().nullable(),
   organizationMemberIds: array().nullable(),
+  primaryLocationId: string().nullable(),
 });
 
 const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancelled, cancelButtonText }: Props) => {
@@ -113,7 +117,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
     });
   };
 
-  const handleTeamCreateClick = ({ name, about, timezone, organizationMemberIds }: TeamDetails) => {
+  const handleTeamCreateClick = ({ name, about, timezone, organizationMemberIds, primaryLocationId }: TeamDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -133,6 +137,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
           customerIds,
           organizationId,
           organizationMemberIds: [...new Set(organizationMemberIds)],
+          primaryLocationId,
         },
       },
       onCompleted: (_, errors) => {
@@ -214,15 +219,20 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
             <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
             <SingleChoiceTimezone name="timezone" required={requiredFields.timezone} />
 
-            {organizationId && (
-              <OrganizationMemberSelector
-                rootDataRelay={rootData}
-                name="organizationMemberIds"
-                required={requiredFields.organizationMemberIds}
-                multiple={true}
-                useMemberId={true}
-              />
-            )}
+            <SingleChoiceLocation
+              rootDataRelay={rootData}
+              id="primaryLocationId"
+              required={requiredFields.primaryLocationId}
+              label="Primary Location"
+            />
+
+            <OrganizationMemberSelector
+              rootDataRelay={rootData}
+              name="organizationMemberIds"
+              required={requiredFields.organizationMemberIds}
+              multiple={true}
+              useMemberId={true}
+            />
 
             <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
               <Button color="secondary" variant="contained" onClick={handleCancelClick}>

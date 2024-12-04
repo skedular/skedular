@@ -198,12 +198,14 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
           <TextField label="Name" name="name" required={requiredFields.name} />
           <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
           <SingleChoiceTimezone name="timezone" required={requiredFields.timezone} />
-          <SingleChoiceLocation
-            rootDataRelay={rootData}
-            id="primaryLocationId"
-            required={requiredFields.primaryLocationId}
-            label="Primary Location"
-          />
+          {organizationId && (
+            <SingleChoiceLocation
+              rootDataRelay={rootData}
+              id="primaryLocationId"
+              required={requiredFields.primaryLocationId}
+              label="Primary Location"
+            />
+          )}
 
           <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
             <Button color="primary" variant="contained" type="submit">

@@ -291,6 +291,7 @@ public class TeamService(
         }
 
         return await EnrichTeamAsync(customer, team, cancellationToken);
+    
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int)>

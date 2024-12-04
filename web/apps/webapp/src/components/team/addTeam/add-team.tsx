@@ -1,3 +1,4 @@
+import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import { OrganizationMemberSelector } from '@/components/organization';
 import type { addTeam_addTeamMutation } from '@/queries/__generated__/addTeam_addTeamMutation.graphql';
 import type { addTeam_completeTeamOnboardingMutation } from '@/queries/__generated__/addTeam_completeTeamOnboardingMutation.graphql';
@@ -50,6 +51,7 @@ const RootQuery = graphql`
       name
     }
     ...organizationMemberSelector_query
+    ...singleChoiceLocation_locations_query
   }
 `;
 
@@ -58,6 +60,7 @@ type TeamDetails = {
   about: string | null;
   timezone: string | null;
   organizationMemberIds: string[];
+  primaryLocationId?: string;
 };
 
 const teamSchema = object({
@@ -65,6 +68,7 @@ const teamSchema = object({
   about: string().nullable(),
   timezone: string().nullable(),
   organizationMemberIds: array().nullable(),
+  primaryLocationId: string().nullable(),
 });
 
 const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancelled, cancelButtonText }: Props) => {
@@ -113,7 +117,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
     });
   };
 
-  const handleTeamCreateClick = ({ name, about, timezone, organizationMemberIds }: TeamDetails) => {
+  const handleTeamCreateClick = ({ name, about, timezone, organizationMemberIds, primaryLocationId }: TeamDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -133,6 +137,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
           customerIds,
           organizationId,
           organizationMemberIds: [...new Set(organizationMemberIds)],
+          primaryLocationId,
         },
       },
       onCompleted: (_, errors) => {
@@ -206,6 +211,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
           name: '',
           about: null,
           organizationMemberIds: [],
+          primaryLocationId: null,
         }}
         validate={validate}
         render={({ handleSubmit }) => (
@@ -213,6 +219,15 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
             <TextField label="Name" name="name" required={requiredFields.name} />
             <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
             <SingleChoiceTimezone name="timezone" required={requiredFields.timezone} />
+
+            {organizationId && (
+              <SingleChoiceLocation
+                rootDataRelay={rootData}
+                id="primaryLocationId"
+                required={requiredFields.primaryLocationId}
+                label="Primary Location"
+              />
+            )}
 
             {organizationId && (
               <OrganizationMemberSelector

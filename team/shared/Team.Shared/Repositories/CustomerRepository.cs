@@ -77,18 +77,6 @@ public class CustomerRepository(TeamDbContext dbContext, TimeProvider timeProvid
                     .OrderBy(query => query.Id)
                     .FirstOrDefault());
 
-    private static readonly Func<TeamDbContext, ICollection<string>, CancellationToken, Task<ICollection<Customer>>>
-        s_getByIdsQueryAsync =
-            EF.CompileAsyncQuery<TeamDbContext, ICollection<string>, CancellationToken, ICollection<Customer>>((
-                    dbContext,
-                    ids,
-                    cancellationToken) =>
-                Queryable
-                    .Where<Customer>(dbContext.Customer
-                        .AddDependentObjects(), query => ids.Contains(query.Id))
-                    .OrderBy(query => query.Id)
-                    .ToList());
-
     public override async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         await base.UpsertNakedAsync(id, cancellationToken);
@@ -115,7 +103,11 @@ public class CustomerRepository(TeamDbContext dbContext, TimeProvider timeProvid
 
     public async Task<ICollection<Customer>>
         GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
-        await s_getByIdsQueryAsync(DbContext, ids, cancellationToken);
+        await DbContext.Customer
+            .Where(query => ids.Contains(query.Id))
+            .AddDependentObjects()
+            .OrderBy(query => query.Id)
+            .ToListAsync(cancellationToken);
 
     public Customer Add(Customer customer)
     {
