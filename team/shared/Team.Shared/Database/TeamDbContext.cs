@@ -19,6 +19,7 @@ public class TeamDbContext(
     public DbSet<TeamMember> TeamMember { get; set; }
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
+    public DbSet<Location> Location { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class TeamDbContextDesignFactory : IDesignTimeDbContextFactory<TeamDbContext>

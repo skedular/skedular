@@ -1,12 +1,13 @@
 using Api.Shared.Clients.Events.UnityHub.Location.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
-using Organization.Processors.Mappers;
-using Organization.Shared.Repositories;
+using Team.Processors.Mappers;
+using Team.Shared.Database.Entities;
+using Team.Shared.Repositories;
 using Event = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event;
-using Location = Organization.Shared.Database.Entities.Location;
+using Location = Team.Shared.Database.Entities.Location;
 using Type = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Type;
 
-namespace Organization.Processors.Subscribers;
+namespace Team.Processors.Subscribers;
 
 public class LocationSubscriber(
     ILogger<LocationSubscriber> logger,
@@ -30,9 +31,11 @@ public class LocationSubscriber(
                     }
 
                     var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                            location.Organization.Id,
-                            cancellationToken);
+                        location.Organization is null
+                            ? null
+                            : await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                                location.Organization.Id,
+                                cancellationToken);
                     ArgumentNullException.ThrowIfNull(existingOrganization);
 
                     var existingLocation =
@@ -89,24 +92,9 @@ public class LocationSubscriber(
     private async Task HandleLocationUpsertedEventAsync(
         Shared.Models.Location location,
         Location? existingLocation,
-        Shared.Database.Entities.Organization existingOrganization,
+        Organization existingOrganization,
         CancellationToken cancellationToken)
     {
-        if (existingLocation is not null && string.IsNullOrWhiteSpace(location.Organization.Id))
-        {
-            // If location already exist and is now detached from organization, delete it
-            _ = repositoryFactory.LocationRepository.Remove(existingLocation);
-            await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(location.Organization.Id))
-        {
-            // Location not attached to any organization, ignoring it
-            return;
-        }
-
         _ = existingLocation is null
             ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, existingOrganization))
             : repositoryFactory.LocationRepository.Update(

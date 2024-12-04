@@ -6,6 +6,7 @@ using Team.Shared.Models;
 using Customer = Team.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
 using Identity = Team.Shared.Database.Entities.Identity;
+using Location = Team.Shared.Models.Location;
 using TeamMember = Team.Shared.Database.Entities.TeamMember;
 using Offering = Team.Shared.Models.Offering;
 using Organization = Team.Shared.Models.Organization;
@@ -18,8 +19,15 @@ public interface IMapper
     Customer MapTo(Event src);
     Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
     Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src);
+    Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
 
     Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities);
+    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization? organization);
+
+    Shared.Database.Entities.Location MergeToEntity(
+        Location src,
+        Shared.Database.Entities.Location dest,
+        Shared.Database.Entities.Organization? organization);
 
     Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
@@ -154,10 +162,44 @@ public class Mapper : IMapper
         };
     }
 
+    public Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
+    {
+        var location = src.Data.LocationAfterState;
+        var deletedAt = location.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        return new Location
+        {
+            Id = location.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = location.Name,
+            Organization = string.IsNullOrWhiteSpace(location.OrganizationId)
+                ? null
+                : new Organization { Id = location.OrganizationId }
+        };
+    }
+
     public Shared.Database.Entities.Customer MapToEntity(
         Customer src,
         ICollection<Identity> identities) =>
         MergeToEntity(src, new Shared.Database.Entities.Customer(), identities);
+
+    public Shared.Database.Entities.Location MapToEntity(Location src,
+        Shared.Database.Entities.Organization? organization) =>
+        MergeToEntity(src, new Shared.Database.Entities.Location(), organization);
+
+    public Shared.Database.Entities.Location MergeToEntity(
+        Location src,
+        Shared.Database.Entities.Location dest,
+        Shared.Database.Entities.Organization? organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Organization = organization;
+        return dest;
+    }
 
     public Shared.Database.Entities.Customer MergeToEntity(
         Customer src,

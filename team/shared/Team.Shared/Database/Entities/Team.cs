@@ -17,6 +17,7 @@ public class Team : EntityBaseWithDeleted
     public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
     public virtual ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
+    public virtual Location? PrimaryLocation { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -33,5 +34,10 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder
             .HasOne(item => item.Organization)
             .WithMany(item => item.Teams);
+        
+        builder
+            .HasOne(item => item.PrimaryLocation)
+            .WithMany(item => item.PrimaryLocationForTeams);
+
     }
 }

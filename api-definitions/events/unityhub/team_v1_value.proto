@@ -41,6 +41,7 @@ message Team {
   repeated Member members = 5;
   string organizationId = 6;
   string timezone = 7;
+  string primaryLocationId = 8;
 }
 
 enum MembershipType {
