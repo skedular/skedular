@@ -1,19 +1,21 @@
 import { TeamSelector } from '@/components/team/teamSelector';
 import type { organizationMembers_rootQuery } from '@/queries/__generated__/organizationMembers_rootQuery.graphql';
-import type { organizationMembers_teams_query$key } from '@/queries/__generated__/organizationMembers_teams_query.graphql';
-import type { organizationMembers_teamsrefetchableFragment } from '@/queries/__generated__/organizationMembers_teamsrefetchableFragment.graphql';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import type { GridColDef } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { defaultPadding } from '@repo/shared/libs/theme';
+import { getCustomerFullName } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
   queryReference: PreloadedQuery<organizationMembers_rootQuery, Record<string, unknown>>;
@@ -36,59 +38,128 @@ const RootQuery = graphql`
         }
       }
     }
+    teams(where: { organizationId: $organizationId }) {
+      __id
+      totalCount
+      edges {
+        node {
+          id
+          name
+          members {
+            organizationMember {
+              uniqueId
+              customer {
+                uniqueId
+                givenName
+                middleName
+                familyName
+                name
+                photoUrl
+              }
+            }
+          }
+          ...myTeamCard_TeamDetails
+        }
+      }
+    }
     ...teamSelector_allTeams_query
-    ...organizationMembers_teams_query
   }
 `;
 
+type CustomerDetails = {
+  uniqueId: string;
+  givenName?: string | null | undefined;
+  middleName?: string | null | undefined;
+  familyName?: string | null | undefined;
+  name?: string | null | undefined;
+  photoUrl?: string | null | undefined;
+};
+type RowType = {
+  id: string;
+  avatar: CustomerDetails;
+  name: string;
+  teams: string;
+};
+
 const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<organizationMembers_rootQuery>(RootQuery, queryReference);
-  const [rootDataRefetchable, refetch] = useRefetchableFragment<
-    organizationMembers_teamsrefetchableFragment,
-    organizationMembers_teams_query$key
-  >(
-    graphql`
-      fragment organizationMembers_teams_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "organizationMembers_teamsrefetchableFragment") {
-        teams(
-          first: $count
-          after: $cursor
-          where: { organizationId: $organizationId }
-        ) @connection(key: "myTeams_teams") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              members {
-                organizationMember {
-                  uniqueId
-                  customer {
-                    uniqueId
-                    givenName
-                    middleName
-                    familyName
-                    name
-                    photoUrl
-                  }
-                }
-              }
-              ...myTeamCard_TeamDetails
-            }
-          }
-        }
-      }
-    `,
-    rootData,
-  );
 
   const [teamIds, setTeamIds] = useState<string[]>([]);
+  const members = useMemo(() => {
+    if (!rootData.organization) {
+      return [];
+    }
+
+    const members = rootData.organization.members
+      .map((member) => member)
+      .sort((a, b) => {
+        const name1 = getCustomerFullName(a.customer);
+        const name2 = getCustomerFullName(b.customer);
+
+        return name1.localeCompare(name2);
+      })
+      .map((member) => {
+        const teams = rootData.teams
+          ? rootData.teams.edges
+              .map(({ node }) => node)
+              .filter((item) => item.members.some(({ organizationMember }) => organizationMember?.customer.uniqueId === member.customer.uniqueId))
+          : [];
+
+        return {
+          ...member,
+          teams,
+        };
+      });
+
+    return members.filter((member) => {
+      if (teamIds.length === 0) {
+        return true;
+      }
+
+      return member.teams.some((team) => teamIds.includes(team.id));
+    });
+  }, [rootData.organization, rootData.teams, teamIds]);
 
   const handlTeamChanged = (id?: string) => {
     setTeamIds(id ? [id] : []);
   };
+
+  const rows: RowType[] = members.map((member) => {
+    return {
+      id: member.id,
+      avatar: member.customer,
+      name: getCustomerFullName(member.customer),
+      teams: member.teams.map((team) => team.name).join(', '),
+    };
+  });
+
+  const columns: GridColDef<(typeof rows)[number]>[] = [
+    {
+      field: 'avatar',
+      headerName: '',
+      editable: false,
+      renderCell: (params) => (
+        <CustomerAvatar key={params.value?.uniqueId} name={params.value} photo={{ url: params.value?.photoUrl }} size="medium" showFullName />
+      ),
+      display: 'flex',
+    },
+    {
+      field: 'name',
+      headerName: 'Name',
+      editable: false,
+      renderCell: (params) => params.value,
+      display: 'text',
+      minWidth: 200,
+    },
+    {
+      field: 'teams',
+      headerName: 'Team',
+      editable: false,
+      renderCell: (params) => params.value,
+      display: 'text',
+      minWidth: 200,
+    },
+  ];
 
   return (
     <Stack direction="column" spacing={1}>
@@ -120,6 +191,29 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
         <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
         <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
       </Stack>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        ignoreDiacritics
+        disableRowSelectionOnClick
+        hideFooter
+        getRowHeight={() => 'auto'}
+        rowSpacingType="margin"
+        getRowSpacing={() => ({ top: 3, bottom: 3 })}
+        sx={{
+          [`& .${gridClasses.cell}`]: {
+            paddingTop: 1,
+            paddingBottom: 1,
+          },
+          [`& .${gridClasses.row}`]: {
+            paddingLeft: 1,
+            paddingTop: 1,
+            paddingBottom: 1,
+            borderRadius: 2,
+            backgroundColor: (theme) => theme.palette.background.paper,
+          },
+        }}
+      />{' '}
     </Stack>
   );
 };

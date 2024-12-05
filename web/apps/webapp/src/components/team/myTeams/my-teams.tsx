@@ -40,10 +40,7 @@ type RowType = {
 };
 
 const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode }: Props) => {
-  const [rootDataRefetchable, refetch] = useRefetchableFragment<
-    myTeams_teams_refetchableFragment,
-    myTeams_teams_query$key
-  >(
+  const [rootDataRefetchable, refetch] = useRefetchableFragment<myTeams_teams_refetchableFragment, myTeams_teams_query$key>(
     graphql`
       fragment myTeams_teams_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
