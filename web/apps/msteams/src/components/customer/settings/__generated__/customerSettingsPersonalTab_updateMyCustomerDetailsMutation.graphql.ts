@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<60ed0f968d4f44a099969361058b9953>>
+ * @generated SignedSource<<8aae91887568256d7cfd7f61f889f8a6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type UpdateMyCustomerDetailsInput = {
   givenName?: string | null | undefined;
   middleName?: string | null | undefined;
   name?: string | null | undefined;
+  phoneNumber?: string | null | undefined;
   timezone?: string | null | undefined;
   title?: string | null | undefined;
 };
@@ -31,6 +32,7 @@ export type customerSettingsPersonalTab_updateMyCustomerDetailsMutation$data = {
       readonly id: string;
       readonly middleName: string | null | undefined;
       readonly name: string | null | undefined;
+      readonly phoneNumber: string | null | undefined;
       readonly timezone: string | null | undefined;
       readonly title: string | null | undefined;
     };
@@ -45,6 +47,7 @@ export type customerSettingsPersonalTab_updateMyCustomerDetailsMutation$rawRespo
       readonly id: string;
       readonly middleName: string | null | undefined;
       readonly name: string | null | undefined;
+      readonly phoneNumber: string | null | undefined;
       readonly timezone: string | null | undefined;
       readonly title: string | null | undefined;
     };
@@ -142,6 +145,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "familyName",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "phoneNumber",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -168,16 +178,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "af292bf964f1f5f9670a5e84ddceb5d0",
+    "cacheID": "d0ababb18171b61d3618db2704890d62",
     "id": null,
     "metadata": {},
     "name": "customerSettingsPersonalTab_updateMyCustomerDetailsMutation",
     "operationKind": "mutation",
-    "text": "mutation customerSettingsPersonalTab_updateMyCustomerDetailsMutation(\n  $input: UpdateMyCustomerDetailsInput!\n) {\n  updateMyCustomerDetails(input: $input) {\n    customer {\n      id\n      timezone\n      designation\n      title\n      name\n      givenName\n      middleName\n      familyName\n    }\n  }\n}\n"
+    "text": "mutation customerSettingsPersonalTab_updateMyCustomerDetailsMutation(\n  $input: UpdateMyCustomerDetailsInput!\n) {\n  updateMyCustomerDetails(input: $input) {\n    customer {\n      id\n      timezone\n      designation\n      title\n      name\n      givenName\n      middleName\n      familyName\n      phoneNumber\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "04d3e426f6791d5732645dcbada88047";
+(node as any).hash = "7c9cf3f21539ecf5b6a7b66aaf399d2b";
 
 export default node;

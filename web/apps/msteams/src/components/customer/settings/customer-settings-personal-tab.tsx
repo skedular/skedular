@@ -32,6 +32,7 @@ type SettingsDetails = {
   middleName: string | null;
   familyName: string | null;
   timezone: string;
+  phoneNumber: string | null;
 };
 
 const settingsSchema = object({
@@ -42,6 +43,7 @@ const settingsSchema = object({
   middleName: string().nullable(),
   familyName: string().nullable(),
   timezone: string().required('Timezone is required'),
+  phoneNumber: string().nullable(),
 });
 
 const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
@@ -57,6 +59,7 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
           givenName
           middleName
           familyName
+          phoneNumber
         }
       }
     `,
@@ -75,6 +78,7 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
           givenName
           middleName
           familyName
+          phoneNumber
         }
       }
     }
@@ -85,7 +89,7 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
   const validate = makeValidate(settingsSchema);
   const requiredFields = makeRequired(settingsSchema);
 
-  const handleSettingsUpdateClick = ({ timezone, designation, title, name, givenName, middleName, familyName }: SettingsDetails) => {
+  const handleSettingsUpdateClick = ({ timezone, designation, title, name, givenName, middleName, familyName, phoneNumber }: SettingsDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -103,6 +107,7 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
           givenName,
           middleName,
           familyName,
+          phoneNumber,
         },
       },
       onCompleted: (_, errors) => {
@@ -137,6 +142,7 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
             givenName,
             middleName,
             familyName,
+            phoneNumber,
           },
         },
       },
@@ -158,6 +164,7 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
         givenName: rootData.me.givenName,
         middleName: rootData.me.middleName,
         familyName: rootData.me.familyName,
+        phoneNumber: rootData.me.phoneNumber,
       }}
       validate={validate}
       render={({ handleSubmit }) => (
@@ -169,6 +176,7 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
           <TextField label="Middle Name" name="middleName" required={requiredFields.middleName} />
           <TextField label="Family Name" name="familyName" required={requiredFields.familyName} />
           <SingleChoiceTimezone name="timezone" required={requiredFields.timezone} />
+          <TextField label="Phone Number" name="phoneNumber" required={requiredFields.phoneNumber} />
 
           <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
             <Button color="primary" variant="contained" type="submit">

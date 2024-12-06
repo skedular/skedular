@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<17734ef33fd7cd4e1e72c2c99f3aa3e2>>
+ * @generated SignedSource<<0e02ec3dccf778ecb79105879684b77b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -143,6 +143,13 @@ return {
             "kind": "ScalarField",
             "name": "title",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "phoneNumber",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -150,12 +157,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cb5b72e23c284e1c70d7766c129450b7",
+    "cacheID": "109da6ad926b3d812f207bc6890c4f12",
     "id": null,
     "metadata": {},
     "name": "customerSettings_rootQuery",
     "operationKind": "query",
-    "text": "query customerSettings_rootQuery {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  ...customerSettingsPersonalTab_query\n}\n\nfragment customerSettingsPersonalTab_query on Query {\n  me {\n    id\n    timezone\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n  }\n}\n"
+    "text": "query customerSettings_rootQuery {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  ...customerSettingsPersonalTab_query\n}\n\nfragment customerSettingsPersonalTab_query on Query {\n  me {\n    id\n    timezone\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n    phoneNumber\n  }\n}\n"
   }
 };
 })();

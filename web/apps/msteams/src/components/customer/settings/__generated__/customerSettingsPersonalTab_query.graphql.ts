@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4526a470dd290f0f214b089a76628eaf>>
+ * @generated SignedSource<<98de23e0462a37354b0746b14bcbbd84>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type customerSettingsPersonalTab_query$data = {
     readonly id: string;
     readonly middleName: string | null | undefined;
     readonly name: string | null | undefined;
+    readonly phoneNumber: string | null | undefined;
     readonly timezone: string | null | undefined;
     readonly title: string | null | undefined;
   } | null | undefined;
@@ -97,6 +98,13 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "familyName",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "phoneNumber",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -106,6 +114,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "454aa1d0a77a35cf75ee8715edc2cf4e";
+(node as any).hash = "d1398df7f5d7f6c7dceeefcddf4fc111";
 
 export default node;
