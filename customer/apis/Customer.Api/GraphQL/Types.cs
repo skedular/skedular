@@ -275,8 +275,8 @@ public class SubmitCustomerFeedbackInput
 [GraphQLName("SubmitCustomerFeedbackPayload")]
 public class SubmitCustomerFeedbackPayload
 {
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
 [GraphQLName("UpdateMyCustomerDetailsInput")]

@@ -37,6 +37,7 @@ const RootQuery = graphql`
           familyName
           photoUrl
         }
+        isActive
       }
     }
     teams(where: { organizationId: $organizationId }) {
@@ -76,6 +77,7 @@ type RowType = {
   name: string;
   teams: string;
   email: string | null | undefined;
+  status: boolean;
 };
 
 const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId }: Props) => {
@@ -121,15 +123,14 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
     setTeamIds(id ? [id] : []);
   };
 
-  const rows: RowType[] = members.map((member) => {
-    return {
-      id: member.id,
-      avatar: member.customer,
-      name: getCustomerFullName(member.customer),
-      teams: member.teams.map((team) => team.name).join(', '),
-      email: member.customer.email,
-    };
-  });
+  const rows: RowType[] = members.map((member) => ({
+    id: member.id,
+    avatar: member.customer,
+    name: getCustomerFullName(member.customer),
+    teams: member.teams.map((team) => team.name).join(', '),
+    email: member.customer.email,
+    status: member.isActive,
+  }));
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
@@ -164,6 +165,53 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
       renderCell: (params) => params.value,
       display: 'text',
       minWidth: 300,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      editable: false,
+      renderCell: (params) => {
+        return (
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              alignItems: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            {params.value && (
+              <>
+                <Typography variant="body1">Active</Typography>
+                <Box
+                  sx={{
+                    width: 15,
+                    height: 15,
+                    borderRadius: '50%',
+                    backgroundColor: 'green',
+                  }}
+                />
+              </>
+            )}
+            {!params.value && (
+              <>
+                <Typography variant="body1">Deactive</Typography>
+                <Box
+                  sx={{
+                    width: 15,
+                    height: 15,
+                    borderRadius: '50%',
+                    backgroundColor: 'orange',
+                  }}
+                />
+              </>
+            )}
+          </Stack>
+        );
+
+        return params.value;
+      },
+      display: 'flex',
     },
   ];
 
@@ -219,7 +267,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
             backgroundColor: (theme) => theme.palette.background.paper,
           },
         }}
-      />{' '}
+      />
     </Stack>
   );
 };

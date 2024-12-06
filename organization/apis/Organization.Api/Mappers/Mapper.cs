@@ -326,7 +326,8 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-            Customer = MapTo(src.Customer)
+            Customer = MapTo(src.Customer),
+            IsActive = true
         };
 
     public OrganizationAnalytics MapTo(

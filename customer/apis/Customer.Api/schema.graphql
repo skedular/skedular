@@ -124,8 +124,8 @@ type Query {
 }
 
 type SubmitCustomerFeedbackPayload {
-  clientMutationId: String
   id: ID!
+  clientMutationId: String
 }
 
 type Version {

@@ -137,6 +137,7 @@ type OrganizationMemberConnection {
 
 type OrganizationMemberDetails {
   membershipType: OrganizationMemberMembershipType
+  isActive: Boolean!
   isOrganizationOnboardingDone: Boolean!
   customer: OrganizationCustomerDetails!
   id: ID!
