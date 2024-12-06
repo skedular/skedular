@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<247fbf4fd9e202165fdd8cd10bf54f47>>
+ * @generated SignedSource<<fdd622cff350813ccb362007b652c371>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type organizationMembers_rootQuery$data = {
         readonly givenName: string | null | undefined;
         readonly middleName: string | null | undefined;
         readonly name: string | null | undefined;
+        readonly phoneNumber: string | null | undefined;
         readonly photoUrl: string | null | undefined;
         readonly uniqueId: string;
       };
@@ -148,7 +149,14 @@ v9 = {
         (v5/*: any*/),
         (v6/*: any*/),
         (v7/*: any*/),
-        (v8/*: any*/)
+        (v8/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "phoneNumber",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -399,16 +407,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9ca986b5ab09a4e2172a56eb7e3cafdd",
+    "cacheID": "2e1503c8d60bc10a7223d771c3528865",
     "id": null,
     "metadata": {},
     "name": "organizationMembers_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMembers_rootQuery(\n  $organizationId: String!\n) {\n  organization(id: $organizationId) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      isActive\n    }\n    id\n  }\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n      }\n    }\n  }\n  ...teamSelector_allTeams_query\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query organizationMembers_rootQuery(\n  $organizationId: String!\n) {\n  organization(id: $organizationId) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      isActive\n    }\n    id\n  }\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n      }\n    }\n  }\n  ...teamSelector_allTeams_query\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2af4cd67ad7f1dd1a7a1d43054f4459d";
+(node as any).hash = "0823ef91164cf86df5b56c2e9544e5dc";
 
 export default node;

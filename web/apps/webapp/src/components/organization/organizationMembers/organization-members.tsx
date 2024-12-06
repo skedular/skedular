@@ -36,6 +36,7 @@ const RootQuery = graphql`
           middleName
           familyName
           photoUrl
+          phoneNumber
         }
         isActive
       }
@@ -70,6 +71,7 @@ type CustomerDetails = {
   familyName?: string | null | undefined;
   name?: string | null | undefined;
   photoUrl?: string | null | undefined;
+  phoneNumber?: string | null | undefined;
 };
 type RowType = {
   id: string;
@@ -77,6 +79,7 @@ type RowType = {
   name: string;
   teams: string;
   email: string | null | undefined;
+  phoneNumber: string | null | undefined;
   status: boolean;
 };
 
@@ -129,6 +132,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
     name: getCustomerFullName(member.customer),
     teams: member.teams.map((team) => team.name).join(', '),
     email: member.customer.email,
+    phoneNumber: member.customer.phoneNumber,
     status: member.isActive,
   }));
 
@@ -161,6 +165,14 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
     {
       field: 'email',
       headerName: 'Email',
+      editable: false,
+      renderCell: (params) => params.value,
+      display: 'text',
+      minWidth: 300,
+    },
+    {
+      field: 'phoneNumber',
+      headerName: 'Phone',
       editable: false,
       renderCell: (params) => params.value,
       display: 'text',
