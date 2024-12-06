@@ -1,0 +1,58 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type AddOrganizationPaymentMethodIntentResponse {
+  clientMutationId: String
+  publishedKeys: String!
+  clientSecret: String!
+}
+
+type Mutation {
+  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse @cost(weight: "10")
+  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodResponse @cost(weight: "10")
+}
+
+type OrganizationPaymentMethod {
+  cardBrand: String
+  cardCountry: String
+  cardDescription: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardFingerprint: String
+  cardFunding: String
+  cardIssuer: String
+  cardLastFourDigit: String
+  id: ID!
+}
+
+type Query {
+  paymentVersion: Version!
+  paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
+  organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!] @cost(weight: "10")
+}
+
+type RemoveOrganizationPaymentMethodResponse {
+  clientMutationId: String
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+input AddOrganizationPaymentMethodIntentInput {
+  clientMutationId: String
+  organizationId: String!
+}
+
+input RemoveOrganizationPaymentMethodInput {
+  clientMutationId: String
+  id: String!
+}
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION

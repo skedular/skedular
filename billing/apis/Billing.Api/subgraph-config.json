@@ -1,0 +1,6 @@
+{
+  "subgraph": "Billing",
+  "http": {
+    "baseAddress": "http://localhost:10800/billing/api/v1/graphql"
+  }
+}

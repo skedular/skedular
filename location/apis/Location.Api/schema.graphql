@@ -1,0 +1,369 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type AcceptInvitationToJoinLocationPayload {
+  clientMutationId: String
+}
+
+type BulkDeskPayload {
+  clientMutationId: String
+  desks: [DeskDetails!]!
+}
+
+type CancelInvitationToJoinLocationPayload {
+  clientMutationId: String
+}
+
+type DeskConnection {
+  pageInfo: PageInfo!
+  edges: [DeskEdge!]!
+  totalCount: Int
+}
+
+type DeskDetails {
+  name: String!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+  deskTypes: [Organization_OrganizationTagDetails!]!
+  zones: [Organization_OrganizationTagDetails!]!
+  id: ID!
+}
+
+type DeskEdge {
+  node: DeskDetails!
+  cursor: String!
+}
+
+type DeskPayload {
+  clientMutationId: String
+  desk: DeskDetails!
+}
+
+type InviteCustomersToJoinLocationPayload {
+  clientMutationId: String
+}
+
+type LocationAddressDetails {
+  formattedAddress: String
+  addressLine1: String
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String
+  country: String
+}
+
+type LocationAnalytics {
+  desksOccupancyPercentage: [LocationDesksOccupancyPercentage!]!
+  dailyBookingsTotals: [LocationDailyBookingsTotal!]!
+}
+
+type LocationConnection {
+  pageInfo: PageInfo!
+  edges: [LocationEdge!]!
+  totalCount: Int
+}
+
+type LocationCustomerDetails {
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+}
+
+type LocationDailyBookingsTotal {
+  date: DateTime!
+  total: Int!
+}
+
+type LocationDesksOccupancyPercentage {
+  date: DateTime!
+  percentage: Float!
+}
+
+type LocationDetails {
+  name: String!
+  about: String
+  organization: LocationOrganizationDetails
+  timezone: String
+  deskCapacity: Int!
+  hasFutureBooking: Boolean!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  canViewAnalytics: Boolean!
+  desks: [DeskDetails!]!
+  physicalAddress: LocationAddressDetails
+  deskTypes: [Organization_OrganizationTagDetails!]!
+  zones: [Organization_OrganizationTagDetails!]!
+  id: ID!
+}
+
+type LocationEdge {
+  node: LocationDetails!
+  cursor: String!
+}
+
+type LocationMemberConnection {
+  pageInfo: PageInfo!
+  edges: [LocationMemberEdge!]!
+  totalCount: Int
+}
+
+type LocationMemberDetails {
+  membershipType: LocationMemberMembershipType
+  customer: LocationCustomerDetails!
+  id: ID!
+}
+
+type LocationMemberDetailsPayload {
+  clientMutationId: String
+  member: LocationMemberDetails
+}
+
+type LocationMemberEdge {
+  node: LocationMemberDetails!
+  cursor: String!
+}
+
+type LocationOrganizationDetails {
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
+}
+
+type LocationPayload {
+  clientMutationId: String
+  location: LocationDetails!
+}
+
+type Mutation {
+  addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
+  updateLocation(input: UpdateLocationInput!): LocationPayload @cost(weight: "10")
+  deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
+  addDesk(input: AddDeskInput!): DeskPayload @cost(weight: "10")
+  bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload @cost(weight: "10")
+  updateDesk(input: UpdateDeskInput!): DeskPayload @cost(weight: "10")
+  deleteDesk(input: DeleteDeskInput!): DeskPayload @cost(weight: "10")
+  changeLocationMemberOwnershipType(input: ChangeLocationMemberOwnershipTypeInput!): LocationMemberDetailsPayload @cost(weight: "10")
+  inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
+  acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
+  rejectInvitationToJoinLocation(input: RejectInvitationToJoinLocationInput!): RejectInvitationToJoinLocationPayload @cost(weight: "10")
+  cancelInvitationToJoinLocation(input: CancelInvitationToJoinLocationInput!): CancelInvitationToJoinLocationPayload @cost(weight: "10")
+}
+
+type Organization_OrganizationTagDetails {
+  name: String
+  tagType: String
+  uniqueId: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  locationVersion: Version!
+  locationCustomerRecordSynced: Boolean! @cost(weight: "10")
+  locationMemberMembershipTypes: [LocationMemberMembershipType!]! @cost(weight: "10")
+  location(id: String!): LocationDetails @cost(weight: "10")
+  locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): LocationConnection @cost(weight: "10")
+  myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
+  locationMembers(after: String first: Int before: String last: Int where: LocationMemberWhereInput! orderBy: [LocationMemberOrderInput!]): LocationMemberConnection @cost(weight: "10")
+  locationDesks(after: String first: Int before: String last: Int where: DeskWhereInput! orderBy: [DeskOrderInput!]): DeskConnection @cost(weight: "10")
+  locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
+}
+
+type RejectInvitationToJoinLocationPayload {
+  clientMutationId: String
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+input AcceptInvitationToJoinLocationInput {
+  clientMutationId: String
+  id: String!
+}
+
+input AddDeskInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  locationId: String!
+  deskTypeIds: [String!]!
+  zoneIds: [String!]!
+}
+
+input AddLocationInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  organizationId: String
+  timezone: String
+  physicalAddress: LocationAddressDetailsInput
+}
+
+input BulkAddDeskInput {
+  clientMutationId: String
+  id: String
+  namePrefix: String
+  locationId: String!
+  count: Int!
+  deskTypeIds: [String!]!
+  zoneIds: [String!]!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+}
+
+input CancelInvitationToJoinLocationInput {
+  clientMutationId: String
+  id: String!
+}
+
+input ChangeLocationMemberOwnershipTypeInput {
+  clientMutationId: String
+  id: String!
+  membershipType: LocationMemberMembershipType!
+}
+
+input DeleteDeskInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteLocationInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeskOrderInput {
+  direction: OrderDirection!
+  field: DeskOrderField!
+}
+
+input DeskWhereInput {
+  locationId: String!
+  nameContains: String
+}
+
+input InviteCustomersToJoinLocationInput {
+  clientMutationId: String
+  locationId: String!
+  emails: [String!]!
+}
+
+input LocationAddressDetailsInput {
+  formattedAddress: String
+  addressLine1: String
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String
+  country: String
+}
+
+input LocationMemberOrderInput {
+  direction: OrderDirection!
+  field: LocationMemberOrderField!
+}
+
+input LocationMemberWhereInput {
+  locationId: String!
+  nameContains: String
+}
+
+input LocationOrderInput {
+  direction: OrderDirection!
+  field: LocationOrderField!
+}
+
+input LocationWhereInput {
+  organizationId: String
+  nameContains: String
+  zoneIds: [String!]
+  deskTypeIds: [String!]
+}
+
+input RejectInvitationToJoinLocationInput {
+  clientMutationId: String
+  id: String!
+}
+
+input UpdateDeskInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+  deskTypeIds: [String!]!
+  zoneIds: [String!]!
+}
+
+input UpdateLocationInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  organizationId: String
+  timezone: String
+  physicalAddress: LocationAddressDetailsInput
+}
+
+enum DeskOrderField {
+  Name
+}
+
+enum LocationMemberMembershipType {
+  Owner
+  Administrator
+  Member
+}
+
+enum LocationMemberOrderField {
+  MembershipType
+  Name
+  GivenName
+  MiddleName
+  FamilyName
+}
+
+enum LocationOrderField {
+  Name
+  About
+  Timezone
+}
+
+enum OrderDirection {
+  Ascending
+  Descending
+}
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")

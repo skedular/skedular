@@ -1,0 +1,421 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type AcceptInvitationToJoinOrganizationPayload {
+  clientMutationId: String
+}
+
+type CancelInvitationToJoinOrganizationPayload {
+  clientMutationId: String
+}
+
+type CancelOrganizationOfferingPayload {
+  clientMutationId: String
+}
+
+type InviteCustomersToJoinOrganizationPayload {
+  clientMutationId: String
+}
+
+type Mutation {
+  addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
+  updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
+  deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
+  updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
+  cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload @cost(weight: "10")
+  changeOrganizationMemberOwnershipType(input: ChangeOrganizationMemberOwnershipTypeInput!): OrganizationMemberDetailsPayload @cost(weight: "10")
+  inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InviteCustomersToJoinOrganizationPayload @cost(weight: "10")
+  acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): AcceptInvitationToJoinOrganizationPayload @cost(weight: "10")
+  rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): RejectInvitationToJoinOrganizationPayload @cost(weight: "10")
+  cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): CancelInvitationToJoinOrganizationPayload @cost(weight: "10")
+  completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload @cost(weight: "10")
+  addDeskType(input: AddDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
+  updateDeskType(input: UpdateDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteDeskType(input: DeleteDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
+  addZone(input: AddZoneInput!): OrganizationTagPayload @cost(weight: "10")
+  updateZone(input: UpdateZoneInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
+}
+
+type OrganizationAnalytics {
+  memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
+  dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
+}
+
+type OrganizationAvailableOfferingDetails {
+  code: String!
+  name: String!
+  unitPrice: Int!
+  featureSet: [OrganizationFeatureSetDetails!]!
+  free: Boolean!
+}
+
+type OrganizationConnection {
+  pageInfo: PageInfo!
+  edges: [OrganizationEdge!]!
+  totalCount: Int
+}
+
+type OrganizationCustomerDetails {
+  uniqueId: ID!
+  email: String
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+}
+
+type OrganizationDailyBookingsTotal {
+  date: DateTime!
+  total: Int!
+}
+
+type OrganizationDetails {
+  name: String!
+  about: String
+  website: String
+  logoUrl: String
+  agreedToTermsOfUse: Boolean!
+  termsOfUse: OrganizationTermsOfUse
+  industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  availableOfferings: [OrganizationAvailableOfferingDetails!]!
+  offering: OrganizationOfferingDetails!
+  hasAttachedPaymentMethod: Boolean!
+  hasFutureBooking: Boolean!
+  hasLocation: Boolean!
+  hasTeam: Boolean!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  canViewAnalytics: Boolean!
+  isMyOnboardingDone: Boolean!
+  members: [OrganizationMemberDetails!]!
+  id: ID!
+}
+
+type OrganizationEdge {
+  node: OrganizationDetails!
+  cursor: String!
+}
+
+type OrganizationFeatureSetDetails {
+  name: String!
+  description: String!
+}
+
+type OrganizationIndustryMainCategoryReferenceDetails {
+  name: String!
+  subCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  id: ID!
+}
+
+type OrganizationIndustrySubCategoryReferenceDetails {
+  name: String!
+  mainCategoryName: String!
+  id: ID!
+}
+
+type OrganizationMemberAttendancePercentage {
+  date: DateTime!
+  percentage: Float!
+}
+
+type OrganizationMemberConnection {
+  pageInfo: PageInfo!
+  edges: [OrganizationMemberEdge!]!
+  totalCount: Int
+}
+
+type OrganizationMemberDetails {
+  membershipType: OrganizationMemberMembershipType
+  isOrganizationOnboardingDone: Boolean!
+  customer: OrganizationCustomerDetails!
+  id: ID!
+}
+
+type OrganizationMemberDetailsPayload {
+  clientMutationId: String
+  member: OrganizationMemberDetails
+}
+
+type OrganizationMemberEdge {
+  node: OrganizationMemberDetails!
+  cursor: String!
+}
+
+type OrganizationMemberPayload {
+  clientMutationId: String
+}
+
+type OrganizationOfferingDetails {
+  code: String!
+  name: String!
+  start: DateTime!
+  end: DateTime!
+  unitPrice: Int!
+  featureSet: [OrganizationFeatureSetDetails!]!
+  free: Boolean!
+  id: ID!
+}
+
+type OrganizationPayload {
+  clientMutationId: String
+  organization: OrganizationDetails!
+}
+
+type OrganizationTagConnection {
+  pageInfo: PageInfo!
+  edges: [OrganizationTagEdge!]!
+  totalCount: Int
+}
+
+type OrganizationTagDetails {
+  name: String!
+  description: String
+  tagType: String!
+  id: ID!
+}
+
+type OrganizationTagEdge {
+  node: OrganizationTagDetails!
+  cursor: String!
+}
+
+type OrganizationTagPayload {
+  clientMutationId: String
+  organizationTag: OrganizationTagDetails!
+}
+
+type OrganizationTermsOfUse {
+  terms: String!
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  organizationVersion: Version!
+  organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
+  activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
+  organizationMemberMembershipTypes: [OrganizationMemberMembershipType!]!
+  organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
+  organization(id: String!): OrganizationDetails @cost(weight: "10")
+  organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): OrganizationConnection @cost(weight: "10")
+  myOrganizations: [OrganizationDetails!] @cost(weight: "10")
+  organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection @cost(weight: "10")
+  organizationAnalytics(organizationId: String! from: DateTime! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
+  isAzureTenantInstalled: Boolean! @cost(weight: "10")
+  azureTenantAdminConsentUrl: String! @cost(weight: "10")
+  azureTenantOrganization: OrganizationDetails @cost(weight: "10")
+  deskTypes(after: String first: Int before: String last: Int where: DeskTypeOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+}
+
+type RejectInvitationToJoinOrganizationPayload {
+  clientMutationId: String
+}
+
+type UpdateOrganizationOfferingPayload {
+  clientMutationId: String
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+input AcceptInvitationToJoinOrganizationInput {
+  clientMutationId: String
+  id: String!
+}
+
+input AddDeskTypeInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  organizationId: String!
+}
+
+input AddOrganizationInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  website: String
+  agreedToTermsOfUse: Boolean!
+  termsOfUseId: String!
+  industrySubCategoryIds: [String!]!
+}
+
+input AddZoneInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  organizationId: String!
+}
+
+input CancelInvitationToJoinOrganizationInput {
+  clientMutationId: String
+  id: String!
+}
+
+input CancelOrganizationOfferingInput {
+  clientMutationId: String
+  id: String!
+}
+
+input ChangeOrganizationMemberOwnershipTypeInput {
+  clientMutationId: String
+  id: String!
+  membershipType: OrganizationMemberMembershipType!
+}
+
+input CompleteOrganizationMemberOnboardingInput {
+  clientMutationId: String
+  organizationId: String!
+}
+
+input DeleteDeskTypeInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteOrganizationInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteZoneInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeskTypeOrganizationTagWhereInput {
+  organizationId: String!
+  nameContains: String
+}
+
+input InviteCustomersToJoinOrganizationInput {
+  clientMutationId: String
+  organizationId: String!
+  emails: [String!]!
+}
+
+input OrganizationMemberOrderInput {
+  direction: OrderDirection!
+  field: OrganizationMemberOrderField!
+}
+
+input OrganizationMemberWhereInput {
+  organizationId: String!
+  nameContains: String
+}
+
+input OrganizationOrderInput {
+  direction: OrderDirection!
+  field: OrganizationOrderField!
+}
+
+input OrganizationTagOrderInput {
+  direction: OrderDirection!
+  field: OrganizationTagOrderField!
+}
+
+input OrganizationWhereInput {
+  nameContains: String
+}
+
+input RejectInvitationToJoinOrganizationInput {
+  clientMutationId: String
+  id: String!
+}
+
+input UpdateDeskTypeInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+}
+
+input UpdateOrganizationInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  website: String
+  industrySubCategoryIds: [String!]!
+}
+
+input UpdateOrganizationOfferingInput {
+  clientMutationId: String
+  id: String!
+  offeringCode: String!
+}
+
+input UpdateZoneInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+}
+
+input ZoneOrganizationTagWhereInput {
+  organizationId: String!
+  nameContains: String
+}
+
+enum OrderDirection {
+  Ascending
+  Descending
+}
+
+enum OrganizationMemberMembershipType {
+  Owner
+  Administrator
+  Member
+}
+
+enum OrganizationMemberOrderField {
+  MembershipType
+  Name
+  GivenName
+  MiddleName
+  FamilyName
+}
+
+enum OrganizationOrderField {
+  Name
+}
+
+enum OrganizationTagOrderField {
+  Name
+  Description
+  TagType
+}
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")

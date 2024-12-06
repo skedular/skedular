@@ -29,6 +29,13 @@
         "dotnet-outdated"
       ],
       "rollForward": false
+    },
+    "hotchocolate.fusion.commandline": {
+      "version": "14.2.0",
+      "commands": [
+        "fusion"
+      ],
+      "rollForward": false
     }
   }
 }

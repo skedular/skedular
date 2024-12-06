@@ -1,0 +1,272 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type CustomerConnection {
+  pageInfo: PageInfo!
+  edges: [CustomerEdge!]!
+  totalCount: Int
+}
+
+type CustomerDeskDetails {
+  uniqueId: ID!
+  name: String
+}
+
+type CustomerDetails {
+  createdAt: DateTime!
+  email: String
+  identities: [CustomerEmail!]!
+  designation: String
+  title: String
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+  timezone: String
+  locale: String
+  isOrganizationOnboardingDone: Boolean!
+  isLocationOnboardingDone: Boolean!
+  isTeamOnboardingDone: Boolean!
+  isDefaultOrganizationOnboardingDone: Boolean!
+  isDefaultLocationOnboardingDone: Boolean!
+  isPreferredZoneOnboardingDone: Boolean!
+  isPreferredDeskOnboardingDone: Boolean!
+  defaultLocations: [CustomerLocationDetails!]!
+  defaultTeams: [CustomerTeamDetails!]!
+  defaultOrganization: CustomerOrganizationDetails
+  preferredZones: [CustomerOrganizationTagDetails!]!
+  preferredDeskTypes: [CustomerOrganizationTagDetails!]!
+  preferredDesks: [CustomerDeskDetails!]!
+  id: ID!
+}
+
+type CustomerEdge {
+  node: CustomerDetails!
+  cursor: String!
+}
+
+type CustomerEmail {
+  email: String
+  verified: Boolean!
+  id: ID!
+}
+
+type CustomerLocationDetails {
+  uniqueId: ID!
+  name: String
+  organization: CustomerOrganizationDetails
+}
+
+type CustomerOrganizationDetails {
+  uniqueId: ID!
+  name: String
+  logoUrl: String
+}
+
+type CustomerOrganizationTagDetails {
+  uniqueId: ID!
+  name: String
+}
+
+type CustomerPayload {
+  clientMutationId: String
+  customer: CustomerDetails!
+}
+
+type CustomerTeamDetails {
+  uniqueId: ID!
+  name: String
+  organization: CustomerOrganizationDetails
+}
+
+type Mutation {
+  completeOrganizationOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload @cost(weight: "10")
+  completeLocationOnboarding(input: CompleteLocationOnboardingInput!): CustomerPayload @cost(weight: "10")
+  completeTeamOnboarding(input: CompleteTeamOnboardingInput!): CustomerPayload @cost(weight: "10")
+  completeDefaultOrganizationOnboarding(input: CompleteDefaultOrganizationOnboardingInput!): CustomerPayload @cost(weight: "10")
+  completeDefaultLocationOnboarding(input: CompleteDefaultLocationOnboardingInput!): CustomerPayload @cost(weight: "10")
+  completePreferredZoneOnboarding(input: CompletePreferredZoneOnboardingInput!): CustomerPayload @cost(weight: "10")
+  completePreferredDeskOnboarding(input: CompletePreferredDeskOnboardingInput!): CustomerPayload @cost(weight: "10")
+  addCustomerDefaultLocation(input: AddCustomerDefaultLocationInput!): CustomerPayload @cost(weight: "10")
+  removeCustomerDefaultLocation(input: RemoveCustomerDefaultLocationInput!): CustomerPayload @cost(weight: "10")
+  addCustomerDefaultTeam(input: AddCustomerDefaultTeamInput!): CustomerPayload @cost(weight: "10")
+  removeCustomerDefaultTeam(input: RemoveCustomerDefaultTeamInput!): CustomerPayload @cost(weight: "10")
+  setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload @cost(weight: "10")
+  clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload @cost(weight: "10")
+  addCustomerDefaultDesk(input: AddCustomerDefaultDeskInput!): CustomerPayload @cost(weight: "10")
+  removeCustomerDefaultDesk(input: RemoveCustomerDefaultDeskInput!): CustomerPayload @cost(weight: "10")
+  submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload @cost(weight: "10")
+  updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
+  addCustomerDefaultOrganizationTag(input: AddCustomerDefaultOrganizationTagInput!): CustomerPayload @cost(weight: "10")
+  removeCustomerDefaultOrganizationTag(input: RemoveCustomerDefaultOrganizationTagInput!): CustomerPayload @cost(weight: "10")
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  customerVersion: Version!
+  me: CustomerDetails @cost(weight: "10")
+  customersByDefaultLocation(after: String first: Int before: String last: Int where: CustomerWhereInput! orderBy: [CustomerOrderInput!]): CustomerConnection @cost(weight: "10")
+}
+
+type SubmitCustomerFeedbackPayload {
+  clientMutationId: String
+  id: ID!
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+input AddCustomerDefaultDeskInput {
+  clientMutationId: String
+  deskId: String!
+}
+
+input AddCustomerDefaultLocationInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input AddCustomerDefaultOrganizationTagInput {
+  clientMutationId: String
+  organizationTagId: String!
+}
+
+input AddCustomerDefaultTeamInput {
+  clientMutationId: String
+  teamId: String!
+}
+
+input ClearCustomerDefaultOrganizationInput {
+  clientMutationId: String
+}
+
+input CompleteDefaultLocationOnboardingInput {
+  clientMutationId: String
+}
+
+input CompleteDefaultOrganizationOnboardingInput {
+  clientMutationId: String
+}
+
+input CompleteLocationOnboardingInput {
+  clientMutationId: String
+}
+
+input CompleteOrganizationOnboardingInput {
+  clientMutationId: String
+}
+
+input CompletePreferredDeskOnboardingInput {
+  clientMutationId: String
+}
+
+input CompletePreferredZoneOnboardingInput {
+  clientMutationId: String
+}
+
+input CompleteTeamOnboardingInput {
+  clientMutationId: String
+}
+
+input CustomerOrderInput {
+  direction: OrderDirection!
+  field: CustomerOrderField!
+}
+
+input CustomerWhereInput {
+  locationId: String!
+  nameContains: String
+}
+
+input RemoveCustomerDefaultDeskInput {
+  clientMutationId: String
+  deskId: String!
+}
+
+input RemoveCustomerDefaultLocationInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input RemoveCustomerDefaultOrganizationTagInput {
+  clientMutationId: String
+  organizationTagId: String!
+}
+
+input RemoveCustomerDefaultTeamInput {
+  clientMutationId: String
+  teamId: String!
+}
+
+input SetCustomerDefaultOrganizationInput {
+  clientMutationId: String
+  organizationId: String!
+}
+
+input SubmitCustomerFeedbackInput {
+  clientMutationId: String
+  id: String
+  feedbackContent: String!
+  channel: FeedbackChannel!
+}
+
+input UpdateMyCustomerDetailsInput {
+  clientMutationId: String
+  timezone: String
+  designation: String
+  title: String
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+}
+
+enum CustomerOrderField {
+  Designation
+  Title
+  Name
+  GivenName
+  MiddleName
+  FamilyName
+  Timezone
+  Locale
+}
+
+enum FeedbackChannel {
+  Web
+  Slack
+  MsTeams
+}
+
+enum OrderDirection {
+  Ascending
+  Descending
+}
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")

@@ -10,21 +10,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="HotChocolate.Fusion" Version="14.2.0"/>
         <PackageReference Include="HotChocolate.Stitching" Version="13.9.14"/>
         <PackageReference Include="Yarp.ReverseProxy" Version="2.2.0"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <EmbeddedResource Include="schemas\Billing.graphql" />
-        <EmbeddedResource Include="schemas\Booking.graphql" />
-        <EmbeddedResource Include="schemas\Customer.graphql" />
-        <EmbeddedResource Include="schemas\Location.graphql" />
-        <EmbeddedResource Include="schemas\MsTeams.graphql" />
-        <EmbeddedResource Include="schemas\Notification.graphql" />
-        <EmbeddedResource Include="schemas\Organization.graphql" />
-        <EmbeddedResource Include="schemas\Payment.graphql" />
-        <EmbeddedResource Include="schemas\Slack.graphql" />
-        <EmbeddedResource Include="schemas\Team.graphql" />
     </ItemGroup>
 
     <ItemGroup>
@@ -32,8 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
         <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="gateway.fgp">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

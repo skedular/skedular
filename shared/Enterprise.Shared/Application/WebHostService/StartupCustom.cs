@@ -42,7 +42,11 @@ public abstract class StartupCustom(IConfiguration configuration, IWebHostEnviro
 
         var azureEntraConfiguration =
             Configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
-        if (azureEntraConfiguration is not null)
+        if (azureEntraConfiguration is null)
+        {
+            services.AddSingleton(new AzureEntraConfiguration());
+        }
+        else
         {
             if (string.IsNullOrWhiteSpace(azureEntraConfiguration.ClientId))
             {

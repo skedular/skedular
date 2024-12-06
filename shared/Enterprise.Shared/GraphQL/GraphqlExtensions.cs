@@ -26,9 +26,8 @@ public static class GraphqlExtensions
             .AddErrorFilter<GraphqlErrorFilter>()
             .AddSingleton<INamingConventions, CustomNamingConventions>()
             .AddGraphQLServer()
-            .RegisterDbContext<TDbContext>(DbContextKind.Pooled)
             .InitializeOnStartup()
-            .AllowIntrospection(graphqlConfig.IntrospectionEnabled)
+            .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)
             .AddCustomGraphqlInstrumentation();
 
         configure(builder);

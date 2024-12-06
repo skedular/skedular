@@ -20,6 +20,7 @@
         <PackageReference Include="Google.Apis.Auth" Version="1.68.0"/>
         <PackageReference Include="IdGen" Version="3.0.7"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.0"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.0"/>
@@ -47,12 +48,12 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="HotChocolate" Version="13.9.14"/>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.14"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="13.9.14"/>
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="13.9.14" />
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.9.14"/>
-        <PackageReference Include="HotChocolate.Diagnostics" Version="13.9.14"/>
+        <PackageReference Include="HotChocolate" Version="14.2.0"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="14.2.0"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="14.2.0"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="14.2.0"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="14.2.0"/>
+        <PackageReference Include="HotChocolate.Diagnostics" Version="14.2.0"/>
 
         <PackageReference Include="OpenTelemetry.Api" Version="1.10.0"/>
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.10.0"/>

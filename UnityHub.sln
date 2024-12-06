@@ -463,8 +463,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Team.Jobs.IntegrationTests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Team.Jobs.UnitTests", "team\jobs\Team.Jobs.UnitTests\Team.Jobs.UnitTests.csproj", "{9782E979-FB8C-4548-8842-A3AAEE4B0943}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphQLSchemaGenerator", "shared\GraphQLSchemaGenerator\GraphQLSchemaGenerator.csproj", "{DF01ACB5-4BC2-4D23-9404-7F079609F213}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -979,10 +977,6 @@ Global
 		{9782E979-FB8C-4548-8842-A3AAEE4B0943}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9782E979-FB8C-4548-8842-A3AAEE4B0943}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9782E979-FB8C-4548-8842-A3AAEE4B0943}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF01ACB5-4BC2-4D23-9404-7F079609F213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF01ACB5-4BC2-4D23-9404-7F079609F213}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF01ACB5-4BC2-4D23-9404-7F079609F213}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF01ACB5-4BC2-4D23-9404-7F079609F213}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1162,6 +1156,5 @@ Global
 		{964C2F9C-52F8-4A18-BBD9-48085F151B95} = {E7DF7F16-46E4-4262-89F2-DC1D917F6BD5}
 		{CEAAFF39-1D8B-4D85-BAD6-F989451EAAD0} = {E7DF7F16-46E4-4262-89F2-DC1D917F6BD5}
 		{9782E979-FB8C-4548-8842-A3AAEE4B0943} = {E7DF7F16-46E4-4262-89F2-DC1D917F6BD5}
-		{DF01ACB5-4BC2-4D23-9404-7F079609F213} = {0916AC00-8FE9-4B38-A135-EF9CE225C84B}
 	EndGlobalSection
 EndGlobal

@@ -24,7 +24,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services.AddKafka();
         services.AddRedis(Configuration);
 
-        services.AddGraphql<BillingDbContext>(Configuration, builder => builder.AddTypes());
+        services.AddGraphql<BillingDbContext>(Configuration, builder => builder.AddApiTypes());
 
         services
             .AddDomainSharedServices()

@@ -1,4 +1,3 @@
-using Booking.Api.GraphQL;
 using Booking.Api.Grpc;
 using Booking.Shared;
 using Booking.Shared.Database;
@@ -7,7 +6,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
-
+ 
 namespace Booking.Api;
 
 public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
@@ -24,7 +23,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services.AddKafka();
         services.AddRedis(Configuration);
 
-        services.AddGraphql<BookingDbContext>(Configuration, builder => builder.AddTypes());
+        services.AddGraphql<BookingDbContext>(Configuration, builder =>
+        {
+            builder.AddApiTypes();
+        });
 
         services
             .AddDomainSharedServices()
