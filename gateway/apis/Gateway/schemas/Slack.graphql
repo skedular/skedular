@@ -1,0 +1,15 @@
+﻿schema {
+  query: SlackQuery
+}
+
+type SlackQuery {
+  slackVersion: Version!
+  slackCustomerRecordSynced: Boolean!
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}

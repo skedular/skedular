@@ -4,7 +4,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Gateway.Configurations;
 using Gateway.Handlers;
-using StackExchange.Redis;
 
 namespace Gateway;
 
@@ -98,9 +97,36 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddGraphQLServer()
             .AddCustomGraphqlInstrumentation()
-            .AddRemoteSchemasFromRedis(
-                applicationConfiguration.Environment,
-                sp => sp.GetRequiredService<ConnectionMultiplexer>());
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Billing),
+                nameof(subgraphsConfigurations.Billing).ToGraphQlSchema())
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Booking),
+                nameof(subgraphsConfigurations.Booking).ToGraphQlSchema())
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Customer),
+                nameof(subgraphsConfigurations.Customer).ToGraphQlSchema())
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Location),
+                nameof(subgraphsConfigurations.Location).ToGraphQlSchema())
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.MsTeams),
+                nameof(subgraphsConfigurations.MsTeams).ToGraphQlSchema())
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Notification),
+                nameof(subgraphsConfigurations.Notification).ToGraphQlSchema())
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Organization),
+                nameof(subgraphsConfigurations.Organization).ToGraphQlSchema())
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Payment),
+                nameof(subgraphsConfigurations.Payment).ToGraphQlSchema())
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Slack),
+                nameof(subgraphsConfigurations.Slack).ToGraphQlSchema())
+            .AddRemoteSchemaFromString(
+                nameof(subgraphsConfigurations.Team),
+                nameof(subgraphsConfigurations.Team).ToGraphQlSchema());
 
         // services
         //     .AddReverseProxy()

@@ -35,19 +35,6 @@ public static class GraphqlExtensions
 
         builder.InitializeOnStartup();
 
-        var applicationConfiguration =
-            configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        ArgumentNullException.ThrowIfNull(applicationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.Domain);
-        ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.Environment);
-
-        builder.PublishSchemaDefinition(descriptor =>
-            descriptor
-                .SetName(applicationConfiguration.Domain)
-                .PublishToRedis(
-                    applicationConfiguration.Environment,
-                    sp => sp.GetRequiredService<ConnectionMultiplexer>()));
-
         return services;
     }
 

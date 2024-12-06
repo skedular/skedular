@@ -1,0 +1,240 @@
+﻿schema {
+  query: TeamQuery
+  mutation: TeamMutation
+}
+
+type AcceptInvitationToJoinTeamPayload {
+  clientMutationId: String
+}
+
+type CancelInvitationToJoinTeamPayload {
+  clientMutationId: String
+}
+
+type InviteCustomersToJoinTeamPayload {
+  clientMutationId: String
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type RejectInvitationToJoinTeamPayload {
+  clientMutationId: String
+}
+
+type TeamConnection {
+  pageInfo: PageInfo!
+  edges: [TeamEdge!]!
+  totalCount: Int
+}
+
+type TeamCustomerDetails {
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+}
+
+type TeamDetails {
+  name: String!
+  about: String
+  members: [TeamMemberDetails!]!
+  organization: TeamOrganizationDetails
+  primaryLocation: TeamLocationDetails
+  timezone: String
+  hasFutureBooking: Boolean!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  id: ID!
+}
+
+type TeamEdge {
+  node: TeamDetails!
+  cursor: String!
+}
+
+type TeamLocationDetails {
+  uniqueId: ID!
+  name: String!
+}
+
+type TeamMemberConnection {
+  pageInfo: PageInfo!
+  edges: [TeamMemberEdge!]!
+  totalCount: Int
+}
+
+type TeamMemberDetails {
+  membershipType: TeamMemberMembershipType
+  customer: TeamCustomerDetails!
+  organizationMember: TeamOrganizationMemberDetails
+  id: ID!
+}
+
+type TeamMemberDetailsPayload {
+  clientMutationId: String
+  member: TeamMemberDetails
+}
+
+type TeamMemberEdge {
+  node: TeamMemberDetails!
+  cursor: String!
+}
+
+type TeamMutation {
+  addTeam(input: AddTeamInput!): TeamPayload
+  updateTeam(input: UpdateTeamInput!): TeamPayload
+  deleteTeam(input: DeleteTeamInput!): TeamPayload
+  changeTeamMemberOwnershipType(input: ChangeTeamMemberOwnershipTypeInput!): TeamMemberDetailsPayload
+  inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload
+  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload
+  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): RejectInvitationToJoinTeamPayload
+  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): CancelInvitationToJoinTeamPayload
+}
+
+type TeamOrganizationDetails {
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
+}
+
+type TeamOrganizationMemberDetails {
+  uniqueId: ID!
+  customer: TeamCustomerDetails!
+}
+
+type TeamPayload {
+  clientMutationId: String
+  team: TeamDetails!
+}
+
+type TeamQuery {
+  teamVersion: Version!
+  teamCustomerRecordSynced: Boolean!
+  teamMemberMembershipTypes: [TeamMemberMembershipType!]!
+  team(id: String!): TeamDetails
+  teams(after: String first: Int before: String last: Int where: TeamWhereInput! orderBy: [TeamOrderInput!]): TeamConnection
+  myTeams(organizationId: String): [TeamDetails!]
+  teamMembers(after: String first: Int before: String last: Int where: TeamMemberWhereInput! orderBy: [TeamMemberOrderInput!]): TeamMemberConnection
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+input AcceptInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input AddTeamInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  customerIds: [String!]!
+  organizationId: String
+  primaryLocationId: String
+  timezone: String
+  organizationMemberIds: [String!]!
+}
+
+input CancelInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input ChangeTeamMemberOwnershipTypeInput {
+  clientMutationId: String
+  id: String!
+  membershipType: TeamMemberMembershipType!
+}
+
+input DeleteTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input InviteCustomersToJoinTeamInput {
+  clientMutationId: String
+  teamId: String!
+  emails: [String!]!
+}
+
+input RejectInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input TeamMemberOrderInput {
+  direction: OrderDirection!
+  field: TeamMemberOrderField!
+}
+
+input TeamMemberWhereInput {
+  teamId: String!
+  nameContains: String
+}
+
+input TeamOrderInput {
+  direction: OrderDirection!
+  field: TeamOrderField!
+}
+
+input TeamWhereInput {
+  organizationId: String
+  nameContains: String
+  primaryLocationIds: [String!]
+}
+
+input UpdateTeamInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  customerIds: [String!]!
+  organizationId: String
+  primaryLocationId: String
+  timezone: String
+  organizationMemberIds: [String!]!
+}
+
+enum OrderDirection {
+  Ascending
+  Descending
+}
+
+enum TeamMemberMembershipType {
+  Owner
+  Administrator
+  Member
+}
+
+enum TeamMemberOrderField {
+  MembershipType
+  Name
+  GivenName
+  MiddleName
+  FamilyName
+}
+
+enum TeamOrderField {
+  Name
+  About
+}

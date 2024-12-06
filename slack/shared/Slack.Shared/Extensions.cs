@@ -58,7 +58,11 @@ public static class Extensions
     {
         var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfiguration>();
         ArgumentNullException.ThrowIfNull(slackConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(slackConfiguration.SigningSecret);
+        
+        if (string.IsNullOrWhiteSpace(slackConfiguration.SigningSecret))
+        {
+            Console.Error.WriteLine("slackConfiguration.SigningSecret is null");
+        }
 
         return services
             .AddScoped<IBookingComponents, BookingComponents>()
@@ -75,13 +79,41 @@ public static class Extensions
     {
         var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfiguration>();
         ArgumentNullException.ThrowIfNull(slackConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(slackConfiguration.ApiKey);
-        ArgumentException.ThrowIfNullOrWhiteSpace(slackConfiguration.AppId);
-        ArgumentException.ThrowIfNullOrWhiteSpace(slackConfiguration.ClientId);
-        ArgumentException.ThrowIfNullOrWhiteSpace(slackConfiguration.ClientSecret);
-        ArgumentException.ThrowIfNullOrWhiteSpace(slackConfiguration.SigningSecret);
-        ArgumentNullException.ThrowIfNull(slackConfiguration.RedirectUrl);
-        ArgumentNullException.ThrowIfNull(slackConfiguration.SuccessInstallUrl);
+
+        if (string.IsNullOrWhiteSpace(slackConfiguration.ApiKey))
+        {
+            Console.Error.WriteLine("slackConfiguration.ApiKey is null");
+        }
+
+        if (string.IsNullOrWhiteSpace(slackConfiguration.AppId))
+        {
+            Console.Error.WriteLine("slackConfiguration.AppId is null");
+        }
+
+        if (string.IsNullOrWhiteSpace(slackConfiguration.ClientId))
+        {
+            Console.Error.WriteLine("slackConfiguration.ClientId is null");
+        }
+
+        if (string.IsNullOrWhiteSpace(slackConfiguration.ClientSecret))
+        {
+            Console.Error.WriteLine("slackConfiguration.ClientSecret is null");
+        }
+
+        if (string.IsNullOrWhiteSpace(slackConfiguration.SigningSecret))
+        {
+            Console.Error.WriteLine("slackConfiguration.SigningSecret is null");
+        }
+
+        if (slackConfiguration.RedirectUrl is null)
+        {
+            Console.Error.WriteLine("slackConfiguration.RedirectUrl is null");
+        }
+
+        if (slackConfiguration.SuccessInstallUrl is null)
+        {
+            Console.Error.WriteLine("slackConfiguration.SuccessInstallUrl is null");
+        }
 
         var billingConfiguration =
             configuration.GetSection(BillingConfiguration.Key).Get<BillingConfiguration>();

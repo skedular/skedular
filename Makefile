@@ -15,6 +15,7 @@ dep: ## Install dependencies
 .PHONY: generate
 generate: ## Generate code
 	@./api-definitions/generate.sh
+	@dotnet run --project ./shared/GraphQLSchemaGenerator/GraphQLSchemaGenerator.csproj -- graphql-schema-generate --output ./gateway/apis/Gateway/schemas
 	@./web/packages/shared/scripts/generate.sh
 
 .PHONY: sync-web-schema

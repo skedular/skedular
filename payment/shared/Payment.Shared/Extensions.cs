@@ -42,8 +42,14 @@ public static class Extensions
     public static IServiceCollection AddStripe(this IServiceCollection services, IConfiguration configuration)
     {
         var stripeConfiguration = configuration.GetSection(StripeConfiguration.Key).Get<StripeConfiguration>();
+
         ArgumentNullException.ThrowIfNull(stripeConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(stripeConfiguration.SecretKey);
+
+        if (string.IsNullOrWhiteSpace(stripeConfiguration.SecretKey))
+        {
+            Console.Error.WriteLine("stripeConfiguration.SecretKey is null");
+        }
+
         Stripe.StripeConfiguration.ApiKey = stripeConfiguration.SecretKey;
 
         return services

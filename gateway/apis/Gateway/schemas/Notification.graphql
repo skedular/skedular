@@ -1,0 +1,102 @@
+﻿schema {
+  query: NotificationQuery
+}
+
+type Notification {
+  sourceId: ID!
+  eventRaisedAt: DateTime!
+  notificationType: NotificationNotificationType!
+  invitedBy: NotificationCustomerDetails
+  invitee: NotificationCustomerDetails
+  organization: NotificationOrganizationDetails
+  location: NotificationLocationDetails
+  team: NotificationTeamDetails
+  id: ID!
+}
+
+type NotificationConnection {
+  pageInfo: PageInfo!
+  edges: [NotificationEdge!]!
+  totalCount: Int
+}
+
+type NotificationCustomerDetails {
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+  emails: [String!]!
+}
+
+type NotificationEdge {
+  node: Notification!
+  cursor: String!
+}
+
+type NotificationLocationDetails {
+  uniqueId: ID!
+  name: String!
+}
+
+type NotificationOrganizationDetails {
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
+}
+
+type NotificationQuery {
+  notificationVersion: Version!
+  notificationCustomerRecordSynced: Boolean!
+  myNotifications(after: String first: Int before: String last: Int orderBy: [NotificationOrderInput!]): NotificationConnection
+}
+
+type NotificationTeamDetails {
+  uniqueId: ID!
+  name: String!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+input NotificationOrderInput {
+  direction: OrderDirection!
+  field: NotificationOrderField!
+}
+
+enum NotificationNotificationType {
+  InvitationToJoinOrganization
+  InvitationToJoinLocation
+  InvitationToJoinTeam
+}
+
+enum NotificationOrderField {
+  EventRaisedAt
+  NotificationType
+}
+
+enum OrderDirection {
+  Ascending
+  Descending
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")

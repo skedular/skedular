@@ -44,8 +44,16 @@ public abstract class StartupCustom(IConfiguration configuration, IWebHostEnviro
             Configuration.GetSection(AzureEntraConfiguration.Key).Get<AzureEntraConfiguration>();
         if (azureEntraConfiguration is not null)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientId);
-            ArgumentException.ThrowIfNullOrWhiteSpace(azureEntraConfiguration.ClientSecret);
+            if (string.IsNullOrWhiteSpace(azureEntraConfiguration.ClientId))
+            {
+                Console.Error.WriteLine("azureEntraConfiguration.ClientId is null");
+            }
+
+            if (string.IsNullOrWhiteSpace(azureEntraConfiguration.ClientSecret))
+            {
+                Console.Error.WriteLine("azureEntraConfiguration.ClientSecret is null");
+            }
+
             services.AddSingleton(azureEntraConfiguration);
         }
 

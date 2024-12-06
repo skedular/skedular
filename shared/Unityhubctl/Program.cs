@@ -12,7 +12,7 @@ public static class Program
 
         await Task.WhenAll(new Task[]
         {
-            parserResult.WithParsedAsync<ProtobufEventMetadataGenerateOptions>(async options =>
+            parserResult.WithParsedAsync(async options =>
                 await new ProtobufEventMetadataGenerateHandler(options).HandleAsync())
         });
     }
