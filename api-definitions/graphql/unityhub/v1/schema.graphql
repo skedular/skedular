@@ -152,6 +152,7 @@ type CustomerDetails {
   locale: String
   middleName: String
   name: String
+  phoneNumber: String
   photoUrl: String
   photoUrl192: String
   photoUrl24: String
@@ -534,6 +535,7 @@ type OrganizationCustomerDetails {
   givenName: String
   middleName: String
   name: String
+  phoneNumber: String
   photoUrl: String
   photoUrl192: String
   photoUrl24: String
@@ -1387,6 +1389,7 @@ input UpdateMyCustomerDetailsInput {
   givenName: String
   middleName: String
   name: String
+  phoneNumber: String
   timezone: String
   title: String
 }
@@ -1450,6 +1453,7 @@ enum CustomerOrderField {
   Locale
   MiddleName
   Name
+  PhoneNumber
   Timezone
   Title
 }
@@ -1512,6 +1516,7 @@ enum OrganizationMemberOrderField {
   MembershipType
   MiddleName
   Name
+  PhoneNumber
 }
 
 enum OrganizationOrderField {

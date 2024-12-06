@@ -51,6 +51,7 @@ message Customer {
   Settings settings = 22;
   repeated Team defaultTeams = 23;
   repeated OrganizationTag defaultOrganizationTags = 24;
+  string phoneNumber = 25;
 }
 
 message Identity {

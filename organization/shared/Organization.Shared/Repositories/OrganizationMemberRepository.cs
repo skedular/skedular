@@ -102,6 +102,9 @@ internal static class OrganizationMemberExtensions
                 OrganizationMemberOrderField.FamilyName => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Customer.FamilyName)
                     : query.ThenByDescending(x => x.Customer.FamilyName),
+                OrganizationMemberOrderField.PhoneNumber => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Customer.PhoneNumber)
+                    : query.ThenByDescending(x => x.Customer.PhoneNumber),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }

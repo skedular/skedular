@@ -115,6 +115,7 @@ public class CustomerDetails : Node
     [GraphQLName("photoUrl512")] public string? PhotoUrl512 { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("locale")] public string? Locale { get; set; }
+    [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
 
     [GraphQLName("isOrganizationOnboardingDone")]
     public bool IsOrganizationOnboardingDone { get; set; }
@@ -180,7 +181,8 @@ public enum CustomerOrderField
     MiddleName,
     FamilyName,
     Timezone,
-    Locale
+    Locale,
+    PhoneNumber
 }
 
 [GraphQLName("CustomerOrderInput")]
@@ -290,4 +292,5 @@ public class UpdateMyCustomerDetailsInput
     [GraphQLName("givenName")] public string? GivenName { get; set; }
     [GraphQLName("middleName")] public string? MiddleName { get; set; }
     [GraphQLName("familyName")] public string? FamilyName { get; set; }
+    [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
 }

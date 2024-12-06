@@ -237,6 +237,7 @@ public class Mapper : IMapper
                 PhotoUrl72 = src.PhotoUrl72,
                 PhotoUrl192 = src.PhotoUrl192,
                 PhotoUrl512 = src.PhotoUrl512,
+                PhoneNumber = src.PhoneNumber,
                 Identities = MapTo(src.Identities).ToList()
             };
 
@@ -623,7 +624,8 @@ public class Mapper : IMapper
             PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
             PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
             PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
-            PhotoUrl512 = src.PhotoUrl512.ToSafeString()
+            PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
+            PhoneNumber = src.PhoneNumber.ToSafeString(),
         };
 
         customer.Identities.AddRange(MapToGrpcResponse(src.Identities));
@@ -674,7 +676,8 @@ public class Mapper : IMapper
             PhotoUrl48 = src.PhotoUrl48,
             PhotoUrl72 = src.PhotoUrl72,
             PhotoUrl192 = src.PhotoUrl192,
-            PhotoUrl512 = src.PhotoUrl512
+            PhotoUrl512 = src.PhotoUrl512,
+            PhoneNumber = src.PhoneNumber,
         };
 
     private static OrganizationOfferingDetails MapTo(OrganizationOffering? src)

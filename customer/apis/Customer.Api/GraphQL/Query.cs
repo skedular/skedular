@@ -59,22 +59,15 @@ public class Query(IMapper mapper)
                             : OrderDirection.Descending;
                         var field = item.Field switch
                         {
-                            CustomerOrderField.Designation =>
-                                Shared.Models.CustomerOrderField.Designation,
-                            CustomerOrderField.Title =>
-                                Shared.Models.CustomerOrderField.Title,
-                            CustomerOrderField.Name =>
-                                Shared.Models.CustomerOrderField.Name,
-                            CustomerOrderField.GivenName =>
-                                Shared.Models.CustomerOrderField.GivenName,
-                            CustomerOrderField.MiddleName =>
-                                Shared.Models.CustomerOrderField.MiddleName,
-                            CustomerOrderField.FamilyName =>
-                                Shared.Models.CustomerOrderField.FamilyName,
-                            CustomerOrderField.Timezone =>
-                                Shared.Models.CustomerOrderField.Timezone,
-                            CustomerOrderField.Locale =>
-                                Shared.Models.CustomerOrderField.Locale,
+                            CustomerOrderField.Designation => Shared.Models.CustomerOrderField.Designation,
+                            CustomerOrderField.Title => Shared.Models.CustomerOrderField.Title,
+                            CustomerOrderField.Name => Shared.Models.CustomerOrderField.Name,
+                            CustomerOrderField.GivenName => Shared.Models.CustomerOrderField.GivenName,
+                            CustomerOrderField.MiddleName => Shared.Models.CustomerOrderField.MiddleName,
+                            CustomerOrderField.FamilyName => Shared.Models.CustomerOrderField.FamilyName,
+                            CustomerOrderField.Timezone => Shared.Models.CustomerOrderField.Timezone,
+                            CustomerOrderField.Locale => Shared.Models.CustomerOrderField.Locale,
+                            CustomerOrderField.PhoneNumber => Shared.Models.CustomerOrderField.PhoneNumber,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

@@ -179,6 +179,8 @@ public class Query(IMapper mapper)
                                 Shared.Models.OrganizationMemberOrderField.MiddleName,
                             OrganizationMemberOrderField.FamilyName =>
                                 Shared.Models.OrganizationMemberOrderField.FamilyName,
+                            OrganizationMemberOrderField.PhoneNumber =>
+                                Shared.Models.OrganizationMemberOrderField.PhoneNumber,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

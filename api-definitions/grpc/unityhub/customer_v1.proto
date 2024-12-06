@@ -97,6 +97,7 @@ message Admin_AddInput {
     repeated Desk preferredDesks = 27;
     repeated Team defaultTeams = 28;
     repeated OrganizationTag preferredOrganizationTags = 29;
+    string phoneNumber = 30;
 }
 
 message Customer {
@@ -129,6 +130,7 @@ message Customer {
     repeated Desk preferredDesks = 27;
     repeated Team defaultTeams = 28;
     repeated OrganizationTag preferredOrganizationTags = 29;
+    string phoneNumber = 30;
 }
 
 message Identity {

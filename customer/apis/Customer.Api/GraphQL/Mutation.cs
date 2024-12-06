@@ -211,6 +211,7 @@ public class Mutation(IMapper mapper)
             input.GivenName,
             input.MiddleName,
             input.FamilyName,
+            input.PhoneNumber,
             cancellationToken);
         return mapper.MapTo(customerFeedback, input.ClientMutationId);
     }

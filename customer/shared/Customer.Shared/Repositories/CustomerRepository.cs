@@ -110,6 +110,9 @@ internal static class CustomerExtensions
             CustomerOrderField.Locale => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Locale)
                 : originalQuery.OrderByDescending(x => x.Locale),
+            CustomerOrderField.PhoneNumber => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.PhoneNumber)
+                : originalQuery.OrderByDescending(x => x.PhoneNumber),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch
@@ -138,6 +141,9 @@ internal static class CustomerExtensions
                 CustomerOrderField.Locale => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Locale)
                     : query.ThenByDescending(x => x.Locale),
+                CustomerOrderField.PhoneNumber => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.PhoneNumber)
+                    : query.ThenByDescending(x => x.PhoneNumber),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }

@@ -24,5 +24,6 @@ public enum OrganizationMemberOrderField
     Name,
     GivenName,
     MiddleName,
-    FamilyName
+    FamilyName,
+    PhoneNumber
 }

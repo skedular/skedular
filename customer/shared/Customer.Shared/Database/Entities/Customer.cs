@@ -24,6 +24,8 @@ public class Customer : EntityBaseWithDeleted
     public string? PhotoUrl512 { get; set; }
     public string? Timezone { get; set; }
     public string? Locale { get; set; }
+    public string? PhoneNumber { get; set; }
+
     public bool? IsOrganizationOnboardingDone { get; set; }
     public bool? IsLocationOnboardingDone { get; set; }
     public bool? IsTeamOnboardingDone { get; set; }
@@ -66,6 +68,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.PhotoUrl512).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
         builder.Property(item => item.Locale).HasMaxLength(Constants.MaxLocaleLength);
+        builder.Property(item => item.PhoneNumber).HasMaxLength(Constants.MaxPhoneNumberLength);
 
         builder
             .HasOne(item => item.DefaultOrganization)
@@ -95,5 +98,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasIndex(item => item.FamilyName);
         builder.HasIndex(item => item.Timezone);
         builder.HasIndex(item => item.Locale);
+        builder.HasIndex(item => item.PhoneNumber);
     }
 }

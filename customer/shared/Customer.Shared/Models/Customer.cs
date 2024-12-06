@@ -19,6 +19,7 @@ public class Customer : ModelBaseWithDeleted
     public string? PhotoUrl512 { get; set; }
     public string? Timezone { get; set; }
     public string? Locale { get; set; }
+    public string? PhoneNumber { get; set; }
 
     public bool? IsOrganizationOnboardingDone { get; set; }
     public bool? IsLocationOnboardingDone { get; set; }

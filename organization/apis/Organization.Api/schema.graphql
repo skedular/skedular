@@ -72,6 +72,7 @@ type OrganizationCustomerDetails {
   photoUrl72: String
   photoUrl192: String
   photoUrl512: String
+  phoneNumber: String
 }
 
 type OrganizationDailyBookingsTotal {
@@ -400,6 +401,7 @@ enum OrganizationMemberOrderField {
   GivenName
   MiddleName
   FamilyName
+  PhoneNumber
 }
 
 enum OrganizationOrderField {

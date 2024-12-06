@@ -10,6 +10,7 @@ public interface ICustomerDetailsService
         string? givenName,
         string? middleName,
         string? familyName,
+        string? phoneNumber,
         CancellationToken cancellationToken);
 }
 
@@ -23,6 +24,7 @@ public class CustomerDetailsService(ICustomerHelperService customerHelperService
         string? givenName,
         string? middleName,
         string? familyName,
+        string? phoneNumber,
         CancellationToken cancellationToken)
     {
         var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
@@ -33,6 +35,7 @@ public class CustomerDetailsService(ICustomerHelperService customerHelperService
         customer.GivenName = givenName;
         customer.MiddleName = middleName;
         customer.FamilyName = familyName;
+        customer.PhoneNumber = phoneNumber;
 
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }

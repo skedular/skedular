@@ -130,6 +130,7 @@ public class OrganizationCustomerDetails
     [GraphQLName("photoUrl72")] public string? PhotoUrl72 { get; set; }
     [GraphQLName("photoUrl192")] public string? PhotoUrl192 { get; set; }
     [GraphQLName("photoUrl512")] public string? PhotoUrl512 { get; set; }
+    [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
 }
 
 [GraphQLName("OrganizationDailyBookingsTotal")]
@@ -247,7 +248,8 @@ public enum OrganizationMemberOrderField
     Name,
     GivenName,
     MiddleName,
-    FamilyName
+    FamilyName,
+    PhoneNumber
 }
 
 [GraphQLName("OrganizationMemberOrderInput")]

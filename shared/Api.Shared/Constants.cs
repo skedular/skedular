@@ -26,6 +26,8 @@ public static class Constants
 
     public const int MaxLocaleLength = 32;
 
+    public const int MaxPhoneNumberLength = 64;
+
     public const int MaxEmailLength = 64 + 1 + 255; // RFC 5321 and RFC 5322
 
     public const int MaxFeedbackLength = 10240;

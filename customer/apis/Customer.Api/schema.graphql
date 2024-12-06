@@ -33,6 +33,7 @@ type CustomerDetails {
   photoUrl512: String
   timezone: String
   locale: String
+  phoneNumber: String
   isOrganizationOnboardingDone: Boolean!
   isLocationOnboardingDone: Boolean!
   isTeamOnboardingDone: Boolean!
@@ -238,6 +239,7 @@ input UpdateMyCustomerDetailsInput {
   givenName: String
   middleName: String
   familyName: String
+  phoneNumber: String
 }
 
 enum CustomerOrderField {
@@ -249,6 +251,7 @@ enum CustomerOrderField {
   FamilyName
   Timezone
   Locale
+  PhoneNumber
 }
 
 enum FeedbackChannel {

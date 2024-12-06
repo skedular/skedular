@@ -30,6 +30,7 @@ public class Mapper : IMapper
             PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
             Locale = src.Locale.ToSafeString(),
+            PhoneNumber = src.PhoneNumber.ToSafeString(),
             Settings = new Settings
             {
                 IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,

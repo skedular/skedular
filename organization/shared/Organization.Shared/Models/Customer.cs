@@ -15,6 +15,7 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public string? PhotoUrl72 { get; set; }
     public string? PhotoUrl192 { get; set; }
     public string? PhotoUrl512 { get; set; }
+    public string? PhoneNumber { get; set; }
 
     public ICollection<Identity> Identities { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];

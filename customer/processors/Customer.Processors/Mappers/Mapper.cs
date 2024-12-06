@@ -256,6 +256,7 @@ public class Mapper : IMapper
                 PhotoUrl512 = src.PhotoUrl512,
                 Timezone = src.Timezone,
                 Locale = src.Locale,
+                PhoneNumber = src.PhoneNumber,
                 IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
                 IsLocationOnboardingDone = src.IsLocationOnboardingDone,
                 IsTeamOnboardingDone = src.IsTeamOnboardingDone,

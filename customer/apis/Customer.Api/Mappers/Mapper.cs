@@ -68,6 +68,7 @@ public class Mapper(IContext context) : IMapper
             PhotoUrl512 = context.GetPhotoUrl512(),
             Timezone = context.GetTimezone(),
             Locale = context.GetLocale(),
+            PhoneNumber = null,
             Identities =
                 new List<Shared.Models.Identity>
                 {
@@ -120,6 +121,7 @@ public class Mapper(IContext context) : IMapper
             PhotoUrl512 = src.PhotoUrl512,
             Timezone = src.Timezone,
             Locale = src.Locale,
+            PhoneNumber = src.PhoneNumber,
             Email = src.Identities
                 .Where(identity => !string.IsNullOrWhiteSpace(identity.Email))
                 .Select(item => item.Email!.ToLowerInvariant())
@@ -229,6 +231,7 @@ public class Mapper(IContext context) : IMapper
             PhotoUrl512 = src.PhotoUrl512,
             Timezone = src.Timezone,
             Locale = src.Locale,
+            PhoneNumber = src.PhoneNumber,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone,
@@ -278,6 +281,7 @@ public class Mapper(IContext context) : IMapper
             PhotoUrl512 = src.PhotoUrl512,
             Timezone = src.Timezone,
             Locale = src.Locale,
+            PhoneNumber = src.PhoneNumber,
             Identities =
                 src.Identities.Select(item =>
                         new Shared.Models.Identity
@@ -342,6 +346,7 @@ public class Mapper(IContext context) : IMapper
             PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
             Locale = src.Locale.ToSafeString(),
+            PhoneNumber = src.PhoneNumber.ToSafeString(),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone ?? false,
@@ -475,6 +480,7 @@ public class Mapper(IContext context) : IMapper
             PhotoUrl512 = src.PhotoUrl512,
             Timezone = src.Timezone,
             Locale = src.Locale,
+            PhoneNumber = src.PhoneNumber,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone,

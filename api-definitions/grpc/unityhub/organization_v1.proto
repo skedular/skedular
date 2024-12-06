@@ -156,6 +156,7 @@ enum MemberOrderField {
     GivenName= 2;
     MiddleName= 3;
     FamilyName= 4;
+    PhoneNumber= 5;
 }
 
 message MemberConnection {
@@ -184,6 +185,7 @@ message Customer {
     string photoUrl192 = 11;
     string photoUrl512 = 12;
     repeated Identity identities = 13;
+    string phoneNumber = 14;
 }
 
 message Identity {

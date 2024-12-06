@@ -130,6 +130,7 @@ public class OrganizationGrpcService(
                     MemberOrderField.GivenName => OrganizationMemberOrderField.GivenName,
                     MemberOrderField.MiddleName => OrganizationMemberOrderField.MiddleName,
                     MemberOrderField.FamilyName => OrganizationMemberOrderField.FamilyName,
+                    MemberOrderField.PhoneNumber => OrganizationMemberOrderField.PhoneNumber,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
