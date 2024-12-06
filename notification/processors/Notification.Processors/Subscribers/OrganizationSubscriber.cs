@@ -26,7 +26,8 @@ public class OrganizationSubscriber(
                 {
                     var organization = mapper.MapTo(@event);
                     var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
+                        await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id,
+                            cancellationToken);
                     if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation(

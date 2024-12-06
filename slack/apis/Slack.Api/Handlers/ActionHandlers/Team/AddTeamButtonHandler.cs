@@ -81,11 +81,9 @@ public class AddTeamButtonHandler(
         {
             BlockId = TeamActionTypes.PrimaryLocation,
             Label = "Primary Location".ToPlainText(),
-            Element =new ExternalSelectMenu
+            Element = new ExternalSelectMenu
             {
-                ActionId = OptionLoaderKeys.OrganizationLocationKey,
-                InitialOption = null,
-                MinQueryLength = 0
+                ActionId = OptionLoaderKeys.OrganizationLocationKey, InitialOption = null, MinQueryLength = 0
             },
             Optional = true
         };

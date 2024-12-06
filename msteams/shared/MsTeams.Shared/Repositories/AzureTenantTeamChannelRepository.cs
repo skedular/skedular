@@ -13,7 +13,8 @@ public interface IAzureTenantTeamChannelRepository : IRepository<AzureTenantTeam
 }
 
 public class AzureTenantTeamChannelRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<MsTeamsDbContext, AzureTenantTeamChannel>(dbContext, timeProvider), IAzureTenantTeamChannelRepository
+    : RepositoryBase<MsTeamsDbContext, AzureTenantTeamChannel>(dbContext, timeProvider),
+        IAzureTenantTeamChannelRepository
 {
     public AzureTenantTeamChannel Add(AzureTenantTeamChannel azureTenantTeamChannel)
     {

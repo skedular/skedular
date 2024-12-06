@@ -7,7 +7,6 @@ using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Kafka.Telemetry;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry.Trace;
 
 namespace Enterprise.Shared.Kafka.Consume;
 

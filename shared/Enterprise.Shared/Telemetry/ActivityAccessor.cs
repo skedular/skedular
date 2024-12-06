@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry.Trace;
 
 namespace Enterprise.Shared.Telemetry;
 

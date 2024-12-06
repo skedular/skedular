@@ -21,7 +21,7 @@ public static class SlackClientExtensions
             return await slackApiClient.Views.Open(string.Empty, viewDefinition, cancellationToken);
         }
     }
-    
+
     public static async Task ViewsPublishAsync(
         this ISlackApiClient slackApiClient,
         string userId,

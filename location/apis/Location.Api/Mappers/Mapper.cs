@@ -197,6 +197,7 @@ public class Mapper : IMapper
                 Zones = MapTo(src.Zones).ToArray(),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress)
             };
+
     public Shared.Models.Desk MapTo(Desk src) =>
         new()
         {

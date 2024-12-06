@@ -145,8 +145,8 @@ public class OrganizationSubscriber(
                          existingOrganization.OrganizationMembers.All(item => item.Id != organizationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                    organizationMember.Customer.Id,
-                    cancellationToken);
+                organizationMember.Customer.Id,
+                cancellationToken);
             addedItems.Add(
                 repositoryFactory.OrganizationMemberRepository.Add(
                     mapper.MapToEntity(organizationMember, existingOrganization, customer)));

@@ -20,7 +20,7 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
 {
     public async Task<Team> UpsertNakedAsync(
         string id,
-        Organization? organization, 
+        Organization? organization,
         CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);

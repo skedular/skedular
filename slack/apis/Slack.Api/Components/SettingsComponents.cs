@@ -1,4 +1,3 @@
-using Api.Shared.Models;
 using Enterprise.Shared.Time;
 using Slack.Api.Services;
 using Slack.Shared.Constants;

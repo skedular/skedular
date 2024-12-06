@@ -37,6 +37,12 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList()
             };
 
+    public Edge<Shared.Models.Notification> MapTo(Edge<Shared.Database.Entities.Notification> src) =>
+        new(src.Cursor, MapTo(src.Node));
+
+    public NotificationEdge MapTo(Edge<Shared.Models.Notification> src) =>
+        new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+
     private GraphQL.Notification MapTo(Shared.Models.Notification src) =>
         new()
         {
@@ -57,12 +63,6 @@ public class Mapper : IMapper
             Location = MapTo(src.Location),
             Team = MapTo(src.Team)
         };
-
-    public Edge<Shared.Models.Notification> MapTo(Edge<Shared.Database.Entities.Notification> src) =>
-        new(src.Cursor, MapTo(src.Node));
-
-    public NotificationEdge MapTo(Edge<Shared.Models.Notification> src) =>
-        new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
     private Shared.Models.Notification MapTo(Shared.Database.Entities.Notification src) =>
         new()

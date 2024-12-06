@@ -145,8 +145,8 @@ public class OrganizationSubscriber(
                          organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                    organizationMember.Customer.Id,
-                    cancellationToken);
+                organizationMember.Customer.Id,
+                cancellationToken);
             updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(
                 mapper.MergeToEntity(
                     organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),

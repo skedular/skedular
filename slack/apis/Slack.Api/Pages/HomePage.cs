@@ -322,7 +322,7 @@ public class HomePage(
                 }
 
                 break;
-            
+
             case ZoneActionTypes.Zones:
                 {
                     var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);

@@ -29,7 +29,7 @@ public class OrganizationMemberRepository(TeamDbContext dbContext, TimeProvider 
         Customer customer,
         CancellationToken cancellationToken)
     {
-        await UpsertNakedAsync<Organization, Database.Entities.Customer>(id, organization, customer, cancellationToken);
+        await UpsertNakedAsync<Organization, Customer>(id, organization, customer, cancellationToken);
 
         return (await GetByIdAsync(id, cancellationToken))!;
     }

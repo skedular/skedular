@@ -215,9 +215,9 @@ public class TeamSubscriber(
                 cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
-            var existingTeamIds  = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
+            var existingTeamIds = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
             customer.DefaultTeams = customer.DefaultTeams.Where(item => item.Id != existingTeam.Id).ToList();
-            var newTeamIds  = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
+            var newTeamIds = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
             customer = repositoryFactory.CustomerRepository.Update(customer);
 
             if (newTeamIds.Count != existingTeamIds.Count || newTeamIds.Except(existingTeamIds).Any())

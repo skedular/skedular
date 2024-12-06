@@ -84,7 +84,7 @@ public abstract class RepositoryBase<TContext, TEntity>(TContext dbContext, Time
             ],
             cancellationToken);
     }
-    
+
     public async Task UpsertNakedAsync<TForeignEntity1, TForeignEntity2>(
         string id,
         TForeignEntity1? foreignEntity1,
@@ -152,5 +152,4 @@ public abstract class RepositoryBase<TContext, TEntity>(TContext dbContext, Time
             ],
             cancellationToken);
     }
-
 }

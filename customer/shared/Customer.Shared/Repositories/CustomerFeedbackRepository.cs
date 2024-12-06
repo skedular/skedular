@@ -10,7 +10,8 @@ public interface ICustomerFeedbackRepository : IRepository<Database.Entities.Cus
 }
 
 public class CustomerFeedbackRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<CustomerDbContext, Database.Entities.Customer>(dbContext, timeProvider), ICustomerFeedbackRepository
+    : RepositoryBase<CustomerDbContext, Database.Entities.Customer>(dbContext, timeProvider),
+        ICustomerFeedbackRepository
 {
     public CustomerFeedback Add(CustomerFeedback customerFeedback)
     {

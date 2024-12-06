@@ -10,7 +10,8 @@ public interface IDailyMemberCountRecordingRepository : IRepository<DailyMemberC
 }
 
 public class DailyMemberCountRecordingRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, DailyMemberCountRecording>(dbContext, timeProvider), IDailyMemberCountRecordingRepository
+    : RepositoryBase<OrganizationDbContext, DailyMemberCountRecording>(dbContext, timeProvider),
+        IDailyMemberCountRecordingRepository
 {
     public DailyMemberCountRecording Add(DailyMemberCountRecording dailyMemberCountRecording)
     {

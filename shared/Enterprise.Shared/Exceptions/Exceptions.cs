@@ -62,6 +62,8 @@ public class ZoneWithSameNameExist() : Exception("Zone with same name exist");
 
 public class OrganizationTagWithSameNameExist() : Exception("Organization tag with same name exist");
 
-public class TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup() : Exception("Team primary location linking only allowed in organization setup");
+public class TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup()
+    : Exception("Team primary location linking only allowed in organization setup");
 
-public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization() : Exception("Team Primary location organization does not match team organization");
+public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
+    : Exception("Team Primary location organization does not match team organization");

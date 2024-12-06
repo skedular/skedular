@@ -162,7 +162,6 @@ public class Mapper : IMapper
     }
 
 
-
     public Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src)
     {
         var booking = src.Data.AfterState;

@@ -125,7 +125,6 @@ public class Mapper : IMapper
     }
 
 
-
     public Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
     {
         var location = src.Data.LocationAfterState;
@@ -224,20 +223,6 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer) =>
         MergeToEntity(src, new OrganizationMember(), organization, customer);
-
-    private OrganizationMember MergeToEntity(
-        Shared.Models.OrganizationMember src,
-        OrganizationMember dest,
-        Shared.Database.Entities.Organization organization,
-        Shared.Database.Entities.Customer customer)
-    {
-        dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType;
-        dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
-        dest.Organization = organization;
-        dest.Customer = customer;
-        return dest;
-    }
 
     public Shared.Database.Entities.Location MapToEntity(Location src,
         Shared.Database.Entities.Organization organization) =>
@@ -402,6 +387,20 @@ public class Mapper : IMapper
         dest.PhotoUrl504 = src.PhotoUrl504;
         dest.PhotoUrl648 = src.PhotoUrl648;
         dest.AzureTenant = azureTenant;
+        return dest;
+    }
+
+    private OrganizationMember MergeToEntity(
+        Shared.Models.OrganizationMember src,
+        OrganizationMember dest,
+        Shared.Database.Entities.Organization organization,
+        Shared.Database.Entities.Customer customer)
+    {
+        dest.Id = src.Id;
+        dest.MembershipType = src.MembershipType;
+        dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
+        dest.Organization = organization;
+        dest.Customer = customer;
         return dest;
     }
 

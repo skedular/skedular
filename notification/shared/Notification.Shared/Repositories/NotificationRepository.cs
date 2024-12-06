@@ -88,7 +88,8 @@ internal static class NotificationExtensions
 }
 
 public class NotificationRepository(NotificationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<NotificationDbContext, Database.Entities.Notification>(dbContext, timeProvider), INotificationRepository
+    : RepositoryBase<NotificationDbContext, Database.Entities.Notification>(dbContext, timeProvider),
+        INotificationRepository
 {
     public async Task<Database.Entities.Notification?> GetBySourceIdAsync(string sourceId,
         CancellationToken cancellationToken) =>

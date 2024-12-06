@@ -16,7 +16,8 @@ public interface IOrganizationOfferingRepository : IRepository<OrganizationOffer
 }
 
 public class OrganizationOfferingRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, OrganizationOffering>(dbContext, timeProvider), IOrganizationOfferingRepository
+    : RepositoryBase<OrganizationDbContext, OrganizationOffering>(dbContext, timeProvider),
+        IOrganizationOfferingRepository
 {
     public OrganizationOffering Add(OrganizationOffering organizationOffering)
     {

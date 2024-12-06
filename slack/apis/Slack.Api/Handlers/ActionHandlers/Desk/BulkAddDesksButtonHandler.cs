@@ -399,7 +399,7 @@ public class BulkAddDesksButtonHandler(
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
     }
-    
+
     private async Task<ZoneConnection> GetZonesAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,

@@ -24,7 +24,8 @@ public class TeamSubscriber(
             case Type.TeamUpserted:
                 {
                     var team = mapper.MapTo(@event);
-                    var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, cancellationToken);
+                    var existingTeam =
+                        await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
                         logger.LogInformation(

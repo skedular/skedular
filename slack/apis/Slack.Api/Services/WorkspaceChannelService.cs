@@ -29,7 +29,7 @@ public class WorkspaceChannelService(IRepositoryFactory repositoryFactory, IMapp
 
         var slackApiClient = workspace.GetApiClient();
         var workspaceChannel = await slackApiClient.Conversations.Info(
-            workspaceChannelId, 
+            workspaceChannelId,
             true,
             false,
             cancellationToken);

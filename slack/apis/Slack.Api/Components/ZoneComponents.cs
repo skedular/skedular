@@ -119,8 +119,7 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationServi
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{ZoneActionTypes.EditZone}{zone.Id}",
-                Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
+                Value = $"{ZoneActionTypes.EditZone}{zone.Id}", Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
             });
         }
 

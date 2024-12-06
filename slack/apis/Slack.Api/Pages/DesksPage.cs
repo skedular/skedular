@@ -733,14 +733,17 @@ public class DesksPage(
                             string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList(),
                     InitialOptions = deskTypeConnection.Edges.Select(item => item.Node)
-                        .Where(item => desk.OrganizationDeskTypes.Select(tag => tag.Id).Contains(item.Id)).Select(item =>
-                            new Option
-                            {
-                                Text = item.Name.ToOptionText(),
-                                Value = item.Id,
-                                Description =
-                                    string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
-                            }).ToList()
+                        .Where(item => desk.OrganizationDeskTypes.Select(tag => tag.Id).Contains(item.Id)).Select(
+                            item =>
+                                new Option
+                                {
+                                    Text = item.Name.ToOptionText(),
+                                    Value = item.Id,
+                                    Description =
+                                        string.IsNullOrWhiteSpace(item.Description)
+                                            ? null
+                                            : item.Description.ToPlainText()
+                                }).ToList()
                 },
                 Optional = true
             });

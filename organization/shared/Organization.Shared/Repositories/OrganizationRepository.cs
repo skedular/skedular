@@ -127,7 +127,8 @@ internal static class OrganizationExtensions
 }
 
 public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<OrganizationDbContext, Database.Entities.Organization>(dbContext, timeProvider), IOrganizationRepository
+    : RepositoryBase<OrganizationDbContext, Database.Entities.Organization>(dbContext, timeProvider),
+        IOrganizationRepository
 {
     public Database.Entities.Organization Add(Database.Entities.Organization organization)
     {

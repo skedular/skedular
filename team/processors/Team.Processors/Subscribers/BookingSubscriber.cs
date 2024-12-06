@@ -84,7 +84,7 @@ public class BookingSubscriber(
             return;
         }
 
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(booking.Team.Id,cancellationToken);
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(booking.Team.Id, cancellationToken);
         ArgumentNullException.ThrowIfNull(team);
 
         _ = existingBooking is null

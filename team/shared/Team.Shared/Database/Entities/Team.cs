@@ -34,10 +34,9 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder
             .HasOne(item => item.Organization)
             .WithMany(item => item.Teams);
-        
+
         builder
             .HasOne(item => item.PrimaryLocation)
             .WithMany(item => item.PrimaryLocationForTeams);
-
     }
 }

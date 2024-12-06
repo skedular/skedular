@@ -26,9 +26,9 @@ public class OrganizationSubscriber(
             case Type.OrganizationUpserted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization =await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                            organization.Id,
-                            cancellationToken);
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                        organization.Id,
+                        cancellationToken);
                     if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation(
@@ -113,8 +113,8 @@ public class OrganizationSubscriber(
                          organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                    organizationMember.Customer.Id,
-                    cancellationToken);
+                organizationMember.Customer.Id,
+                cancellationToken);
             updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(
                 mapper.MergeToEntity(
                     organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),

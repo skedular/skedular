@@ -2,7 +2,6 @@
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
 namespace Booking.Shared.Repositories;
 

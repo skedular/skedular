@@ -176,14 +176,14 @@ public class OrganizationSubscriber(
                 await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
-            var existingOrganizationId = customer.DefaultOrganization?.Id; 
-            
+            var existingOrganizationId = customer.DefaultOrganization?.Id;
+
             if (customer.DefaultOrganization is not null && customer.DefaultOrganization.Id == organizationId)
             {
                 customer.DefaultOrganization = null;
             }
 
-            var newOrganizationId = customer.DefaultOrganization?.Id; 
+            var newOrganizationId = customer.DefaultOrganization?.Id;
 
             var existingLocationIds = customer.DefaultLocations.Select(item => item.Id).Distinct().ToList();
             customer.DefaultLocations = customer.DefaultLocations
@@ -197,10 +197,10 @@ public class OrganizationSubscriber(
                 .ToList();
             var newDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
 
-            var existingTeamIds  = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
+            var existingTeamIds = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
             customer.DefaultTeams = customer.DefaultTeams
                 .Where(team => team.Organization is null || team.Organization.Id != organizationId).ToList();
-            var newTeamIds  = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
+            var newTeamIds = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
 
             customer = repositoryFactory.CustomerRepository.Update(customer);
 
