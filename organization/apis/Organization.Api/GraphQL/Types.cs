@@ -136,6 +136,8 @@ public class OrganizationCustomerDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
 
+    [GraphQLName("email")] public string? Email { get; set; }
+
     [GraphQLName("name")] public string? Name { get; set; }
 
     [GraphQLName("givenName")] public string? GivenName { get; set; }

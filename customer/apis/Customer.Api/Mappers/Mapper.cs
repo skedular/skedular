@@ -100,19 +100,8 @@ public class Mapper(IContext context) : IMapper
             EmailVerified = context.GetEmailVerified()
         };
 
-    public CustomerDetails MapTo(Shared.Models.Customer src)
-    {
-        var identitiesWithEmail = src.Identities.Where(identity => !string.IsNullOrWhiteSpace(identity.Email)).ToList();
-        var email = identitiesWithEmail.Count != 0
-            ? new CustomerEmail
-            {
-                Id = identitiesWithEmail.First().Id,
-                Email = identitiesWithEmail.First().Email!,
-                Verified = identitiesWithEmail.First().EmailVerified ?? false
-            }
-            : null;
-
-        return new CustomerDetails
+    public CustomerDetails MapTo(Shared.Models.Customer src) =>
+        new()
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
@@ -131,7 +120,12 @@ public class Mapper(IContext context) : IMapper
             PhotoUrl512 = src.PhotoUrl512,
             Timezone = src.Timezone,
             Locale = src.Locale,
-            Email = email,
+            Email = src.Identities
+                .Where(identity => !string.IsNullOrWhiteSpace(identity.Email))
+                .Select(item => item.Email!.ToLowerInvariant())
+                .Distinct()
+                .FirstOrDefault(),
+            Identities = MapTo(src.Identities).ToArray(),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone ?? false,
@@ -190,7 +184,6 @@ public class Mapper(IContext context) : IMapper
                         }
             }).ToArray()
         };
-    }
 
     public CustomerPayload MapTo(Shared.Models.Customer src, string? clientMutationId) => new()
     {
@@ -200,7 +193,7 @@ public class Mapper(IContext context) : IMapper
     public CustomerFeedback MapTo(SubmitCustomerFeedbackInput src) =>
         new()
         {
-            Id = src.Id,
+            Id = src.Id.ToSafeString(),
             Content = src.FeedbackContent,
             Channel = src.Channel switch
             {
@@ -599,4 +592,10 @@ public class Mapper(IContext context) : IMapper
                 Name = src.Name,
                 Organization = MapTo(src.Organization)
             };
+
+    private static IEnumerable<CustomerIdentity> MapTo(IEnumerable<Shared.Models.Identity> src) =>
+        src.Select(MapTo)!;
+
+    private static CustomerIdentity MapTo(Shared.Models.Identity src) =>
+        new() { Id = src.Id, Email = src.Email, Verified = src.EmailVerified ?? false };
 }

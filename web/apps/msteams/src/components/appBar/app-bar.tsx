@@ -26,10 +26,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
     graphql`
       fragment appBar_query on Query {
         me {
-          email {
-            email
-            verified
-          }
+          email
           givenName
           middleName
           familyName
@@ -138,7 +135,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
               <Stack direction="column">
                 <Stack direction="column">
                   <Typography variant="h6">{customerName}</Typography>
-                  {rootData.me?.email && <Typography variant="body1">{rootData.me?.email.email}</Typography>}
+                  {rootData.me?.email && <Typography variant="body1">{rootData.me?.email}</Typography>}
                 </Stack>
               </Stack>
             </MenuItem>

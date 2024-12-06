@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6de09d22a52d6e7012821baa6d1420fa>>
+ * @generated SignedSource<<49169f4c57767fa90ca63282f2de2f33>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type SubmitCustomerFeedbackInput = {
   channel: FeedbackChannel;
   clientMutationId?: string | null | undefined;
   feedbackContent: string;
-  id: string;
+  id?: string | null | undefined;
 };
 export type newFeedbackDialog_submitCustomerFeedbackMutation$variables = {
   input: SubmitCustomerFeedbackInput;

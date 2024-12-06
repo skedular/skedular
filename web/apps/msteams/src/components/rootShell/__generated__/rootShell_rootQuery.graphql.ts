@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2fe85ee33342b1ab02efb9a1c50cd0d2>>
+ * @generated SignedSource<<1a68345e856cf0b73ac39aff503bf091>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -162,27 +162,8 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "CustomerEmail",
-            "kind": "LinkedField",
+            "kind": "ScalarField",
             "name": "email",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "email",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "verified",
-                "storageKey": null
-              },
-              (v0/*: any*/)
-            ],
             "storageKey": null
           },
           {
@@ -235,12 +216,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d9cf83cf569fcbc9da5fc8249823307c",
+    "cacheID": "d322368d5f0890efd47014074a9c5146",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery {\n  me {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...oldAppBar_query\n  ...appBar_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment oldAppBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n"
+    "text": "query rootShell_rootQuery {\n  me {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...oldAppBar_query\n  ...appBar_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment oldAppBar_query on Query {\n  me {\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n"
   }
 };
 })();

@@ -53,6 +53,7 @@ internal static class OrganizationExtensions
             .Include(query =>
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query.Identities)
             .Include(query => query.TermsOfUse)
             .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue));
 

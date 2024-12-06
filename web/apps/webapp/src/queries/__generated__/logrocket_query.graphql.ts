@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e803e019d81b07f2dfd021062e0c96be>>
+ * @generated SignedSource<<b5e57b0c7773fd49c3959c24f046e6bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type logrocket_query$data = {
   readonly me: {
-    readonly email: {
-      readonly email: string;
-    } | null | undefined;
+    readonly email: string | null | undefined;
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
     readonly id: string;
@@ -52,19 +50,8 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "CustomerEmail",
-          "kind": "LinkedField",
+          "kind": "ScalarField",
           "name": "email",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "email",
-              "storageKey": null
-            }
-          ],
           "storageKey": null
         },
         {
@@ -103,6 +90,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "1dc0245fad618a512791dfbf794e180d";
+(node as any).hash = "1ba23a689e3021f0fa536ebe301ea69f";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e3477f2c8a2f35de980a79eb7e608184>>
+ * @generated SignedSource<<895b7e8f84ccf230aa891e8408b4b158>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -214,27 +214,8 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "CustomerEmail",
-            "kind": "LinkedField",
+            "kind": "ScalarField",
             "name": "email",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "email",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "verified",
-                "storageKey": null
-              },
-              (v2/*: any*/)
-            ],
             "storageKey": null
           },
           {
@@ -335,12 +316,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9dbbdaf721530b9fe0caed701bc3ba15",
+    "cacheID": "a68d34e4b4dc2525dae516d3c55b1e1a",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...oldAppBar_query\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    canModify\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment oldAppBar_query on Query {\n  me {\n    email {\n      email\n      verified\n      id\n    }\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n"
+    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  ...oldAppBar_query\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n}\n\nfragment appBar_query on Query {\n  me {\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    canModify\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment oldAppBar_query on Query {\n  me {\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...newFeedbackDialog_query\n}\n"
   }
 };
 })();

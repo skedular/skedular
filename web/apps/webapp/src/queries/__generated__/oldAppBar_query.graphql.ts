@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e50edad65a32635bb50aa4ce1587b36d>>
+ * @generated SignedSource<<fb5dac2e57e748d22e25a741e9937fcc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,10 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type oldAppBar_query$data = {
   readonly me: {
-    readonly email: {
-      readonly email: string;
-      readonly verified: boolean;
-    } | null | undefined;
+    readonly email: string | null | undefined;
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
     readonly middleName: string | null | undefined;
@@ -46,26 +43,8 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "CustomerEmail",
-          "kind": "LinkedField",
+          "kind": "ScalarField",
           "name": "email",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "email",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "verified",
-              "storageKey": null
-            }
-          ],
           "storageKey": null
         },
         {
@@ -109,6 +88,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6a536baae9316f8b6b484d1db107e709";
+(node as any).hash = "1e9859b813ea122e6dfa4e6e8fe0bb7b";
 
 export default node;

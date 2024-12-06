@@ -13,9 +13,7 @@ const LogRocketComponent = ({ rootDataRelay }: Props) => {
       fragment logrocket_query on Query {
         me {
           id
-          email {
-            email
-          }
+          email
           title
           givenName
           middleName
@@ -32,7 +30,7 @@ const LogRocketComponent = ({ rootDataRelay }: Props) => {
     }
 
     LogRocket.identify(rootData.me?.id, {
-      email: rootData.me?.email?.email ?? '',
+      email: rootData.me?.email ?? '',
       title: rootData.me?.title ?? '',
       givenName: rootData.me?.givenName ?? '',
       middleName: rootData.me?.middleName ?? '',

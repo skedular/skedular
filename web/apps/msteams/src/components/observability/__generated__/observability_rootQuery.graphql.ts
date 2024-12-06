@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4a3e6e9b725b5f557c4229a9e84a9799>>
+ * @generated SignedSource<<dce77bf1a674c335be17ff9ce71a0a22>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,15 +19,7 @@ export type observability_rootQuery = {
   variables: observability_rootQuery$variables;
 };
 
-const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ConcreteRequest = {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
@@ -57,24 +49,18 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "CustomerEmail",
-            "kind": "LinkedField",
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
             "name": "email",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "email",
-                "storageKey": null
-              },
-              (v0/*: any*/)
-            ],
             "storageKey": null
           },
           {
@@ -111,15 +97,14 @@ return {
     ]
   },
   "params": {
-    "cacheID": "faccd4f03c89c65153109936cf676308",
+    "cacheID": "906cf9831dab1e05a744ad5d8d3ea6f6",
     "id": null,
     "metadata": {},
     "name": "observability_rootQuery",
     "operationKind": "query",
-    "text": "query observability_rootQuery {\n  ...logrocket_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email {\n      email\n      id\n    }\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n"
+    "text": "query observability_rootQuery {\n  ...logrocket_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n"
   }
 };
-})();
 
 (node as any).hash = "0a55ecc1667f25b2db93a728abb5c761";
 

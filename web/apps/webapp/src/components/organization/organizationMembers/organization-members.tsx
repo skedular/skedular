@@ -30,6 +30,7 @@ const RootQuery = graphql`
         id
         customer {
           uniqueId
+          email
           name
           givenName
           middleName
@@ -50,11 +51,6 @@ const RootQuery = graphql`
               uniqueId
               customer {
                 uniqueId
-                givenName
-                middleName
-                familyName
-                name
-                photoUrl
               }
             }
           }
@@ -79,6 +75,7 @@ type RowType = {
   avatar: CustomerDetails;
   name: string;
   teams: string;
+  email: string | null | undefined;
 };
 
 const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId }: Props) => {
@@ -130,6 +127,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
       avatar: member.customer,
       name: getCustomerFullName(member.customer),
       teams: member.teams.map((team) => team.name).join(', '),
+      email: member.customer.email,
     };
   });
 
@@ -157,7 +155,15 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
       editable: false,
       renderCell: (params) => params.value,
       display: 'text',
-      minWidth: 200,
+      minWidth: 350,
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      editable: false,
+      renderCell: (params) => params.value,
+      display: 'text',
+      minWidth: 300,
     },
   ];
 

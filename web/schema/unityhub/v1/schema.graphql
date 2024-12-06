@@ -264,7 +264,8 @@ type CustomerDeskDetails {
 }
 type CustomerDetails {
   createdAt: DateTime!
-  email: CustomerEmail
+  email: String
+  identities: [CustomerEmail!]!
   designation: String
   title: String
   name: String
@@ -300,7 +301,7 @@ type CustomerEdge {
   cursor: String!
 }
 type CustomerEmail {
-  email: String!
+  email: String
   verified: Boolean!
   id: ID!
 }
@@ -492,6 +493,7 @@ type OrganizationConnection {
 }
 type OrganizationCustomerDetails {
   uniqueId: ID!
+  email: String
   name: String
   givenName: String
   middleName: String
@@ -1006,7 +1008,7 @@ input SetCustomerDefaultOrganizationInput {
 }
 input SubmitCustomerFeedbackInput {
   clientMutationId: String
-  id: String!
+  id: String
   feedbackContent: String!
   channel: FeedbackChannel!
 }
