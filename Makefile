@@ -18,10 +18,6 @@ generate: ## Generate code
 	@./api-definitions/generate.sh
 	@./web/packages/shared/scripts/generate.sh
 
-.PHONY: sync-web-schema
-sync-web-schema: ## Sync GraphQL schema to web applications
-	@./web/scripts/download-federated-schema.sh
-
 .PHONY: lint
 lint: ## run golanci-lint locally
 	@terraform fmt -check -diff -recursive
