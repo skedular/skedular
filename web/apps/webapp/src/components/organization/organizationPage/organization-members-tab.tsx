@@ -1,5 +1,5 @@
 import { OrganizationMemberCard } from '@/components/organization';
-import type { organizationMembersTab_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/organizationMembersTab_inviteCustomersToJoinOrganizationMutation.graphql';
+import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import type { organizationMembersTab_organizationMembers_query$key } from '@/queries/__generated__/organizationMembersTab_organizationMembers_query.graphql';
 import type {
   OrganizationMemberOrderField,
@@ -8,38 +8,18 @@ import type {
 } from '@/queries/__generated__/organizationMembersTab_organizationMembers_refetchableFragment.graphql';
 import type { organizationMembersTab_query$key } from '@/queries/__generated__/organizationMembersTab_query.graphql';
 import type { organizationMembersTab_rootQuery } from '@/queries/__generated__/organizationMembersTab_rootQuery.graphql';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
-import {
-  NotificationContent,
-  errorNotificationOptions,
-  infoNotificationOptions,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { DialogTransition } from '@repo/shared/components/transitions';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { joinErrors } from '@repo/shared/libs/utils';
-import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Form } from 'react-final-form';
-import { PreloadedQuery, graphql, useFragment, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { toast } from 'react-toastify';
-import { array, object, string } from 'yup';
+import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
   queryReference: PreloadedQuery<organizationMembersTab_rootQuery, Record<string, unknown>>;
@@ -58,23 +38,6 @@ const RootQuery = graphql`
     ...organizationMembersTab_organizationMembers_query
   }
 `;
-
-type PeopleToJoin = {
-  emails: (string | undefined)[];
-};
-
-const peopleToInviteSchema = object({
-  emails: array()
-    .transform(function (value, originalValue) {
-      if (this.isType(value) && value !== null) {
-        return value;
-      }
-
-      return originalValue ? originalValue.split(/[\s,]+/) : [];
-    })
-    .of(string().email(({ value }) => `${value} is not a valid email`))
-    .required('List of emails separated by comma is required'),
-});
 
 const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<organizationMembersTab_rootQuery>(RootQuery, queryReference);
@@ -122,16 +85,6 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
     rootDataRelay,
   );
 
-  const [commitInviteCustomersToJoinOrganization] = useMutation<organizationMembersTab_inviteCustomersToJoinOrganizationMutation>(graphql`
-    mutation organizationMembersTab_inviteCustomersToJoinOrganizationMutation($input: InviteCustomersToJoinOrganizationInput!) {
-      inviteCustomersToJoinOrganization(input: $input) {
-        clientMutationId
-      }
-    }
-  `);
-
-  const paletteMode = useContext(PaletteModeContext);
-  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [, startTransition] = useTransition();
   const [sortingOrder, setSortingOrder] = useState<OrganizationMemberOrderInput>({
     direction: 'Ascending',
@@ -139,77 +92,6 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
   });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
-  const [invitePeopleDialogOpen, setInvitePeopleDialogOpen] = useState(false);
-  const validate = makeValidate(peopleToInviteSchema);
-  const requiredFields = makeRequired(peopleToInviteSchema);
-
-  const handleInvitePeopleDialogOpenClick = () => {
-    setInvitePeopleDialogOpen(true);
-  };
-
-  const handleInvitePeopleClick = ({ emails: originalEmailsStr }: PeopleToJoin) => {
-    if (!rootData.organization || !originalEmailsStr) {
-      return;
-    }
-
-    const emails = originalEmailsStr as unknown as string;
-    if (!emails) {
-      return;
-    }
-
-    const toastId = themedToast(
-      <NotificationContent content={`Inviting people to join organization '${rootData.organization.name}'...`} />,
-      infoNotificationOptions,
-    );
-
-    commitInviteCustomersToJoinOrganization({
-      variables: {
-        input: {
-          clientMutationId: nanoid(),
-          organizationId: rootData.organization.id,
-          emails: emails
-            .split(/[\s,]+/)
-            .map((email) => email.trim())
-            .filter((email) => email),
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to invite people to join organization '${rootData.organization?.name}'. Error: ${joinErrors(errors)}.`}
-              />
-            ),
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation sent to people to join organization ${rootData.organization?.name}.`} />,
-        });
-
-        setInvitePeopleDialogOpen(false);
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: (
-            <NotificationContent
-              content={`Failed to invite people to join organization '${rootData.organization?.name}'. Error: ${error.message}.`}
-            />
-          ),
-        });
-      },
-    });
-  };
-
-  const handleCancelInvitingPeopleClick = () => {
-    setInvitePeopleDialogOpen(false);
-  };
 
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
@@ -298,13 +180,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
 
   return (
     <>
-      {rootData.organization.canInvitePeople && (
-        <Stack direction="row" sx={{ width: 'auto' }}>
-          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-            Invite People
-          </Button>
-        </Stack>
-      )}
+      {rootData.organization.canInvitePeople && <InvitePeopleToJoinOrganizationButton organizationId={organizationId} />}
 
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
         <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
@@ -342,41 +218,6 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
           </Grid>
         ))}
       </Grid>
-
-      <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
-        <DialogTitle>Invite people to join your organization</DialogTitle>
-        <DialogContent>
-          <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>
-
-          <Form
-            onSubmit={handleInvitePeopleClick}
-            initialValues={{
-              emails: '',
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
-                <TextField
-                  label="Emails"
-                  name="emails"
-                  required={requiredFields.emails}
-                  multiline={true}
-                  helperText="member1@example.com,member2@example.com"
-                />
-
-                <DialogActions>
-                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Invite
-                  </Button>
-                </DialogActions>
-              </Stack>
-            )}
-          />
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

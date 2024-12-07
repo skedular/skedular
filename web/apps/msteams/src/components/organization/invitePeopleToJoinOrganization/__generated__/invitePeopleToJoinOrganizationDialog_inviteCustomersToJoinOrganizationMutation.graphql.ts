@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b7e056d870a5dc803129ee8b1f8fe34>>
+ * @generated SignedSource<<4c41b0993182e047aee3d480ce1de14a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,17 +14,17 @@ export type InviteCustomersToJoinOrganizationInput = {
   emails: ReadonlyArray<string>;
   organizationId: string;
 };
-export type organizationMembersTab_inviteCustomersToJoinOrganizationMutation$variables = {
+export type invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation$variables = {
   input: InviteCustomersToJoinOrganizationInput;
 };
-export type organizationMembersTab_inviteCustomersToJoinOrganizationMutation$data = {
+export type invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation$data = {
   readonly inviteCustomersToJoinOrganization: {
     readonly clientMutationId: string | null | undefined;
   } | null | undefined;
 };
-export type organizationMembersTab_inviteCustomersToJoinOrganizationMutation = {
-  response: organizationMembersTab_inviteCustomersToJoinOrganizationMutation$data;
-  variables: organizationMembersTab_inviteCustomersToJoinOrganizationMutation$variables;
+export type invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation = {
+  response: invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation$data;
+  variables: invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -66,7 +66,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMembersTab_inviteCustomersToJoinOrganizationMutation",
+    "name": "invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -75,20 +75,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMembersTab_inviteCustomersToJoinOrganizationMutation",
+    "name": "invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "04741ccd4e1fb544181f465589f7954f",
+    "cacheID": "849d823c6df2300ce0b93f67ff5e0462",
     "id": null,
     "metadata": {},
-    "name": "organizationMembersTab_inviteCustomersToJoinOrganizationMutation",
+    "name": "invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMembersTab_inviteCustomersToJoinOrganizationMutation(\n  $input: InviteCustomersToJoinOrganizationInput!\n) {\n  inviteCustomersToJoinOrganization(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation(\n  $input: InviteCustomersToJoinOrganizationInput!\n) {\n  inviteCustomersToJoinOrganization(input: $input) {\n    clientMutationId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3e69d80dfc93b6bceab261d6a38e12c3";
+(node as any).hash = "49525060ea6e474f7011e3dc6bddaf89";
 
 export default node;
