@@ -26,9 +26,7 @@ const RootQuery = graphql`
     $peopleSortingValues: [OrganizationMemberOrderInput!]!
     $organizationId: String!
     $locationId: String!
-    $locationExists: Boolean!
     $teamId: String!
-    $teamExists: Boolean!
     $from: DateTime!
     $to: DateTime!
   ) {

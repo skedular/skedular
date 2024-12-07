@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<67e42b63a6a17c08b394a7bedfb8bc86>>
+ * @generated SignedSource<<c9164018b6a7f3f124aba2a707305f20>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookingsWeekGrid_query$data = {
-  readonly locationBookingPermissions?: {
+  readonly locationBookingPermissions: {
     readonly canAddBookingOnBehalf: boolean;
     readonly canDeleteBookingOnBehalf: boolean;
   } | null | undefined;
@@ -22,7 +22,7 @@ export type bookingsWeekGrid_query$data = {
     readonly canAddBookingOnBehalf: boolean;
     readonly canDeleteBookingOnBehalf: boolean;
   } | null | undefined;
-  readonly teamBookingPermissions?: {
+  readonly teamBookingPermissions: {
     readonly canAddBookingOnBehalf: boolean;
     readonly canDeleteBookingOnBehalf: boolean;
   } | null | undefined;
@@ -54,19 +54,11 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "locationExists"
-    },
-    {
-      "kind": "RootArgument",
       "name": "locationId"
     },
     {
       "kind": "RootArgument",
       "name": "organizationId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "teamExists"
     },
     {
       "kind": "RootArgument",
@@ -112,50 +104,36 @@ return {
       "storageKey": null
     },
     {
-      "condition": "locationExists",
-      "kind": "Condition",
-      "passingValue": true,
-      "selections": [
+      "alias": null,
+      "args": [
         {
-          "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "locationId",
-              "variableName": "locationId"
-            }
-          ],
-          "concreteType": "LocationBookingPermissions",
-          "kind": "LinkedField",
-          "name": "locationBookingPermissions",
-          "plural": false,
-          "selections": (v0/*: any*/),
-          "storageKey": null
+          "kind": "Variable",
+          "name": "locationId",
+          "variableName": "locationId"
         }
-      ]
+      ],
+      "concreteType": "LocationBookingPermissions",
+      "kind": "LinkedField",
+      "name": "locationBookingPermissions",
+      "plural": false,
+      "selections": (v0/*: any*/),
+      "storageKey": null
     },
     {
-      "condition": "teamExists",
-      "kind": "Condition",
-      "passingValue": true,
-      "selections": [
+      "alias": null,
+      "args": [
         {
-          "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "teamId",
-              "variableName": "teamId"
-            }
-          ],
-          "concreteType": "TeamBookingPermissions",
-          "kind": "LinkedField",
-          "name": "teamBookingPermissions",
-          "plural": false,
-          "selections": (v0/*: any*/),
-          "storageKey": null
+          "kind": "Variable",
+          "name": "teamId",
+          "variableName": "teamId"
         }
-      ]
+      ],
+      "concreteType": "TeamBookingPermissions",
+      "kind": "LinkedField",
+      "name": "teamBookingPermissions",
+      "plural": false,
+      "selections": (v0/*: any*/),
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -163,6 +141,6 @@ return {
 };
 })();
 
-(node as any).hash = "886b4f131c05e4f78e9b0513462df129";
+(node as any).hash = "ec7257b1e2e0e9151145a1446c836bf6";
 
 export default node;

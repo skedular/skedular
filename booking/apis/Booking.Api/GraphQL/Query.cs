@@ -178,7 +178,18 @@ public class Query(IMapper mapper)
         [Service] IOrganizationAuthorizationService organizationAuthorizationService,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
+        if (string.IsNullOrWhiteSpace(organizationId))
+        {
+            return new OrganizationBookingPermissions
+            {
+                CanAddBooking = false,
+                CanUpdateBooking = false,
+                CanDeleteBooking = false,
+                CanAddBookingOnBehalf = false,
+                CanUpdateBookingOnBehalf = false,
+                CanDeleteBookingOnBehalf = false
+            };
+        }
 
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
@@ -205,6 +216,19 @@ public class Query(IMapper mapper)
         [Service] ILocationAuthorizationService locationAuthorizationService,
         CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(locationId))
+        {
+            return new LocationBookingPermissions
+            {
+                CanAddBooking = false,
+                CanUpdateBooking = false,
+                CanDeleteBooking = false,
+                CanAddBookingOnBehalf = false,
+                CanUpdateBookingOnBehalf = false,
+                CanDeleteBookingOnBehalf = false
+            };
+        }
+
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
@@ -230,6 +254,19 @@ public class Query(IMapper mapper)
         [Service] ITeamAuthorizationService teamAuthorizationService,
         CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(teamId))
+        {
+            return new TeamBookingPermissions
+            {
+                CanAddBooking = false,
+                CanUpdateBooking = false,
+                CanDeleteBooking = false,
+                CanAddBookingOnBehalf = false,
+                CanUpdateBookingOnBehalf = false,
+                CanDeleteBookingOnBehalf = false
+            };
+        }
+
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;

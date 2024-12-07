@@ -99,7 +99,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           id
           name
         }
-        organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {
+        organizationBookingPermissions(organizationId: $organizationId) {
           canUpdateBookingOnBehalf
           canDeleteBookingOnBehalf
         }

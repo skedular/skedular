@@ -96,15 +96,15 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
         me {
           id
         }
-        organizationBookingPermissions(organizationId: $organizationId) @include(if: $organizationExists) {
+        organizationBookingPermissions(organizationId: $organizationId) {
           canAddBookingOnBehalf
           canDeleteBookingOnBehalf
         }
-        locationBookingPermissions(locationId: $locationId) @include(if: $locationExists) {
+        locationBookingPermissions(locationId: $locationId) {
           canAddBookingOnBehalf
           canDeleteBookingOnBehalf
         }
-        teamBookingPermissions(teamId: $teamId) @include(if: $teamExists) {
+        teamBookingPermissions(teamId: $teamId) {
           canAddBookingOnBehalf
           canDeleteBookingOnBehalf
         }

@@ -27,11 +27,8 @@ const RootQuery = graphql`
   query teamBookingsCard_rootQuery(
     $peopleSortingValues: [TeamMemberOrderInput!]!
     $organizationId: String!
-    $organizationExists: Boolean!
     $locationId: String!
-    $locationExists: Boolean!
     $teamId: String!
-    $teamExists: Boolean!
     $from: DateTime!
     $to: DateTime!
   ) {

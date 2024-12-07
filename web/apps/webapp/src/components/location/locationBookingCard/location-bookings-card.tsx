@@ -30,9 +30,7 @@ const RootQuery = graphql`
     $organizationId: String!
     $organizationExists: Boolean!
     $locationId: String!
-    $locationExists: Boolean!
     $teamId: String!
-    $teamExists: Boolean!
     $from: DateTime!
     $to: DateTime!
   ) {
