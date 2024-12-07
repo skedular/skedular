@@ -302,7 +302,6 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       sx={{
         paddingLeft: defaultPadding,
         paddingRight: defaultPadding,
-        paddingTop: defaultPadding,
       }}
     >
       <Typography variant="h5">My Bookings</Typography>

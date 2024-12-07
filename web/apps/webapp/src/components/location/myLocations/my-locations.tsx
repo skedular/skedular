@@ -278,7 +278,6 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       sx={{
         paddingLeft: defaultPadding,
         paddingRight: defaultPadding,
-        paddingTop: defaultPadding,
       }}
     >
       <Typography variant="h5">My Locations</Typography>

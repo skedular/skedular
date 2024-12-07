@@ -257,29 +257,38 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
         <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
         <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
       </Stack>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        ignoreDiacritics
-        disableRowSelectionOnClick
-        hideFooter
-        getRowHeight={() => 'auto'}
-        rowSpacingType="margin"
-        getRowSpacing={() => ({ top: 3, bottom: 3 })}
+      <Stack
+        direction="column"
+        spacing={1}
         sx={{
-          [`& .${gridClasses.cell}`]: {
-            paddingTop: 1,
-            paddingBottom: 1,
-          },
-          [`& .${gridClasses.row}`]: {
-            paddingLeft: 1,
-            paddingTop: 1,
-            paddingBottom: 1,
-            borderRadius: 2,
-            backgroundColor: (theme) => theme.palette.background.paper,
-          },
+          paddingLeft: defaultPadding,
+          paddingRight: defaultPadding,
         }}
-      />
+      >
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          ignoreDiacritics
+          disableRowSelectionOnClick
+          hideFooter
+          getRowHeight={() => 'auto'}
+          rowSpacingType="margin"
+          getRowSpacing={() => ({ top: 3, bottom: 3 })}
+          sx={{
+            [`& .${gridClasses.cell}`]: {
+              paddingTop: 1,
+              paddingBottom: 1,
+            },
+            [`& .${gridClasses.row}`]: {
+              paddingLeft: 1,
+              paddingTop: 1,
+              paddingBottom: 1,
+              borderRadius: 2,
+              backgroundColor: (theme) => theme.palette.background.paper,
+            },
+          }}
+        />
+      </Stack>
     </Stack>
   );
 };

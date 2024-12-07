@@ -151,7 +151,6 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
       sx={{
         paddingLeft: defaultPadding,
         paddingRight: defaultPadding,
-        paddingTop: defaultPadding,
       }}
     >
       <Typography variant="h5">My Teams</Typography>
