@@ -71,7 +71,7 @@ type TeamDetails = {
   organizationMemberIds: string[];
 };
 
-type MembersToJoin = {
+type PeopleToJoin = {
   emails: (string | undefined)[];
 };
 
@@ -79,7 +79,7 @@ const teamSchema = object({
   organizationMemberIds: array().nullable(),
 });
 
-const membersToInviteSchema = object({
+const peopleToInviteSchema = object({
   emails: array()
     .transform(function (value, originalValue) {
       if (this.isType(value) && value !== null) {
@@ -196,8 +196,8 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
   const [pageSize, setPageSize] = useState(50);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [invitePeopleDialogOpen, setInvitePeopleDialogOpen] = useState(false);
-  const validateMembersToInvite = makeValidate(membersToInviteSchema);
-  const requiredMembersToInviteFields = makeRequired(membersToInviteSchema);
+  const validateMembersToInvite = makeValidate(peopleToInviteSchema);
+  const requiredMembersToInviteFields = makeRequired(peopleToInviteSchema);
 
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
@@ -320,7 +320,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     setInvitePeopleDialogOpen(true);
   };
 
-  const handleInvitePeopleClick = ({ emails: originalEmailsStr }: MembersToJoin) => {
+  const handleInvitePeopleClick = ({ emails: originalEmailsStr }: PeopleToJoin) => {
     if (!rootData.team || !originalEmailsStr) {
       return;
     }

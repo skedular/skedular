@@ -26,6 +26,7 @@ type Props = {
 const RootQuery = graphql`
   query organizationMembers_rootQuery($organizationId: String!) {
     organization(id: $organizationId) {
+      canInvitePeople
       members {
         id
         customer {

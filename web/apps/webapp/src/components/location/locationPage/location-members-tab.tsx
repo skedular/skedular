@@ -59,11 +59,11 @@ const RootQuery = graphql`
   }
 `;
 
-type MembersToJoin = {
+type PeopleToJoin = {
   emails: (string | undefined)[];
 };
 
-const membersToInviteSchema = object({
+const peopleToInviteSchema = object({
   emails: array()
     .transform(function (value, originalValue) {
       if (this.isType(value) && value !== null) {
@@ -185,8 +185,8 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
 
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [invitePeopleDialogOpen, setInvitePeopleDialogOpen] = useState(false);
-  const validateMembersToInvite = makeValidate(membersToInviteSchema);
-  const requiredMembersToInviteFields = makeRequired(membersToInviteSchema);
+  const validateMembersToInvite = makeValidate(peopleToInviteSchema);
+  const requiredMembersToInviteFields = makeRequired(peopleToInviteSchema);
 
   const handleSearchTextChange = (str: string) => {
     setPeopleNameSearchText(str);
@@ -229,7 +229,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
     setInvitePeopleDialogOpen(true);
   };
 
-  const handleInvitePeopleClick = ({ emails: originalEmailsStr }: MembersToJoin) => {
+  const handleInvitePeopleClick = ({ emails: originalEmailsStr }: PeopleToJoin) => {
     if (!rootData.location || !originalEmailsStr) {
       return;
     }

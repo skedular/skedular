@@ -61,22 +61,22 @@ const NewBookingButton = ({
   size,
 }: Props) => {
   const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleAddClick = () => {
-    setIsAddDialogOpen(true);
+  const handleButtonClicked = () => {
+    setIsDialogOpen(true);
   };
 
-  const handleAddDialogAddClick = () => {
-    setIsAddDialogOpen(false);
+  const handleAddClicked = () => {
+    setIsDialogOpen(false);
 
     if (onReloadRequired) {
       onReloadRequired();
     }
   };
 
-  const handleAddDialogCancelClick = () => {
-    setIsAddDialogOpen(false);
+  const handleCancelClicked = () => {
+    setIsDialogOpen(false);
   };
 
   return (
@@ -84,7 +84,7 @@ const NewBookingButton = ({
       <Button
         variant={variant ?? 'text'}
         size={size ?? 'large'}
-        onClick={handleAddClick}
+        onClick={handleButtonClicked}
         fullWidth={fullWidth}
         endIcon={hideIcon ? null : <NewIcon />}
         sx={{ borderRadius: 4 }}
@@ -94,9 +94,9 @@ const NewBookingButton = ({
       <NewBookingDialog
         rootDataRelay={rootData}
         connectionIds={connectionIds ?? []}
-        isDialogOpen={isAddDialogOpen}
-        onAddClicked={handleAddDialogAddClick}
-        onCancelClicked={handleAddDialogCancelClick}
+        isDialogOpen={isDialogOpen}
+        onAddClicked={handleAddClicked}
+        onCancelClicked={handleCancelClicked}
         organizationId={organizationId}
         locationId={locationId}
         defaultTeamId={defaultTeamId}
