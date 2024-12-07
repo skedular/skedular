@@ -33,6 +33,9 @@ const RootQuery = graphql`
     $zoneIds: [String!]!
     $deskTypeIds: [String!]!
   ) {
+    organization(id: $organizationId) {
+      canModify
+    }
     ...deskTypeSelector_allDeskTypes_query
     ...zoneSelector_allZones_query
     ...myLocations_query
@@ -76,7 +79,7 @@ const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) 
         <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
-        <NewLocationButton organizationId={organizationId} />
+        {rootData.organization?.canModify && <NewLocationButton organizationId={organizationId} />}
       </Stack>
       <MyLocations
         rootDataRelay={rootData}
