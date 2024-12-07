@@ -24,7 +24,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{8DAB14BA-1215-4EE2-B0FF-CEB773B26351}"
 	ProjectSection(SolutionItems) = preProject
 		scripts\format.sh = scripts\format.sh
-		scripts\inspect.sh = scripts\inspect.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{09975EEB-216E-4FF6-B0A7-00A4F02F9983}"
