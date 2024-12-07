@@ -20,12 +20,12 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query dashboard_rootQuery($organizationId: String!, $organizationExists: Boolean!) {
+  query dashboard_rootQuery($organizationId: String!, $nullableOrganizationId: String, $organizationExists: Boolean!) {
     organization(id: $organizationId) @include(if: $organizationExists) {
       id
       name
     }
-    myLocations(organizationId: $organizationId) {
+    myLocations(organizationId: $nullableOrganizationId) {
       id
       name
       organization {
@@ -33,7 +33,7 @@ const RootQuery = graphql`
         name
       }
     }
-    myTeams(organizationId: $organizationId) {
+    myTeams(organizationId: $nullableOrganizationId) {
       id
       name
       organization {
@@ -140,6 +140,7 @@ const DashboardWithRelay = ({ organizationId }: RelayProps) => {
     loadQuery(
       {
         organizationId: organizationId ?? '',
+        nullableOrganizationId: organizationId,
         organizationExists: !!organizationId,
       },
       {

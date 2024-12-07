@@ -29,6 +29,7 @@ type Props = {
 const RootQuery = graphql`
   query organization_rootQuery(
     $organizationId: String!
+    $nullableOrganizationId: String
     $locationIds: [String!]!
     $teamIds: [String!]!
     $bookingsSearchCriteriaFrom: DateTime!
@@ -38,7 +39,7 @@ const RootQuery = graphql`
       id
       name
     }
-    myLocations(organizationId: $organizationId) {
+    myLocations(organizationId: $nullableOrganizationId) {
       id
       name
       organization {
@@ -46,7 +47,7 @@ const RootQuery = graphql`
         name
       }
     }
-    myTeams(organizationId: $organizationId) {
+    myTeams(organizationId: $nullableOrganizationId) {
       id
       name
       organization {
@@ -157,6 +158,7 @@ const DashboardWithRelay = ({ organizationId }: RelayProps) => {
     loadQuery(
       {
         organizationId,
+        nullableOrganizationId: organizationId,
         bookingsSearchCriteriaFrom,
         bookingsSearchCriteriaTo,
         locationIds: [],

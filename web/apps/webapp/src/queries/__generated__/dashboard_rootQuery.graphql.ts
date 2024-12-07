@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ea187e0888d84859e217d5fb8a56afed>>
+ * @generated SignedSource<<150c609fe9367607336e4a85df6c7aad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type dashboard_rootQuery$variables = {
+  nullableOrganizationId?: string | null | undefined;
   organizationExists: boolean;
   organizationId: string;
 };
@@ -44,35 +45,40 @@ const node: ConcreteRequest = (function(){
 var v0 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationExists"
+  "name": "nullableOrganizationId"
 },
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "organizationExists"
 },
 v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationId"
+},
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = [
+v5 = [
   {
     "kind": "Variable",
     "name": "organizationId",
-    "variableName": "organizationId"
+    "variableName": "nullableOrganizationId"
   }
 ],
-v5 = [
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -80,9 +86,9 @@ v5 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v3/*: any*/)
+  (v4/*: any*/)
 ],
-v6 = [
+v7 = [
   {
     "condition": "organizationExists",
     "kind": "Condition",
@@ -102,8 +108,8 @@ v6 = [
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/)
+          (v3/*: any*/),
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
@@ -111,14 +117,14 @@ v6 = [
   },
   {
     "alias": null,
-    "args": (v4/*: any*/),
+    "args": (v5/*: any*/),
     "concreteType": "LocationDetails",
     "kind": "LinkedField",
     "name": "myLocations",
     "plural": true,
     "selections": [
-      (v2/*: any*/),
       (v3/*: any*/),
+      (v4/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -126,7 +132,7 @@ v6 = [
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
-        "selections": (v5/*: any*/),
+        "selections": (v6/*: any*/),
         "storageKey": null
       }
     ],
@@ -134,14 +140,14 @@ v6 = [
   },
   {
     "alias": null,
-    "args": (v4/*: any*/),
+    "args": (v5/*: any*/),
     "concreteType": "TeamDetails",
     "kind": "LinkedField",
     "name": "myTeams",
     "plural": true,
     "selections": [
-      (v2/*: any*/),
       (v3/*: any*/),
+      (v4/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -149,7 +155,7 @@ v6 = [
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
-        "selections": (v5/*: any*/),
+        "selections": (v6/*: any*/),
         "storageKey": null
       }
     ],
@@ -160,36 +166,38 @@ return {
   "fragment": {
     "argumentDefinitions": [
       (v0/*: any*/),
-      (v1/*: any*/)
+      (v1/*: any*/),
+      (v2/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
     "name": "dashboard_rootQuery",
-    "selections": (v6/*: any*/),
+    "selections": (v7/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
+      (v2/*: any*/),
+      (v0/*: any*/),
+      (v1/*: any*/)
     ],
     "kind": "Operation",
     "name": "dashboard_rootQuery",
-    "selections": (v6/*: any*/)
+    "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "4e1dc1bdadea57b3be7e88fbfd1bdf3c",
+    "cacheID": "11069e721dfac04f4319fc1586ad375f",
     "id": null,
     "metadata": {},
     "name": "dashboard_rootQuery",
     "operationKind": "query",
-    "text": "query dashboard_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n}\n"
+    "text": "query dashboard_rootQuery(\n  $organizationId: String!\n  $nullableOrganizationId: String\n  $organizationExists: Boolean!\n) {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    name\n  }\n  myLocations(organizationId: $nullableOrganizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams(organizationId: $nullableOrganizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "96baed7a8da2994baba6cac78f132b66";
+(node as any).hash = "dd81a42b9b17777e4ee4f406159746a4";
 
 export default node;

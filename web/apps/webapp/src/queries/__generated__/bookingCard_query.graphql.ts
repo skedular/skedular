@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bf59b63de6b30757d230e6c26dbc8c48>>
+ * @generated SignedSource<<044d7b02c30b3b09767178b9eaec73f8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -60,16 +60,13 @@ v1 = {
 v2 = [
   (v0/*: any*/),
   (v1/*: any*/)
-],
-v3 = [
-  {
-    "kind": "Variable",
-    "name": "organizationId",
-    "variableName": "organizationId"
-  }
 ];
 return {
   "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "nullableOrganizationId"
+    },
     {
       "kind": "RootArgument",
       "name": "organizationExists"
@@ -154,7 +151,13 @@ return {
     },
     {
       "alias": null,
-      "args": (v3/*: any*/),
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "organizationId",
+          "variableName": "nullableOrganizationId"
+        }
+      ],
       "concreteType": "LocationDetails",
       "kind": "LinkedField",
       "name": "myLocations",
@@ -169,7 +172,13 @@ return {
       "selections": [
         {
           "alias": null,
-          "args": (v3/*: any*/),
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "organizationId",
+              "variableName": "organizationId"
+            }
+          ],
           "concreteType": "OrganizationBookingPermissions",
           "kind": "LinkedField",
           "name": "organizationBookingPermissions",
@@ -215,6 +224,6 @@ return {
 };
 })();
 
-(node as any).hash = "4d40610663727653db8efd87b6a731a9";
+(node as any).hash = "966e1a461b4dcdaaa24d32ed8b248097";
 
 export default node;

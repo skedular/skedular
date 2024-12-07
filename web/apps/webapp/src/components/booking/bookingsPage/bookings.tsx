@@ -35,6 +35,7 @@ type Props = {
 const RootQuery = graphql`
   query bookings_rootQuery(
     $organizationId: String!
+    $nullableOrganizationId: String
     $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
@@ -323,6 +324,7 @@ const BookingsWithRelay = ({ onReloadRequired, organizationId, locationId, teamI
     loadQuery(
       {
         organizationId: organizationId ?? '',
+        nullableOrganizationId: organizationId,
         organizationExists: !!organizationId,
         locationId: locationId ?? '',
         locationExists: !!locationId,

@@ -95,7 +95,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           id
           name
         }
-        myLocations(organizationId: $organizationId) {
+        myLocations(organizationId: $nullableOrganizationId) {
           id
           name
         }

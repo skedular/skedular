@@ -113,14 +113,14 @@ const BookingDetailsSelector = ({
           id
           name
         }
-        myLocations(organizationId: $organizationId) {
+        myLocations(organizationId: $nullableOrganizationId) {
           id
           name
           organization {
             uniqueId
           }
         }
-        myTeams(organizationId: $organizationId) {
+        myTeams(organizationId: $nullableOrganizationId) {
           id
           name
           organization {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eb31d90fd02e9eb41b0afdef1e7b1ab3>>
+ * @generated SignedSource<<f69e87291bac576881cc6a9f8b9462c1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type newBookingButton_rootQuery$variables = {
   deskIdsToIncludeToGetAvailableDesks: ReadonlyArray<string>;
   locationExists: boolean;
   locationId: string;
+  nullableOrganizationId?: string | null | undefined;
   organizationId: string;
 };
 export type newBookingButton_rootQuery$data = {
@@ -67,23 +68,25 @@ v5 = {
 v6 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "nullableOrganizationId"
 },
 v7 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationId"
+},
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
 },
-v9 = [
-  (v8/*: any*/)
-],
 v10 = {
   "alias": null,
   "args": null,
@@ -91,17 +94,24 @@ v10 = {
   "name": "name",
   "storageKey": null
 },
-v11 = {
+v11 = [
+  {
+    "kind": "Variable",
+    "name": "organizationId",
+    "variableName": "nullableOrganizationId"
+  }
+],
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v12 = [
-  (v11/*: any*/)
-],
 v13 = [
+  (v12/*: any*/)
+],
+v14 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -119,14 +129,14 @@ v13 = [
         "name": "nameContains",
         "variableName": "bookingPeopleNameSearchText"
       },
-      (v8/*: any*/)
+      (v9/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v14 = [
-  (v11/*: any*/),
+v15 = [
+  (v12/*: any*/),
   (v10/*: any*/)
 ];
 return {
@@ -138,7 +148,8 @@ return {
       (v3/*: any*/),
       (v4/*: any*/),
       (v5/*: any*/),
-      (v6/*: any*/)
+      (v6/*: any*/),
+      (v7/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -156,6 +167,7 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
+      (v7/*: any*/),
       (v6/*: any*/),
       (v5/*: any*/),
       (v4/*: any*/),
@@ -175,13 +187,15 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v7/*: any*/)
+          (v8/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v9/*: any*/),
+        "args": [
+          (v9/*: any*/)
+        ],
         "concreteType": "OrganizationBookingPermissions",
         "kind": "LinkedField",
         "name": "organizationBookingPermissions",
@@ -205,20 +219,20 @@ return {
         "name": "myOrganizations",
         "plural": true,
         "selections": [
-          (v7/*: any*/),
+          (v8/*: any*/),
           (v10/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v9/*: any*/),
+        "args": (v11/*: any*/),
         "concreteType": "LocationDetails",
         "kind": "LinkedField",
         "name": "myLocations",
         "plural": true,
         "selections": [
-          (v7/*: any*/),
+          (v8/*: any*/),
           (v10/*: any*/),
           {
             "alias": null,
@@ -227,7 +241,7 @@ return {
             "kind": "LinkedField",
             "name": "organization",
             "plural": false,
-            "selections": (v12/*: any*/),
+            "selections": (v13/*: any*/),
             "storageKey": null
           }
         ],
@@ -235,13 +249,13 @@ return {
       },
       {
         "alias": null,
-        "args": (v9/*: any*/),
+        "args": (v11/*: any*/),
         "concreteType": "TeamDetails",
         "kind": "LinkedField",
         "name": "myTeams",
         "plural": true,
         "selections": [
-          (v7/*: any*/),
+          (v8/*: any*/),
           (v10/*: any*/),
           {
             "alias": null,
@@ -250,7 +264,7 @@ return {
             "kind": "LinkedField",
             "name": "organization",
             "plural": false,
-            "selections": (v12/*: any*/),
+            "selections": (v13/*: any*/),
             "storageKey": null
           }
         ],
@@ -258,7 +272,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v13/*: any*/),
+        "args": (v14/*: any*/),
         "concreteType": "OrganizationMemberConnection",
         "kind": "LinkedField",
         "name": "organizationMembers",
@@ -287,7 +301,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
+                  (v8/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -296,7 +310,7 @@ return {
                     "name": "customer",
                     "plural": false,
                     "selections": [
-                      (v11/*: any*/),
+                      (v12/*: any*/),
                       (v10/*: any*/),
                       {
                         "alias": null,
@@ -391,7 +405,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v13/*: any*/),
+        "args": (v14/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -436,7 +450,7 @@ return {
             "name": "availableDesks",
             "plural": true,
             "selections": [
-              (v11/*: any*/),
+              (v12/*: any*/),
               (v10/*: any*/),
               {
                 "alias": null,
@@ -445,7 +459,7 @@ return {
                 "kind": "LinkedField",
                 "name": "deskTypes",
                 "plural": true,
-                "selections": (v14/*: any*/),
+                "selections": (v15/*: any*/),
                 "storageKey": null
               },
               {
@@ -455,7 +469,7 @@ return {
                 "kind": "LinkedField",
                 "name": "zones",
                 "plural": true,
-                "selections": (v14/*: any*/),
+                "selections": (v15/*: any*/),
                 "storageKey": null
               }
             ],
@@ -466,16 +480,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "67d2c1be45b8e9486d2cd47c230f11e9",
+    "cacheID": "64238d1b0caa012def9fad58dc55d3b8",
     "id": null,
     "metadata": {},
     "name": "newBookingButton_rootQuery",
     "operationKind": "query",
-    "text": "query newBookingButton_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $locationExists: Boolean!\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n) {\n  ...newBookingDialog_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableDesks(where: {locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n\nfragment bookingDetailsSelector_organizationMembers_query on Query {\n  organizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams(organizationId: $organizationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n\nfragment newBookingDialog_query on Query {\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canAddBookingOnBehalf\n  }\n  ...bookingDetailsSelector_query\n  ...bookingDetailsSelector_organizationMembers_query\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n"
+    "text": "query newBookingButton_rootQuery(\n  $organizationId: String!\n  $nullableOrganizationId: String\n  $locationId: String!\n  $locationExists: Boolean!\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]!\n  $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingPeopleNameSearchText: String\n) {\n  ...newBookingDialog_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableDesks(where: {locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n\nfragment bookingDetailsSelector_organizationMembers_query on Query {\n  organizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $bookingDetailsSelectorOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookingDetailsSelector_query on Query {\n  myOrganizations {\n    id\n    name\n  }\n  myLocations(organizationId: $nullableOrganizationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n  myTeams(organizationId: $nullableOrganizationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n\nfragment newBookingDialog_query on Query {\n  me {\n    id\n  }\n  organizationBookingPermissions(organizationId: $organizationId) {\n    canAddBookingOnBehalf\n  }\n  ...bookingDetailsSelector_query\n  ...bookingDetailsSelector_organizationMembers_query\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9f09c61b6510e26fbd9f17939ddc5a13";
+(node as any).hash = "80860ccfc5a7623b314d0acac7f53000";
 
 export default node;

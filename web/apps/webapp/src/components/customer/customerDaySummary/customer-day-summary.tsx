@@ -37,11 +37,11 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query customerDaySummary_rootQuery($organizationId: String!, $from: DateTime!, $to: DateTime!) {
+  query customerDaySummary_rootQuery($organizationId: String!, $nullableOrganizationId: String, $from: DateTime!, $to: DateTime!) {
     me {
       id
     }
-    myLocations(organizationId: $organizationId) {
+    myLocations(organizationId: $nullableOrganizationId) {
       id
       name
       organization {
@@ -49,7 +49,7 @@ const RootQuery = graphql`
         name
       }
     }
-    myTeams(organizationId: $organizationId) {
+    myTeams(organizationId: $nullableOrganizationId) {
       id
       name
       organization {
@@ -419,6 +419,7 @@ const CustomerDaySummaryWithRelay = ({ date, minWidth, organizationId }: RelayPr
         from: date.toISOString(),
         to: endOfDay(date).toISOString(),
         organizationId: organizationId ?? '',
+        nullableOrganizationId: organizationId,
       },
       {
         fetchPolicy: 'store-and-network',

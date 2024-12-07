@@ -17,6 +17,7 @@ type Props = {
   onReloadRequired?: () => void;
   connectionIds?: string[];
   organizationId: string;
+  $nullableOrganizationId: String;
   locationId?: string;
   defaultTeamId?: string;
   hideOrganizationControl?: boolean;
@@ -32,6 +33,7 @@ type Props = {
 const RootQuery = graphql`
   query newBookingButton_rootQuery(
     $organizationId: String!
+    $nullableOrganizationId: String
     $locationId: String!
     $locationExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
@@ -148,6 +150,7 @@ const NewBookingButtonWithRelay = ({
     loadQuery(
       {
         organizationId,
+        nullableOrganizationId: organizationId,
         locationId: locationId ?? '',
         locationExists: !!locationId,
         deskIdsToIncludeToGetAvailableDesks: [],

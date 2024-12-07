@@ -37,6 +37,7 @@ type Props = {
 const RootQuery = graphql`
   query smallMonthlyViewCalendar_rootQuery(
     $organizationId: String!
+    $nullableOrganizationId: String
     $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
@@ -308,6 +309,7 @@ const SmallMonthlyViewCalendarWithRelay = () => {
         monthlyCalendarDateTo: endOfMonth(date).toISOString(),
         deskIdsToIncludeToGetAvailableDesks: [],
         organizationId: '',
+        nullableOrganizationId: '',
         organizationExists: false,
         locationId: '',
         locationExists: false,
