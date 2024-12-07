@@ -101,7 +101,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
           canAddBookingOnBehalf
           canDeleteBookingOnBehalf
         }
-        locationBookingPermissions(locationId: $locationId)  {
+        locationBookingPermissions(locationId: $locationId) {
           canAddBookingOnBehalf
           canDeleteBookingOnBehalf
         }

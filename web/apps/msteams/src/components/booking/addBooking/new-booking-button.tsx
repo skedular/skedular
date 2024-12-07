@@ -17,7 +17,6 @@ type Props = {
   onReloadRequired?: () => void;
   connectionIds?: string[];
   organizationId: string;
-  $nullableOrganizationId: String;
   locationId?: string;
   defaultTeamId?: string;
   hideOrganizationControl?: boolean;
