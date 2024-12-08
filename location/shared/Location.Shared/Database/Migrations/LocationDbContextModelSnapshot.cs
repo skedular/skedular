@@ -454,21 +454,15 @@ namespace Location.Shared.Database.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("MembershipType")
+                        .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<string>("NewStatus")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
@@ -490,7 +484,7 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("NewStatus");
+                    b.HasIndex("Status");
 
                     b.ToTable("JoinInvitation");
                 });
@@ -571,15 +565,12 @@ namespace Location.Shared.Database.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("MembershipType")
+                        .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -593,7 +584,7 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("NewMembershipType");
+                    b.HasIndex("MembershipType");
 
                     b.HasIndex("CustomerId", "LocationId")
                         .IsUnique();
@@ -671,10 +662,6 @@ namespace Location.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
@@ -689,7 +676,7 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("NewMembershipType");
+                    b.HasIndex("MembershipType");
 
                     b.HasIndex("OrganizationId");
 

@@ -399,7 +399,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.Customer customer)
     {
         dest.Id = src.Id;
-        dest.NewMembershipType = src.MembershipType;
+        dest.MembershipType = src.MembershipType;
         dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
         dest.Organization = organization;
         dest.Customer = customer;
@@ -414,7 +414,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.NewStatus,
+            Status = src.Status,
             Organization = MapTo(src.Organization),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -432,7 +432,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.NewMembershipType,
+            MembershipType = src.MembershipType,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = MapTo(src.Customer)!,
             Organization = organization
@@ -636,7 +636,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.NewStatus,
+            Status = src.Status,
             Organization = organization,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)

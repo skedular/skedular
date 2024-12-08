@@ -109,19 +109,19 @@ public class OrganizationMemberService(
         var myMembershipDetails =
             organization.OrganizationMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.NewMembershipType == OrganizationMembershipType.Administrator &&
+        if (myMembershipDetails.MembershipType == OrganizationMembershipType.Administrator &&
             membershipType == OrganizationMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.NewMembershipType == OrganizationMembershipType.Member &&
+        if (myMembershipDetails.MembershipType == OrganizationMembershipType.Member &&
             membershipType == OrganizationMembershipType.Administrator)
         {
             throw new Unauthorized();
         }
 
-        if (organizationMember.NewMembershipType == membershipType)
+        if (organizationMember.MembershipType == membershipType)
         {
             return mapper.MapTo(organizationMember, mapper.MapTo(organization));
         }
@@ -131,7 +131,7 @@ public class OrganizationMemberService(
                 repositoryFactory.OrganizationMemberRepository.UnitOfWork,
                 cancellationToken);
 
-        organizationMember.NewMembershipType = membershipType;
+        organizationMember.MembershipType = membershipType;
         repositoryFactory.OrganizationMemberRepository.Update(organizationMember);
 
         await organizationOutboxPublisher.PublishOrganizationAsync(

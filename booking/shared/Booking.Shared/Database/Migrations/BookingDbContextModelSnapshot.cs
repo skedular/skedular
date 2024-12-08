@@ -346,10 +346,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -362,7 +358,7 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("NewMembershipType");
+                    b.HasIndex("MembershipType");
 
                     b.HasIndex("CustomerId", "LocationId")
                         .IsUnique();
@@ -440,10 +436,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
@@ -458,7 +450,7 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("NewMembershipType");
+                    b.HasIndex("MembershipType");
 
                     b.HasIndex("OrganizationId");
 
@@ -581,10 +573,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<string>("TeamId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
@@ -599,7 +587,7 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("NewMembershipType");
+                    b.HasIndex("MembershipType");
 
                     b.HasIndex("TeamId");
 

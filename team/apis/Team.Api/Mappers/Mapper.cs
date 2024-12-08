@@ -163,7 +163,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.NewMembershipType,
+            MembershipType = src.MembershipType,
             Customer = MapTo(src.Customer)!,
             Team = team,
             OrganizationMember = MapTo(src.OrganizationMember)
@@ -236,8 +236,8 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.NewStatus,
-            MembershipType = src.NewMembershipType,
+            Status = src.Status,
+            MembershipType = src.MembershipType,
             Team = MapTo(src.Team),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -339,7 +339,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.OrganizationMember? organizationMember)
     {
         dest.Id = src.Id;
-        dest.NewMembershipType = src.MembershipType;
+        dest.MembershipType = src.MembershipType;
         dest.Team = team;
         dest.Customer = customer;
         dest.OrganizationMember = organizationMember;
@@ -471,7 +471,7 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                MembershipType = src.NewMembershipType,
+                MembershipType = src.MembershipType,
                 Customer = MapTo(src.Customer)!,
                 Organization = MapTo(src.Organization)!
             };
@@ -555,7 +555,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.NewStatus,
+            Status = src.Status,
             Team = team,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)

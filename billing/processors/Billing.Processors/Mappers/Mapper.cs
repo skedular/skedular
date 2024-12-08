@@ -177,7 +177,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.NewMembershipType = src.MembershipType;
+        dest.MembershipType = src.MembershipType;
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;

@@ -25,7 +25,7 @@ public class TeamAuthorizationService(
     {
         if (team.Organization is null)
         {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
         }
 
@@ -36,7 +36,7 @@ public class TeamAuthorizationService(
     {
         if (team.Organization is null)
         {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 TeamMembershipType.Owner or TeamMembershipType.Administrator;
         }
 
@@ -47,7 +47,7 @@ public class TeamAuthorizationService(
     {
         if (team.Organization is null)
         {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 TeamMembershipType.Owner;
         }
 
@@ -58,7 +58,7 @@ public class TeamAuthorizationService(
     {
         if (team.Organization is null)
         {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 TeamMembershipType.Owner or TeamMembershipType.Administrator;
         }
 
@@ -71,7 +71,7 @@ public class TeamAuthorizationService(
     {
         if (team.Organization is null)
         {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 TeamMembershipType.Owner or TeamMembershipType.Administrator;
         }
 

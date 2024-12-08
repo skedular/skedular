@@ -28,7 +28,7 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 LocationMembershipType.Owner
                 or LocationMembershipType.Administrator or LocationMembershipType.Member;
         }
@@ -40,7 +40,7 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 LocationMembershipType.Owner
                 or LocationMembershipType.Administrator or LocationMembershipType.Member;
         }
@@ -52,7 +52,7 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 LocationMembershipType.Owner or LocationMembershipType.Administrator or LocationMembershipType.Member;
         }
 
@@ -63,7 +63,7 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 LocationMembershipType.Owner or LocationMembershipType.Administrator or LocationMembershipType.Member;
         }
 
@@ -74,7 +74,7 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 LocationMembershipType.Owner or LocationMembershipType.Administrator or LocationMembershipType.Member;
         }
 
@@ -85,7 +85,7 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 LocationMembershipType.Owner
                 or LocationMembershipType.Administrator
                 or LocationMembershipType.Member;
@@ -98,7 +98,7 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 LocationMembershipType.Owner
                 or LocationMembershipType.Administrator
                 or LocationMembershipType.Member;
@@ -111,7 +111,7 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.NewMembershipType is
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
                 LocationMembershipType.Owner
                 or LocationMembershipType.Administrator
                 or LocationMembershipType.Member;

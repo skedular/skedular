@@ -420,7 +420,7 @@ public class TeamService(
             {
                 Id = randomHelper.Generate(),
                 CreatedAt = now,
-                NewMembershipType =
+                MembershipType =
                     customer is not null && item.Id == customer.Id
                         ? TeamMembershipType.Owner
                         : TeamMembershipType.Member,
@@ -442,7 +442,7 @@ public class TeamService(
             {
                 Id = randomHelper.Generate(),
                 CreatedAt = now,
-                NewMembershipType = customer is not null && item.Customer.Id == customer.Id
+                MembershipType = customer is not null && item.Customer.Id == customer.Id
                     ? TeamMembershipType.Owner
                     : TeamMembershipType.Member,
                 Customer = item.Customer,

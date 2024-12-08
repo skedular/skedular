@@ -241,7 +241,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.NewMembershipType,
+            MembershipType = src.MembershipType,
             Customer = MapTo(src.Customer)!,
             Location = location
         };
@@ -305,7 +305,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.Customer customer)
     {
         dest.Id = src.Id;
-        dest.NewMembershipType = src.MembershipType;
+        dest.MembershipType = src.MembershipType;
         dest.Location = location;
         dest.Customer = customer;
         return dest;
@@ -411,8 +411,8 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.NewStatus,
-            MembershipType = src.NewMembershipType,
+            Status = src.Status,
+            MembershipType = src.MembershipType,
             Location = MapTo(src.Location),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -731,7 +731,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.NewStatus,
+            Status = src.Status,
             Location = location,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)

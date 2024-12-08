@@ -70,7 +70,7 @@ public class LocationAuthorizationService(
         var locationMember =
             location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
 
-        return locationMember?.NewMembershipType is LocationMembershipType.Owner or LocationMembershipType.Administrator
+        return locationMember?.MembershipType is LocationMembershipType.Owner or LocationMembershipType.Administrator
             or LocationMembershipType.Member;
     }
 }

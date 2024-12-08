@@ -270,21 +270,15 @@ namespace Team.Shared.Database.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("MembershipType")
+                        .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<string>("NewStatus")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
@@ -308,7 +302,7 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("InviteeId");
 
-                    b.HasIndex("NewStatus");
+                    b.HasIndex("Status");
 
                     b.HasIndex("TeamId");
 
@@ -425,10 +419,6 @@ namespace Team.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
@@ -443,7 +433,7 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("NewMembershipType");
+                    b.HasIndex("MembershipType");
 
                     b.HasIndex("OrganizationId");
 
@@ -521,15 +511,12 @@ namespace Team.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MembershipType")
+                        .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
 
                     b.Property<string>("OrganizationMemberId")
                         .HasColumnType("character varying(100)");
@@ -548,7 +535,7 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("NewMembershipType");
+                    b.HasIndex("MembershipType");
 
                     b.HasIndex("OrganizationMemberId");
 

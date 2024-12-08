@@ -98,19 +98,19 @@ public class TeamMemberService(
         var myMembershipDetails =
             team.TeamMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.NewMembershipType == TeamMembershipType.Administrator &&
+        if (myMembershipDetails.MembershipType == TeamMembershipType.Administrator &&
             membershipType == TeamMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.NewMembershipType == TeamMembershipType.Member &&
+        if (myMembershipDetails.MembershipType == TeamMembershipType.Member &&
             membershipType == TeamMembershipType.Administrator)
         {
             throw new Unauthorized();
         }
 
-        if (teamMember.NewMembershipType == membershipType)
+        if (teamMember.MembershipType == membershipType)
         {
             return mapper.MapTo(teamMember, mapper.MapTo(team));
         }
@@ -119,7 +119,7 @@ public class TeamMemberService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.TeamMemberRepository.UnitOfWork,
                 cancellationToken);
 
-        teamMember.NewMembershipType = membershipType;
+        teamMember.MembershipType = membershipType;
         repositoryFactory.TeamMemberRepository.Update(teamMember);
 
         await teamOutboxPublisher.PublishTeamAsync(

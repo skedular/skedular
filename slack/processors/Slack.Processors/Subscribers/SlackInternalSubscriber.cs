@@ -353,7 +353,7 @@ public class SlackInternalSubscriber(
             {
                 Id = organizationMember.Id,
                 Customer = new Customer { Id = customerId },
-                MembershipType = organizationMember.NewMembershipType switch
+                MembershipType = organizationMember.MembershipType switch
                 {
                     OrganizationMembershipType.Owner => MembershipType.Owner,
                     OrganizationMembershipType.Administrator => MembershipType.Administrator,

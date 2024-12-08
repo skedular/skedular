@@ -354,10 +354,6 @@ namespace Customer.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -370,7 +366,7 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("NewMembershipType");
+                    b.HasIndex("MembershipType");
 
                     b.HasIndex("CustomerId", "LocationId")
                         .IsUnique();
@@ -445,10 +441,6 @@ namespace Customer.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
@@ -463,7 +455,7 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("NewMembershipType");
+                    b.HasIndex("MembershipType");
 
                     b.HasIndex("OrganizationId");
 
@@ -588,10 +580,6 @@ namespace Customer.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewMembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<string>("OrganizationMemberId")
                         .HasColumnType("character varying(100)");
 
@@ -609,7 +597,7 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("NewMembershipType");
+                    b.HasIndex("MembershipType");
 
                     b.HasIndex("OrganizationMemberId");
 

@@ -82,7 +82,7 @@ public class OrganizationInvitationService(
                 Criteria = query =>
                     !query.DeletedAt.HasValue &&
                     query.Organization.Id == organizationId &&
-                    query.NewStatus == InvitationStatus.Pending
+                    query.Status == InvitationStatus.Pending
             }).ToListAsync(cancellationToken);
 
         await using var transaction =
@@ -105,8 +105,8 @@ public class OrganizationInvitationService(
                     Id = randomHelper.Generate(),
                     Organization = organization,
                     Email = email,
-                    NewStatus = InvitationStatus.Pending,
-                    NewMembershipType = OrganizationMembershipType.Member,
+                    Status = InvitationStatus.Pending,
+                    MembershipType = OrganizationMembershipType.Member,
                     CreatedBy = customerEntity,
                     Invitee = matchingCustomerByEmail
                 })
@@ -171,7 +171,7 @@ public class OrganizationInvitationService(
             repositoryFactory.OrganizationMemberRepository.Add(new OrganizationMember
             {
                 Id = randomHelper.Generate(),
-                NewMembershipType = joinInvitation.NewMembershipType,
+                MembershipType = joinInvitation.MembershipType,
                 Organization = organization,
                 Customer = customerEntity
             });
@@ -182,7 +182,7 @@ public class OrganizationInvitationService(
                 cancellationToken);
         }
 
-        joinInvitation.NewStatus = InvitationStatus.Accepted;
+        joinInvitation.Status = InvitationStatus.Accepted;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await organizationOutboxPublisher.PublishInvitesToJoinOrganizationNotificationAsync(
@@ -213,7 +213,7 @@ public class OrganizationInvitationService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.JoinInvitationRepository.UnitOfWork,
                 cancellationToken);
 
-        joinInvitation.NewStatus = InvitationStatus.Rejected;
+        joinInvitation.Status = InvitationStatus.Rejected;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await organizationOutboxPublisher.PublishInvitesToJoinOrganizationNotificationAsync(
@@ -253,7 +253,7 @@ public class OrganizationInvitationService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.JoinInvitationRepository.UnitOfWork,
                 cancellationToken);
 
-        joinInvitation.NewStatus = InvitationStatus.Cancelled;
+        joinInvitation.Status = InvitationStatus.Cancelled;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await organizationOutboxPublisher.PublishInvitesToJoinOrganizationNotificationAsync(

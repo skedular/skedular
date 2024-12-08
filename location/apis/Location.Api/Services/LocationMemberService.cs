@@ -100,19 +100,19 @@ public class LocationMemberService(
         var myMembershipDetails =
             location.LocationMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.NewMembershipType == LocationMembershipType.Administrator &&
+        if (myMembershipDetails.MembershipType == LocationMembershipType.Administrator &&
             membershipType == LocationMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.NewMembershipType == LocationMembershipType.Member &&
+        if (myMembershipDetails.MembershipType == LocationMembershipType.Member &&
             membershipType == LocationMembershipType.Administrator)
         {
             throw new Unauthorized();
         }
 
-        if (locationMember.NewMembershipType == membershipType)
+        if (locationMember.MembershipType == membershipType)
         {
             return mapper.MapTo(locationMember, mapper.MapTo(location));
         }
@@ -121,7 +121,7 @@ public class LocationMemberService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationMemberRepository.UnitOfWork,
                 cancellationToken);
 
-        locationMember.NewMembershipType = membershipType;
+        locationMember.MembershipType = membershipType;
         repositoryFactory.LocationMemberRepository.Update(locationMember);
 
         await locationOutboxPublisher.PublishLocationAsync(

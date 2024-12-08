@@ -9,7 +9,6 @@ namespace Slack.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class OrganizationMember : ReplicatedEntityBaseWithDeleted
 {
-    public string? NewMembershipType { get; set; }
     public string? MembershipType { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
@@ -29,10 +28,6 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder
-            .Property(item => item.NewMembershipType)
-            .HasMaxLength(Api.Shared.Constants.MaxMembershipTypeLength);
-
-        builder
             .Property(item => item.MembershipType)
             .HasMaxLength(Api.Shared.Constants.MaxMembershipTypeLength);
 
@@ -46,7 +41,7 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
             .WithMany(item => item.OrganizationMembers)
             .HasForeignKey(item => item.CustomerId);
 
-        builder.HasIndex(item => item.NewMembershipType);
+        builder.HasIndex(item => item.MembershipType);
         builder.HasIndex(item => new { item.CustomerId, item.OrganizationId }).IsUnique();
     }
 }

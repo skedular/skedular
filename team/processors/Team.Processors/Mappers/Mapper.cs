@@ -291,7 +291,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.NewMembershipType = src.MembershipType;
+        dest.MembershipType = src.MembershipType;
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;
@@ -348,7 +348,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.NewStatus,
+            Status = src.Status,
             Team = MapTo(src.Team),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -367,7 +367,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.NewMembershipType,
+            MembershipType = src.MembershipType,
             Customer = MapTo(src.Customer)!,
             Team = team
         };
@@ -384,7 +384,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.NewMembershipType,
+            MembershipType = src.MembershipType,
             Customer = MapTo(src.Customer)!,
             Organization = organization
         };

@@ -15,7 +15,7 @@ public class TeamAuthorizationService : ITeamAuthorizationService
         var teamMember =
             team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
 
-        return teamMember?.NewMembershipType is TeamMembershipType.Owner or TeamMembershipType.Administrator
+        return teamMember?.MembershipType is TeamMembershipType.Owner or TeamMembershipType.Administrator
             or TeamMembershipType.Member;
     }
 }

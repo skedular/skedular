@@ -134,7 +134,7 @@ public class OrganizationService(
             organizationMembers.Add(new OrganizationMember
             {
                 Id = randomHelper.Generate(),
-                NewMembershipType = OrganizationMembershipType.Owner,
+                MembershipType = OrganizationMembershipType.Owner,
                 Customer = customerEntity,
                 Organization = organizationEntity
             });
