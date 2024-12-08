@@ -11,7 +11,7 @@ namespace Organization.Shared.Database.Entities;
 public class JoinInvitation : EntityBaseWithDeleted
 {
     public string? Email { get; set; }
-    public InvitationStatus Status { get; set; }
+    public OldInvitationStatus Status { get; set; }
     public OldOrganizationMembershipType MembershipType { get; set; }
 
     public virtual Organization Organization { get; set; }

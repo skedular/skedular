@@ -34,9 +34,9 @@ public class Mapper : IMapper
                 CustomerId = item.Customer.Id,
                 MembershipType = item.MembershipType switch
                 {
-                    TeamMembershipType.Owner => MembershipType.Owner,
-                    TeamMembershipType.Administrator => MembershipType.Administrator,
-                    TeamMembershipType.Member => MembershipType.Member,
+                    OldTeamMembershipType.Owner => MembershipType.Owner,
+                    OldTeamMembershipType.Administrator => MembershipType.Administrator,
+                    OldTeamMembershipType.Member => MembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 OrganizationMember = item.OrganizationMember is null

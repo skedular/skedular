@@ -132,7 +132,7 @@ public class LocationService(
                 locationMembers.Add(new LocationMember
                 {
                     Id = randomHelper.Generate(),
-                    MembershipType = LocationMembershipType.Owner,
+                    MembershipType = OldLocationMembershipType.Owner,
                     Customer = customerEntity,
                     Location = locationEntity
                 });

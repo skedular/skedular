@@ -11,8 +11,8 @@ namespace Team.Shared.Database.Entities;
 public class JoinInvitation : EntityBaseWithDeleted
 {
     public string? Email { get; set; }
-    public InvitationStatus Status { get; set; }
-    public TeamMembershipType MembershipType { get; set; }
+    public OldInvitationStatus Status { get; set; }
+    public OldTeamMembershipType MembershipType { get; set; }
 
     public virtual Team Team { get; set; }
     public virtual Customer CreatedBy { get; set; }

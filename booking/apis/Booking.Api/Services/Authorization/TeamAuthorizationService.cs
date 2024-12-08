@@ -28,7 +28,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator or OldTeamMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanViewBookings(team.Organization, customer);
@@ -39,7 +39,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator or OldTeamMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanAddBooking(team.Organization, customer);
@@ -50,7 +50,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator or OldTeamMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanUpdateBooking(team.Organization, customer);
@@ -61,7 +61,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator or OldTeamMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanDeleteBooking(team.Organization, customer);
@@ -72,7 +72,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator or OldTeamMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanAddBookingOnBehalf(team.Organization, customer);
@@ -83,7 +83,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator or OldTeamMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanUpdateBookingOnBehalf(team.Organization, customer);
@@ -94,7 +94,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator or OldTeamMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanDeleteBookingOnBehalf(team.Organization, customer);

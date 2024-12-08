@@ -6,8 +6,8 @@ namespace Team.Shared.Models;
 public class JoinInvitation : ModelBaseWithDeleted
 {
     public string? Email { get; set; }
-    public InvitationStatus Status { get; set; }
-    public TeamMembershipType MembershipType { get; set; }
+    public OldInvitationStatus Status { get; set; }
+    public OldTeamMembershipType MembershipType { get; set; }
 
     public Team Team { get; set; }
     public Customer CreatedBy { get; set; }

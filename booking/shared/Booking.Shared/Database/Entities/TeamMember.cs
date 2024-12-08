@@ -9,7 +9,7 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class TeamMember : ReplicatedEntityBaseWithDeleted
 {
-    public TeamMembershipType? MembershipType { get; set; }
+    public OldTeamMembershipType? MembershipType { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string TeamId { get; set; }

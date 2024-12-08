@@ -5,7 +5,7 @@ namespace Team.Shared.Models;
 
 public class TeamMember : ModelBaseWithDeleted
 {
-    public TeamMembershipType MembershipType { get; set; } = TeamMembershipType.Member;
+    public OldTeamMembershipType MembershipType { get; set; } = OldTeamMembershipType.Member;
 
     public Team Team { get; set; }
     public Customer Customer { get; set; }

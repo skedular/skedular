@@ -29,8 +29,8 @@ public class LocationAuthorizationService(
         if (location.Organization is null)
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner
-                or LocationMembershipType.Administrator or LocationMembershipType.Member;
+                OldLocationMembershipType.Owner
+                or OldLocationMembershipType.Administrator or OldLocationMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanViewBookings(location.Organization, customer);
@@ -41,8 +41,8 @@ public class LocationAuthorizationService(
         if (location.Organization is null)
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner
-                or LocationMembershipType.Administrator or LocationMembershipType.Member;
+                OldLocationMembershipType.Owner
+                or OldLocationMembershipType.Administrator or OldLocationMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanViewBookings(location.Organization, customer);
@@ -53,7 +53,7 @@ public class LocationAuthorizationService(
         if (location.Organization is null)
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner or LocationMembershipType.Administrator or LocationMembershipType.Member;
+                OldLocationMembershipType.Owner or OldLocationMembershipType.Administrator or OldLocationMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanAddBooking(location.Organization, customer);
@@ -64,7 +64,7 @@ public class LocationAuthorizationService(
         if (location.Organization is null)
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner or LocationMembershipType.Administrator or LocationMembershipType.Member;
+                OldLocationMembershipType.Owner or OldLocationMembershipType.Administrator or OldLocationMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanUpdateBooking(location.Organization, customer);
@@ -75,7 +75,7 @@ public class LocationAuthorizationService(
         if (location.Organization is null)
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner or LocationMembershipType.Administrator or LocationMembershipType.Member;
+                OldLocationMembershipType.Owner or OldLocationMembershipType.Administrator or OldLocationMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanDeleteBooking(location.Organization, customer);
@@ -86,9 +86,9 @@ public class LocationAuthorizationService(
         if (location.Organization is null)
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner
-                or LocationMembershipType.Administrator
-                or LocationMembershipType.Member;
+                OldLocationMembershipType.Owner
+                or OldLocationMembershipType.Administrator
+                or OldLocationMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanAddBookingOnBehalf(location.Organization, customer);
@@ -99,9 +99,9 @@ public class LocationAuthorizationService(
         if (location.Organization is null)
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner
-                or LocationMembershipType.Administrator
-                or LocationMembershipType.Member;
+                OldLocationMembershipType.Owner
+                or OldLocationMembershipType.Administrator
+                or OldLocationMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanUpdateBookingOnBehalf(location.Organization, customer);
@@ -112,9 +112,9 @@ public class LocationAuthorizationService(
         if (location.Organization is null)
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner
-                or LocationMembershipType.Administrator
-                or LocationMembershipType.Member;
+                OldLocationMembershipType.Owner
+                or OldLocationMembershipType.Administrator
+                or OldLocationMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanDeleteBookingOnBehalf(location.Organization, customer);

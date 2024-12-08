@@ -82,7 +82,7 @@ public class TeamInvitationService(
                 Criteria = query =>
                     !query.DeletedAt.HasValue &&
                     query.Team.Id == teamId &&
-                    query.Status == InvitationStatus.Pending
+                    query.Status == OldInvitationStatus.Pending
             }).ToListAsync(cancellationToken);
 
         await using var transaction =
@@ -105,8 +105,8 @@ public class TeamInvitationService(
                     Id = randomHelper.Generate(),
                     Team = team,
                     Email = email,
-                    Status = InvitationStatus.Pending,
-                    MembershipType = TeamMembershipType.Member,
+                    Status = OldInvitationStatus.Pending,
+                    MembershipType = OldTeamMembershipType.Member,
                     CreatedBy = customerEntity,
                     Invitee = matchingCustomerByEmail
                 })
@@ -182,7 +182,7 @@ public class TeamInvitationService(
                 cancellationToken);
         }
 
-        joinInvitation.Status = InvitationStatus.Accepted;
+        joinInvitation.Status = OldInvitationStatus.Accepted;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(
@@ -213,7 +213,7 @@ public class TeamInvitationService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.JoinInvitationRepository.UnitOfWork,
                 cancellationToken);
 
-        joinInvitation.Status = InvitationStatus.Rejected;
+        joinInvitation.Status = OldInvitationStatus.Rejected;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(
@@ -253,7 +253,7 @@ public class TeamInvitationService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.JoinInvitationRepository.UnitOfWork,
                 cancellationToken);
 
-        joinInvitation.Status = InvitationStatus.Cancelled;
+        joinInvitation.Status = OldInvitationStatus.Cancelled;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(

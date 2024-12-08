@@ -257,12 +257,12 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             MembershipType = item.MembershipType switch
             {
-                Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType.Owner => LocationMembershipType
+                Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType.Owner => OldLocationMembershipType
                     .Owner,
                 Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType.Administrator =>
-                    LocationMembershipType.Administrator,
+                    OldLocationMembershipType.Administrator,
                 Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType.Member =>
-                    LocationMembershipType.Member,
+                    OldLocationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Shared.Models.Customer { Id = item.CustomerId },
@@ -316,12 +316,12 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             MembershipType = item.MembershipType switch
             {
-                Api.Shared.Clients.Events.UnityHub.Team.V1.Value.MembershipType.Owner => TeamMembershipType
+                Api.Shared.Clients.Events.UnityHub.Team.V1.Value.MembershipType.Owner => OldTeamMembershipType
                     .Owner,
                 Api.Shared.Clients.Events.UnityHub.Team.V1.Value.MembershipType.Administrator =>
-                    TeamMembershipType.Administrator,
+                    OldTeamMembershipType.Administrator,
                 Api.Shared.Clients.Events.UnityHub.Team.V1.Value.MembershipType.Member =>
-                    TeamMembershipType.Member,
+                    OldTeamMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Shared.Models.Customer { Id = item.CustomerId },

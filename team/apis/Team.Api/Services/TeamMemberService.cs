@@ -22,7 +22,7 @@ public interface ITeamMemberService
 
     Task<TeamMember> ChangeMembershipTypeAsync(
         string teamMemberId,
-        TeamMembershipType membershipType,
+        OldTeamMembershipType membershipType,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Team> UpdateMembersAsync(
@@ -72,7 +72,7 @@ public class TeamMemberService(
 
     public async Task<TeamMember> ChangeMembershipTypeAsync(
         string teamMemberId,
-        TeamMembershipType membershipType,
+        OldTeamMembershipType membershipType,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -98,14 +98,14 @@ public class TeamMemberService(
         var myMembershipDetails =
             team.TeamMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.MembershipType == TeamMembershipType.Administrator &&
-            membershipType == TeamMembershipType.Owner)
+        if (myMembershipDetails.MembershipType == OldTeamMembershipType.Administrator &&
+            membershipType == OldTeamMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == TeamMembershipType.Member &&
-            membershipType == TeamMembershipType.Administrator)
+        if (myMembershipDetails.MembershipType == OldTeamMembershipType.Member &&
+            membershipType == OldTeamMembershipType.Administrator)
         {
             throw new Unauthorized();
         }

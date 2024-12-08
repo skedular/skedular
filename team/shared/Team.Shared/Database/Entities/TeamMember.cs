@@ -9,7 +9,7 @@ namespace Team.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class TeamMember : EntityBaseWithDeleted
 {
-    public TeamMembershipType MembershipType { get; set; } = TeamMembershipType.Member;
+    public OldTeamMembershipType MembershipType { get; set; } = OldTeamMembershipType.Member;
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string TeamId { get; set; } = string.Empty;

@@ -9,7 +9,7 @@ namespace Location.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class LocationMember : EntityBaseWithDeleted
 {
-    public LocationMembershipType MembershipType { get; set; } = LocationMembershipType.Member;
+    public OldLocationMembershipType MembershipType { get; set; } = OldLocationMembershipType.Member;
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string LocationId { get; set; } = string.Empty;

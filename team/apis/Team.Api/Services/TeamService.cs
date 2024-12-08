@@ -422,8 +422,8 @@ public class TeamService(
                 CreatedAt = now,
                 MembershipType =
                     customer is not null && item.Id == customer.Id
-                        ? TeamMembershipType.Owner
-                        : TeamMembershipType.Member,
+                        ? OldTeamMembershipType.Owner
+                        : OldTeamMembershipType.Member,
                 Customer = item,
                 Team = existingTeam
             }));
@@ -443,8 +443,8 @@ public class TeamService(
                 Id = randomHelper.Generate(),
                 CreatedAt = now,
                 MembershipType = customer is not null && item.Customer.Id == customer.Id
-                    ? TeamMembershipType.Owner
-                    : TeamMembershipType.Member,
+                    ? OldTeamMembershipType.Owner
+                    : OldTeamMembershipType.Member,
                 Customer = item.Customer,
                 Team = existingTeam,
                 OrganizationMember = item

@@ -5,7 +5,7 @@ namespace Customer.Shared.Models;
 
 public class LocationMember : ReplicatedModelBaseWithDeleted
 {
-    public LocationMembershipType? MembershipType { get; set; }
+    public OldLocationMembershipType? MembershipType { get; set; }
     public Location Location { get; set; }
     public Customer Customer { get; set; }
 }

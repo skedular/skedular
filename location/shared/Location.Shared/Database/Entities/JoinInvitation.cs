@@ -11,8 +11,8 @@ namespace Location.Shared.Database.Entities;
 public class JoinInvitation : EntityBaseWithDeleted
 {
     public string? Email { get; set; }
-    public InvitationStatus Status { get; set; }
-    public LocationMembershipType MembershipType { get; set; }
+    public OldInvitationStatus Status { get; set; }
+    public OldLocationMembershipType MembershipType { get; set; }
 
     public virtual Location Location { get; set; }
     public virtual Customer CreatedBy { get; set; }

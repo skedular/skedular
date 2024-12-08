@@ -252,9 +252,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                LocationMembershipType.Owner => LocationMemberMembershipType.Owner,
-                LocationMembershipType.Administrator => LocationMemberMembershipType.Administrator,
-                LocationMembershipType.Member => LocationMemberMembershipType.Member,
+                OldLocationMembershipType.Owner => LocationMemberMembershipType.Owner,
+                OldLocationMembershipType.Administrator => LocationMemberMembershipType.Administrator,
+                OldLocationMembershipType.Member => LocationMemberMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer)
@@ -592,9 +592,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                MembershipType.Owner => LocationMembershipType.Owner,
-                MembershipType.Administrator => LocationMembershipType.Administrator,
-                MembershipType.Member => LocationMembershipType.Member,
+                MembershipType.Owner => OldLocationMembershipType.Owner,
+                MembershipType.Administrator => OldLocationMembershipType.Administrator,
+                MembershipType.Member => OldLocationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = src.Customer.Id },

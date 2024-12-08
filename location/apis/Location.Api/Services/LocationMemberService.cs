@@ -21,7 +21,7 @@ public interface ILocationMemberService
 
     Task<LocationMember> ChangeMembershipTypeAsync(
         string locationMemberId,
-        LocationMembershipType membershipType,
+        OldLocationMembershipType membershipType,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Location> UpdateMembersAsync(
@@ -73,7 +73,7 @@ public class LocationMemberService(
 
     public async Task<LocationMember> ChangeMembershipTypeAsync(
         string locationMemberId,
-        LocationMembershipType membershipType,
+        OldLocationMembershipType membershipType,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -100,14 +100,14 @@ public class LocationMemberService(
         var myMembershipDetails =
             location.LocationMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.MembershipType == LocationMembershipType.Administrator &&
-            membershipType == LocationMembershipType.Owner)
+        if (myMembershipDetails.MembershipType == OldLocationMembershipType.Administrator &&
+            membershipType == OldLocationMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == LocationMembershipType.Member &&
-            membershipType == LocationMembershipType.Administrator)
+        if (myMembershipDetails.MembershipType == OldLocationMembershipType.Member &&
+            membershipType == OldLocationMembershipType.Administrator)
         {
             throw new Unauthorized();
         }

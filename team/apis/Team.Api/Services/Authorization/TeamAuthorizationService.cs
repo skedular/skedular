@@ -26,7 +26,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator or OldTeamMembershipType.Member;
         }
 
         return organizationAuthorizationService.CanView(team.Organization, customer);
@@ -37,7 +37,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator;
         }
 
         return organizationAuthorizationService.CanModify(team.Organization, customer);
@@ -48,7 +48,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner;
+                OldTeamMembershipType.Owner;
         }
 
         return organizationAuthorizationService.CanDelete(team.Organization, customer);
@@ -59,7 +59,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator;
         }
 
         return organizationAuthorizationService.CanInvitePeople(team.Organization, customer);
@@ -72,7 +72,7 @@ public class TeamAuthorizationService(
         if (team.Organization is null)
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                TeamMembershipType.Owner or TeamMembershipType.Administrator;
+                OldTeamMembershipType.Owner or OldTeamMembershipType.Administrator;
         }
 
         return organizationAuthorizationService.CanCancelPeopleExistingInvitations(team.Organization, customer);

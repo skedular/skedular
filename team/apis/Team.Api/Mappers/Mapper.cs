@@ -175,9 +175,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                TeamMembershipType.Owner => TeamMemberMembershipType.Owner,
-                TeamMembershipType.Administrator => TeamMemberMembershipType.Administrator,
-                TeamMembershipType.Member => TeamMemberMembershipType.Member,
+                OldTeamMembershipType.Owner => TeamMemberMembershipType.Owner,
+                OldTeamMembershipType.Administrator => TeamMemberMembershipType.Administrator,
+                OldTeamMembershipType.Member => TeamMemberMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer),
@@ -380,9 +380,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                TeamMembershipType.Owner => MembershipType.Owner,
-                TeamMembershipType.Administrator => MembershipType.Administrator,
-                TeamMembershipType.Member => MembershipType.Member,
+                OldTeamMembershipType.Owner => MembershipType.Owner,
+                OldTeamMembershipType.Administrator => MembershipType.Administrator,
+                OldTeamMembershipType.Member => MembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapToGrpcResponse(src.Customer),
@@ -430,9 +430,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                MembershipType.Owner => TeamMembershipType.Owner,
-                MembershipType.Administrator => TeamMembershipType.Administrator,
-                MembershipType.Member => TeamMembershipType.Member,
+                MembershipType.Owner => OldTeamMembershipType.Owner,
+                MembershipType.Administrator => OldTeamMembershipType.Administrator,
+                MembershipType.Member => OldTeamMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = src.Customer.Id },
