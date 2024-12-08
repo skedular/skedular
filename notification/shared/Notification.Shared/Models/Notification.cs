@@ -6,7 +6,7 @@ public class Notification : ModelBaseWithDeleted
 {
     public DateTimeOffset EventRaisedAt { get; set; }
     public string SourceId { get; set; }
-    public NotificationType Type { get; set; }
+    public string Type { get; set; }
 
     public virtual Customer? InvitedBy { get; set; }
     public virtual Customer? Invitee { get; set; }

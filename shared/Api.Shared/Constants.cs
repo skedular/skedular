@@ -80,4 +80,5 @@ public static class Constants
 
     public const int MaxMembershipTypeLength = 32;
     public const int MaxInvitationStatusLength = 32;
+    public const int MaxNotificationTypeLength = 128;
 }

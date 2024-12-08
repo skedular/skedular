@@ -12,7 +12,7 @@ public class Notification : EntityBaseWithDeleted
 {
     public DateTimeOffset EventRaisedAt { get; set; }
     public string SourceId { get; set; }
-    public NotificationType Type { get; set; }
+    public string Type { get; set; }
 
     public virtual Customer? InvitedBy { get; set; }
     public virtual Customer? Invitee { get; set; }
@@ -29,6 +29,7 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.SourceId).HasMaxLength(Constants.MaxUniqueIdLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxNotificationTypeLength);
 
         builder
             .HasOne(item => item.InvitedBy)
