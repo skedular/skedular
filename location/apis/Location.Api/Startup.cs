@@ -3,7 +3,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
-using Location.Api.GraphQL;
 using Location.Api.Grpc;
 using Location.Shared;
 using Location.Shared.Configurations;

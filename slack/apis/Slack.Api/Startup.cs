@@ -4,7 +4,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
-using Slack.Api.GraphQL;
 using Slack.Api.Grpc;
 using Slack.Api.Handlers.ActionHandlers.Billing;
 using Slack.Api.Handlers.ActionHandlers.Booking;

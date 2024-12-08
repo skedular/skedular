@@ -1,4 +1,3 @@
-using Billing.Api.GraphQL;
 using Billing.Api.Grpc;
 using Billing.Shared;
 using Billing.Shared.Database;

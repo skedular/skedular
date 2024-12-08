@@ -625,7 +625,7 @@ public class Mapper : IMapper
             PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
             PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
             PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
-            PhoneNumber = src.PhoneNumber.ToSafeString(),
+            PhoneNumber = src.PhoneNumber.ToSafeString()
         };
 
         customer.Identities.AddRange(MapToGrpcResponse(src.Identities));
@@ -677,7 +677,7 @@ public class Mapper : IMapper
             PhotoUrl72 = src.PhotoUrl72,
             PhotoUrl192 = src.PhotoUrl192,
             PhotoUrl512 = src.PhotoUrl512,
-            PhoneNumber = src.PhoneNumber,
+            PhoneNumber = src.PhoneNumber
         };
 
     private static OrganizationOfferingDetails MapTo(OrganizationOffering? src)
@@ -988,7 +988,7 @@ public class Mapper : IMapper
 
     private IEnumerable<OrganizationMemberDetails> MapTo(IEnumerable<OrganizationMember> src) =>
         src.Select(MapTo);
-    
+
     private static IEnumerable<Tag> MapTo(IEnumerable<Shared.Database.Entities.Tag> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));

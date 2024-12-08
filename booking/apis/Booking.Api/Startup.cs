@@ -6,7 +6,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
- 
+
 namespace Booking.Api;
 
 public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)

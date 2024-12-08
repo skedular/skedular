@@ -3,7 +3,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
-using Notification.Api.GraphQL;
 using Notification.Api.Grpc;
 using Notification.Shared;
 using Notification.Shared.Database;

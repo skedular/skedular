@@ -1,5 +1,4 @@
-﻿using Enterprise.Shared.Configurations;
-using Enterprise.Shared.GraphQL.Configurations;
+﻿using Enterprise.Shared.GraphQL.Configurations;
 using HotChocolate.AspNetCore;
 using HotChocolate.Execution.Configuration;
 using HotChocolate.Types.Descriptors;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
 
 namespace Enterprise.Shared.GraphQL;
 

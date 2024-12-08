@@ -1,5 +1,4 @@
 using Api.Shared;
-using Api.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -31,7 +30,7 @@ public class LocationMemberConfiguration : IEntityTypeConfiguration<LocationMemb
         builder
             .Property(item => item.MembershipType)
             .HasMaxLength(Constants.MaxMembershipTypeLength);
-        
+
         builder
             .HasOne(item => item.Location)
             .WithMany(item => item.LocationMembers)

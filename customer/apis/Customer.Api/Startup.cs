@@ -1,4 +1,3 @@
-using Customer.Api.GraphQL;
 using Customer.Api.Grpc;
 using Customer.Shared;
 using Customer.Shared.Configurations;

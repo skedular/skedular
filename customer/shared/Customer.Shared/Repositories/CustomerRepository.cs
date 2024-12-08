@@ -185,7 +185,7 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                         query.Identities.Any(identity =>
                             identity.Email != null &&
                             EF.Functions.ILike(identity.Email, email))));
-    
+
     public async Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await s_getByIdQueryAsync(DbContext, id, cancellationToken);
 

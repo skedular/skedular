@@ -58,7 +58,7 @@ public static class Extensions
     {
         var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfiguration>();
         ArgumentNullException.ThrowIfNull(slackConfiguration);
-        
+
         if (string.IsNullOrWhiteSpace(slackConfiguration.SigningSecret))
         {
             Console.Error.WriteLine("slackConfiguration.SigningSecret is null");

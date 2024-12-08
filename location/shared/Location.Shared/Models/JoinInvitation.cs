@@ -1,4 +1,3 @@
-using Api.Shared.Models;
 using Enterprise.Shared.Models;
 
 namespace Location.Shared.Models;

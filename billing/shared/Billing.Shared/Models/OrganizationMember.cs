@@ -1,4 +1,3 @@
-using Api.Shared.Models;
 using Enterprise.Shared.Models;
 
 namespace Billing.Shared.Models;

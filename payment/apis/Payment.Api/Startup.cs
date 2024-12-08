@@ -3,7 +3,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
-using Payment.Api.GraphQL;
 using Payment.Api.Grpc;
 using Payment.Shared;
 using Payment.Shared.Database;
