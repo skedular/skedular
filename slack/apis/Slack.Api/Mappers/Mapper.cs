@@ -315,9 +315,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                MembershipType.Owner => OrganizationMembershipType.Owner,
-                MembershipType.Administrator => OrganizationMembershipType.Administrator,
-                MembershipType.Member => OrganizationMembershipType.Member,
+                MembershipType.Owner => OldOrganizationMembershipType.Owner,
+                MembershipType.Administrator => OldOrganizationMembershipType.Administrator,
+                MembershipType.Member => OldOrganizationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer)

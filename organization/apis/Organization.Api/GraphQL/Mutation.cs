@@ -83,9 +83,9 @@ public class Mutation(IMapper mapper)
                 input.Id,
                 input.MembershipType switch
                 {
-                    OrganizationMemberMembershipType.Owner => OrganizationMembershipType.Owner,
-                    OrganizationMemberMembershipType.Administrator => OrganizationMembershipType.Administrator,
-                    OrganizationMemberMembershipType.Member => OrganizationMembershipType.Member,
+                    OrganizationMemberMembershipType.Owner => OldOrganizationMembershipType.Owner,
+                    OrganizationMemberMembershipType.Administrator => OldOrganizationMembershipType.Administrator,
+                    OrganizationMemberMembershipType.Member => OldOrganizationMembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 cancellationToken);

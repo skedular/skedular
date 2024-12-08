@@ -18,7 +18,7 @@ namespace Slack.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -260,6 +260,12 @@ namespace Slack.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NewMembershipType")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasComputedColumnSql("\n                    CASE \n                        WHEN \"MembershipType\" = 0 THEN 'OWNER'\n                        WHEN \"MembershipType\" = 1 THEN 'ADMINISTRATOR'\n                        WHEN \"MembershipType\" = 2 THEN 'MEMBER'\n                        ELSE 'UNKNOWN'\n                    END", true);
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()

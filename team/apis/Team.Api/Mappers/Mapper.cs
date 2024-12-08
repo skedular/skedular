@@ -393,9 +393,9 @@ public class Mapper : IMapper
                     Id = src.OrganizationMember.Id,
                     MembershipType = src.OrganizationMember.MembershipType switch
                     {
-                        OrganizationMembershipType.Owner => MembershipType.Owner,
-                        OrganizationMembershipType.Administrator => MembershipType.Administrator,
-                        OrganizationMembershipType.Member => MembershipType.Member,
+                        OldOrganizationMembershipType.Owner => MembershipType.Owner,
+                        OldOrganizationMembershipType.Administrator => MembershipType.Administrator,
+                        OldOrganizationMembershipType.Member => MembershipType.Member,
                         _ => throw new ArgumentOutOfRangeException()
                     },
                     Customer = MapToGrpcResponse(src.OrganizationMember.Customer)

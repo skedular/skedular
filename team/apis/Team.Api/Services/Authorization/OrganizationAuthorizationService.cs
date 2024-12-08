@@ -17,27 +17,27 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
 {
     public bool CanView(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator or OrganizationMembershipType.Member;
+            OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator or OldOrganizationMembershipType.Member;
 
     public bool CanModify(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
+            OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator;
 
     public bool CanDelete(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner;
+            OldOrganizationMembershipType.Owner;
 
     public bool CanInvitePeople(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
+            OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator;
 
     public bool CanCancelPeopleExistingInvitations(
         Organization organization,
         Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
+            OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator;
 }

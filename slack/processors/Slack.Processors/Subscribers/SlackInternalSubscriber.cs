@@ -355,9 +355,9 @@ public class SlackInternalSubscriber(
                 Customer = new Customer { Id = customerId },
                 MembershipType = organizationMember.MembershipType switch
                 {
-                    OrganizationMembershipType.Owner => MembershipType.Owner,
-                    OrganizationMembershipType.Administrator => MembershipType.Administrator,
-                    OrganizationMembershipType.Member => MembershipType.Member,
+                    OldOrganizationMembershipType.Owner => MembershipType.Owner,
+                    OldOrganizationMembershipType.Administrator => MembershipType.Administrator,
+                    OldOrganizationMembershipType.Member => MembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 IsOrganizationOnboardingDone = true

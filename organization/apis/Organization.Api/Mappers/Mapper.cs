@@ -321,9 +321,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                OrganizationMembershipType.Owner => OrganizationMemberMembershipType.Owner,
-                OrganizationMembershipType.Administrator => OrganizationMemberMembershipType.Administrator,
-                OrganizationMembershipType.Member => OrganizationMemberMembershipType.Member,
+                OldOrganizationMembershipType.Owner => OrganizationMemberMembershipType.Owner,
+                OldOrganizationMembershipType.Administrator => OrganizationMemberMembershipType.Administrator,
+                OldOrganizationMembershipType.Member => OrganizationMemberMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
@@ -597,9 +597,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                OrganizationMembershipType.Owner => MembershipType.Owner,
-                OrganizationMembershipType.Administrator => MembershipType.Administrator,
-                OrganizationMembershipType.Member => MembershipType.Member,
+                OldOrganizationMembershipType.Owner => MembershipType.Owner,
+                OldOrganizationMembershipType.Administrator => MembershipType.Administrator,
+                OldOrganizationMembershipType.Member => MembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
@@ -647,9 +647,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                MembershipType.Owner => OrganizationMembershipType.Owner,
-                MembershipType.Administrator => OrganizationMembershipType.Administrator,
-                MembershipType.Member => OrganizationMembershipType.Member,
+                MembershipType.Owner => OldOrganizationMembershipType.Owner,
+                MembershipType.Administrator => OldOrganizationMembershipType.Administrator,
+                MembershipType.Member => OldOrganizationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,

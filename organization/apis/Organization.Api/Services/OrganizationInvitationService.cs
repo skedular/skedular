@@ -106,7 +106,7 @@ public class OrganizationInvitationService(
                     Organization = organization,
                     Email = email,
                     Status = InvitationStatus.Pending,
-                    MembershipType = OrganizationMembershipType.Member,
+                    MembershipType = OldOrganizationMembershipType.Member,
                     CreatedBy = customerEntity,
                     Invitee = matchingCustomerByEmail
                 })

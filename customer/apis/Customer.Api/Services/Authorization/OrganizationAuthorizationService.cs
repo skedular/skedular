@@ -23,8 +23,8 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         var organizationMember =
             organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
 
-        return organizationMember?.MembershipType is OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator
-            or OrganizationMembershipType.Member;
+        return organizationMember?.MembershipType is OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator
+            or OldOrganizationMembershipType.Member;
     }
 }

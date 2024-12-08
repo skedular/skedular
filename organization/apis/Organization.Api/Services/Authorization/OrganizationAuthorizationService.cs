@@ -23,34 +23,34 @@ public class OrganizationAuthorizationService(
 {
     public bool CanView(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator or OrganizationMembershipType.Member;
+            OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator or OldOrganizationMembershipType.Member;
 
     public bool CanModify(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
+            OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator;
 
     public bool CanDelete(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner;
+            OldOrganizationMembershipType.Owner;
 
     public bool CanInvitePeople(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
+            OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator;
 
     public bool CanCancelPeopleExistingInvitations(
         Shared.Database.Entities.Organization organization,
         Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
+            OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator;
 
     public bool CanViewAnalytics(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-            OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
+            OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator;
 
     public async Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {

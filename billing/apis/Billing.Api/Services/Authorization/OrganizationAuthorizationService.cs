@@ -23,8 +23,8 @@ public class OrganizationAuthorizationService(
         var organizationMember =
             organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
 
-        return organizationMember?.MembershipType is OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator or OrganizationMembershipType.Member;
+        return organizationMember?.MembershipType is OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator or OldOrganizationMembershipType.Member;
     }
 
     public bool CanManageBillingInfo(Organization organization, Customer customer)
@@ -32,8 +32,8 @@ public class OrganizationAuthorizationService(
         var organizationMember =
             organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
 
-        return organizationMember?.MembershipType is OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
+        return organizationMember?.MembershipType is OldOrganizationMembershipType.Owner
+            or OldOrganizationMembershipType.Administrator;
     }
 
     public async Task<OrganizationLevelPermissions> GetPermissionsAsync(

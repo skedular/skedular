@@ -12,7 +12,7 @@ public class JoinInvitation : EntityBaseWithDeleted
 {
     public string? Email { get; set; }
     public InvitationStatus Status { get; set; }
-    public OrganizationMembershipType MembershipType { get; set; }
+    public OldOrganizationMembershipType MembershipType { get; set; }
 
     public virtual Organization Organization { get; set; }
     public virtual Customer CreatedBy { get; set; }

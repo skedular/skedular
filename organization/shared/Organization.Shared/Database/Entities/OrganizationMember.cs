@@ -1,3 +1,4 @@
+using Api.Shared;
 using Api.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,8 @@ namespace Organization.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class OrganizationMember : EntityBaseWithDeleted
 {
-    public OrganizationMembershipType MembershipType { get; set; } = OrganizationMembershipType.Member;
+    public OldOrganizationMembershipType MembershipType { get; set; } = OldOrganizationMembershipType.Member;
+    public string NewMembershipType { get; set; }
     public bool? IsOrganizationOnboardingDone { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
@@ -29,6 +31,17 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
     public void Configure(EntityTypeBuilder<OrganizationMember> builder)
     {
         builder.ConfigureEntityBaseWithDeleted();
+
+        builder
+            .Property(item => item.NewMembershipType)
+            .HasMaxLength(Constants.MaxMembershipTypeLength)
+            .HasComputedColumnSql(@"
+                    CASE 
+                        WHEN ""MembershipType"" = 0 THEN 'OWNER'
+                        WHEN ""MembershipType"" = 1 THEN 'ADMINISTRATOR'
+                        WHEN ""MembershipType"" = 2 THEN 'MEMBER'
+                        ELSE 'UNKNOWN'
+                    END", stored: true);
 
         builder
             .HasOne(item => item.Organization)

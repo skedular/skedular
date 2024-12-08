@@ -333,8 +333,8 @@ public class OrganizationInternalSubscriber(
                     Id = randomHelper.Generate(),
                     Customer = new Customer { Id = customerId },
                     MembershipType = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
-                        ? OrganizationMembershipType.Owner
-                        : OrganizationMembershipType.Member,
+                        ? OldOrganizationMembershipType.Owner
+                        : OldOrganizationMembershipType.Member,
                     IsOrganizationOnboardingDone = true
                 };
             }
@@ -344,8 +344,8 @@ public class OrganizationInternalSubscriber(
                 Id = organizationMember.Id,
                 Customer = new Customer { Id = customerId },
                 MembershipType = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
-                    ? OrganizationMembershipType.Owner
-                    : OrganizationMembershipType.Member,
+                    ? OldOrganizationMembershipType.Owner
+                    : OldOrganizationMembershipType.Member,
                 IsOrganizationOnboardingDone = true
             };
         }).ToList();
