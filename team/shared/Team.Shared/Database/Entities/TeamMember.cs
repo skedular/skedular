@@ -1,3 +1,4 @@
+using Api.Shared;
 using Api.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace Team.Shared.Database.Entities;
 public class TeamMember : EntityBaseWithDeleted
 {
     public OldTeamMembershipType MembershipType { get; set; } = OldTeamMembershipType.Member;
+    public string? NewMembershipType { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string TeamId { get; set; } = string.Empty;
@@ -28,6 +30,17 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
     public void Configure(EntityTypeBuilder<TeamMember> builder)
     {
         builder.ConfigureEntityBaseWithDeleted();
+
+        builder
+            .Property(item => item.NewMembershipType)
+            .HasMaxLength(Constants.MaxMembershipTypeLength)
+            .HasComputedColumnSql(@"
+                    CASE 
+                        WHEN ""MembershipType"" = 0 THEN 'OWNER'
+                        WHEN ""MembershipType"" = 1 THEN 'ADMINISTRATOR'
+                        WHEN ""MembershipType"" = 2 THEN 'MEMBER'
+                        ELSE 'UNKNOWN'
+                    END", true);
 
         builder
             .HasOne(item => item.Team)

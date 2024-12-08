@@ -1,3 +1,4 @@
+using Api.Shared;
 using Api.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace Booking.Shared.Database.Entities;
 public class LocationMember : ReplicatedEntityBaseWithDeleted
 {
     public OldLocationMembershipType? MembershipType { get; set; }
+    public string? NewMembershipType { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string LocationId { get; set; } = string.Empty;
@@ -26,6 +28,17 @@ public class LocationMemberConfiguration : IEntityTypeConfiguration<LocationMemb
     public void Configure(EntityTypeBuilder<LocationMember> builder)
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
+
+        builder
+            .Property(item => item.NewMembershipType)
+            .HasMaxLength(Constants.MaxMembershipTypeLength)
+            .HasComputedColumnSql(@"
+                    CASE 
+                        WHEN ""MembershipType"" = 0 THEN 'OWNER'
+                        WHEN ""MembershipType"" = 1 THEN 'ADMINISTRATOR'
+                        WHEN ""MembershipType"" = 2 THEN 'MEMBER'
+                        ELSE 'UNKNOWN'
+                    END", true);
 
         builder
             .HasOne(item => item.Location)
