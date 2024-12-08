@@ -132,9 +132,9 @@ public class Mapper : IMapper
                 Id = item.Id,
                 MembershipType = item.MembershipType switch
                 {
-                    MembershipType.Owner => OldOrganizationMembershipType.Owner,
-                    MembershipType.Administrator => OldOrganizationMembershipType.Administrator,
-                    MembershipType.Member => OldOrganizationMembershipType.Member,
+                    MembershipType.Owner => OrganizationMembershipType.Owner,
+                    MembershipType.Administrator => OrganizationMembershipType.Administrator,
+                    MembershipType.Member => OrganizationMembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 Customer = new Customer { Id = item.CustomerId },
@@ -291,7 +291,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType;
+        dest.NewMembershipType = src.MembershipType;
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;
@@ -348,7 +348,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
+            Status = src.NewStatus,
             Team = MapTo(src.Team),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -367,7 +367,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType,
+            MembershipType = src.NewMembershipType,
             Customer = MapTo(src.Customer)!,
             Team = team
         };
@@ -384,7 +384,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType,
+            MembershipType = src.NewMembershipType,
             Customer = MapTo(src.Customer)!,
             Organization = organization
         };

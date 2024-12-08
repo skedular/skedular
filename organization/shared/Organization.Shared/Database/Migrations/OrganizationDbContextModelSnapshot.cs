@@ -1893,8 +1893,9 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("InviteeId")
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("MembershipType")
-                        .HasColumnType("integer");
+                    b.Property<string>("MembershipType")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1904,14 +1905,16 @@ namespace Organization.Shared.Database.Migrations
                         .HasColumnType("character varying(32)");
 
                     b.Property<string>("NewStatus")
-                        .HasColumnType("text");
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -1929,9 +1932,9 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("InviteeId");
 
-                    b.HasIndex("OrganizationId");
+                    b.HasIndex("NewStatus");
 
-                    b.HasIndex("Status");
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("JoinInvitation");
                 });
@@ -2062,8 +2065,9 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<bool?>("IsOrganizationOnboardingDone")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("MembershipType")
-                        .HasColumnType("integer");
+                    b.Property<string>("MembershipType")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -2086,7 +2090,7 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("MembershipType");
+                    b.HasIndex("NewMembershipType");
 
                     b.HasIndex("OrganizationId");
 

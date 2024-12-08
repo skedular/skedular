@@ -30,9 +30,9 @@ public class Mapper : IMapper
             var membershipType =
                 item.MembershipType switch
                 {
-                    OldLocationMembershipType.Owner => MembershipType.Owner,
-                    OldLocationMembershipType.Administrator => MembershipType.Administrator,
-                    OldLocationMembershipType.Member => MembershipType.Member,
+                    LocationMembershipType.Owner => MembershipType.Owner,
+                    LocationMembershipType.Administrator => MembershipType.Administrator,
+                    LocationMembershipType.Member => MembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 

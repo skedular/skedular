@@ -269,8 +269,9 @@ namespace Team.Shared.Database.Migrations
                     b.Property<string>("InviteeId")
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("MembershipType")
-                        .HasColumnType("integer");
+                    b.Property<string>("MembershipType")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -280,10 +281,12 @@ namespace Team.Shared.Database.Migrations
                         .HasColumnType("character varying(32)");
 
                     b.Property<string>("NewStatus")
-                        .HasColumnType("text");
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<string>("TeamId")
                         .IsRequired()
@@ -305,7 +308,7 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("InviteeId");
 
-                    b.HasIndex("Status");
+                    b.HasIndex("NewStatus");
 
                     b.HasIndex("TeamId");
 
@@ -415,8 +418,9 @@ namespace Team.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("MembershipType")
-                        .HasColumnType("integer");
+                    b.Property<string>("MembershipType")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -439,7 +443,7 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("MembershipType");
+                    b.HasIndex("NewMembershipType");
 
                     b.HasIndex("OrganizationId");
 
@@ -516,8 +520,9 @@ namespace Team.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("MembershipType")
-                        .HasColumnType("integer");
+                    b.Property<string>("MembershipType")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -543,7 +548,7 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("MembershipType");
+                    b.HasIndex("NewMembershipType");
 
                     b.HasIndex("OrganizationMemberId");
 

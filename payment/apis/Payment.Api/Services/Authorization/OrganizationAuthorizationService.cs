@@ -17,8 +17,8 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         var organizationMember =
             organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
 
-        return organizationMember?.MembershipType is OldOrganizationMembershipType.Owner
-            or OldOrganizationMembershipType.Administrator;
+        return organizationMember?.NewMembershipType is OrganizationMembershipType.Owner
+            or OrganizationMembershipType.Administrator;
     }
 
     public bool CanManagePaymentMethod(Organization organization, Customer customer)
@@ -26,7 +26,7 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         var organizationMember =
             organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
 
-        return organizationMember?.MembershipType is OldOrganizationMembershipType.Owner
-            or OldOrganizationMembershipType.Administrator;
+        return organizationMember?.NewMembershipType is OrganizationMembershipType.Owner
+            or OrganizationMembershipType.Administrator;
     }
 }

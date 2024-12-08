@@ -11,10 +11,10 @@ namespace Team.Shared.Database.Entities;
 public class JoinInvitation : EntityBaseWithDeleted
 {
     public string? Email { get; set; }
-    public OldInvitationStatus Status { get; set; }
     public string? NewStatus { get; set; }
-    public OldTeamMembershipType MembershipType { get; set; }
+    public string? Status { get; set; }
     public string? NewMembershipType { get; set; }
+    public string? MembershipType { get; set; }
 
     public virtual Team Team { get; set; }
     public virtual Customer CreatedBy { get; set; }
@@ -31,11 +31,19 @@ public class JoinInvitationConfiguration : IEntityTypeConfiguration<JoinInvitati
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
 
         builder
-            .Property(item => item.NewMembershipType)
+            .Property(item => item.NewStatus)
             .HasMaxLength(Constants.MaxInvitationStatusLength);
 
         builder
             .Property(item => item.NewMembershipType)
+            .HasMaxLength(Constants.MaxMembershipTypeLength);
+
+        builder
+            .Property(item => item.Status)
+            .HasMaxLength(Constants.MaxInvitationStatusLength);
+
+        builder
+            .Property(item => item.MembershipType)
             .HasMaxLength(Constants.MaxMembershipTypeLength);
 
         builder
@@ -51,6 +59,6 @@ public class JoinInvitationConfiguration : IEntityTypeConfiguration<JoinInvitati
             .WithMany(item => item.JoinInvitationsInvitee);
 
         builder.HasIndex(item => item.Email);
-        builder.HasIndex(item => item.Status);
+        builder.HasIndex(item => item.NewStatus);
     }
 }

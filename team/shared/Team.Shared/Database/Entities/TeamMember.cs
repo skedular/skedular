@@ -10,8 +10,8 @@ namespace Team.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class TeamMember : EntityBaseWithDeleted
 {
-    public OldTeamMembershipType MembershipType { get; set; } = OldTeamMembershipType.Member;
     public string? NewMembershipType { get; set; }
+    public string? MembershipType { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string TeamId { get; set; } = string.Empty;
@@ -36,6 +36,10 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
             .HasMaxLength(Constants.MaxMembershipTypeLength);
 
         builder
+            .Property(item => item.MembershipType)
+            .HasMaxLength(Constants.MaxMembershipTypeLength);
+
+        builder
             .HasOne(item => item.Team)
             .WithMany(item => item.TeamMembers)
             .HasForeignKey(item => item.TeamId);
@@ -49,7 +53,7 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
             .HasOne(item => item.OrganizationMember)
             .WithMany(item => item.TeamMembers);
 
-        builder.HasIndex(item => item.MembershipType);
+        builder.HasIndex(item => item.NewMembershipType);
         builder.HasIndex(item => new { item.CustomerId, item.TeamId }).IsUnique();
     }
 }

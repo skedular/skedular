@@ -82,7 +82,7 @@ public class LocationInvitationService(
                 Criteria = query =>
                     !query.DeletedAt.HasValue &&
                     query.Location.Id == locationId &&
-                    query.Status == OldInvitationStatus.Pending
+                    query.NewStatus == InvitationStatus.Pending
             }).ToListAsync(cancellationToken);
 
         await using var transaction =
@@ -105,8 +105,8 @@ public class LocationInvitationService(
                     Id = randomHelper.Generate(),
                     Location = location,
                     Email = email,
-                    Status = OldInvitationStatus.Pending,
-                    MembershipType = OldLocationMembershipType.Member,
+                    NewStatus = InvitationStatus.Pending,
+                    NewMembershipType = LocationMembershipType.Member,
                     CreatedBy = customerEntity,
                     Invitee = matchingCustomerByEmail
                 })
@@ -171,7 +171,7 @@ public class LocationInvitationService(
             repositoryFactory.LocationMemberRepository.Add(new LocationMember
             {
                 Id = randomHelper.Generate(),
-                MembershipType = joinInvitation.MembershipType,
+                NewMembershipType = joinInvitation.NewMembershipType,
                 Location = location,
                 Customer = customerEntity
             });
@@ -182,7 +182,7 @@ public class LocationInvitationService(
                 cancellationToken);
         }
 
-        joinInvitation.Status = OldInvitationStatus.Accepted;
+        joinInvitation.NewStatus = InvitationStatus.Accepted;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await locationOutboxPublisher.PublishInvitesToJoinLocationNotificationAsync(
@@ -213,7 +213,7 @@ public class LocationInvitationService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.JoinInvitationRepository.UnitOfWork,
                 cancellationToken);
 
-        joinInvitation.Status = OldInvitationStatus.Rejected;
+        joinInvitation.NewStatus = InvitationStatus.Rejected;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await locationOutboxPublisher.PublishInvitesToJoinLocationNotificationAsync(
@@ -253,7 +253,7 @@ public class LocationInvitationService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.JoinInvitationRepository.UnitOfWork,
                 cancellationToken);
 
-        joinInvitation.Status = OldInvitationStatus.Cancelled;
+        joinInvitation.NewStatus = InvitationStatus.Cancelled;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await locationOutboxPublisher.PublishInvitesToJoinLocationNotificationAsync(

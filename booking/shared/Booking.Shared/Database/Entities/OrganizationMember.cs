@@ -10,8 +10,8 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class OrganizationMember : ReplicatedEntityBaseWithDeleted
 {
-    public OldOrganizationMembershipType? MembershipType { get; set; } = OldOrganizationMembershipType.Member;
     public string? NewMembershipType { get; set; }
+    public string? MembershipType { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; } = string.Empty;
@@ -34,6 +34,10 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
             .HasMaxLength(Constants.MaxMembershipTypeLength);
 
         builder
+            .Property(item => item.MembershipType)
+            .HasMaxLength(Constants.MaxMembershipTypeLength);
+
+        builder
             .HasOne(item => item.Organization)
             .WithMany(item => item.OrganizationMembers)
             .HasForeignKey(item => item.OrganizationId);
@@ -43,7 +47,7 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
             .WithMany(item => item.OrganizationMembers)
             .HasForeignKey(item => item.CustomerId);
 
-        builder.HasIndex(item => item.MembershipType);
+        builder.HasIndex(item => item.NewMembershipType);
         builder.HasIndex(item => new { item.CustomerId, item.OrganizationId }).IsUnique();
     }
 }

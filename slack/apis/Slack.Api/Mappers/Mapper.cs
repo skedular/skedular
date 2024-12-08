@@ -315,9 +315,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                MembershipType.Owner => OldOrganizationMembershipType.Owner,
-                MembershipType.Administrator => OldOrganizationMembershipType.Administrator,
-                MembershipType.Member => OldOrganizationMembershipType.Member,
+                MembershipType.Owner => OrganizationMembershipType.Owner,
+                MembershipType.Administrator => OrganizationMembershipType.Administrator,
+                MembershipType.Member => OrganizationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer)
@@ -628,10 +628,10 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                global::Api.Shared.Services.Grpc.UnityHub.Team.V1.MembershipType.Owner => OldTeamMembershipType.Owner,
-                global::Api.Shared.Services.Grpc.UnityHub.Team.V1.MembershipType.Administrator => OldTeamMembershipType
+                global::Api.Shared.Services.Grpc.UnityHub.Team.V1.MembershipType.Owner => TeamMembershipType.Owner,
+                global::Api.Shared.Services.Grpc.UnityHub.Team.V1.MembershipType.Administrator => TeamMembershipType
                     .Administrator,
-                global::Api.Shared.Services.Grpc.UnityHub.Team.V1.MembershipType.Member => OldTeamMembershipType.Member,
+                global::Api.Shared.Services.Grpc.UnityHub.Team.V1.MembershipType.Member => TeamMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer),

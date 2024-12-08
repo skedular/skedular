@@ -21,7 +21,7 @@ public interface IOrganizationMemberService
 
     Task<OrganizationMember> ChangeMembershipTypeAsync(
         string organizationMemberId,
-        OldOrganizationMembershipType membershipType,
+        string membershipType,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization> UpdateMembersAsync(
@@ -82,7 +82,7 @@ public class OrganizationMemberService(
 
     public async Task<OrganizationMember> ChangeMembershipTypeAsync(
         string organizationMemberId,
-        OldOrganizationMembershipType membershipType,
+        string membershipType,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -109,19 +109,19 @@ public class OrganizationMemberService(
         var myMembershipDetails =
             organization.OrganizationMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.MembershipType == OldOrganizationMembershipType.Administrator &&
-            membershipType == OldOrganizationMembershipType.Owner)
+        if (myMembershipDetails.NewMembershipType == OrganizationMembershipType.Administrator &&
+            membershipType == OrganizationMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == OldOrganizationMembershipType.Member &&
-            membershipType == OldOrganizationMembershipType.Administrator)
+        if (myMembershipDetails.NewMembershipType == OrganizationMembershipType.Member &&
+            membershipType == OrganizationMembershipType.Administrator)
         {
             throw new Unauthorized();
         }
 
-        if (organizationMember.MembershipType == membershipType)
+        if (organizationMember.NewMembershipType == membershipType)
         {
             return mapper.MapTo(organizationMember, mapper.MapTo(organization));
         }
@@ -131,7 +131,7 @@ public class OrganizationMemberService(
                 repositoryFactory.OrganizationMemberRepository.UnitOfWork,
                 cancellationToken);
 
-        organizationMember.MembershipType = membershipType;
+        organizationMember.NewMembershipType = membershipType;
         repositoryFactory.OrganizationMemberRepository.Update(organizationMember);
 
         await organizationOutboxPublisher.PublishOrganizationAsync(

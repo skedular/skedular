@@ -192,9 +192,9 @@ public class EditTeamButtonHandler(
                                     ? MembershipType.Member
                                     : existingMember.MembershipType switch
                                     {
-                                        OldTeamMembershipType.Owner => MembershipType.Owner,
-                                        OldTeamMembershipType.Administrator => MembershipType.Administrator,
-                                        OldTeamMembershipType.Member => MembershipType.Member,
+                                        TeamMembershipType.Owner => MembershipType.Owner,
+                                        TeamMembershipType.Administrator => MembershipType.Administrator,
+                                        TeamMembershipType.Member => MembershipType.Member,
                                         _ => throw new ArgumentOutOfRangeException()
                                     },
                                 Customer = new Customer { Id = customerId },

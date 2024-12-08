@@ -10,8 +10,8 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class LocationMember : ReplicatedEntityBaseWithDeleted
 {
-    public OldLocationMembershipType? MembershipType { get; set; }
     public string? NewMembershipType { get; set; }
+    public string? MembershipType { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string LocationId { get; set; } = string.Empty;
@@ -34,6 +34,10 @@ public class LocationMemberConfiguration : IEntityTypeConfiguration<LocationMemb
             .HasMaxLength(Constants.MaxMembershipTypeLength);
 
         builder
+            .Property(item => item.MembershipType)
+            .HasMaxLength(Constants.MaxMembershipTypeLength);
+
+        builder
             .HasOne(item => item.Location)
             .WithMany(item => item.LocationMembers)
             .HasForeignKey(item => item.LocationId);
@@ -43,7 +47,7 @@ public class LocationMemberConfiguration : IEntityTypeConfiguration<LocationMemb
             .WithMany(item => item.LocationMembers)
             .HasForeignKey(item => item.CustomerId);
 
-        builder.HasIndex(item => item.MembershipType);
+        builder.HasIndex(item => item.NewMembershipType);
         builder.HasIndex(item => new { item.CustomerId, item.LocationId }).IsUnique();
     }
 }

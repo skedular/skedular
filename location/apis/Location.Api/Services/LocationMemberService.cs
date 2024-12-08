@@ -21,7 +21,7 @@ public interface ILocationMemberService
 
     Task<LocationMember> ChangeMembershipTypeAsync(
         string locationMemberId,
-        OldLocationMembershipType membershipType,
+        string membershipType,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Location> UpdateMembersAsync(
@@ -73,7 +73,7 @@ public class LocationMemberService(
 
     public async Task<LocationMember> ChangeMembershipTypeAsync(
         string locationMemberId,
-        OldLocationMembershipType membershipType,
+        string membershipType,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -100,19 +100,19 @@ public class LocationMemberService(
         var myMembershipDetails =
             location.LocationMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.MembershipType == OldLocationMembershipType.Administrator &&
-            membershipType == OldLocationMembershipType.Owner)
+        if (myMembershipDetails.NewMembershipType == LocationMembershipType.Administrator &&
+            membershipType == LocationMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == OldLocationMembershipType.Member &&
-            membershipType == OldLocationMembershipType.Administrator)
+        if (myMembershipDetails.NewMembershipType == LocationMembershipType.Member &&
+            membershipType == LocationMembershipType.Administrator)
         {
             throw new Unauthorized();
         }
 
-        if (locationMember.MembershipType == membershipType)
+        if (locationMember.NewMembershipType == membershipType)
         {
             return mapper.MapTo(locationMember, mapper.MapTo(location));
         }
@@ -121,7 +121,7 @@ public class LocationMemberService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationMemberRepository.UnitOfWork,
                 cancellationToken);
 
-        locationMember.MembershipType = membershipType;
+        locationMember.NewMembershipType = membershipType;
         repositoryFactory.LocationMemberRepository.Update(locationMember);
 
         await locationOutboxPublisher.PublishLocationAsync(

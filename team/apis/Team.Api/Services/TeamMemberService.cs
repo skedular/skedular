@@ -22,7 +22,7 @@ public interface ITeamMemberService
 
     Task<TeamMember> ChangeMembershipTypeAsync(
         string teamMemberId,
-        OldTeamMembershipType membershipType,
+        string membershipType,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Team> UpdateMembersAsync(
@@ -72,7 +72,7 @@ public class TeamMemberService(
 
     public async Task<TeamMember> ChangeMembershipTypeAsync(
         string teamMemberId,
-        OldTeamMembershipType membershipType,
+        string membershipType,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -98,19 +98,19 @@ public class TeamMemberService(
         var myMembershipDetails =
             team.TeamMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.MembershipType == OldTeamMembershipType.Administrator &&
-            membershipType == OldTeamMembershipType.Owner)
+        if (myMembershipDetails.NewMembershipType == TeamMembershipType.Administrator &&
+            membershipType == TeamMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == OldTeamMembershipType.Member &&
-            membershipType == OldTeamMembershipType.Administrator)
+        if (myMembershipDetails.NewMembershipType == TeamMembershipType.Member &&
+            membershipType == TeamMembershipType.Administrator)
         {
             throw new Unauthorized();
         }
 
-        if (teamMember.MembershipType == membershipType)
+        if (teamMember.NewMembershipType == membershipType)
         {
             return mapper.MapTo(teamMember, mapper.MapTo(team));
         }
@@ -119,7 +119,7 @@ public class TeamMemberService(
             await transactionBuilder.BeginTransactionAsync(repositoryFactory.TeamMemberRepository.UnitOfWork,
                 cancellationToken);
 
-        teamMember.MembershipType = membershipType;
+        teamMember.NewMembershipType = membershipType;
         repositoryFactory.TeamMemberRepository.Update(teamMember);
 
         await teamOutboxPublisher.PublishTeamAsync(

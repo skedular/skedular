@@ -163,7 +163,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType,
+            MembershipType = src.NewMembershipType,
             Customer = MapTo(src.Customer)!,
             Team = team,
             OrganizationMember = MapTo(src.OrganizationMember)
@@ -175,9 +175,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                OldTeamMembershipType.Owner => TeamMemberMembershipType.Owner,
-                OldTeamMembershipType.Administrator => TeamMemberMembershipType.Administrator,
-                OldTeamMembershipType.Member => TeamMemberMembershipType.Member,
+                TeamMembershipType.Owner => TeamMemberMembershipType.Owner,
+                TeamMembershipType.Administrator => TeamMemberMembershipType.Administrator,
+                TeamMembershipType.Member => TeamMemberMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer),
@@ -236,8 +236,8 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
-            MembershipType = src.MembershipType,
+            Status = src.NewStatus,
+            MembershipType = src.NewMembershipType,
             Team = MapTo(src.Team),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -339,7 +339,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.OrganizationMember? organizationMember)
     {
         dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType;
+        dest.NewMembershipType = src.MembershipType;
         dest.Team = team;
         dest.Customer = customer;
         dest.OrganizationMember = organizationMember;
@@ -380,9 +380,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                OldTeamMembershipType.Owner => MembershipType.Owner,
-                OldTeamMembershipType.Administrator => MembershipType.Administrator,
-                OldTeamMembershipType.Member => MembershipType.Member,
+                TeamMembershipType.Owner => MembershipType.Owner,
+                TeamMembershipType.Administrator => MembershipType.Administrator,
+                TeamMembershipType.Member => MembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapToGrpcResponse(src.Customer),
@@ -393,9 +393,9 @@ public class Mapper : IMapper
                     Id = src.OrganizationMember.Id,
                     MembershipType = src.OrganizationMember.MembershipType switch
                     {
-                        OldOrganizationMembershipType.Owner => MembershipType.Owner,
-                        OldOrganizationMembershipType.Administrator => MembershipType.Administrator,
-                        OldOrganizationMembershipType.Member => MembershipType.Member,
+                        OrganizationMembershipType.Owner => MembershipType.Owner,
+                        OrganizationMembershipType.Administrator => MembershipType.Administrator,
+                        OrganizationMembershipType.Member => MembershipType.Member,
                         _ => throw new ArgumentOutOfRangeException()
                     },
                     Customer = MapToGrpcResponse(src.OrganizationMember.Customer)
@@ -430,9 +430,9 @@ public class Mapper : IMapper
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                MembershipType.Owner => OldTeamMembershipType.Owner,
-                MembershipType.Administrator => OldTeamMembershipType.Administrator,
-                MembershipType.Member => OldTeamMembershipType.Member,
+                MembershipType.Owner => TeamMembershipType.Owner,
+                MembershipType.Administrator => TeamMembershipType.Administrator,
+                MembershipType.Member => TeamMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = src.Customer.Id },
@@ -471,7 +471,7 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                MembershipType = src.MembershipType,
+                MembershipType = src.NewMembershipType,
                 Customer = MapTo(src.Customer)!,
                 Organization = MapTo(src.Organization)!
             };
@@ -555,7 +555,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
+            Status = src.NewStatus,
             Team = team,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)

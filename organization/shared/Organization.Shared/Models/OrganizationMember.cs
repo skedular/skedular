@@ -5,7 +5,7 @@ namespace Organization.Shared.Models;
 
 public class OrganizationMember : ModelBaseWithDeleted
 {
-    public OldOrganizationMembershipType MembershipType { get; set; } = OldOrganizationMembershipType.Member;
+    public string MembershipType { get; set; } = OrganizationMembershipType.Member;
     public bool? IsOrganizationOnboardingDone { get; set; }
     public Organization Organization { get; set; }
     public Customer Customer { get; set; }
