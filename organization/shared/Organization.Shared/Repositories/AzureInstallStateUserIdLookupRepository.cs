@@ -17,10 +17,7 @@ public class AzureInstallStateUserIdLookupRepository(OrganizationDbContext dbCon
         IAzureInstallStateUserIdLookupRepository
 {
     public async Task<AzureInstallStateUserIdLookup?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.AzureInstallStateUserIdLookup
-            .Where(query => query.Id == id)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        await DbContext.AzureInstallStateUserIdLookup.FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public AzureInstallStateUserIdLookup Add(AzureInstallStateUserIdLookup azureInstallStateUserIdLookup)
     {

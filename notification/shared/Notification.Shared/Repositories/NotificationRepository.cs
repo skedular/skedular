@@ -91,13 +91,12 @@ public class NotificationRepository(NotificationDbContext dbContext, TimeProvide
     : RepositoryBase<NotificationDbContext, Database.Entities.Notification>(dbContext, timeProvider),
         INotificationRepository
 {
-    public async Task<Database.Entities.Notification?> GetBySourceIdAsync(string sourceId,
+    public async Task<Database.Entities.Notification?> GetBySourceIdAsync(
+        string sourceId,
         CancellationToken cancellationToken) =>
         await DbContext.Notification
-            .Where(query => query.SourceId == sourceId)
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.SourceId == sourceId, cancellationToken);
 
     public Database.Entities.Notification Add(Database.Entities.Notification notification)
     {

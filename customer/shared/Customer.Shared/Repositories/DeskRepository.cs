@@ -48,8 +48,6 @@ public class DeskRepository(CustomerDbContext dbContext, TimeProvider timeProvid
 
     public async Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Desk
-            .Where(query => query.Id == id)
             .Include(query => query.Location)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 }

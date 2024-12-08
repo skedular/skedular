@@ -25,9 +25,7 @@ public class OrganizationRepository(NotificationDbContext dbContext, TimeProvide
     }
 
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Organization
-            .Where(query => query.Id == id)
-            .FirstOrDefaultAsync(cancellationToken);
+        await DbContext.Organization.FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Organization Add(Organization organization)
     {

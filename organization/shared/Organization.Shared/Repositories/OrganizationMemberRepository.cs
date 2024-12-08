@@ -115,10 +115,8 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
 {
     public async Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
-            .Where(query => query.Id == id)
             .Include(query => query.Organization)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public OrganizationMember Add(OrganizationMember organizationMember)
     {

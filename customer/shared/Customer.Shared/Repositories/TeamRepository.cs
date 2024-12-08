@@ -29,7 +29,6 @@ public class TeamRepository(CustomerDbContext dbContext, TimeProvider timeProvid
 
     public async Task<Team?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Team
-            .Where(query => query.Id == id)
             .Include(query =>
                 query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
@@ -42,8 +41,7 @@ public class TeamRepository(CustomerDbContext dbContext, TimeProvider timeProvid
             .ThenInclude(query => query.Customer)
             .Include(query => query.Organization)
             .Include(query => query.DefaultedByCustomers)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Team Add(Team team)
     {

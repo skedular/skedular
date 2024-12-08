@@ -26,15 +26,13 @@ public class OrganizationRepository(LocationDbContext dbContext, TimeProvider ti
 
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => query.Id == id)
             .Include(query =>
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Locations.Where(location => !location.DeletedAt.HasValue))
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Organization Add(Organization location)
     {

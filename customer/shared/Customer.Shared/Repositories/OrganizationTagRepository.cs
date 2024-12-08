@@ -51,8 +51,6 @@ public class OrganizationTagRepository(CustomerDbContext dbContext, TimeProvider
 
     public async Task<OrganizationTag?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationTag
-            .Where(query => query.Id == id)
             .Include(query => query.Organization)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 }

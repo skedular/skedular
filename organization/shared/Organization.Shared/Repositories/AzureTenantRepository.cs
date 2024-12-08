@@ -38,9 +38,7 @@ public class AzureTenantRepository(OrganizationDbContext dbContext, TimeProvider
     public async Task<AzureTenant?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.AzureTenant
             .AddDependentObjects()
-            .Where(query => query.Id == id)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public AzureTenant Add(AzureTenant azureTenant)
     {

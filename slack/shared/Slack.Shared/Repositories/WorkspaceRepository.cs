@@ -33,39 +33,31 @@ public class WorkspaceRepository(SlackDbContext dbContext, TimeProvider timeProv
 {
     public async Task<Workspace?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Workspace
-            .Where(query => query.Id == id)
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<Workspace?> GetByWorkspaceMemberIdAsync(
         string workspaceMemberId,
         CancellationToken cancellationToken)
     {
         var workspaceMember = await DbContext.WorkspaceMember
-            .Where(query => query.Id == workspaceMemberId)
             .Include(query => query.Workspace)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == workspaceMemberId, cancellationToken);
         if (workspaceMember is null)
         {
             return null;
         }
 
         return await DbContext.Workspace
-            .Where(query => query.Id == workspaceMember.Workspace.Id)
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == workspaceMember.Workspace.Id, cancellationToken);
     }
 
     public async Task<Workspace?>
         GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.Workspace
-            .Where(query => query.Organization.Id == organizationId)
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Organization.Id == organizationId, cancellationToken);
 
     public Workspace Add(Workspace workspace)
     {

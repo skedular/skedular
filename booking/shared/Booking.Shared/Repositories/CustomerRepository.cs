@@ -47,10 +47,7 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                     id,
                     cancellationToken) =>
                 Queryable
-                    .Where<Customer>(dbContext.Customer
-                        .AddDependentObjects(), query => query.Id == id)
-                    .OrderBy(query => query.Id)
-                    .FirstOrDefault());
+                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query => query.Id == id));
 
     private static readonly Func<BookingDbContext, string, CancellationToken, Task<Customer?>>
         s_getByVerifiableTokenQueryAsync =
@@ -59,12 +56,9 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                     verifiableToken,
                     cancellationToken) =>
                 Queryable
-                    .Where<Customer>(dbContext.Customer
-                        .AddDependentObjects(), query => !query.DeletedAt.HasValue &&
-                                                         query.Identities.Select(identity => identity.Id)
-                                                             .Contains(verifiableToken))
-                    .OrderBy(query => query.Id)
-                    .FirstOrDefault());
+                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query =>
+                        !query.DeletedAt.HasValue &&
+                        query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
 
     private static readonly Func<BookingDbContext, string, CancellationToken, Task<Customer?>>
         s_getByEmailQueryAsync =
@@ -73,13 +67,11 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                     email,
                     cancellationToken) =>
                 Queryable
-                    .Where<Customer>(dbContext.Customer
-                        .AddDependentObjects(), query => !query.DeletedAt.HasValue &&
-                                                         query.Identities.Any(identity =>
-                                                             identity.Email != null &&
-                                                             EF.Functions.ILike(identity.Email, email)))
-                    .OrderBy(query => query.Id)
-                    .FirstOrDefault());
+                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query =>
+                        !query.DeletedAt.HasValue &&
+                        query.Identities.Any(identity =>
+                            identity.Email != null &&
+                            EF.Functions.ILike(identity.Email, email))));
 
     public override async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {

@@ -145,10 +145,8 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
 
     public async Task<Database.Entities.Team?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Team
-            .Where(query => query.Id == id)
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<IEnumerable<Database.Entities.Team>> GetByCustomerIdAsync(
         string customerId,

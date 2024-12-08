@@ -25,10 +25,7 @@ public class LocationRepository(NotificationDbContext dbContext, TimeProvider ti
     }
 
     public async Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Location
-            .Where(query => query.Id == id)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        await DbContext.Location.FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Location Add(Location location)
     {

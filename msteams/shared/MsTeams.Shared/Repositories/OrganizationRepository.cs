@@ -36,10 +36,8 @@ public class OrganizationRepository(MsTeamsDbContext dbContext, TimeProvider tim
 
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => query.Id == id)
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Organization Add(Organization organization)
     {

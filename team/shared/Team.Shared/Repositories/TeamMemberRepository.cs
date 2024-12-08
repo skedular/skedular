@@ -116,10 +116,8 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
 {
     public async Task<TeamMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.TeamMember
-            .Where(query => query.Id == id)
             .Include(query => query.Team)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public TeamMember Add(TeamMember teamMember)
     {

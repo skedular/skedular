@@ -153,10 +153,8 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         bool includeAllOfferings,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => query.Id == id)
             .AddDependentObjects(includeAllOfferings)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(
         string customerId,
@@ -172,11 +170,11 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         string azureTenantId,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => !query.DeletedAt.HasValue &&
-                            query.AzureTenants.Any(azureTenant => azureTenant.Id == azureTenantId))
             .AddDependentObjects(false)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(
+                query => !query.DeletedAt.HasValue &&
+                         query.AzureTenants.Any(azureTenant => azureTenant.Id == azureTenantId),
+                cancellationToken);
 
     public async Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Organization

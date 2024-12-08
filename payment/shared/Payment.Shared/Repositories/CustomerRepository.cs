@@ -35,10 +35,7 @@ public class CustomerRepository(PaymentDbContext dbContext, TimeProvider timePro
                     id,
                     cancellationToken) =>
                 Queryable
-                    .Where<Customer>(dbContext.Customer
-                        .AddDependentObjects(), query => query.Id == id)
-                    .OrderBy(query => query.Id)
-                    .FirstOrDefault());
+                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query => query.Id == id));
 
     private static readonly Func<PaymentDbContext, string, CancellationToken, Task<Customer?>>
         s_getByVerifiableTokenQueryAsync =
@@ -47,12 +44,9 @@ public class CustomerRepository(PaymentDbContext dbContext, TimeProvider timePro
                     verifiableToken,
                     cancellationToken) =>
                 Queryable
-                    .Where<Customer>(dbContext.Customer
-                        .AddDependentObjects(), query => !query.DeletedAt.HasValue &&
-                                                         query.Identities.Select(identity => identity.Id)
-                                                             .Contains(verifiableToken))
-                    .OrderBy(query => query.Id)
-                    .FirstOrDefault());
+                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query =>
+                        !query.DeletedAt.HasValue &&
+                        query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
 
     public override async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {

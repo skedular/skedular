@@ -112,10 +112,8 @@ public class LocationMemberRepository(LocationDbContext dbContext, TimeProvider 
 {
     public async Task<LocationMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.LocationMember
-            .Where(query => query.Id == id)
             .Include(query => query.Location)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public LocationMember Add(LocationMember locationMember)
     {

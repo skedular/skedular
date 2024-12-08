@@ -20,10 +20,8 @@ public class WorkspaceChannelRepository(SlackDbContext dbContext, TimeProvider t
 {
     public async Task<WorkspaceChannel?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.WorkspaceChannel
-            .Where(query => query.Id == id)
             .Include(query => query.Workspace)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public WorkspaceChannel Add(WorkspaceChannel workspaceChannel)
     {

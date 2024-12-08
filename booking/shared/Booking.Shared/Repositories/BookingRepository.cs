@@ -245,10 +245,8 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
 {
     public async Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .Where(query => query.Id == id)
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Database.Entities.Booking>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Booking
@@ -283,7 +281,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         ICollection<BookingOrder> orderByFields,
         CancellationToken cancellationToken) =>
         (await DbContext.Booking
-            .AddSearchCriteria(searchCriteria, timeProvider)
+            .AddSearchCriteria(searchCriteria, TimeProvider)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects()
             .ToListAsync(cancellationToken))

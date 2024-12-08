@@ -31,18 +31,14 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
 {
     public async Task<WorkspaceMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.WorkspaceMember
-            .Where(query => query.Id == id)
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<WorkspaceMember?> GetByAnyMatchingIdAsync(ICollection<string> ids,
         CancellationToken cancellationToken) =>
         await DbContext.WorkspaceMember
-            .Where(query => ids.Contains(query.Id))
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => ids.Contains(query.Id), cancellationToken);
 
     public WorkspaceMember Add(WorkspaceMember workspaceMember)
     {

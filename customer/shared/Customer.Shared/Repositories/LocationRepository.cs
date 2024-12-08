@@ -29,7 +29,6 @@ public class LocationRepository(CustomerDbContext dbContext, TimeProvider timePr
 
     public async Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => query.Id == id)
             .Include(query =>
                 query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
@@ -37,8 +36,7 @@ public class LocationRepository(CustomerDbContext dbContext, TimeProvider timePr
             .Include(query => query.Desks)
             .Include(query => query.Organization)
             .Include(query => query.DefaultedByCustomers)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Location Add(Location location)
     {

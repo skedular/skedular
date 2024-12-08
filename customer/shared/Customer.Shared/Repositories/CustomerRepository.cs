@@ -159,10 +159,8 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                     id,
                     cancellationToken) =>
                 Queryable
-                    .Where<Database.Entities.Customer>(dbContext.Customer
-                        .AddDependentObjects(), query => query.Id == id)
-                    .OrderBy(query => query.Id)
-                    .FirstOrDefault());
+                    .FirstOrDefault<Database.Entities.Customer>(dbContext.Customer.AddDependentObjects(),
+                        query => query.Id == id));
 
     private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
         s_getByVerifiableTokenQueryAsync =
@@ -171,12 +169,9 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                     verifiableToken,
                     cancellationToken) =>
                 Queryable
-                    .Where<Database.Entities.Customer>(dbContext.Customer
-                        .AddDependentObjects(), query => !query.DeletedAt.HasValue &&
-                                                         query.Identities.Select(identity => identity.Id)
-                                                             .Contains(verifiableToken))
-                    .OrderBy(query => query.Id)
-                    .FirstOrDefault());
+                    .FirstOrDefault<Database.Entities.Customer>(dbContext.Customer.AddDependentObjects(), query =>
+                        !query.DeletedAt.HasValue &&
+                        query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
 
     private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
         s_getByEmailQueryAsync =
@@ -185,14 +180,12 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                     email,
                     cancellationToken) =>
                 Queryable
-                    .Where<Database.Entities.Customer>(dbContext.Customer
-                        .AddDependentObjects(), query => !query.DeletedAt.HasValue &&
-                                                         query.Identities.Any(identity =>
-                                                             identity.Email != null &&
-                                                             EF.Functions.ILike(identity.Email, email)))
-                    .OrderBy(query => query.Id)
-                    .FirstOrDefault());
-
+                    .FirstOrDefault<Database.Entities.Customer>(dbContext.Customer.AddDependentObjects(), query =>
+                        !query.DeletedAt.HasValue &&
+                        query.Identities.Any(identity =>
+                            identity.Email != null &&
+                            EF.Functions.ILike(identity.Email, email))));
+    
     public async Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await s_getByIdQueryAsync(DbContext, id, cancellationToken);
 

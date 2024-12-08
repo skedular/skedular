@@ -60,10 +60,8 @@ public class OrganizationRepository(PaymentDbContext dbContext, TimeProvider tim
         bool includeAllOfferings,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => query.Id == id)
             .AddDependentObjects(includeAllOfferings)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Organization Add(Organization organization)
     {

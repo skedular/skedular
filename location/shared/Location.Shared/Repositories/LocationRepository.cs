@@ -151,10 +151,8 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
 
     public async Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => query.Id == id)
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
         string customerId,

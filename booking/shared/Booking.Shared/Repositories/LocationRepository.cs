@@ -53,18 +53,14 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
 
     public async Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => query.Id == id)
             .AddDependentObjects(true)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<Location?>
         GetByIdAndExcludeDeactivatedDesksAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => query.Id == id)
             .AddDependentObjects(false)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Location Add(Location location)
     {

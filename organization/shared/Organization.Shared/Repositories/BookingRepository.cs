@@ -18,10 +18,8 @@ public class BookingRepository(OrganizationDbContext dbContext, TimeProvider tim
 {
     public async Task<Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .Where(query => query.Id == id)
             .Include(query => query.Organization)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Booking Add(Booking booking)
     {

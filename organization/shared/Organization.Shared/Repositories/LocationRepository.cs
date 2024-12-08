@@ -33,10 +33,8 @@ public class LocationRepository(OrganizationDbContext dbContext, TimeProvider ti
 
     public async Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => query.Id == id)
             .Include(query => query.Organization)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Location Add(Location location)
     {

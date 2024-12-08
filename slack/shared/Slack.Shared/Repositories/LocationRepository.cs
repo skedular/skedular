@@ -19,10 +19,8 @@ public class LocationRepository(SlackDbContext dbContext, TimeProvider timeProvi
 {
     public async Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => query.Id == id)
             .Include(query => query.DailyUpdateChannel)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Location Add(Location location)
     {

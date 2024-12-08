@@ -116,11 +116,7 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
     }
 
     public async Task<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Tag
-            .Where(query => query.Id == id)
-            .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        await DbContext.Tag.AddDependentObjects().FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,

@@ -35,9 +35,7 @@ public class OrganizationMemberRepository(TeamDbContext dbContext, TimeProvider 
     }
 
     public async Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.OrganizationMember
-            .Where(query => query.Id == id)
-            .FirstOrDefaultAsync(cancellationToken);
+        await DbContext.OrganizationMember.FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public OrganizationMember Add(OrganizationMember organizationMember)
     {

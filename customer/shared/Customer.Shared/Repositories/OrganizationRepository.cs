@@ -26,7 +26,6 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
 
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => query.Id == id)
             .Include(query =>
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
@@ -35,8 +34,7 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
             .Include(query => query.Locations)
             .Include(query => query.Teams)
             .Include(query => query.DefaultedByCustomers)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Organization Add(Organization organization)
     {

@@ -39,17 +39,15 @@ public class OrganizationRepository(SlackDbContext dbContext, TimeProvider timeP
 
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => query.Id == id)
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<Organization?> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => !query.DeletedAt.HasValue && query.Workspaces.Any(workspace => workspace.Id == workspaceId))
             .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(
+                query => !query.DeletedAt.HasValue && query.Workspaces.Any(workspace => workspace.Id == workspaceId),
+                cancellationToken);
 
     public Organization Add(Organization organization)
     {

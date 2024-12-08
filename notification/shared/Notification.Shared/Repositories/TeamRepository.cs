@@ -25,10 +25,7 @@ public class TeamRepository(NotificationDbContext dbContext, TimeProvider timePr
     }
 
     public async Task<Team?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Team
-            .Where(query => query.Id == id)
-            .OrderBy(query => query.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        await DbContext.Team.FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Team Add(Team team)
     {
