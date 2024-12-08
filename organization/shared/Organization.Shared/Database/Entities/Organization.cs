@@ -17,7 +17,6 @@ public class Organization : EntityBaseWithDeleted
     public bool HasAttachedPaymentMethod { get; set; }
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
-
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
     public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
@@ -28,6 +27,7 @@ public class Organization : EntityBaseWithDeleted
     public virtual ICollection<Team> Teams { get; set; } = [];
     public virtual ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
     public virtual ICollection<AzureTenant> AzureTenants { get; set; } = [];
+    public virtual ICollection<OrganizationSsoSetting> OrganizationSsoSettings { get; set; } = [];
     public virtual ICollection<Tag> Tags { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -42,7 +42,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Website).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
-
+        
         builder
             .HasOne(item => item.TermsOfUse)
             .WithMany(item => item.Organizations);

@@ -94,6 +94,51 @@ paths:
       responses:
         "200":
           description: onboarding response
+                              
+  /organization/api/v1/{organizationId}/sso/login:
+    post:
+      tags:
+        - organization
+        - sso
+      summary: sso login
+      operationId: SsoLogin
+      parameters:
+        - in: path
+          name: organizationId
+          schema:
+            type: string
+          required: true
+          description: Unique identifier for the organization initiating SSO login.
+
+      responses:
+        "200":
+          description: sso login
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+                
+  /organization/api/v1/acs:
+    post:
+      tags:
+        - organization
+        - sso
+      summary: sso acs
+      operationId: SsoAcs
+
+      responses:
+        "200":
+          description: sso acs
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 components:
   schemas:

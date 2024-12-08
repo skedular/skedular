@@ -78,7 +78,10 @@ public static class Constants
     public const int MaxAzureTeamNameLength = 1000;
     public const int MaxAzureTeamChannelNameLength = 1000;
 
+    public const int MaxSsoEntityIdLength = 200;
+
     public const int MaxMembershipTypeLength = 32;
+
     public const int MaxInvitationStatusLength = 32;
     public const int MaxNotificationTypeLength = 128;
 }

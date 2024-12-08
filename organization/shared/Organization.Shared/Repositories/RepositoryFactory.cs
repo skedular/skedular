@@ -20,6 +20,7 @@ public interface IRepositoryFactory
     IOrganizationOfferingActiveMemberRepository OrganizationOfferingActiveMemberRepository { get; }
     IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
     IOrganizationRepository OrganizationRepository { get; }
+    IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     ITeamRepository TeamRepository { get; }
     ITermsOfUseRepository TermsOfUseRepository { get; }
     IJoinInvitationRepository JoinInvitationRepository { get; }
@@ -50,6 +51,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
             new OrganizationOfferingActiveMemberRepository(_dbContext, timeProvider);
         OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
         TeamRepository = new TeamRepository(_dbContext, timeProvider);
         TermsOfUseRepository = new TermsOfUseRepository(_dbContext, timeProvider);
         JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
@@ -76,6 +78,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationOfferingActiveMemberRepository OrganizationOfferingActiveMemberRepository { get; }
     public IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }
+    public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     public ITeamRepository TeamRepository { get; }
     public ITermsOfUseRepository TermsOfUseRepository { get; }
     public IJoinInvitationRepository JoinInvitationRepository { get; }

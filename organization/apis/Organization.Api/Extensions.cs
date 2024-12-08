@@ -1,3 +1,4 @@
+using Enterprise.Shared.Security.Sso;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Api.Services.Authorization;
@@ -24,7 +25,8 @@ public static class Extensions
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<IOrganizationInvitationService, OrganizationInvitationService>()
             .AddScoped<ITagService, TagService>()
-            .AddScoped<IWorkaroundService, WorkaroundService>();
+            .AddScoped<IWorkaroundService, WorkaroundService>()
+            .AddScoped<IOrganizationSsoService, OrganizationSsoService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

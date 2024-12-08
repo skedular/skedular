@@ -7,11 +7,13 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { AzureService } from './services/AzureService';
 import { OrganizationService } from './services/OrganizationService';
+import { SsoService } from './services/SsoService';
 import { TenantService } from './services/TenantService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class UnityHubOrganizationClient {
     public readonly azure: AzureService;
     public readonly organization: OrganizationService;
+    public readonly sso: SsoService;
     public readonly tenant: TenantService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
@@ -28,6 +30,7 @@ export class UnityHubOrganizationClient {
         });
         this.azure = new AzureService(this.request);
         this.organization = new OrganizationService(this.request);
+        this.sso = new SsoService(this.request);
         this.tenant = new TenantService(this.request);
     }
 }

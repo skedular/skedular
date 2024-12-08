@@ -14,6 +14,7 @@ public class OrganizationDbContext(
 {
     public DbSet<AzureInstallStateUserIdLookup> AzureInstallStateUserIdLookup { get; set; }
     public DbSet<AzureTenant> AzureTenant { get; set; }
+    public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<AzureTenantMember> AzureTenantMember { get; set; }
     public DbSet<Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }

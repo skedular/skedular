@@ -16,4 +16,5 @@ export { $Error } from './schemas/$Error';
 
 export { AzureService } from './services/AzureService';
 export { OrganizationService } from './services/OrganizationService';
+export { SsoService } from './services/SsoService';
 export { TenantService } from './services/TenantService';

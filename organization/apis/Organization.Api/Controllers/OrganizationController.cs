@@ -7,7 +7,8 @@ namespace Organization.Api.Controllers;
 [ApiController]
 public class OrganizationController(
     IWorkaroundService workaroundService,
-    IAzureTenantService azureTenantService) : OrganizationControllerBase
+    IAzureTenantService azureTenantService,
+    IOrganizationSsoService organizationSsoService) : OrganizationControllerBase
 {
     public override async Task<IActionResult>
         Republish(string organizationId, CancellationToken cancellationToken = default)
@@ -47,5 +48,28 @@ public class OrganizationController(
         var redirectUri = await azureTenantService.InstallAsync(tenant, state, cancellationToken);
 
         return Redirect(redirectUri.AbsoluteUri);
+    }
+
+    public override async Task<IActionResult> SsoLogin(string organizationId,
+        CancellationToken cancellationToken = default)
+    {
+        var loginRequestUrl = await organizationSsoService.SsoLoginAsync(organizationId, cancellationToken);
+
+        return Redirect(loginRequestUrl);
+    }
+
+    public override async Task<IActionResult> SsoAcs(CancellationToken cancellationToken = default)
+    {
+        if (!Request.Form.ContainsKey("SAMLResponse"))
+        {
+            throw new ArgumentException("SAMLResponse is required.");
+        }
+
+        var rawSamlResponse = Request.Form["SAMLResponse"].ToString();
+        ArgumentException.ThrowIfNullOrWhiteSpace(rawSamlResponse);
+        var redirectUrl =
+            await organizationSsoService.ProcessSsoResponseAsync(Response, rawSamlResponse, cancellationToken);
+
+        return Redirect(redirectUrl);
     }
 }

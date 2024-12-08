@@ -3,6 +3,7 @@ using Enterprise.Shared.Azure.Graph;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Telemetry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -70,6 +71,8 @@ public abstract class StartupCustom(IConfiguration configuration, IWebHostEnviro
         services.AddAuthorization();
 
         services.AddGrpc();
+
+        services.AddSso();
 
         ConfigureCustomServices(services);
 

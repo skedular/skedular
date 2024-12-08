@@ -6,13 +6,13 @@ public class CustomerNotFound() : Exception("Customer not found");
 
 public class OrganizationNotFound() : Exception("Organization not found");
 
+public class OrganizationSsoIsNotYetSetup() : Exception("Organization SSO is not yet setup");
+
 public class OrganizationMemberNotFound() : Exception("Organization member not found");
 
 public class OrganizationJoinInvitationNotFound() : Exception("Organization join invitation not found");
 
 public class LocationNotFound() : Exception("Location not found");
-
-public class LocationTagNotFound() : Exception("Location tag not found");
 
 public class LocationMemberNotFound() : Exception("Location member not found");
 
@@ -28,12 +28,7 @@ public class DeskNotFound() : Exception("Desk not found");
 
 public class DeskWithSameNameExist() : Exception("Desk with same name exist");
 
-public class LocationTagWithSameNameExist() : Exception("Location tag with same name exist");
-
 public class OrganizationTermsOfUseAgreementMissing() : Exception("Organization terms of use agreement missing");
-
-public class OrganizationLatestTermsOfUseAgreementMissing()
-    : Exception("Organization latest terms of use agreement missing");
 
 public class PaymentMethodRequired() : Exception("Payment method required");
 
@@ -61,6 +56,8 @@ public class DeskTypeWithSameNameExist() : Exception("Desk type with same name e
 public class ZoneWithSameNameExist() : Exception("Zone with same name exist");
 
 public class OrganizationTagWithSameNameExist() : Exception("Organization tag with same name exist");
+
+public class SamlMetadataException() : Exception("Signing certificate not found in IdP metadata");
 
 public class TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup()
     : Exception("Team primary location linking only allowed in organization setup");
