@@ -11,7 +11,7 @@ namespace Organization.Shared.Database.Entities;
 public class OrganizationMember : EntityBaseWithDeleted
 {
     public OldOrganizationMembershipType MembershipType { get; set; } = OldOrganizationMembershipType.Member;
-    public string NewMembershipType { get; set; }
+    public string? NewMembershipType { get; set; }
     public bool? IsOrganizationOnboardingDone { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
@@ -34,14 +34,7 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
 
         builder
             .Property(item => item.NewMembershipType)
-            .HasMaxLength(Constants.MaxMembershipTypeLength)
-            .HasComputedColumnSql(@"
-                    CASE 
-                        WHEN ""MembershipType"" = 0 THEN 'OWNER'
-                        WHEN ""MembershipType"" = 1 THEN 'ADMINISTRATOR'
-                        WHEN ""MembershipType"" = 2 THEN 'MEMBER'
-                        ELSE 'UNKNOWN'
-                    END", stored: true);
+            .HasMaxLength(Constants.MaxMembershipTypeLength);
 
         builder
             .HasOne(item => item.Organization)

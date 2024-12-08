@@ -12,9 +12,9 @@ public class JoinInvitation : EntityBaseWithDeleted
 {
     public string? Email { get; set; }
     public OldInvitationStatus Status { get; set; }
-    public string NewStatus { get; set; }
+    public string? NewStatus { get; set; }
     public OldOrganizationMembershipType MembershipType { get; set; }
-    public string NewMembershipType { get; set; }
+    public string? NewMembershipType { get; set; }
 
     public virtual Organization Organization { get; set; }
     public virtual Customer CreatedBy { get; set; }
@@ -32,26 +32,11 @@ public class JoinInvitationConfiguration : IEntityTypeConfiguration<JoinInvitati
 
         builder
             .Property(item => item.NewMembershipType)
-            .HasMaxLength(Constants.MaxInvitationStatusLength)
-            .HasComputedColumnSql(@"
-                    CASE 
-                        WHEN ""Status"" = 0 THEN 'PENDING'
-                        WHEN ""Status"" = 1 THEN 'ACCEPTED'
-                        WHEN ""Status"" = 2 THEN 'REJECTED'
-                        WHEN ""Status"" = 3 THEN 'CANCELLED'
-                        ELSE 'UNKNOWN'
-                    END", true);
+            .HasMaxLength(Constants.MaxInvitationStatusLength);
 
         builder
             .Property(item => item.NewMembershipType)
-            .HasMaxLength(Constants.MaxMembershipTypeLength)
-            .HasComputedColumnSql(@"
-                    CASE 
-                        WHEN ""MembershipType"" = 0 THEN 'OWNER'
-                        WHEN ""MembershipType"" = 1 THEN 'ADMINISTRATOR'
-                        WHEN ""MembershipType"" = 2 THEN 'MEMBER'
-                        ELSE 'UNKNOWN'
-                    END", true);
+            .HasMaxLength(Constants.MaxMembershipTypeLength);
 
         builder
             .HasOne(item => item.Organization)

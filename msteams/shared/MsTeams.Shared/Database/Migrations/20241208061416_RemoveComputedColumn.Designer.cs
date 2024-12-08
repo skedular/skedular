@@ -3,18 +3,21 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using MsTeams.Shared.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Payment.Shared.Database;
 
 #nullable disable
 
-namespace Payment.Shared.Database.Migrations
+namespace MsTeams.Shared.Database.Migrations
 {
-    [DbContext(typeof(PaymentDbContext))]
-    partial class PaymentDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MsTeamsDbContext))]
+    [Migration("20241208061416_RemoveComputedColumn")]
+    partial class RemoveComputedColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,7 +75,7 @@ namespace Payment.Shared.Database.Migrations
                     b.ToTable("Outbox");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.Customer", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -90,6 +93,152 @@ namespace Payment.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("TeamsAndChannelsLastRefreshedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("TeamsAndChannelsLastRefreshedAt");
+
+                    b.ToTable("AzureTenant");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeam", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AzureTenantId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("WebUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AzureTenantId");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("AzureTenantTeam");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeamChannel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AzureTenantTeamId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("WebUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AzureTenantTeamId");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("AzureTenantTeamChannel");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Customer", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -103,7 +252,7 @@ namespace Payment.Shared.Database.Migrations
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.Identity", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Identity", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(200)
@@ -115,6 +264,13 @@ namespace Payment.Shared.Database.Migrations
                     b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)");
+
+                    b.Property<bool?>("EmailVerified")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
@@ -132,10 +288,14 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasIndex("CustomerId");
 
+                    b.HasIndex("Email");
+
+                    b.HasIndex("EmailVerified");
+
                     b.ToTable("Identity");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.Organization", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Location", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -153,13 +313,9 @@ namespace Payment.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("StripeCustomerId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -171,12 +327,41 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("Name");
+                    b.ToTable("Location");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Organization", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeletedAt");
 
                     b.ToTable("Organization");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationMember", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.OrganizationMember", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -229,22 +414,16 @@ namespace Payment.Shared.Database.Migrations
                     b.ToTable("OrganizationMember");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationOffering", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Team", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("Code")
-                        .HasColumnType("integer");
-
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("End")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("EventRaisedAt")
@@ -253,12 +432,9 @@ namespace Payment.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("Start")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -270,152 +446,45 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("OrganizationId");
-
-                    b.ToTable("OrganizationOffering");
+                    b.ToTable("Team");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationOfferingStripePaymentIntent", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.HasOne("MsTeams.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("AzureTenants")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<long>("Amount")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("OrganizationOfferingId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("OrganizationStripePaymentMethodId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("OrganizationOfferingId");
-
-                    b.HasIndex("OrganizationStripePaymentMethodId");
-
-                    b.ToTable("OrganizationOfferingStripePaymentIntent");
+                    b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationStripePaymentMethod", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeam", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.HasOne("MsTeams.Shared.Database.Entities.AzureTenant", "AzureTenant")
+                        .WithMany("AzureTenantTeams")
+                        .HasForeignKey("AzureTenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("CardBrand")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CardCountry")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CardDescription")
-                        .HasColumnType("text");
-
-                    b.Property<byte?>("CardExpiryMonth")
-                        .HasColumnType("smallint");
-
-                    b.Property<short?>("CardExpiryYear")
-                        .HasColumnType("smallint");
-
-                    b.Property<string>("CardFingerprint")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CardFunding")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CardIssuer")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CardLastFourDigit")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ClientSecret")
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PaymentMethodId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SetupIntentId")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientSecret");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("PaymentMethodId");
-
-                    b.HasIndex("SetupIntentId")
-                        .IsUnique();
-
-                    b.HasIndex("Status");
-
-                    b.HasIndex("CardExpiryMonth", "CardExpiryYear");
-
-                    b.ToTable("OrganizationStripePaymentMethod");
+                    b.Navigation("AzureTenant");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.Identity", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeamChannel", b =>
                 {
-                    b.HasOne("Payment.Shared.Database.Entities.Customer", "Customer")
+                    b.HasOne("MsTeams.Shared.Database.Entities.AzureTenantTeam", "AzureTenantTeam")
+                        .WithMany("AzureTenantTeamChannels")
+                        .HasForeignKey("AzureTenantTeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AzureTenantTeam");
+                });
+
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Identity", b =>
+                {
+                    b.HasOne("MsTeams.Shared.Database.Entities.Customer", "Customer")
                         .WithMany("Identities")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -424,15 +493,15 @@ namespace Payment.Shared.Database.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationMember", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.OrganizationMember", b =>
                 {
-                    b.HasOne("Payment.Shared.Database.Entities.Customer", "Customer")
+                    b.HasOne("MsTeams.Shared.Database.Entities.Customer", "Customer")
                         .WithMany("OrganizationMembers")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Payment.Shared.Database.Entities.Organization", "Organization")
+                    b.HasOne("MsTeams.Shared.Database.Entities.Organization", "Organization")
                         .WithMany("OrganizationMembers")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -443,79 +512,28 @@ namespace Payment.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationOffering", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>
                 {
-                    b.HasOne("Payment.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("OrganizationOfferings")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Organization");
+                    b.Navigation("AzureTenantTeams");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationOfferingStripePaymentIntent", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeam", b =>
                 {
-                    b.HasOne("Payment.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany()
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Payment.Shared.Database.Entities.OrganizationOffering", "OrganizationOffering")
-                        .WithMany("OrganizationOfferingStripePaymentIntents")
-                        .HasForeignKey("OrganizationOfferingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Payment.Shared.Database.Entities.OrganizationStripePaymentMethod", "OrganizationStripePaymentMethod")
-                        .WithMany("OrganizationOfferingStripePaymentIntents")
-                        .HasForeignKey("OrganizationStripePaymentMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Organization");
-
-                    b.Navigation("OrganizationOffering");
-
-                    b.Navigation("OrganizationStripePaymentMethod");
+                    b.Navigation("AzureTenantTeamChannels");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationStripePaymentMethod", b =>
-                {
-                    b.HasOne("Payment.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("OrganizationStripePaymentMethods")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Organization");
-                });
-
-            modelBuilder.Entity("Payment.Shared.Database.Entities.Customer", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Customer", b =>
                 {
                     b.Navigation("Identities");
 
                     b.Navigation("OrganizationMembers");
                 });
 
-            modelBuilder.Entity("Payment.Shared.Database.Entities.Organization", b =>
+            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Organization", b =>
                 {
+                    b.Navigation("AzureTenants");
+
                     b.Navigation("OrganizationMembers");
-
-                    b.Navigation("OrganizationOfferings");
-
-                    b.Navigation("OrganizationStripePaymentMethods");
-                });
-
-            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationOffering", b =>
-                {
-                    b.Navigation("OrganizationOfferingStripePaymentIntents");
-                });
-
-            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationStripePaymentMethod", b =>
-                {
-                    b.Navigation("OrganizationOfferingStripePaymentIntents");
                 });
 #pragma warning restore 612, 618
         }
