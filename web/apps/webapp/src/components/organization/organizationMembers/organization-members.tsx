@@ -228,6 +228,8 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
     },
   ];
 
+  const rowCount = rows.length;
+
   return (
     <Stack direction="column" spacing={1}>
       <Stack
@@ -269,9 +271,18 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
         <DataGrid
           rows={rows}
           columns={columns}
+          hideFooterPagination={rowCount <= 10}
+          initialState={{
+            pagination: {
+              rowCount,
+              paginationModel: {
+                pageSize: 10,
+              },
+            },
+          }}
+          pageSizeOptions={[10]}
           ignoreDiacritics
           disableRowSelectionOnClick
-          hideFooter
           getRowHeight={() => 'auto'}
           rowSpacingType="margin"
           getRowSpacing={() => ({ top: 3, bottom: 3 })}
