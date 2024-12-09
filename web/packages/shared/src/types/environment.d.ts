@@ -5,7 +5,6 @@ declare global {
     interface ProcessEnv {
       NEXT_PUBLIC_SITE_URL: string;
       NEXT_PUBLIC_MICROANALYTICS_APP_ID: string;
-      NEXT_PUBLIC_LOGROCKET_APP_ID: string;
       NEXT_PUBLIC_SLACK_CLIENT_ID: string;
       NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID: string;
       NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID: string;

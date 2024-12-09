@@ -22,6 +22,7 @@ import { LocationLink } from 'components/location';
 import { TeamLink } from 'components/team';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
+import type { JSX } from 'react';
 import { memo, startTransition, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';

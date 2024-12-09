@@ -22,6 +22,7 @@ import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditional
 import graphql from 'babel-plugin-relay/macro';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
+import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';

@@ -23,6 +23,7 @@ import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/li
 import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
+import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
