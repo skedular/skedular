@@ -4,7 +4,7 @@ import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { defaultPadding } from '@repo/shared/libs/theme';
+import { defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
 import graphql from 'babel-plugin-relay/macro';
 import { LocationSelector } from 'components/location/locationSelector';
 import { NewTeamButton } from 'components/team/addTeam';
@@ -42,7 +42,7 @@ const Teams = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   };
 
   return (
-    <Stack direction="column" spacing={1}>
+    <Stack direction="column" spacing={1} sx={{ maxWidth: maxScreenWidth }}>
       <Stack
         direction="row"
         spacing={1}

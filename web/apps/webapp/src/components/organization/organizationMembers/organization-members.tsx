@@ -13,7 +13,7 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
-import { defaultPadding } from '@repo/shared/libs/theme';
+import { defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
 import { getCustomerFullName } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
@@ -273,10 +273,8 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
     },
   ];
 
-  const rowCount = rows.length;
-
   return (
-    <Stack direction="column" spacing={1}>
+    <Stack direction="column" spacing={1} sx={{ maxWidth: maxScreenWidth }}>
       <Stack
         direction="column"
         spacing={1}
@@ -317,10 +315,10 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
         <DataGrid
           rows={rows}
           columns={columns}
-          hideFooterPagination={rowCount <= 10}
+          hideFooterPagination={rows.length <= 10}
           initialState={{
             pagination: {
-              rowCount,
+              rowCount: rows.length,
               paginationModel: {
                 pageSize: 10,
               },

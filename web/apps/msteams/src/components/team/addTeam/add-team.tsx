@@ -12,6 +12,7 @@ import {
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { maxScreenWidth } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { SingleChoiceLocation } from 'components/location/locationSelector';
@@ -204,7 +205,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   }
 
   return (
-    <Paper elevation={24} sx={{ padding: 2 }}>
+    <Paper elevation={24} sx={{ padding: 2, maxWidth: maxScreenWidth }}>
       <Form
         onSubmit={handleTeamCreateClick}
         initialValues={{

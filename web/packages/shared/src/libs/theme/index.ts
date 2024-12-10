@@ -1,1 +1,1 @@
-export { default as createTheme, defaultPadding, defaultSpacing } from './theme';
+export { default as createTheme, defaultPadding, defaultSpacing, maxScreenWidth } from './theme';

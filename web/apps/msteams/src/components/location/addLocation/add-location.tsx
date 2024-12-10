@@ -9,6 +9,7 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { maxScreenWidth } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -172,7 +173,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
   };
 
   return (
-    <Paper elevation={24} sx={{ padding: 2 }}>
+    <Paper elevation={24} sx={{ padding: 2, maxWidth: maxScreenWidth }}>
       <Form
         onSubmit={handleLocationCreateClick}
         initialValues={{
