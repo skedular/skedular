@@ -20,17 +20,14 @@ public class ExtractSamlResponseShould
         var xmlResponse = sut.ExtractSamlResponse(decodedSamlResponse);
 
         // Assert
-        xmlResponse.Email.Should()
-            .Be("morteza.azizi.khalkheili_hotmail.com#EXT#@mortezaazizikhalkheilihotma.onmicrosoft.com");
         xmlResponse.NameId.Should()
             .Be("morteza.azizi.khalkheili_hotmail.com#EXT#@mortezaazizikhalkheilihotma.onmicrosoft.com");
         xmlResponse.Issuer.Should().Be("https://sts.windows.net/280c5331-477b-4a6a-98c5-5b1ae2bf725d/");
-        xmlResponse.ObjectId.Should().Be("985050ce-033d-4652-ab2d-33920faf2daf");
         xmlResponse.AuthnContext.Should().Be("urn:oasis:names:tc:SAML:2.0:ac:classes:Password");
         xmlResponse.SessionIndex.Should().Be("_7777a9fb-6c29-4df9-9eb0-97f746df2201");
         xmlResponse.SessionNotOnOrAfter.Should().NotBe(null);
         xmlResponse.AuthnInstant.Should().NotBe(null);
-        xmlResponse.Roles.Count.Should().Be(0);
+        xmlResponse.Roles.Count.Should().Be(9);
         xmlResponse.StatusCode.Should().Contain("Success");
         xmlResponse.NestedStatusCode.Should().BeNull();
         xmlResponse.StatusMessage.Should().BeNull();

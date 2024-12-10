@@ -123,24 +123,9 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
         {
             var name = attribute.Attributes?["Name"]?.Value;
             var value = attribute.SelectSingleNode("saml:AttributeValue", namespaceManager)?.InnerText;
-
             ArgumentException.ThrowIfNullOrWhiteSpace(value);
-
-            switch (name)
-            {
-                case "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name":
-                    response.Email = value;
-                    break;
-                case "http://schemas.microsoft.com/identity/claims/objectidentifier":
-                    response.ObjectId = value;
-                    break;
-                case "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role":
-                    response.Roles.Add(value);
-                    break;
-            }
+            response.Roles.Add($"{name}:{value}");
         }
-
-        ArgumentException.ThrowIfNullOrWhiteSpace(response.ObjectId);
 
         var responseNode = samlResponse.SelectSingleNode("//samlp:Response", namespaceManager);
         ArgumentNullException.ThrowIfNull(responseNode);
