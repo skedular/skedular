@@ -50,6 +50,7 @@ export { default as BillingAndPaymentIcon } from '@mui/icons-material/Payment';
 export { default as CustomerIcon } from '@mui/icons-material/Person';
 export { default as InviteMemberIcon } from '@mui/icons-material/PersonAdd';
 export { default as RemoveIcon } from '@mui/icons-material/Remove';
+export { default as SearchRoundedIcon } from '@mui/icons-material/SearchRounded';
 export { default as PreferredIcon } from '@mui/icons-material/Star';
 export { default as NotPreferredIcon } from '@mui/icons-material/StarOutline';
 export { default as TodayIcon } from '@mui/icons-material/Today';

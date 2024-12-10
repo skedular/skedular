@@ -1,8 +1,9 @@
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import InputAdornment from '@mui/material/InputAdornment';
+import Divider from '@mui/material/Divider';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Stack from '@mui/material/Stack';
 import debounce from 'lodash.debounce';
 import { memo } from 'react';
+import { SearchRoundedIcon } from '../../components/icons';
 import { keyboardDebounceTimeout } from '../../libs/utils';
 
 type Props = {
@@ -28,12 +29,22 @@ const Search = ({ size, placeholder, defaultValue, onChange }: Props) => {
       size={size}
       placeholder={placeholder}
       startAdornment={
-        <InputAdornment position="start">
-          <SearchRoundedIcon fontSize="small" />
-        </InputAdornment>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingRight: 1 }}>
+          <SearchRoundedIcon />
+          <Divider orientation="vertical" flexItem />
+        </Stack>
       }
       onChange={debounceChanged}
       defaultValue={defaultValue}
+      sx={{
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderRadius: 4,
+        },
+        width: {
+          xs: '100%',
+          sm: 'min(100%, 250px)',
+        },
+      }}
     />
   );
 };

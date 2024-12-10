@@ -1,4 +1,6 @@
 import { TeamSelector } from '@/components/team/teamSelector';
+import type { organizationMembers_organizationMembers_query$key } from '@/queries/__generated__/organizationMembers_organizationMembers_query.graphql';
+import type { organizationMembers_organizationMembers_refetchableFragment } from '@/queries/__generated__/organizationMembers_organizationMembers_refetchableFragment.graphql';
 import type { organizationMembers_rootQuery } from '@/queries/__generated__/organizationMembers_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -10,12 +12,13 @@ import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { Search } from '@repo/shared/components/search';
 import { defaultPadding } from '@repo/shared/libs/theme';
 import { getCustomerFullName } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
-import { memo, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 
 type Props = {
   queryReference: PreloadedQuery<organizationMembers_rootQuery, Record<string, unknown>>;
@@ -24,23 +27,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query organizationMembers_rootQuery($organizationId: String!) {
+  query organizationMembers_rootQuery($organizationId: String!, $peopleNameSearchText: String) {
     organization(id: $organizationId) {
       canInvitePeople
-      members {
-        id
-        customer {
-          uniqueId
-          email
-          name
-          givenName
-          middleName
-          familyName
-          photoUrl
-          phoneNumber
-        }
-        isActive
-      }
     }
     teams(where: { organizationId: $organizationId }) {
       __id
@@ -62,6 +51,7 @@ const RootQuery = graphql`
       }
     }
     ...teamSelector_allTeams_query
+    ...organizationMembers_organizationMembers_query
   }
 `;
 
@@ -86,15 +76,48 @@ type RowType = {
 
 const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<organizationMembers_rootQuery>(RootQuery, queryReference);
+  const [rootDataOrganizationMembers, refetchOrganizationMembers] = useRefetchableFragment<
+    organizationMembers_organizationMembers_refetchableFragment,
+    organizationMembers_organizationMembers_query$key
+  >(
+    graphql`
+      fragment organizationMembers_organizationMembers_query on Query
+      @refetchable(queryName: "organizationMembers_organizationMembers_refetchableFragment") {
+        organizationMembers(where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }) {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              customer {
+                uniqueId
+                email
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+                phoneNumber
+              }
+              isActive
+            }
+          }
+        }
+      }
+    `,
+    rootData,
+  );
 
+  const [, startTransition] = useTransition();
   const [teamIds, setTeamIds] = useState<string[]>([]);
+  const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const members = useMemo(() => {
-    if (!rootData.organization) {
+    if (!rootDataOrganizationMembers.organizationMembers) {
       return [];
     }
 
-    const members = rootData.organization.members
-      .map((member) => member)
+    const members = rootDataOrganizationMembers.organizationMembers.edges
+      .map(({ node }) => node)
       .sort((a, b) => {
         const name1 = getCustomerFullName(a.customer);
         const name2 = getCustomerFullName(b.customer);
@@ -121,10 +144,32 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
 
       return member.teams.some((team) => teamIds.includes(team.id));
     });
-  }, [rootData.organization, rootData.teams, teamIds]);
+  }, [rootData.teams, rootDataOrganizationMembers.organizationMembers, teamIds]);
+
+  const handleRefetchOrganizationMembers = useCallback(
+    (peopleNameSearchText: string) => {
+      startTransition(() => {
+        refetchOrganizationMembers(
+          {
+            peopleNameSearchText,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchOrganizationMembers],
+  );
 
   const handlTeamChanged = (id?: string) => {
     setTeamIds(id ? [id] : []);
+  };
+
+  const handleSearchTextChange = (str: string) => {
+    setPeopleNameSearchText(str);
+
+    handleRefetchOrganizationMembers(str);
   };
 
   const rows: RowType[] = members.map((member) => ({
@@ -259,6 +304,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
       >
         <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
         <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
+        <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
       </Stack>
       <Stack
         direction="column"

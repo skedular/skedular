@@ -87,7 +87,7 @@ type RowType = {
   Sun: BookingAndCustomerDetails;
 };
 
-const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Find a person..." />;
+const QuickSearchToolbar = () => <GridToolbarQuickFilter placeholder="Search for members" />;
 
 const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizationId, locationId, teamId, customers, startDate }: Props) => {
   const rootData = useFragment(

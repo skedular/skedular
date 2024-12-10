@@ -244,7 +244,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
             defaultDate={startWeek}
           />
           <WeekPicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChange} />
-          <Search size="small" placeholder="Find a person..." defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+          <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
         </Stack>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
           <TablePagination
