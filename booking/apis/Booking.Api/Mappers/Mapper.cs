@@ -6,6 +6,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
 using BookingEdge = Booking.Api.GraphQL.BookingEdge;
+using BookingType = Booking.Api.GraphQL.BookingType;
 using Customer = Booking.Shared.Models.Customer;
 using Desk = Booking.Shared.Database.Entities.Desk;
 using Identity = Booking.Shared.Models.Identity;
@@ -71,6 +72,7 @@ public class Mapper : IMapper
             From = src.From,
             To = src.To,
             Notes = src.Notes,
+            Type = src.Type,
             Customer = MapTo(src.Customer)!,
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
@@ -112,6 +114,19 @@ public class Mapper : IMapper
             From = src.From,
             To = src.To,
             Notes = src.Notes,
+            Type = src.Type switch
+            {
+                global::Api.Shared.Models.BookingType.WorkingFromHome => BookingType.WorkingFromHome,
+                global::Api.Shared.Models.BookingType.WorkingFromOffice => BookingType.WorkingFromOffice,
+                global::Api.Shared.Models.BookingType.SickLeave => BookingType.SickLeave,
+                global::Api.Shared.Models.BookingType.AnnualLeave => BookingType.AnnualLeave,
+                global::Api.Shared.Models.BookingType.WellBeingLeave => BookingType.WellBeingLeave,
+                global::Api.Shared.Models.BookingType.ClientOffices => BookingType.ClientOffices,
+                global::Api.Shared.Models.BookingType.Vacation => BookingType.Vacation,
+                global::Api.Shared.Models.BookingType.TravelingForWork => BookingType.TravelingForWork,
+                global::Api.Shared.Models.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = MapTo(src.Customer),
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
@@ -126,6 +141,19 @@ public class Mapper : IMapper
             From = src.From,
             To = src.To,
             Notes = src.Notes,
+            Type = src.Type switch
+            {
+                BookingType.WorkingFromHome => global::Api.Shared.Models.BookingType.WorkingFromHome,
+                BookingType.WorkingFromOffice => global::Api.Shared.Models.BookingType.WorkingFromOffice,
+                BookingType.SickLeave => global::Api.Shared.Models.BookingType.SickLeave,
+                BookingType.AnnualLeave => global::Api.Shared.Models.BookingType.AnnualLeave,
+                BookingType.WellBeingLeave => global::Api.Shared.Models.BookingType.WellBeingLeave,
+                BookingType.ClientOffices => global::Api.Shared.Models.BookingType.ClientOffices,
+                BookingType.Vacation => global::Api.Shared.Models.BookingType.Vacation,
+                BookingType.TravelingForWork => global::Api.Shared.Models.BookingType.TravelingForWork,
+                BookingType.NonWorkingDay => global::Api.Shared.Models.BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = new Customer { Id = src.CustomerId },
             Organization =
                 string.IsNullOrWhiteSpace(src.OrganizationId)
@@ -144,6 +172,19 @@ public class Mapper : IMapper
             From = src.From,
             To = src.To,
             Notes = src.Notes,
+            Type = src.Type switch
+            {
+                BookingType.WorkingFromHome => global::Api.Shared.Models.BookingType.WorkingFromHome,
+                BookingType.WorkingFromOffice => global::Api.Shared.Models.BookingType.WorkingFromOffice,
+                BookingType.SickLeave => global::Api.Shared.Models.BookingType.SickLeave,
+                BookingType.AnnualLeave => global::Api.Shared.Models.BookingType.AnnualLeave,
+                BookingType.WellBeingLeave => global::Api.Shared.Models.BookingType.WellBeingLeave,
+                BookingType.ClientOffices => global::Api.Shared.Models.BookingType.ClientOffices,
+                BookingType.Vacation => global::Api.Shared.Models.BookingType.Vacation,
+                BookingType.TravelingForWork => global::Api.Shared.Models.BookingType.TravelingForWork,
+                BookingType.NonWorkingDay => global::Api.Shared.Models.BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = new Customer { Id = src.CustomerId },
             Organization =
                 string.IsNullOrWhiteSpace(src.OrganizationId)
@@ -177,6 +218,7 @@ public class Mapper : IMapper
         dest.From = src.From;
         dest.To = src.To;
         dest.Notes = src.Notes;
+        dest.Type = src.Type;
         dest.Customer = customer;
         dest.Organization = organization;
         dest.Location = location;
@@ -197,6 +239,28 @@ public class Mapper : IMapper
             To = src.To.ToTimestamp(),
             Notes = src.Notes.ToSafeString(),
             Customer = MapToGrpcResponse(src.Customer),
+            Type = src.Type switch
+            {
+                global::Api.Shared.Models.BookingType.WorkingFromHome => global::Api.Shared.Services.Grpc.UnityHub
+                    .Booking.V1.BookingType.WorkingFromHome,
+                global::Api.Shared.Models.BookingType.WorkingFromOffice => global::Api.Shared.Services.Grpc.UnityHub
+                    .Booking.V1.BookingType.WorkingFromOffice,
+                global::Api.Shared.Models.BookingType.SickLeave => global::Api.Shared.Services.Grpc.UnityHub.Booking.V1
+                    .BookingType.SickLeave,
+                global::Api.Shared.Models.BookingType.AnnualLeave => global::Api.Shared.Services.Grpc.UnityHub.Booking
+                    .V1.BookingType.AnnualLeave,
+                global::Api.Shared.Models.BookingType.WellBeingLeave => global::Api.Shared.Services.Grpc.UnityHub
+                    .Booking.V1.BookingType.WellBeingLeave,
+                global::Api.Shared.Models.BookingType.ClientOffices => global::Api.Shared.Services.Grpc.UnityHub.Booking
+                    .V1.BookingType.ClientOffices,
+                global::Api.Shared.Models.BookingType.Vacation => global::Api.Shared.Services.Grpc.UnityHub.Booking.V1
+                    .BookingType.Vacation,
+                global::Api.Shared.Models.BookingType.TravelingForWork => global::Api.Shared.Services.Grpc.UnityHub
+                    .Booking.V1.BookingType.TravelingForWork,
+                global::Api.Shared.Models.BookingType.NonWorkingDay => global::Api.Shared.Services.Grpc.UnityHub.Booking
+                    .V1.BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Organization = MapToGrpcResponse(src.Organization),
             Location = MapToGrpcResponse(src.Location),
             Team = MapToGrpcResponse(src.Team)
@@ -214,6 +278,28 @@ public class Mapper : IMapper
             From = src.From.ToDateTimeOffset(),
             To = src.To.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
+            Type = src.Type switch
+            {
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
+                    .Models.BookingType.WorkingFromHome,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
+                    .Models.BookingType.WorkingFromOffice,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
+                    .BookingType.SickLeave,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
+                    .Models.BookingType.AnnualLeave,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
+                    .Models.BookingType.WellBeingLeave,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.ClientOffices => global::Api.Shared
+                    .Models.BookingType.ClientOffices,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
+                    .BookingType.Vacation,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
+                    .Models.BookingType.TravelingForWork,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
+                    .Models.BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = new Customer { Id = src.CustomerId },
             Organization =
                 string.IsNullOrWhiteSpace(src.OrganizationId)
@@ -234,6 +320,28 @@ public class Mapper : IMapper
             From = src.From.ToDateTimeOffset(),
             To = src.To.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
+            Type = src.Type switch
+            {
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
+                    .Models.BookingType.WorkingFromHome,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
+                    .Models.BookingType.WorkingFromOffice,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
+                    .BookingType.SickLeave,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
+                    .Models.BookingType.AnnualLeave,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
+                    .Models.BookingType.WellBeingLeave,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.ClientOffices => global::Api.Shared
+                    .Models.BookingType.ClientOffices,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
+                    .BookingType.Vacation,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
+                    .Models.BookingType.TravelingForWork,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
+                    .Models.BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = new Customer { Id = src.CustomerId },
             Organization =
                 string.IsNullOrWhiteSpace(src.OrganizationId)
@@ -254,6 +362,28 @@ public class Mapper : IMapper
             From = src.From.ToDateTimeOffset(),
             To = src.To.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
+            Type = src.Type switch
+            {
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
+                    .Models.BookingType.WorkingFromHome,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
+                    .Models.BookingType.WorkingFromOffice,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
+                    .BookingType.SickLeave,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
+                    .Models.BookingType.AnnualLeave,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
+                    .Models.BookingType.WellBeingLeave,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.ClientOffices => global::Api.Shared
+                    .Models.BookingType.ClientOffices,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
+                    .BookingType.Vacation,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
+                    .Models.BookingType.TravelingForWork,
+                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
+                    .Models.BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = new Customer { Id = src.CustomerId },
             Organization =
                 string.IsNullOrWhiteSpace(src.OrganizationId)

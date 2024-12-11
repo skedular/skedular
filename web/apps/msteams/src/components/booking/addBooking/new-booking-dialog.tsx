@@ -104,6 +104,7 @@ const NewBookingDialog = ({
           from
           to
           notes
+          type
           customer {
             uniqueId
             name
@@ -172,6 +173,7 @@ const NewBookingDialog = ({
     const fromToPrint = toShortDate(startOfDay(finalDate));
     const customerId = member ?? rootData.me?.id;
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
+    const type = 'WorkingFromOffice';
 
     commitAddBooking({
       variables: {
@@ -187,6 +189,7 @@ const NewBookingDialog = ({
           locationId,
           deskIds,
           teamId: defaultTeamId,
+          type,
         },
       },
       onCompleted: (response, errors) => {
@@ -240,6 +243,7 @@ const NewBookingDialog = ({
             from,
             to,
             notes,
+            type,
             customer: {
               uniqueId: rootData.me.id,
               name: '',

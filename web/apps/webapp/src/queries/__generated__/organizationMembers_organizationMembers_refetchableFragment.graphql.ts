@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<078e6aa65e757b9eea958fefaafa341c>>
+ * @generated SignedSource<<d679fd010204d6f3e0d659e5150af863>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,15 +10,8 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "PhoneNumber" | "%future added value";
-export type OrganizationMemberOrderInput = {
-  direction: OrderDirection;
-  field: OrganizationMemberOrderField;
-};
 export type organizationMembers_organizationMembers_refetchableFragment$variables = {
   organizationId: string;
-  organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   peopleNameSearchText?: string | null | undefined;
 };
 export type organizationMembers_organizationMembers_refetchableFragment$data = {
@@ -35,11 +28,6 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "organizationId"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "organizationMembersSortingValues"
   },
   {
     "defaultValue": null,
@@ -72,11 +60,6 @@ return {
       {
         "alias": null,
         "args": [
-          {
-            "kind": "Variable",
-            "name": "orderBy",
-            "variableName": "organizationMembersSortingValues"
-          },
           {
             "fields": [
               {
@@ -227,16 +210,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "312703fcb8387ef33f5732ebbbda3c4d",
+    "cacheID": "45fb6277b342008d8a016792519557fc",
     "id": null,
     "metadata": {},
     "name": "organizationMembers_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMembers_organizationMembers_refetchableFragment(\n  $organizationId: String!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...organizationMembers_organizationMembers_query\n}\n\nfragment organizationMembers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        isActive\n      }\n    }\n  }\n}\n"
+    "text": "query organizationMembers_organizationMembers_refetchableFragment(\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...organizationMembers_organizationMembers_query\n}\n\nfragment organizationMembers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        isActive\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ee92e1935a624bf676567bcc12a21215";
+(node as any).hash = "8e813e6da842b69f8529ad922a54cd4f";
 
 export default node;

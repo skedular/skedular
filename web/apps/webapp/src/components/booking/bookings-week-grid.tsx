@@ -136,6 +136,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
               id
               from
               to
+              type
               customer {
                 uniqueId
                 name
@@ -176,6 +177,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
           id
           from
           to
+          type
           customer {
             uniqueId
             name
@@ -486,6 +488,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       });
     } else {
       const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
+      const type = 'WorkingFromOffice';
 
       commitAddBooking({
         variables: {
@@ -500,6 +503,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
             locationId,
             teamId,
             deskIds: [],
+            type,
           },
         },
         onCompleted: (response, errors) => {
@@ -550,6 +554,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
               id,
               from,
               to,
+              type,
               customer: {
                 uniqueId: customer.uniqueId,
                 name: '',

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2b46d2ae956aa06ceac94b5ed69c96d9>>
+ * @generated SignedSource<<3faee03ab7f59942a9ed4a1f788df44b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellBeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookingsWeekGrid_allBookings_query$data = {
   readonly bookings: {
@@ -43,6 +44,7 @@ export type bookingsWeekGrid_allBookings_query$data = {
           readonly name: string;
         } | null | undefined;
         readonly to: any;
+        readonly type: BookingType;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -219,6 +221,13 @@ return {
                 {
                   "alias": null,
                   "args": null,
+                  "kind": "ScalarField",
+                  "name": "type",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
                   "concreteType": "BookingCustomerDetails",
                   "kind": "LinkedField",
                   "name": "customer",
@@ -336,6 +345,6 @@ return {
 };
 })();
 
-(node as any).hash = "b302b01d00e21ba0ffdfef59c4ea33fc";
+(node as any).hash = "9cee852f0c1c6bfcbc00eacf7ab3fc7f";
 
 export default node;

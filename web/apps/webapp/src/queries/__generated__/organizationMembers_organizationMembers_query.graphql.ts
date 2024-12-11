@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5e06e37d2c4bed21cc6058cb7b2a0a1d>>
+ * @generated SignedSource<<f441ee40289fdbf14c11a7f50181979b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -46,10 +46,6 @@ const node: ReaderFragment = {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationMembersSortingValues"
-    },
-    {
-      "kind": "RootArgument",
       "name": "peopleNameSearchText"
     }
   ],
@@ -66,11 +62,6 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": [
-        {
-          "kind": "Variable",
-          "name": "orderBy",
-          "variableName": "organizationMembersSortingValues"
-        },
         {
           "fields": [
             {
@@ -223,6 +214,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "ee92e1935a624bf676567bcc12a21215";
+(node as any).hash = "8e813e6da842b69f8529ad922a54cd4f";
 
 export default node;

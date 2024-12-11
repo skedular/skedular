@@ -36,6 +36,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
           from
           to
           notes
+          type
           customer {
             uniqueId
             name
@@ -158,6 +159,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
             }
 
             const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
+            const type = 'WorkingFromOffice';
 
             commitAddBooking({
               variables: {
@@ -170,6 +172,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
                   to,
                   organizationId,
                   deskIds: [],
+                  type,
                 },
               },
               onCompleted: (response, errors) => {
@@ -221,6 +224,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
                     id,
                     from,
                     to,
+                    type,
                     customer: {
                       uniqueId: rootData.me.id,
                       photoUrl: rootData.me.photoUrl,

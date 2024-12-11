@@ -31,27 +31,32 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5i",
             "b29raW5nLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
             "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSIsCgREYXRhEiQKCmFm",
-            "dGVyU3RhdGUYASABKAsyEC5ib29raW5nLkJvb2tpbmcivgIKB0Jvb2tpbmcS",
+            "dGVyU3RhdGUYASABKAsyEC5ib29raW5nLkJvb2tpbmci4gIKB0Jvb2tpbmcS",
             "CgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3Rv",
             "YnVmLlRpbWVzdGFtcBISCgpjdXN0b21lcklkGAMgASgJEhYKDm9yZ2FuaXph",
             "dGlvbklkGAQgASgJEigKBGZyb20YBSABKAsyGi5nb29nbGUucHJvdG9idWYu",
             "VGltZXN0YW1wEiYKAnRvGAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz",
             "dGFtcBINCgVub3RlcxgHIAEoCRISCgpsb2NhdGlvbklkGAggASgJEg8KB2Rl",
             "c2tJZHMYCSADKAkSDgoGdGVhbUlkGAogASgJEjYKEmRlc2tCb29raW5nRGV0",
-            "YWlscxgLIAMoCzIaLmJvb2tpbmcuRGVza0Jvb2tpbmdEZXRhaWwiVwoRRGVz",
-            "a0Jvb2tpbmdEZXRhaWwSCgoCaWQYASABKAkSDgoGZGVza0lkGAIgASgJEiYK",
-            "BnN0YXR1cxgDIAEoDjIWLmJvb2tpbmcuQm9va2luZ1N0YXR1cyovCgRUeXBl",
-            "EhMKD0Jvb2tpbmdVcHNlcnRlZBAAEhIKDkJvb2tpbmdEZWxldGVkEAEqQAoN",
-            "Qm9va2luZ1N0YXR1cxITCg9Bd2FpdEFjY2VwdGFuY2UQABIMCghBY2NlcHRl",
-            "ZBABEgwKCERlY2xpbmVkEAJCNqoCM0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVu",
-            "dHMuVW5pdHlIdWIuQm9va2luZy5WMS5WYWx1ZWIGcHJvdG8z"));
+            "YWlscxgLIAMoCzIaLmJvb2tpbmcuRGVza0Jvb2tpbmdEZXRhaWwSIgoEdHlw",
+            "ZRgMIAEoDjIULmJvb2tpbmcuQm9va2luZ1R5cGUiVwoRRGVza0Jvb2tpbmdE",
+            "ZXRhaWwSCgoCaWQYASABKAkSDgoGZGVza0lkGAIgASgJEiYKBnN0YXR1cxgD",
+            "IAEoDjIWLmJvb2tpbmcuQm9va2luZ1N0YXR1cyovCgRUeXBlEhMKD0Jvb2tp",
+            "bmdVcHNlcnRlZBAAEhIKDkJvb2tpbmdEZWxldGVkEAEqQAoNQm9va2luZ1N0",
+            "YXR1cxITCg9Bd2FpdEFjY2VwdGFuY2UQABIMCghBY2NlcHRlZBABEgwKCERl",
+            "Y2xpbmVkEAIqtwEKC0Jvb2tpbmdUeXBlEhMKD1dvcmtpbmdGcm9tSG9tZRAA",
+            "EhUKEVdvcmtpbmdGcm9tT2ZmaWNlEAESDQoJU2lja0xlYXZlEAISDwoLQW5u",
+            "dWFsTGVhdmUQAxISCg5XZWxsQmVpbmdMZWF2ZRAEEhEKDUNsaWVudE9mZmlj",
+            "ZXMQBRIMCghWYWNhdGlvbhAGEhQKEFRyYXZlbGluZ0ZvcldvcmsQBxIRCg1O",
+            "b25Xb3JraW5nRGF5EAhCNqoCM0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMu",
+            "VW5pdHlIdWIuQm9va2luZy5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingStatus), typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event), global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Metadata), global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Data.Parser, new[]{ "AfterState" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "CustomerId", "OrganizationId", "From", "To", "Notes", "LocationId", "DeskIds", "TeamId", "DeskBookingDetails" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "CustomerId", "OrganizationId", "From", "To", "Notes", "LocationId", "DeskIds", "TeamId", "DeskBookingDetails", "Type" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.DeskBookingDetail), global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.DeskBookingDetail.Parser, new[]{ "Id", "DeskId", "Status" }, null, null, null, null)
           }));
     }
@@ -68,6 +73,18 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
     [pbr::OriginalName("AwaitAcceptance")] AwaitAcceptance = 0,
     [pbr::OriginalName("Accepted")] Accepted = 1,
     [pbr::OriginalName("Declined")] Declined = 2,
+  }
+
+  public enum BookingType {
+    [pbr::OriginalName("WorkingFromHome")] WorkingFromHome = 0,
+    [pbr::OriginalName("WorkingFromOffice")] WorkingFromOffice = 1,
+    [pbr::OriginalName("SickLeave")] SickLeave = 2,
+    [pbr::OriginalName("AnnualLeave")] AnnualLeave = 3,
+    [pbr::OriginalName("WellBeingLeave")] WellBeingLeave = 4,
+    [pbr::OriginalName("ClientOffices")] ClientOffices = 5,
+    [pbr::OriginalName("Vacation")] Vacation = 6,
+    [pbr::OriginalName("TravelingForWork")] TravelingForWork = 7,
+    [pbr::OriginalName("NonWorkingDay")] NonWorkingDay = 8,
   }
 
   #endregion
@@ -971,6 +988,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
       deskIds_ = other.deskIds_.Clone();
       teamId_ = other.teamId_;
       deskBookingDetails_ = other.deskBookingDetails_.Clone();
+      type_ = other.type_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1110,6 +1128,18 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
       get { return deskBookingDetails_; }
     }
 
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 12;
+    private global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType type_ = global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType.WorkingFromHome;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType Type {
+      get { return type_; }
+      set {
+        type_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1136,6 +1166,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
       if(!deskIds_.Equals(other.deskIds_)) return false;
       if (TeamId != other.TeamId) return false;
       if(!deskBookingDetails_.Equals(other.deskBookingDetails_)) return false;
+      if (Type != other.Type) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1154,6 +1185,7 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
       hash ^= deskIds_.GetHashCode();
       if (TeamId.Length != 0) hash ^= TeamId.GetHashCode();
       hash ^= deskBookingDetails_.GetHashCode();
+      if (Type != global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType.WorkingFromHome) hash ^= Type.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1210,6 +1242,10 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
         output.WriteString(TeamId);
       }
       deskBookingDetails_.WriteTo(output, _repeated_deskBookingDetails_codec);
+      if (Type != global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType.WorkingFromHome) {
+        output.WriteRawTag(96);
+        output.WriteEnum((int) Type);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1258,6 +1294,10 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
         output.WriteString(TeamId);
       }
       deskBookingDetails_.WriteTo(ref output, _repeated_deskBookingDetails_codec);
+      if (Type != global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType.WorkingFromHome) {
+        output.WriteRawTag(96);
+        output.WriteEnum((int) Type);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1297,6 +1337,9 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(TeamId);
       }
       size += deskBookingDetails_.CalculateSize(_repeated_deskBookingDetails_codec);
+      if (Type != global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType.WorkingFromHome) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1347,6 +1390,9 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
         TeamId = other.TeamId;
       }
       deskBookingDetails_.Add(other.deskBookingDetails_);
+      if (other.Type != global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType.WorkingFromHome) {
+        Type = other.Type;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1419,6 +1465,10 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
             deskBookingDetails_.AddEntriesFrom(input, _repeated_deskBookingDetails_codec);
             break;
           }
+          case 96: {
+            Type = (global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType) input.ReadEnum();
+            break;
+          }
         }
       }
     #endif
@@ -1489,6 +1539,10 @@ namespace Api.Shared.Clients.Events.UnityHub.Booking.V1.Value {
           }
           case 90: {
             deskBookingDetails_.AddEntriesFrom(ref input, _repeated_deskBookingDetails_codec);
+            break;
+          }
+          case 96: {
+            Type = (global::Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.BookingType) input.ReadEnum();
             break;
           }
         }

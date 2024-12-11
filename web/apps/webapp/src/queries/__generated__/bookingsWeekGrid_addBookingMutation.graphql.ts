@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<50b3a54e95d49315c744585d78bcf3f0>>
+ * @generated SignedSource<<d0524e04aa6841be003aa1cabca84abb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellBeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 export type AddBookingInput = {
   clientMutationId?: string | null | undefined;
   customerId: string;
@@ -20,6 +21,7 @@ export type AddBookingInput = {
   organizationId?: string | null | undefined;
   teamId?: string | null | undefined;
   to: any;
+  type: BookingType;
 };
 export type bookingsWeekGrid_addBookingMutation$variables = {
   connectionIds: ReadonlyArray<string>;
@@ -61,6 +63,7 @@ export type bookingsWeekGrid_addBookingMutation$data = {
         readonly uniqueId: string;
       } | null | undefined;
       readonly to: any;
+      readonly type: BookingType;
     };
   } | null | undefined;
 };
@@ -100,6 +103,7 @@ export type bookingsWeekGrid_addBookingMutation$rawResponse = {
         readonly uniqueId: string;
       } | null | undefined;
       readonly to: any;
+      readonly type: BookingType;
     };
   } | null | undefined;
 };
@@ -174,6 +178,13 @@ v5 = {
       "args": null,
       "kind": "ScalarField",
       "name": "to",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "type",
       "storageKey": null
     },
     {
@@ -340,16 +351,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7f2deaf73e6b4ed7d0c22b53d24cbdcf",
+    "cacheID": "b9bd4998face46517c73f15ff392809d",
     "id": null,
     "metadata": {},
     "name": "bookingsWeekGrid_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingsWeekGrid_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingsWeekGrid_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b2c17e32205f4721d7498c050d764fc1";
+(node as any).hash = "167b9fc26963f0d452e75543b370817d";
 
 export default node;

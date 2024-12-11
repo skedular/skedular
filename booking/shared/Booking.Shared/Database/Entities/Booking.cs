@@ -1,4 +1,5 @@
 using Api.Shared;
+using Api.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,13 +13,14 @@ public class Booking : EntityBaseWithDeleted
     public DateTimeOffset From { get; set; }
     public DateTimeOffset To { get; set; }
     public string? Notes { get; set; }
-
+    public string Type { get; set; }
     public virtual Customer Customer { get; set; }
     public virtual Organization? Organization { get; set; }
     public virtual Location? Location { get; set; }
     public virtual ICollection<Desk> Desks { get; set; } = [];
     public virtual Team? Team { get; set; }
 }
+
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 public class BookingConfiguration : IEntityTypeConfiguration<Booking>
@@ -28,6 +30,8 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Notes).HasMaxLength(Constants.MaxBookingNotesLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingTypeLength)
+            .HasDefaultValue(BookingType.WorkingFromOffice);
 
         builder
             .HasOne(item => item.Customer)
@@ -52,5 +56,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasIndex(item => item.From);
         builder.HasIndex(item => item.To);
         builder.HasIndex(item => item.Notes);
+
+        builder.HasIndex(item => item.Type);
     }
 }

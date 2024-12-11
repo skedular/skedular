@@ -66,6 +66,7 @@ public class BookingGrpcService(
                 request.Where.ToLTE?.ToDateTimeOffset(),
                 request.Where.NotesContains,
                 request.Where.NameContains,
+                string.IsNullOrWhiteSpace(request.Where.Type) ? null : request.Where.Type,
                 request.Where.IncludeMineOnly,
                 request.Where.IncludeFutureBookingsOnly,
                 request.Where.CombineOrganizationsLocationsTeams,
@@ -99,6 +100,8 @@ public class BookingGrpcService(
                         BookingOrderField.LocationName,
                     global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.TeamName => BookingOrderField
                         .TeamName,
+                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.Type => BookingOrderField
+                        .BookingType,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -146,6 +149,7 @@ public class BookingGrpcService(
                 request.Where.ToLTE?.ToDateTimeOffset(),
                 request.Where.NotesContains,
                 request.Where.NameContains,
+                string.IsNullOrWhiteSpace(request.Where.Type) ? null : request.Where.Type,
                 request.Where.IncludeMineOnly,
                 request.Where.IncludeFutureBookingsOnly,
                 request.Where.CombineOrganizationsLocationsTeams,

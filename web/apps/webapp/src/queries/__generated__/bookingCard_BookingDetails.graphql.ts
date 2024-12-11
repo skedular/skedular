@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<28acaa28d7a27041c90d182fd2cb6ee5>>
+ * @generated SignedSource<<d11c3a81255a4ba67d4195821847e192>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellBeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookingCard_BookingDetails$data = {
   readonly customer: {
@@ -47,6 +48,7 @@ export type bookingCard_BookingDetails$data = {
     readonly uniqueId: string;
   } | null | undefined;
   readonly to: any;
+  readonly type: BookingType;
   readonly " $fragmentType": "bookingCard_BookingDetails";
 };
 export type bookingCard_BookingDetails$key = {
@@ -105,6 +107,13 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "notes",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "type",
       "storageKey": null
     },
     {
@@ -217,6 +226,6 @@ return {
 };
 })();
 
-(node as any).hash = "48f7d8c6b44772527bc3b9bdfe3e2478";
+(node as any).hash = "b69365c62106be5bd47bfeec7ad6aa57";
 
 export default node;

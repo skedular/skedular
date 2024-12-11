@@ -78,6 +78,7 @@ message BookingWhereInput {
     bool includeMineOnly  = 14;
     bool includeFutureBookingsOnly  = 15;
     bool combineOrganizationsLocationsTeams = 16;
+    string type = 17;
 }
 
 message BookingOrderInput {
@@ -96,6 +97,20 @@ enum BookingOrderField {
     OrganizationName= 7;
     LocationName= 8;
     TeamName= 9;
+    Type= 10;
+}
+
+enum BookingType
+{
+    WorkingFromHome = 0;
+    WorkingFromOffice = 1;
+    SickLeave = 2;
+    AnnualLeave = 3;
+    WellBeingLeave = 4;
+    ClientOffices = 5;
+    Vacation = 6;
+    TravelingForWork = 7;
+    NonWorkingDay = 8;
 }
 
 message BookingConnection {
@@ -119,6 +134,7 @@ message Booking {
     Location location = 7;
     Team team = 8;
     repeated Desk desks = 9;
+    BookingType type = 10;
 }
 
 message Customer {
@@ -233,6 +249,7 @@ message Admin_AddInput {
     string teamId = 8;
     repeated string deskIds = 9;
     bool ignoreDeskAvailability = 10;
+    BookingType type = 11;
 }
 
 message AddInput {
@@ -245,6 +262,7 @@ message AddInput {
     string locationId = 7;
     string teamId = 8;
     repeated string deskIds = 9;
+    BookingType type = 10;
 }
 
 message UpdateInput {
@@ -257,6 +275,7 @@ message UpdateInput {
     string locationId = 7;
     string teamId = 8;
     repeated string deskIds = 9;
+    BookingType type = 10;
 }
 
 message DeleteInput {

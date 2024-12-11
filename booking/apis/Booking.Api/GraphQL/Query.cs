@@ -80,6 +80,7 @@ public class Query(IMapper mapper)
                     where.ToLTE,
                     where.NotesContains,
                     where.NameContains,
+                    string.IsNullOrWhiteSpace(where.Type) ? null : where.Type,
                     where.IncludeMineOnly,
                     where.IncludeFutureBookingsOnly,
                     where.CombineOrganizationsLocationsTeams,
@@ -105,6 +106,7 @@ public class Query(IMapper mapper)
                             BookingOrderField.OrganizationName => Shared.Models.BookingOrderField.OrganizationName,
                             BookingOrderField.LocationName => Shared.Models.BookingOrderField.LocationName,
                             BookingOrderField.TeamName => Shared.Models.BookingOrderField.TeamName,
+                            BookingOrderField.BookingType => Shared.Models.BookingOrderField.BookingType,
                             _ => throw new ArgumentOutOfRangeException()
                         };
 

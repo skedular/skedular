@@ -14,6 +14,7 @@ public class BookingSearchCriteria(
     DateTimeOffset? toLTE,
     string? notesContains,
     string? nameContains,
+    string? bookingType,
     bool? includeMineOnly,
     bool? includeFutureBookingsOnly,
     bool? combineOrganizationsLocationsTeams,
@@ -35,6 +36,7 @@ public class BookingSearchCriteria(
     public bool? IncludeFutureBookingsOnly { get; } = includeFutureBookingsOnly;
     public bool? CombineOrganizationsLocationsTeams { get; } = combineOrganizationsLocationsTeams;
     public string? CustomerId { get; set; }
+    public string? BookingType { get; } = bookingType;
     public ICollection<string> OrganizationIds { get; set; } = organizationIds;
     public ICollection<string> LocationIds { get; set; } = locationIds;
     public ICollection<string> TeamIds { get; set; } = teamIds;
@@ -54,5 +56,6 @@ public enum BookingOrderField
     FamilyName,
     OrganizationName,
     LocationName,
-    TeamName
+    TeamName,
+    BookingType
 }

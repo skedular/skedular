@@ -38,6 +38,7 @@ type BookingDetails {
   from: DateTime!
   to: DateTime!
   notes: String
+  type: BookingType!
   customer: BookingCustomerDetails!
   organization: BookingOrganizationDetails
   location: BookingLocationDetails
@@ -147,6 +148,7 @@ input AddBookingInput {
   from: DateTime!
   to: DateTime!
   notes: String
+  type: BookingType!
   organizationId: String
   locationId: String
   deskIds: [String!]!
@@ -178,6 +180,7 @@ input BookingWhereInput {
   toLT: DateTime
   toLTE: DateTime
   notesContains: String
+  type: String
   nameContains: String
   organizationIds: [String!]
   locationIds: [String!]
@@ -199,6 +202,7 @@ input UpdateBookingInput {
   from: DateTime!
   to: DateTime!
   notes: String
+  type: BookingType!
   organizationId: String
   locationId: String
   deskIds: [String!]!
@@ -216,6 +220,19 @@ enum BookingOrderField {
   OrganizationName
   LocationName
   TeamName
+  BookingType
+}
+
+enum BookingType {
+  WorkingFromHome
+  WorkingFromOffice
+  SickLeave
+  AnnualLeave
+  WellBeingLeave
+  ClientOffices
+  Vacation
+  TravelingForWork
+  NonWorkingDay
 }
 
 enum OrderDirection {

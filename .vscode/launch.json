@@ -9,8 +9,19 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/all-in-one/AllInOne/bin/Debug/net8.0/AllInOne.dll",
-      "cwd": "${workspaceFolder}/all-in-one/AllInOne/bin/Debug/net8.0",
+      "program": "${workspaceFolder}/all-in-one/AllInOne/bin/Debug/net9.0/AllInOne.dll",
+      "cwd": "${workspaceFolder}/all-in-one/AllInOne/bin/Debug/net9.0",
+      "args": [],
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "All Apis",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/all-in-one/AllApis/bin/Debug/net9.0/AllApis.dll",
+      "cwd": "${workspaceFolder}/all-in-one/AllApis/bin/Debug/net9.0",
       "args": [],
       "console": "integratedTerminal",
       "stopAtEntry": false,
@@ -30,6 +41,7 @@
       "request": "launch",
       "url": "http://localhost:15000",
       "cwd": "${workspaceFolder}/web/apps/webapp",
+      "port": 9876,
       "env": {
         "NEXTAUTH_SECRET": "XXXX",
         "PORT": "15000"

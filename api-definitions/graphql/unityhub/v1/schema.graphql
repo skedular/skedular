@@ -62,6 +62,7 @@ type BookingDetails {
   organization: BookingOrganizationDetails
   team: BookingTeamDetails
   to: DateTime!
+  type: BookingType!
 }
 
 type BookingEdge {
@@ -910,6 +911,7 @@ input AddBookingInput {
   organizationId: String
   teamId: String
   to: DateTime!
+  type: BookingType!
 }
 
 input AddCustomerDefaultDeskInput {
@@ -1027,6 +1029,7 @@ input BookingWhereInput {
   toGTE: DateTime
   toLT: DateTime
   toLTE: DateTime
+  type: String
 }
 
 input BulkAddDeskInput {
@@ -1353,6 +1356,7 @@ input UpdateBookingInput {
   organizationId: String
   teamId: String
   to: DateTime!
+  type: BookingType!
 }
 
 input UpdateDeskInput {
@@ -1434,6 +1438,7 @@ input ZoneOrganizationTagWhereInput {
 }
 
 enum BookingOrderField {
+  BookingType
   FamilyName
   From
   GivenName
@@ -1444,6 +1449,18 @@ enum BookingOrderField {
   OrganizationName
   TeamName
   To
+}
+
+enum BookingType {
+  AnnualLeave
+  ClientOffices
+  NonWorkingDay
+  SickLeave
+  TravelingForWork
+  Vacation
+  WellBeingLeave
+  WorkingFromHome
+  WorkingFromOffice
 }
 
 enum CustomerOrderField {

@@ -38,12 +38,26 @@ message Booking {
   repeated string deskIds = 9;
   string teamId = 10;
   repeated DeskBookingDetail deskBookingDetails = 11;
+  BookingType type = 12;
 }
 
 enum BookingStatus {
   AwaitAcceptance = 0;
   Accepted = 1;
   Declined = 2;
+}
+
+enum BookingType
+{
+    WorkingFromHome = 0;
+    WorkingFromOffice = 1;
+    SickLeave = 2;
+    AnnualLeave = 3;
+    WellBeingLeave = 4;
+    ClientOffices = 5;
+    Vacation = 6;
+    TravelingForWork = 7;
+    NonWorkingDay = 8;
 }
 
 message DeskBookingDetail {

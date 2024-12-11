@@ -71,8 +71,7 @@ public class EditBookingButtonHandler(
         if (booking.Customer.Id != customerId)
         {
             var permissions =
-                await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember,
-                    cancellationToken);
+                await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
             if (!permissions.CanUpdateBookingOnBehalf)
             {
                 throw new Unauthorized();
@@ -317,8 +316,11 @@ public class EditBookingButtonHandler(
             throw new InvalidOperationException("notes block is missing");
         }
 
+        var updateBooking = mapper.MapTo(booking);
+        updateBooking.Type = BookingType.WorkingFromOffice;
+
         await bookingServiceClient.UpdateAsync(
-            mapper.MapTo(booking),
+            updateBooking,
             bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 

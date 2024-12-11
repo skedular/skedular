@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6e1592144f7df180496b0718db3c03f7>>
+ * @generated SignedSource<<04d355126fc8ec3323a321e47919d590>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellBeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 export type UpdateBookingInput = {
   clientMutationId?: string | null | undefined;
   customerId: string;
@@ -20,6 +21,7 @@ export type UpdateBookingInput = {
   organizationId?: string | null | undefined;
   teamId?: string | null | undefined;
   to: any;
+  type: BookingType;
 };
 export type bookingCard_updateBookingMutation$variables = {
   input: UpdateBookingInput;
@@ -63,6 +65,7 @@ export type bookingCard_updateBookingMutation$data = {
         readonly uniqueId: string;
       } | null | undefined;
       readonly to: any;
+      readonly type: BookingType;
     };
   } | null | undefined;
 };
@@ -105,6 +108,7 @@ export type bookingCard_updateBookingMutation$rawResponse = {
         readonly uniqueId: string;
       } | null | undefined;
       readonly to: any;
+      readonly type: BookingType;
     };
   } | null | undefined;
 };
@@ -189,6 +193,13 @@ v4 = [
             "args": null,
             "kind": "ScalarField",
             "name": "notes",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "type",
             "storageKey": null
           },
           {
@@ -320,16 +331,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "3846d1ee7e31135ffa99456ca1c9c6ef",
+    "cacheID": "7827c2ab0e6bef8d7219728136d83df1",
     "id": null,
     "metadata": {},
     "name": "bookingCard_updateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingCard_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3f0256f3ff42e0cf08e0750432e61114";
+(node as any).hash = "3bcaef7062185f75d62785664f667e90";
 
 export default node;

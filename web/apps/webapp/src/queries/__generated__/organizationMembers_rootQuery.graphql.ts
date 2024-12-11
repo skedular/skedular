@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e46318adecd24b0ed8f37edf7868dfdd>>
+ * @generated SignedSource<<006ca2529d225fada69efe8b6a708ff3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,15 +10,8 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "PhoneNumber" | "%future added value";
-export type OrganizationMemberOrderInput = {
-  direction: OrderDirection;
-  field: OrganizationMemberOrderField;
-};
 export type organizationMembers_rootQuery$variables = {
   organizationId: string;
-  organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   peopleNameSearchText?: string | null | undefined;
 };
 export type organizationMembers_rootQuery$data = {
@@ -52,78 +45,75 @@ export type organizationMembers_rootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationId"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationMembersSortingValues"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "peopleNameSearchText"
-},
-v3 = [
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "peopleNameSearchText"
+  }
+],
+v1 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "organizationId"
   }
 ],
-v4 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "canInvitePeople",
   "storageKey": null
 },
-v5 = {
+v3 = {
   "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
 },
-v6 = [
+v4 = [
   {
     "fields": [
-      (v5/*: any*/)
+      (v3/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v7 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v8 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v9 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v10 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v11 = {
+v9 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -135,28 +125,28 @@ v11 = {
     }
   ]
 },
-v12 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "givenName",
   "storageKey": null
 },
-v13 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "middleName",
   "storageKey": null
 },
-v14 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "familyName",
   "storageKey": null
 },
-v15 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -165,36 +155,32 @@ v15 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationMembers_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v4/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v6/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "TeamConnection",
         "kind": "LinkedField",
         "name": "teams",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -211,8 +197,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/),
-                  (v9/*: any*/),
+                  (v6/*: any*/),
+                  (v7/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -229,7 +215,7 @@ return {
                         "name": "organizationMember",
                         "plural": false,
                         "selections": [
-                          (v10/*: any*/),
+                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -238,7 +224,7 @@ return {
                             "name": "customer",
                             "plural": false,
                             "selections": [
-                              (v10/*: any*/)
+                              (v8/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -259,7 +245,7 @@ return {
             ],
             "storageKey": null
           },
-          (v11/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
@@ -279,36 +265,32 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v2/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationMembers_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
-          (v8/*: any*/)
+          (v2/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v6/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "TeamConnection",
         "kind": "LinkedField",
         "name": "teams",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -325,8 +307,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/),
-                  (v9/*: any*/),
+                  (v6/*: any*/),
+                  (v7/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -343,7 +325,7 @@ return {
                         "name": "organizationMember",
                         "plural": false,
                         "selections": [
-                          (v10/*: any*/),
+                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -352,19 +334,19 @@ return {
                             "name": "customer",
                             "plural": false,
                             "selections": [
+                              (v8/*: any*/),
                               (v10/*: any*/),
+                              (v11/*: any*/),
                               (v12/*: any*/),
-                              (v13/*: any*/),
-                              (v14/*: any*/),
-                              (v9/*: any*/),
-                              (v15/*: any*/)
+                              (v7/*: any*/),
+                              (v13/*: any*/)
                             ],
                             "storageKey": null
                           }
                         ],
                         "storageKey": null
                       },
-                      (v8/*: any*/)
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -374,7 +356,7 @@ return {
             ],
             "storageKey": null
           },
-          (v11/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
@@ -382,18 +364,13 @@ return {
         "alias": null,
         "args": [
           {
-            "kind": "Variable",
-            "name": "orderBy",
-            "variableName": "organizationMembersSortingValues"
-          },
-          {
             "fields": [
               {
                 "kind": "Variable",
                 "name": "nameContains",
                 "variableName": "peopleNameSearchText"
               },
-              (v5/*: any*/)
+              (v3/*: any*/)
             ],
             "kind": "ObjectValue",
             "name": "where"
@@ -404,7 +381,7 @@ return {
         "name": "organizationMembers",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -421,7 +398,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/),
+                  (v6/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -430,7 +407,7 @@ return {
                     "name": "customer",
                     "plural": false,
                     "selections": [
-                      (v10/*: any*/),
+                      (v8/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -438,11 +415,11 @@ return {
                         "name": "email",
                         "storageKey": null
                       },
-                      (v9/*: any*/),
+                      (v7/*: any*/),
+                      (v10/*: any*/),
+                      (v11/*: any*/),
                       (v12/*: any*/),
                       (v13/*: any*/),
-                      (v14/*: any*/),
-                      (v15/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -466,23 +443,23 @@ return {
             ],
             "storageKey": null
           },
-          (v11/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "65fff656112e8c0b259cf919f5c06550",
+    "cacheID": "bea612b38b566ad4a28b70aa10c66dcd",
     "id": null,
     "metadata": {},
     "name": "organizationMembers_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMembers_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  organization(id: $organizationId) {\n    canInvitePeople\n    id\n  }\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n      }\n    }\n  }\n  ...teamSelector_allTeams_query\n  ...organizationMembers_organizationMembers_query\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMembers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        isActive\n      }\n    }\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query organizationMembers_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    canInvitePeople\n    id\n  }\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n      }\n    }\n  }\n  ...teamSelector_allTeams_query\n  ...organizationMembers_organizationMembers_query\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMembers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        isActive\n      }\n    }\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e55dc42df86fb796a1af5dac070d441f";
+(node as any).hash = "9a779738fc6673cd2154f81bd412c5fc";
 
 export default node;

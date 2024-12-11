@@ -118,6 +118,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
         from
         to
         notes
+        type
         customer {
           uniqueId
           name
@@ -163,6 +164,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           from
           to
           notes
+          type
           customer {
             uniqueId
             name
@@ -208,6 +210,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           from
           to
           notes
+          type
           customer {
             uniqueId
             name
@@ -298,6 +301,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
 
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
+    const type = 'WorkingFromOffice';
 
     commitAddBooking({
       variables: {
@@ -312,6 +316,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           locationId: bookingDetails.location?.uniqueId,
           teamId: bookingDetails.team?.uniqueId,
           deskIds: [],
+          type,
         },
       },
       onCompleted: (response, errors) => {
@@ -364,6 +369,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             from: bookingDetails.from,
             to: bookingDetails.to,
             notes: null,
+            type,
             customer: {
               uniqueId: rootData.me.id,
               name: rootData.me.name,
@@ -457,6 +463,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     const from = start.toISOString();
     const to = endOfDay(start).toISOString();
     const shortDateTimeFormatFrom = toShortDate(start);
+    const type = bookingDetails.type;
 
     let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.customer)}`;
     if (bookingDetails.location) {
@@ -480,6 +487,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           locationId,
           teamId: bookingDetails.team?.uniqueId,
           deskIds: locationId ? deskIds : [],
+          type,
         },
       },
       onCompleted: (_, errors) => {
@@ -512,6 +520,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             from,
             to,
             notes,
+            type,
             customer: {
               uniqueId: '',
               name: '',
