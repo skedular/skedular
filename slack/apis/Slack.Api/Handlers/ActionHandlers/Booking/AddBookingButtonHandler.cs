@@ -143,7 +143,7 @@ public class AddBookingButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddBookingContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var addInput = new AddInput { Id = randomHelper.Generate(), Type = BookingType.WorkingFromOffice};
+        var addInput = new AddInput { Id = randomHelper.Generate(), Type = BookingType.WorkingFromOffice };
         var values = viewSubmission.View.State.Values;
         if (values.TryGetValue(DateKey, out var dateBlock))
         {
