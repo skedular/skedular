@@ -1,14 +1,10 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
 export const SelectedOrganizationContext = createContext<string | undefined>(undefined);
 export const UpdateSelectedOrganizationContext = createContext<(selectedOrganizationId: string) => void>(() => {});
 
-type Props = {
-  children: React.ReactNode;
-};
-
-const SelectedOrganizationProvider = ({ children }: Props) => {
+const SelectedOrganizationProvider = ({ children }: PropsWithChildren) => {
   const [persistedSelectedOrganizationId, setPersistedSelectedOrganizationId] = useLocalStorage<string | undefined>(
     'selectedOrganizationId',
     undefined,

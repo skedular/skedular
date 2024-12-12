@@ -1,14 +1,10 @@
-import { createContext, useState } from 'react';
+import { createContext, PropsWithChildren, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export const GlobalReloadIdContext = createContext<string>(uuidv4());
 export const UpdateGlobalReloadIdContext = createContext<() => void>(() => {});
 
-type Props = {
-  children: React.ReactNode;
-};
-
-const GlobalReloadIdProvider = ({ children }: Props) => {
+const GlobalReloadIdProvider = ({ children }: PropsWithChildren) => {
   const [selectedGlobalReloadId, setGlobalReloadId] = useState<string>(uuidv4());
   const updateGlobalReloadId = () => setGlobalReloadId(uuidv4());
 

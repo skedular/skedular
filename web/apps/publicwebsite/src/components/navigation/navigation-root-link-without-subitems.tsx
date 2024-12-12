@@ -1,14 +1,13 @@
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import { ReactNode, memo } from 'react';
+import { memo, PropsWithChildren } from 'react';
 import { Navigation } from './navigation.data';
 
 interface Props {
   navigation: Navigation;
-  children: ReactNode;
 }
 
-const NavigationRootLinkWithoutSubItems = ({ navigation: { path }, children }: Props) => {
+const NavigationRootLinkWithoutSubItems = ({ navigation: { path }, children }: PropsWithChildren<Props>) => {
   return (
     <Box
       component={Link}

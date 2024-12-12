@@ -7,16 +7,15 @@ import MenuList from '@mui/material/MenuList';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Typography from '@mui/material/Typography';
-import { ReactNode, memo, useRef, useState } from 'react';
+import { PropsWithChildren, memo, useRef, useState } from 'react';
 import NavigationRootLinkWithoutSubItems from './navigation-root-link-without-subitems';
 import { Navigation } from './navigation.data';
 
 interface Props {
   navigation: Navigation;
-  children: ReactNode;
 }
 
-const NavigationRootLinkWithSubItems = ({ navigation: { subItems }, children }: Props) => {
+const NavigationRootLinkWithSubItems = ({ navigation: { subItems }, children }: PropsWithChildren<Props>) => {
   const anchorRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
 

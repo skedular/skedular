@@ -1,6 +1,6 @@
 import { useMediaQuery } from '@mui/material';
 import { PaletteMode } from '@mui/material/styles';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
 export type ExtendedPaletteMode = PaletteMode | 'system';
@@ -8,11 +8,7 @@ export type ExtendedPaletteMode = PaletteMode | 'system';
 export const PaletteModeContext = createContext<PaletteMode>('light');
 export const UpdatePaletteModeContext = createContext<(mode: ExtendedPaletteMode) => void>(() => {});
 
-type Props = {
-  children: React.ReactNode;
-};
-
-const PaletteModeProvider = ({ children }: Props) => {
+const PaletteModeProvider = ({ children }: PropsWithChildren) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [persistedPaletteMode, setPersistedPaletteMode] = useLocalStorage<ExtendedPaletteMode | undefined>('paletteMode', undefined);
   const [paletteMode, setPaletteMode] = useState<PaletteMode>('light');

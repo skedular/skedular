@@ -1,13 +1,12 @@
 import { getEnvironment } from '@repo/shared/clients/graphql/unityhub';
-import { useMemo } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 
 type Props = {
-  children?: React.ReactNode;
   token: string | null;
 };
 
-const RelayProvider = ({ children, token }: Props) => {
+const RelayProvider = ({ children, token }: PropsWithChildren<Props>) => {
   const environment = useMemo(() => {
     if (!token) {
       return null;

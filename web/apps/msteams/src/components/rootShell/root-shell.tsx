@@ -13,7 +13,7 @@ import { AppBar, OldAppBar } from 'components/appBar';
 import { LeftSideNavigationMenu } from 'components/navigationMenu';
 import { Observability } from 'components/observability';
 import { nanoid } from 'nanoid';
-import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, PropsWithChildren, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useParams } from 'react-router-dom';
@@ -22,7 +22,6 @@ import type { rootShell_rootQuery } from './__generated__/rootShell_rootQuery.gr
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  children: React.ReactNode;
   title?: string | null;
 };
 
@@ -49,7 +48,7 @@ const maxRetryAttemptsToReload = 20;
 const drawerWithTextWidth = 250;
 const drawerWithoutTextWidth = 80;
 
-const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
+const RootShell = ({ queryReference, children, onReloadRequired }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const switchToModernUI = useContext(SwitchToModernUIContext);
 
@@ -143,11 +142,10 @@ const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
 const MemoRootShell = memo(RootShell);
 
 type RelayProps = {
-  children: React.ReactNode;
   title?: string | null;
 };
 
-const RootShellWithRelay = ({ children, title }: RelayProps) => {
+const RootShellWithRelay = ({ children, title }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();

@@ -18,14 +18,13 @@ import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { nanoid } from 'nanoid';
 import { signOut } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import { PropsWithChildren, memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  children: React.ReactNode;
   title?: string | null;
 };
 
@@ -56,7 +55,7 @@ const maxRetryAttemptsToReload = 20;
 const drawerWithTextWidth = 250;
 const drawerWithoutTextWidth = 80;
 
-const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
+const RootShell = ({ queryReference, children, onReloadRequired }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const switchToModernUI = useContext(SwitchToModernUIContext);
 
@@ -171,11 +170,10 @@ const RootShell = ({ queryReference, children, onReloadRequired }: Props) => {
 const MemoRootShell = memo(RootShell);
 
 type RelayProps = {
-  children: React.ReactNode;
   title?: string | null;
 };
 
-const RootShellWithRelay = ({ title, children }: RelayProps) => {
+const RootShellWithRelay = ({ title, children }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();

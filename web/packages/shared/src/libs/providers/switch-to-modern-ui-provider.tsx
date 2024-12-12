@@ -1,14 +1,10 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
 export const SwitchToModernUIContext = createContext<boolean>(false);
 export const UpdateSwitchToModernUIContext = createContext<(state: boolean) => void>(() => {});
 
-type Props = {
-  children: React.ReactNode;
-};
-
-const SwitchToModernUIProvider = ({ children }: Props) => {
+const SwitchToModernUIProvider = ({ children }: PropsWithChildren) => {
   const [persistedSwitchToModernUI, setPersistedSwitchToModernUI] = useLocalStorage<boolean>('switchToModernUI', false);
   const [selectedOrganization, setSwitchToModernUI] = useState<boolean>(false);
 

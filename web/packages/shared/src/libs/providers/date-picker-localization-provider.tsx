@@ -4,15 +4,14 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { PropsWithChildren } from 'react';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
 
-type Props = {
-  children?: React.JSX.Element;
-};
-
-const DatePickerLocalizationProvider = ({ children }: Props) => <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>;
+const DatePickerLocalizationProvider = ({ children }: PropsWithChildren) => (
+  <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>
+);
 
 export default DatePickerLocalizationProvider;

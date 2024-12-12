@@ -6,12 +6,12 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Barlow, Inter } from 'next/font/google';
 import Script from 'next/script';
-import { useContext } from 'react';
+import { PropsWithChildren, useContext } from 'react';
 
 const inter = Inter({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] });
 const barlow = Barlow({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] });
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = ({ children }: PropsWithChildren) => {
   const paletteMode = useContext(PaletteModeContext);
 
   return (
@@ -23,7 +23,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const ThemedRootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
+const ThemedRootLayout = ({ children }: PropsWithChildren) => (
   <html lang="en">
     <title>Skedular</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />

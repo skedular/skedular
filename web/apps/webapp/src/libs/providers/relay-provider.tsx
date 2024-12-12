@@ -2,18 +2,14 @@
 
 import { getEnvironment } from '@repo/shared/clients/graphql/unityhub';
 import { signIn, useSession } from 'next-auth/react';
-import { useMemo } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
-
-type Props = {
-  children?: React.ReactNode;
-};
 
 interface SessionExtended {
   accessToken?: string;
 }
 
-const RelayProvider = ({ children }: Props) => {
+const RelayProvider = ({ children }: PropsWithChildren) => {
   const { data: session } = useSession();
 
   const environment = useMemo(() => {
