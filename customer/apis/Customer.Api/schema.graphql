@@ -121,7 +121,7 @@ type PageInfo {
 type Query {
   customerVersion: Version!
   me: CustomerDetails @cost(weight: "10")
-  customersByDefaultLocation(after: String first: Int before: String last: Int where: CustomerWhereInput! orderBy: [CustomerOrderInput!]): CustomerConnection @cost(weight: "10")
+  customersByDefaultLocation(after: String first: Int before: String last: Int where: CustomersByDefaultLocationWhereInput! orderBy: [CustomerOrderInput!]): CustomerConnection @cost(weight: "10")
 }
 
 type SubmitCustomerFeedbackPayload {
@@ -193,7 +193,7 @@ input CustomerOrderInput {
   field: CustomerOrderField!
 }
 
-input CustomerWhereInput {
+input CustomersByDefaultLocationWhereInput {
   locationId: String!
   nameContains: String
 }

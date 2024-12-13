@@ -39,7 +39,7 @@ public class Query(IMapper mapper)
         int? first,
         string? before,
         int? last,
-        CustomerWhereInput where,
+        CustomersByDefaultLocationWhereInput where,
         CustomerOrderInput[]? orderBy,
         [Service] ICustomerService customerService,
         CancellationToken cancellationToken)

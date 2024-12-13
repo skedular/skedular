@@ -215,11 +215,10 @@ public class CustomerTeamDetails
     [GraphQLName("organization")] public CustomerOrganizationDetails? Organization { get; set; }
 }
 
-[GraphQLName("CustomerWhereInput")]
-public class CustomerWhereInput
+[GraphQLName("CustomersByDefaultLocationWhereInput")]
+public class CustomersByDefaultLocationWhereInput
 {
-    [GraphQLName("locationId")] public string LocationId { get; set; }
-
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
 

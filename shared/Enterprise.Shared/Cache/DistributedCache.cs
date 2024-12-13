@@ -25,14 +25,7 @@ public class DistributedCache(
     public async Task<(bool, T?)> GetAsync<T>(string key)
     {
         var data = await _database.StringGetAsync(AddPrefix(key));
-        if (data.IsNull)
-        {
-            return (false, default);
-        }
-
-        ArgumentNullException.ThrowIfNull(data);
-
-        return (true, JsonSerializer.Deserialize<T>(data!));
+        return data.IsNull ? (false, default) : (true, JsonSerializer.Deserialize<T>(data!));
     }
 
     private string AddPrefix(string key) => $"{applicationConfiguration.Environment}:{key}";

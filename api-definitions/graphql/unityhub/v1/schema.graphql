@@ -712,7 +712,7 @@ type Query {
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): BookingConnection @cost(weight: "10")
   bookingVersion: Version!
-  customersByDefaultLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomerWhereInput!): CustomerConnection @cost(weight: "10")
+  customersByDefaultLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByDefaultLocationWhereInput!): CustomerConnection @cost(weight: "10")
   customerVersion: Version!
   deskTypes(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: DeskTypeOrganizationTagWhereInput!): OrganizationTagConnection @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
@@ -1124,7 +1124,7 @@ input CustomerOrderInput {
   field: CustomerOrderField!
 }
 
-input CustomerWhereInput {
+input CustomersByDefaultLocationWhereInput {
   locationId: String!
   nameContains: String
 }

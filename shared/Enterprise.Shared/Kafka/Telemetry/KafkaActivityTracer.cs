@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Confluent.Kafka;
 using Enterprise.Shared.Telemetry;
-using OpenTelemetry.Trace;
 
 namespace Enterprise.Shared.Kafka.Telemetry;
 
@@ -60,7 +59,7 @@ public class KafkaActivityTracer(
         }
 
         SetKafkaTagsOnConsumeActivity(activity, consumeResult);
-        activity.SetStatus(Status.Ok);
+        activity.SetStatus(ActivityStatusCode.Ok);
 
         return activity;
     }
@@ -94,7 +93,7 @@ public class KafkaActivityTracer(
 
         propagator.PropagateActivity(message.Headers);
         SetKafkaTagsOnProduceActivity(activity, message);
-        activity.SetStatus(Status.Ok);
+        activity.SetStatus(ActivityStatusCode.Ok);
 
         return activity;
     }

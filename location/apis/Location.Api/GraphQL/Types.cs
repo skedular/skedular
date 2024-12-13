@@ -12,7 +12,7 @@ namespace Location.Api.GraphQL;
 public class AcceptInvitationToJoinLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("AcceptInvitationToJoinLocationPayload")]
@@ -204,7 +204,7 @@ public class LocationDetails : Node
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
     [GraphQLName("deskTypes")] public OrganizationTagDetails[] DeskTypes { get; set; } = [];
     [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
-    [GraphQLName("id")] [ID] public string Id { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("LocationEdge")]
@@ -311,7 +311,7 @@ public class LocationWhereInput
 public class RejectInvitationToJoinLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public string Id { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("RejectInvitationToJoinLocationPayload")]
