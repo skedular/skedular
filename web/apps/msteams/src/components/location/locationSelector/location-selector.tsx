@@ -1,9 +1,8 @@
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { LocationAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, DropdownSelect, LeadIconTypography, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { LocationIcon } from '@repo/shared/components/icons';
 import graphql from 'babel-plugin-relay/macro';
 import { memo, useMemo, useState } from 'react';
@@ -39,7 +38,7 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
   const [id, setId] = useState<string>(allId);
   const allItems = useMemo(() => (rootData.locations?.edges ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
 
-  const handleSelectedChanged = (event: SelectChangeEvent) => {
+  const handleChanged = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;
 
     setId(id);
@@ -47,57 +46,43 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
   };
 
   return (
-    <Select
+    <DropdownSelect
       value={id}
-      onChange={handleSelectedChanged}
-      sx={{
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderRadius: 4,
-        },
-        width: {
-          xs: '100%',
-          sm: 'min(100%, 250px)',
-        },
-      }}
+      onChange={handleChanged}
       size="small"
       renderValue={(selectedId) => {
         const selectedItem = allItems.find((item) => item.id === selectedId);
         if (selectedItem) {
           return (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <LocationIcon />
-              <Typography variant="h6">Location</Typography>
+            <StackRow>
+              <LeadIconTypography label="Location" icon={<LocationIcon />} />
               <Divider orientation="vertical" flexItem />
-              <Typography variant="body1">{selectedItem.name}</Typography>
-            </Stack>
+              <PushToRight />
+              <BodyIconTypography label={selectedItem.name} />
+            </StackRow>
           );
         }
 
         return (
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <LocationIcon />
-            <Typography variant="h6">Location</Typography>
+          <StackRow>
+            <LeadIconTypography label="Location" icon={<LocationIcon />} />
             <Divider orientation="vertical" flexItem />
-            <Typography variant="body1">All</Typography>
-          </Stack>
+            <PushToRight />
+            <BodyIconTypography label="All" />
+          </StackRow>
         );
       }}
     >
       <MenuItem value={allId}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Typography variant="h6">All</Typography>
-        </Stack>
+        <BodyIconTypography label="All" />
       </MenuItem>
 
-      {allItems.map((location) => (
-        <MenuItem key={location.id} value={location.id}>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <LocationAvatar name={{ name: location.name }} size="small" />
-            <Typography variant="h6">{location.name}</Typography>
-          </Stack>
+      {allItems.map((item) => (
+        <MenuItem key={item.id} value={item.id}>
+          <LeadIconTypography icon={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
         </MenuItem>
       ))}
-    </Select>
+    </DropdownSelect>
   );
 };
 

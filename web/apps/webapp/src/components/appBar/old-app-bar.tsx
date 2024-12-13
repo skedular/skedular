@@ -7,9 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, LeadIconTypography, StackColumn, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { FeedbackIcon, LogoutIcon, NotificationsIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext, SwitchToModernUIContext, UpdatePaletteModeContext, UpdateSwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
@@ -102,18 +101,11 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      <Stack
-        direction="row"
-        sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1, flexWrap: 'wrap' }}
-      >
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Typography variant="h6" sx={{ display: { xs: 'none', sm: 'block' } }}>{`Welcome ${customerName}`}</Typography>
-        </Stack>
+      <StackRowFullWidth sx={{ paddingLeft: 1, paddingRight: 1 }}>
+        <LeadIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Typography variant="h6" sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {`${toLongDateTime(currentTime)}`}
-          </Typography>
+        <StackRow sx={{ alignItems: 'center' }}>
+          <LeadIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
           <Divider orientation="vertical" flexItem />
 
           <IconButton sx={{ ml: 1 }}>
@@ -150,81 +142,58 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
             onClose={handleProfileMenuCloseClick}
           >
             <MenuItem>
-              <Stack direction="column">
-                <Stack direction="column">
-                  <Typography variant="h6">{customerName}</Typography>
-                  {rootData.me?.email && <Typography variant="body1">{rootData.me?.email}</Typography>}
-                </Stack>
-              </Stack>
+              <StackColumn>
+                <LeadIconTypography label={customerName} />
+                <BodyIconTypography label={rootData.me?.email} />
+              </StackColumn>
             </MenuItem>
 
             <Divider />
 
             <MenuItem>
               <Link component={NextLink} href="/settings" color="inherit">
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <SettingsIcon fontSize="medium" />
-                  <Typography textAlign="center">Settings</Typography>
-                </Stack>
+                <BodyIconTypography icon={<SettingsIcon />} label="Settings" />
               </Link>
             </MenuItem>
 
             {paletteMode === 'dark' && (
               <MenuItem onClick={handleLightThemeClicked}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <DarkModeIcon fontSize="medium" />
-                  <Typography textAlign="center">Dark Mode</Typography>
-                </Stack>
+                <BodyIconTypography icon={<DarkModeIcon />} label="Dark Mode" />
               </MenuItem>
             )}
 
             {paletteMode === 'light' && (
               <MenuItem onClick={handleDarkThemeClicked}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <LightModeIcon fontSize="medium" />
-                  <Typography textAlign="center">Light Mode</Typography>
-                </Stack>
+                <BodyIconTypography icon={<LightModeIcon />} label="Light Mode" />
               </MenuItem>
             )}
 
             {!switchToModernUI && (
               <MenuItem onClick={handleModernUIClicked}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <ToggleOffIcon fontSize="medium" />
-                  <Typography textAlign="center">Switch to modern UI</Typography>
-                </Stack>
+                <BodyIconTypography icon={<ToggleOffIcon />} label="Switch to modern UI" />
               </MenuItem>
             )}
 
             {switchToModernUI && (
               <MenuItem onClick={handleClassicUIClicked}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <ToggleOnIcon fontSize="medium" />
-                  <Typography textAlign="center">Switch to classic UI</Typography>
-                </Stack>
+                <BodyIconTypography icon={<ToggleOnIcon />} label="Switch to classic UI" />
               </MenuItem>
             )}
 
             <Divider />
 
             <MenuItem onClick={handleSubmitFeedbackClicked}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <FeedbackIcon fontSize="medium" />
-                <Typography textAlign="center">Send us feedback</Typography>
-              </Stack>
+              <BodyIconTypography icon={<FeedbackIcon />} label="Send us feedback" />
             </MenuItem>
 
             <Divider />
 
             <MenuItem onClick={handleSignOutClick}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <LogoutIcon fontSize="medium" />
-                <Typography textAlign="center">Sign out</Typography>
-              </Stack>
+              <BodyIconTypography icon={<LogoutIcon />} label="Sign out" />
             </MenuItem>
           </Menu>
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
       <NewFeedbackDialog
         rootDataRelay={rootData}

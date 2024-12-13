@@ -1,13 +1,11 @@
 import AvatarGroup from '@mui/material/AvatarGroup';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import LinearProgress from '@mui/material/LinearProgress';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { Zones } from '@repo/shared/components/zone';
 import graphql from 'babel-plugin-relay/macro';
@@ -77,10 +75,9 @@ const MyLocationCard = ({
     <Card sx={{ width: 600 }}>
       <CardHeader
         title={
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <LocationIcon fontSize="medium" />
-            <Typography variant="h6">{locationDetails.name}</Typography>
-            <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
+          <StackRow>
+            <LeadIconTypography label={locationDetails.name} icon={<LocationIcon />} />
+            <PushToRight />
             <NewBookingButton
               hideLocationControl={false}
               hideOrganizationControl={true}
@@ -93,49 +90,46 @@ const MyLocationCard = ({
               variant="contained"
               size="small"
             />
-          </Stack>
+          </StackRow>
         }
       />
       <CardContent>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1, width: '100%' }}>
-          <DeskIcon fontSize="medium" />
-          <Typography variant="body1" sx={{ flexGrow: 0, flexShrink: 0 }}>{`${desksCount} Desks`}</Typography>
-
-          <Stack direction="column" sx={{ paddingLeft: 20, alignItems: 'flex-end', width: '100%' }}>
-            <Typography variant="body2">{`${availableDesksCount} Available Today`}</Typography>
+        <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%' }}>
+          <BodyIconTypography label={`${desksCount} Desks`} sx={{ flexGrow: 0, flexShrink: 0 }} icon={<DeskIcon />} />
+          <StackColumn sx={{ paddingLeft: 40, alignItems: 'flex-end', width: '100%' }}>
+            <SmallIconTypography label={`${availableDesksCount} Available Today`} />
             <LinearProgress value={availablePercentage} variant="determinate" sx={{ width: '100%' }} />
-          </Stack>
-        </Stack>
+          </StackColumn>
+        </StackRow>
 
         <Divider />
 
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-          <ZoneIcon fontSize="medium" />
+        <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
+          <ZoneIcon />
           <Zones zones={zones} />
-        </Stack>
+        </StackRow>
 
         <Divider />
 
-        <Stack direction="row" spacing={1}>
-          <Stack direction="column" spacing={1}>
-            <Typography variant="body1">Shared with teammates</Typography>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
+          <StackColumn>
+            <BodyIconTypography label="Shared with teammates" />
+            <StackRow>
               <AvatarGroup max={5}>
                 {sharedWithTeammates.map((item) => (
                   <CustomerAvatar key={item?.uniqueId} name={item} photo={{ url: item?.photoUrl }} size="medium" showFullName />
                 ))}
               </AvatarGroup>
-            </Stack>
-          </Stack>
+            </StackRow>
+          </StackColumn>
 
           <Divider orientation="vertical" flexItem />
 
-          <Stack direction="column" spacing={1}>
-            <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
-              {locationDetails.physicalAddress?.formattedAddress ? locationDetails.physicalAddress?.formattedAddress : 'N/A'}
-            </Typography>
-          </Stack>
-        </Stack>
+          <BodyIconTypography
+            label={locationDetails.physicalAddress?.formattedAddress ? locationDetails.physicalAddress?.formattedAddress : 'N/A'}
+            sx={{ whiteSpace: 'pre-line' }}
+          />
+        </StackRow>
       </CardContent>
     </Card>
   );

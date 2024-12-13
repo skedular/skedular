@@ -1,7 +1,7 @@
 import type { locationAboutTab_rootQuery } from '@/queries/__generated__/locationAboutTab_rootQuery.graphql';
 import type { locationAboutTab_updateLocationMutation } from '@/queries/__generated__/locationAboutTab_updateLocationMutation.graphql';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -159,18 +159,18 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
       }}
       validate={validate}
       render={({ handleSubmit }) => (
-        <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+        <FormStackColumn onSubmit={handleSubmit}>
           <TextField label="Name" name="name" required={requiredFields.name} />
           <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
           <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
           <TextField label="Physical Address" name="physicalAddress" required={requiredFields.physicalAddress} multiline={true} />
 
-          <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+          <StackRow sx={{ justifyContent: 'flex-end' }}>
             <Button color="primary" variant="contained" type="submit">
               Update
             </Button>
-          </Stack>
-        </Stack>
+          </StackRow>
+        </FormStackColumn>
       )}
     />
   );

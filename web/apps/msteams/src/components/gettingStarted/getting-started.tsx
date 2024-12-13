@@ -3,12 +3,11 @@ import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { BodyIconTypography, GridContainer, LeadIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { CancelIcon, DeskIcon, InviteMemberIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
 import { errorNotificationOptions, NotificationContent } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
+import { defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getLocationAddLink } from 'components/location';
@@ -99,61 +98,69 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
           </IconButton>
         </Box>
 
-        <Typography variant="h5">Getting started</Typography>
+        <LeadIconTypography label="Getting started" />
 
-        <Grid container spacing={defaultSpacing} sx={{ alignItems: 'center' }}>
+        <GridContainer sx={{ alignItems: 'center' }}>
           <Grid>
-            <Stack direction="column" spacing={1} sx={{ width: 250 }}>
-              <Typography variant="body1">Let&apos;s start by setting up the organization&apos;s first location.</Typography>
+            <StackColumn sx={{ width: 250 }}>
+              <BodyIconTypography label="Let's start by setting up the organization's first location." />
               <Link href={getLocationAddLink(organizationId)}>
                 <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
-                  <Stack direction="column" spacing={1} sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                    <LocationIcon fontSize="large" excludeTooltip />
-                    <Typography variant="h6">Create Location</Typography>
-                  </Stack>
+                  <LeadIconTypography
+                    label="Create Location"
+                    stackMode="column"
+                    icon={<LocationIcon fontSize="large" excludeTooltip />}
+                    sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+                  />
                 </Paper>
               </Link>
-            </Stack>
+            </StackColumn>
           </Grid>
 
           <Grid>
-            <Stack direction="column" spacing={1} sx={{ width: 250 }}>
-              <Typography variant="body1">Create teams that regularly work or meet together.</Typography>
+            <StackColumn sx={{ width: 250 }}>
+              <BodyIconTypography label="Create teams that regularly work or meet together." />
               <Link href={getTeamAddLink(organizationId)}>
                 <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
-                  <Stack direction="column" spacing={1} sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                    <TeamIcon fontSize="large" excludeTooltip />
-                    <Typography variant="h6">Create Team</Typography>
-                  </Stack>
+                  <LeadIconTypography
+                    label="Create Team"
+                    stackMode="column"
+                    icon={<TeamIcon fontSize="large" excludeTooltip />}
+                    sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+                  />
                 </Paper>
               </Link>
-            </Stack>
+            </StackColumn>
           </Grid>
 
           <Grid>
-            <Stack direction="column" spacing={1} sx={{ width: 250 }}>
-              <Typography variant="body1">Add desks and zones for your locations and teams.</Typography>
+            <StackColumn sx={{ width: 250 }}>
+              <BodyIconTypography label="Add desks and zones for your locations and teams." />
               <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
-                <Stack direction="column" spacing={1} sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                  <DeskIcon fontSize="large" excludeTooltip />
-                  <Typography variant="h6">Add Desks</Typography>
-                </Stack>
+                <LeadIconTypography
+                  label="Add Desks"
+                  stackMode="column"
+                  icon={<DeskIcon fontSize="large" excludeTooltip />}
+                  sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+                />
               </Paper>
-            </Stack>
+            </StackColumn>
           </Grid>
 
           <Grid>
-            <Stack direction="column" spacing={1} sx={{ width: 250 }}>
-              <Typography variant="body1">Invite your team members to your organization and start booking!</Typography>
+            <StackColumn sx={{ width: 250 }}>
+              <BodyIconTypography label="Invite your team members to your organization and start booking!" />
               <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
-                <Stack direction="column" spacing={1} sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                  <InviteMemberIcon fontSize="large" />
-                  <Typography variant="h6">Invite Teammates</Typography>
-                </Stack>
+                <LeadIconTypography
+                  label="Invite Teammates"
+                  stackMode="column"
+                  icon={<InviteMemberIcon fontSize="large" />}
+                  sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
+                />
               </Paper>
-            </Stack>
+            </StackColumn>
           </Grid>
-        </Grid>
+        </GridContainer>
       </Box>
     </Box>
   );

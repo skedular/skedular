@@ -3,9 +3,8 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, StackRow } from '@repo/shared/components/commons';
 import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
@@ -171,61 +170,55 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
         <>
           <CardHeader
             title={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <CustomerAvatar
-                  name={{
-                    name: null,
-                    givenName: invitedBy?.givenName,
-                    middleName: invitedBy?.middleName,
-                    familyName: invitedBy?.familyName,
-                  }}
-                  photo={{
-                    url: invitedBy?.photoUrl,
-                  }}
-                />
-              </Stack>
+              <CustomerAvatar
+                name={{
+                  name: null,
+                  givenName: invitedBy?.givenName,
+                  middleName: invitedBy?.middleName,
+                  familyName: invitedBy?.familyName,
+                }}
+                photo={{
+                  url: invitedBy?.photoUrl,
+                }}
+              />
             }
-            subheader={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <Typography variant="body1">{`${getCustomerFullName(invitedBy)} has invited you to join team ${team?.name}`}</Typography>
-              </Stack>
-            }
+            subheader={<BodyIconTypography label={`${getCustomerFullName(invitedBy)} has invited you to join team ${team?.name}`} />}
           />
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+            <StackRow sx={{ justifyContent: 'flex-end' }}>
               <Button color="secondary" variant="contained" startIcon={<CancelIcon />} onClick={handleRejectClick}>
                 Reject
               </Button>
               <Button color="primary" variant="contained" type="submit" startIcon={<CheckIcon />} onClick={handleAcceptClick}>
                 Accept
               </Button>
-            </Stack>
+            </StackRow>
           </CardActions>
         </>
       )}
 
       {cardState === CardState.Rejecting && (
         <CardContent>
-          <Typography variant="body1">{`Rejecting invitation to join ${team?.name}`}</Typography>
+          <BodyIconTypography label={`Rejecting invitation to join ${team?.name}`} />
         </CardContent>
       )}
 
       {cardState === CardState.Rejected && (
         <CardContent>
-          <Typography variant="body1">{`Rejected invitation to join ${team?.name}`}</Typography>
+          <BodyIconTypography label={`Rejected invitation to join ${team?.name}`} />
         </CardContent>
       )}
 
       {cardState === CardState.Accepting && (
         <CardContent>
-          <Typography variant="body1">{`Accepting invitation to join ${team?.name}`}</Typography>
+          <BodyIconTypography label={`Accepting invitation to join ${team?.name}`} />
         </CardContent>
       )}
 
       {cardState === CardState.Accepted && (
         <CardContent>
-          <Typography variant="body1">{`Accepted invitation to join ${team?.name}`}</Typography>
+          <BodyIconTypography label={`Accepted invitation to join ${team?.name}`} />
         </CardContent>
       )}
     </Card>

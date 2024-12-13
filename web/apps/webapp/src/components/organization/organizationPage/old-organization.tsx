@@ -1,10 +1,9 @@
 import { Bookings } from '@/components/booking/bookingsPage';
 import type { oldOrganization_rootQuery } from '@/queries/__generated__/oldOrganization_rootQuery.graphql';
-import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import Typography from '@mui/material/Typography';
 import { OrganizationAvatar } from '@repo/shared/components/avatars';
+import { LeadIconTypography } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import { NotificationContent, errorNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -136,10 +135,12 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
 
   return (
     <>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} sx={{ marginBottom: 1 }} />
-        <Typography variant="h6">{rootData.organization?.name}</Typography>
-      </Stack>
+      <LeadIconTypography
+        label={rootData.organization?.name}
+        icon={
+          <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} sx={{ marginBottom: 1 }} />
+        }
+      />
 
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />

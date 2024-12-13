@@ -1,5 +1,4 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
+import { PushToRight, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -62,25 +61,14 @@ const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) 
   };
 
   return (
-    <Stack direction="column" spacing={1} sx={{ maxWidth: maxScreenWidth }}>
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          paddingLeft: defaultPadding,
-          paddingRight: defaultPadding,
-          paddingBottom: defaultPadding,
-          paddingTop: defaultPadding,
-        }}
-      >
+    <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+      <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding, paddingTop: defaultPadding }}>
         <DeskTypeSelector rootDataRelay={rootData} onChange={handleDeskTypeChanged} />
         <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
-        <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
+        <PushToRight />
         {rootData.organization?.canModify && <NewLocationButton organizationId={organizationId} />}
-      </Stack>
+      </StackRow>
       <MyLocations
         rootDataRelay={rootData}
         rootDataRefetchableRelay={rootData}
@@ -90,7 +78,7 @@ const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) 
         zoneIds={zoneIds}
         viewMode={viewMode}
       />
-    </Stack>
+    </StackColumn>
   );
 };
 

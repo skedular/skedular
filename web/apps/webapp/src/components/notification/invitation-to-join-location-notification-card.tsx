@@ -6,9 +6,8 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography } from '@repo/shared/components/commons';
 import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
@@ -185,25 +184,19 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
         <>
           <CardHeader
             title={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <CustomerAvatar
-                  name={{
-                    name: null,
-                    givenName: invitedBy?.givenName,
-                    middleName: invitedBy?.middleName,
-                    familyName: invitedBy?.familyName,
-                  }}
-                  photo={{
-                    url: invitedBy?.photoUrl,
-                  }}
-                />
-              </Stack>
+              <CustomerAvatar
+                name={{
+                  name: null,
+                  givenName: invitedBy?.givenName,
+                  middleName: invitedBy?.middleName,
+                  familyName: invitedBy?.familyName,
+                }}
+                photo={{
+                  url: invitedBy?.photoUrl,
+                }}
+              />
             }
-            subheader={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <Typography variant="body1">{`${getCustomerFullName(invitedBy)} has invited you to join location ${location?.name}`}</Typography>
-              </Stack>
-            }
+            subheader={<BodyIconTypography label={`${getCustomerFullName(invitedBy)} has invited you to join location ${location?.name}`} />}
           />
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
@@ -219,25 +212,25 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
 
       {cardState === CardState.Rejecting && (
         <CardContent>
-          <Typography variant="body1">{`Rejecting invitation to join ${location?.name}`}</Typography>
+          <BodyIconTypography label={`Rejecting invitation to join ${location?.name}`} />
         </CardContent>
       )}
 
       {cardState === CardState.Rejected && (
         <CardContent>
-          <Typography variant="body1">{`Rejected invitation to join ${location?.name}`}</Typography>
+          <BodyIconTypography label={`Rejected invitation to join ${location?.name}`} />
         </CardContent>
       )}
 
       {cardState === CardState.Accepting && (
         <CardContent>
-          <Typography variant="body1">{`Accepting invitation to join ${location?.name}`}</Typography>
+          <BodyIconTypography label={`Accepting invitation to join ${location?.name}`} />
         </CardContent>
       )}
 
       {cardState === CardState.Accepted && (
         <CardContent>
-          <Typography variant="body1">{`Accepted invitation to join ${location?.name}`}</Typography>
+          <BodyIconTypography label={`Accepted invitation to join ${location?.name}`} />
         </CardContent>
       )}
     </Card>

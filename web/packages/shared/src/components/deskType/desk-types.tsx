@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid2';
-import Typography from '@mui/material/Typography';
 import { memo } from 'react';
+import { BodyIconTypography, GridContainer } from '../commons';
 import type { DeskTypeDetails } from './desk-type';
 import DeskType from './desk-type';
 
@@ -11,17 +11,17 @@ type Props = {
 
 const DeskTypes = ({ deskTypes, maxWidth }: Props) => {
   if (deskTypes.length === 0) {
-    return <Typography variant="body1">N/A</Typography>;
+    return <BodyIconTypography label="N/A" />;
   }
 
   return (
-    <Grid container spacing={1}>
+    <GridContainer spacing={1}>
       {deskTypes.map((deskType) => (
         <Grid key={deskType.id}>
           <DeskType deskType={deskType} maxWidth={maxWidth} />
         </Grid>
       ))}
-    </Grid>
+    </GridContainer>
   );
 };
 

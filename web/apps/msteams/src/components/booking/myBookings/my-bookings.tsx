@@ -1,13 +1,12 @@
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { GridContainer, SectionIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { Zones } from '@repo/shared/components/zone';
-import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
+import { defaultPadding } from '@repo/shared/libs/theme';
 import { toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import dayjs, { Dayjs } from 'dayjs';
@@ -270,13 +269,11 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       headerName: 'Teammates',
       editable: false,
       renderCell: (params) => (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <AvatarGroup max={5}>
-            {params.value?.map((customer: CustomerDetails) => (
-              <CustomerAvatar key={customer?.uniqueId} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
-            ))}
-          </AvatarGroup>
-        </Stack>
+        <AvatarGroup max={5}>
+          {params.value?.map((customer: CustomerDetails) => (
+            <CustomerAvatar key={customer?.uniqueId} name={customer} photo={{ url: customer?.photoUrl }} size="medium" showFullName />
+          ))}
+        </AvatarGroup>
       ),
       display: 'flex',
       minWidth: 200,
@@ -296,20 +293,12 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
   }
 
   return (
-    <Stack
-      direction="column"
-      spacing={1}
-      sx={{
-        paddingLeft: defaultPadding,
-        paddingRight: defaultPadding,
-      }}
-    >
-      <Typography variant="h5">My Bookings</Typography>
-
+    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+      <SectionIconTypography label="My Bookings" />
       <Divider />
 
       {viewMode === 'grid' && (
-        <Grid container spacing={defaultSpacing} sx={{ alignItems: 'flex-start' }}>
+        <GridContainer>
           {myBookings.map((myBooking) => {
             const key = convertDateToKey(myBooking.from);
             const otherTeammates = groupedBookingsByFromDate[key]?.filter(
@@ -326,7 +315,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
               </Grid>
             );
           })}
-        </Grid>
+        </GridContainer>
       )}
 
       {viewMode === 'list' && (
@@ -354,7 +343,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
           }}
         />
       )}
-    </Stack>
+    </StackColumn>
   );
 };
 

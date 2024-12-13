@@ -1,14 +1,9 @@
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
-import { AddIcon, EditIcon } from '@repo/shared/components/icons';
+import { FormStackColumn, GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
+import { EditIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -20,20 +15,18 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Direction, Sorting } from '@repo/shared/components/sorting';
-import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { OrganizationMemberSelector } from 'components/organization';
-import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { PreloadedQuery, useFragment, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, object, string } from 'yup';
-import type { teamMembersTab_inviteCustomersToJoinTeamMutation } from './__generated__/teamMembersTab_inviteCustomersToJoinTeamMutation.graphql';
+import { array, object } from 'yup';
 import type { teamMembersTab_query$key } from './__generated__/teamMembersTab_query.graphql';
 import type { teamMembersTab_rootQuery } from './__generated__/teamMembersTab_rootQuery.graphql';
 import type { teamMembersTab_teamMembers_query$key } from './__generated__/teamMembersTab_teamMembers_query.graphql';
@@ -71,25 +64,8 @@ type TeamDetails = {
   organizationMemberIds: string[];
 };
 
-type PeopleToJoin = {
-  emails: (string | undefined)[];
-};
-
 const teamSchema = object({
   organizationMemberIds: array().nullable(),
-});
-
-const peopleToInviteSchema = object({
-  emails: array()
-    .transform(function (value, originalValue) {
-      if (this.isType(value) && value !== null) {
-        return value;
-      }
-
-      return originalValue ? originalValue.split(/[\s,]+/) : [];
-    })
-    .of(string().email(({ value }) => `${value} is not a valid email`))
-    .required('List of emails separated by comma is required'),
 });
 
 const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
@@ -174,14 +150,6 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     }
   `);
 
-  const [commitInviteCustomersToJoinTeam] = useMutation<teamMembersTab_inviteCustomersToJoinTeamMutation>(graphql`
-    mutation teamMembersTab_inviteCustomersToJoinTeamMutation($input: InviteCustomersToJoinTeamInput!) {
-      inviteCustomersToJoinTeam(input: $input) {
-        clientMutationId
-      }
-    }
-  `);
-
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [, startTransition] = useTransition();
@@ -195,9 +163,6 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(50);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-  const [invitePeopleDialogOpen, setInvitePeopleDialogOpen] = useState(false);
-  const validateMembersToInvite = makeValidate(peopleToInviteSchema);
-  const requiredMembersToInviteFields = makeRequired(peopleToInviteSchema);
 
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
@@ -316,63 +281,6 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     setEditingOrganizationMembers(false);
   };
 
-  const handleInvitePeopleDialogOpenClick = () => {
-    setInvitePeopleDialogOpen(true);
-  };
-
-  const handleInvitePeopleClick = ({ emails: originalEmailsStr }: PeopleToJoin) => {
-    if (!rootData.team || !originalEmailsStr) {
-      return;
-    }
-
-    const emails = originalEmailsStr as unknown as string;
-    if (!emails) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Inviting people to join team '${rootData.team.name}'...`} />, infoNotificationOptions);
-
-    commitInviteCustomersToJoinTeam({
-      variables: {
-        input: {
-          clientMutationId: nanoid(),
-          teamId: rootData.team.id,
-          emails: emails
-            .split(/[\s,]+/)
-            .map((email) => email.trim())
-            .filter((email) => email),
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to invite people to join team '${rootData.team?.name}'. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation sent to people to join team ${rootData.team?.name}.`} />,
-        });
-
-        setInvitePeopleDialogOpen(false);
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to invite people to join team '${rootData.team?.name}'. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleCancelInvitingPeopleClick = () => {
-    setInvitePeopleDialogOpen(false);
-  };
-
   if (!rootData.team || !rootDataPaginatedTeamMembers.teamMembers) {
     return <></>;
   }
@@ -408,29 +316,17 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
 
   return (
     <>
-      {!organizationId && (
-        <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
-          <Grid>
-            <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-              Invite People
-            </Button>
-          </Grid>
-        </Stack>
-      )}
-
       {!editingOrganizationMembers && (
         <>
           {rootData.team?.organization && rootData.team.canModify && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditOrganizationMembersClick}>
-                Edit Members
-              </Button>
-            </Stack>
+            <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditOrganizationMembersClick}>
+              Edit Members
+            </Button>
           )}
 
-          <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+          <StackRowFullWidth>
             <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+            <StackRow>
               <TablePagination
                 count={count}
                 page={page}
@@ -449,10 +345,10 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
                 defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
                 onValueChange={handleSortingChanged}
               />
-            </Stack>
-          </Stack>
+            </StackRow>
+          </StackRowFullWidth>
 
-          <Grid container spacing={1}>
+          <GridContainer spacing={1}>
             {slicedrEdges.map((edge) => (
               <Grid key={edge.node.id}>
                 <TeamMemberCard
@@ -463,7 +359,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
                 />
               </Grid>
             ))}
-          </Grid>
+          </GridContainer>
         </>
       )}
 
@@ -478,7 +374,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
             }}
             validate={validateTeam}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+              <FormStackColumn onSubmit={handleSubmit}>
                 {rootData.team?.organization && (
                   <OrganizationMemberSelector
                     rootDataRelay={rootData}
@@ -488,53 +384,19 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
                     useMemberId={true}
                   />
                 )}
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
                   </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Update
                   </Button>
-                </Stack>
-              </Stack>
+                </StackRow>
+              </FormStackColumn>
             )}
           />
         </Paper>
       )}
-
-      <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
-        <DialogTitle>Invite people to join your team</DialogTitle>
-        <DialogContent>
-          <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>
-
-          <Form
-            onSubmit={handleInvitePeopleClick}
-            initialValues={{
-              emails: '',
-            }}
-            validate={validateMembersToInvite}
-            render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
-                <TextField
-                  label="Emails"
-                  name="emails"
-                  required={requiredMembersToInviteFields.emails}
-                  multiline={true}
-                  helperText="member1@example.com,member2@example.com"
-                />
-                <DialogActions>
-                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Invite
-                  </Button>
-                </DialogActions>
-              </Stack>
-            )}
-          />
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

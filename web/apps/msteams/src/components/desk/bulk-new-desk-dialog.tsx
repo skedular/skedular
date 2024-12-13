@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Stack from '@mui/material/Stack';
+import { FormStackColumn } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -144,7 +144,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+            <FormStackColumn onSubmit={handleSubmit}>
               <TextField label="Optional name prefix" name="namePrefix" required={requiredFields.namePrefix} helperText="Add your desk name prefix" />
               <TextField label="Count" name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
               <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
@@ -158,7 +158,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
                   Add
                 </Button>
               </DialogActions>
-            </Stack>
+            </FormStackColumn>
           )}
         />
       </DialogContent>

@@ -7,9 +7,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography } from '@repo/shared/components/commons';
 import { DangerIcon, DeleteIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
@@ -185,10 +184,7 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
       <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <CustomerAvatar name={customer} photo={{ url: customer.photoUrl }} />
-              <Typography variant="body1">{getCustomerFullName(customer)}</Typography>
-            </Stack>
+            <BodyIconTypography label={getCustomerFullName(customer)} icon={<CustomerAvatar name={customer} photo={{ url: customer.photoUrl }} />} />
           }
         />
 

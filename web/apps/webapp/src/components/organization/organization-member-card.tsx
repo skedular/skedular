@@ -11,9 +11,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, FormStackColumn, StackRow } from '@repo/shared/components/commons';
 import { EditIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
@@ -135,25 +134,29 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     });
   };
 
-  const avatar = (
-    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-      <CustomerAvatar name={organizationMemberDetails.customer} photo={{ url: organizationMemberDetails.customer?.photoUrl }} showFullName />
-      <Typography variant="body1">{getCustomerFullName(organizationMemberDetails.customer)}</Typography>
-    </Stack>
-  );
-
   return (
     <>
       {!editing && (
         <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
-          <CardHeader title={<>{avatar}</>} />
+          <CardHeader
+            title={
+              <BodyIconTypography
+                label={getCustomerFullName(organizationMemberDetails.customer)}
+                icon={
+                  <CustomerAvatar
+                    name={organizationMemberDetails.customer}
+                    photo={{ url: organizationMemberDetails.customer?.photoUrl }}
+                    showFullName
+                  />
+                }
+              />
+            }
+          />
 
           <CardContent>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              {organizationMemberDetails.membershipType && (
-                <Typography variant="body1">{convertStringToLowercaseExceptFirstLetter(organizationMemberDetails.membershipType)}</Typography>
-              )}
-            </Stack>
+            {organizationMemberDetails.membershipType && (
+              <BodyIconTypography label={convertStringToLowercaseExceptFirstLetter(organizationMemberDetails.membershipType)} />
+            )}
 
             <CardActions sx={{ justifyContent: 'flex-end' }}>
               <Button size="small" color="primary" onClick={handleEditClick}>
@@ -173,20 +176,29 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
-                {avatar}
+              <FormStackColumn onSubmit={handleSubmit}>
+                <BodyIconTypography
+                  label={getCustomerFullName(organizationMemberDetails.customer)}
+                  icon={
+                    <CustomerAvatar
+                      name={organizationMemberDetails.customer}
+                      photo={{ url: organizationMemberDetails.customer?.photoUrl }}
+                      showFullName
+                    />
+                  }
+                />
 
                 <OrganizationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />
 
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
                   </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Update
                   </Button>
-                </Stack>
-              </Stack>
+                </StackRow>
+              </FormStackColumn>
             )}
           />
         </Paper>

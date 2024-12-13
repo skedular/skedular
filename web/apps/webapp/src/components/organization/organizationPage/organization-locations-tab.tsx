@@ -9,8 +9,8 @@ import type { organizationLocationsTab_locations_query$key } from '@/queries/__g
 import type { organizationLocationsTab_query$key } from '@/queries/__generated__/organizationLocationsTab_query.graphql';
 import type { organizationLocationsTab_rootQuery } from '@/queries/__generated__/organizationLocationsTab_rootQuery.graphql';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -175,9 +175,9 @@ const OrganizationLocationsTab = ({ queryReference }: Props) => {
     <>
       {rootData.organization.canModify && <NewLocationButton organizationId={rootData.organization.id} />}
 
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+      <StackRowFullWidth>
         <Search size="small" placeholder="Find a location..." defaultValue={locationNameSearchText} onChange={handleSearchTextChange} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <TablePagination
             count={rootDataLocations.locations?.totalCount ? rootDataLocations.locations.totalCount : 0}
             page={page}
@@ -191,10 +191,10 @@ const OrganizationLocationsTab = ({ queryReference }: Props) => {
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedEdges.map((edge) => {
           if (!edge.node.organization) {
             return <></>;
@@ -212,7 +212,7 @@ const OrganizationLocationsTab = ({ queryReference }: Props) => {
             </Grid>
           );
         })}
-      </Grid>
+      </GridContainer>
     </>
   );
 };

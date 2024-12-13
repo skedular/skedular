@@ -1,15 +1,14 @@
 import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
 import Select from '@mui/material/Select';
-import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { CalendarIcon } from '@repo/shared/components/icons';
 import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
+import { BodyIconTypography, LeadIconTypography, StackRow } from '../commons';
 
 interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
   isSelected: boolean;
@@ -124,12 +123,12 @@ const WeekRangePicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
         }}
         size="small"
         renderValue={() => (
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <StackRow>
             <CalendarIcon />
-            <Typography variant="h6">Date</Typography>
+            <LeadIconTypography label="Date" icon={<CalendarIcon />} />
             <Divider orientation="vertical" flexItem />
-            <Typography variant="body1">{buttonTitle}</Typography>
-          </Stack>
+            <BodyIconTypography label={buttonTitle} />
+          </StackRow>
         )}
         value=""
       />

@@ -8,8 +8,8 @@ import type {
 } from '@/queries/__generated__/oldLocations_refetchableFragment.graphql';
 import type { oldLocations_rootQuery } from '@/queries/__generated__/oldLocations_rootQuery.graphql';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -151,9 +151,9 @@ const OldLocations = ({ queryReference }: Props) => {
   return (
     <>
       <NewLocationButton />
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+      <StackRowFullWidth>
         <Search size="small" placeholder="Find a location..." defaultValue={locationNameSearchText} onChange={handleSearchTextChange} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <TablePagination
             count={rootData.locations.totalCount ? rootData.locations.totalCount : 0}
             page={page}
@@ -167,10 +167,10 @@ const OldLocations = ({ queryReference }: Props) => {
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <LocationBookingsCard
@@ -182,7 +182,7 @@ const OldLocations = ({ queryReference }: Props) => {
             />
           </Grid>
         ))}
-      </Grid>
+      </GridContainer>
     </>
   );
 };

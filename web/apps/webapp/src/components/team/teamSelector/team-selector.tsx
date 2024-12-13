@@ -1,10 +1,9 @@
 import type { teamSelector_allTeams_query$key } from '@/queries/__generated__/teamSelector_allTeams_query.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { TeamAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, DropdownSelect, LeadIconTypography, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { TeamIcon } from '@repo/shared/components/icons';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -38,7 +37,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
   const [id, setId] = useState<string>(allId);
   const allItems = useMemo(() => (rootData.teams?.edges ? rootData.teams.edges.map(({ node }) => node) : []), [rootData.teams]);
 
-  const handleChanged = (event: SelectChangeEvent) => {
+  const handleChanged = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;
 
     setId(id);
@@ -46,57 +45,43 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
   };
 
   return (
-    <Select
+    <DropdownSelect
       value={id}
       onChange={handleChanged}
-      sx={{
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderRadius: 4,
-        },
-        width: {
-          xs: '100%',
-          sm: 'min(100%, 250px)',
-        },
-      }}
       size="small"
       renderValue={(selectedId) => {
         const selectedItem = allItems.find((item) => item.id === selectedId);
         if (selectedItem) {
           return (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <TeamIcon />
-              <Typography variant="h6">Team</Typography>
+            <StackRow sx={{ alignItems: 'center' }}>
+              <LeadIconTypography label="Team" icon={<TeamIcon />} />
               <Divider orientation="vertical" flexItem />
-              <Typography variant="body1">{selectedItem.name}</Typography>
-            </Stack>
+              <PushToRight />
+              <BodyIconTypography label={selectedItem.name} />
+            </StackRow>
           );
         }
 
         return (
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <TeamIcon />
-            <Typography variant="h6">Team</Typography>
+          <StackRow sx={{ alignItems: 'center' }}>
+            <LeadIconTypography label="Team" icon={<TeamIcon />} />
             <Divider orientation="vertical" flexItem />
-            <Typography variant="body1">All</Typography>
-          </Stack>
+            <PushToRight />
+            <BodyIconTypography label="All" />
+          </StackRow>
         );
       }}
     >
       <MenuItem value={allId}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Typography variant="h6">All</Typography>
-        </Stack>
+        <BodyIconTypography label="All" />
       </MenuItem>
 
-      {allItems.map((team) => (
-        <MenuItem key={team.id} value={team.id}>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <TeamAvatar name={{ name: team.name }} size="small" />
-            <Typography variant="h6">{team.name}</Typography>
-          </Stack>
+      {allItems.map((item) => (
+        <MenuItem key={item.id} value={item.id}>
+          <LeadIconTypography icon={<TeamAvatar name={{ name: item.name }} size="small" />} label={item.name} />
         </MenuItem>
       ))}
-    </Select>
+    </DropdownSelect>
   );
 };
 

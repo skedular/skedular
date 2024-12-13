@@ -1,6 +1,5 @@
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { BodyIconTypography } from '@repo/shared/components/commons';
 import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
@@ -65,9 +64,7 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
 
         return (
           <li {...props}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="body1">{castedOption.name}</Typography>
-            </Stack>
+            <BodyIconTypography label={castedOption.name} />
           </li>
         );
       }}

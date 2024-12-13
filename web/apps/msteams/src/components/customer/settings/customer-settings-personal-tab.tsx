@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import {
   errorNotificationOptions,
@@ -168,7 +168,7 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
       }}
       validate={validate}
       render={({ handleSubmit }) => (
-        <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+        <FormStackColumn onSubmit={handleSubmit}>
           <TextField label="Designation" name="designation" required={requiredFields.designation} />
           <TextField label="Title" name="title" required={requiredFields.title} />
           <TextField label="Name" name="name" required={requiredFields.name} />
@@ -178,12 +178,12 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
           <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
           <TextField label="Phone Number" name="phoneNumber" required={requiredFields.phoneNumber} />
 
-          <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+          <StackRow sx={{ justifyContent: 'flex-end' }}>
             <Button color="primary" variant="contained" type="submit">
               Update
             </Button>
-          </Stack>
-        </Stack>
+          </StackRow>
+        </FormStackColumn>
       )}
     />
   );

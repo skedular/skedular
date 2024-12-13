@@ -5,13 +5,12 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import LinearProgress from '@mui/material/LinearProgress';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, GridContainer, SectionIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { Zones } from '@repo/shared/components/zone';
-import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
+import { defaultPadding } from '@repo/shared/libs/theme';
 import { startOfDay } from '@repo/shared/libs/utils';
 import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
@@ -223,10 +222,10 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       headerName: 'Availability',
       editable: false,
       renderCell: (params) => (
-        <Stack direction="column" sx={{ alignItems: 'flex-end' }}>
-          <Typography variant="body2">{`${params.value.desksCount} Available Today`}</Typography>
+        <StackColumn sx={{ alignItems: 'flex-end' }}>
+          <SmallIconTypography label={`${params.value.desksCount} Available Today`} />
           <LinearProgress value={params.value.availablePercentage} variant="determinate" sx={{ width: '100%' }} />
-        </Stack>
+        </StackColumn>
       ),
       display: 'flex',
       minWidth: 200,
@@ -257,11 +256,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       field: 'physicalAddress',
       headerName: 'Address',
       editable: false,
-      renderCell: (params) => (
-        <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
-          {params.value ? params.value : 'N/A'}
-        </Typography>
-      ),
+      renderCell: (params) => <BodyIconTypography label={params.value ? params.value : 'N/A'} sx={{ whiteSpace: 'pre-line' }} />,
       display: 'flex',
       minWidth: 200,
     },
@@ -272,20 +267,13 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
   }
 
   return (
-    <Stack
-      direction="column"
-      spacing={1}
-      sx={{
-        paddingLeft: defaultPadding,
-        paddingRight: defaultPadding,
-      }}
-    >
-      <Typography variant="h5">My Locations</Typography>
+    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+      <SectionIconTypography label="My Locations" />
 
       <Divider />
 
       {viewMode === 'grid' && (
-        <Grid container spacing={defaultSpacing} sx={{ alignItems: 'flex-start' }}>
+        <GridContainer>
           {locations.map((location) => {
             const desksCount = location.desks.length;
             const availableDesksCount = rootDataRefetchable.availableDesks
@@ -308,7 +296,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               </Grid>
             );
           })}
-        </Grid>
+        </GridContainer>
       )}
 
       {viewMode === 'list' && (
@@ -336,7 +324,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
           }}
         />
       )}
-    </Stack>
+    </StackColumn>
   );
 };
 

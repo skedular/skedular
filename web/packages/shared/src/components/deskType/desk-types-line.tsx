@@ -1,9 +1,8 @@
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import { memo, useState } from 'react';
+import { BodyIconTypography, StackRow } from '../commons';
 import { CollapseIcon, DeskTypeIcon, MoreItemsIcon } from '../icons';
 import type { DeskTypeDetails } from './desk-type';
 import DeskType from './desk-type';
@@ -31,15 +30,10 @@ const DeskTypesLine = ({ deskTypes, deskTypeTotalDisplayLimit = preferredDeskTyp
 
   return (
     <>
-      {deskTypes.length === 0 && (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <DeskTypeIcon />
-          <Typography>N/A</Typography>
-        </Stack>
-      )}
+      {deskTypes.length === 0 && <BodyIconTypography icon={<DeskTypeIcon />} label="N/A" />}
 
       {deskTypes.length !== 0 && (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow sx={{ alignItems: 'center' }}>
           <DeskTypeIcon />
           {deskTypesToDisplay.map((deskType) => (
             <DeskType key={deskType.id} deskType={deskType} maxWidth={100} />
@@ -62,7 +56,7 @@ const DeskTypesLine = ({ deskTypes, deskTypeTotalDisplayLimit = preferredDeskTyp
               </Button>
             </Tooltip>
           )}
-        </Stack>
+        </StackRow>
       )}
     </>
   );

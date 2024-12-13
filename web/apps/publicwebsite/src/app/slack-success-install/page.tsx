@@ -1,26 +1,10 @@
 'use client';
 
-import { PublicMainRootLayout } from '@/components/layouts';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { LargeHeadingIconTypography } from '@repo/shared/components/commons';
 import { memo } from 'react';
 
 const AttendanceVisibility = () => {
-  return (
-    <PublicMainRootLayout>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          p: '3rem',
-        }}
-      >
-        <Typography variant="h1">You&apos;re all set!</Typography>
-      </Box>
-    </PublicMainRootLayout>
-  );
+  return <LargeHeadingIconTypography label={"You're all set!"} />;
 };
 
 export default memo(AttendanceVisibility);

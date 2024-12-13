@@ -4,11 +4,10 @@ import type { organizationMembers_organizationMembers_refetchableFragment } from
 import type { organizationMembers_rootQuery } from '@/queries/__generated__/organizationMembers_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, PushToRight, SectionIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -230,17 +229,10 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
       editable: false,
       renderCell: (params) => {
         return (
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              alignItems: 'center',
-              flexWrap: 'wrap',
-            }}
-          >
+          <StackRow>
             {params.value && (
               <>
-                <Typography variant="body1">Active</Typography>
+                <BodyIconTypography label="Active" />
                 <Box
                   sx={{
                     width: 15,
@@ -253,7 +245,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
             )}
             {!params.value && (
               <>
-                <Typography variant="body1">Deactive</Typography>
+                <BodyIconTypography label="Deactive" />
                 <Box
                   sx={{
                     width: 15,
@@ -264,7 +256,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
                 />
               </>
             )}
-          </Stack>
+          </StackRow>
         );
 
         return params.value;
@@ -274,44 +266,19 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
   ];
 
   return (
-    <Stack direction="column" spacing={1} sx={{ maxWidth: maxScreenWidth }}>
-      <Stack
-        direction="column"
-        spacing={1}
-        sx={{
-          paddingLeft: defaultPadding,
-          paddingRight: defaultPadding,
-          paddingTop: defaultPadding,
-        }}
-      >
-        <Typography variant="h5">Organization Members</Typography>
-        <Typography variant="body1">View members in your organization</Typography>
+    <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+        <SectionIconTypography label="Organization Members" />
+        <BodyIconTypography label="View members in your organization" />
         <Divider />
-      </Stack>
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          paddingLeft: defaultPadding,
-          paddingRight: defaultPadding,
-          paddingBottom: defaultPadding,
-          paddingTop: defaultPadding,
-        }}
-      >
+      </StackColumn>
+
+      <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding, paddingTop: defaultPadding }}>
         <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
-        <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
+        <PushToRight />
         <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-      </Stack>
-      <Stack
-        direction="column"
-        spacing={1}
-        sx={{
-          paddingLeft: defaultPadding,
-          paddingRight: defaultPadding,
-        }}
-      >
+      </StackRow>
+      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
         <DataGrid
           rows={rows}
           columns={columns}
@@ -344,8 +311,8 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
             },
           }}
         />
-      </Stack>
-    </Stack>
+      </StackColumn>
+    </StackColumn>
   );
 };
 

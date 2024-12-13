@@ -1,6 +1,7 @@
 import { LocationBookingInsightRoot } from '@/components/location/locationBookingInsight';
 import { LocationDeskOccupancyInsightRoot } from '@/components/location/locationDeskOccupancyInsight';
 import Grid from '@mui/material/Grid2';
+import { GridContainer } from '@repo/shared/components/commons';
 import { memo } from 'react';
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
 };
 
 const LocationAnalyticsTab = ({ onReloadRequired, organizationId, locationId, locationName }: Props) => (
-  <Grid container spacing={1}>
+  <GridContainer spacing={1}>
     <Grid>
       <LocationBookingInsightRoot onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} hideLocationDetails />
     </Grid>
@@ -24,7 +25,7 @@ const LocationAnalyticsTab = ({ onReloadRequired, organizationId, locationId, lo
         hideLocationDetails
       />
     </Grid>
-  </Grid>
+  </GridContainer>
 );
 
 export default memo(LocationAnalyticsTab);

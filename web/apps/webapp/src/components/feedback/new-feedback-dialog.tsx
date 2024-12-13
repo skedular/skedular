@@ -5,8 +5,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { FormStackColumn } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -117,7 +117,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+            <FormStackColumn onSubmit={handleSubmit}>
               <Typography>
                 Hi
                 <span style={{ fontWeight: 'bold' }}>{' ' + getCustomerShortName(rootData.me)}</span>, what feedback would you like to share with us?
@@ -149,7 +149,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
                   Send
                 </Button>
               </DialogActions>
-            </Stack>
+            </FormStackColumn>
           )}
         />
       </DialogContent>

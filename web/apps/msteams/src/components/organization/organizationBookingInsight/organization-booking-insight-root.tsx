@@ -2,7 +2,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
-import Typography from '@mui/material/Typography';
+import { SectionIconTypography } from '@repo/shared/components/commons';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
@@ -86,9 +86,7 @@ const OrganizationBookingInsightRootWithRelay = ({ onReloadRequired, organizatio
         <CardHeader
           title={
             <>
-              <Typography variant="h5" color="primary">
-                Booking Insights
-              </Typography>
+              <SectionIconTypography label="Booking Insights" />
               {!hideOrganizationDetails && <OrganizationLink id={organizationId} name={organizationName} analayticsLink />}
             </>
           }

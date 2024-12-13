@@ -11,9 +11,15 @@ import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
+import {
+  BodyIconTypography,
+  LeadIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  StackRowFullWidth,
+} from '@repo/shared/components/commons';
 import { AddIcon, FeedbackIcon, LogoutIcon, NotificationsIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext, SwitchToModernUIContext, UpdatePaletteModeContext, UpdateSwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
@@ -166,60 +172,48 @@ const AppBar = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      <Stack
-        direction="row"
-        sx={{ alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingLeft: 1, paddingRight: 1, flexWrap: 'wrap' }}
-      >
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <>
-            {rootData.myOrganizations.length > 0 && (
-              <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
-                <Select
-                  value={selectedOrganizationId}
-                  onChange={handleSelectedOrganizationChange}
-                  sx={{
-                    '& fieldset': {
-                      border: 0,
-                      borderRight: 1,
-                      borderColor: 'divider',
-                      borderRadius: 0,
-                    },
-                  }}
-                >
-                  {rootData.myOrganizations.map((organization) => (
-                    <MenuItem key={organization.id} value={organization.id}>
-                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                        <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
-                        <Stack direction="column">
-                          <Typography variant="h5">{organization.name}</Typography>
-                          <Typography variant="body2">Organization</Typography>
-                        </Stack>
-                      </Stack>
-                    </MenuItem>
-                  ))}
-
-                  <Divider />
-
-                  <MenuItem value={createOrganizationId}>
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                      <AddIcon fontSize="large" />
-                      <Stack direction="column">
-                        <Typography variant="h6">Create Organization</Typography>
-                      </Stack>
-                    </Stack>
+      <StackRowFullWidth sx={{ paddingLeft: 1, paddingRight: 1 }}>
+        <StackRow sx={{ alignItems: 'center' }}>
+          {rootData.myOrganizations.length > 0 && (
+            <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
+              <Select
+                value={selectedOrganizationId}
+                onChange={handleSelectedOrganizationChange}
+                sx={{
+                  '& fieldset': {
+                    border: 0,
+                    borderRight: 1,
+                    borderColor: 'divider',
+                    borderRadius: 0,
+                  },
+                }}
+              >
+                {rootData.myOrganizations.map((organization) => (
+                  <MenuItem key={organization.id} value={organization.id}>
+                    <StackRow>
+                      <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
+                      <StackColumn>
+                        <LeadIconTypography label={organization.name} />
+                        <SmallIconTypography label="Organization" />
+                      </StackColumn>
+                    </StackRow>
                   </MenuItem>
-                </Select>
-              </FormControl>
-            )}
-          </>
+                ))}
 
-          <Typography variant="h6" sx={{ display: { xs: 'none', sm: 'block' } }}>{`Welcome ${customerName}`}</Typography>
-        </Stack>
+                <Divider />
 
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Typography variant="h6" sx={{ display: { xs: 'none', sm: 'block' } }}>
-            {`${toLongDateTime(currentTime)}`}
-          </Typography>
+                <MenuItem value={createOrganizationId}>
+                  <LeadIconTypography label="Create Organization" icon={<AddIcon />} />
+                </MenuItem>
+              </Select>
+            </FormControl>
+          )}
+
+          <LeadIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
+        </StackRow>
+
+        <StackRow sx={{ alignItems: 'center' }}>
+          <LeadIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
           <Divider orientation="vertical" flexItem />
 
           <IconButton sx={{ ml: 1 }}>
@@ -256,81 +250,58 @@ const AppBar = ({ rootDataRelay }: Props) => {
             onClose={handleProfileMenuCloseClick}
           >
             <MenuItem>
-              <Stack direction="column">
-                <Stack direction="column">
-                  <Typography variant="h6">{customerName}</Typography>
-                  {rootData.me?.email && <Typography variant="body1">{rootData.me?.email}</Typography>}
-                </Stack>
-              </Stack>
+              <StackColumn>
+                <LeadIconTypography label={customerName} />
+                <BodyIconTypography label={rootData.me?.email} />
+              </StackColumn>
             </MenuItem>
 
             <Divider />
 
             <MenuItem>
               <Link component={NextLink} href="/settings" color="inherit">
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <SettingsIcon fontSize="medium" />
-                  <Typography textAlign="center">Settings</Typography>
-                </Stack>
+                <BodyIconTypography icon={<SettingsIcon />} label="Settings" />
               </Link>
             </MenuItem>
 
             {paletteMode === 'dark' && (
               <MenuItem onClick={handleLightThemeClicked}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <DarkModeIcon fontSize="medium" />
-                  <Typography textAlign="center">Dark Mode</Typography>
-                </Stack>
+                <BodyIconTypography icon={<DarkModeIcon />} label="Dark Mode" />
               </MenuItem>
             )}
 
             {paletteMode === 'light' && (
               <MenuItem onClick={handleDarkThemeClicked}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <LightModeIcon fontSize="medium" />
-                  <Typography textAlign="center">Light Mode</Typography>
-                </Stack>
+                <BodyIconTypography icon={<LightModeIcon />} label="Light Mode" />
               </MenuItem>
             )}
 
             {!switchToModernUI && (
               <MenuItem onClick={handleModernUIClicked}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <ToggleOffIcon fontSize="medium" />
-                  <Typography textAlign="center">Switch to modern UI</Typography>
-                </Stack>
+                <BodyIconTypography icon={<ToggleOffIcon />} label="Switch to modern UI" />
               </MenuItem>
             )}
 
             {switchToModernUI && (
               <MenuItem onClick={handleClassicUIClicked}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <ToggleOnIcon fontSize="medium" />
-                  <Typography textAlign="center">Switch to classic UI</Typography>
-                </Stack>
+                <BodyIconTypography icon={<ToggleOnIcon />} label="Switch to classic UI" />
               </MenuItem>
             )}
 
             <Divider />
 
             <MenuItem onClick={handleSubmitFeedbackClicked}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <FeedbackIcon fontSize="medium" />
-                <Typography textAlign="center">Send us feedback</Typography>
-              </Stack>
+              <BodyIconTypography icon={<FeedbackIcon />} label="Send us feedback" />
             </MenuItem>
 
             <Divider />
 
             <MenuItem onClick={handleSignOutClick}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <LogoutIcon fontSize="medium" />
-                <Typography textAlign="center">Sign out</Typography>
-              </Stack>
+              <BodyIconTypography icon={<LogoutIcon />} label="Sign out" />
             </MenuItem>
           </Menu>
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
       <NewFeedbackDialog
         rootDataRelay={rootData}

@@ -11,10 +11,9 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, FormStackColumn, LeadIconTypography, StackRow } from '@repo/shared/components/commons';
 import {
   CustomerIcon,
   DeleteIcon,
@@ -653,68 +652,27 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
         <Card elevation={24} sx={{ minWidth: 400, height: '100%' }}>
           <CardHeader
             title={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <CustomerAvatar name={bookingDetails.customer} photo={{ url: bookingDetails.customer?.photoUrl }} />
-                <Typography variant="h6" component="div">
-                  {shortDateFormatFrom}
-                </Typography>
-              </Stack>
+              <LeadIconTypography
+                label={shortDateFormatFrom}
+                icon={<CustomerAvatar name={bookingDetails.customer} photo={{ url: bookingDetails.customer?.photoUrl }} />}
+              />
             }
           />
 
           <CardContent>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <CustomerIcon />
-              <Typography variant="h6" component="div">
-                {getCustomerFullName(bookingDetails.customer)}
-              </Typography>
-            </Stack>
-
-            {bookingDetails.notes && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <NotesIcon />
-                <Typography variant="body1" component="div">
-                  {bookingDetails.notes}
-                </Typography>
-              </Stack>
-            )}
-
-            {bookingDetails.organization && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <OrganizationIcon />
-                <Typography variant="body1" component="div">
-                  {bookingDetails.organization.name}
-                </Typography>
-              </Stack>
-            )}
-
-            {bookingDetails.location && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <LocationIcon />
-                <Typography variant="body1" component="div">
-                  {bookingDetails.location.name}
-                </Typography>
-              </Stack>
-            )}
-
-            {bookingDetails.team && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <TeamIcon />
-                <Typography variant="body1" component="div">
-                  {bookingDetails.team.name}
-                </Typography>
-              </Stack>
-            )}
+            <LeadIconTypography label={getCustomerFullName(bookingDetails.customer)} icon={<CustomerIcon />} />
+            {bookingDetails.notes && <BodyIconTypography label={bookingDetails.notes} icon={<NotesIcon />} />}
+            {bookingDetails.organization && <BodyIconTypography label={bookingDetails.organization.name} icon={<OrganizationIcon />} />}
+            {bookingDetails.location && <BodyIconTypography label={bookingDetails.location.name} icon={<LocationIcon />} />}
+            {bookingDetails.team && <BodyIconTypography label={bookingDetails.team.name} icon={<TeamIcon />} />}
 
             {bookingDetails.desks?.map(({ uniqueId, name, zones }) => {
               const isPreferredDesk = !!rootData.me?.preferredDesks.find((desk) => desk.uniqueId === uniqueId);
 
               return (
-                <Stack key={uniqueId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                  <DeskIcon />
-                  <Typography variant="body1" component="div">
-                    {name}
-                  </Typography>
+                <StackRow key={uniqueId}>
+                  <BodyIconTypography label={name} icon={<DeskIcon />} />
+
                   {isPreferredDesk && (
                     <Tooltip title={'Remove as preferred desk'}>
                       <Button size="small" color="primary" onClick={() => handleRemoveAsPreferredDeskClicked(uniqueId, name)}>
@@ -736,7 +694,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                       name,
                     }))}
                   />
-                </Stack>
+                </StackRow>
               );
             })}
           </CardContent>
@@ -782,7 +740,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
               setFrom(values.date);
 
               return (
-                <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+                <FormStackColumn onSubmit={handleSubmit}>
                   <BookingDate name="date" required={requiredFields.date} />
                   <BookingNotes name="notes" required={requiredFields.notes} />
                   <BookingDetailsSelector
@@ -808,15 +766,15 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                     bookingTo={to}
                   />
 
-                  <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                  <StackRow sx={{ justifyContent: 'flex-end' }}>
                     <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                       Cancel
                     </Button>
                     <Button color="primary" variant="contained" type="submit">
                       Update
                     </Button>
-                  </Stack>
-                </Stack>
+                  </StackRow>
+                </FormStackColumn>
               );
             }}
           />

@@ -1,7 +1,7 @@
-import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { StackColumn } from '@repo/shared/components/commons';
 import type { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 import { startOfDay } from '../../libs/utils';
@@ -72,7 +72,7 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
   };
 
   return (
-    <Stack direction="column" spacing={1}>
+    <StackColumn>
       <ToggleButtonGroup color="primary" value={period} exclusive onChange={handlePeriodChange} size="small">
         <ToggleButton value="week">1 Week</ToggleButton>
         <ToggleButton value="month">1 Month</ToggleButton>
@@ -86,7 +86,7 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
           onChange={(dateRangeValue) => handleSelectedDateChange(dateRangeValue[0], dateRangeValue[1])}
         />
       )}
-    </Stack>
+    </StackColumn>
   );
 };
 

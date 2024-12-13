@@ -14,14 +14,14 @@
     "./components/booking": {
       "default": "./dist/components/booking/index.js"
     },
+    "./components/commons": {
+      "default": "./dist/components/commons/index.js"
+    },
     "./components/deskType": {
       "default": "./dist/components/deskType/index.js"
     },
     "./components/datePickers": {
       "default": "./dist/components/datePickers/index.js"
-    },
-    "./components/document": {
-      "default": "./dist/components/document/index.js"
     },
     "./components/forms": {
       "default": "./dist/components/forms/index.js"
@@ -89,6 +89,7 @@
     "@mui/icons-material": "^6.2.0",
     "@mui/lab": "6.0.0-beta.19",
     "@mui/material": "^6.2.0",
+    "@mui/system": "^6.2.0",
     "@mui/x-charts": "^7.23.2",
     "@mui/x-data-grid": "^7.23.2",
     "@mui/x-data-grid-premium": "^7.23.2",

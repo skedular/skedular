@@ -3,8 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { LeadIconTypography, StackRow } from '@repo/shared/components/commons';
 import { LocationIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { LocationBookingsCard } from 'components/location/locationBookingCard';
@@ -83,18 +82,11 @@ const LocationLink = ({
 
   return (
     <>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        <LocationIcon fontSize="small" color="primary" />
-        {excludeLink && (
-          <Typography variant="h6" color="primary">
-            {name}
-          </Typography>
-        )}
+      <StackRow>
+        {excludeLink && <LeadIconTypography color="primary" label={name} icon={<LocationIcon fontSize="small" color="primary" />} />}
         {!excludeLink && (
           <Link href={href}>
-            <Typography variant="h6" color="primary">
-              {name}
-            </Typography>
+            <LeadIconTypography color="primary" label={name} icon={<LocationIcon fontSize="small" color="primary" />} />
           </Link>
         )}
         {enableViewDetails && (
@@ -102,7 +94,7 @@ const LocationLink = ({
             <ViewDetailsIcon color="primary" />
           </Button>
         )}
-      </Stack>
+      </StackRow>
       <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
         <DialogContent>
           <LocationBookingsCard

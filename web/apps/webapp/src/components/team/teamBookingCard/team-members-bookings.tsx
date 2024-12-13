@@ -18,10 +18,9 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Typography from '@mui/material/Typography';
+import { BodyIconTypography, StackColumn, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -61,29 +60,25 @@ enum MoreActionsMenuOptionType {
 
 type MoreActionsMenuItemType = {
   id: MoreActionsMenuOptionType;
-  label: String;
+  label: string;
   icon: JSX.Element;
-  color: 'inherit' | 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 };
 
 const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
   [MoreActionsMenuOptionType.SetAsPreferredTeam]: {
     id: MoreActionsMenuOptionType.SetAsPreferredTeam,
     label: 'Set as preferred team',
-    icon: <NotPreferredIcon />,
-    color: 'primary',
+    icon: <NotPreferredIcon color="primary" />,
   },
   [MoreActionsMenuOptionType.RemoveAsPreferredTeam]: {
     id: MoreActionsMenuOptionType.RemoveAsPreferredTeam,
     label: 'Remove as preferred team',
-    icon: <PreferredIcon />,
-    color: 'primary',
+    icon: <PreferredIcon color="primary" />,
   },
   [MoreActionsMenuOptionType.RemoveTeam]: {
     id: MoreActionsMenuOptionType.RemoveTeam,
     label: 'Remove team',
-    icon: <DeleteIcon />,
-    color: 'warning',
+    icon: <DeleteIcon color="warning" />,
   },
 };
 
@@ -367,18 +362,18 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="column">
+            <StackColumn>
               <TeamLink organizationId={organizationId} id={teamId} name={teamName} />
               {rootData.team.organization && <OrganizationLink id={rootData.team.organization.uniqueId} name={rootData.team.organization.name} />}
-            </Stack>
+            </StackColumn>
           }
           subheader={
-            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+            <StackRowFullWidth>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
                 <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
-              <Stack direction="row">
+              <StackRow>
                 <Link href={getTeamBookingsLink(teamId, organizationId)}>
                   <BookingIcon />
                 </Link>
@@ -388,8 +383,8 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
                     <SettingsIcon color="secondary" />
                   </Link>
                 )}
-              </Stack>
-            </Stack>
+              </StackRow>
+            </StackRowFullWidth>
           }
           action={
             <>
@@ -415,10 +410,7 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
         {moreActionsOption.map((option) => (
           <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <IconButton color={option.color}>{option.icon}</IconButton>
-              <Typography variant="body1">{option.label}</Typography>
-            </Stack>
+            <BodyIconTypography label={option.label} icon={option.icon} />
           </MenuItem>
         ))}
       </Menu>

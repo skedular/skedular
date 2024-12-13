@@ -1,12 +1,11 @@
 import SortIcon from '@mui/icons-material/Sort';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import { memo, useState } from 'react';
+import { BodyIconTypography } from '../commons';
 import { AscDirectionIcon, DescDirectionIcon } from '../icons';
 
 export type Direction = 'Ascending' | 'Descending';
@@ -64,32 +63,26 @@ const SortingDirection = ({ options, defaultOption, defaultSortingDirectionValue
       </Tooltip>
       <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
         <MenuItem selected={false}>
-          <Typography textAlign="center">Direction</Typography>
+          <BodyIconTypography label="Direction" />
         </MenuItem>
 
         <MenuItem selected={selectedSortingDirection === 'Ascending'} onClick={handleAscendingDirectionClicked}>
-          <ListItemIcon>
-            <AscDirectionIcon fontSize="small" />
-          </ListItemIcon>
-          <Typography textAlign="center">Sort Ascending</Typography>
+          <BodyIconTypography label="Sort Ascending" icon={<AscDirectionIcon fontSize="small" />} />
         </MenuItem>
 
         <MenuItem selected={selectedSortingDirection === 'Descending'} onClick={handleDescendingDirectionClicked}>
-          <ListItemIcon>
-            <DescDirectionIcon fontSize="small" />
-          </ListItemIcon>
-          <Typography textAlign="center">Sort Descending</Typography>
+          <BodyIconTypography label="Sort Descending" icon={<DescDirectionIcon fontSize="small" />} />
         </MenuItem>
 
         <Divider />
 
         <MenuItem selected={false}>
-          <Typography textAlign="center">Sort by</Typography>
+          <BodyIconTypography label="Sort by" />
         </MenuItem>
 
         {options.map((option) => (
           <MenuItem key={option.id} selected={option.id === selectedOption} onClick={() => handleOptionChange(option.id)}>
-            <Typography textAlign="center">{option.label}</Typography>
+            <BodyIconTypography label={option.label} />
           </MenuItem>
         ))}
       </Menu>

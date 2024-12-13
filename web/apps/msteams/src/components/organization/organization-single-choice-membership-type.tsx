@@ -1,6 +1,5 @@
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { BodyIconTypography } from '@repo/shared/components/commons';
 import { convertStringToLowercaseExceptFirstLetter } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
@@ -45,9 +44,7 @@ const OrganizationSingleChoiceMembershipType = ({ rootDataRelay, name, required 
 
         return (
           <li {...props}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="body1">{convertStringToLowercaseExceptFirstLetter(castedOption)}</Typography>
-            </Stack>
+            <BodyIconTypography label={convertStringToLowercaseExceptFirstLetter(castedOption)} />
           </li>
         );
       }}

@@ -2,7 +2,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
+import { StackColumn } from '@repo/shared/components/commons';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
@@ -95,10 +95,10 @@ const TeamBookingsWithRelay = ({ organizationId, organizationName, teamId, teamN
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={
-            <Stack direction="column">
+            <StackColumn>
               <TeamLink organizationId={organizationId} id={teamId} name={teamName} />
               {organizationId && <OrganizationLink id={organizationId} name={organizationName} />}
-            </Stack>
+            </StackColumn>
           }
         />
         <CardContent>

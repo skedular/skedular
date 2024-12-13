@@ -2,8 +2,7 @@ import { LocationSelector } from '@/components/location/locationSelector';
 import { NewTeamButton } from '@/components/team/addTeam';
 import { MyTeams } from '@/components/team/myTeams';
 import type { teams_rootQuery } from '@/queries/__generated__/teams_rootQuery.graphql';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
+import { PushToRight, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -41,26 +40,15 @@ const Teams = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   };
 
   return (
-    <Stack direction="column" spacing={1} sx={{ maxWidth: maxScreenWidth }}>
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          paddingLeft: defaultPadding,
-          paddingRight: defaultPadding,
-          paddingBottom: defaultPadding,
-          paddingTop: defaultPadding,
-        }}
-      >
+    <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+      <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding, paddingTop: defaultPadding }}>
         <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
-        <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
+        <PushToRight />
         <NewTeamButton organizationId={organizationId} />
-      </Stack>
+      </StackRow>
       <MyTeams rootDataRelay={rootData} onReloadRequired={onReloadRequired} primaryLocationIds={locationIds} viewMode={viewMode} />
-    </Stack>
+    </StackColumn>
   );
 };
 

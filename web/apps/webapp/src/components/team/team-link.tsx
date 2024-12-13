@@ -4,11 +4,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { LeadIconTypography, StackRow } from '@repo/shared/components/commons';
 import { TeamIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import NextLink from 'next/link';
 import { memo, useState } from 'react';
 
 type Props = {
@@ -70,18 +68,11 @@ const TeamLink = ({
 
   return (
     <>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        <TeamIcon fontSize="small" color="primary" />
-        {excludeLink && (
-          <Typography variant="h6" color="primary">
-            {name}
-          </Typography>
-        )}
+      <StackRow>
+        {excludeLink && <LeadIconTypography color="primary" label={name} icon={<TeamIcon fontSize="small" color="primary" />} />}
         {!excludeLink && (
-          <Link component={NextLink} href={href}>
-            <Typography variant="h6" color="primary">
-              {name}
-            </Typography>
+          <Link href={href}>
+            <LeadIconTypography color="primary" label={name} icon={<TeamIcon fontSize="small" color="primary" />} />
           </Link>
         )}
         {enableViewDetails && (
@@ -89,7 +80,8 @@ const TeamLink = ({
             <ViewDetailsIcon color="primary" />
           </Button>
         )}
-      </Stack>
+      </StackRow>
+
       <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
         <DialogContent>
           <TeamBookingsCard organizationId={organizationId} organizationName={organizationName} teamId={id} teamName={name} teamsConnectionIds={[]} />

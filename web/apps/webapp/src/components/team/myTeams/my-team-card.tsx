@@ -3,9 +3,8 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, LeadIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { LocationIcon } from '@repo/shared/components/icons';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -51,25 +50,18 @@ const MyTeamCard = ({ teamDetailsRelay, teammates }: Props) => {
 
   return (
     <Card sx={{ width: 600 }}>
-      <CardHeader
-        title={
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <LocationIcon fontSize="medium" />
-            <Typography variant="h6">{teamDetails.name}</Typography>
-          </Stack>
-        }
-      />
+      <CardHeader title={<CardHeader title={<LeadIconTypography icon={<LocationIcon />} label={teamDetails.name} />} />} />
       <CardContent>
-        <Stack direction="column" spacing={1} sx={{ paddingTop: 1, paddingBottom: 1 }}>
-          <Typography variant="body1">Members of this team</Typography>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackColumn sx={{ paddingTop: 1, paddingBottom: 1 }}>
+          <BodyIconTypography label="Members of this team" />
+          <StackRow>
             <AvatarGroup max={5}>
               {teammates.map((item) => (
                 <CustomerAvatar key={item.uniqueId} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
               ))}
             </AvatarGroup>
-          </Stack>
-        </Stack>
+          </StackRow>
+        </StackColumn>
       </CardContent>
     </Card>
   );

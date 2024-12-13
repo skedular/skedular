@@ -9,8 +9,8 @@ import type { organizationDeskTypesTab_query$key } from '@/queries/__generated__
 import type { organizationDeskTypesTab_rootQuery } from '@/queries/__generated__/organizationDeskTypesTab_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -192,16 +192,14 @@ const OrganizationDeskTypesTab = ({ queryReference, onReloadRequired, organizati
   return (
     <>
       {rootData.organization.canModify && (
-        <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
-          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddDeskTypeClick}>
-            Add Desk Type
-          </Button>
-        </Stack>
+        <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddDeskTypeClick}>
+          Add Desk Type
+        </Button>
       )}
 
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+      <StackRowFullWidth>
         <Search size="small" placeholder="Find a desk type..." defaultValue={deskTypeNameSearchText} onChange={handleSearchTextChange} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <TablePagination
             count={rootDataPaginatedOrganizationTags.deskTypes.totalCount ? rootDataPaginatedOrganizationTags.deskTypes.totalCount : 0}
             page={page}
@@ -215,16 +213,16 @@ const OrganizationDeskTypesTab = ({ queryReference, onReloadRequired, organizati
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <DeskTypeCard rootDataRelay={rootData} organizationTagDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}
-      </Grid>
+      </GridContainer>
 
       <NewDeskTypeDialog
         connectionIds={connectionIds}

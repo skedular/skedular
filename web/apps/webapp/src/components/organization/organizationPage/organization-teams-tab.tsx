@@ -8,8 +8,8 @@ import type {
   organizationTeamsTab_teams_refetchableFragment,
 } from '@/queries/__generated__/organizationTeamsTab_teams_refetchableFragment.graphql';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -152,9 +152,9 @@ const OrganizationTeamsTab = ({ queryReference, organizationId }: Props) => {
     <>
       <NewTeamButton organizationId={organizationId} />
 
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+      <StackRowFullWidth>
         <Search size="small" placeholder="Find a team..." defaultValue={teamNameSearchText} onChange={handleSearchTextChange} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <TablePagination
             count={rootData.teams?.totalCount ? rootData.teams.totalCount : 0}
             page={page}
@@ -168,10 +168,10 @@ const OrganizationTeamsTab = ({ queryReference, organizationId }: Props) => {
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedEdges.map((edge) => {
           if (!edge.node.organization) {
             return <></>;
@@ -189,7 +189,7 @@ const OrganizationTeamsTab = ({ queryReference, organizationId }: Props) => {
             </Grid>
           );
         })}
-      </Grid>
+      </GridContainer>
     </>
   );
 };

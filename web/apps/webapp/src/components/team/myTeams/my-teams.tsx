@@ -3,12 +3,11 @@ import type { myTeams_teams_refetchableFragment } from '@/queries/__generated__/
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { defaultPadding, defaultSpacing } from '@repo/shared/libs/theme';
+import { GridContainer, SectionIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { defaultPadding } from '@repo/shared/libs/theme';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
 import MyTeamCard from './my-team-card';
@@ -144,20 +143,13 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
   }
 
   return (
-    <Stack
-      direction="column"
-      spacing={1}
-      sx={{
-        paddingLeft: defaultPadding,
-        paddingRight: defaultPadding,
-      }}
-    >
-      <Typography variant="h5">My Teams</Typography>
+    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+      <SectionIconTypography label="My Teams" />
 
       <Divider />
 
       {viewMode === 'grid' && (
-        <Grid container spacing={defaultSpacing} sx={{ alignItems: 'flex-start' }}>
+        <GridContainer>
           {teams.map((team) => (
             <Grid key={team.id}>
               <MyTeamCard
@@ -169,7 +161,7 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
               />
             </Grid>
           ))}
-        </Grid>
+        </GridContainer>
       )}
 
       {viewMode === 'list' && (
@@ -197,7 +189,7 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
           }}
         />
       )}
-    </Stack>
+    </StackColumn>
   );
 };
 

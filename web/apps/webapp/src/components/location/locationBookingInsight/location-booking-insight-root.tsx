@@ -4,7 +4,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
-import Typography from '@mui/material/Typography';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
@@ -13,6 +12,7 @@ import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import LocationBookingInsight from './location-booking-insight';
+import { SectionIconTypography } from '@repo/shared/components/commons';
 
 type Props = {
   queryReference: PreloadedQuery<locationBookingInsightRoot_rootQuery, Record<string, unknown>>;
@@ -89,9 +89,7 @@ const LocationBookingInsightRootWithRelay = ({ onReloadRequired, organizationId,
         <CardHeader
           title={
             <>
-              <Typography variant="h5" color="primary">
-                Booking Insights
-              </Typography>
+              <SectionIconTypography label="Booking Insights" />
               {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={locationName} analayticsLink />}
             </>
           }

@@ -14,8 +14,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { FormStackColumn, GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -289,15 +289,13 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
 
   return (
     <>
-      <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
-        <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-          Invite People
-        </Button>
-      </Stack>
+      <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
+        Invite People
+      </Button>
 
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+      <StackRowFullWidth>
         <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <TablePagination
             count={count}
             page={page}
@@ -317,16 +315,16 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
             defaultSortingDirectionValue={sortingLocationMemberOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedLocationMemberEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <LocationMemberCard data={rootData} locationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}
-      </Grid>
+      </GridContainer>
 
       <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
         <DialogTitle>Invite people to join your location</DialogTitle>
@@ -340,7 +338,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
             }}
             validate={validateMembersToInvite}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+              <FormStackColumn onSubmit={handleSubmit}>
                 <TextField
                   label="Emails"
                   name="emails"
@@ -356,7 +354,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
                     Invite
                   </Button>
                 </DialogActions>
-              </Stack>
+              </FormStackColumn>
             )}
           />
         </DialogContent>

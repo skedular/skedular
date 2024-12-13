@@ -1,9 +1,8 @@
 import type { zoneSelector_allZones_query$key } from '@/queries/__generated__/zoneSelector_allZones_query.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { SelectChangeEvent } from '@mui/material/Select';
+import { BodyIconTypography, DropdownSelect, LeadIconTypography, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { ZoneIcon } from '@repo/shared/components/icons';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -37,7 +36,7 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
   const [id, setId] = useState<string>(allId);
   const allItems = useMemo(() => (rootData.zones?.edges ? rootData.zones.edges.map(({ node }) => node) : []), [rootData.zones]);
 
-  const handleSelectedChanged = (event: SelectChangeEvent) => {
+  const handleChanged = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;
 
     setId(id);
@@ -45,56 +44,43 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
   };
 
   return (
-    <Select
+    <DropdownSelect
       value={id}
-      onChange={handleSelectedChanged}
-      sx={{
-        '& .MuiOutlinedInput-notchedOutline': {
-          borderRadius: 4,
-        },
-        width: {
-          xs: '100%',
-          sm: 'min(100%, 250px)',
-        },
-      }}
+      onChange={handleChanged}
       size="small"
       renderValue={(selectedId) => {
         const selectedItem = allItems.find((item) => item.id === selectedId);
         if (selectedItem) {
           return (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <ZoneIcon />
-              <Typography variant="h6">Zones</Typography>
+            <StackRow sx={{ alignItems: 'center' }}>
+              <LeadIconTypography label="Zones" icon={<ZoneIcon />} />
               <Divider orientation="vertical" flexItem />
-              <Typography variant="body1">{selectedItem.name}</Typography>
-            </Stack>
+              <PushToRight />
+              <BodyIconTypography label={selectedItem.name} />
+            </StackRow>
           );
         }
 
         return (
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <ZoneIcon />
-            <Typography variant="h6">Zones</Typography>
+          <StackRow sx={{ alignItems: 'center' }}>
+            <LeadIconTypography label="Zones" icon={<ZoneIcon />} />
             <Divider orientation="vertical" flexItem />
-            <Typography variant="body1">All</Typography>
-          </Stack>
+            <PushToRight />
+            <BodyIconTypography label="All" />
+          </StackRow>
         );
       }}
     >
       <MenuItem value={allId}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Typography variant="h6">All</Typography>
-        </Stack>
+        <BodyIconTypography label="All" />
       </MenuItem>
 
-      {allItems.map((location) => (
-        <MenuItem key={location.id} value={location.id}>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">{location.name}</Typography>
-          </Stack>
+      {allItems.map((item) => (
+        <MenuItem key={item.id} value={item.id}>
+          <LeadIconTypography label={item.name} />
         </MenuItem>
       ))}
-    </Select>
+    </DropdownSelect>
   );
 };
 

@@ -1,9 +1,9 @@
-import Typography from '@mui/material/Typography';
+import { SmallIconTypography } from '../commons';
 
 type Props = {
   content?: string;
 };
 
-const Notification = ({ content }: Props) => <Typography variant="caption">{content}</Typography>;
+const Notification = ({ content }: Props) => <SmallIconTypography label={content} />;
 
 export default Notification;

@@ -8,9 +8,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
+import { BodyIconTypography, FormStackColumn, StackRow } from '@repo/shared/components/commons';
 import { DangerIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon, ZoneIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -368,14 +367,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
     <>
       {!editing && (
         <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
-          <CardHeader
-            title={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <ZoneIcon />
-                <Typography variant="body1">{organizationTagDetails.name}</Typography>
-              </Stack>
-            }
-          />
+          <CardHeader title={<BodyIconTypography label={organizationTagDetails.name} icon={<ZoneIcon />} />} />
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
             {rootData.organization.canModify && (
@@ -419,18 +411,18 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+              <FormStackColumn onSubmit={handleSubmit}>
                 <ZoneName name="name" required={requiredFields.name} />
 
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
                   </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Update
                   </Button>
-                </Stack>
-              </Stack>
+                </StackRow>
+              </FormStackColumn>
             )}
           />
         </Paper>

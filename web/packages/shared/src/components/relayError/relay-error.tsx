@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import { memo } from 'react';
+import { BodyIconTypography, MediumHeadingIconTypography } from '../commons';
 import { RefreshIcon } from '../icons';
 
 export interface Error {
@@ -28,19 +28,12 @@ const RelayError = ({ error }: Props) => {
 
   return (
     <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
-      <Typography variant="h2">Following error occurred while fetching the data, please refresh the page</Typography>
+      <MediumHeadingIconTypography label="Following error occurred while fetching the data, please refresh the page" />
+      {error?.source?.errors && error.source.errors.map((item, index) => <BodyIconTypography key={index} label={item.message} />)}
+      {!error?.source?.errors && <BodyIconTypography label={error.message} />}
       <Button variant="contained" startIcon={<RefreshIcon />} onClick={handleRefreshClicked}>
         Refresh
       </Button>
-
-      {error?.source?.errors &&
-        error.source.errors.map((item, index) => (
-          <Typography variant="h4" key={index}>
-            {item.message}
-          </Typography>
-        ))}
-
-      {!error?.source?.errors && <Typography variant="h4">{error.message}</Typography>}
     </Box>
   );
 };

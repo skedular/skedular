@@ -4,7 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Stack from '@mui/material/Stack';
+import { FormStackColumn } from '@repo/shared/components/commons';
 import { DeskTypeName } from '@repo/shared/components/deskType';
 import {
   errorNotificationOptions,
@@ -115,7 +115,7 @@ const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+            <FormStackColumn onSubmit={handleSubmit}>
               <DeskTypeName name="name" required={requiredFields.name} />
 
               <DialogActions>
@@ -126,7 +126,7 @@ const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel
                   Add
                 </Button>
               </DialogActions>
-            </Stack>
+            </FormStackColumn>
           )}
         />
       </DialogContent>

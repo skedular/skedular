@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
+import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import {
   errorNotificationOptions,
@@ -184,21 +184,21 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
         }}
         validate={validate}
         render={({ handleSubmit }) => (
-          <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+          <FormStackColumn onSubmit={handleSubmit}>
             <TextField label="Name" name="name" required={requiredFields.name} />
             <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
             <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
             <TextField label="Physical Address" name="physicalAddress" required={requiredFields.physicalAddress} multiline={true} />
 
-            <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+            <StackRow sx={{ justifyContent: 'flex-end' }}>
               <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                 {cancelButtonText ?? 'Cancel'}
               </Button>
               <Button color="primary" variant="contained" type="submit">
                 Create
               </Button>
-            </Stack>
-          </Stack>
+            </StackRow>
+          </FormStackColumn>
         )}
       />
     </Paper>

@@ -4,9 +4,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, FormStackColumn, StackRow } from '@repo/shared/components/commons';
 import { EditIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
@@ -135,34 +134,30 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
     });
   };
 
-  const avatar = (
-    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-      <CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />
-      <Typography variant="body1">{getCustomerFullName(locationMemberDetails.customer)}</Typography>
-    </Stack>
-  );
-
   return (
     <>
       {!editing && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
-          <Card>
-            <CardHeader title={<>{avatar}</>} />
-            <CardContent>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                {locationMemberDetails.membershipType && (
-                  <Typography variant="body1">{convertStringToLowercaseExceptFirstLetter(locationMemberDetails.membershipType)}</Typography>
-                )}
-              </Stack>
+        <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
+          <CardHeader
+            title={
+              <BodyIconTypography
+                label={getCustomerFullName(locationMemberDetails.customer)}
+                icon={<CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />}
+              />
+            }
+          />
+          <CardContent>
+            {locationMemberDetails.membershipType && (
+              <BodyIconTypography label={convertStringToLowercaseExceptFirstLetter(locationMemberDetails.membershipType)} />
+            )}
 
-              <CardActions sx={{ justifyContent: 'flex-end' }}>
-                <Button size="small" color="primary" onClick={handleEditClick}>
-                  <EditIcon />
-                </Button>
-              </CardActions>
-            </CardContent>
-          </Card>
-        </Paper>
+            <CardActions sx={{ justifyContent: 'flex-end' }}>
+              <Button size="small" color="primary" onClick={handleEditClick}>
+                <EditIcon />
+              </Button>
+            </CardActions>
+          </CardContent>
+        </Card>
       )}
 
       {editing && (
@@ -174,20 +169,23 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
-                {avatar}
+              <FormStackColumn onSubmit={handleSubmit}>
+                <BodyIconTypography
+                  label={getCustomerFullName(locationMemberDetails.customer)}
+                  icon={<CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />}
+                />
 
                 <LocationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />
 
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
                   </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Update
                   </Button>
-                </Stack>
-              </Stack>
+                </StackRow>
+              </FormStackColumn>
             )}
           />
         </Paper>

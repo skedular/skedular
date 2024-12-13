@@ -4,7 +4,7 @@ import { TeamBookingsCard } from '@/components/team/teamBookingCard';
 import type { dashboard_rootQuery } from '@/queries/__generated__/dashboard_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
+import { GridContainer, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -56,12 +56,12 @@ const Dashboard = ({ queryReference, organizationId }: Props) => {
   return (
     <>
       <Box sx={{ display: { xs: 'none', sm: 'none', md: 'none', lg: 'block', xl: 'block' } }}>
-        <Stack direction="row" spacing={1}>
-          <Stack direction="column" spacing={1}>
+        <StackRow sx={{ alignItems: undefined, flexWrap: undefined }}>
+          <StackColumn>
             <CustomerDaySummary date={today} minWidth={300} organizationId={organizationId} />
             <CustomerDaySummary date={tomorrow} minWidth={300} organizationId={organizationId} />
-          </Stack>
-          <Grid container spacing={2}>
+          </StackColumn>
+          <GridContainer spacing={1}>
             {rootData.myLocations.map((location) => (
               <Grid key={location.id}>
                 <LocationBookingsCard
@@ -86,8 +86,8 @@ const Dashboard = ({ queryReference, organizationId }: Props) => {
                 />
               </Grid>
             ))}
-          </Grid>
-        </Stack>
+          </GridContainer>
+        </StackRow>
       </Box>
       <Box sx={{ display: { xs: 'block', sm: 'block', md: 'block', lg: 'none', xl: 'none' } }}>
         <Grid>

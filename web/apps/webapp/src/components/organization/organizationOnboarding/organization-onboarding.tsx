@@ -2,10 +2,10 @@ import { AddLocation } from '@/components/location/addLocation';
 import { AddOrganization } from '@/components/organization/addOrganization';
 import { AddTeam } from '@/components/team/addTeam';
 import type { organizationOnboarding_rootQuery } from '@/queries/__generated__/organizationOnboarding_rootQuery.graphql';
-import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
+import { StackColumn } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -54,7 +54,7 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
   };
 
   return (
-    <Stack spacing={1}>
+    <StackColumn>
       <Stepper activeStep={activeStep}>
         <Step>
           <StepLabel>Create Organization</StepLabel>
@@ -85,7 +85,7 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
           cancelButtonText="Dismiss"
         />
       )}
-    </Stack>
+    </StackColumn>
   );
 };
 

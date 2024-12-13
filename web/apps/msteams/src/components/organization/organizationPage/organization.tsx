@@ -1,5 +1,4 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
+import { PushToRight, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { WeekRangePicker } from '@repo/shared/components/datePickers';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
@@ -98,24 +97,13 @@ const Dashboard = ({ queryReference, onReloadRequired, organizationId, defaultSt
   }
 
   return (
-    <Stack direction="column" spacing={1} sx={{ maxWidth: maxScreenWidth }}>
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          paddingLeft: defaultPadding,
-          paddingRight: defaultPadding,
-          paddingBottom: defaultPadding,
-          paddingTop: defaultPadding,
-        }}
-      >
+    <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+      <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding, paddingTop: defaultPadding }}>
         <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
         <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
         <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
-        <Box sx={{ flexGrow: 1 }} /> {/* This will push NewBookingButton to the right */}
+        <PushToRight />
         <NewBookingButton
           hideLocationControl={false}
           hideOrganizationControl={true}
@@ -123,7 +111,7 @@ const Dashboard = ({ queryReference, onReloadRequired, organizationId, defaultSt
           defaultDate={today}
           organizationId={organizationId}
         />
-      </Stack>
+      </StackRow>
       <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
       <MyBookings
         rootDataRelay={rootData}
@@ -135,7 +123,7 @@ const Dashboard = ({ queryReference, onReloadRequired, organizationId, defaultSt
         teamIds={teamIds}
         viewMode={viewMode}
       />
-    </Stack>
+    </StackColumn>
   );
 };
 

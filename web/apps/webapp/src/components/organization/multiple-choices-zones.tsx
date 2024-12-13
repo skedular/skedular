@@ -1,7 +1,6 @@
 import type { multipleChoicesZones_query$key } from '@/queries/__generated__/multipleChoicesZones_query.graphql';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { BodyIconTypography } from '@repo/shared/components/commons';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -64,9 +63,7 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
 
         return (
           <li {...props}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="body1">{castedOption.name}</Typography>
-            </Stack>
+            <BodyIconTypography label={castedOption.name} />
           </li>
         );
       }}

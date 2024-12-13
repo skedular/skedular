@@ -2,12 +2,12 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '../../libs/utils';
+import { LeadIconTypography } from '../commons';
 import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, TodayIcon } from '../icons';
 
 interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
@@ -139,7 +139,7 @@ const WeekPicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
         <ArrowRightIcon />
       </IconButton>
       <Button variant="text" color="inherit" onClick={handleClick} endIcon={<ArrowDownIcon />}>
-        <Typography variant="h6">{buttonTitle}</Typography>
+        <LeadIconTypography label={buttonTitle} />
       </Button>
       <Popover
         open={Boolean(anchorEl)}

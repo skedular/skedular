@@ -9,8 +9,8 @@ import type {
 } from '@/queries/__generated__/organizationZonesTab_zones_refetchableFragment.graphql';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -188,16 +188,14 @@ const OrganizationZonesTab = ({ queryReference, onReloadRequired, organizationId
   return (
     <>
       {rootData.organization.canModify && (
-        <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
-          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddZoneClick}>
-            Add Zone
-          </Button>
-        </Stack>
+        <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddZoneClick}>
+          Add Zone
+        </Button>
       )}
 
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+      <StackRowFullWidth>
         <Search size="small" placeholder="Find a desk type..." defaultValue={zoneNameSearchText} onChange={handleSearchTextChange} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <TablePagination
             count={rootDataPaginatedOrganizationTags.zones.totalCount ? rootDataPaginatedOrganizationTags.zones.totalCount : 0}
             page={page}
@@ -211,16 +209,16 @@ const OrganizationZonesTab = ({ queryReference, onReloadRequired, organizationId
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <ZoneCard rootDataRelay={rootData} organizationTagDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}
-      </Grid>
+      </GridContainer>
 
       <NewZoneDialog
         connectionIds={connectionIds}

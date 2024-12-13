@@ -7,8 +7,8 @@ import type {
 } from '@/queries/__generated__/notifications_refetchableFragment.graphql';
 import type { notifications_rootQuery } from '@/queries/__generated__/notifications_rootQuery.graphql';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { GridContainer, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -131,7 +131,7 @@ const Notifications = ({ queryReference }: Props) => {
 
   return (
     <>
-      <Stack direction="row" sx={{ justifyContent: 'flex-end' }}>
+      <StackRow sx={{ justifyContent: 'flex-end' }}>
         <TablePagination
           count={rootData.myNotifications.totalCount ? rootData.myNotifications.totalCount : 0}
           page={page}
@@ -145,15 +145,15 @@ const Notifications = ({ queryReference }: Props) => {
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
           onValueChange={handleSortingChanged}
         />
-      </Stack>
+      </StackRow>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <NotificationCard notificationDetailsRelay={edge.node} />
           </Grid>
         ))}
-      </Grid>
+      </GridContainer>
     </>
   );
 };

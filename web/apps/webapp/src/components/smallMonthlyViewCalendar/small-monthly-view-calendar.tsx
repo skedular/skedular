@@ -10,11 +10,10 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Autocomplete from '@mui/material/Autocomplete';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { BodyIconTypography, GridContainer, StackColumn } from '@repo/shared/components/commons';
 import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '@repo/shared/components/generics';
 import { OrganizationIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
@@ -216,7 +215,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
   };
 
   return (
-    <Stack sx={{ alignItems: 'center' }} direction="column">
+    <StackColumn>
       <Paper elevation={24} sx={{ marginBottom: 1 }}>
         <StaticDatePicker
           slots={{
@@ -236,12 +235,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
 
       <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%', marginBottom: 1 }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          {!pageContextOpen && selectedOrganization && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <OrganizationIcon />
-              <Typography>{selectedOrganization.name}</Typography>
-            </Stack>
-          )}
+          {!pageContextOpen && selectedOrganization && <BodyIconTypography label={selectedOrganization.name} icon={<OrganizationIcon />} />}
         </AccordionSummary>
         <AccordionDetails>
           <Autocomplete
@@ -258,9 +252,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
 
               return (
                 <li {...props}>
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                    <Typography variant="body1">{castedOption.name}</Typography>
-                  </Stack>
+                  <BodyIconTypography label={castedOption.name} />
                 </li>
               );
             }}
@@ -275,7 +267,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
         </AccordionDetails>
       </Accordion>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {nodes.map((node) => (
           <Grid key={node.id}>
             <BookingCard
@@ -288,8 +280,8 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
             />
           </Grid>
         ))}
-      </Grid>
-    </Stack>
+      </GridContainer>
+    </StackColumn>
   );
 };
 

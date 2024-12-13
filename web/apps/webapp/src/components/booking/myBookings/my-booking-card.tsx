@@ -8,10 +8,9 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { CalendarIcon, DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, LocationIcon, TeamIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { BodyIconTypography, LeadIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { CalendarIcon, DeleteIcon, EditIcon, EllipseMenuIcon, LocationIcon, TeamIcon, ZoneIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -56,23 +55,20 @@ enum MoreActionsMenuOptionType {
 
 type MoreActionsMenuItemType = {
   id: MoreActionsMenuOptionType;
-  label: String;
+  label: string;
   icon: JSX.Element;
-  color: 'inherit' | 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 };
 
 const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
   [MoreActionsMenuOptionType.EditBooking]: {
     id: MoreActionsMenuOptionType.EditBooking,
     label: 'Edit Booking',
-    icon: <EditIcon />,
-    color: 'primary',
+    icon: <EditIcon color="primary" />,
   },
   [MoreActionsMenuOptionType.DeleteBooking]: {
     id: MoreActionsMenuOptionType.DeleteBooking,
     label: 'Delete',
-    icon: <DeleteIcon />,
-    color: 'warning',
+    icon: <DeleteIcon color="warning" />,
   },
 };
 
@@ -215,12 +211,7 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
     <>
       <Card sx={{ width: 250 }}>
         <CardHeader
-          title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-              <LocationIcon fontSize="medium" />
-              <Typography variant="h6">{bookingDetails.location?.name}</Typography>
-            </Stack>
-          }
+          title={<LeadIconTypography icon={<LocationIcon />} label={bookingDetails.location?.name} />}
           action={
             <>
               {moreActionsOption.length > 0 && (
@@ -232,55 +223,41 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
           }
         />
         <CardContent>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-            <CalendarIcon fontSize="medium" />
-            <Typography variant="body1">{toShortDateWithAdditionalDayInfo(date)}</Typography>
-          </Stack>
-
+          <BodyIconTypography icon={<CalendarIcon />} label={toShortDateWithAdditionalDayInfo(date)} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-            <TeamIcon fontSize="medium" />
-            <Typography variant="body1">{bookingDetails.team ? bookingDetails.team.name : 'N/A'}</Typography>
-          </Stack>
-
+          <BodyIconTypography
+            icon={<TeamIcon />}
+            label={bookingDetails.team ? bookingDetails.team.name : 'N/A'}
+            sx={{ paddingTop: 1, paddingBottom: 1 }}
+          />
           <Divider />
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-            <DeskIcon fontSize="medium" />
-            <Typography variant="body1">{desks.length === 0 ? 'N/A' : desks}</Typography>
-          </Stack>
-
+          <BodyIconTypography icon={<TeamIcon />} label={desks.length === 0 ? 'N/A' : desks} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
-
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', paddingTop: 1, paddingBottom: 1 }}>
-            <ZoneIcon fontSize="medium" />
-            {zones.length === 0 && <Typography variant="body1">{desks.length === 0 ? 'N/A' : desks}</Typography>}
-            {zones.length !== 0 && <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
-          </Stack>
-
+          {zones.length === 0 && <BodyIconTypography icon={<ZoneIcon />} label="N/A" sx={{ paddingTop: 1, paddingBottom: 1 }} />}
+          {zones.length !== 0 && (
+            <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
+              <ZoneIcon />
+              <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} />
+            </StackRow>
+          )}
           <Divider />
-
-          <Stack direction="column" spacing={1} sx={{ paddingTop: 1, paddingBottom: 1 }}>
-            <Typography variant="body1">Other teammates coming</Typography>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <StackColumn sx={{ paddingTop: 1, paddingBottom: 1 }}>
+            <BodyIconTypography label="Other teammates coming" />
+            <StackRow>
               <AvatarGroup max={5}>
                 {otherTeammates.map((item) => (
                   <CustomerAvatar key={item.uniqueId} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
                 ))}
               </AvatarGroup>
-            </Stack>
-          </Stack>
+            </StackRow>
+          </StackColumn>
         </CardContent>
       </Card>
 
       <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
         {moreActionsOption.map((option) => (
           <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <IconButton color={option.color}>{option.icon}</IconButton>
-              <Typography variant="body1">{option.label}</Typography>
-            </Stack>
+            <BodyIconTypography label={option.label} icon={option.icon} />
           </MenuItem>
         ))}
       </Menu>

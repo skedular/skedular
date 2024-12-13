@@ -3,10 +3,9 @@ import type { bookingDetailsSelector_availableLocationDesks_refetchableFragment 
 import type { bookingDetailsSelector_organizationMembers_query$key } from '@/queries/__generated__/bookingDetailsSelector_organizationMembers_query.graphql';
 import type { bookingDetailsSelector_organizationMembers_refetchableFragment } from '@/queries/__generated__/bookingDetailsSelector_organizationMembers_refetchableFragment.graphql';
 import type { bookingDetailsSelector_query$key } from '@/queries/__generated__/bookingDetailsSelector_query.graphql';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, StackRow } from '@repo/shared/components/commons';
 import { ZonesLine } from '@repo/shared/components/zone';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
@@ -326,9 +325,7 @@ const BookingDetailsSelector = ({
 
             return (
               <li {...props}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                  <Typography variant="body1">{castedOption.name}</Typography>
-                </Stack>
+                <BodyIconTypography label={castedOption.name} />
               </li>
             );
           }}
@@ -356,10 +353,10 @@ const BookingDetailsSelector = ({
 
             return (
               <li {...props}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                  <CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />
-                  <Typography variant="body1">{getCustomerFullName(castedOption)}</Typography>
-                </Stack>
+                <BodyIconTypography
+                  label={getCustomerFullName(castedOption)}
+                  icon={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
+                />
               </li>
             );
           }}
@@ -392,9 +389,7 @@ const BookingDetailsSelector = ({
 
             return (
               <li {...props}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                  <Typography variant="body1">{castedOption.name}</Typography>
-                </Stack>
+                <BodyIconTypography label={castedOption.name} />
               </li>
             );
           }}
@@ -424,10 +419,10 @@ const BookingDetailsSelector = ({
 
                 return (
                   <li {...props}>
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                      <Typography variant="body1">{castedOption.name}</Typography>
+                    <StackRow sx={{ alignItems: 'center' }}>
+                      <BodyIconTypography label={castedOption.name} />
                       <ZonesLine zones={castedOption.zones} />
-                    </Stack>
+                    </StackRow>
                   </li>
                 );
               }}
@@ -441,9 +436,7 @@ const BookingDetailsSelector = ({
           )}
 
           {locationId && desks.length === 0 && (
-            <Typography variant="body1" color="warning">
-              There are currently no available desks in the chosen location.
-            </Typography>
+            <BodyIconTypography label="There are currently no available desks in the chosen location." color="warning" />
           )}
         </>
       )}

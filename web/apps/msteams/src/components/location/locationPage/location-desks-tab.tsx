@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { DayPicker } from '@repo/shared/components/datePickers';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
@@ -278,22 +278,22 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
   return (
     <>
       {rootData.location.canModify && (
-        <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
+        <StackRow>
           <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddDeskClick}>
             Add Desk
           </Button>
           <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleBulkAddDeskClick}>
             Bulk Add Desk
           </Button>
-        </Stack>
+        </StackRow>
       )}
 
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+      <StackRowFullWidth>
+        <StackRow>
           <Search size="small" placeholder="Find a desk..." defaultValue={deskNameSearchText} onChange={handleSearchTextChange} />
           <DayPicker onDateChanged={handleSelectedDateChange} />
-        </Stack>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        </StackRow>
+        <StackRow>
           <TablePagination
             count={
               rootDataRefetchPaginatedLocationDesks.locationDesks.totalCount ? rootDataRefetchPaginatedLocationDesks.locationDesks.totalCount : 0
@@ -309,10 +309,10 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedEdges.map((edge) => {
           const foundBooking = rootDatarefetchAllBookings.allBookings?.find((booking) =>
             booking.desks.find(({ uniqueId }) => uniqueId === edge.node.id),
@@ -331,7 +331,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
             </Grid>
           );
         })}
-      </Grid>
+      </GridContainer>
 
       <NewDeskDialog
         rootDataRelay={rootData}

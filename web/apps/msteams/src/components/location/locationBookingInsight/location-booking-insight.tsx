@@ -1,10 +1,9 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
+import { SectionIconTypography } from '@repo/shared/components/commons';
 import { toDayAndMonthDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { LocationLink } from 'components/location';
@@ -101,17 +100,11 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay,
       <CardHeader
         title={
           <>
-            <Typography variant="h5" color="primary">
-              Booking Insights
-            </Typography>
+            <SectionIconTypography label="Booking Insights" />
             {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={rootData.location?.name} analayticsLink />}
           </>
         }
-        subheader={
-          <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-            <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
-          </Stack>
-        }
+        subheader={<AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />}
       />
       <CardContent>
         <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'total' }]} {...chartSettings} />

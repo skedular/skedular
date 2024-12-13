@@ -12,10 +12,9 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Popover from '@mui/material/Popover';
 import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { getBookingSummaryMessage } from '@repo/shared/components/booking';
+import { BodyIconTypography, LeadIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -210,60 +209,39 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
   );
 
   const getMyBookingComponent = (booking: BookingDetails) => (
-    <Stack key={booking.id} direction="column">
-      {booking.location && (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <LocationIcon />
-          <Typography variant="body1" component="div">
-            {booking.location.name}
-          </Typography>
-        </Stack>
-      )}
-
-      {booking.team && (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <TeamIcon />
-          <Typography variant="body1" component="div">
-            {booking.team.name}
-          </Typography>
-        </Stack>
-      )}
-
+    <StackColumn key={booking.id}>
+      {booking.location && <BodyIconTypography icon={<LocationIcon />} label={booking.location.name} />}
+      {booking.team && <BodyIconTypography icon={<TeamIcon />} label={booking.team.name} />}
       {booking.desks?.map(({ uniqueId, name, zones }) => (
-        <Stack key={uniqueId} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-          <DeskIcon />
-          <Typography variant="body1" component="div">
-            {name}
-          </Typography>
+        <StackRow key={uniqueId} sx={{ alignItems: 'center' }}>
+          <BodyIconTypography label={name} icon={<DeskIcon />} />
           <ZonesLine zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
-        </Stack>
+        </StackRow>
       ))}
-    </Stack>
+    </StackColumn>
   );
 
   const getMyBookingsComponents = (bookings: BookingDetails[]) => (
-    <Stack direction="column">
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-        {bookings.length === 0 && <Typography variant="h6">You have no booking</Typography>}
-        {bookings.length !== 0 && <Typography variant="h6">You</Typography>}
-      </Stack>
-      <Stack direction="column">
+    <StackColumn>
+      {bookings.length === 0 && <LeadIconTypography label="You have no booking" />}
+      {bookings.length !== 0 && <LeadIconTypography label="You" />}
+      <StackColumn>
         {bookings.length === 0 && (
           <NewBookingButton hideLocationControl={false} hideOrganizationControl={false} onReloadRequired={onReloadRequired} defaultDate={date} />
         )}
         {bookings.length !== 0 && (
           <>
             {bookings.slice(0, bookings.length - 1).map((booking, index) => (
-              <Stack key={index} direction="column" spacing={1}>
+              <StackColumn key={index}>
                 {getMyBookingComponent(booking)}
                 <Divider />
-              </Stack>
+              </StackColumn>
             ))}
             {getMyBookingComponent(bookings[bookings.length - 1]!)}
           </>
         )}
-      </Stack>
-    </Stack>
+      </StackColumn>
+    </StackColumn>
   );
 
   const getBookingsByLocationsComponents = (locationId: string, bookings: typeof otherBookings) => {
@@ -281,7 +259,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
           enableViewDetails
           onReloadRequired={onReloadRequired}
         />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <AvatarGroup max={10}>
             {bookings.map((booking) => (
               <CustomerAvatar
@@ -305,7 +283,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
               />
             ))}
           </AvatarGroup>
-        </Stack>
+        </StackRow>
       </>
     );
   };
@@ -319,7 +297,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
     return (
       <>
         <TeamLink organizationId={team.organization?.uniqueId} id={teamId} name={team.name} enableViewDetails onReloadRequired={onReloadRequired} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <AvatarGroup max={10}>
             {bookings.map((booking) => (
               <CustomerAvatar
@@ -343,7 +321,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
               />
             ))}
           </AvatarGroup>
-        </Stack>
+        </StackRow>
       </>
     );
   };
@@ -362,21 +340,17 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
     <>
       <Card sx={{ maxWidth: 500, minWidth }}>
         <CardHeader
-          title={
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="body1">{toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo(date)}</Typography>
-            </Stack>
-          }
+          title={<BodyIconTypography label={toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo(date)} />}
           subheader={getMyBookingsComponents(myBookings)}
         />
         <CardContent>
           {summerizedRows.length !== 0 && (
             <>
               {summerizedRows.slice(0, summerizedRows.length - 1).map((row, index) => (
-                <Stack key={index} direction="column" spacing={1}>
+                <StackRow key={index}>
                   {row}
                   <Divider />
-                </Stack>
+                </StackRow>
               ))}
               {summerizedRows[summerizedRows.length - 1]}
             </>
@@ -393,7 +367,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
         }}
       >
         <Paper sx={{ border: 1, p: 1 }}>
-          <Typography variant="body1">{bookingPopperMessage}</Typography>
+          <BodyIconTypography label={bookingPopperMessage} />
         </Paper>
       </Popover>
     </>

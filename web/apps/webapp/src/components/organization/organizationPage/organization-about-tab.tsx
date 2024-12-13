@@ -2,7 +2,7 @@ import { OrganizationMultipleChoicesIndustries } from '@/components/organization
 import type { organizationAboutTab_rootQuery } from '@/queries/__generated__/organizationAboutTab_rootQuery.graphql';
 import type { organizationAboutTab_updateOrganizationMutation } from '@/queries/__generated__/organizationAboutTab_updateOrganizationMutation.graphql';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -166,7 +166,7 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
       }}
       validate={validate}
       render={({ handleSubmit }) => (
-        <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+        <FormStackColumn onSubmit={handleSubmit}>
           <TextField label="Name" name="name" required={requiredFields.name} />
           <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
           <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />
@@ -176,12 +176,12 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
             required={requiredFields.industrySubCategoryIds}
           />
 
-          <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+          <StackRow sx={{ justifyContent: 'flex-end' }}>
             <Button color="primary" variant="contained" type="submit">
               Update
             </Button>
-          </Stack>
-        </Stack>
+          </StackRow>
+        </FormStackColumn>
       )}
     />
   );

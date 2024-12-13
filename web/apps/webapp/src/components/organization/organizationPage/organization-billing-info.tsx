@@ -3,8 +3,7 @@ import type { organizationBillingInfo_refetchableFragment } from '@/queries/__ge
 import type { organizationBillingInfo_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationBillingInfo_setOrganizationBillingInfoMutation.graphql';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { BodyIconTypography, FormStackColumn, LeadIconTypography, StackRow } from '@repo/shared/components/commons';
 import { SingleChoiceCountry } from '@repo/shared/components/forms';
 import { EditIcon } from '@repo/shared/components/icons';
 import {
@@ -199,51 +198,51 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
     <>
       {!editing && (
         <>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Email</Typography>
-            <Typography variant="body1">{email}</Typography>
-          </Stack>
+          <StackRow>
+            <LeadIconTypography label="Email" />
+            <BodyIconTypography label={email} />
+          </StackRow>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Address Line 1</Typography>
-            <Typography variant="body1">{addressLine1}</Typography>
-          </Stack>
+          <StackRow>
+            <LeadIconTypography label="Address Line 1" />
+            <BodyIconTypography label={addressLine1} />
+          </StackRow>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Address Line 2</Typography>
-            <Typography variant="body1">{addressLine2}</Typography>
-          </Stack>
+          <StackRow>
+            <LeadIconTypography label="Address Line 2" />
+            <BodyIconTypography label={addressLine2} />
+          </StackRow>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Suburb</Typography>
-            <Typography variant="body1">{suburb}</Typography>
-          </Stack>
+          <StackRow>
+            <LeadIconTypography label="Suburb" />
+            <BodyIconTypography label={suburb} />
+          </StackRow>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">City</Typography>
-            <Typography variant="body1">{city}</Typography>
-          </Stack>
+          <StackRow>
+            <LeadIconTypography label="City" />
+            <BodyIconTypography label={city} />
+          </StackRow>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Province</Typography>
-            <Typography variant="body1">{province}</Typography>
-          </Stack>
+          <StackRow>
+            <LeadIconTypography label="Province" />
+            <BodyIconTypography label={province} />
+          </StackRow>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Zipcode</Typography>
-            <Typography variant="body1">{zipcode}</Typography>
-          </Stack>
+          <StackRow>
+            <LeadIconTypography label="Zipcode" />
+            <BodyIconTypography label={zipcode} />
+          </StackRow>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <Typography variant="h6">Country</Typography>
-            <Typography variant="body1">{country}</Typography>
-          </Stack>
+          <StackRow>
+            <LeadIconTypography label="Country" />
+            <BodyIconTypography label={country} />
+          </StackRow>
 
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <StackRow>
             <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditClick}>
               Edit
             </Button>
-          </Stack>
+          </StackRow>
         </>
       )}
       {editing && (
@@ -262,7 +261,7 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+              <FormStackColumn onSubmit={handleSubmit}>
                 <TextField label="Email" name="email" required={requiredFields.email} helperText="Email to send invoice to" />
                 <TextField label="Address line 1" name="addressLine1" required={requiredFields.addressLine1} />
                 <TextField label="Address line 2" name="addressLine2" required={requiredFields.addressLine2} />
@@ -272,15 +271,15 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
                 <TextField label="Zipcode" name="zipcode" required={requiredFields.zipcode} />
                 <SingleChoiceCountry name="country" required={requiredFields.country} />
 
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
                   </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Update
                   </Button>
-                </Stack>
-              </Stack>
+                </StackRow>
+              </FormStackColumn>
             )}
           />
         </Paper>

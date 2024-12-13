@@ -21,10 +21,9 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography, FormStackColumn, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { DeskTypesLine } from '@repo/shared/components/deskType';
 import {
   DangerIcon,
@@ -94,7 +93,7 @@ enum MoreActionsMenuOptionType {
 
 type MoreActionsMenuItemType = {
   id: MoreActionsMenuOptionType;
-  label: String;
+  label: string;
 };
 
 const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
@@ -777,12 +776,7 @@ const DeskCard = ({
       {!editing && (
         <Card elevation={24} sx={{ minWidth: 320, height: '100%' }}>
           <CardHeader
-            title={
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <DeskIcon />
-                <Typography variant="body1">{deskDetails.name}</Typography>
-              </Stack>
-            }
+            title={<BodyIconTypography label={deskDetails.name} icon={<DeskIcon />} />}
             action={
               <>
                 {moreActionsOption.length > 0 && (
@@ -795,23 +789,18 @@ const DeskCard = ({
           />
 
           <CardContent>
-            <Stack direction="column" spacing={1}>
+            <StackColumn>
               <DeskTypesLine deskTypes={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
               <ZonesLine zones={deskDetails.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
-            </Stack>
+            </StackColumn>
 
-            {extraInfo.length > 0 && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <InfoIcon />
-                <Typography variant="body1">{extraInfo.join(', ')}</Typography>
-              </Stack>
-            )}
+            {extraInfo.length > 0 && <BodyIconTypography label={extraInfo.join(', ')} icon={<InfoIcon />} />}
 
             {customerDetails && (
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                <CustomerAvatar name={customerDetails} photo={{ url: customerDetails.photoUrl }} size="medium" />
-                <Typography variant="body1">{getCustomerFullName(customerDetails)}</Typography>
-              </Stack>
+              <BodyIconTypography
+                label={getCustomerFullName(customerDetails)}
+                icon={<CustomerAvatar name={customerDetails} photo={{ url: customerDetails.photoUrl }} size="small" />}
+              />
             )}
           </CardContent>
 
@@ -858,20 +847,20 @@ const DeskCard = ({
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+              <FormStackColumn onSubmit={handleSubmit}>
                 <DeskName name="name" required={requiredFields.name} />
                 <MultipleChoicesDeskTypes rootDataRelay={multipleChoicesDeskTypesData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
                 <MultipleChoicesZones rootDataRelay={multipleChoicesZonesData} name="zoneIds" required={requiredFields.zoneIds} />
 
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
                   </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Update
                   </Button>
-                </Stack>
-              </Stack>
+                </StackRow>
+              </FormStackColumn>
             )}
           />
         </Paper>

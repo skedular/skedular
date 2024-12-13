@@ -6,8 +6,7 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { BodyIconTypography, LeadIconTypography, StackRow } from '@repo/shared/components/commons';
 import { AddIcon, RemoveIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
@@ -177,21 +176,15 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
 
   return (
     <>
-      <Typography variant="h6">Payment methods</Typography>
+      <LeadIconTypography label="Payment methods" />
       {paymentMethodExist && (
         <>
           {rootData.organizationPaymentMethodsDetails.map(({ id, cardBrand, cardExpiryMonth, cardExpiryYear, cardLastFourDigit }) => {
             return (
               <Card elevation={24} key={id}>
                 <CardContent>
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                    <Typography variant="body1">{`${cardBrand} •••• ${cardLastFourDigit}`}</Typography>
-                  </Stack>
-
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                    <Typography variant="body1">{`Expires ${cardExpiryMonth}/${cardExpiryYear?.toString().slice(-2)}`}</Typography>
-                  </Stack>
-
+                  <BodyIconTypography label={`${cardBrand} •••• ${cardLastFourDigit}`} />
+                  <BodyIconTypography label={`Expires ${cardExpiryMonth}/${cardExpiryYear?.toString().slice(-2)}`} />
                   <CardActions sx={{ justifyContent: 'flex-end' }}>
                     <Button startIcon={<RemoveIcon />} onClick={() => handleRemovePaymentMethodClick(id)}>
                       Remove
@@ -205,13 +198,12 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
       )}
       {!paymentMethodExist && addNewPaymentMethodState === AddOrganizationPaymentMethodState.NOT_STARTED && (
         <>
-          <Typography variant="h6">Payment method</Typography>
-          <Typography>No payment method setup yet</Typography>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <BodyIconTypography label="No payment method setup yet" />
+          <StackRow>
             <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddNewPaymentMethodClick}>
               Add payment method
             </Button>
-          </Stack>
+          </StackRow>
         </>
       )}
       {!paymentMethodExist && addNewPaymentMethodState === AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET && <CircularProgress />}

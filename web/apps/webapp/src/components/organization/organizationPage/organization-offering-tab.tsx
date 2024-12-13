@@ -1,5 +1,5 @@
 import type { organizationOfferingTab_rootQuery } from '@/queries/__generated__/organizationOfferingTab_rootQuery.graphql';
-import Stack from '@mui/material/Stack';
+import { StackColumn } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -32,12 +32,12 @@ const OrganizationOfferingTab = ({ queryReference, onReloadRequired }: Props) =>
   const rootData = usePreloadedQuery<organizationOfferingTab_rootQuery>(RootQuery, queryReference);
 
   return (
-    <Stack spacing={1}>
+    <StackColumn>
       <OrganizationOffering rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       {rootData.organization?.availableOfferings && rootData.organization?.availableOfferings.length > 0 && (
         <OrganizationAvailableOfferings rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       )}
-    </Stack>
+    </StackColumn>
   );
 };
 

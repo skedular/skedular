@@ -11,10 +11,9 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Typography from '@mui/material/Typography';
+import { BodyIconTypography, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import {
   BookingIcon,
   DangerIcon,
@@ -70,29 +69,25 @@ enum MoreActionsMenuOptionType {
 
 type MoreActionsMenuItemType = {
   id: MoreActionsMenuOptionType;
-  label: String;
+  label: string;
   icon: JSX.Element;
-  color: 'inherit' | 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 };
 
 const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
   [MoreActionsMenuOptionType.SetAsPreferredLocation]: {
     id: MoreActionsMenuOptionType.SetAsPreferredLocation,
     label: 'Set as preferred location',
-    icon: <NotPreferredIcon />,
-    color: 'primary',
+    icon: <NotPreferredIcon color="primary" />,
   },
   [MoreActionsMenuOptionType.RemoveAsPreferredLocation]: {
     id: MoreActionsMenuOptionType.RemoveAsPreferredLocation,
     label: 'Remove as preferred location',
-    icon: <PreferredIcon />,
-    color: 'primary',
+    icon: <PreferredIcon color="primary" />,
   },
   [MoreActionsMenuOptionType.RemoveLocation]: {
     id: MoreActionsMenuOptionType.RemoveLocation,
     label: 'Remove location',
-    icon: <DeleteIcon />,
-    color: 'warning',
+    icon: <DeleteIcon color="warning" />,
   },
 };
 
@@ -396,18 +391,14 @@ const LocationMembersBookings = ({
     <>
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
-          title={
-            <Stack direction="column">
-              <LocationLink organizationId={organizationId} id={locationId} name={locationName} />
-            </Stack>
-          }
+          title={<LocationLink organizationId={organizationId} id={locationId} name={locationName} />}
           subheader={
-            <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+            <StackRowFullWidth>
               <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
                 <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
-              <Stack direction="row">
+              <StackRow>
                 <Link href={getLocationBookingsLink(locationId, organizationId)}>
                   <BookingIcon />
                 </Link>
@@ -417,8 +408,8 @@ const LocationMembersBookings = ({
                     <SettingsIcon color="secondary" />
                   </Link>
                 )}
-              </Stack>
-            </Stack>
+              </StackRow>
+            </StackRowFullWidth>
           }
           action={
             <>
@@ -431,12 +422,10 @@ const LocationMembersBookings = ({
           }
         />
         <CardContent>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-            <DeskIcon />
-            <Typography variant="body1">
-              {rootData.location.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${rootData.location.deskCapacity}`}
-            </Typography>
-          </Stack>
+          <BodyIconTypography
+            label={rootData.location.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${rootData.location.deskCapacity}`}
+            icon={<DeskIcon />}
+          />
 
           <BookingsWeekGrid
             rootDataRelay={rootData}
@@ -451,10 +440,7 @@ const LocationMembersBookings = ({
       <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
         {moreActionsOption.map((option) => (
           <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <IconButton color={option.color}>{option.icon}</IconButton>
-              <Typography variant="body1">{option.label}</Typography>
-            </Stack>
+            <BodyIconTypography label={option.label} icon={option.icon} />
           </MenuItem>
         ))}
       </Menu>

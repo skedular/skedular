@@ -6,8 +6,7 @@ import CardHeader from '@mui/material/CardHeader';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { BodyIconTypography, LeadIconTypography } from '@repo/shared/components/commons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -116,18 +115,18 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onReloadRequired }: Pro
 
   return (
     <>
-      <Typography variant="h6">Available offerings</Typography>
-      {!availableOfferingExist && <Typography variant="h6">No offering is available</Typography>}
+      <LeadIconTypography label="Available offerings" />
+      {!availableOfferingExist && <LeadIconTypography label="No offering is available" />}
       {availableOfferingExist && (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <>
           {rootData.organization?.availableOfferings?.map(({ code, name, unitPrice, featureSet }) => {
             return (
               <Card elevation={24} sx={{ maxWidth: 500, height: '100%' }} key={code}>
                 <CardHeader
                   title={
                     <>
-                      <Typography variant="body1">{name}</Typography>
-                      <Typography variant="body1">{`Unit price: $${(unitPrice / 100).toFixed(2)}`}</Typography>
+                      <BodyIconTypography label={name} />
+                      <BodyIconTypography label={`Unit price: $${(unitPrice / 100).toFixed(2)}`} />
                     </>
                   }
                 />
@@ -142,9 +141,7 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onReloadRequired }: Pro
                     ))}
                   </List>
                   {!rootData.organization?.hasAttachedPaymentMethod && (
-                    <Typography variant="body1">
-                      You need to have payment method setup in order to upgrade to this offering. Please setup payment method under Billing tab.
-                    </Typography>
+                    <BodyIconTypography label="You need to have payment method setup in order to upgrade to this offering. Please setup payment method under Billing tab." />
                   )}
                 </CardContent>
 
@@ -158,7 +155,7 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onReloadRequired }: Pro
               </Card>
             );
           })}
-        </Stack>
+        </>
       )}
     </>
   );

@@ -4,7 +4,7 @@ import type { addOrganization_completeOrganizationOnboardingMutation } from '@/q
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
+import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -175,7 +175,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
         }}
         validate={validate}
         render={({ handleSubmit }) => (
-          <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+          <FormStackColumn onSubmit={handleSubmit}>
             <TextField label="Name" name="name" required={requiredFields.name} />
             <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
             <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />
@@ -186,7 +186,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
             />
             <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
 
-            <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+            <StackRow sx={{ justifyContent: 'flex-end' }}>
               {showCancel && (
                 <Button color="secondary" variant="contained" onClick={onCancelled}>
                   Cancel
@@ -195,8 +195,8 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               <Button color="primary" variant="contained" type="submit">
                 Create
               </Button>
-            </Stack>
-          </Stack>
+            </StackRow>
+          </FormStackColumn>
         )}
       />
     </Paper>

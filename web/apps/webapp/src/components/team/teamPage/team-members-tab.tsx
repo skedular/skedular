@@ -17,8 +17,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { FormStackColumn, GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { AddIcon, EditIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -408,28 +408,22 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
   return (
     <>
       {!organizationId && (
-        <Stack direction="row" sx={{ justifyContent: 'flex-start' }} spacing={1}>
-          <Grid>
-            <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
-              Invite People
-            </Button>
-          </Grid>
-        </Stack>
+        <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleInvitePeopleDialogOpenClick}>
+          Invite People
+        </Button>
       )}
 
       {!editingOrganizationMembers && (
         <>
           {rootData.team?.organization && rootData.team.canModify && (
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditOrganizationMembersClick}>
-                Edit Members
-              </Button>
-            </Stack>
+            <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditOrganizationMembersClick}>
+              Edit Members
+            </Button>
           )}
 
-          <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+          <StackRowFullWidth>
             <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+            <StackRow>
               <TablePagination
                 count={count}
                 page={page}
@@ -448,10 +442,10 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
                 defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
                 onValueChange={handleSortingChanged}
               />
-            </Stack>
-          </Stack>
+            </StackRow>
+          </StackRowFullWidth>
 
-          <Grid container spacing={1}>
+          <GridContainer spacing={1}>
             {slicedrEdges.map((edge) => (
               <Grid key={edge.node.id}>
                 <TeamMemberCard
@@ -462,7 +456,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
                 />
               </Grid>
             ))}
-          </Grid>
+          </GridContainer>
         </>
       )}
 
@@ -477,7 +471,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
             }}
             validate={validateTeam}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+              <FormStackColumn onSubmit={handleSubmit}>
                 {rootData.team?.organization && (
                   <OrganizationMemberSelector
                     rootDataRelay={rootData}
@@ -488,15 +482,15 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
                     useMemberId={true}
                   />
                 )}
-                <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
                   <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                     Cancel
                   </Button>
                   <Button color="primary" variant="contained" type="submit">
                     Update
                   </Button>
-                </Stack>
-              </Stack>
+                </StackRow>
+              </FormStackColumn>
             )}
           />
         </Paper>
@@ -514,7 +508,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
             }}
             validate={validateMembersToInvite}
             render={({ handleSubmit }) => (
-              <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+              <FormStackColumn onSubmit={handleSubmit}>
                 <TextField
                   label="Emails"
                   name="emails"
@@ -530,7 +524,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
                     Invite
                   </Button>
                 </DialogActions>
-              </Stack>
+              </FormStackColumn>
             )}
           />
         </DialogContent>

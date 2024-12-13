@@ -1,8 +1,7 @@
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
+import { BodyIconTypography } from '../commons';
 
 type Props = {
   name: string;
@@ -40,9 +39,7 @@ const SingleChoinceTimezone = ({ name, required }: Props) => {
 
         return (
           <li {...props}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography variant="body1">{castedOption.label}</Typography>
-            </Stack>
+            <BodyIconTypography label={castedOption.label} />
           </li>
         );
       }}

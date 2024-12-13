@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -181,9 +181,9 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
     <>
       {rootData.organization.canInvitePeople && <InvitePeopleToJoinOrganizationButton organizationId={organizationId} />}
 
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+      <StackRowFullWidth>
         <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <TablePagination
             count={
               rootDataPaginatedOrganizationMembers.organizationMembers.totalCount
@@ -207,16 +207,16 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <OrganizationMemberCard data={rootData} organizationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
           </Grid>
         ))}
-      </Grid>
+      </GridContainer>
     </>
   );
 };

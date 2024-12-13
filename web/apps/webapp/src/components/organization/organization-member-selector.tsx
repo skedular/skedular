@@ -1,8 +1,7 @@
 import type { organizationMemberSelector_query$key } from '@/queries/__generated__/organizationMemberSelector_query.graphql';
 import type { organizationMemberSelector_refetchableFragment } from '@/queries/__generated__/organizationMemberSelector_refetchableFragment.graphql';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { BodyIconTypography } from '@repo/shared/components/commons';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
@@ -131,10 +130,10 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
 
         return (
           <li {...props}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />
-              <Typography variant="body1">{getCustomerFullName(castedOption)}</Typography>
-            </Stack>
+            <BodyIconTypography
+              label={getCustomerFullName(castedOption)}
+              icon={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
+            />
           </li>
         );
       }}

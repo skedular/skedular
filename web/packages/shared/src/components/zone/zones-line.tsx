@@ -1,9 +1,8 @@
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import { memo, useState } from 'react';
+import { BodyIconTypography, StackRow } from '../commons';
 import { CollapseIcon, MoreItemsIcon, ZoneIcon } from '../icons';
 import type { ZoneDetails } from './zone';
 import Zone from './zone';
@@ -31,15 +30,10 @@ const ZonesLine = ({ zones, zoneTotalDisplayLimit = preferredZonesTotalDisplayLi
 
   return (
     <>
-      {zones.length === 0 && (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <ZoneIcon />
-          <Typography>N/A</Typography>
-        </Stack>
-      )}
+      {zones.length === 0 && <BodyIconTypography icon={<ZoneIcon />} label="N/A" />}
 
       {zones.length !== 0 && (
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow sx={{ alignItems: 'center' }}>
           <ZoneIcon />
           {zonesToDisplay.map((zone) => (
             <Zone key={zone.id} zone={zone} maxWidth={100} />
@@ -62,7 +56,7 @@ const ZonesLine = ({ zones, zoneTotalDisplayLimit = preferredZonesTotalDisplayLi
               </Button>
             </Tooltip>
           )}
-        </Stack>
+        </StackRow>
       )}
     </>
   );

@@ -8,7 +8,7 @@ import CardHeader from '@mui/material/CardHeader';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import Typography from '@mui/material/Typography';
+import { BodyIconTypography, LeadIconTypography } from '@repo/shared/components/commons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -124,13 +124,13 @@ const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
 
   return (
     <>
-      <Typography variant="h6">Active offering</Typography>
+      <LeadIconTypography label="Active offering" />
       <Card elevation={24} sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={
             <>
-              <Typography variant="body1">{offering.name}</Typography>
-              <Typography variant="body1">{`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`}</Typography>
+              <BodyIconTypography label={offering.name} />
+              <BodyIconTypography label={`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`} />
             </>
           }
         />

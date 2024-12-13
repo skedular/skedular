@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -159,9 +159,9 @@ const OldLocations = ({ queryReference, organizationId }: Props) => {
     <>
       <NewLocationButton organizationId={organizationId} />
 
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+      <StackRowFullWidth>
         <Search size="small" placeholder="Find a location..." defaultValue={locationNameSearchText} onChange={handleSearchTextChange} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <TablePagination
             count={rootData.locations.totalCount ? rootData.locations.totalCount : 0}
             page={page}
@@ -175,10 +175,10 @@ const OldLocations = ({ queryReference, organizationId }: Props) => {
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedEdges.map((edge) => {
           if (!edge.node.organization) {
             return <></>;
@@ -196,7 +196,7 @@ const OldLocations = ({ queryReference, organizationId }: Props) => {
             </Grid>
           );
         })}
-      </Grid>
+      </GridContainer>
     </>
   );
 };

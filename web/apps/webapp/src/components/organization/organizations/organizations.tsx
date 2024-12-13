@@ -8,8 +8,8 @@ import type {
 } from '@/queries/__generated__/organizations_refetchableFragment.graphql';
 import type { organizations_rootQuery } from '@/queries/__generated__/organizations_rootQuery.graphql';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
 import TablePagination from '@mui/material/TablePagination';
+import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -148,9 +148,9 @@ const Organizations = ({ queryReference }: Props) => {
     <>
       <NewOrganizationButton />
 
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+      <StackRowFullWidth>
         <Search size="small" placeholder="Find an organization..." defaultValue={organizationNameSearchText} onChange={handleSearchTextChange} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <StackRow>
           <TablePagination
             count={rootData.organizations.totalCount ? rootData.organizations.totalCount : 0}
             page={page}
@@ -164,16 +164,16 @@ const Organizations = ({ queryReference }: Props) => {
             defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
             onValueChange={handleSortingChanged}
           />
-        </Stack>
-      </Stack>
+        </StackRow>
+      </StackRowFullWidth>
 
-      <Grid container spacing={1}>
+      <GridContainer spacing={1}>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <OrganizationBookingsCard organizationId={edge.node.id} organizationName={edge.node.name} organizationsConnectionIds={connectionIds} />
           </Grid>
         ))}
-      </Grid>
+      </GridContainer>
     </>
   );
 };

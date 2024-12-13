@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
 import { NotificationContent, errorNotificationOptions } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
@@ -45,18 +45,18 @@ const OrganizationPaymentMethodSetupForm = ({ onCancelClick }: Props) => {
     <Form
       onSubmit={handleAddClick}
       render={({ handleSubmit }) => (
-        <Stack direction="column" spacing={2} sx={{ paddingTop: 1 }} component="form" noValidate onSubmit={handleSubmit}>
+        <FormStackColumn onSubmit={handleSubmit}>
           <PaymentElement id="payment-element" />
 
-          <Stack sx={{ justifyContent: 'flex-end' }} direction="row" spacing={1}>
+          <StackRow sx={{ justifyContent: 'flex-end' }}>
             <Button color="secondary" variant="contained" onClick={handleCancelClick} disabled={isAdding || !stripe || !elements}>
               Cancel
             </Button>
             <Button color="primary" variant="contained" type="submit" disabled={isAdding || !stripe || !elements}>
               Add
             </Button>
-          </Stack>
-        </Stack>
+          </StackRow>
+        </FormStackColumn>
       )}
     />
   );

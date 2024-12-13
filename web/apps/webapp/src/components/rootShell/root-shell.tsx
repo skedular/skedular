@@ -8,8 +8,7 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid2';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { SmallHeadingIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { LogoutIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -106,9 +105,7 @@ const RootShell = ({ queryReference, children, onReloadRequired }: PropsWithChil
   if (reloadCount === maxRetryAttemptsToReload) {
     return (
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
-        <Typography variant="h4">
-          There was an issue activating your account. Kindly sign out and then sign back in to resolve the problem.
-        </Typography>
+        <SmallHeadingIconTypography label="There was an issue activating your account. Kindly sign out and then sign back in to resolve the problem." />
         <Button variant="contained" startIcon={<LogoutIcon />} onClick={handleSignOutClick}>
           Sign out
         </Button>
@@ -148,10 +145,10 @@ const RootShell = ({ queryReference, children, onReloadRequired }: PropsWithChil
               <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />
             )}
           </Grid>
-          <Stack direction="column" sx={{ width: '100vw' }}>
+          <StackColumn sx={{ width: '100vw' }}>
             {!switchToModernUI && <OldAppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
             {switchToModernUI && <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
-          </Stack>
+          </StackColumn>
           {!rootData.myOrganizations ||
             (rootData.myOrganizations.length === 0 && (
               <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>
