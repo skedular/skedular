@@ -75,7 +75,7 @@ const MyLocationCard = ({
       <CardHeader
         title={
           <StackRow>
-            <LeadIconTypography label={locationDetails.name} icon={<LocationIcon />} />
+            <LeadIconTypography label={locationDetails.name} icon={<LocationIcon />} sx={{ flexWrap: undefined }} />
             <PushToRight />
             <NewBookingButton
               hideLocationControl={false}

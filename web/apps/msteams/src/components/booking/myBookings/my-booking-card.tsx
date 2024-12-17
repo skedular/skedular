@@ -212,7 +212,7 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
     <>
       <Card sx={{ width: 250 }}>
         <CardHeader
-          title={<LeadIconTypography icon={<LocationIcon />} label={bookingDetails.location?.name} />}
+          title={<LeadIconTypography icon={<LocationIcon />} label={bookingDetails.location?.name} sx={{ flexWrap: undefined }} />}
           action={
             <>
               {moreActionsOption.length > 0 && (
