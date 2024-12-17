@@ -1,5 +1,5 @@
 import type { CSSProperties } from '@mui/material/styles/createTypography';
-import type { SxProps, Theme } from '@mui/system';
+import type { ResponsiveStyleValue, SxProps, Theme } from '@mui/system';
 import type { JSX } from 'react';
 import IconTypography from './icon-typography';
 
@@ -8,10 +8,11 @@ type Props = {
   stackMode?: 'row' | 'column';
   label?: string | null | undefined;
   sx?: SxProps<Theme>;
+  spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];
 };
 
-const LargeHeadingIconTypography = ({ icon, stackMode, label, sx, color }: Props) => (
-  <IconTypography icon={icon} stackMode={stackMode} label={label} variant="h2" sx={sx} color={color} />
+const LargeHeadingIconTypography = ({ icon, stackMode, label, sx, spacing, color }: Props) => (
+  <IconTypography icon={icon} stackMode={stackMode} label={label} variant="h2" sx={sx} spacing={spacing} color={color} />
 );
 export default LargeHeadingIconTypography;

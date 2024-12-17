@@ -1,6 +1,7 @@
 import type { CSSProperties, Variant } from '@mui/material/styles/createTypography';
 import Typography from '@mui/material/Typography';
 import type { SxProps, Theme } from '@mui/system';
+import { ResponsiveStyleValue } from '@mui/system';
 import type { JSX } from 'react';
 import StackColumn from './stack-column';
 import StackRow from './stack-row';
@@ -11,10 +12,11 @@ type Props = {
   label?: string | null | undefined;
   variant?: Variant;
   sx?: SxProps<Theme>;
+  spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];
 };
 
-const IconTypography = ({ icon, stackMode, label, variant, sx, color }: Props) => {
+const IconTypography = ({ icon, stackMode, label, variant, sx, spacing, color }: Props) => {
   if (!icon && !label) {
     return <></>;
   }
@@ -29,7 +31,7 @@ const IconTypography = ({ icon, stackMode, label, variant, sx, color }: Props) =
 
   if (stackMode === 'column') {
     return (
-      <StackColumn sx={sx}>
+      <StackColumn sx={sx} spacing={spacing}>
         {icon}
         {label && (
           <Typography variant={variant} color={color}>
@@ -41,7 +43,7 @@ const IconTypography = ({ icon, stackMode, label, variant, sx, color }: Props) =
   }
 
   return (
-    <StackRow sx={sx}>
+    <StackRow sx={sx} spacing={spacing}>
       {icon}
       {label && (
         <Typography variant={variant} color={color}>

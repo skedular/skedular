@@ -9,8 +9,7 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { LeadIconTypography } from '@repo/shared/components/commons';
 import { HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import Image from 'next/image';
@@ -83,10 +82,8 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
       <ListItem disablePadding>
         <Link component={NextLink} href={organizationBaseLink}>
           <ListItemButton selected={pathName === organizationBaseLink} sx={{ ...styles, borderRadius: pathName === organizationBaseLink ? 4 : 0 }}>
-            <ListItemIcon>
-              <HomeIcon excludeTooltip />
-            </ListItemIcon>
-            {!showIconsOnly && <ListItemText>Home</ListItemText>}
+            {showIconsOnly && <HomeIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Home" icon={<HomeIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -97,10 +94,8 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             selected={pathName === organizationLocationsBaseLink}
             sx={{ ...styles, borderRadius: pathName === organizationLocationsBaseLink ? 4 : 0 }}
           >
-            <ListItemIcon>
-              <LocationIcon excludeTooltip />
-            </ListItemIcon>
-            {!showIconsOnly && <ListItemText>Locations</ListItemText>}
+            {showIconsOnly && <LocationIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Locations" icon={<LocationIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -111,10 +106,8 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             selected={pathName === organizationTeamsBaseLink}
             sx={{ ...styles, borderRadius: pathName === organizationTeamsBaseLink ? 4 : 0 }}
           >
-            <ListItemIcon>
-              <TeamIcon excludeTooltip />
-            </ListItemIcon>
-            {!showIconsOnly && <ListItemText>Teams</ListItemText>}
+            {showIconsOnly && <TeamIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Teams" icon={<TeamIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -125,10 +118,8 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             selected={pathName === organizationMembersBaseLink}
             sx={{ ...styles, borderRadius: pathName === organizationMembersBaseLink ? 4 : 0 }}
           >
-            <ListItemIcon>
-              <MembersIcon excludeTooltip />
-            </ListItemIcon>
-            {!showIconsOnly && <ListItemText>Members</ListItemText>}
+            {showIconsOnly && <MembersIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Members" icon={<MembersIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -137,10 +128,8 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
         <ListItem disablePadding>
           <Link component={NextLink} href="/settings">
             <ListItemButton selected={pathName === '/settings'} sx={{ ...styles, borderRadius: pathName === '/settings' ? 4 : 0 }}>
-              <ListItemIcon>
-                <SettingsIcon excludeTooltip />
-              </ListItemIcon>
-              {!showIconsOnly && <ListItemText>Admin</ListItemText>}
+              {showIconsOnly && <SettingsIcon excludeTooltip />}
+              {!showIconsOnly && <LeadIconTypography label="Admin" icon={<SettingsIcon excludeTooltip />} spacing={3} />}
             </ListItemButton>
           </Link>
         </ListItem>

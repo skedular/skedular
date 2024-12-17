@@ -3,8 +3,7 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { LeadIconTypography } from '@repo/shared/components/commons';
 import { HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { memo, useContext } from 'react';
@@ -71,10 +70,8 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             selected={pathName === `/organizations/${finalOrganizationId}`}
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}` ? 4 : 0 }}
           >
-            <ListItemIcon>
-              <HomeIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Home</ListItemText>
+            {showIconsOnly && <HomeIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Home" icon={<HomeIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -85,10 +82,8 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             selected={pathName === `/organizations/${finalOrganizationId}/locations`}
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/locations` ? 4 : 0 }}
           >
-            <ListItemIcon>
-              <LocationIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Locations</ListItemText>
+            {showIconsOnly && <LocationIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Locations" icon={<LocationIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -99,10 +94,8 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             selected={pathName === `/organizations/${finalOrganizationId}/teams`}
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/teams` ? 4 : 0 }}
           >
-            <ListItemIcon>
-              <TeamIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Teams</ListItemText>
+            {showIconsOnly && <TeamIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Teams" icon={<TeamIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -113,10 +106,8 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             selected={pathName === `/${finalOrganizationId}/notifications`}
             sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/notifications` ? 4 : 0 }}
           >
-            <ListItemIcon>
-              <NotificationsIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Notifications</ListItemText>
+            {showIconsOnly && <NotificationsIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Notifications" icon={<NotificationsIcon excludeTooltip />} spacing={3} />}{' '}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -127,10 +118,8 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             selected={pathName === `/${finalOrganizationId}/settings`}
             sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/settings` ? 4 : 0 }}
           >
-            <ListItemIcon>
-              <SettingsIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Settings</ListItemText>
+            {showIconsOnly && <SettingsIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Settings" icon={<SettingsIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>

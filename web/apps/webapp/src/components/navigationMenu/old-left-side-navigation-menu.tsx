@@ -2,8 +2,7 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { LeadIconTypography } from '@repo/shared/components/commons';
 import { HomeIcon, LocationIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import Image from 'next/image';
@@ -53,10 +52,8 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/">
           <ListItemButton selected={pathName === '/'} sx={{ ...styles, borderRadius: pathName === '/' ? 4 : 0 }}>
-            <ListItemIcon>
-              <HomeIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Home</ListItemText>
+            {showIconsOnly && <HomeIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Home" icon={<HomeIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -64,10 +61,8 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/organizations">
           <ListItemButton selected={pathName === '/organizations'} sx={{ ...styles, borderRadius: pathName === '/organizations' ? 4 : 0 }}>
-            <ListItemIcon>
-              <OrganizationIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Organizations</ListItemText>
+            {showIconsOnly && <OrganizationIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Organizations" icon={<OrganizationIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -75,10 +70,8 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/locations">
           <ListItemButton selected={pathName === '/locations'} sx={{ ...styles, borderRadius: pathName === '/locations' ? 4 : 0 }}>
-            <ListItemIcon>
-              <LocationIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Locations</ListItemText>
+            {showIconsOnly && <LocationIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Locations" icon={<LocationIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -86,10 +79,8 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/teams">
           <ListItemButton selected={pathName === '/teams'} sx={{ ...styles, borderRadius: pathName === '/teams' ? 4 : 0 }}>
-            <ListItemIcon>
-              <TeamIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Teams</ListItemText>
+            {showIconsOnly && <TeamIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Teams" icon={<TeamIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -97,10 +88,8 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/notifications">
           <ListItemButton selected={pathName === '/notifications'} sx={{ ...styles, borderRadius: pathName === '/notifications' ? 4 : 0 }}>
-            <ListItemIcon>
-              <NotificationsIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Notifications</ListItemText>
+            {showIconsOnly && <NotificationsIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Notifications" icon={<NotificationsIcon excludeTooltip />} spacing={3} />}{' '}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -108,10 +97,8 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/settings">
           <ListItemButton selected={pathName === '/settings'} sx={{ ...styles, borderRadius: pathName === '/settings' ? 4 : 0 }}>
-            <ListItemIcon>
-              <SettingsIcon excludeTooltip />
-            </ListItemIcon>
-            <ListItemText>Settings</ListItemText>
+            {showIconsOnly && <SettingsIcon excludeTooltip />}
+            {!showIconsOnly && <LeadIconTypography label="Settings" icon={<SettingsIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
