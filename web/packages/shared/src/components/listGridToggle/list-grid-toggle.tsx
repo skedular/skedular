@@ -1,5 +1,6 @@
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Tooltip from '@mui/material/Tooltip';
 import { memo, useState } from 'react';
 import { GridViewIcon, ListViewIcon } from '../icons';
 
@@ -30,12 +31,16 @@ const ListGridToggle = ({ defaultValue, onChange }: Props) => {
         overflow: 'hidden', // Ensures no visual artifacts from children
       }}
     >
-      <ToggleButton value="list">
-        <ListViewIcon />
-      </ToggleButton>
-      <ToggleButton value="grid">
-        <GridViewIcon />
-      </ToggleButton>
+      <Tooltip title="List layout">
+        <ToggleButton value="list">
+          <ListViewIcon />
+        </ToggleButton>
+      </Tooltip>
+      <Tooltip title="Grid layout">
+        <ToggleButton value="grid">
+          <GridViewIcon />
+        </ToggleButton>
+      </Tooltip>
     </ToggleButtonGroup>
   );
 };
