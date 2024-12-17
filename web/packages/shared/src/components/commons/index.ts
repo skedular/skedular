@@ -1,5 +1,7 @@
 export { default as BodyIconTypography } from './body-icon-typography';
+export { default as CaptionIconTypography } from './caption-icon-typography';
 export { default as DropdownSelect } from './dropdown-select';
+export { default as ExtraLargeHeadingIconTypography } from './extra-large-heading-icon-typography';
 export { default as FormStackColumn } from './form-stack-column';
 export { default as GridContainer } from './grid-container';
 export { default as LargeHeadingIconTypography } from './large-heading-icon-typography';
@@ -9,6 +11,8 @@ export { default as PushToRight } from './push-to-right';
 export { default as SectionIconTypography } from './section-icon-typography';
 export { default as SmallHeadingIconTypography } from './small-heading-icon-typography';
 export { default as SmallIconTypography } from './small-icon-typography';
+export { default as SmallSubtitleIconTypography } from './small-subtitle-icon-typography';
 export { default as StackColumn } from './stack-column';
 export { default as StackRow } from './stack-row';
 export { default as StackRowFullWidth } from './stack-row-full-width';
+export { default as SubtitleIconTypography } from './subtitle-icon-typography';
