@@ -232,6 +232,18 @@ const getDesignTokens = (mode: PaletteMode) => {
       borderRadius: 8,
     },
     shadows: customShadows,
+    components: {
+      MuiLink: {
+        styleOverrides: {
+          root: {
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'none',
+            },
+          },
+        },
+      },
+    },
   };
 };
 

@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, PushToRight, SectionIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -232,7 +232,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
           <StackRow>
             {params.value && (
               <>
-                <BodyIconTypography label="Active" />
+                <SmallIconTypography label="Active" />
                 <Box
                   sx={{
                     width: 15,
@@ -245,7 +245,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
             )}
             {!params.value && (
               <>
-                <BodyIconTypography label="Deactive" />
+                <SmallIconTypography label="Deactive" />
                 <Box
                   sx={{
                     width: 15,

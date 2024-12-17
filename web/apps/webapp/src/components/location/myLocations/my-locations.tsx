@@ -8,7 +8,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, GridContainer, SectionIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { Zones } from '@repo/shared/components/zone';
 import { defaultPadding } from '@repo/shared/libs/theme';
 import { startOfDay } from '@repo/shared/libs/utils';
@@ -256,7 +256,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       field: 'physicalAddress',
       headerName: 'Address',
       editable: false,
-      renderCell: (params) => <BodyIconTypography label={params.value ? params.value : 'N/A'} sx={{ whiteSpace: 'pre-line' }} />,
+      renderCell: (params) => <SmallIconTypography label={params.value ? params.value : 'N/A'} sx={{ whiteSpace: 'pre-line' }} />,
       display: 'flex',
       minWidth: 200,
     },

@@ -9,7 +9,7 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import { LeadIconTypography } from '@repo/shared/components/commons';
+import { BodyIconTypography } from '@repo/shared/components/commons';
 import { HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import Image from 'next/image';
@@ -83,7 +83,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
         <Link component={NextLink} href={organizationBaseLink}>
           <ListItemButton selected={pathName === organizationBaseLink} sx={{ ...styles, borderRadius: pathName === organizationBaseLink ? 4 : 0 }}>
             {showIconsOnly && <HomeIcon excludeTooltip />}
-            {!showIconsOnly && <LeadIconTypography label="Home" icon={<HomeIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Home" icon={<HomeIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -95,7 +95,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             sx={{ ...styles, borderRadius: pathName === organizationLocationsBaseLink ? 4 : 0 }}
           >
             {showIconsOnly && <LocationIcon excludeTooltip />}
-            {!showIconsOnly && <LeadIconTypography label="Locations" icon={<LocationIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Locations" icon={<LocationIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -107,7 +107,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             sx={{ ...styles, borderRadius: pathName === organizationTeamsBaseLink ? 4 : 0 }}
           >
             {showIconsOnly && <TeamIcon excludeTooltip />}
-            {!showIconsOnly && <LeadIconTypography label="Teams" icon={<TeamIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Teams" icon={<TeamIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -119,7 +119,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             sx={{ ...styles, borderRadius: pathName === organizationMembersBaseLink ? 4 : 0 }}
           >
             {showIconsOnly && <MembersIcon excludeTooltip />}
-            {!showIconsOnly && <LeadIconTypography label="Members" icon={<MembersIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Members" icon={<MembersIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -129,7 +129,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
           <Link component={NextLink} href="/settings">
             <ListItemButton selected={pathName === '/settings'} sx={{ ...styles, borderRadius: pathName === '/settings' ? 4 : 0 }}>
               {showIconsOnly && <SettingsIcon excludeTooltip />}
-              {!showIconsOnly && <LeadIconTypography label="Admin" icon={<SettingsIcon excludeTooltip />} spacing={3} />}
+              {!showIconsOnly && <BodyIconTypography label="Admin" icon={<SettingsIcon excludeTooltip />} spacing={3} />}
             </ListItemButton>
           </Link>
         </ListItem>

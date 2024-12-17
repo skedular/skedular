@@ -3,7 +3,7 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import { LeadIconTypography } from '@repo/shared/components/commons';
+import { BodyIconTypography } from '@repo/shared/components/commons';
 import { HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { memo, useContext } from 'react';
@@ -71,7 +71,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}` ? 4 : 0 }}
           >
             {showIconsOnly && <HomeIcon excludeTooltip />}
-            {!showIconsOnly && <LeadIconTypography label="Home" icon={<HomeIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Home" icon={<HomeIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -83,7 +83,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/locations` ? 4 : 0 }}
           >
             {showIconsOnly && <LocationIcon excludeTooltip />}
-            {!showIconsOnly && <LeadIconTypography label="Locations" icon={<LocationIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Locations" icon={<LocationIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -95,7 +95,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/teams` ? 4 : 0 }}
           >
             {showIconsOnly && <TeamIcon excludeTooltip />}
-            {!showIconsOnly && <LeadIconTypography label="Teams" icon={<TeamIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Teams" icon={<TeamIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -107,7 +107,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/notifications` ? 4 : 0 }}
           >
             {showIconsOnly && <NotificationsIcon excludeTooltip />}
-            {!showIconsOnly && <LeadIconTypography label="Notifications" icon={<NotificationsIcon excludeTooltip />} spacing={3} />}{' '}
+            {!showIconsOnly && <BodyIconTypography label="Notifications" icon={<NotificationsIcon excludeTooltip />} spacing={3} />}{' '}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -119,7 +119,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/settings` ? 4 : 0 }}
           >
             {showIconsOnly && <SettingsIcon excludeTooltip />}
-            {!showIconsOnly && <LeadIconTypography label="Settings" icon={<SettingsIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Settings" icon={<SettingsIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>

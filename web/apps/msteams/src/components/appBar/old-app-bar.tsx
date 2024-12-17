@@ -84,10 +84,10 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
   return (
     <>
       <StackRowFullWidth sx={{ paddingLeft: 1, paddingRight: 1 }}>
-        <LeadIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
+        <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
 
         <StackRow sx={{ alignItems: 'center' }}>
-          <LeadIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
+          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
           <Divider orientation="vertical" flexItem />
 
           <IconButton onClick={handleProfileMenuOpenClick}>

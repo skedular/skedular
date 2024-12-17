@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
-import { BodyIconTypography, GridContainer, LeadIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { GridContainer, LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { CancelIcon, DeskIcon, InviteMemberIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
 import { errorNotificationOptions, NotificationContent } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
@@ -98,12 +98,12 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
           </IconButton>
         </Box>
 
-        <LeadIconTypography label="Getting started" />
+        <SectionIconTypography label="Getting started" />
 
         <GridContainer sx={{ alignItems: 'center' }}>
           <Grid>
             <StackColumn sx={{ width: 250 }}>
-              <BodyIconTypography label="Let's start by setting up the organization's first location." />
+              <SmallIconTypography label="Let's start by setting up the organization's first location." />
               <Link href={getLocationAddLink(organizationId)}>
                 <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
                   <LeadIconTypography
@@ -119,7 +119,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
 
           <Grid>
             <StackColumn sx={{ width: 250 }}>
-              <BodyIconTypography label="Create teams that regularly work or meet together." />
+              <SmallIconTypography label="Create teams that regularly work or meet together." />
               <Link href={getTeamAddLink(organizationId)}>
                 <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
                   <LeadIconTypography
@@ -135,7 +135,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
 
           <Grid>
             <StackColumn sx={{ width: 250 }}>
-              <BodyIconTypography label="Add desks and zones for your locations and teams." />
+              <SmallIconTypography label="Add desks and zones for your locations and teams." />
               <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
                 <LeadIconTypography
                   label="Add Desks"
@@ -149,7 +149,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
 
           <Grid>
             <StackColumn sx={{ width: 250 }}>
-              <BodyIconTypography label="Invite your team members to your organization and start booking!" />
+              <SmallIconTypography label="Invite your team members to your organization and start booking!" />
               <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
                 <LeadIconTypography
                   label="Invite Teammates"

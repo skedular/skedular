@@ -5,7 +5,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import LinearProgress from '@mui/material/LinearProgress';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { Zones } from '@repo/shared/components/zone';
 import graphql from 'babel-plugin-relay/macro';
@@ -76,7 +76,7 @@ const MyLocationCard = ({
       <CardHeader
         title={
           <StackRow>
-            <LeadIconTypography label={locationDetails.name} icon={<LocationIcon />} sx={{ flexWrap: undefined }} />
+            <BodyIconTypography label={locationDetails.name} icon={<LocationIcon />} sx={{ flexWrap: undefined }} />
             <PushToRight />
             <NewBookingButton
               hideLocationControl={false}
@@ -95,7 +95,7 @@ const MyLocationCard = ({
       />
       <CardContent>
         <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%' }}>
-          <BodyIconTypography label={`${desksCount} Desks`} sx={{ flexGrow: 0, flexShrink: 0 }} icon={<DeskIcon />} />
+          <SmallIconTypography label={`${desksCount} Desks`} sx={{ flexGrow: 0, flexShrink: 0 }} icon={<DeskIcon />} />
           <StackColumn sx={{ paddingLeft: 40, alignItems: 'flex-end', width: '100%' }}>
             <SmallIconTypography label={`${availableDesksCount} Available Today`} />
             <LinearProgress value={availablePercentage} variant="determinate" sx={{ width: '100%' }} />
@@ -113,7 +113,7 @@ const MyLocationCard = ({
 
         <StackRow>
           <StackColumn>
-            <BodyIconTypography label="Shared with teammates" />
+            <SmallIconTypography label="Shared with teammates" />
             <StackRow>
               <AvatarGroup max={5}>
                 {sharedWithTeammates.map((item) => (
@@ -125,7 +125,7 @@ const MyLocationCard = ({
 
           <Divider orientation="vertical" flexItem />
 
-          <BodyIconTypography
+          <SmallIconTypography
             label={locationDetails.physicalAddress?.formattedAddress ? locationDetails.physicalAddress?.formattedAddress : 'N/A'}
             sx={{ whiteSpace: 'pre-line' }}
           />

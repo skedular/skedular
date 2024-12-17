@@ -14,8 +14,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
+  CaptionIconTypography,
   LeadIconTypography,
-  SmallIconTypography,
   StackColumn,
   StackRow,
   StackRowFullWidth,
@@ -194,7 +194,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
                       <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
                       <StackColumn>
                         <LeadIconTypography label={organization.name} />
-                        <SmallIconTypography label="Organization" />
+                        <CaptionIconTypography label="Organization" />
                       </StackColumn>
                     </StackRow>
                   </MenuItem>
@@ -209,15 +209,15 @@ const AppBar = ({ rootDataRelay }: Props) => {
             </FormControl>
           )}
 
-          <LeadIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
+          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
         </StackRow>
 
         <StackRow sx={{ alignItems: 'center' }}>
-          <LeadIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
+          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
           <Divider orientation="vertical" flexItem />
 
           <IconButton sx={{ ml: 1 }}>
-            <NotificationsIcon />
+            <NotificationsIcon excludeTooltip />
           </IconButton>
 
           <IconButton onClick={handleProfileMenuOpenClick}>

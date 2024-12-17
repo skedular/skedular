@@ -42,6 +42,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
+import NextLink from 'next/link';
 import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
@@ -431,12 +432,12 @@ const LocationMembersBookings = ({
                 <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
               </ToggleButtonGroup>
               <StackRow>
-                <Link href={getLocationBookingsLink(locationId, organizationId)}>
+                <Link component={NextLink} href={getLocationBookingsLink(locationId, organizationId)}>
                   <BookingIcon />
                 </Link>
 
                 {rootData.location.canModify && (
-                  <Link href={getLocationSettingsLink(locationId, organizationId)}>
+                  <Link component={NextLink} href={getLocationSettingsLink(locationId, organizationId)}>
                     <SettingsIcon color="secondary" />
                   </Link>
                 )}
