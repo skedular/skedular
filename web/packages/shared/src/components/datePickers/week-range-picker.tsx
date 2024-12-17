@@ -1,14 +1,13 @@
 import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
-import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { BodyIconTypography, DropdownSelect, LeadIconTypography, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { CalendarIcon } from '@repo/shared/components/icons';
 import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
-import { BodyIconTypography, LeadIconTypography, StackRow } from '../commons';
 
 interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
   isSelected: boolean;
@@ -79,7 +78,7 @@ const WeekRangePicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
   const [start, setStart] = useState(defaultStartWeek ?? startOfWeek());
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleChanged = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -108,24 +107,16 @@ const WeekRangePicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
 
   return (
     <>
-      <Select
+      <DropdownSelect
         displayEmpty
         open={false}
-        onClick={handleClick}
-        sx={{
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderRadius: 4,
-          },
-          width: {
-            xs: '100%',
-            sm: 'min(100%, 250px)',
-          },
-        }}
+        onClick={handleChanged}
         size="small"
         renderValue={() => (
           <StackRow>
             <LeadIconTypography label="Date" icon={<CalendarIcon />} />
             <Divider orientation="vertical" flexItem />
+            <PushToRight />
             <BodyIconTypography label={buttonTitle} />
           </StackRow>
         )}
