@@ -173,7 +173,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      <StackRowFullWidth sx={{ paddingLeft: 1, paddingRight: 1 }}>
+      <StackRowFullWidth sx={{ paddingLeft: 1, paddingRight: 1, borderBottom: paletteMode === 'dark' ? 1 : undefined, borderColor: 'divider' }}>
         <StackRow sx={{ alignItems: 'center' }}>
           {rootData.myOrganizations.length > 0 && (
             <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
