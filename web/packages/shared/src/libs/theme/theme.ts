@@ -22,6 +22,17 @@ export const defaultGridStyle: SxProps<Theme> = {
     border: 'none',
   },
 };
+export const defaultOldGridStyle: SxProps<Theme> = {
+  border: 'none',
+  [`& .${gridClasses.cell}`]: {
+    border: 'none',
+  },
+  [`& .${gridClasses.row}`]: {
+    borderRadius: 2,
+    backgroundColor: (theme) => theme.palette.background.paper,
+    border: 'none',
+  },
+};
 
 const createTheme = (mode: PaletteMode): Theme => createMuiTheme(getDesignTokens(mode));
 

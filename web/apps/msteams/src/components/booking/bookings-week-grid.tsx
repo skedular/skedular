@@ -10,6 +10,7 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { GlobalReloadIdContext, PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
+import { defaultOldGridStyle } from '@repo/shared/libs/theme';
 import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { Dayjs } from 'dayjs';
@@ -610,6 +611,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       density="compact"
       onCellClick={handleCellClick}
       slots={{ toolbar: QuickSearchToolbar }}
+      sx={defaultOldGridStyle}
     />
   );
 };

@@ -15,6 +15,7 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { GlobalReloadIdContext, PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
+import { defaultOldGridStyle } from '@repo/shared/libs/theme';
 import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
@@ -609,6 +610,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
       density="compact"
       onCellClick={handleCellClick}
       slots={{ toolbar: QuickSearchToolbar }}
+      sx={defaultOldGridStyle}
     />
   );
 };
