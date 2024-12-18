@@ -2,7 +2,7 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { TeamAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, DropdownSelect, LeadIconTypography, PushToRight, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, DropdownSelect, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
 import { TeamIcon } from '@repo/shared/components/icons';
 import graphql from 'babel-plugin-relay/macro';
 import { memo, useMemo, useState } from 'react';
@@ -55,20 +55,20 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
         if (selectedItem) {
           return (
             <StackRow sx={{ alignItems: 'center' }}>
-              <LeadIconTypography label="Team" icon={<TeamIcon />} />
+              <BodyIconTypography label="Team" icon={<TeamIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
-              <BodyIconTypography label={selectedItem.name} />
+              <SmallIconTypography label={selectedItem.name} />
             </StackRow>
           );
         }
 
         return (
           <StackRow sx={{ alignItems: 'center' }}>
-            <LeadIconTypography label="Team" icon={<TeamIcon />} />
+            <BodyIconTypography label="Team" icon={<TeamIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
-            <BodyIconTypography label="All" />
+            <SmallIconTypography label="All" />
           </StackRow>
         );
       }}
@@ -79,7 +79,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
 
       {allItems.map((item) => (
         <MenuItem key={item.id} value={item.id}>
-          <LeadIconTypography icon={<TeamAvatar name={{ name: item.name }} size="small" />} label={item.name} />
+          <BodyIconTypography icon={<TeamAvatar name={{ name: item.name }} size="small" />} label={item.name} />
         </MenuItem>
       ))}
     </DropdownSelect>

@@ -3,7 +3,7 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { LocationAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, DropdownSelect, LeadIconTypography, PushToRight, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, DropdownSelect, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
 import { LocationIcon } from '@repo/shared/components/icons';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -53,32 +53,32 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
         const selectedItem = allItems.find((item) => item.id === selectedId);
         if (selectedItem) {
           return (
-            <StackRow sx={{ alignItems: 'center' }}>
-              <LeadIconTypography label="Location" icon={<LocationIcon />} />
+            <StackRow>
+              <BodyIconTypography label="Location" icon={<LocationIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
-              <BodyIconTypography label={selectedItem.name} />
+              <SmallIconTypography label={selectedItem.name} />
             </StackRow>
           );
         }
 
         return (
-          <StackRow sx={{ alignItems: 'center' }}>
-            <LeadIconTypography label="Location" icon={<LocationIcon />} />
+          <StackRow>
+            <BodyIconTypography label="Location" icon={<LocationIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
-            <BodyIconTypography label="All" />
+            <SmallIconTypography label="All" />
           </StackRow>
         );
       }}
     >
       <MenuItem value={allId}>
-        <LeadIconTypography label="All" />
+        <BodyIconTypography label="All" />
       </MenuItem>
 
       {allItems.map((item) => (
         <MenuItem key={item.id} value={item.id}>
-          <LeadIconTypography icon={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
+          <BodyIconTypography icon={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
         </MenuItem>
       ))}
     </DropdownSelect>

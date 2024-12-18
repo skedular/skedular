@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid2';
 import { memo } from 'react';
-import { BodyIconTypography, GridContainer } from '../commons';
+import { GridContainer, SmallIconTypography } from '../commons';
 import type { ZoneDetails } from './zone';
 import Zone from './zone';
 
@@ -11,7 +11,7 @@ type Props = {
 
 const Zones = ({ zones, maxWidth }: Props) => {
   if (zones.length === 0) {
-    return <BodyIconTypography label="N/A" />;
+    return <SmallIconTypography label="N/A" />;
   }
 
   return (
