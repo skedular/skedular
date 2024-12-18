@@ -3,6 +3,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Divider from '@mui/material/Divider';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { TeamIcon } from '@repo/shared/components/icons';
@@ -52,6 +53,7 @@ const MyTeamCard = ({ teamDetailsRelay, teammates }: Props) => {
     <Card sx={{ width: 600 }}>
       <CardHeader title={<LeadIconTypography startElement={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} />} />
       <CardContent>
+        <Divider />
         <StackColumn sx={{ paddingTop: 1, paddingBottom: 1 }}>
           <SmallIconTypography label="Members of this team" />
           <StackRow>

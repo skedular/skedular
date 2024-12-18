@@ -224,6 +224,7 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
           }
         />
         <CardContent>
+          <Divider />
           <SmallIconTypography
             startElement={<CalendarIcon />}
             label={toShortDateWithAdditionalDayInfo(date)}

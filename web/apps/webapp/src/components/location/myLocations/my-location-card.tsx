@@ -93,6 +93,7 @@ const MyLocationCard = ({
         }
       />
       <CardContent>
+        <Divider />
         <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%' }}>
           <SmallIconTypography label={`${desksCount} Desks`} sx={{ flexGrow: 0, flexShrink: 0 }} startElement={<DeskIcon />} />
           <StackColumn sx={{ paddingLeft: 40, alignItems: 'flex-end', width: '100%' }}>
