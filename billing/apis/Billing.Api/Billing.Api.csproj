@@ -14,11 +14,11 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/billing_v1.proto" GrpcServices="Server"/>
+        <Protobuf Include="../../../api-definitions/grpc/unityhub/billing_v1.proto" GrpcServices="Server" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="14.2.0">
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="14.3.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -31,11 +31,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\shared\Billing.Shared\Billing.Shared.csproj"/>
+        <ProjectReference Include="..\..\shared\Billing.Shared\Billing.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="appsettings.json"/>
+        <EmbeddedResource Include="appsettings.json" />
     </ItemGroup>
 
 </Project>
