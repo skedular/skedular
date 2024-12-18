@@ -16,6 +16,7 @@ import {
   BodyIconTypography,
   CaptionIconTypography,
   LeadIconTypography,
+  SmallIconTypography,
   StackColumn,
   StackRow,
   StackRowFullWidth,
@@ -252,7 +253,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
             <MenuItem>
               <StackColumn>
                 <LeadIconTypography label={customerName} />
-                <BodyIconTypography label={rootData.me?.email} />
+                <CaptionIconTypography label={rootData.me?.email} />
               </StackColumn>
             </MenuItem>
 
@@ -260,44 +261,44 @@ const AppBar = ({ rootDataRelay }: Props) => {
 
             <MenuItem>
               <Link component={NextLink} href="/settings" color="inherit">
-                <BodyIconTypography icon={<SettingsIcon />} label="Settings" />
+                <SmallIconTypography icon={<SettingsIcon />} label="Settings" />
               </Link>
             </MenuItem>
 
             {paletteMode === 'dark' && (
               <MenuItem onClick={handleLightThemeClicked}>
-                <BodyIconTypography icon={<DarkModeIcon />} label="Dark Mode" />
+                <SmallIconTypography icon={<DarkModeIcon />} label="Dark Mode" />
               </MenuItem>
             )}
 
             {paletteMode === 'light' && (
               <MenuItem onClick={handleDarkThemeClicked}>
-                <BodyIconTypography icon={<LightModeIcon />} label="Light Mode" />
+                <SmallIconTypography icon={<LightModeIcon />} label="Light Mode" />
               </MenuItem>
             )}
 
             {!switchToModernUI && (
               <MenuItem onClick={handleModernUIClicked}>
-                <BodyIconTypography icon={<ToggleOffIcon />} label="Switch to modern UI" />
+                <SmallIconTypography icon={<ToggleOffIcon />} label="Switch to modern UI" />
               </MenuItem>
             )}
 
             {switchToModernUI && (
               <MenuItem onClick={handleClassicUIClicked}>
-                <BodyIconTypography icon={<ToggleOnIcon />} label="Switch to classic UI" />
+                <SmallIconTypography icon={<ToggleOnIcon />} label="Switch to classic UI" />
               </MenuItem>
             )}
 
             <Divider />
 
             <MenuItem onClick={handleSubmitFeedbackClicked}>
-              <BodyIconTypography icon={<FeedbackIcon />} label="Send us feedback" />
+              <SmallIconTypography icon={<FeedbackIcon />} label="Send us feedback" />
             </MenuItem>
 
             <Divider />
 
             <MenuItem onClick={handleSignOutClick}>
-              <BodyIconTypography icon={<LogoutIcon />} label="Sign out" />
+              <SmallIconTypography icon={<LogoutIcon />} label="Sign out" />
             </MenuItem>
           </Menu>
         </StackRow>
