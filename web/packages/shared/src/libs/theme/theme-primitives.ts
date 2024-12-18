@@ -233,6 +233,13 @@ const getDesignTokens = (mode: PaletteMode) => {
     },
     shadows: customShadows,
     components: {
+      MuiTypography: {
+        styleOverrides: {
+          root: {
+            color: mode === 'dark' ? sandstone : coal,
+          },
+        },
+      },
       MuiLink: {
         styleOverrides: {
           root: {

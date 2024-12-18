@@ -7,7 +7,6 @@ import Link from '@mui/material/Link';
 import { LeadIconTypography, StackRow } from '@repo/shared/components/commons';
 import { OrganizationIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import NextLink from 'next/link';
 import { memo, useState } from 'react';
 
 type Props = {
@@ -93,15 +92,15 @@ const OrganizationLink = ({
   return (
     <>
       <StackRow>
-        {excludeLink && <LeadIconTypography color="primary" label={name} startElement={<OrganizationIcon fontSize="small" color="primary" />} />}
+        {excludeLink && <LeadIconTypography label={name} startElement={<OrganizationIcon fontSize="medium" excludeTooltip />} />}
         {!excludeLink && (
-          <Link component={NextLink} href={href}>
-            <LeadIconTypography color="primary" label={name} startElement={<OrganizationIcon fontSize="small" color="primary" />} />
+          <Link href={href}>
+            <LeadIconTypography label={name} startElement={<OrganizationIcon fontSize="medium" excludeTooltip />} />
           </Link>
         )}
         {enableViewDetails && (
           <Button size="small" color="warning" onClick={handleViewDetailsClick}>
-            <ViewDetailsIcon color="primary" />
+            <ViewDetailsIcon />
           </Button>
         )}
       </StackRow>
@@ -110,7 +109,7 @@ const OrganizationLink = ({
           <OrganizationBookingsCard organizationId={id} organizationName={name} organizationsConnectionIds={[]} />
         </DialogContent>
         <DialogActions>
-          <Button color="primary" variant="contained" onClick={handleViewDetailsCloseClick}>
+          <Button variant="contained" onClick={handleViewDetailsCloseClick}>
             Close
           </Button>
         </DialogActions>

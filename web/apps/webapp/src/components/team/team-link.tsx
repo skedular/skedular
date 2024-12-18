@@ -70,15 +70,15 @@ const TeamLink = ({
   return (
     <>
       <StackRow>
-        {excludeLink && <LeadIconTypography color="primary" label={name} startElement={<TeamIcon fontSize="small" color="primary" />} />}
+        {excludeLink && <LeadIconTypography label={name} startElement={<TeamIcon fontSize="medium" excludeTooltip />} />}
         {!excludeLink && (
           <Link component={NextLink} href={href}>
-            <LeadIconTypography color="primary" label={name} startElement={<TeamIcon fontSize="small" color="primary" />} />
+            <LeadIconTypography label={name} startElement={<TeamIcon fontSize="medium" excludeTooltip />} />
           </Link>
         )}
         {enableViewDetails && (
           <Button size="small" color="warning" onClick={handleViewDetailsClick}>
-            <ViewDetailsIcon color="primary" />
+            <ViewDetailsIcon />
           </Button>
         )}
       </StackRow>
@@ -88,7 +88,7 @@ const TeamLink = ({
           <TeamBookingsCard organizationId={organizationId} organizationName={organizationName} teamId={id} teamName={name} teamsConnectionIds={[]} />
         </DialogContent>
         <DialogActions>
-          <Button color="primary" variant="contained" onClick={handleViewDetailsCloseClick}>
+          <Button variant="contained" onClick={handleViewDetailsCloseClick}>
             Close
           </Button>
         </DialogActions>

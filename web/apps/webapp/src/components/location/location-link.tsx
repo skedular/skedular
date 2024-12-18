@@ -85,15 +85,15 @@ const LocationLink = ({
   return (
     <>
       <StackRow>
-        {excludeLink && <LeadIconTypography color="primary" label={name} startElement={<LocationIcon fontSize="small" color="primary" />} />}
+        {excludeLink && <LeadIconTypography label={name} startElement={<LocationIcon fontSize="medium" excludeTooltip />} />}
         {!excludeLink && (
           <Link component={NextLink} href={href}>
-            <LeadIconTypography color="primary" label={name} startElement={<LocationIcon fontSize="small" color="primary" />} />
+            <LeadIconTypography label={name} startElement={<LocationIcon fontSize="medium" excludeTooltip />} />
           </Link>
         )}
         {enableViewDetails && (
           <Button size="small" color="warning" onClick={handleViewDetailsClick}>
-            <ViewDetailsIcon color="primary" />
+            <ViewDetailsIcon />
           </Button>
         )}
       </StackRow>
@@ -108,7 +108,7 @@ const LocationLink = ({
           />
         </DialogContent>
         <DialogActions>
-          <Button color="primary" variant="contained" onClick={handleViewDetailsCloseClick}>
+          <Button variant="contained" onClick={handleViewDetailsCloseClick}>
             Close
           </Button>
         </DialogActions>

@@ -91,15 +91,15 @@ const OrganizationLink = ({
   return (
     <>
       <StackRow>
-        {excludeLink && <LeadIconTypography color="primary" label={name} startElement={<OrganizationIcon fontSize="small" color="primary" />} />}
+        {excludeLink && <LeadIconTypography label={name} startElement={<OrganizationIcon fontSize="medium" excludeTooltip />} />}
         {!excludeLink && (
           <Link href={href}>
-            <LeadIconTypography color="primary" label={name} startElement={<OrganizationIcon fontSize="small" color="primary" />} />
+            <LeadIconTypography label={name} startElement={<OrganizationIcon fontSize="medium" excludeTooltip />} />
           </Link>
         )}
         {enableViewDetails && (
           <Button size="small" color="warning" onClick={handleViewDetailsClick}>
-            <ViewDetailsIcon color="primary" />
+            <ViewDetailsIcon />
           </Button>
         )}
       </StackRow>
@@ -108,7 +108,7 @@ const OrganizationLink = ({
           <OrganizationBookingsCard organizationId={id} organizationName={name} organizationsConnectionIds={[]} />
         </DialogContent>
         <DialogActions>
-          <Button color="primary" variant="contained" onClick={handleViewDetailsCloseClick}>
+          <Button variant="contained" onClick={handleViewDetailsCloseClick}>
             Close
           </Button>
         </DialogActions>
