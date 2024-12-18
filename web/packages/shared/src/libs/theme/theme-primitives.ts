@@ -250,6 +250,13 @@ const getDesignTokens = (mode: PaletteMode) => {
           },
         },
       },
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            boxShadow: 'none',
+          },
+        },
+      },
     },
   };
 };
