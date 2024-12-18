@@ -2,11 +2,11 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import type { GridColDef } from '@mui/x-data-grid';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { GridContainer, SectionIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { Zones } from '@repo/shared/components/zone';
-import { defaultPadding } from '@repo/shared/libs/theme';
+import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import dayjs, { Dayjs } from 'dayjs';
@@ -328,19 +328,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
           getRowHeight={() => 'auto'}
           rowSpacingType="margin"
           getRowSpacing={() => ({ top: 3, bottom: 3 })}
-          sx={{
-            [`& .${gridClasses.cell}`]: {
-              paddingTop: 1,
-              paddingBottom: 1,
-            },
-            [`& .${gridClasses.row}`]: {
-              paddingLeft: 1,
-              paddingTop: 1,
-              paddingBottom: 1,
-              borderRadius: 2,
-              backgroundColor: (theme) => theme.palette.background.paper,
-            },
-          }}
+          sx={defaultGridStyle}
         />
       )}
     </StackColumn>

@@ -1,1 +1,1 @@
-export { default as createTheme, defaultPadding, maxScreenWidth } from './theme';
+export { default as createTheme, defaultGridStyle, defaultPadding, maxScreenWidth } from './theme';

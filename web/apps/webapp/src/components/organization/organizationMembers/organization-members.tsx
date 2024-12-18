@@ -5,14 +5,14 @@ import type { organizationMembers_rootQuery } from '@/queries/__generated__/orga
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import type { GridColDef } from '@mui/x-data-grid';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BodyIconTypography, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
-import { defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
+import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
 import { getCustomerFullName } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
@@ -297,19 +297,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
           getRowHeight={() => 'auto'}
           rowSpacingType="margin"
           getRowSpacing={() => ({ top: 3, bottom: 3 })}
-          sx={{
-            [`& .${gridClasses.cell}`]: {
-              paddingTop: 1,
-              paddingBottom: 1,
-            },
-            [`& .${gridClasses.row}`]: {
-              paddingLeft: 1,
-              paddingTop: 1,
-              paddingBottom: 1,
-              borderRadius: 2,
-              backgroundColor: (theme) => theme.palette.background.paper,
-            },
-          }}
+          sx={defaultGridStyle}
         />
       </StackColumn>
     </StackColumn>
