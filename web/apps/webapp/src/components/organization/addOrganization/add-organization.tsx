@@ -165,7 +165,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   };
 
   return (
-    <Paper elevation={24} sx={{ padding: 2, maxWidth: maxScreenWidth }}>
+    <Paper sx={{ padding: 2, maxWidth: maxScreenWidth }}>
       <Form
         onSubmit={handleOrganizationCreateClick}
         initialValues={{

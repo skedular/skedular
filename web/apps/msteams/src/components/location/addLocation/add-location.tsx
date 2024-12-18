@@ -173,7 +173,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
   };
 
   return (
-    <Paper elevation={24} sx={{ padding: 2, maxWidth: maxScreenWidth }}>
+    <Paper sx={{ padding: 2, maxWidth: maxScreenWidth }}>
       <Form
         onSubmit={handleLocationCreateClick}
         initialValues={{

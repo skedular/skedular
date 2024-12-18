@@ -179,7 +179,7 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
   };
 
   return (
-    <Card elevation={24} sx={{ minWidth: 350, height: '100%' }}>
+    <Card sx={{ minWidth: 350, height: '100%' }}>
       {cardState === CardState.Pending && (
         <>
           <CardHeader

@@ -164,7 +164,7 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
   };
 
   return (
-    <Card elevation={24} sx={{ minWidth: 400, height: '100%' }}>
+    <Card sx={{ minWidth: 400, height: '100%' }}>
       {cardState === CardState.Pending && (
         <>
           <CardHeader

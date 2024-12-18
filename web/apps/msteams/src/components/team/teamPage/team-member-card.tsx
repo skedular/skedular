@@ -181,7 +181,7 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
 
   return (
     <>
-      <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
+      <Card sx={{ minWidth: 200, height: '100%' }}>
         <CardHeader
           title={
             <BodyIconTypography

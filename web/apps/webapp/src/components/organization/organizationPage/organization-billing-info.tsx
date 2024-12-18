@@ -246,7 +246,7 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
         </>
       )}
       {editing && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
+        <Paper sx={{ padding: 2 }}>
           <Form
             onSubmit={handleUpdateClick}
             initialValues={{

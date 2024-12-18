@@ -776,7 +776,7 @@ const DeskCard = ({
   return (
     <>
       {!editing && (
-        <Card elevation={24} sx={{ minWidth: 320, height: '100%' }}>
+        <Card sx={{ minWidth: 320, height: '100%' }}>
           <CardHeader
             title={<BodyIconTypography label={deskDetails.name} startElement={<DeskIcon />} />}
             action={
@@ -839,7 +839,7 @@ const DeskCard = ({
         </Card>
       )}
       {editing && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
+        <Paper sx={{ padding: 2 }}>
           <Form
             onSubmit={handleSaveClick}
             initialValues={{

@@ -216,7 +216,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
 
   return (
     <StackColumn>
-      <Paper elevation={24} sx={{ marginBottom: 1 }}>
+      <Paper sx={{ marginBottom: 1 }}>
         <StaticDatePicker
           slots={{
             toolbar: EmptyCalendarToolbar,

@@ -182,7 +182,7 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
         <>
           {rootData.organizationPaymentMethodsDetails.map(({ id, cardBrand, cardExpiryMonth, cardExpiryYear, cardLastFourDigit }) => {
             return (
-              <Card elevation={24} key={id}>
+              <Card key={id}>
                 <CardContent>
                   <BodyIconTypography label={`${cardBrand} •••• ${cardLastFourDigit}`} />
                   <BodyIconTypography label={`Expires ${cardExpiryMonth}/${cardExpiryYear?.toString().slice(-2)}`} />

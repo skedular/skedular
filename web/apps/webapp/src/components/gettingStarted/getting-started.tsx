@@ -105,7 +105,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
             <StackColumn sx={{ width: 250 }}>
               <SmallIconTypography label="Let's start by setting up the organization's first location." />
               <Link component={NextLink} href={getLocationAddLink(organizationId)}>
-                <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
+                <Paper sx={{ height: 100, borderRadius: 2 }}>
                   <LeadIconTypography
                     label="Create Location"
                     stackMode="column"
@@ -121,7 +121,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
             <StackColumn sx={{ width: 250 }}>
               <SmallIconTypography label="Create teams that regularly work or meet together." />
               <Link component={NextLink} href={getTeamAddLink(organizationId)}>
-                <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
+                <Paper sx={{ height: 100, borderRadius: 2 }}>
                   <LeadIconTypography
                     label="Create Team"
                     stackMode="column"
@@ -136,7 +136,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
           <Grid>
             <StackColumn sx={{ width: 250 }}>
               <SmallIconTypography label="Add desks and zones for your locations and teams." />
-              <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
+              <Paper sx={{ height: 100, borderRadius: 2 }}>
                 <LeadIconTypography
                   label="Add Desks"
                   stackMode="column"
@@ -150,7 +150,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
           <Grid>
             <StackColumn sx={{ width: 250 }}>
               <SmallIconTypography label="Invite your team members to your organization and start booking!" />
-              <Paper elevation={0} sx={{ height: 100, borderRadius: 2 }}>
+              <Paper sx={{ height: 100, borderRadius: 2 }}>
                 <LeadIconTypography
                   label="Invite Teammates"
                   stackMode="column"

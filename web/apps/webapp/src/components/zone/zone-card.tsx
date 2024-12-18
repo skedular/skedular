@@ -365,7 +365,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
   return (
     <>
       {!editing && (
-        <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
+        <Card sx={{ minWidth: 200, height: '100%' }}>
           <CardHeader title={<BodyIconTypography label={organizationTagDetails.name} startElement={<ZoneIcon />} />} />
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
@@ -402,7 +402,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
       )}
 
       {editing && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
+        <Paper sx={{ padding: 2 }}>
           <Form
             onSubmit={handleSaveClick}
             initialValues={{

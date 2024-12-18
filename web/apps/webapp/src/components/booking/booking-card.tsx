@@ -649,7 +649,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
   return (
     <>
       {!editing && (
-        <Card elevation={24} sx={{ minWidth: 400, height: '100%' }}>
+        <Card sx={{ minWidth: 400, height: '100%' }}>
           <CardHeader
             title={
               <LeadIconTypography
@@ -724,7 +724,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
       )}
 
       {canUpdateBooking && editing && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
+        <Paper sx={{ padding: 2 }}>
           <Form
             onSubmit={handleSaveClick}
             initialValues={{

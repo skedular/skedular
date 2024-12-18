@@ -364,7 +364,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
       )}
 
       {editingOrganizationMembers && (
-        <Paper elevation={24} sx={{ padding: 2 }}>
+        <Paper sx={{ padding: 2 }}>
           <Form
             onSubmit={handleTeamUpdateClick}
             initialValues={{

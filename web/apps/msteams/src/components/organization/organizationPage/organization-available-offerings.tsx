@@ -121,7 +121,7 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onReloadRequired }: Pro
         <>
           {rootData.organization?.availableOfferings?.map(({ code, name, unitPrice, featureSet }) => {
             return (
-              <Card elevation={24} sx={{ maxWidth: 500, height: '100%' }} key={code}>
+              <Card sx={{ maxWidth: 500, height: '100%' }} key={code}>
                 <CardHeader
                   title={
                     <>
