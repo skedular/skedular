@@ -93,7 +93,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
         }}
       >
         <Box sx={{ position: 'absolute', top: 1, right: 1 }}>
-          <IconButton onClick={handleDismissButtonClicked}>
+          <IconButton onClick={handleDismissButtonClicked} color="inherit">
             <CancelIcon fontSize="large" />
           </IconButton>
         </Box>
