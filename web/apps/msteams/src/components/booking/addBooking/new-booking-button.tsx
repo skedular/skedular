@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
 import { NewIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -81,15 +82,16 @@ const NewBookingButton = ({
 
   return (
     <>
-      <Button
-        variant={variant ?? 'text'}
-        size={size ?? 'large'}
-        onClick={handleButtonClicked}
-        fullWidth={fullWidth}
-        endIcon={hideIcon ? null : <NewIcon />}
-        sx={{ borderRadius: 4 }}
-      >
-        {label ?? 'Add Booking'}
+      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ borderRadius: 4 }}>
+        {size === 'small' && (
+          <SmallIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
+        )}
+        {size === 'medium' && (
+          <BodyIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
+        )}
+        {(size === 'large' || !size) && (
+          <LeadIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
+        )}
       </Button>
       <NewBookingDialog
         rootDataRelay={rootData}
