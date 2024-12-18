@@ -257,6 +257,13 @@ const getDesignTokens = (mode: PaletteMode) => {
           },
         },
       },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            boxShadow: 'none',
+          },
+        },
+      },
     },
   };
 };
