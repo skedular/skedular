@@ -85,10 +85,10 @@ const LocationLink = ({
   return (
     <>
       <StackRow>
-        {excludeLink && <LeadIconTypography color="primary" label={name} icon={<LocationIcon fontSize="small" color="primary" />} />}
+        {excludeLink && <LeadIconTypography color="primary" label={name} startElement={<LocationIcon fontSize="small" color="primary" />} />}
         {!excludeLink && (
           <Link component={NextLink} href={href}>
-            <LeadIconTypography color="primary" label={name} icon={<LocationIcon fontSize="small" color="primary" />} />
+            <LeadIconTypography color="primary" label={name} startElement={<LocationIcon fontSize="small" color="primary" />} />
           </Link>
         )}
         {enableViewDetails && (

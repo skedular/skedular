@@ -367,7 +367,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
     <>
       {!editing && (
         <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
-          <CardHeader title={<BodyIconTypography label={organizationTagDetails.name} icon={<ZoneIcon />} />} />
+          <CardHeader title={<BodyIconTypography label={organizationTagDetails.name} startElement={<ZoneIcon />} />} />
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
             {rootData.organization.canModify && (

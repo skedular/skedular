@@ -183,7 +183,10 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
       <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
         <CardHeader
           title={
-            <BodyIconTypography label={getCustomerFullName(customer)} icon={<CustomerAvatar name={customer} photo={{ url: customer.photoUrl }} />} />
+            <BodyIconTypography
+              label={getCustomerFullName(customer)}
+              startElement={<CustomerAvatar name={customer} photo={{ url: customer.photoUrl }} />}
+            />
           }
         />
 

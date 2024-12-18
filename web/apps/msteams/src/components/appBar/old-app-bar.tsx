@@ -138,26 +138,26 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
 
             <MenuItem>
               <Link href="/settings" color="inherit">
-                <SmallIconTypography icon={<SettingsIcon />} label="Settings" />
+                <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
               </Link>
             </MenuItem>
 
             {!switchToModernUI && (
               <MenuItem onClick={handleModernUIClicked}>
-                <SmallIconTypography icon={<ToggleOffIcon />} label="Switch to modern UI" />
+                <SmallIconTypography startElement={<ToggleOffIcon />} label="Switch to modern UI" />
               </MenuItem>
             )}
 
             {switchToModernUI && (
               <MenuItem onClick={handleClassicUIClicked}>
-                <SmallIconTypography icon={<ToggleOnIcon />} label="Switch to classic UI" />
+                <SmallIconTypography startElement={<ToggleOnIcon />} label="Switch to classic UI" />
               </MenuItem>
             )}
 
             <Divider />
 
             <MenuItem onClick={handleSubmitFeedbackClicked}>
-              <SmallIconTypography icon={<FeedbackIcon />} label="Send us feedback" />
+              <SmallIconTypography startElement={<FeedbackIcon />} label="Send us feedback" />
             </MenuItem>
           </Menu>
         </StackRow>

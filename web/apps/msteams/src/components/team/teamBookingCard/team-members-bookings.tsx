@@ -401,7 +401,7 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
         {moreActionsOption.map((option) => (
           <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <BodyIconTypography label={option.label} icon={option.icon} />
+            <BodyIconTypography label={option.label} startElement={option.icon} />
           </MenuItem>
         ))}
       </Menu>

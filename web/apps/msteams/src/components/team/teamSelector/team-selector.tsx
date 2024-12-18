@@ -56,7 +56,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
         if (selectedItem) {
           return (
             <StackRow sx={{ alignItems: 'center' }}>
-              <LeadIconTypography label="Team" icon={<TeamIcon />} />
+              <LeadIconTypography label="Team" startElement={<TeamIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
               <SmallIconTypography label={selectedItem.name} />
@@ -66,7 +66,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
 
         return (
           <StackRow sx={{ alignItems: 'center' }}>
-            <LeadIconTypography label="Team" icon={<TeamIcon />} />
+            <LeadIconTypography label="Team" startElement={<TeamIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label="All" />
@@ -80,7 +80,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
 
       {allItems.map((item) => (
         <MenuItem key={item.id} value={item.id}>
-          <BodyIconTypography icon={<TeamAvatar name={{ name: item.name }} size="small" />} label={item.name} />
+          <BodyIconTypography startElement={<TeamAvatar name={{ name: item.name }} size="small" />} label={item.name} />
         </MenuItem>
       ))}
     </DefaultSelect>

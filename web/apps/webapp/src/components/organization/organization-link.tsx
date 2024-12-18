@@ -93,10 +93,10 @@ const OrganizationLink = ({
   return (
     <>
       <StackRow>
-        {excludeLink && <LeadIconTypography color="primary" label={name} icon={<OrganizationIcon fontSize="small" color="primary" />} />}
+        {excludeLink && <LeadIconTypography color="primary" label={name} startElement={<OrganizationIcon fontSize="small" color="primary" />} />}
         {!excludeLink && (
           <Link component={NextLink} href={href}>
-            <LeadIconTypography color="primary" label={name} icon={<OrganizationIcon fontSize="small" color="primary" />} />
+            <LeadIconTypography color="primary" label={name} startElement={<OrganizationIcon fontSize="small" color="primary" />} />
           </Link>
         )}
         {enableViewDetails && (

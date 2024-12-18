@@ -366,7 +366,7 @@ const DeskTypeCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionId
     <>
       {!editing && (
         <Card elevation={24} sx={{ minWidth: 200, height: '100%' }}>
-          <CardHeader title={<BodyIconTypography label={organizationTagDetails.name} icon={<DeskTypeIcon />} />} />
+          <CardHeader title={<BodyIconTypography label={organizationTagDetails.name} startElement={<DeskTypeIcon />} />} />
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
             {rootData.organization.canModify && (

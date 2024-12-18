@@ -142,7 +142,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
             title={
               <BodyIconTypography
                 label={getCustomerFullName(organizationMemberDetails.customer)}
-                icon={
+                startElement={
                   <CustomerAvatar
                     name={organizationMemberDetails.customer}
                     photo={{ url: organizationMemberDetails.customer?.photoUrl }}
@@ -179,7 +179,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
               <FormStackColumn onSubmit={handleSubmit}>
                 <BodyIconTypography
                   label={getCustomerFullName(organizationMemberDetails.customer)}
-                  icon={
+                  startElement={
                     <CustomerAvatar
                       name={organizationMemberDetails.customer}
                       photo={{ url: organizationMemberDetails.customer?.photoUrl }}

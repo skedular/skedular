@@ -30,7 +30,7 @@ const DeskTypesLine = ({ deskTypes, deskTypeTotalDisplayLimit = preferredDeskTyp
 
   return (
     <>
-      {deskTypes.length === 0 && <BodyIconTypography icon={<DeskTypeIcon />} label="N/A" />}
+      {deskTypes.length === 0 && <BodyIconTypography startElement={<DeskTypeIcon />} label="N/A" />}
 
       {deskTypes.length !== 0 && (
         <StackRow sx={{ alignItems: 'center' }}>

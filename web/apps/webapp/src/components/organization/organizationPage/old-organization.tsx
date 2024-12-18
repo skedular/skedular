@@ -137,7 +137,7 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
     <>
       <LeadIconTypography
         label={rootData.organization?.name}
-        icon={
+        startElement={
           <OrganizationAvatar name={{ name: rootData.organization?.name }} photo={{ url: rootData.organization?.logoUrl }} sx={{ marginBottom: 1 }} />
         }
       />

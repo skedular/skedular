@@ -212,7 +212,7 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
     <>
       <Card sx={{ width: 250 }}>
         <CardHeader
-          title={<LeadIconTypography icon={<LocationIcon />} label={bookingDetails.location?.name} sx={{ flexWrap: undefined }} />}
+          title={<LeadIconTypography startElement={<LocationIcon />} label={bookingDetails.location?.name} sx={{ flexWrap: undefined }} />}
           action={
             <>
               {moreActionsOption.length > 0 && (
@@ -224,17 +224,21 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
           }
         />
         <CardContent>
-          <SmallIconTypography icon={<CalendarIcon />} label={toShortDateWithAdditionalDayInfo(date)} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <SmallIconTypography
+            startElement={<CalendarIcon />}
+            label={toShortDateWithAdditionalDayInfo(date)}
+            sx={{ paddingTop: 1, paddingBottom: 1 }}
+          />
           <Divider />
           <SmallIconTypography
-            icon={<TeamIcon />}
+            startElement={<TeamIcon />}
             label={bookingDetails.team ? bookingDetails.team.name : 'N/A'}
             sx={{ paddingTop: 1, paddingBottom: 1 }}
           />
           <Divider />
-          <SmallIconTypography icon={<DeskIcon />} label={desks.length === 0 ? 'N/A' : desks} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <SmallIconTypography startElement={<DeskIcon />} label={desks.length === 0 ? 'N/A' : desks} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
-          {zones.length === 0 && <SmallIconTypography icon={<ZoneIcon />} label="N/A" sx={{ paddingTop: 1, paddingBottom: 1 }} />}
+          {zones.length === 0 && <SmallIconTypography startElement={<ZoneIcon />} label="N/A" sx={{ paddingTop: 1, paddingBottom: 1 }} />}
           {zones.length !== 0 && (
             <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
               <ZoneIcon />
@@ -258,7 +262,7 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
       <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
         {moreActionsOption.map((option) => (
           <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <SmallIconTypography label={option.label} icon={option.icon} />
+            <SmallIconTypography label={option.label} startElement={option.icon} />
           </MenuItem>
         ))}
       </Menu>

@@ -457,7 +457,7 @@ const LocationMembersBookings = ({
         <CardContent>
           <BodyIconTypography
             label={rootData.location.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${rootData.location.deskCapacity}`}
-            icon={<DeskIcon />}
+            startElement={<DeskIcon />}
           />
 
           <BookingsWeekGrid
@@ -473,7 +473,7 @@ const LocationMembersBookings = ({
       <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
         {moreActionsOption.map((option) => (
           <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <BodyIconTypography label={option.label} icon={option.icon} />
+            <BodyIconTypography label={option.label} startElement={option.icon} />
           </MenuItem>
         ))}
       </Menu>

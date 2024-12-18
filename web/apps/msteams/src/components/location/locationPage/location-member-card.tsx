@@ -142,7 +142,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
             title={
               <BodyIconTypography
                 label={getCustomerFullName(locationMemberDetails.customer)}
-                icon={<CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />}
+                startElement={<CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />}
               />
             }
           />
@@ -172,7 +172,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
               <FormStackColumn onSubmit={handleSubmit}>
                 <BodyIconTypography
                   label={getCustomerFullName(locationMemberDetails.customer)}
-                  icon={<CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />}
+                  startElement={<CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />}
                 />
 
                 <LocationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />

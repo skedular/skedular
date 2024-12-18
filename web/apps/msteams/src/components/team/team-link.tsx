@@ -68,10 +68,10 @@ const TeamLink = ({
   return (
     <>
       <StackRow>
-        {excludeLink && <LeadIconTypography color="primary" label={name} icon={<TeamIcon fontSize="small" color="primary" />} />}
+        {excludeLink && <LeadIconTypography color="primary" label={name} startElement={<TeamIcon fontSize="small" color="primary" />} />}
         {!excludeLink && (
           <Link href={href}>
-            <LeadIconTypography color="primary" label={name} icon={<TeamIcon fontSize="small" color="primary" />} />
+            <LeadIconTypography color="primary" label={name} startElement={<TeamIcon fontSize="small" color="primary" />} />
           </Link>
         )}
         {enableViewDetails && (

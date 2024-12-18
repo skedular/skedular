@@ -235,7 +235,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
 
       <Accordion onChange={handlePageContextOpenStateChange} expanded={pageContextOpen} sx={{ width: '100%', marginBottom: 1 }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          {!pageContextOpen && selectedOrganization && <BodyIconTypography label={selectedOrganization.name} icon={<OrganizationIcon />} />}
+          {!pageContextOpen && selectedOrganization && <BodyIconTypography label={selectedOrganization.name} startElement={<OrganizationIcon />} />}
         </AccordionSummary>
         <AccordionDetails>
           <Autocomplete

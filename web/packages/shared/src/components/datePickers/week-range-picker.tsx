@@ -115,7 +115,7 @@ const WeekRangePicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
         size="small"
         renderValue={() => (
           <StackRow>
-            <LeadIconTypography label="Date" icon={<CalendarIcon />} />
+            <LeadIconTypography label="Date" startElement={<CalendarIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label={buttonTitle} />

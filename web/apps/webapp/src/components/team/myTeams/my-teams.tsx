@@ -7,7 +7,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { GridContainer, SectionIconTypography, StackColumn } from '@repo/shared/components/commons';
-import { defaultPadding } from '@repo/shared/libs/theme';
+import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
 import { graphql, useRefetchableFragment } from 'react-relay';
 import MyTeamCard from './my-team-card';

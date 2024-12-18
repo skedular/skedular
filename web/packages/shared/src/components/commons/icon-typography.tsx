@@ -7,7 +7,8 @@ import StackColumn from './stack-column';
 import StackRow from './stack-row';
 
 type Props = {
-  icon?: React.ReactNode | JSX.Element;
+  startElement?: React.ReactNode | JSX.Element;
+  endElement?: React.ReactNode | JSX.Element;
   stackMode?: 'row' | 'column';
   label?: string | null | undefined;
   variant?: Variant;
@@ -16,12 +17,12 @@ type Props = {
   color?: CSSProperties['color'];
 };
 
-const IconTypography = ({ icon, stackMode, label, variant, sx, spacing, color }: Props) => {
-  if (!icon && !label) {
+const IconTypography = ({ startElement, endElement, stackMode, label, variant, sx, spacing, color }: Props) => {
+  if (!startElement && !label && !endElement) {
     return <></>;
   }
 
-  if (!icon) {
+  if (!startElement && !endElement) {
     return (
       <Typography variant={variant} sx={sx}>
         {label}
@@ -32,24 +33,26 @@ const IconTypography = ({ icon, stackMode, label, variant, sx, spacing, color }:
   if (stackMode === 'column') {
     return (
       <StackColumn sx={sx} spacing={spacing}>
-        {icon}
+        {startElement}
         {label && (
           <Typography variant={variant} color={color}>
             {label}
           </Typography>
         )}
+        {endElement}
       </StackColumn>
     );
   }
 
   return (
     <StackRow sx={sx} spacing={spacing}>
-      {icon}
+      {startElement}
       {label && (
         <Typography variant={variant} color={color}>
           {label}
         </Typography>
       )}
+      {endElement}
     </StackRow>
   );
 };

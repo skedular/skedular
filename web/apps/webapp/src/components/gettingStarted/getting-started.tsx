@@ -109,7 +109,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
                   <LeadIconTypography
                     label="Create Location"
                     stackMode="column"
-                    icon={<LocationIcon fontSize="large" excludeTooltip />}
+                    startElement={<LocationIcon fontSize="large" excludeTooltip />}
                     sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
                   />
                 </Paper>
@@ -125,7 +125,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
                   <LeadIconTypography
                     label="Create Team"
                     stackMode="column"
-                    icon={<TeamIcon fontSize="large" excludeTooltip />}
+                    startElement={<TeamIcon fontSize="large" excludeTooltip />}
                     sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
                   />
                 </Paper>
@@ -140,7 +140,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
                 <LeadIconTypography
                   label="Add Desks"
                   stackMode="column"
-                  icon={<DeskIcon fontSize="large" excludeTooltip />}
+                  startElement={<DeskIcon fontSize="large" excludeTooltip />}
                   sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
                 />
               </Paper>
@@ -154,7 +154,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
                 <LeadIconTypography
                   label="Invite Teammates"
                   stackMode="column"
-                  icon={<InviteMemberIcon fontSize="large" />}
+                  startElement={<InviteMemberIcon fontSize="large" />}
                   sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
                 />
               </Paper>

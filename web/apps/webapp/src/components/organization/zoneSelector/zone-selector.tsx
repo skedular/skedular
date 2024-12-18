@@ -54,7 +54,7 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
         if (selectedItem) {
           return (
             <StackRow sx={{ alignItems: 'center' }}>
-              <LeadIconTypography label="Zones" icon={<ZoneIcon />} />
+              <LeadIconTypography label="Zones" startElement={<ZoneIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
               <SmallIconTypography label={selectedItem.name} />
@@ -64,7 +64,7 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
 
         return (
           <StackRow sx={{ alignItems: 'center' }}>
-            <LeadIconTypography label="Zones" icon={<ZoneIcon />} />
+            <LeadIconTypography label="Zones" startElement={<ZoneIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label="All" />

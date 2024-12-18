@@ -55,7 +55,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
         if (selectedItem) {
           return (
             <StackRow sx={{ alignItems: 'center' }}>
-              <LeadIconTypography label="Desks" icon={<DeskTypeIcon />} />
+              <LeadIconTypography label="Desks" startElement={<DeskTypeIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
               <SmallIconTypography label={selectedItem.name} />
@@ -65,7 +65,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
 
         return (
           <StackRow sx={{ alignItems: 'center' }}>
-            <LeadIconTypography label="Desks" icon={<DeskTypeIcon />} />
+            <LeadIconTypography label="Desks" startElement={<DeskTypeIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label="All" />

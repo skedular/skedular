@@ -776,7 +776,7 @@ const DeskCard = ({
       {!editing && (
         <Card elevation={24} sx={{ minWidth: 320, height: '100%' }}>
           <CardHeader
-            title={<BodyIconTypography label={deskDetails.name} icon={<DeskIcon />} />}
+            title={<BodyIconTypography label={deskDetails.name} startElement={<DeskIcon />} />}
             action={
               <>
                 {moreActionsOption.length > 0 && (
@@ -794,12 +794,12 @@ const DeskCard = ({
               <ZonesLine zones={deskDetails.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
             </StackColumn>
 
-            {extraInfo.length > 0 && <BodyIconTypography label={extraInfo.join(', ')} icon={<InfoIcon />} />}
+            {extraInfo.length > 0 && <BodyIconTypography label={extraInfo.join(', ')} startElement={<InfoIcon />} />}
 
             {customerDetails && (
               <BodyIconTypography
                 label={getCustomerFullName(customerDetails)}
-                icon={<CustomerAvatar name={customerDetails} photo={{ url: customerDetails.photoUrl }} size="small" />}
+                startElement={<CustomerAvatar name={customerDetails} photo={{ url: customerDetails.photoUrl }} size="small" />}
               />
             )}
           </CardContent>

@@ -75,7 +75,7 @@ const MyLocationCard = ({
       <CardHeader
         title={
           <StackRow>
-            <LeadIconTypography label={locationDetails.name} icon={<LocationIcon />} sx={{ flexWrap: undefined }} />
+            <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon />} sx={{ flexWrap: undefined }} />
             <PushToRight />
             <NewBookingButton
               hideLocationControl={false}
@@ -94,7 +94,7 @@ const MyLocationCard = ({
       />
       <CardContent>
         <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%' }}>
-          <SmallIconTypography label={`${desksCount} Desks`} sx={{ flexGrow: 0, flexShrink: 0 }} icon={<DeskIcon />} />
+          <SmallIconTypography label={`${desksCount} Desks`} sx={{ flexGrow: 0, flexShrink: 0 }} startElement={<DeskIcon />} />
           <StackColumn sx={{ paddingLeft: 40, alignItems: 'flex-end', width: '100%' }}>
             <SmallIconTypography label={`${availableDesksCount} Available Today`} />
             <LinearProgress value={availablePercentage} variant="determinate" sx={{ width: '100%' }} />

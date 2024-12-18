@@ -4,7 +4,8 @@ import type { JSX } from 'react';
 import IconTypography from './icon-typography';
 
 type Props = {
-  icon?: React.ReactNode | JSX.Element;
+  startElement?: React.ReactNode | JSX.Element;
+  endElement?: React.ReactNode | JSX.Element;
   stackMode?: 'row' | 'column';
   label?: string | null | undefined;
   sx?: SxProps<Theme>;
@@ -12,7 +13,16 @@ type Props = {
   color?: CSSProperties['color'];
 };
 
-const SmallHeadingIconTypography = ({ icon, stackMode, label, sx, spacing, color }: Props) => (
-  <IconTypography icon={icon} stackMode={stackMode} label={label} variant="h4" sx={sx} spacing={spacing} color={color} />
+const SmallHeadingIconTypography = ({ startElement, endElement, stackMode, label, sx, spacing, color }: Props) => (
+  <IconTypography
+    startElement={startElement}
+    endElement={endElement}
+    stackMode={stackMode}
+    label={label}
+    variant="h4"
+    sx={sx}
+    spacing={spacing}
+    color={color}
+  />
 );
 export default SmallHeadingIconTypography;

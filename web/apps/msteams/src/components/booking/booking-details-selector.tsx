@@ -355,7 +355,7 @@ const BookingDetailsSelector = ({
               <li {...props}>
                 <BodyIconTypography
                   label={getCustomerFullName(castedOption)}
-                  icon={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
+                  startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
                 />
               </li>
             );

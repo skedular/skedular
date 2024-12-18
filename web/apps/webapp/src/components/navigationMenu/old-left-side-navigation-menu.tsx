@@ -53,7 +53,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
         <Link component={NextLink} href="/">
           <ListItemButton selected={pathName === '/'} sx={{ ...styles, borderRadius: pathName === '/' ? 4 : 0 }}>
             {showIconsOnly && <HomeIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Home" icon={<HomeIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Home" startElement={<HomeIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -62,7 +62,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
         <Link component={NextLink} href="/organizations">
           <ListItemButton selected={pathName === '/organizations'} sx={{ ...styles, borderRadius: pathName === '/organizations' ? 4 : 0 }}>
             {showIconsOnly && <OrganizationIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Organizations" icon={<OrganizationIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Organizations" startElement={<OrganizationIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -71,7 +71,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
         <Link component={NextLink} href="/locations">
           <ListItemButton selected={pathName === '/locations'} sx={{ ...styles, borderRadius: pathName === '/locations' ? 4 : 0 }}>
             {showIconsOnly && <LocationIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Locations" icon={<LocationIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Locations" startElement={<LocationIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -80,7 +80,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
         <Link component={NextLink} href="/teams">
           <ListItemButton selected={pathName === '/teams'} sx={{ ...styles, borderRadius: pathName === '/teams' ? 4 : 0 }}>
             {showIconsOnly && <TeamIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Teams" icon={<TeamIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Teams" startElement={<TeamIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -89,7 +89,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
         <Link component={NextLink} href="/notifications">
           <ListItemButton selected={pathName === '/notifications'} sx={{ ...styles, borderRadius: pathName === '/notifications' ? 4 : 0 }}>
             {showIconsOnly && <NotificationsIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Notifications" icon={<NotificationsIcon excludeTooltip />} spacing={3} />}{' '}
+            {!showIconsOnly && <BodyIconTypography label="Notifications" startElement={<NotificationsIcon excludeTooltip />} spacing={3} />}{' '}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -98,7 +98,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
         <Link component={NextLink} href="/settings">
           <ListItemButton selected={pathName === '/settings'} sx={{ ...styles, borderRadius: pathName === '/settings' ? 4 : 0 }}>
             {showIconsOnly && <SettingsIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Settings" icon={<SettingsIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Settings" startElement={<SettingsIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>

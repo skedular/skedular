@@ -219,11 +219,11 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth, 
 
   const getMyBookingComponent = (booking: BookingDetails) => (
     <StackColumn key={booking.id}>
-      {booking.location && <BodyIconTypography icon={<LocationIcon />} label={booking.location.name} />}
-      {booking.team && <BodyIconTypography icon={<TeamIcon />} label={booking.team.name} />}
+      {booking.location && <BodyIconTypography startElement={<LocationIcon />} label={booking.location.name} />}
+      {booking.team && <BodyIconTypography startElement={<TeamIcon />} label={booking.team.name} />}
       {booking.desks?.map(({ uniqueId, name, zones }) => (
         <StackRow key={uniqueId} sx={{ alignItems: 'center' }}>
-          <BodyIconTypography label={name} icon={<DeskIcon />} />
+          <BodyIconTypography label={name} startElement={<DeskIcon />} />
           <ZonesLine zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
         </StackRow>
       ))}

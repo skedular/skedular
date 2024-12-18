@@ -55,7 +55,7 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
         if (selectedItem) {
           return (
             <StackRow>
-              <LeadIconTypography label="Location" icon={<LocationIcon />} />
+              <LeadIconTypography label="Location" startElement={<LocationIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
               <SmallIconTypography label={selectedItem.name} />
@@ -65,7 +65,7 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
 
         return (
           <StackRow>
-            <LeadIconTypography label="Location" icon={<LocationIcon />} />
+            <LeadIconTypography label="Location" startElement={<LocationIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label="All" />
@@ -79,7 +79,7 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
 
       {allItems.map((item) => (
         <MenuItem key={item.id} value={item.id}>
-          <BodyIconTypography icon={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
+          <BodyIconTypography startElement={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
         </MenuItem>
       ))}
     </DefaultSelect>

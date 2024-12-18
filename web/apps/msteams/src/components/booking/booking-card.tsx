@@ -654,23 +654,23 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             title={
               <LeadIconTypography
                 label={shortDateFormatFrom}
-                icon={<CustomerAvatar name={bookingDetails.customer} photo={{ url: bookingDetails.customer?.photoUrl }} />}
+                startElement={<CustomerAvatar name={bookingDetails.customer} photo={{ url: bookingDetails.customer?.photoUrl }} />}
               />
             }
           />
 
           <CardContent>
-            <LeadIconTypography label={getCustomerFullName(bookingDetails.customer)} icon={<CustomerIcon />} />
-            {bookingDetails.notes && <BodyIconTypography label={bookingDetails.notes} icon={<NotesIcon />} />}
-            {bookingDetails.location && <BodyIconTypography label={bookingDetails.location.name} icon={<LocationIcon />} />}
-            {bookingDetails.team && <BodyIconTypography label={bookingDetails.team.name} icon={<TeamIcon />} />}
+            <LeadIconTypography label={getCustomerFullName(bookingDetails.customer)} startElement={<CustomerIcon />} />
+            {bookingDetails.notes && <BodyIconTypography label={bookingDetails.notes} startElement={<NotesIcon />} />}
+            {bookingDetails.location && <BodyIconTypography label={bookingDetails.location.name} startElement={<LocationIcon />} />}
+            {bookingDetails.team && <BodyIconTypography label={bookingDetails.team.name} startElement={<TeamIcon />} />}
 
             {bookingDetails.desks?.map(({ uniqueId, name, zones }) => {
               const isPreferredDesk = !!rootData.me?.preferredDesks.find((desk) => desk.uniqueId === uniqueId);
 
               return (
                 <StackRow key={uniqueId}>
-                  <BodyIconTypography label={name} icon={<DeskIcon />} />
+                  <BodyIconTypography label={name} startElement={<DeskIcon />} />
 
                   {isPreferredDesk && (
                     <Tooltip title={'Remove as preferred desk'}>

@@ -51,7 +51,7 @@ const MyTeamCard = ({ teamDetailsRelay, teammates }: Props) => {
 
   return (
     <Card sx={{ width: 600 }}>
-      <CardHeader title={<LeadIconTypography icon={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} />} />
+      <CardHeader title={<LeadIconTypography startElement={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} />} />
       <CardContent>
         <StackColumn sx={{ paddingTop: 1, paddingBottom: 1 }}>
           <SmallIconTypography label="Members of this team" />

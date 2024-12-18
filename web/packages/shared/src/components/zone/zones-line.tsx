@@ -30,7 +30,7 @@ const ZonesLine = ({ zones, zoneTotalDisplayLimit = preferredZonesTotalDisplayLi
 
   return (
     <>
-      {zones.length === 0 && <BodyIconTypography icon={<ZoneIcon />} label="N/A" />}
+      {zones.length === 0 && <BodyIconTypography startElement={<ZoneIcon />} label="N/A" />}
 
       {zones.length !== 0 && (
         <StackRow sx={{ alignItems: 'center' }}>

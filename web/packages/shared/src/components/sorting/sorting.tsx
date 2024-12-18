@@ -67,11 +67,11 @@ const SortingDirection = ({ options, defaultOption, defaultSortingDirectionValue
         </MenuItem>
 
         <MenuItem selected={selectedSortingDirection === 'Ascending'} onClick={handleAscendingDirectionClicked}>
-          <BodyIconTypography label="Sort Ascending" icon={<AscDirectionIcon fontSize="small" />} />
+          <BodyIconTypography label="Sort Ascending" startElement={<AscDirectionIcon fontSize="small" />} />
         </MenuItem>
 
         <MenuItem selected={selectedSortingDirection === 'Descending'} onClick={handleDescendingDirectionClicked}>
-          <BodyIconTypography label="Sort Descending" icon={<DescDirectionIcon fontSize="small" />} />
+          <BodyIconTypography label="Sort Descending" startElement={<DescDirectionIcon fontSize="small" />} />
         </MenuItem>
 
         <Divider />

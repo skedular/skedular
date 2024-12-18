@@ -71,7 +71,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}` ? 4 : 0 }}
           >
             {showIconsOnly && <HomeIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Home" icon={<HomeIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Home" startElement={<HomeIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -83,7 +83,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/locations` ? 4 : 0 }}
           >
             {showIconsOnly && <LocationIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Locations" icon={<LocationIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Locations" startElement={<LocationIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -95,7 +95,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/teams` ? 4 : 0 }}
           >
             {showIconsOnly && <TeamIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Teams" icon={<TeamIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Teams" startElement={<TeamIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -107,7 +107,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/notifications` ? 4 : 0 }}
           >
             {showIconsOnly && <NotificationsIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Notifications" icon={<NotificationsIcon excludeTooltip />} spacing={3} />}{' '}
+            {!showIconsOnly && <BodyIconTypography label="Notifications" startElement={<NotificationsIcon excludeTooltip />} spacing={3} />}{' '}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -119,7 +119,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/settings` ? 4 : 0 }}
           >
             {showIconsOnly && <SettingsIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Settings" icon={<SettingsIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && <BodyIconTypography label="Settings" startElement={<SettingsIcon excludeTooltip />} spacing={3} />}
           </ListItemButton>
         </Link>
       </ListItem>

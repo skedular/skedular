@@ -160,44 +160,44 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
 
             <MenuItem>
               <Link component={NextLink} href="/settings" color="inherit">
-                <SmallIconTypography icon={<SettingsIcon />} label="Settings" />
+                <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
               </Link>
             </MenuItem>
 
             {paletteMode === 'dark' && (
               <MenuItem onClick={handleLightThemeClicked}>
-                <SmallIconTypography icon={<DarkModeIcon />} label="Dark Mode" />
+                <SmallIconTypography startElement={<DarkModeIcon />} label="Dark Mode" />
               </MenuItem>
             )}
 
             {paletteMode === 'light' && (
               <MenuItem onClick={handleDarkThemeClicked}>
-                <SmallIconTypography icon={<LightModeIcon />} label="Light Mode" />
+                <SmallIconTypography startElement={<LightModeIcon />} label="Light Mode" />
               </MenuItem>
             )}
 
             {!switchToModernUI && (
               <MenuItem onClick={handleModernUIClicked}>
-                <SmallIconTypography icon={<ToggleOffIcon />} label="Switch to modern UI" />
+                <SmallIconTypography startElement={<ToggleOffIcon />} label="Switch to modern UI" />
               </MenuItem>
             )}
 
             {switchToModernUI && (
               <MenuItem onClick={handleClassicUIClicked}>
-                <SmallIconTypography icon={<ToggleOnIcon />} label="Switch to classic UI" />
+                <SmallIconTypography startElement={<ToggleOnIcon />} label="Switch to classic UI" />
               </MenuItem>
             )}
 
             <Divider />
 
             <MenuItem onClick={handleSubmitFeedbackClicked}>
-              <SmallIconTypography icon={<FeedbackIcon />} label="Send us feedback" />
+              <SmallIconTypography startElement={<FeedbackIcon />} label="Send us feedback" />
             </MenuItem>
 
             <Divider />
 
             <MenuItem onClick={handleSignOutClick}>
-              <SmallIconTypography icon={<LogoutIcon />} label="Sign out" />
+              <SmallIconTypography startElement={<LogoutIcon />} label="Sign out" />
             </MenuItem>
           </Menu>
         </StackRow>
