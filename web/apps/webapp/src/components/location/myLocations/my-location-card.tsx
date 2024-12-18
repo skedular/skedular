@@ -7,7 +7,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import LinearProgress from '@mui/material/LinearProgress';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { Zones } from '@repo/shared/components/zone';
 import { Dayjs } from 'dayjs';
@@ -75,7 +75,7 @@ const MyLocationCard = ({
       <CardHeader
         title={
           <StackRow>
-            <BodyIconTypography label={locationDetails.name} icon={<LocationIcon />} sx={{ flexWrap: undefined }} />
+            <LeadIconTypography label={locationDetails.name} icon={<LocationIcon />} sx={{ flexWrap: undefined }} />
             <PushToRight />
             <NewBookingButton
               hideLocationControl={false}

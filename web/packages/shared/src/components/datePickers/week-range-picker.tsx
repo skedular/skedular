@@ -3,8 +3,9 @@ import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
-import { BodyIconTypography, DropdownSelect, LeadIconTypography, PushToRight, StackRow } from '@repo/shared/components/commons';
+import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
 import { CalendarIcon } from '@repo/shared/components/icons';
+import { DefaultSelect } from '@repo/shared/components/styled';
 import { endOfWeek, isInSameMonth, isInSameWeek, isInSameYear, startOfWeek } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
@@ -107,7 +108,7 @@ const WeekRangePicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
 
   return (
     <>
-      <DropdownSelect
+      <DefaultSelect
         displayEmpty
         open={false}
         onClick={handleChanged}
@@ -117,7 +118,7 @@ const WeekRangePicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
             <LeadIconTypography label="Date" icon={<CalendarIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
-            <BodyIconTypography label={buttonTitle} />
+            <SmallIconTypography label={buttonTitle} />
           </StackRow>
         )}
         value=""

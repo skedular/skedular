@@ -1,6 +1,5 @@
 export { default as BodyIconTypography } from './body-icon-typography';
 export { default as CaptionIconTypography } from './caption-icon-typography';
-export { default as DropdownSelect } from './dropdown-select';
 export { default as ExtraLargeHeadingIconTypography } from './extra-large-heading-icon-typography';
 export { default as FormStackColumn } from './form-stack-column';
 export { default as GridContainer } from './grid-container';

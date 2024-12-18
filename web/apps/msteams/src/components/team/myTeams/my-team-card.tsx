@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { TeamIcon } from '@repo/shared/components/icons';
 import graphql from 'babel-plugin-relay/macro';
 import { memo } from 'react';
@@ -51,7 +51,7 @@ const MyTeamCard = ({ teamDetailsRelay, teammates }: Props) => {
 
   return (
     <Card sx={{ width: 600 }}>
-      <CardHeader title={<BodyIconTypography icon={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} />} />
+      <CardHeader title={<LeadIconTypography icon={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} />} />
       <CardContent>
         <StackColumn sx={{ paddingTop: 1, paddingBottom: 1 }}>
           <SmallIconTypography label="Members of this team" />

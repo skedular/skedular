@@ -2,7 +2,7 @@ import type { SelectProps } from '@mui/material/Select';
 import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 
-const DropdownSelect = styled(Select)(({ theme }) => ({
+const DefaultSelect = styled(Select)(({ theme }) => ({
   width: '100%',
   [theme.breakpoints.up('sm')]: {
     width: 'min(100%, 300px)',
@@ -18,4 +18,4 @@ const DropdownSelect = styled(Select)(({ theme }) => ({
   },
 })) as React.ComponentType<SelectProps>;
 
-export default DropdownSelect;
+export default DefaultSelect;

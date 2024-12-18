@@ -2,8 +2,9 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { LocationAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, DropdownSelect, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
 import { LocationIcon } from '@repo/shared/components/icons';
+import { DefaultSelect } from '@repo/shared/components/styled';
 import graphql from 'babel-plugin-relay/macro';
 import { memo, useMemo, useState } from 'react';
 import { useFragment } from 'react-relay';
@@ -46,7 +47,7 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
   };
 
   return (
-    <DropdownSelect
+    <DefaultSelect
       value={id}
       onChange={handleChanged}
       size="small"
@@ -55,7 +56,7 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
         if (selectedItem) {
           return (
             <StackRow>
-              <BodyIconTypography label="Location" icon={<LocationIcon />} />
+              <LeadIconTypography label="Location" icon={<LocationIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
               <SmallIconTypography label={selectedItem.name} />
@@ -65,7 +66,7 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
 
         return (
           <StackRow>
-            <BodyIconTypography label="Location" icon={<LocationIcon />} />
+            <LeadIconTypography label="Location" icon={<LocationIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label="All" />
@@ -82,7 +83,7 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
           <BodyIconTypography icon={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
         </MenuItem>
       ))}
-    </DropdownSelect>
+    </DefaultSelect>
   );
 };
 

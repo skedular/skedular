@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { CalendarIcon, DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, LocationIcon, TeamIcon, ZoneIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -212,7 +212,7 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
     <>
       <Card sx={{ width: 250 }}>
         <CardHeader
-          title={<BodyIconTypography icon={<LocationIcon />} label={bookingDetails.location?.name} sx={{ flexWrap: undefined }} />}
+          title={<LeadIconTypography icon={<LocationIcon />} label={bookingDetails.location?.name} sx={{ flexWrap: undefined }} />}
           action={
             <>
               {moreActionsOption.length > 0 && (

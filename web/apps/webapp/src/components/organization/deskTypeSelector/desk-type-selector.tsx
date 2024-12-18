@@ -2,8 +2,9 @@ import type { deskTypeSelector_allDeskTypes_query$key } from '@/queries/__genera
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { BodyIconTypography, DropdownSelect, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
 import { DeskTypeIcon } from '@repo/shared/components/icons';
+import { DefaultSelect } from '@repo/shared/components/styled';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -44,7 +45,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
   };
 
   return (
-    <DropdownSelect
+    <DefaultSelect
       value={id}
       onChange={handleChanged}
       size="small"
@@ -53,7 +54,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
         if (selectedItem) {
           return (
             <StackRow sx={{ alignItems: 'center' }}>
-              <BodyIconTypography label="Desks" icon={<DeskTypeIcon />} />
+              <LeadIconTypography label="Desks" icon={<DeskTypeIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
               <SmallIconTypography label={selectedItem.name} />
@@ -63,7 +64,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
 
         return (
           <StackRow sx={{ alignItems: 'center' }}>
-            <BodyIconTypography label="Desks" icon={<DeskTypeIcon />} />
+            <LeadIconTypography label="Desks" icon={<DeskTypeIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label="All" />
@@ -80,7 +81,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
           <BodyIconTypography label={item.name} />
         </MenuItem>
       ))}
-    </DropdownSelect>
+    </DefaultSelect>
   );
 };
 

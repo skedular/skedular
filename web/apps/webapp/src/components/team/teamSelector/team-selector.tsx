@@ -3,8 +3,9 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { TeamAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, DropdownSelect, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
 import { TeamIcon } from '@repo/shared/components/icons';
+import { DefaultSelect } from '@repo/shared/components/styled';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -45,7 +46,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
   };
 
   return (
-    <DropdownSelect
+    <DefaultSelect
       value={id}
       onChange={handleChanged}
       size="small"
@@ -54,7 +55,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
         if (selectedItem) {
           return (
             <StackRow sx={{ alignItems: 'center' }}>
-              <BodyIconTypography label="Team" icon={<TeamIcon />} />
+              <LeadIconTypography label="Team" icon={<TeamIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
               <SmallIconTypography label={selectedItem.name} />
@@ -64,7 +65,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
 
         return (
           <StackRow sx={{ alignItems: 'center' }}>
-            <BodyIconTypography label="Team" icon={<TeamIcon />} />
+            <LeadIconTypography label="Team" icon={<TeamIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label="All" />
@@ -81,7 +82,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
           <BodyIconTypography icon={<TeamAvatar name={{ name: item.name }} size="small" />} label={item.name} />
         </MenuItem>
       ))}
-    </DropdownSelect>
+    </DefaultSelect>
   );
 };
 

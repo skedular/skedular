@@ -4,7 +4,7 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 import { startOfDay, toShortDate } from '../../libs/utils';
-import { LeadIconTypography } from '../commons';
+import { SmallIconTypography } from '../commons';
 import { EmptyCalendarToolbar, SimpleCalendarSlotProps } from '../generics';
 import { ArrowDownIcon } from '../icons';
 
@@ -46,7 +46,7 @@ const DayPicker = ({ defaultDate, onDateChanged, disablePastDaysSelection }: Pro
   return (
     <>
       <Button variant="text" color="inherit" onClick={handleClick} endIcon={<ArrowDownIcon />}>
-        <LeadIconTypography label={toShortDate(date)} />
+        <SmallIconTypography label={toShortDate(date)} />
       </Button>
       <Popover
         open={Boolean(anchorEl)}
