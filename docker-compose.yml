@@ -15,7 +15,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
-      - 5000:8080
+      - 5001:8080
     networks:
       - unityhubio_network
 
