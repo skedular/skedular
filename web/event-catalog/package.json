@@ -4,7 +4,7 @@
   "description": "UnityHub Event Catalog",
   "private": true,
   "scripts": {
-    "dev": "PORT=15003 eventcatalog dev",
+    "dev": "cross-env PORT=15003 eventcatalog dev",
     "build": "eventcatalog build",
     "start": "eventcatalog start",
     "preview": "eventcatalog preview",
@@ -12,9 +12,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@eventcatalog/core": "latest"
+    "@eventcatalog/core": "2.18.1"
   },
   "devDependencies": {
+    "@astrojs/mdx": "^4.0.2",
     "@parcel/watcher": "2.5.0",
     "@types/lodash.merge": "4.6.9",
     "concurrently": "9.1.0",

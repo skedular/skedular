@@ -22,7 +22,6 @@ receives:
     version: 0.0.1
 repository:
   language: C#
-  url: 
 ---
 
 ## Overview
