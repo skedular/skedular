@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2024.2.7",
+      "version": "2024.3.2",
       "commands": [
         "jb"
       ],
@@ -31,7 +31,7 @@
       "rollForward": false
     },
     "hotchocolate.fusion.commandline": {
-      "version": "14.2.0",
+      "version": "14.3.0",
       "commands": [
         "fusion"
       ],
