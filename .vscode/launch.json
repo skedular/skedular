@@ -28,6 +28,28 @@
       "envFile": "${workspaceFolder}/.env"
     },
     {
+      "name": "All Processors",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/all-in-one/AllProcessors/bin/Debug/net9.0/AllProcessors.dll",
+      "cwd": "${workspaceFolder}/all-in-one/AllProcessors/bin/Debug/net9.0",
+      "args": [],
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "All Jobs",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/all-in-one/AllJobs/bin/Debug/net9.0/AllJobs.dll",
+      "cwd": "${workspaceFolder}/all-in-one/AllJobs/bin/Debug/net9.0",
+      "args": [],
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
       "name": "Webapp - debug server-side",
       "type": "node-terminal",
       "request": "launch",
