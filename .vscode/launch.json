@@ -17,6 +17,17 @@
       "envFile": "${workspaceFolder}/.env"
     },
     {
+      "name": "All Infra",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/all-in-one/AllInfra/bin/Debug/net9.0/AllInfra.dll",
+      "cwd": "${workspaceFolder}/all-in-one/AllInfra/bin/Debug/net9.0",
+      "args": [],
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
       "name": "All Apis",
       "type": "coreclr",
       "request": "launch",

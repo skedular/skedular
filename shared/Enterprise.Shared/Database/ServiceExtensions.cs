@@ -48,6 +48,16 @@ public static class ServiceExtensions
                 $"{applicationConfiguration.Environment}.{npgsqlConnectionStringBuilder.Database}";
         }
 
+        if (!string.IsNullOrWhiteSpace(postgresSqlConfigurationOptions.Server))
+        {
+            npgsqlConnectionStringBuilder.Host = postgresSqlConfigurationOptions.Server;
+        }
+
+        if (postgresSqlConfigurationOptions.Port is not null)
+        {
+            npgsqlConnectionStringBuilder.Port = postgresSqlConfigurationOptions.Port.Value;
+        }
+
         if (!string.IsNullOrWhiteSpace(postgresSqlConfigurationOptions.Username))
         {
             npgsqlConnectionStringBuilder.Username = postgresSqlConfigurationOptions.Username;

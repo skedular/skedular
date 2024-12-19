@@ -14,9 +14,7 @@ services:
     ports:
       - 5000:8080
     networks:
-      unityhubio_network:
-        aliases:
-          - dozzle.localhost
+      - unityhubio_network
 
   postgres:
     image: postgres:16-alpine
@@ -30,9 +28,7 @@ services:
     ports:
       - "13450:5432"
     networks:
-      unityhubio_network:
-        aliases:
-          - postgres.localhost
+      - unityhubio_network
 
   redis:
     image: redis:latest
@@ -45,9 +41,7 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      unityhubio_network:
-        aliases:
-          - redis.localhost
+      - unityhubio_network
 
   kafka1:
     image: confluentinc/cp-kafka:latest
@@ -56,7 +50,7 @@ services:
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka1:29092,PLAINTEXT_HOST://kafka1.localhost:19092"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka1:29092,PLAINTEXT_HOST://localhost:19092"
       KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: "kafka1:19092"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
@@ -75,9 +69,7 @@ services:
       # See https://docs.confluent.io/kafka/operations-tools/kafka-tools.html#kafka-storage-sh
       CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
     networks:
-      unityhubio_network:
-        aliases:
-          - kafka1.localhost
+      - unityhubio_network
 
   kowl:
     image: docker.redpanda.com/redpandadata/console:latest
@@ -96,9 +88,11 @@ services:
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
       Application__Environment: staging
+      Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
     networks:
@@ -135,8 +129,10 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
       Application__WebAppBaseDomain: https://app.staging.unityhub.io
       Application__ApiBaseDomain: https://apistaging.unityhub.io
+      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
       Subgraphs__Billing__Url: http://localhost:10800/billing/api/v1/graphql
@@ -189,9 +185,7 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      unityhubio_network:
-        aliases:
-          - staging-apis-01.localhost
+      - unityhubio_network
 
   staging-processors-01:
     image: ghcr.io/unityhubio/allprocessors:latest
@@ -214,8 +208,10 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
       Application__WebAppBaseDomain: https://app.staging.unityhub.io
       Application__ApiBaseDomain: https://apistaging.unityhub.io
+      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
       Billing__ApiKey: ${STAGING_UNITYHUBIO_BILLING_APIKEY}
@@ -271,9 +267,7 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      unityhubio_network:
-        aliases:
-          - staging-processors-01.localhost
+      - unityhubio_network
 
   staging-jobs-01:
     image: ghcr.io/unityhubio/alljobs:latest
@@ -296,8 +290,10 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.unityhub.io
       Application__WebAppBaseDomain: https://app.staging.unityhub.io
       Application__ApiBaseDomain: https://apistaging.unityhub.io
+      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
       Billing__ApiKey: ${STAGING_UNITYHUBIO_BILLING_APIKEY}
@@ -353,18 +349,18 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      unityhubio_network:
-        aliases:
-          - staging-processors-01.localhost
+      - unityhubio_network
 
   prod-infra-provision:
     image: ghcr.io/unityhubio/allinfra:latest
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
       Application__Environment: prod
+      Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
     networks:
@@ -403,8 +399,10 @@ services:
       Application__PublicWebSiteBaseDomain: https://unityhub.io
       Application__WebAppBaseDomain: https://app.unityhub.io
       Application__ApiBaseDomain: https://api.unityhub.io
+      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
       Subgraphs__Billing__Url: http://localhost:10800/billing/api/v1/graphql
@@ -457,9 +455,7 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      unityhubio_network:
-        aliases:
-          - prod-apis-01.localhost
+      - unityhubio_network
 
   prod-processors-01:
     image: ghcr.io/unityhubio/allprocessors:latest
@@ -482,8 +478,10 @@ services:
       Application__PublicWebSiteBaseDomain: https://unityhub.io
       Application__WebAppBaseDomain: https://app.unityhub.io
       Application__ApiBaseDomain: https://api.unityhub.io
+      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
       Billing__ApiKey: ${PRODUCTION_UNITYHUBIO_BILLING_APIKEY}
@@ -539,9 +537,7 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      unityhubio_network:
-        aliases:
-          - prod-processors-01.localhost
+      - unityhubio_network
 
   prod-jobs-01:
     image: ghcr.io/unityhubio/alljobs:latest
@@ -564,8 +560,10 @@ services:
       Application__PublicWebSiteBaseDomain: https://unityhub.io
       Application__WebAppBaseDomain: https://app.unityhub.io
       Application__ApiBaseDomain: https://api.unityhub.io
+      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
       Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
       Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
       Billing__ApiKey: ${PRODUCTION_UNITYHUBIO_BILLING_APIKEY}
@@ -621,6 +619,4 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      unityhubio_network:
-        aliases:
-          - prod-jobs-01.localhost
+      - unityhubio_network
