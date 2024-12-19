@@ -83,8 +83,8 @@ const getDesignTokens = (mode: PaletteMode) => {
         ...gray,
       },
       background: {
-        default: sandstone,
-        ...(mode === 'dark' && { default: coal }),
+        default: mode === 'dark' ? coal : sandstone,
+        paper: mode === 'dark' ? coal : defaultTheme.palette.background.paper,
       },
     },
     shape: {
