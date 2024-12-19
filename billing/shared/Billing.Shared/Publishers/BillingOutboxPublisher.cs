@@ -1,14 +1,14 @@
-using Api.Shared.Clients.Events.UnityHub.Billing.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Billing.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Billing.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Billing.V1.Value;
 using Billing.Shared.Mappers;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
-using Event = Api.Shared.Clients.Events.UnityHub.Billing.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Event;
 using Organization = Billing.Shared.Models.Organization;
 using OrganizationOffering = Billing.Shared.Models.OrganizationOffering;
-using Type = Api.Shared.Clients.Events.UnityHub.Billing.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Type;
 
 namespace Billing.Shared.Publishers;
 

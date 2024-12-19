@@ -1,7 +1,7 @@
-using Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key;
+using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key;
 using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
@@ -17,10 +17,10 @@ using Organization.Shared.Repositories;
 using Customer = Organization.Shared.Models.Customer;
 using LocationConfiguration = Organization.Shared.Configurations.LocationConfiguration;
 using CustomerConfiguration = Organization.Shared.Configurations.CustomerConfiguration;
-using Event = Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event;
 using Location = Organization.Shared.Database.Entities.Location;
 using OrganizationMember = Organization.Shared.Models.OrganizationMember;
-using Type = Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type;
 
 namespace Organization.Processors.Subscribers;
 

@@ -1,5 +1,5 @@
 using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Customer.Api.GraphQL;
 using Customer.Shared.Models;
 using Enterprise.Shared;
@@ -39,7 +39,7 @@ public interface IMapper
     CustomerFeedback MapTo(Shared.Database.Entities.CustomerFeedback src);
     Shared.Database.Entities.CustomerFeedback MapTo(CustomerFeedback src, Shared.Database.Entities.Customer customer);
     Shared.Models.Customer MapTo(Admin_AddInput src);
-    global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer MapToGrpcResponse(Shared.Models.Customer src);
+    global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer MapToGrpcResponse(Shared.Models.Customer src);
     Identity MapTo(Shared.Models.Identity src, Shared.Database.Entities.Customer customer);
     Identity MergeTo(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer customer);
     Shared.Models.Identity MapTo(Admin_AddIdentityInput src);
@@ -326,9 +326,9 @@ public class Mapper(IContext context) : IMapper
                 .ToList()
         };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer MapToGrpcResponse(Shared.Models.Customer src)
+    public global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer MapToGrpcResponse(Shared.Models.Customer src)
     {
-        var customer = new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer
+        var customer = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer
         {
             Id = src.Id,
             Designation = src.Designation.ToSafeString(),
@@ -356,59 +356,59 @@ public class Mapper(IContext context) : IMapper
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false,
             DefaultOrganization =
                 string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id)
-                    ? new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization()
-                    : new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization
+                    ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
+                    : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
                     {
                         Id = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name.ToSafeString()
                     }
         };
 
         customer.Identities.AddRange(src.Identities.Select(item =>
-            new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Identity
+            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity
             {
                 Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
             }));
         customer.DefaultLocations.AddRange(src.DefaultLocations.Select(item =>
-            new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Location
+            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
                 Organization = string.IsNullOrWhiteSpace(item.Organization?.Id)
-                    ? new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization()
-                    : new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization
+                    ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
+                    : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
                     {
                         Id = item.Organization.Id
                     }
             }));
         customer.DefaultTeams.AddRange(src.DefaultTeams.Select(item =>
-            new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Team
+            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Team
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
                 Organization = string.IsNullOrWhiteSpace(item.Organization?.Id)
-                    ? new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization()
-                    : new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization
+                    ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
+                    : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
                     {
                         Id = item.Organization.Id
                     }
             }));
         customer.PreferredDesks.AddRange(src.PreferredDesks.Select(item =>
-            new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Desk
+            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Desk
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
-                Location = new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Location
+                Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
                 {
                     Id = item.Location.Id
                 }
             }));
         customer.PreferredOrganizationTags.AddRange(src.PreferredOrganizationTags.Select(item =>
-            new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.OrganizationTag
+            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.OrganizationTag
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
                 Type = item.Type.ToSafeString(),
-                Organization = new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization
+                Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
                 {
                     Id = item.Organization.Id
                 }

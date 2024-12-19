@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Team.V1;
+using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Models;
@@ -28,7 +28,7 @@ public interface ITeamService
 public class TeamService(
     TeamConfiguration teamConfiguration,
     IMapper mapper,
-    global::Api.Shared.Services.Grpc.UnityHub.Team.V1.TeamService.TeamServiceClient
+    global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService.TeamServiceClient
         teamServiceClient) : ITeamService, IDisposable
 {
     private readonly SemaphoreSlim _cachedPermissionsLock = new(1, 1);

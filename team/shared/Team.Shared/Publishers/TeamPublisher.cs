@@ -1,13 +1,13 @@
-using Api.Shared.Clients.Events.UnityHub.Team.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Team.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Models;
 using Team.Shared.Mappers;
 using Team.Shared.Models;
-using Event = Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type;
 
 namespace Team.Shared.Publishers;
 

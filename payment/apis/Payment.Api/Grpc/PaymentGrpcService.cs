@@ -1,7 +1,7 @@
 using System.Reflection;
-using Api.Shared.Services.Grpc.UnityHub.Payment.V1;
+using Api.Shared.Services.Grpc.Skedular.Payment.V1;
 using Grpc.Core;
-using Version = Api.Shared.Services.Grpc.UnityHub.Payment.V1.Version;
+using Version = Api.Shared.Services.Grpc.Skedular.Payment.V1.Version;
 
 namespace Payment.Api.Grpc;
 

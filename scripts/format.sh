@@ -6,4 +6,4 @@ set -x
 cd "$(dirname "${0}")/.."
 
 dotnet tool restore
-dotnet jb cleanupcode UnityHub.sln
+dotnet jb cleanupcode Skedular.sln

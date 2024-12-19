@@ -1,5 +1,5 @@
-using Api.Shared.Clients.Events.UnityHub.Location.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Location.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
@@ -7,8 +7,8 @@ using Enterprise.Shared.Models;
 using Enterprise.Shared.Outbox.Publishers;
 using Location.Shared.Mappers;
 using Location.Shared.Models;
-using Event = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 
 namespace Location.Shared.Publishers;
 

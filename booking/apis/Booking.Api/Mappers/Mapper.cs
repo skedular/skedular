@@ -1,5 +1,5 @@
 using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
+using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Booking.Api.GraphQL;
 using Booking.Shared.Models;
 using Enterprise.Shared;
@@ -44,19 +44,19 @@ public interface IMapper
         ICollection<Desk> desks);
 
     IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src, Shared.Models.Location location);
-    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
+    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
     Shared.Models.Booking MapTo(Admin_AddInput src);
     Shared.Models.Booking MapTo(UpdateInput src);
 
-    IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Desk> MapToGrpcResponse(
+    IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk> MapToGrpcResponse(
         IEnumerable<Shared.Models.Desk> src);
 
     IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src);
     Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src);
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
 
-    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
+    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
 }
 
 public class Mapper : IMapper
@@ -230,9 +230,9 @@ public class Mapper : IMapper
     public IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src)
+    public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src)
     {
-        var booking = new global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking
+        var booking = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking
         {
             Id = src.Id,
             From = src.From.ToTimestamp(),
@@ -241,23 +241,23 @@ public class Mapper : IMapper
             Customer = MapToGrpcResponse(src.Customer),
             Type = src.Type switch
             {
-                global::Api.Shared.Models.BookingType.WorkingFromHome => global::Api.Shared.Services.Grpc.UnityHub
+                global::Api.Shared.Models.BookingType.WorkingFromHome => global::Api.Shared.Services.Grpc.Skedular
                     .Booking.V1.BookingType.WorkingFromHome,
-                global::Api.Shared.Models.BookingType.WorkingFromOffice => global::Api.Shared.Services.Grpc.UnityHub
+                global::Api.Shared.Models.BookingType.WorkingFromOffice => global::Api.Shared.Services.Grpc.Skedular
                     .Booking.V1.BookingType.WorkingFromOffice,
-                global::Api.Shared.Models.BookingType.SickLeave => global::Api.Shared.Services.Grpc.UnityHub.Booking.V1
+                global::Api.Shared.Models.BookingType.SickLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1
                     .BookingType.SickLeave,
-                global::Api.Shared.Models.BookingType.AnnualLeave => global::Api.Shared.Services.Grpc.UnityHub.Booking
+                global::Api.Shared.Models.BookingType.AnnualLeave => global::Api.Shared.Services.Grpc.Skedular.Booking
                     .V1.BookingType.AnnualLeave,
-                global::Api.Shared.Models.BookingType.WellBeingLeave => global::Api.Shared.Services.Grpc.UnityHub
+                global::Api.Shared.Models.BookingType.WellBeingLeave => global::Api.Shared.Services.Grpc.Skedular
                     .Booking.V1.BookingType.WellBeingLeave,
-                global::Api.Shared.Models.BookingType.ClientOffices => global::Api.Shared.Services.Grpc.UnityHub.Booking
+                global::Api.Shared.Models.BookingType.ClientOffices => global::Api.Shared.Services.Grpc.Skedular.Booking
                     .V1.BookingType.ClientOffices,
-                global::Api.Shared.Models.BookingType.Vacation => global::Api.Shared.Services.Grpc.UnityHub.Booking.V1
+                global::Api.Shared.Models.BookingType.Vacation => global::Api.Shared.Services.Grpc.Skedular.Booking.V1
                     .BookingType.Vacation,
-                global::Api.Shared.Models.BookingType.TravelingForWork => global::Api.Shared.Services.Grpc.UnityHub
+                global::Api.Shared.Models.BookingType.TravelingForWork => global::Api.Shared.Services.Grpc.Skedular
                     .Booking.V1.BookingType.TravelingForWork,
-                global::Api.Shared.Models.BookingType.NonWorkingDay => global::Api.Shared.Services.Grpc.UnityHub.Booking
+                global::Api.Shared.Models.BookingType.NonWorkingDay => global::Api.Shared.Services.Grpc.Skedular.Booking
                     .V1.BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
@@ -280,23 +280,23 @@ public class Mapper : IMapper
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
                     .Models.BookingType.WorkingFromHome,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
                     .Models.BookingType.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
                     .BookingType.SickLeave,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
                     .Models.BookingType.AnnualLeave,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
                     .Models.BookingType.WellBeingLeave,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.ClientOffices => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => global::Api.Shared
                     .Models.BookingType.ClientOffices,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
                     .BookingType.Vacation,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
                     .Models.BookingType.TravelingForWork,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
                     .Models.BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
@@ -322,23 +322,23 @@ public class Mapper : IMapper
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
                     .Models.BookingType.WorkingFromHome,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
                     .Models.BookingType.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
                     .BookingType.SickLeave,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
                     .Models.BookingType.AnnualLeave,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
                     .Models.BookingType.WellBeingLeave,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.ClientOffices => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => global::Api.Shared
                     .Models.BookingType.ClientOffices,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
                     .BookingType.Vacation,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
                     .Models.BookingType.TravelingForWork,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
                     .Models.BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
@@ -364,23 +364,23 @@ public class Mapper : IMapper
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
                     .Models.BookingType.WorkingFromHome,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
                     .Models.BookingType.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
                     .BookingType.SickLeave,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
                     .Models.BookingType.AnnualLeave,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
                     .Models.BookingType.WellBeingLeave,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.ClientOffices => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => global::Api.Shared
                     .Models.BookingType.ClientOffices,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
                     .BookingType.Vacation,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
                     .Models.BookingType.TravelingForWork,
-                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
                     .Models.BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
@@ -412,7 +412,7 @@ public class Mapper : IMapper
 
     public IEnumerable<BookingDeskDetails> MapTo(IEnumerable<Shared.Models.Desk> src) => src.Select(MapTo);
 
-    public IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Desk> MapToGrpcResponse(
+    public IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk> MapToGrpcResponse(
         IEnumerable<Shared.Models.Desk> src) =>
         src.Select(MapToGrpcResponse);
 
@@ -425,7 +425,7 @@ public class Mapper : IMapper
     public BookingEdge MapTo(Edge<Shared.Models.Booking> src) =>
         new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingEdge MapToGrpcResponse(
+    public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(
         Edge<Shared.Models.Booking> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
@@ -448,9 +448,9 @@ public class Mapper : IMapper
             Location = location
         };
 
-    private static global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Customer MapToGrpcResponse(Customer src)
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer MapToGrpcResponse(Customer src)
     {
-        var customer = new global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Customer
+        var customer = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
@@ -471,49 +471,49 @@ public class Mapper : IMapper
         return customer;
     }
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Identity> MapToGrpcResponse(
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity> MapToGrpcResponse(
         IEnumerable<Identity> src) =>
         src.Select(MapToGrpcResponse);
 
-    private static global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Identity MapToGrpcResponse(Identity src) =>
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity MapToGrpcResponse(Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
 
-    private static global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Organization? MapToGrpcResponse(
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? MapToGrpcResponse(
         Shared.Models.Organization? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Organization
+            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization
             {
                 Id = src.Id, Name = src.Name.ToSafeString()
             };
 
-    private static global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Location? MapToGrpcResponse(
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location? MapToGrpcResponse(
         Shared.Models.Location? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Location
+            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location
             {
                 Id = src.Id, Name = src.Name.ToSafeString()
             };
 
-    private static global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Team?
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team?
         MapToGrpcResponse(Shared.Models.Team? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Team
+            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team
             {
                 Id = src.Id, Name = src.Name.ToSafeString()
             };
 
-    private static global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Desk MapToGrpcResponse(Shared.Models.Desk src)
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk MapToGrpcResponse(Shared.Models.Desk src)
     {
-        var desk = new global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Desk
+        var desk = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Location = src.Location is null
                 ? null
-                : new global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Location
+                : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location
                 {
                     Id = src.Location.Id, Name = src.Location.Name.ToSafeString()
                 }

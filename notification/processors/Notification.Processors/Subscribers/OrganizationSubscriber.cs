@@ -1,10 +1,10 @@
-﻿using Api.Shared.Clients.Events.UnityHub.Organization.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Enterprise.Shared.Kafka.Consume;
 using Notification.Processors.Mappers;
 using Notification.Shared.Repositories;
 using Organization = Notification.Shared.Database.Entities.Organization;
-using Type = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Notification.Processors.Subscribers;
 

@@ -13,14 +13,14 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/billing_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/booking_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/customer_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/location_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/notification_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/organization_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/payment_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/team_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/billing_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/booking_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/customer_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/location_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/notification_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/organization_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/payment_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/team_v1.proto" GrpcServices="Client"/>
     </ItemGroup>
 
     <ItemGroup>

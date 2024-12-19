@@ -38,7 +38,7 @@ public static class Extensions
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services;
 
-    public static IServiceCollection AddUnityHubGrpcServices(
+    public static IServiceCollection AddSkedularGrpcServices(
         this IServiceCollection services,
         IConfiguration configuration)
     {

@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.UnityHub.Slack.V1;
+using Api.Shared.Services.OpenApi.Skedular.Slack.V1;
 using Microsoft.AspNetCore.Mvc;
 using Slack.Api.Services;
 

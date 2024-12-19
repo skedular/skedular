@@ -2,8 +2,8 @@
   "name": "@repo/shared",
   "private": true,
   "exports": {
-    "./clients/graphql/unityhub": {
-      "default": "./dist/clients/graphql/unityhub/index.js"
+    "./clients/graphql/skedular": {
+      "default": "./dist/clients/graphql/skedular/index.js"
     },
     "./components/analytics": {
       "default": "./dist/components/analytics/index.js"

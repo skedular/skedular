@@ -1,5 +1,5 @@
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -16,10 +16,10 @@ using Slack.Shared.Repositories;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
-using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
+using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
+using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Option = SlackNet.Blocks.Option;
-using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection;
+using OrderDirection = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection;
 
 namespace Slack.Api.Handlers.ActionHandlers.Desk;
 

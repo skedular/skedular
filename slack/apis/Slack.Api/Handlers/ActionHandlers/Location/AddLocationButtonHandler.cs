@@ -13,8 +13,8 @@ using Slack.Shared.Repositories;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using AddInput = Api.Shared.Services.Grpc.UnityHub.Location.V1.AddInput;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using AddInput = Api.Shared.Services.Grpc.Skedular.Location.V1.AddInput;
+using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Location;
 

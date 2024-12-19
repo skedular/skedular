@@ -41,7 +41,7 @@ public static class Extensions
         services
             .AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
 
-    public static IServiceCollection AddUnityHubGrpcServices(
+    public static IServiceCollection AddSkedularGrpcServices(
         this IServiceCollection services,
         IConfiguration configuration)
     {

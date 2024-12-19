@@ -1,5 +1,5 @@
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -16,10 +16,10 @@ using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using Button = SlackNet.Blocks.Button;
-using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService;
+using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 using Icons = Slack.Shared.Constants.Icons;
-using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection;
-using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
+using OrderDirection = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection;
+using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 

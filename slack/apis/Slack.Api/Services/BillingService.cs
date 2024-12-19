@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Billing.V1;
+using Api.Shared.Services.Grpc.Skedular.Billing.V1;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Configurations;
@@ -17,7 +17,7 @@ public interface IBillingService
 public class BillingService(
     BillingConfiguration billingConfiguration,
     IMapper mapper,
-    global::Api.Shared.Services.Grpc.UnityHub.Billing.V1.BillingService.BillingServiceClient billingServiceClient)
+    global::Api.Shared.Services.Grpc.Skedular.Billing.V1.BillingService.BillingServiceClient billingServiceClient)
     : IBillingService, IDisposable
 {
     private readonly SemaphoreSlim _cachedOrganizationPermissionsLock = new(1, 1);

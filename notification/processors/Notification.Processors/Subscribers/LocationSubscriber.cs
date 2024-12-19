@@ -1,10 +1,10 @@
-﻿using Api.Shared.Clients.Events.UnityHub.Location.V1.Key;
+﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
 using Notification.Shared.Repositories;
-using Event = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event;
 using IMapper = Notification.Processors.Mappers.IMapper;
 using Location = Notification.Shared.Database.Entities.Location;
-using Type = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 
 namespace Notification.Processors.Subscribers;
 

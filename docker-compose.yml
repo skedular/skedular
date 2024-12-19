@@ -1,10 +1,10 @@
 networks:
-  unityhubio_network:
+  skedular_network:
 
 volumes:
-  unityhubio_postgres_data:
-  unityhubio_redis_data:
-  unityhubio_kafka1_data:
+  skedular_postgres_data:
+  skedular_redis_data:
+  skedular_kafka1_data:
 
 services:
   dozzle:
@@ -17,14 +17,14 @@ services:
     ports:
       - 5001:8080
     networks:
-      - unityhubio_network
+      - skedular_network
 
   postgres:
     image: postgres:16-alpine
     command: postgres -c 'max_connections=10000'
     restart: unless-stopped
     volumes:
-      - unityhubio_postgres_data:/var/lib/postgresql/data
+      - skedular_postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: "8b974997c3c54b10a556f089377505d7"
       POSTGRES_PASSWORD: "123456"
@@ -35,7 +35,7 @@ services:
       - all
       - gateway
     networks:
-      - unityhubio_network
+      - skedular_network
 
   redis:
     image: redis:latest
@@ -46,14 +46,14 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - unityhubio_redis_data:/data
+      - skedular_redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 5s
       retries: 100
     networks:
-      - unityhubio_network
+      - skedular_network
 
   redisinsight:
     image: redislabs/redisinsight:latest
@@ -66,14 +66,14 @@ services:
     depends_on:
       - redis
     networks:
-      - unityhubio_network
+      - skedular_network
 
   kafka1:
     image: confluentinc/cp-kafka:latest
     ports:
       - "19092:19092"
     volumes:
-      - unityhubio_kafka1_data:/var/lib/kafka/data
+      - skedular_kafka1_data:/var/lib/kafka/data
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
@@ -99,7 +99,7 @@ services:
       - core
       - all
     networks:
-      - unityhubio_network
+      - skedular_network
 
   kowl:
     image: docker.redpanda.com/redpandadata/console:latest
@@ -117,7 +117,7 @@ services:
       - core
       - all
     networks:
-      - unityhubio_network
+      - skedular_network
 
   schema-registry:
     image: confluentinc/cp-schema-registry:latest
@@ -135,7 +135,7 @@ services:
       - core
       - all
     networks:
-      - unityhubio_network
+      - skedular_network
 
   zipkin:
     image: openzipkin/zipkin:latest
@@ -146,7 +146,7 @@ services:
     ports:
       - 9411:9411
     networks:
-      - unityhubio_network
+      - skedular_network
 
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -162,4 +162,4 @@ services:
       - 14268:14268
       - 14269:14269
     networks:
-      - unityhubio_network
+      - skedular_network

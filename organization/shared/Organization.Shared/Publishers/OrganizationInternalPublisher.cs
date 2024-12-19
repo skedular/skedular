@@ -1,9 +1,9 @@
-using Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key;
+using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Kafka.Produce;
-using Event = Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Type;
 
 namespace Organization.Shared.Publishers;
 

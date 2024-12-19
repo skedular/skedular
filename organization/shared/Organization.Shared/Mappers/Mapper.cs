@@ -1,27 +1,27 @@
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Organization.Shared.Models;
-using Offering = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Offering;
-using Tag = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Tag;
+using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
+using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 
 namespace Organization.Shared.Mappers;
 
 public interface IMapper
 {
-    Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization MapTo(Models.Organization src);
+    Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src);
     public InvitationToJoinOrganization MapTo(JoinInvitation src, string? inviteeIdToOverride);
 }
 
 public class Mapper : IMapper
 {
-    public Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization MapTo(Models.Organization src)
+    public Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src)
     {
         var organizationOffering = src.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue)
             .OrderByDescending(item => item.End).First();
-        var organization = new Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Organization
+        var organization = new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),

@@ -1,5 +1,5 @@
 using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Location.Api.GraphQL;
@@ -18,7 +18,7 @@ using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOcc
 using LocationMember = Location.Shared.Models.LocationMember;
 using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationTag = Location.Shared.Models.OrganizationTag;
-using Permissions = Api.Shared.Services.Grpc.UnityHub.Location.V1.Permissions;
+using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
 using UpdateDeskInput = Location.Api.GraphQL.UpdateDeskInput;
 
 namespace Location.Api.Mappers;
@@ -64,20 +64,20 @@ public interface IMapper
     Shared.Models.Desk MapTo(UpdateDeskInput src);
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
     Shared.Models.Location MapTo(Admin_AddInput src);
-    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src);
+    global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src);
     Shared.Models.Location MapTo(AddInput src);
     Shared.Models.Location MapTo(UpdateInput src);
-    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk MapToGrpcResponse(Shared.Models.Desk src);
-    Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.AddDeskInput src);
-    Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.UpdateDeskInput src);
+    global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk MapToGrpcResponse(Shared.Models.Desk src);
+    Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddDeskInput src);
+    Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateDeskInput src);
 
     DeskEdge MapTo(Edge<Shared.Models.Desk> src);
     IEnumerable<Edge<Shared.Models.Desk>> MapTo(IEnumerable<Edge<Desk>> src, Shared.Models.Location location);
-    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.DeskEdge MapToGrpcResponse(Edge<Shared.Models.Desk> src);
+    global::Api.Shared.Services.Grpc.Skedular.Location.V1.DeskEdge MapToGrpcResponse(Edge<Shared.Models.Desk> src);
 
     LocationEdge MapTo(Edge<Shared.Models.Location> src);
 
-    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationEdge MapToGrpcResponse(
+    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationEdge MapToGrpcResponse(
         Edge<Shared.Models.Location> src);
 
     LocationMemberEdge MapTo(Edge<LocationMember> src);
@@ -274,14 +274,14 @@ public class Mapper : IMapper
             Zones = MapTo(src.Zones).ToArray()
         };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.DeskEdge MapToGrpcResponse(
+    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.DeskEdge MapToGrpcResponse(
         Edge<Shared.Models.Desk> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     public LocationEdge MapTo(Edge<Shared.Models.Location> src) =>
         new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationEdge MapToGrpcResponse(
+    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationEdge MapToGrpcResponse(
         Edge<Shared.Models.Location> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
@@ -430,9 +430,9 @@ public class Mapper : IMapper
                 : new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src)
+    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src)
     {
-        var location = new global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location
+        var location = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
@@ -503,10 +503,10 @@ public class Mapper : IMapper
                 .ToList()
         };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk MapToGrpcResponse(
+    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk MapToGrpcResponse(
         Shared.Models.Desk src)
     {
-        var desk = new global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk
+        var desk = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
@@ -520,7 +520,7 @@ public class Mapper : IMapper
         return desk;
     }
 
-    public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.AddDeskInput src) =>
+    public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddDeskInput src) =>
         new()
         {
             Id = src.Id,
@@ -532,7 +532,7 @@ public class Mapper : IMapper
             Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
-    public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.UpdateDeskInput src) =>
+    public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateDeskInput src) =>
         new()
         {
             Id = src.Id,
@@ -619,7 +619,7 @@ public class Mapper : IMapper
     private static IEnumerable<OrganizationZone> MapToGrpcResponseOrganizationZones(IEnumerable<OrganizationTag> src) =>
         src.Select(MapToGrpcResponseOrganizationZone);
 
-    private IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk> MapToGrpcResponse(
+    private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk> MapToGrpcResponse(
         IEnumerable<Shared.Models.Desk> src) => src.Select(MapToGrpcResponse);
 
     private static LocationOrganizationDetails? MapTo(Shared.Models.Organization? src) =>

@@ -49,8 +49,8 @@ public static class OpenTelemetryExtensions
                     if (openTelemetrySettings is not null && openTelemetrySettings.MetricsIngestEnabled)
                     {
                         builder.AddMeter(
-                            MeterProviderNaming.UnityHubMeterProviderName,
-                            MeterProviderNaming.UnityHubMeterProviderVersion);
+                            MeterProviderNaming.SkedularMeterProviderName,
+                            MeterProviderNaming.SkedularMeterProviderVersion);
                     }
                 }
             )

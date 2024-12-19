@@ -1,9 +1,0 @@
-syntax = "proto3";
-package billing;
-
-option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.Billing.V1.Key";
-
-message Key {
-    string organizationId = 1;
-    string organizationOfferingId = 2;
-}

@@ -1,4 +1,4 @@
-import { getEnvironment } from '@repo/shared/clients/graphql/unityhub';
+import { getEnvironment } from '@repo/shared/clients/graphql/skedular';
 import { PropsWithChildren, useMemo } from 'react';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 

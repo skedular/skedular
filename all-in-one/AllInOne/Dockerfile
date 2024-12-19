@@ -21,9 +21,9 @@ FROM base AS final
 RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-RUN groupadd --gid 2000 unityhubio && useradd --uid 1000 --gid 2000 unityhubio
-RUN chown unityhubio:unityhubio /app
-USER unityhubio:unityhubio
+RUN groupadd --gid 2000 skedular && useradd --uid 1000 --gid 2000 skedular
+RUN chown skedular:skedular /app
+USER skedular:skedular
 
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "AllInOne.dll"]

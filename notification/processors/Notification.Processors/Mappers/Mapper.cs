@@ -2,7 +2,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Random;
 using Notification.Shared.Models;
 using Customer = Notification.Shared.Database.Entities.Customer;
-using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Notification.Shared.Database.Entities.Identity;
 using Location = Notification.Shared.Models.Location;
 using Organization = Notification.Shared.Models.Organization;
@@ -13,9 +13,9 @@ namespace Notification.Processors.Mappers;
 public interface IMapper
 {
     Shared.Models.Customer MapTo(Event src);
-    Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
-    Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
-    Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
+    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
+    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
     Shared.Database.Entities.Location MapToEntity(Location src);
@@ -29,13 +29,13 @@ public interface IMapper
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer);
 
     Shared.Models.Notification MapInvitationToJoinOrganizationToNotification(
-        Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
+        Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
 
     Shared.Models.Notification MapInvitationToJoinLocationToNotification(
-        Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
+        Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
 
     Shared.Models.Notification MapInvitationToJoinTeamToNotification(
-        Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
+        Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
 
     Shared.Database.Entities.Notification MapToEntity(
         Shared.Models.Notification src,
@@ -88,7 +88,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         };
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
     {
         var organizationAfterState = src.Data.OrganizationAfterState;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -106,7 +106,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         return organization;
     }
 
-    public Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
+    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
     {
         var locationAfterState = src.Data.LocationAfterState;
         var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -123,7 +123,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         return location;
     }
 
-    public Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src)
+    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
     {
         var teamAfterState = src.Data.TeamAfterState;
         var deletedAt = teamAfterState.DeletedAt?.ToDateTimeOffset();
@@ -201,7 +201,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
     }
 
     public Shared.Models.Notification MapInvitationToJoinOrganizationToNotification(
-        Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src)
+        Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
     {
         var notification = src.Data.InvitationToJoinOrganizationAfterState;
         var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
@@ -221,7 +221,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
     }
 
     public Shared.Models.Notification MapInvitationToJoinLocationToNotification(
-        Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
+        Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
     {
         var notification = src.Data.InvitationToJoinLocationAfterState;
         var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
@@ -241,7 +241,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
     }
 
     public Shared.Models.Notification MapInvitationToJoinTeamToNotification(
-        Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src)
+        Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
     {
         var notification = src.Data.InvitationToJoinTeamAfterState;
         var deletedAt = notification.DeletedAt?.ToDateTimeOffset();

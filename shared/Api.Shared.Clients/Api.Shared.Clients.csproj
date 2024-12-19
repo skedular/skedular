@@ -23,4 +23,9 @@
         <ProjectReference Include="..\Api.Shared\Api.Shared.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Events\" />
+      <Folder Include="OpenApi\" />
+    </ItemGroup>
+
 </Project>

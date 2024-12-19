@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -11,7 +11,7 @@ using Slack.Shared.Context;
 using Slack.Shared.Repositories;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
+using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 
 namespace Slack.Api.Handlers.ActionHandlers.DeskType;
 

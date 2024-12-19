@@ -1,5 +1,5 @@
 using System.Reflection;
-using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
+using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
@@ -10,12 +10,12 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
 using Grpc.Core;
 using BookingOrderField = Booking.Shared.Models.BookingOrderField;
-using BookingService = Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingService;
+using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
-using OrganizationPermissions = Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationPermissions;
-using LocationPermissions = Api.Shared.Services.Grpc.UnityHub.Booking.V1.LocationPermissions;
-using TeamPermissions = Api.Shared.Services.Grpc.UnityHub.Booking.V1.TeamPermissions;
-using Version = Api.Shared.Services.Grpc.UnityHub.Booking.V1.Version;
+using OrganizationPermissions = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions;
+using LocationPermissions = Api.Shared.Services.Grpc.Skedular.Booking.V1.LocationPermissions;
+using TeamPermissions = Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions;
+using Version = Api.Shared.Services.Grpc.Skedular.Booking.V1.Version;
 
 namespace Booking.Api.Grpc;
 
@@ -76,31 +76,31 @@ public class BookingGrpcService(
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrderDirection.Ascending
+                                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.From => BookingOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.From => BookingOrderField
                         .From,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.To => BookingOrderField.To,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.Notes => BookingOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.To => BookingOrderField.To,
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Notes => BookingOrderField
                         .Notes,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.Name => BookingOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Name => BookingOrderField
                         .Name,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.GivenName =>
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.GivenName =>
                         BookingOrderField.GivenName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.MiddleName =>
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.MiddleName =>
                         BookingOrderField.MiddleName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.FamilyName =>
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.FamilyName =>
                         BookingOrderField.FamilyName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.OrganizationName =>
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.OrganizationName =>
                         BookingOrderField.OrganizationName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.LocationName =>
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.LocationName =>
                         BookingOrderField.LocationName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.TeamName => BookingOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.TeamName => BookingOrderField
                         .TeamName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.Type => BookingOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Type => BookingOrderField
                         .BookingType,
                     _ => throw new ArgumentOutOfRangeException()
                 };
@@ -159,29 +159,29 @@ public class BookingGrpcService(
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrderDirection.Ascending
+                                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.From => BookingOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.From => BookingOrderField
                         .From,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.To => BookingOrderField.To,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.Notes => BookingOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.To => BookingOrderField.To,
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Notes => BookingOrderField
                         .Notes,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.Name => BookingOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Name => BookingOrderField
                         .Name,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.GivenName =>
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.GivenName =>
                         BookingOrderField.GivenName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.MiddleName =>
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.MiddleName =>
                         BookingOrderField.MiddleName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.FamilyName =>
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.FamilyName =>
                         BookingOrderField.FamilyName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.OrganizationName =>
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.OrganizationName =>
                         BookingOrderField.OrganizationName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.LocationName =>
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.LocationName =>
                         BookingOrderField.LocationName,
-                    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingOrderField.TeamName => BookingOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.TeamName => BookingOrderField
                         .TeamName,
                     _ => throw new ArgumentOutOfRangeException()
                 };
@@ -270,7 +270,7 @@ public class BookingGrpcService(
     }
 
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking> Get(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Get(
         GetInput request,
         ServerCallContext context)
     {
@@ -280,7 +280,7 @@ public class BookingGrpcService(
             await bookingService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking> Admin_Add(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Admin_Add(
         Admin_AddInput request,
         ServerCallContext context)
     {
@@ -291,7 +291,7 @@ public class BookingGrpcService(
                 mapper.MapTo(request), true, request.IgnoreDeskAvailability, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking> Add(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Add(
         AddInput request,
         ServerCallContext context)
     {
@@ -301,7 +301,7 @@ public class BookingGrpcService(
             await bookingService.AddAsync(mapper.MapTo(request), false, false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking> Update(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Update(
         UpdateInput request,
         ServerCallContext context)
     {
@@ -311,7 +311,7 @@ public class BookingGrpcService(
             await bookingService.UpdateAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking> Delete(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Delete(
         DeleteInput request,
         ServerCallContext context)
     {

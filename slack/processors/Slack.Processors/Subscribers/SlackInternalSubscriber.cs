@@ -1,11 +1,11 @@
-﻿using Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Key;
+using Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value;
 using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
-using Api.Shared.Services.Grpc.UnityHub.Team.V1;
+using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Kafka.Consume;
@@ -24,19 +24,19 @@ using Slack.Shared.Services;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.WebApi;
-using Admin_GetInput = Api.Shared.Services.Grpc.UnityHub.Location.V1.Admin_GetInput;
-using Customer = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer;
+using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Location.V1.Admin_GetInput;
+using Customer = Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer;
 using CustomerConfiguration = Slack.Shared.Configurations.CustomerConfiguration;
 using Icons = Slack.Shared.Constants.Icons;
 using OrganizationConfiguration = Slack.Shared.Configurations.OrganizationConfiguration;
 using Location = Slack.Shared.Database.Entities.Location;
 using LocationConfiguration = Slack.Shared.Configurations.LocationConfiguration;
-using Member = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Member;
-using MembershipType = Api.Shared.Services.Grpc.UnityHub.Organization.V1.MembershipType;
-using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirection;
+using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.Member;
+using MembershipType = Api.Shared.Services.Grpc.Skedular.Organization.V1.MembershipType;
+using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using TeamConfiguration = Slack.Shared.Configurations.TeamConfiguration;
-using Type = Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 
@@ -422,7 +422,7 @@ public class SlackInternalSubscriber(
         getPaginatedBookingsInput.OrderBy.AddRange([
             new BookingOrderInput
             {
-                Direction = Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrderDirection.Ascending,
+                Direction = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending,
                 Field = BookingOrderField.From
             }
         ]);
@@ -525,7 +525,7 @@ public class SlackInternalSubscriber(
         }
 
         var team = await teamServiceClient.Admin_GetAsync(
-            new Api.Shared.Services.Grpc.UnityHub.Team.V1.Admin_GetInput { Id = teamId },
+            new Api.Shared.Services.Grpc.Skedular.Team.V1.Admin_GetInput { Id = teamId },
             teamConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
         if (string.IsNullOrWhiteSpace(team.OrganizationId))
@@ -559,7 +559,7 @@ public class SlackInternalSubscriber(
         getPaginatedBookingsInput.OrderBy.AddRange([
             new BookingOrderInput
             {
-                Direction = Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrderDirection.Ascending,
+                Direction = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending,
                 Field = BookingOrderField.From
             }
         ]);
@@ -699,7 +699,7 @@ public class SlackInternalSubscriber(
         getPaginatedBookingsInput.OrderBy.AddRange([
             new BookingOrderInput
             {
-                Direction = Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrderDirection.Ascending,
+                Direction = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending,
                 Field = BookingOrderField.From
             }
         ]);

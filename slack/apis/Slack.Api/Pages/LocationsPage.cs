@@ -1,5 +1,5 @@
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
@@ -20,10 +20,10 @@ using SlackNet.Interaction;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Button = SlackNet.Blocks.Button;
-using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService;
-using GetInput = Api.Shared.Services.Grpc.UnityHub.Location.V1.GetInput;
+using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
+using GetInput = Api.Shared.Services.Grpc.Skedular.Location.V1.GetInput;
 using Location = Slack.Shared.Database.Entities.Location;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 

@@ -1,11 +1,11 @@
-﻿using Api.Shared.Clients.Events.UnityHub.Location.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Location.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using IMapper = Booking.Processors.Mappers.IMapper;
 using Location = Booking.Shared.Database.Entities.Location;
-using Type = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;
 

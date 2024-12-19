@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
+using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -17,7 +17,7 @@ using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using Icons = Slack.Shared.Constants.Icons;
-using BookingService = Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingService;
+using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using Button = SlackNet.Blocks.Button;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;

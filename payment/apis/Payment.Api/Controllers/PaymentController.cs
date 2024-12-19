@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.UnityHub.Payment.V1;
+using Api.Shared.Services.OpenApi.Skedular.Payment.V1;
 using Microsoft.AspNetCore.Mvc;
 using Payment.Api.Services;
 

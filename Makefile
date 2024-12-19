@@ -14,8 +14,8 @@ dep: ## Install dependencies
 
 .PHONY: generate
 generate: ## Generate code
-	@./scripts/generate-graphql.sh
 	@./api-definitions/generate.sh
+	@./scripts/generate-graphql.sh
 	@./web/packages/shared/scripts/generate.sh
 
 .PHONY: lint

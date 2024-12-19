@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Api.Shared.Clients.Events.UnityHub.Notification.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Notification.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Notification.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Notification.V1.Value;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
@@ -10,8 +10,8 @@ using Enterprise.Shared.Random;
 using Flurl;
 using Organization.Shared.Configurations;
 using Organization.Shared.Models;
-using Event = Api.Shared.Clients.Events.UnityHub.Notification.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.Notification.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Type;
 
 namespace Organization.Shared.Publishers;
 

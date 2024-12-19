@@ -1,0 +1,89 @@
+syntax = "proto3";
+package organization;
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Organization.V1.Value";
+
+enum Type {
+  OrganizationUpserted = 0;
+  OrganizationDeleted = 1;
+  InvitationToJoinOrganizationUpserted = 2;
+  InvitationToJoinOrganizationDeleted = 3;
+  OrganizationOfferingUpdated = 4;
+}
+
+message Event {
+  Metadata metadata = 1;
+  Data data = 2;
+}
+
+message Metadata {
+  string id = 1;
+  string domainSource = 2;
+  string appSource = 3;
+  Type type = 4;
+  google.protobuf.Timestamp time = 5;
+  string correlationId = 6;
+}
+
+message Data {
+  oneof payload {
+    Organization organizationAfterState = 1;
+    InvitationToJoinOrganization invitationToJoinOrganizationAfterState = 2;
+    Offering offeringAfterState = 3;
+  }
+}
+
+message Organization {
+  string id = 1;
+  google.protobuf.Timestamp deletedAt = 2;
+  string name = 3;
+  string about = 4;
+  string logoUrl = 5;
+  string website = 6;
+  repeated Member members = 7;
+  Offering Offering = 8;
+  repeated string azureTenantIds = 9;
+  repeated Tag tags = 10;
+}
+
+enum MembershipType {
+  MembershipTypeOwner = 0;
+  MembershipTypeAdministrator = 1;
+  MembershipTypeMember = 2;
+}
+
+message Member {
+  string id = 1;
+  string customerId = 2;
+  MembershipType membershipType = 3;
+}
+
+message Offering {
+  string id = 1;
+  string code = 2;
+  google.protobuf.Timestamp start = 3;
+  google.protobuf.Timestamp end = 4;
+  bool autoRenew = 5;
+  int32 unitPrice = 6;
+  repeated string activeCustomerIds = 7;
+  string organizationId = 8;
+}
+
+message Location { string id = 1; }
+
+message InvitationToJoinOrganization {
+  string id = 1;
+  google.protobuf.Timestamp deletedAt = 2;
+  string organizationId = 3;
+  string invitedById = 4;
+  string inviteeId = 5;
+}
+
+message Tag {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string tagType = 4;
+}

@@ -1,10 +1,10 @@
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Models;
 using Enterprise.Shared;
 using Microsoft.Graph.Models;
 using MsTeams.Shared.Models;
 using AzureTenant = MsTeams.Shared.Database.Entities.AzureTenant;
-using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Customer = MsTeams.Shared.Models.Customer;
 using Identity = MsTeams.Shared.Database.Entities.Identity;
 using Location = MsTeams.Shared.Models.Location;
@@ -38,7 +38,7 @@ public interface IMapper
         Identity dest,
         Shared.Database.Entities.Customer? customer);
 
-    Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
     Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
@@ -53,10 +53,10 @@ public interface IMapper
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
 
-    Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
+    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
     Shared.Database.Entities.Location MapToEntity(Location src);
     Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest);
-    Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
+    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Shared.Database.Entities.Team MapToEntity(Team src);
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest);
 
@@ -137,7 +137,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
     {
         var organizationAfterState = src.Data.OrganizationAfterState;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -204,7 +204,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
+    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
     {
         var locationAfterState = src.Data.LocationAfterState;
         var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -230,7 +230,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src)
+    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
     {
         var teamAfterState = src.Data.TeamAfterState;
         var deletedAt = teamAfterState.DeletedAt?.ToDateTimeOffset();

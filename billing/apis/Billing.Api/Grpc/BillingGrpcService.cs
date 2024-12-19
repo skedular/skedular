@@ -1,12 +1,12 @@
 using System.Reflection;
-using Api.Shared.Services.Grpc.UnityHub.Billing.V1;
+using Api.Shared.Services.Grpc.Skedular.Billing.V1;
 using Billing.Api.Mappers;
 using Billing.Api.Services;
 using Billing.Api.Services.Authorization;
 using Billing.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Grpc.Core;
-using Version = Api.Shared.Services.Grpc.UnityHub.Billing.V1.Version;
+using Version = Api.Shared.Services.Grpc.Skedular.Billing.V1.Version;
 
 namespace Billing.Api.Grpc;
 

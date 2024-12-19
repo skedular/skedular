@@ -1,22 +1,22 @@
-﻿using Api.Shared.Clients.Events.UnityHub.Location.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Api.Shared.Models;
 using Enterprise.Shared;
 using Location.Shared.Models;
-using Desk = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Desk;
+using Desk = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk;
 
 namespace Location.Shared.Mappers;
 
 public interface IMapper
 {
-    Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Location MapTo(Models.Location src);
+    Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location MapTo(Models.Location src);
     public InvitationToJoinLocation MapTo(JoinInvitation src, string? inviteeIdToOverride);
 }
 
 public class Mapper : IMapper
 {
-    public Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Location MapTo(Models.Location src)
+    public Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location MapTo(Models.Location src)
     {
-        var location = new Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Location
+        var location = new Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),

@@ -1,13 +1,13 @@
-﻿using Api.Shared.Clients.Events.UnityHub.Organization.V1.Key;
+﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
 using Payment.Processors.Mappers;
 using Payment.Shared.Database.Entities;
 using Payment.Shared.Repositories;
 using Stripe;
 using Customer = Stripe.Customer;
-using Event = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Organization = Payment.Shared.Database.Entities.Organization;
-using Type = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Payment.Processors.Subscribers;
 

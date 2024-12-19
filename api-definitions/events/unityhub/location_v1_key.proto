@@ -1,9 +1,0 @@
-syntax = "proto3";
-package location;
-
-option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.Location.V1.Key";
-
-message Key {
-  string locationId = 1;
-  string locationJoinInvitationId = 2;
-}

@@ -1,19 +1,19 @@
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
 using Slack.Shared;
 using Slack.Shared.Repositories;
-using Customer = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer;
+using Customer = Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer;
 using LocationConfiguration = Slack.Shared.Configurations.LocationConfiguration;
 using CustomerConfiguration = Slack.Shared.Configurations.CustomerConfiguration;
 using Location = Slack.Shared.Database.Entities.Location;
-using Member = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Member;
-using MembershipType = Api.Shared.Services.Grpc.UnityHub.Organization.V1.MembershipType;
-using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirection;
+using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.Member;
+using MembershipType = Api.Shared.Services.Grpc.Skedular.Organization.V1.MembershipType;
+using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationConfiguration = Slack.Shared.Configurations.OrganizationConfiguration;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
@@ -34,9 +34,9 @@ public class WorkspaceMemberService(
     CustomerConfiguration customerConfiguration,
     LocationConfiguration locationConfiguration,
     OrganizationConfiguration organizationConfiguration,
-    global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService.CustomerServiceClient customerServiceClient,
-    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService.LocationServiceClient locationServiceClient,
-    global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService.OrganizationServiceClient
+    global::Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService.CustomerServiceClient customerServiceClient,
+    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient,
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient
         organizationServiceClient,
     IMapper mapper,
     IRandomHelper randomHelper) : IWorkspaceMemberService

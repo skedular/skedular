@@ -1,5 +1,5 @@
 using System.Reflection;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -10,14 +10,14 @@ using Location.Api.Services;
 using Location.Api.Services.Authorization;
 using Location.Shared.Configurations;
 using Location.Shared.Models;
-using Desk = Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk;
-using DeskOrderField = Api.Shared.Services.Grpc.UnityHub.Location.V1.DeskOrderField;
+using Desk = Api.Shared.Services.Grpc.Skedular.Location.V1.Desk;
+using DeskOrderField = Api.Shared.Services.Grpc.Skedular.Location.V1.DeskOrderField;
 using LocationOrderField = Location.Shared.Models.LocationOrderField;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
-using PageInfo = Api.Shared.Services.Grpc.UnityHub.Location.V1.PageInfo;
-using Permissions = Api.Shared.Services.Grpc.UnityHub.Location.V1.Permissions;
-using Version = Api.Shared.Services.Grpc.UnityHub.Location.V1.Version;
+using PageInfo = Api.Shared.Services.Grpc.Skedular.Location.V1.PageInfo;
+using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
+using Version = Api.Shared.Services.Grpc.Skedular.Location.V1.Version;
 
 namespace Location.Api.Grpc;
 
@@ -43,7 +43,7 @@ public class LocationGrpcService(
         });
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location> Admin_Add(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Admin_Add(
         Admin_AddInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
@@ -52,7 +52,7 @@ public class LocationGrpcService(
             await locationService.AddAsync(mapper.MapTo(request), true, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location> Admin_UpdateMembers(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Admin_UpdateMembers(
         Admin_UpdateMembersInput request,
         ServerCallContext context)
     {
@@ -66,7 +66,7 @@ public class LocationGrpcService(
                 context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location> Get(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Get(
         GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
@@ -100,16 +100,16 @@ public class LocationGrpcService(
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirection.Ascending
+                                global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationOrderField.Name => LocationOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationOrderField.Name => LocationOrderField
                         .Name,
-                    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationOrderField.About => LocationOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationOrderField.About => LocationOrderField
                         .About,
-                    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationOrderField.Timezone =>
+                    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationOrderField.Timezone =>
                         LocationOrderField
                             .Timezone,
                     _ => throw new ArgumentOutOfRangeException()
@@ -136,7 +136,7 @@ public class LocationGrpcService(
         return connection;
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location> Admin_Get(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Admin_Get(
         Admin_GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
@@ -170,12 +170,12 @@ public class LocationGrpcService(
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirection.Ascending
+                                global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationOrderField.Name => LocationOrderField
+                    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationOrderField.Name => LocationOrderField
                         .Name,
                     _ => throw new ArgumentOutOfRangeException()
                 };
@@ -218,7 +218,7 @@ public class LocationGrpcService(
         };
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location> Add(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Add(
         AddInput request,
         ServerCallContext context)
     {
@@ -228,7 +228,7 @@ public class LocationGrpcService(
             await locationService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location> Update(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Update(
         UpdateInput request,
         ServerCallContext context)
     {
@@ -238,7 +238,7 @@ public class LocationGrpcService(
             await locationService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location> Remove(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Remove(
         RemoveInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
@@ -262,7 +262,7 @@ public class LocationGrpcService(
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirection.Ascending
+                                global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch

@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.UnityHub.Billing.V1;
+using Api.Shared.Services.OpenApi.Skedular.Billing.V1;
 using Billing.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 

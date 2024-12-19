@@ -1,17 +1,17 @@
-using Api.Shared.Clients.Events.UnityHub.Billing.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Billing.V1.Key;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
 using Payment.Shared.Models;
 using Payment.Shared.Repositories;
 using Stripe;
-using Event = Api.Shared.Clients.Events.UnityHub.Billing.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Event;
 using Organization = Payment.Shared.Database.Entities.Organization;
 using OrganizationOffering = Payment.Shared.Database.Entities.OrganizationOffering;
 using OrganizationOfferingStripePaymentIntent =
     Payment.Shared.Database.Entities.OrganizationOfferingStripePaymentIntent;
 using OrganizationStripePaymentMethod = Payment.Shared.Database.Entities.OrganizationStripePaymentMethod;
-using Type = Api.Shared.Clients.Events.UnityHub.Billing.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Type;
 
 namespace Payment.Processors.Subscribers;
 

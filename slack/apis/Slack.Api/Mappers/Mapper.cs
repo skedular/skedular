@@ -1,29 +1,29 @@
 using Api.Shared;
 using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
-using Api.Shared.Services.Grpc.UnityHub.Slack.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Slack.V1;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Slack.Shared.Models;
 using SlackNet;
 using SlackNet.WebApi;
-using Admin_AddInput = Api.Shared.Services.Grpc.UnityHub.Customer.V1.Admin_AddInput;
+using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
 using Booking = Slack.Shared.Models.Booking;
 using Customer = Slack.Shared.Models.Customer;
 using Desk = Slack.Shared.Models.Desk;
-using Identity = Api.Shared.Services.Grpc.UnityHub.Customer.V1.Identity;
+using Identity = Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity;
 using Location = Slack.Shared.Database.Entities.Location;
 using LocationPermissions = Slack.Shared.Models.LocationPermissions;
-using Member = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Member;
-using MembershipType = Api.Shared.Services.Grpc.UnityHub.Organization.V1.MembershipType;
+using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.Member;
+using MembershipType = Api.Shared.Services.Grpc.Skedular.Organization.V1.MembershipType;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationPermissions = Slack.Shared.Models.OrganizationPermissions;
 using OrganizationTag = Slack.Shared.Models.OrganizationTag;
-using Permissions = Api.Shared.Services.Grpc.UnityHub.Location.V1.Permissions;
+using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
 using Team = Slack.Shared.Models.Team;
 using TeamPermissions = Slack.Shared.Models.TeamPermissions;
-using UpdateInput = Api.Shared.Services.Grpc.UnityHub.Booking.V1.UpdateInput;
+using UpdateInput = Api.Shared.Services.Grpc.Skedular.Booking.V1.UpdateInput;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceChannel = Slack.Shared.Database.Entities.WorkspaceChannel;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
@@ -44,36 +44,36 @@ public interface IMapper
         ICollection<Location> defaultLocations);
 
     Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId);
-    Customer MapTo(global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer src);
-    Shared.Models.Organization MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization src);
+    Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer src);
+    Shared.Models.Organization MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src);
     Shared.Models.Workspace MapTo(Workspace src);
     Shared.Models.WorkspaceMember MapTo(WorkspaceMember src, Shared.Models.Workspace workspace);
-    Shared.Models.Location MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location src);
-    Booking MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking src);
+    Shared.Models.Location MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location src);
+    Booking MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking src);
 
     OrganizationBillingPermissions MapTo(
-        global::Api.Shared.Services.Grpc.UnityHub.Billing.V1.OrganizationPermissions src);
+        global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationPermissions src);
 
-    OrganizationPermissions MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Permissions src);
+    OrganizationPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Permissions src);
     LocationPermissions MapTo(Permissions src);
-    TeamPermissions MapTo(global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Permissions src);
+    TeamPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions src);
     OrganizationMember MapTo(Member src);
-    Team MapTo(global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team src);
+    Team MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team src);
     UpdateInput MapTo(Booking src);
 
     OrganizationBookingPermissions MapTo(
-        global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationPermissions src);
+        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src);
 
-    LocationBookingPermissions MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.LocationPermissions src);
-    TeamBookingPermissions MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.TeamPermissions src);
+    LocationBookingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.LocationPermissions src);
+    TeamBookingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions src);
     WorkspaceChannel MapTo(Conversation src, Workspace workspace);
     Shared.Models.WorkspaceChannel? MapTo(WorkspaceChannel? src);
-    Customer MapTo(global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Customer src);
-    Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk src);
+    Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer src);
+    Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk src);
 
     Workspace MapToEntity(Shared.Models.Workspace src, Organization organization);
     Shared.Models.Workspace MapTo(Admin_AddWorkspaceInput src);
-    global::Api.Shared.Services.Grpc.UnityHub.Slack.V1.Workspace MapTo(Shared.Models.Workspace src);
+    global::Api.Shared.Services.Grpc.Skedular.Slack.V1.Workspace MapTo(Shared.Models.Workspace src);
 
     OrganizationDeskType MapTo(DeskType src);
     OrganizationZone MapTo(Zone src);
@@ -157,18 +157,18 @@ public class Mapper : IMapper
             IsPreferredZoneOnboardingDone = false,
             IsPreferredDeskOnboardingDone = false,
             DefaultOrganization =
-                new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization { Id = defaultOrganization.Id }
+                new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 
         input.Identities.Add(
             new Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
         input.DefaultLocations.AddRange(defaultLocations.Select(item =>
-            new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Location
+            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
                 Id = item.Id,
                 Organization =
-                    new global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Organization
+                    new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
                     {
                         Id = defaultOrganization.Id
                     }
@@ -180,7 +180,7 @@ public class Mapper : IMapper
     public Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId) =>
         new() { Id = src.Id, Email = src.Email, EmailVerified = true, CustomerId = customerId };
 
-    public Customer MapTo(global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer src)
+    public Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer src)
     {
         var customer = new Customer
         {
@@ -261,7 +261,7 @@ public class Mapper : IMapper
     }
 
     public Shared.Models.Organization
-        MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization src) =>
+        MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src) =>
         new()
         {
             Id = src.Id,
@@ -275,10 +275,10 @@ public class Mapper : IMapper
         };
 
     public OrganizationBillingPermissions MapTo(
-        global::Api.Shared.Services.Grpc.UnityHub.Billing.V1.OrganizationPermissions src) =>
+        global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationPermissions src) =>
         new() { CanViewBillingInfo = src.CanViewBillingInfo, CanManageBillingInfo = src.CanManageBillingInfo };
 
-    public OrganizationPermissions MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Permissions src) =>
+    public OrganizationPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Permissions src) =>
         new()
         {
             CanView = src.CanView,
@@ -299,7 +299,7 @@ public class Mapper : IMapper
         CanViewAnalytics = src.CanViewAnalytics
     };
 
-    public TeamPermissions MapTo(global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Permissions src) => new()
+    public TeamPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions src) => new()
     {
         CanView = src.CanView,
         CanModify = src.CanModify,
@@ -323,7 +323,7 @@ public class Mapper : IMapper
             Customer = MapTo(src.Customer)
         };
 
-    public Team MapTo(global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team src)
+    public Team MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team src)
     {
         var team = new Team
         {
@@ -373,7 +373,7 @@ public class Mapper : IMapper
     }
 
     OrganizationBookingPermissions IMapper.MapTo(
-        global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationPermissions src) =>
+        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src) =>
         new()
         {
             CanViewBookings = src.CanViewBookings,
@@ -386,7 +386,7 @@ public class Mapper : IMapper
         };
 
     public LocationBookingPermissions MapTo(
-        global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.LocationPermissions src) =>
+        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.LocationPermissions src) =>
         new()
         {
             CanViewBookings = src.CanViewBookings,
@@ -398,7 +398,7 @@ public class Mapper : IMapper
             CanDeleteBookingOnBehalf = src.CanDeleteBookingOnBehalf
         };
 
-    public TeamBookingPermissions MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.TeamPermissions src) =>
+    public TeamBookingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions src) =>
         new()
         {
             CanViewBookings = src.CanViewBookings,
@@ -441,7 +441,7 @@ public class Mapper : IMapper
                 IsMember = src.IsMember
             };
 
-    public Customer MapTo(global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Customer src) =>
+    public Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer src) =>
         new()
         {
             Id = src.Id,
@@ -513,7 +513,7 @@ public class Mapper : IMapper
             Workspace = workspace
         };
 
-    public Shared.Models.Location MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Location src) =>
+    public Shared.Models.Location MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location src) =>
         new()
         {
             Id = src.Id,
@@ -536,7 +536,7 @@ public class Mapper : IMapper
             HasFutureBooking = src.HasFutureBooking
         };
 
-    public Booking MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Booking src) =>
+    public Booking MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking src) =>
         new()
         {
             Id = src.Id,
@@ -550,7 +550,7 @@ public class Mapper : IMapper
             Team = MapTo(src.Team)
         };
 
-    public Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk src) =>
+    public Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk src) =>
         new()
         {
             Id = src.Id,
@@ -580,7 +580,7 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId.ToSafeString() }
         };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Slack.V1.Workspace MapTo(Shared.Models.Workspace src) =>
+    public global::Api.Shared.Services.Grpc.Skedular.Slack.V1.Workspace MapTo(Shared.Models.Workspace src) =>
         new()
         {
             Id = src.Id,
@@ -618,20 +618,20 @@ public class Mapper : IMapper
     }
 
     private IEnumerable<TeamMember> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Member> src,
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Member> src,
         Team team) =>
         src.Select(item => MapTo(item, team));
 
-    private TeamMember MapTo(global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Member src, Team team) =>
+    private TeamMember MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Member src, Team team) =>
         new()
         {
             Id = src.Id,
             MembershipType = src.MembershipType switch
             {
-                global::Api.Shared.Services.Grpc.UnityHub.Team.V1.MembershipType.Owner => TeamMembershipType.Owner,
-                global::Api.Shared.Services.Grpc.UnityHub.Team.V1.MembershipType.Administrator => TeamMembershipType
+                global::Api.Shared.Services.Grpc.Skedular.Team.V1.MembershipType.Owner => TeamMembershipType.Owner,
+                global::Api.Shared.Services.Grpc.Skedular.Team.V1.MembershipType.Administrator => TeamMembershipType
                     .Administrator,
-                global::Api.Shared.Services.Grpc.UnityHub.Team.V1.MembershipType.Member => TeamMembershipType.Member,
+                global::Api.Shared.Services.Grpc.Skedular.Team.V1.MembershipType.Member => TeamMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer),
@@ -645,7 +645,7 @@ public class Mapper : IMapper
         };
 
     private static Customer
-        MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer src) =>
+        MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer src) =>
         new()
         {
             Id = src.Id,
@@ -664,30 +664,30 @@ public class Mapper : IMapper
         };
 
     private static IEnumerable<Shared.Models.Identity>
-        MapTo(IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Identity> src) => src.Select(MapTo);
+        MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity> src) => src.Select(MapTo);
 
     private static Shared.Models.Identity
-        MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Identity src) =>
+        MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
     private static Shared.Models.Organization? MapTo(
-        global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Organization? src) =>
+        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? src) =>
         string.IsNullOrWhiteSpace(src?.Id)
             ? null
             : new Shared.Models.Organization { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static Shared.Models.Location? MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Location? src) =>
+    private static Shared.Models.Location? MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location? src) =>
         string.IsNullOrWhiteSpace(src?.Id)
             ? null
             : new Shared.Models.Location { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static Team? MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Team? src) =>
+    private static Team? MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? src) =>
         string.IsNullOrWhiteSpace(src?.Id) ? null : new Team { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<Desk> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Desk> src) => src.Select(MapTo);
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk> src) => src.Select(MapTo);
 
-    private static Desk MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Desk src) =>
+    private static Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk src) =>
         new()
         {
             Id = src.Id,
@@ -699,7 +699,7 @@ public class Mapper : IMapper
                 : new Shared.Models.Location { Id = src.Id, Name = src.Name }
         };
 
-    private static Customer MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Customer src) =>
+    private static Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer src) =>
         new()
         {
             Id = src.Id,
@@ -718,12 +718,12 @@ public class Mapper : IMapper
         };
 
     private static IEnumerable<Shared.Models.Identity> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Identity> src) => src.Select(MapTo);
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity> src) => src.Select(MapTo);
 
-    private static Shared.Models.Identity MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.Identity src) =>
+    private static Shared.Models.Identity MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
-    private IEnumerable<Desk> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Desk> src) =>
+    private IEnumerable<Desk> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk> src) =>
         src.Select(MapTo);
 
     private IEnumerable<Shared.Models.WorkspaceMember> MapTo(IEnumerable<WorkspaceMember> src,
@@ -797,32 +797,32 @@ public class Mapper : IMapper
         new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Customer = customer };
 
     private static IEnumerable<OrganizationDeskType> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrganizationDeskType> src) =>
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationDeskType> src) =>
         src.Select(MapTo);
 
     private static OrganizationDeskType MapTo(
-        global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrganizationDeskType src) =>
+        global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationDeskType src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<OrganizationZone> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrganizationZone> src) =>
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone> src) =>
         src.Select(MapTo);
 
     private static OrganizationZone MapTo(
-        global::Api.Shared.Services.Grpc.UnityHub.Location.V1.OrganizationZone src) =>
+        global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<OrganizationDeskType> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationDeskType> src) =>
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationDeskType> src) =>
         src.Select(MapTo);
 
     private static OrganizationDeskType MapTo(
-        global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationDeskType src) =>
+        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationDeskType src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<OrganizationZone> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationZone> src) => src.Select(MapTo);
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone> src) => src.Select(MapTo);
 
-    private static OrganizationZone MapTo(global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrganizationZone src) =>
+    private static OrganizationZone MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 }

@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Key;
+using Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Key;
 using Billing.Processors.Mappers;
 using Billing.Shared.Database.Entities;
 using Billing.Shared.Publishers;
@@ -6,8 +6,8 @@ using Billing.Shared.Repositories;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
-using Event = Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Value.Type;
 
 namespace Billing.Processors.Subscribers;
 

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
+using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Configurations;
@@ -27,7 +27,7 @@ public interface IBookingService
 public class BookingService(
     BookingConfiguration bookingConfiguration,
     IMapper mapper,
-    global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingService.BookingServiceClient bookingServiceClient)
+    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService.BookingServiceClient bookingServiceClient)
     : IBookingService, IDisposable
 {
     private readonly SemaphoreSlim _cachedLocationPermissionsLock = new(1, 1);

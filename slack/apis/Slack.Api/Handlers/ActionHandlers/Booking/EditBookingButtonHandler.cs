@@ -1,5 +1,5 @@
-using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -17,14 +17,14 @@ using Slack.Shared.Repositories;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using BookingService = Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingService;
+using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using Customer = Slack.Shared.Models.Customer;
-using GetInput = Api.Shared.Services.Grpc.UnityHub.Booking.V1.GetInput;
+using GetInput = Api.Shared.Services.Grpc.Skedular.Booking.V1.GetInput;
 using Icons = Slack.Shared.Constants.Icons;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using Option = SlackNet.Blocks.Option;
 using OptionGroup = SlackNet.Blocks.OptionGroup;
-using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirection;
+using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 

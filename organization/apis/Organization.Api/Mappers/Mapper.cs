@@ -1,5 +1,5 @@
 using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
@@ -7,7 +7,7 @@ using Google.Protobuf.WellKnownTypes;
 using Organization.Api.GraphQL;
 using Organization.Shared.Models;
 using AddDeskTypeInput = Organization.Api.GraphQL.AddDeskTypeInput;
-using AddZoneInput = Api.Shared.Services.Grpc.UnityHub.Organization.V1.AddZoneInput;
+using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using DailyMemberCountRecording = Organization.Shared.Models.DailyMemberCountRecording;
@@ -25,7 +25,7 @@ using Tag = Organization.Shared.Models.Tag;
 using Team = Organization.Shared.Models.Team;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 using UpdateDeskTypeInput = Organization.Api.GraphQL.UpdateDeskTypeInput;
-using UpdateZoneInput = Api.Shared.Services.Grpc.UnityHub.Organization.V1.UpdateZoneInput;
+using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
 
 namespace Organization.Api.Mappers;
 
@@ -61,12 +61,12 @@ public interface IMapper
     Shared.Models.Organization MapTo(AddOrganizationInput src);
     Shared.Models.Organization MapTo(UpdateOrganizationInput src);
 
-    global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.TermsOfUse
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse
         MapToGrpcResponse(Shared.Models.TermsOfUse src);
 
     Shared.Models.Organization MapTo(Admin_AddInput src);
 
-    global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization MapToGrpcResponse(
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(
         Shared.Models.Organization src);
 
     Shared.Database.Entities.OrganizationMember MapToEntity(
@@ -111,8 +111,8 @@ public interface IMapper
 
     DeskType MapToGrpcResponseDeskType(Tag src);
     DeskTypeEdge MapToGrpcResponseDeskType(Edge<Tag> src);
-    Tag MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.AddDeskTypeInput src);
-    Tag MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.UpdateDeskTypeInput src);
+    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddDeskTypeInput src);
+    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateDeskTypeInput src);
 
     Zone MapToGrpcResponseZone(Tag src);
     ZoneEdge MapToGrpcResponseZone(Edge<Tag> src);
@@ -371,7 +371,7 @@ public class Mapper : IMapper
                 src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.TermsOfUse
+    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse
         MapToGrpcResponse(Shared.Models.TermsOfUse src) => new() { Id = src.Id, Terms = src.Terms };
 
     public Shared.Models.Organization MapTo(
@@ -392,12 +392,12 @@ public class Mapper : IMapper
                 src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization MapToGrpcResponse(
+    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(
         Shared.Models.Organization src)
     {
         var organizationOffering = src.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue)
             .OrderByDescending(item => item.End).First();
-        var organization = new global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization
+        var organization = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
@@ -405,7 +405,7 @@ public class Mapper : IMapper
             Website = src.Website.ToSafeString(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),
-            Offering = new global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Offering
+            Offering = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Offering
             {
                 Id = organizationOffering.Id,
                 OrganizationId = src.Id,
@@ -423,7 +423,7 @@ public class Mapper : IMapper
             organizationOffering.OrganizationOfferingActiveMembers.Select(item => item.OrganizationMember.Customer.Id));
 
         organization.IndustrySubCategories.AddRange(src.IndustrySubCategories.Select(item =>
-            new global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.IndustrySubCategory
+            new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.IndustrySubCategory
             {
                 Id = item.Id, Name = item.Name, MainCategoryName = item.IndustryMainCategory.Name
             }));
@@ -543,7 +543,7 @@ public class Mapper : IMapper
     public DeskTypeEdge MapToGrpcResponseDeskType(Edge<Tag> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponseDeskType(src.Node) };
 
-    public Tag MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.AddDeskTypeInput src) =>
+    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddDeskTypeInput src) =>
         new()
         {
             Id = src.Id,
@@ -553,7 +553,7 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public Tag MapTo(global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.UpdateDeskTypeInput src) =>
+    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateDeskTypeInput src) =>
         new()
         {
             Id = src.Id,
@@ -608,10 +608,10 @@ public class Mapper : IMapper
 
     private IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
 
-    private static global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer MapToGrpcResponse(
+    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer MapToGrpcResponse(
         Customer src)
     {
-        var customer = new global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Customer
+        var customer = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
@@ -633,11 +633,11 @@ public class Mapper : IMapper
         return customer;
     }
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Identity> MapToGrpcResponse(
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity> MapToGrpcResponse(
         IEnumerable<Identity> src) =>
         src.Select(MapToGrpcResponse);
 
-    private static global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Identity MapToGrpcResponse(
+    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity MapToGrpcResponse(
         Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
 

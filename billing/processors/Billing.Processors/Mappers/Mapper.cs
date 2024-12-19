@@ -1,8 +1,8 @@
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Models;
 using Api.Shared.Services.Offering;
 using Customer = Billing.Shared.Models.Customer;
-using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Billing.Shared.Database.Entities.Identity;
 using Organization = Billing.Shared.Models.Organization;
 using OrganizationMember = Billing.Shared.Database.Entities.OrganizationMember;
@@ -13,7 +13,7 @@ namespace Billing.Processors.Mappers;
 public interface IMapper
 {
     Customer MapTo(Event src);
-    Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
     Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities);
 
     Shared.Database.Entities.Customer MergeToEntity(
@@ -71,7 +71,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
     {
         var organizationAfterState = src.Data.OrganizationAfterState;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();

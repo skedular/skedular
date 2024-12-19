@@ -1,9 +1,0 @@
-syntax = "proto3";
-package organization;
-
-option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.Organization.V1.Key";
-
-message Key {
-  string organizationId = 1;
-  string organizationJoinInvitationId = 2;
-}

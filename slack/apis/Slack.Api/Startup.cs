@@ -142,7 +142,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                     .RegisterBlockActionHandler<ButtonAction, CancelBookingButtonHandler>(
                         $"{BookingActionTypes.CancelBooking}{idx}"));
             })
-            .AddUnityHubGrpcServices(Configuration)
+            .AddSkedularGrpcServices(Configuration)
             .AddPages();
     }
 

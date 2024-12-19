@@ -1,0 +1,9 @@
+syntax = "proto3";
+package notification;
+
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Notification.V1.Key";
+
+message Key {
+    string email = 1;
+    string customerId = 2;
+}

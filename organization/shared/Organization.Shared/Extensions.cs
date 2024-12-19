@@ -1,5 +1,5 @@
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Organization.Shared.Configurations;
@@ -52,7 +52,7 @@ public static class Extensions
             .AddScoped<IOrganizationInternalOutboxPublisher, OrganizationInternalOutboxPublisher>()
             .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
-    public static IServiceCollection AddUnityHubGrpcServices(
+    public static IServiceCollection AddSkedularGrpcServices(
         this IServiceCollection services,
         IConfiguration configuration)
     {

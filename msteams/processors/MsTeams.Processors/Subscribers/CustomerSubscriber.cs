@@ -1,10 +1,10 @@
-﻿using Api.Shared.Clients.Events.UnityHub.Customer.V1.Key;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
 using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Repositories;
 using Customer = MsTeams.Shared.Models.Customer;
-using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace MsTeams.Processors.Subscribers;
 

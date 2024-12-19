@@ -1,5 +1,5 @@
-﻿using Api.Shared.Clients.Events.UnityHub.Customer.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Customer.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
 using Booking.Processors.Mappers;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
@@ -8,7 +8,7 @@ using Desk = Booking.Shared.Database.Entities.Desk;
 using Location = Booking.Shared.Database.Entities.Location;
 using OrganizationTag = Booking.Shared.Database.Entities.OrganizationTag;
 using Team = Booking.Shared.Database.Entities.Team;
-using Type = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;
 

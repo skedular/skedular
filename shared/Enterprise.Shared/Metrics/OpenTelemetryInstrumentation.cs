@@ -18,8 +18,8 @@ public class OpenTelemetryInstrumentation : IOpenTelemetryInstrumentation
     private readonly ConcurrentDictionary<string, Instrument> _instruments = new();
 
     private readonly Meter _meter = new(
-        MeterProviderNaming.UnityHubMeterProviderName,
-        MeterProviderNaming.UnityHubMeterProviderVersion);
+        MeterProviderNaming.SkedularMeterProviderName,
+        MeterProviderNaming.SkedularMeterProviderVersion);
 
     public Counter<T> GetCounterByName<T>(string counterName) where T : struct
     {

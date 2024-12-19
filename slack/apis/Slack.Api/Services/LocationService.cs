@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Models;
@@ -28,7 +28,7 @@ public interface ILocationService
 public class LocationService(
     LocationConfiguration locationConfiguration,
     IMapper mapper,
-    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService.LocationServiceClient
+    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient
         locationServiceClient) : ILocationService, IDisposable
 {
     private readonly SemaphoreSlim _cachedLocationLock = new(1, 1);

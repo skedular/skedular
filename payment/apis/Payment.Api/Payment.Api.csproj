@@ -14,7 +14,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <Protobuf Include="../../../api-definitions/grpc/unityhub/payment_v1.proto" GrpcServices="Server" />
+        <Protobuf Include="../../../api-definitions/grpc/skedular/payment_v1.proto" GrpcServices="Server" />
     </ItemGroup>
 
     <ItemGroup>

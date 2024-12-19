@@ -35,7 +35,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddServices()
             .AddMappers()
             .AddJobs()
-            .AddUnityHubGrpcServices(Configuration);
+            .AddSkedularGrpcServices(Configuration);
     }
 
     public override void Configure(IApplicationBuilder app) =>

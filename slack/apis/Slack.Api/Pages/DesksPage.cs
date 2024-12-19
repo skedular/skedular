@@ -1,7 +1,7 @@
-using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -19,14 +19,14 @@ using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
-using BookingService = Api.Shared.Services.Grpc.UnityHub.Booking.V1.BookingService;
+using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
+using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using Button = SlackNet.Blocks.Button;
-using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService;
+using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 using Icons = Slack.Shared.Constants.Icons;
-using LocationService = Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService;
+using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using Option = SlackNet.Blocks.Option;
-using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Location.V1.OrderDirection;
+using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 
@@ -885,7 +885,7 @@ public class DesksPage(
         getPaginatedDeskTypesInput.OrderBy.AddRange([
             new DeskTypeOrderInput
             {
-                Direction = global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection.Ascending,
+                Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending,
                 Field = DeskTypeOrderField.DeskTypeName
             }
         ]);
@@ -913,7 +913,7 @@ public class DesksPage(
         getPaginatedZonesInput.OrderBy.AddRange([
             new ZoneOrderInput
             {
-                Direction = global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection.Ascending,
+                Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending,
                 Field = ZoneOrderField.ZoneName
             }
         ]);
@@ -968,7 +968,7 @@ public class DesksPage(
         getPaginatedBookingsInput.OrderBy.AddRange([
             new BookingOrderInput
             {
-                Direction = global::Api.Shared.Services.Grpc.UnityHub.Booking.V1.OrderDirection.Ascending,
+                Direction = global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending,
                 Field = BookingOrderField.From
             }
         ]);

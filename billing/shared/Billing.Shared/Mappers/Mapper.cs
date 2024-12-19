@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.UnityHub.Billing.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Billing.V1.Value;
 using Billing.Shared.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;

@@ -1,10 +1,10 @@
-using Api.Shared.Clients.Events.UnityHub.Location.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
 using Organization.Processors.Mappers;
 using Organization.Shared.Repositories;
-using Event = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event;
 using Location = Organization.Shared.Database.Entities.Location;
-using Type = Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 
 namespace Organization.Processors.Subscribers;
 

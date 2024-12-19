@@ -1,4 +1,4 @@
-﻿using Api.Shared.Services.Grpc.UnityHub.Location.V1;
+﻿using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;

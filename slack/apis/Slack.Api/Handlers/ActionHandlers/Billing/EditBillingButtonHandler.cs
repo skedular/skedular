@@ -11,8 +11,8 @@ using Slack.Shared.Context;
 using Slack.Shared.Repositories;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using BillingService = Api.Shared.Services.Grpc.UnityHub.Billing.V1.BillingService;
-using SetOrganizationBillingInfoInput = Api.Shared.Services.Grpc.UnityHub.Billing.V1.SetOrganizationBillingInfoInput;
+using BillingService = Api.Shared.Services.Grpc.Skedular.Billing.V1.BillingService;
+using SetOrganizationBillingInfoInput = Api.Shared.Services.Grpc.Skedular.Billing.V1.SetOrganizationBillingInfoInput;
 
 namespace Slack.Api.Handlers.ActionHandlers.Billing;
 

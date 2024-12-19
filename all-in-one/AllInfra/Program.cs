@@ -1,6 +1,6 @@
-﻿// using Api.Shared.Clients.Events.UnityHub.Billing.V1.Key;
+﻿// using Api.Shared.Clients.Events.Skedular.Billing.V1.Key;
 
-using Api.Shared.Clients.Events.UnityHub.Billing.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Billing.V1.Value;
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Configurations.Extensions;
@@ -37,78 +37,78 @@ public class Program : WebHostServiceBase<Program>
 
         var kafkaHelper = new KafkaHelper(kafkaConfiguration);
         await kafkaHelper.CreateTopicForEventAsync<Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>();
         await kafkaHelper
-            .CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Notification.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event>();
+            .CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event>();
         await kafkaHelper
-            .CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Event>();
+            .CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event>();
         await kafkaHelper
-            .CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.OrganizationMember.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Payment.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Value.Event>();
-        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event>();
+            .CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event>();
 
         // await Task.WhenAll([
         //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Key>(),
         //     kafkaHelper.RegisterValueProtobufSchemaAsync<Event>(),
         //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Key.Key>(),
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Key.Key>(),
         //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Value.Event>(),
+        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Value.Event>(),
         //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Booking.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event>(),
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Booking.V1.Key.Key>(),
+        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event>(),
         //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Customer.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>(),
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key>(),
+        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(),
         //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Location.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event>(),
-        //
-        //     kafkaHelper
-        //         .RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Notification.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Notification.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Organization.V1.Key.Key>(),
-        //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event>(),
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key>(),
+        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>(),
         //
         //     kafkaHelper
-        //         .RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Key.Key>(),
+        //         .RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Key.Key>(),
         //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<
-        //             Api.Shared.Clients.Events.UnityHub.OrganizationInternal.V1.Value.Event>(),
+        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Value.Event>(),
+        //
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Key.Key>(),
+        //     kafkaHelper
+        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value.Event>(),
+        //
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Notification.V1.Key.Key>(),
+        //     kafkaHelper
+        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Event>(),
+        //
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key>(),
+        //     kafkaHelper
+        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event>(),
         //
         //     kafkaHelper
-        //         .RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.OrganizationMember.V1.Key.Key>(),
+        //         .RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key.Key>(),
         //     kafkaHelper
         //         .RegisterValueProtobufSchemaAsync<
-        //             Api.Shared.Clients.Events.UnityHub.OrganizationMember.V1.Value.Event>(),
+        //             Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Value.Event>(),
         //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Payment.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Payment.V1.Value.Event>(),
-        //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Key.Key>(),
         //     kafkaHelper
-        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Value.Event>(),
+        //         .RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Key.Key>(),
+        //     kafkaHelper
+        //         .RegisterValueProtobufSchemaAsync<
+        //             Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Event>(),
         //
-        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Team.V1.Key.Key>(),
-        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event>()
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Payment.V1.Key.Key>(),
+        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event>(),
+        //
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Key.Key>(),
+        //     kafkaHelper
+        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Event>(),
+        //
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key>(),
+        //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event>()
         // ]);
 
         await Billing.Shared.Program.Main(args);

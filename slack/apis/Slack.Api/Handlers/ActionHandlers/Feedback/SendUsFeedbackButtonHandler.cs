@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -14,7 +14,7 @@ using Slack.Shared.Repositories;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService;
+using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Feedback;
 

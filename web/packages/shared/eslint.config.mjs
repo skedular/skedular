@@ -2,7 +2,7 @@ import unityhub from "@repo/eslint-config/react-internal.mjs";
 
 export default [
   {
-    ignores: ["src/clients/openapi/unityhub/"],
+    ignores: ["src/clients/openapi/skedular/"],
   },
   ...unityhub,
 ];

@@ -1,11 +1,11 @@
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Desk = Booking.Shared.Database.Entities.Desk;
-using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Location = Booking.Shared.Models.Location;
 using LocationMember = Booking.Shared.Database.Entities.LocationMember;
 using Offering = Booking.Shared.Models.Offering;
@@ -19,9 +19,9 @@ namespace Booking.Processors.Mappers;
 public interface IMapper
 {
     Shared.Models.Customer MapTo(Event src);
-    Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
-    Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
-    Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
+    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
+    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
     Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization? organization);
@@ -179,7 +179,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
     {
         var organizationAfterState = src.Data.OrganizationAfterState;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -232,7 +232,7 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
+    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
     {
         var locationAfterState = src.Data.LocationAfterState;
         var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -257,11 +257,11 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             MembershipType = item.MembershipType switch
             {
-                Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType.Owner => LocationMembershipType
+                Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Owner => LocationMembershipType
                     .Owner,
-                Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType.Administrator =>
+                Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Administrator =>
                     LocationMembershipType.Administrator,
-                Api.Shared.Clients.Events.UnityHub.Location.V1.Value.MembershipType.Member =>
+                Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Member =>
                     LocationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
@@ -291,7 +291,7 @@ public class Mapper : IMapper
         return location;
     }
 
-    public Team MapTo(Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event src)
+    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
     {
         var teamAfterState = src.Data.TeamAfterState;
         var deletedAt = teamAfterState.DeletedAt?.ToDateTimeOffset();
@@ -316,11 +316,11 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             MembershipType = item.MembershipType switch
             {
-                Api.Shared.Clients.Events.UnityHub.Team.V1.Value.MembershipType.Owner => TeamMembershipType
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Owner => TeamMembershipType
                     .Owner,
-                Api.Shared.Clients.Events.UnityHub.Team.V1.Value.MembershipType.Administrator =>
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Administrator =>
                     TeamMembershipType.Administrator,
-                Api.Shared.Clients.Events.UnityHub.Team.V1.Value.MembershipType.Member =>
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Member =>
                     TeamMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using Api.Shared.Clients.Events.UnityHub.Notification.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Notification.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Notification.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Notification.V1.Value;
 using Customer.Shared.Configurations;
 using Customer.Shared.Models;
 using Enterprise.Shared.Configurations;
@@ -9,8 +9,8 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Random;
-using Event = Api.Shared.Clients.Events.UnityHub.Notification.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.Notification.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Type;
 
 namespace Customer.Shared.Publishers;
 
@@ -114,8 +114,8 @@ public class NotificationOutboxPublisher(
             .Trim();
         var data = new NewCustomerJoinedData
         {
-            Subject = "New customer has joined UnityHub",
-            Content = $"New customer with ID {customer.Id} and email(s) {emails} has joined UnityHub"
+            Subject = "New customer has joined Skedular",
+            Content = $"New customer with ID {customer.Id} and email(s) {emails} has joined Skedular"
         };
 
         var templateData = JsonSerializer.Serialize(data);

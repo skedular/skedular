@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.UnityHub.Location.V1;
+using Api.Shared.Services.OpenApi.Skedular.Location.V1;
 using Location.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 

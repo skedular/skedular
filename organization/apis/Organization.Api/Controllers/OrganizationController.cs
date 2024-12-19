@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.UnityHub.Organization.V1;
+using Api.Shared.Services.OpenApi.Skedular.Organization.V1;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Api.Services;
 

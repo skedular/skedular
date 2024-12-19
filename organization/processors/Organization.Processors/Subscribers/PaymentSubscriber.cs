@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.UnityHub.Payment.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Payment.V1.Key;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
@@ -8,8 +8,8 @@ using Organization.Processors.Mappers;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
-using Event = Api.Shared.Clients.Events.UnityHub.Payment.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.Payment.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type;
 
 namespace Organization.Processors.Subscribers;
 

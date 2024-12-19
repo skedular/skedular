@@ -1,5 +1,5 @@
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
@@ -27,20 +27,20 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddKafka()
             .AddKafkaReliableEventConsumers<
                 MsTeamsInternalSubscriber,
-                Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Key.Key,
-                Api.Shared.Clients.Events.UnityHub.MsTeamsInternal.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.MsTeamsInternal.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
-                Api.Shared.Clients.Events.UnityHub.Customer.V1.Key.Key,
-                Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 LocationSubscriber,
-                Api.Shared.Clients.Events.UnityHub.Location.V1.Key.Key,
-                Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 TeamSubscriber,
-                Api.Shared.Clients.Events.UnityHub.Team.V1.Key.Key,
-                Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 OrganizationSubscriber,
                 Key,

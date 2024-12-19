@@ -1,9 +1,9 @@
-using Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Key;
+using Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Key;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Kafka.Produce;
-using Event = Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.BillingInternal.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Value.Type;
 
 namespace Billing.Shared.Publishers;
 

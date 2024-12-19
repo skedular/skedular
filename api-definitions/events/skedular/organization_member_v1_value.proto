@@ -1,0 +1,54 @@
+syntax = "proto3";
+package organizationmember;
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value";
+
+enum Type {
+  OrganizationMemberUpserted = 0;
+  OrganizationMemberDeleted = 1;
+  OrganizationMemberStatusUpdated = 2;
+}
+
+message Event {
+  Metadata metadata = 1;
+  Data data = 2;
+}
+
+message Metadata {
+  string id = 1;
+  string domainSource = 2;
+  string appSource = 3;
+  Type type = 4;
+  google.protobuf.Timestamp time = 5;
+  string correlationId = 6;
+}
+
+message Data { 
+  OrganizationMember afterState = 1;
+}
+
+message OrganizationMember {
+  string id = 1;
+  google.protobuf.Timestamp deletedAt = 2;
+  string organizationId = 3;
+  string customerId = 4;
+  OrganizationMemberStatus organizationMemberStatus = 5;
+}
+
+message OrganizationMemberStatus {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp to = 2;
+  Status status = 3;
+}
+
+enum Status {
+  WorkingFromOffice = 0;
+  WorkingFromHome = 1;
+  TravellingForWork = 2;
+  WorkingFromClientOffice = 3;
+  OnVacation = 4;
+  OffSick = 5;
+  NonWorkingDay = 6;
+}

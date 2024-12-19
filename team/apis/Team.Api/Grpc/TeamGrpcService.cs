@@ -1,5 +1,5 @@
 using System.Reflection;
-using Api.Shared.Services.Grpc.UnityHub.Team.V1;
+using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -10,11 +10,11 @@ using Team.Api.Services;
 using Team.Api.Services.Authorization;
 using Team.Shared.Configurations;
 using Team.Shared.Models;
-using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Team.V1.OrderDirection;
-using Permissions = Api.Shared.Services.Grpc.UnityHub.Team.V1.Permissions;
-using TeamOrderField = Api.Shared.Services.Grpc.UnityHub.Team.V1.TeamOrderField;
-using TeamService = Api.Shared.Services.Grpc.UnityHub.Team.V1.TeamService;
-using Version = Api.Shared.Services.Grpc.UnityHub.Team.V1.Version;
+using OrderDirection = Api.Shared.Services.Grpc.Skedular.Team.V1.OrderDirection;
+using Permissions = Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions;
+using TeamOrderField = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamOrderField;
+using TeamService = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService;
+using Version = Api.Shared.Services.Grpc.Skedular.Team.V1.Version;
 
 namespace Team.Api.Grpc;
 
@@ -39,7 +39,7 @@ public class TeamGrpcService(
         });
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team> Admin_Get(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Admin_Get(
         Admin_GetInput request,
         ServerCallContext context)
     {
@@ -54,7 +54,7 @@ public class TeamGrpcService(
         return mapper.MapToGrpcResponse(team);
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team> Get(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Get(
         GetInput request,
         ServerCallContext context)
     {
@@ -134,7 +134,7 @@ public class TeamGrpcService(
         };
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team> Admin_Add(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Admin_Add(
         Admin_AddInput request,
         ServerCallContext context)
     {
@@ -144,7 +144,7 @@ public class TeamGrpcService(
             await teamService.AddAsync(mapper.MapTo(request), true, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team> Admin_UpdateMembers(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Admin_UpdateMembers(
         Admin_UpdateMembersInput request,
         ServerCallContext context)
     {
@@ -158,7 +158,7 @@ public class TeamGrpcService(
                 context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team> Add(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Add(
         AddInput request,
         ServerCallContext context)
     {
@@ -168,7 +168,7 @@ public class TeamGrpcService(
             await teamService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team> Update(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Update(
         UpdateInput request,
         ServerCallContext context)
     {
@@ -178,7 +178,7 @@ public class TeamGrpcService(
             await teamService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team> Remove(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Remove(
         RemoveInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
@@ -187,7 +187,7 @@ public class TeamGrpcService(
             await teamService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team> UpdateMembers(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> UpdateMembers(
         UpdateMembersInput request,
         ServerCallContext context)
     {

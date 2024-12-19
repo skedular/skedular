@@ -1,0 +1,34 @@
+syntax = "proto3";
+package slackinternal;
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value";
+
+enum Type {
+  RefreshWorkspaceMembers = 0;
+  RefreshWorkspaceChannels = 1;
+  SendWorkspaceLocationDailyUpdateMessage = 2;
+  UpdateWorkspaceMemberProfileStatus = 3;
+  DeactivateOrganizationMembersNotFoundOnSlack = 4;
+  SendWorkspaceTeamDailyUpdateMessage = 5;
+}
+
+message Event {
+  Metadata metadata = 1;
+  oneof payload {
+    string workspaceId = 2;
+    string locationId = 3;
+    string workspaceMemberId = 4;
+    string teamId = 5;
+  }
+}
+
+message Metadata {
+  string id = 1;
+  string domainSource = 2;
+  string appSource = 3;
+  Type type = 4;
+  google.protobuf.Timestamp time = 5;
+  string correlationId = 6;
+}

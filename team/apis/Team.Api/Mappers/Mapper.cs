@@ -1,5 +1,5 @@
 using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Team.V1;
+using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Team.Api.GraphQL;
@@ -10,7 +10,7 @@ using JoinInvitation = Team.Shared.Models.JoinInvitation;
 using Location = Team.Shared.Database.Entities.Location;
 using Organization = Team.Shared.Database.Entities.Organization;
 using OrganizationMember = Team.Shared.Models.OrganizationMember;
-using Permissions = Api.Shared.Services.Grpc.UnityHub.Team.V1.Permissions;
+using Permissions = Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions;
 using TeamEdge = Team.Api.GraphQL.TeamEdge;
 using TeamMember = Team.Shared.Models.TeamMember;
 
@@ -39,7 +39,7 @@ public interface IMapper
     Shared.Models.Team MapTo(AddTeamInput src);
     Shared.Models.Team MapTo(UpdateTeamInput src);
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
-    global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team MapToGrpcResponse(Shared.Models.Team src);
+    global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team MapToGrpcResponse(Shared.Models.Team src);
     Shared.Models.Team MapTo(AddInput src);
     Shared.Models.Team MapTo(Admin_AddInput src);
     Shared.Models.Team MapTo(UpdateInput src);
@@ -60,7 +60,7 @@ public interface IMapper
     ICollection<TeamMember> MapTo(UpdateMembersInput src);
     ICollection<TeamMember> MapTo(Admin_UpdateMembersInput src);
     TeamEdge MapTo(Edge<Shared.Models.Team> src);
-    global::Api.Shared.Services.Grpc.UnityHub.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src);
+    global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src);
 
     IEnumerable<Edge<TeamMember>> MapTo(
         IEnumerable<Edge<Shared.Database.Entities.TeamMember>> src,
@@ -243,9 +243,9 @@ public class Mapper : IMapper
             Invitee = MapTo(src.Invitee)
         };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team MapToGrpcResponse(Shared.Models.Team src)
+    public global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team MapToGrpcResponse(Shared.Models.Team src)
     {
-        var team = new global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Team
+        var team = new global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
@@ -255,7 +255,7 @@ public class Mapper : IMapper
             PrimaryLocation =
                 string.IsNullOrWhiteSpace(src.PrimaryLocation?.Id)
                     ? null
-                    : new global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Location
+                    : new global::Api.Shared.Services.Grpc.Skedular.Team.V1.Location
                     {
                         Id = src.PrimaryLocation.Id, Name = src.PrimaryLocation.Name.ToSafeString()
                     },
@@ -355,7 +355,7 @@ public class Mapper : IMapper
     public TeamEdge MapTo(Edge<Shared.Models.Team> src) =>
         new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src) =>
+    public global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     public IEnumerable<Edge<TeamMember>> MapTo(
@@ -388,7 +388,7 @@ public class Mapper : IMapper
             Customer = MapToGrpcResponse(src.Customer),
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
                 ? null
-                : new global::Api.Shared.Services.Grpc.UnityHub.Team.V1.OrganizationMember
+                : new global::Api.Shared.Services.Grpc.Skedular.Team.V1.OrganizationMember
                 {
                     Id = src.OrganizationMember.Id,
                     MembershipType = src.OrganizationMember.MembershipType switch
@@ -402,10 +402,10 @@ public class Mapper : IMapper
                 }
         };
 
-    private static global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Customer MapToGrpcResponse(
+    private static global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer MapToGrpcResponse(
         Customer src)
     {
-        var customer = new global::Api.Shared.Services.Grpc.UnityHub.Team.V1.Customer
+        var customer = new global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),

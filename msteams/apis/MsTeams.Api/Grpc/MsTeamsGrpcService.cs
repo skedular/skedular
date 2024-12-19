@@ -1,7 +1,7 @@
 using System.Reflection;
-using Api.Shared.Services.Grpc.UnityHub.MsTeams.V1;
+using Api.Shared.Services.Grpc.Skedular.MsTeams.V1;
 using Grpc.Core;
-using Version = Api.Shared.Services.Grpc.UnityHub.MsTeams.V1.Version;
+using Version = Api.Shared.Services.Grpc.Skedular.MsTeams.V1.Version;
 
 namespace MsTeams.Api.Grpc;
 

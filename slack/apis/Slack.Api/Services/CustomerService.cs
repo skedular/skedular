@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -27,7 +27,7 @@ public class CustomerService(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     IContext context,
-    global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService.CustomerServiceClient customerServiceClient)
+    global::Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService.CustomerServiceClient customerServiceClient)
     : ICustomerService, IDisposable
 {
     private readonly SemaphoreSlim _cachedCustomerByIdLock = new(1, 1);

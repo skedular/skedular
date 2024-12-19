@@ -1,5 +1,5 @@
-using Api.Shared.Clients.Events.UnityHub.Team.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Team.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Customer.Processors.Subscribers;
 using Customer.Shared;
 using Customer.Shared.Database;
@@ -27,12 +27,12 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddKafka()
             .AddKafkaReliableEventConsumers<
                 LocationSubscriber,
-                Api.Shared.Clients.Events.UnityHub.Location.V1.Key.Key,
-                Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 OrganizationSubscriber,
-                Api.Shared.Clients.Events.UnityHub.Organization.V1.Key.Key,
-                Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event>(kafkaConfiguration)
+                Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 TeamSubscriber,
                 Key,
@@ -45,7 +45,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddRepositoryFactory()
             .AddPublishers()
             .AddMappers()
-            .AddUnityHubGrpcServices(Configuration);
+            .AddSkedularGrpcServices(Configuration);
     }
 
     public override void Configure(IApplicationBuilder app) =>

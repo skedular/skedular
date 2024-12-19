@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Billing.V1;
+using Api.Shared.Services.Grpc.Skedular.Billing.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -14,7 +14,7 @@ using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using BillingService = Api.Shared.Services.Grpc.UnityHub.Billing.V1.BillingService;
+using BillingService = Api.Shared.Services.Grpc.Skedular.Billing.V1.BillingService;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Workspace = Slack.Shared.Models.Workspace;

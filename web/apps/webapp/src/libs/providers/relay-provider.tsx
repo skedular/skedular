@@ -1,6 +1,6 @@
 'use client';
 
-import { getEnvironment } from '@repo/shared/clients/graphql/unityhub';
+import { getEnvironment } from '@repo/shared/clients/graphql/skedular';
 import { signIn, useSession } from 'next-auth/react';
 import { PropsWithChildren, useMemo } from 'react';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';

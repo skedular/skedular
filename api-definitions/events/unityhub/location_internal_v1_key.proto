@@ -1,8 +1,0 @@
-syntax = "proto3";
-package locationinternal;
-
-option csharp_namespace = "Api.Shared.Clients.Events.UnityHub.LocationInternal.V1.Key";
-
-message Key {
-    string locationId = 1;
-}

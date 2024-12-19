@@ -1,18 +1,18 @@
-using Api.Shared.Clients.Events.UnityHub.Customer.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
 using Enterprise.Shared;
 
 namespace Customer.Shared.Mappers;
 
 public interface IMapper
 {
-    Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Customer MapTo(Models.Customer src);
+    Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer MapTo(Models.Customer src);
 }
 
 public class Mapper : IMapper
 {
-    public Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Customer MapTo(Models.Customer src)
+    public Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer MapTo(Models.Customer src)
     {
-        var customer = new Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Customer
+        var customer = new Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer
         {
             Id = src.Id,
             Title = src.Title.ToSafeString(),

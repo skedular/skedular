@@ -1,11 +1,11 @@
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Location.Shared.Models;
 using Customer = Location.Shared.Models.Customer;
 using Desk = Location.Shared.Models.Desk;
-using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Location.Shared.Database.Entities.Identity;
 using LocationMember = Location.Shared.Database.Entities.LocationMember;
 using Offering = Location.Shared.Models.Offering;
@@ -18,8 +18,8 @@ namespace Location.Processors.Mappers;
 public interface IMapper
 {
     Customer MapTo(Event src);
-    Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
-    Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
+    Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
     Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities);
 
     Shared.Database.Entities.Customer MergeToEntity(
@@ -108,7 +108,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
     {
         var organizationAfterState = src.Data.OrganizationAfterState;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -162,7 +162,7 @@ public class Mapper : IMapper
     }
 
 
-    public Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src)
+    public Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src)
     {
         var booking = src.Data.AfterState;
         var deletedAt = booking.DeletedAt?.ToDateTimeOffset();

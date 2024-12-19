@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.UnityHub.Team.V1;
+using Api.Shared.Services.OpenApi.Skedular.Team.V1;
 using Booking.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 

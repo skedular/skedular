@@ -1,10 +1,10 @@
-using Api.Shared.Clients.Events.UnityHub.Booking.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
 using Team.Processors.Mappers;
 using Team.Shared.Repositories;
-using Event = Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event;
 using Booking = Team.Shared.Database.Entities.Booking;
-using Type = Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type;
 
 namespace Team.Processors.Subscribers;
 

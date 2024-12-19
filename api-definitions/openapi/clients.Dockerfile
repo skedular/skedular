@@ -14,10 +14,10 @@ COPY ["api-definitions/openapi", "/openapi"]
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/gateway_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Gateway.V1 \
+  /Input:/openapi/skedular/gateway_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Gateway.V1 \
   /Classname:GatewayClient \
-  /Output:/output/UnityHub/V1/Gateway/Gateway.g.cs \
+  /Output:/output/Skedular/V1/Gateway/Gateway.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -33,10 +33,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/billing_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Billing.V1 \
+  /Input:/openapi/skedular/billing_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Billing.V1 \
   /Classname:BillingClient \
-  /Output:/output/UnityHub/Billing/V1/Billing.g.cs \
+  /Output:/output/Skedular/Billing/V1/Billing.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -52,10 +52,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/booking_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Booking.V1 \
+  /Input:/openapi/skedular/booking_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Booking.V1 \
   /Classname:BookingClient \
-  /Output:/output/UnityHub/Booking/V1/Booking.g.cs \
+  /Output:/output/Skedular/Booking/V1/Booking.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -71,10 +71,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/customer_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Customer.V1 \
+  /Input:/openapi/skedular/customer_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Customer.V1 \
   /Classname:CustomerClient \
-  /Output:/output/UnityHub/Customer/V1/Customer.g.cs \
+  /Output:/output/Skedular/Customer/V1/Customer.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -90,10 +90,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/location_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Location.V1 \
+  /Input:/openapi/skedular/location_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Location.V1 \
   /Classname:LocationClient \
-  /Output:/output/UnityHub/Location/V1/Location.g.cs \
+  /Output:/output/Skedular/Location/V1/Location.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -109,10 +109,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/msteams_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.MsTeams.V1 \
+  /Input:/openapi/skedular/msteams_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.MsTeams.V1 \
   /Classname:MsTeamsClient \
-  /Output:/output/UnityHub/MsTeams/V1/MsTeams.g.cs \
+  /Output:/output/Skedular/MsTeams/V1/MsTeams.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -128,10 +128,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/notification_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Notification.V1 \
+  /Input:/openapi/skedular/notification_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Notification.V1 \
   /Classname:NotificationClient \
-  /Output:/output/UnityHub/Notification/V1/Notification.g.cs \
+  /Output:/output/Skedular/Notification/V1/Notification.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -147,10 +147,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/organization_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Organization.V1 \
+  /Input:/openapi/skedular/organization_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Organization.V1 \
   /Classname:OrganizationClient \
-  /Output:/output/UnityHub/Organization/V1/Organization.g.cs \
+  /Output:/output/Skedular/Organization/V1/Organization.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -166,10 +166,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/payment_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Payment.V1 \
+  /Input:/openapi/skedular/payment_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Payment.V1 \
   /Classname:PaymentClient \
-  /Output:/output/UnityHub/Payment/V1/Payment.g.cs \
+  /Output:/output/Skedular/Payment/V1/Payment.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -185,10 +185,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/slack_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Slack.V1 \
+  /Input:/openapi/skedular/slack_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Slack.V1 \
   /Classname:SlackClient \
-  /Output:/output/UnityHub/Slack/V1/Slack.g.cs \
+  /Output:/output/Skedular/Slack/V1/Slack.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \
@@ -204,10 +204,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/unityhub/team_v1.yaml \
-  /Namespace:Api.Shared.Clients.OpenApi.UnityHub.Team.V1 \
+  /Input:/openapi/skedular/team_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Team.V1 \
   /Classname:TeamClient \
-  /Output:/output/UnityHub/Team/V1/Team.g.cs \
+  /Output:/output/Skedular/Team/V1/Team.g.cs \
   /GenerateClientClasses:true \
   /OperationGenerationMode:SingleClientFromOperationId \
   /GenerateClientInterfaces:true \

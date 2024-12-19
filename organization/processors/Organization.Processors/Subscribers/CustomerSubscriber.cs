@@ -1,11 +1,11 @@
-using Api.Shared.Clients.Events.UnityHub.Customer.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Customer.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
 using Enterprise.Shared.Kafka.Consume;
 using Organization.Processors.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Customer = Organization.Shared.Models.Customer;
-using Type = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace Organization.Processors.Subscribers;
 

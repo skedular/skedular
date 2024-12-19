@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Shared.Models;
@@ -23,7 +23,7 @@ public interface IOrganizationService
 public class OrganizationService(
     OrganizationConfiguration organizationConfiguration,
     IMapper mapper,
-    global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService.OrganizationServiceClient
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient
         organizationServiceClient) : IOrganizationService, IDisposable
 {
     private readonly SemaphoreSlim _cachedOrganizationLock = new(1, 1);

@@ -1,11 +1,11 @@
-using Api.Shared.Services.Grpc.UnityHub.Billing.V1;
-using Api.Shared.Services.Grpc.UnityHub.Booking.V1;
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
-using Api.Shared.Services.Grpc.UnityHub.Location.V1;
-using Api.Shared.Services.Grpc.UnityHub.Notification.V1;
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
-using Api.Shared.Services.Grpc.UnityHub.Payment.V1;
-using Api.Shared.Services.Grpc.UnityHub.Team.V1;
+using Api.Shared.Services.Grpc.Skedular.Billing.V1;
+using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Grpc.Skedular.Notification.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Payment.V1;
+using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Slack.Shared.Components;
@@ -73,7 +73,7 @@ public static class Extensions
             });
     }
 
-    public static IServiceCollection AddUnityHubGrpcServices(
+    public static IServiceCollection AddSkedularGrpcServices(
         this IServiceCollection services,
         IConfiguration configuration)
     {

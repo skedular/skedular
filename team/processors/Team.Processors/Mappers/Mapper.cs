@@ -1,10 +1,10 @@
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Team.Shared.Models;
 using Customer = Team.Shared.Models.Customer;
-using Event = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Event;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Team.Shared.Database.Entities.Identity;
 using Location = Team.Shared.Models.Location;
 using TeamMember = Team.Shared.Database.Entities.TeamMember;
@@ -17,9 +17,9 @@ namespace Team.Processors.Mappers;
 public interface IMapper
 {
     Customer MapTo(Event src);
-    Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src);
-    Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src);
-    Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src);
+    Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
+    Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
+    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
 
     Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities);
     Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization? organization);
@@ -102,7 +102,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Organization MapTo(Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event src)
+    public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
     {
         var organizationAfterState = src.Data.OrganizationAfterState;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
@@ -145,7 +145,7 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Booking MapTo(Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event src)
+    public Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src)
     {
         var booking = src.Data.AfterState;
         var deletedAt = booking.DeletedAt?.ToDateTimeOffset();
@@ -162,7 +162,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Location MapTo(Api.Shared.Clients.Events.UnityHub.Location.V1.Value.Event src)
+    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
     {
         var location = src.Data.LocationAfterState;
         var deletedAt = location.DeletedAt?.ToDateTimeOffset();

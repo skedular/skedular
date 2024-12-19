@@ -1,12 +1,12 @@
-using Api.Shared.Clients.Events.UnityHub.Booking.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Booking.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Booking.V1.Value;
 using Booking.Shared.Mappers;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Kafka.Produce;
 using Enterprise.Shared.Models;
-using Event = Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.Booking.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type;
 
 namespace Booking.Shared.Publishers;
 

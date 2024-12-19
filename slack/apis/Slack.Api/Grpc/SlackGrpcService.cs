@@ -1,11 +1,11 @@
 using System.Reflection;
-using Api.Shared.Services.Grpc.UnityHub.Slack.V1;
+using Api.Shared.Services.Grpc.Skedular.Slack.V1;
 using Enterprise.Shared.Grpc;
 using Grpc.Core;
 using Slack.Api.Mappers;
 using Slack.Api.Services;
 using Slack.Shared.Configurations;
-using Version = Api.Shared.Services.Grpc.UnityHub.Slack.V1.Version;
+using Version = Api.Shared.Services.Grpc.Skedular.Slack.V1.Version;
 
 namespace Slack.Api.Grpc;
 

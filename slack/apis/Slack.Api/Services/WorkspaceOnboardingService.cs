@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
@@ -7,7 +7,7 @@ using Slack.Api.Mappers;
 using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using SlackNet.WebApi;
-using Admin_AddInput = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Admin_AddInput;
+using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.Admin_AddInput;
 using LocationConfiguration = Slack.Shared.Configurations.LocationConfiguration;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationConfiguration = Slack.Shared.Configurations.OrganizationConfiguration;
@@ -27,9 +27,9 @@ public class WorkspaceOnboardingService(
     IRandomHelper randomHelper,
     IMapper mapper,
     ISlackInternalOutboxPublisher slackInternalOutboxPublisher,
-    global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService.OrganizationServiceClient
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient
         organizationServiceClient,
-    global::Api.Shared.Services.Grpc.UnityHub.Location.V1.LocationService.LocationServiceClient locationServiceClient)
+    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient)
     : IWorkspaceOnboardingService
 {
     public async Task OnboardAsync(OauthV2AccessResponse oauthV2AccessResponse, CancellationToken cancellationToken)
@@ -100,7 +100,7 @@ public class WorkspaceOnboardingService(
             await repositoryFactory.LocationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
 
         await locationServiceClient.Admin_AddAsync(
-            new global::Api.Shared.Services.Grpc.UnityHub.Location.V1.Admin_AddInput
+            new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Admin_AddInput
             {
                 Id = location.Id, Name = $"{name.ToSafeString()} Office", OrganizationId = organization.Id
             },

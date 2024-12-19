@@ -1,5 +1,5 @@
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
@@ -7,8 +7,8 @@ using Enterprise.Shared.Models;
 using Enterprise.Shared.Outbox.Publishers;
 using Organization.Shared.Mappers;
 using Organization.Shared.Models;
-using Event = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.Organization.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Organization.Shared.Publishers;
 

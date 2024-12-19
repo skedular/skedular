@@ -1,4 +1,4 @@
-using Api.Shared.Services.Grpc.UnityHub.Team.V1;
+using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
@@ -7,7 +7,7 @@ using Slack.Shared.Constants;
 using Slack.Shared.Repositories;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using OrderDirection = Api.Shared.Services.Grpc.UnityHub.Team.V1.OrderDirection;
+using OrderDirection = Api.Shared.Services.Grpc.Skedular.Team.V1.OrderDirection;
 
 namespace Slack.Api.Handlers.OptionProviders;
 

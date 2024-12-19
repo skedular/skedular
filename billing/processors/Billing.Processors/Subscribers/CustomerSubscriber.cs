@@ -1,10 +1,10 @@
-﻿using Api.Shared.Clients.Events.UnityHub.Customer.V1.Key;
-using Api.Shared.Clients.Events.UnityHub.Customer.V1.Value;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
 using Billing.Processors.Mappers;
 using Billing.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using Customer = Billing.Shared.Models.Customer;
-using Type = Api.Shared.Clients.Events.UnityHub.Customer.V1.Value.Type;
+using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace Billing.Processors.Subscribers;
 

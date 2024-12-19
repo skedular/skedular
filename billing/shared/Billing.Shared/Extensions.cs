@@ -36,7 +36,7 @@ public static class Extensions
         services
             .AddScoped<IBillingOutboxPublisher, BillingOutboxPublisher>();
 
-    public static IServiceCollection AddUnityHubGrpcServices(
+    public static IServiceCollection AddSkedularGrpcServices(
         this IServiceCollection services,
         IConfiguration configuration)
     {

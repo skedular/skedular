@@ -14,10 +14,10 @@ COPY ["api-definitions/openapi", "/openapi"]
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/gateway_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.Gateway.V1 \
+  /Input:/openapi/skedular/gateway_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Gateway.V1 \
   /Classname:Gateway \
-  /Output:/output/UnityHub/Gateway/V1/Gateway.g.cs \
+  /Output:/output/Skedular/Gateway/V1/Gateway.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -30,10 +30,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/billing_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.Billing.V1 \
+  /Input:/openapi/skedular/billing_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Billing.V1 \
   /Classname:Billing \
-  /Output:/output/UnityHub/Billing/V1/Billing.g.cs \
+  /Output:/output/Skedular/Billing/V1/Billing.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -46,10 +46,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/booking_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.Booking.V1 \
+  /Input:/openapi/skedular/booking_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Booking.V1 \
   /Classname:Booking \
-  /Output:/output/UnityHub/Booking/V1/Booking.g.cs \
+  /Output:/output/Skedular/Booking/V1/Booking.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -62,10 +62,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/customer_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.Customer.V1 \
+  /Input:/openapi/skedular/customer_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Customer.V1 \
   /Classname:Customer \
-  /Output:/output/UnityHub/Customer/V1/Customer.g.cs \
+  /Output:/output/Skedular/Customer/V1/Customer.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -78,10 +78,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/location_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.Location.V1 \
+  /Input:/openapi/skedular/location_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Location.V1 \
   /Classname:Location \
-  /Output:/output/UnityHub/Location/V1/Location.g.cs \
+  /Output:/output/Skedular/Location/V1/Location.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -94,10 +94,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/msteams_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.MsTeams.V1 \
+  /Input:/openapi/skedular/msteams_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.MsTeams.V1 \
   /Classname:MsTeams \
-  /Output:/output/UnityHub/MsTeams/V1/MsTeams.g.cs \
+  /Output:/output/Skedular/MsTeams/V1/MsTeams.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -110,10 +110,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/notification_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.Notification.V1 \
+  /Input:/openapi/skedular/notification_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Notification.V1 \
   /Classname:Notification \
-  /Output:/output/UnityHub/Notification/V1/Notification.g.cs \
+  /Output:/output/Skedular/Notification/V1/Notification.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -126,10 +126,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/organization_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.Organization.V1 \
+  /Input:/openapi/skedular/organization_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Organization.V1 \
   /Classname:Organization \
-  /Output:/output/UnityHub/Organization/V1/Organization.g.cs \
+  /Output:/output/Skedular/Organization/V1/Organization.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -142,10 +142,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/payment_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.Payment.V1 \
+  /Input:/openapi/skedular/payment_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Payment.V1 \
   /Classname:Payment \
-  /Output:/output/UnityHub/Payment/V1/Payment.g.cs \
+  /Output:/output/Skedular/Payment/V1/Payment.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -158,10 +158,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/slack_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.Slack.V1 \
+  /Input:/openapi/skedular/slack_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Slack.V1 \
   /Classname:Slack \
-  /Output:/output/UnityHub/Slack/V1/Slack.g.cs \
+  /Output:/output/Skedular/Slack/V1/Slack.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \
@@ -174,10 +174,10 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
-  /Input:/openapi/unityhub/team_v1.yaml \
-  /Namespace:Api.Shared.Services.OpenApi.UnityHub.Team.V1 \
+  /Input:/openapi/skedular/team_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Team.V1 \
   /Classname:Team \
-  /Output:/output/UnityHub/Team/V1/Team.g.cs \
+  /Output:/output/Skedular/Team/V1/Team.g.cs \
   /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
   /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
   /ControllerStyle:abstract \

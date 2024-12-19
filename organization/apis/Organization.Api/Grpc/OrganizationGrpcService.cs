@@ -1,6 +1,6 @@
 using System.Reflection;
 using Api.Shared.Models;
-using Api.Shared.Services.Grpc.UnityHub.Organization.V1;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -12,10 +12,10 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Configurations;
 using Organization.Shared.Models;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
-using OrganizationService = Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrganizationService;
-using TermsOfUse = Api.Shared.Services.Grpc.UnityHub.Organization.V1.TermsOfUse;
-using Version = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Version;
-using Permissions = Api.Shared.Services.Grpc.UnityHub.Organization.V1.Permissions;
+using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
+using TermsOfUse = Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse;
+using Version = Api.Shared.Services.Grpc.Skedular.Organization.V1.Version;
+using Permissions = Api.Shared.Services.Grpc.Skedular.Organization.V1.Permissions;
 
 namespace Organization.Api.Grpc;
 
@@ -52,7 +52,7 @@ public class OrganizationGrpcService(
             await organizationTermsOfUseService.GetActiveTermsOfUseAsync(context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization> Admin_Add(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Admin_Add(
         Admin_AddInput request,
         ServerCallContext context)
     {
@@ -66,7 +66,7 @@ public class OrganizationGrpcService(
                 context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization> Get(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Get(
         GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
@@ -80,7 +80,7 @@ public class OrganizationGrpcService(
         return mapper.MapToGrpcResponse(organization);
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization>
         Admin_UpdateMembers(
             Admin_UpdateMembersInput request, ServerCallContext context)
     {
@@ -93,7 +93,7 @@ public class OrganizationGrpcService(
                 context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.Organization> Admin_AddMember(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Admin_AddMember(
         Admin_AddMemberInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
@@ -120,7 +120,7 @@ public class OrganizationGrpcService(
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection.Ascending
+                                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
@@ -190,7 +190,7 @@ public class OrganizationGrpcService(
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection.Ascending
+                                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
@@ -269,7 +269,7 @@ public class OrganizationGrpcService(
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.UnityHub.Organization.V1.OrderDirection.Ascending
+                                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch

@@ -40,7 +40,7 @@ public static class Extensions
             .AddScoped<ITeamOutboxPublisher, TeamOutboxPublisher>()
             .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
-    public static IServiceCollection AddUnityHubGrpcServices(
+    public static IServiceCollection AddSkedularGrpcServices(
         this IServiceCollection services,
         IConfiguration configuration)
     {

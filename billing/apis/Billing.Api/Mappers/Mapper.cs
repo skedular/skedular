@@ -10,7 +10,7 @@ public interface IMapper
     OrganizationBillingInfoPayload MapTo(Organization src, string? clientMutationId);
     Customer MapTo(Shared.Database.Entities.Customer src);
     Organization MapTo(Shared.Database.Entities.Organization src);
-    global::Api.Shared.Services.Grpc.UnityHub.Billing.V1.OrganizationBillingInfo MapToGrpcResponse(Organization src);
+    global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationBillingInfo MapToGrpcResponse(Organization src);
 }
 
 public class Mapper : IMapper
@@ -68,7 +68,7 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public global::Api.Shared.Services.Grpc.UnityHub.Billing.V1.OrganizationBillingInfo MapToGrpcResponse(
+    public global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationBillingInfo MapToGrpcResponse(
         Organization src) =>
         new()
         {

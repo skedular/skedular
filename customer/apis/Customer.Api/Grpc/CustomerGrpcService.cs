@@ -1,5 +1,5 @@
 using System.Reflection;
-using Api.Shared.Services.Grpc.UnityHub.Customer.V1;
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Shared.Configurations;
@@ -7,9 +7,9 @@ using Customer.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Grpc.Core;
-using CustomerService = Api.Shared.Services.Grpc.UnityHub.Customer.V1.CustomerService;
-using FeedbackChannel = Api.Shared.Services.Grpc.UnityHub.Customer.V1.FeedbackChannel;
-using Version = Api.Shared.Services.Grpc.UnityHub.Customer.V1.Version;
+using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
+using FeedbackChannel = Api.Shared.Services.Grpc.Skedular.Customer.V1.FeedbackChannel;
+using Version = Api.Shared.Services.Grpc.Skedular.Customer.V1.Version;
 
 namespace Customer.Api.Grpc;
 
@@ -39,7 +39,7 @@ public class CustomerGrpcService(
         });
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> Admin_Get(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_Get(
         Admin_GetInput request,
         ServerCallContext context)
     {
@@ -79,7 +79,7 @@ public class CustomerGrpcService(
         };
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> Admin_Add(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_Add(
         Admin_AddInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -88,7 +88,7 @@ public class CustomerGrpcService(
             await customerService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> Admin_AddIdentity(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_AddIdentity(
         Admin_AddIdentityInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -97,7 +97,7 @@ public class CustomerGrpcService(
             await customerService.AddIdentityAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> Admin_UpdateIdentity(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_UpdateIdentity(
         Admin_UpdateIdentityInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -106,7 +106,7 @@ public class CustomerGrpcService(
             await customerService.UpdateIdentityAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
         Admin_SetDefaultOrganization(
             Admin_SetDefaultOrganizationInput request, ServerCallContext context)
     {
@@ -117,7 +117,7 @@ public class CustomerGrpcService(
                 request.OrganizationId, request.CustomerId, true, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
         Admin_AddDefaultLocation(
             Admin_AddDefaultLocationInput request, ServerCallContext context)
     {
@@ -128,7 +128,7 @@ public class CustomerGrpcService(
                 request.LocationId, request.CustomerId, true, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> Admin_AddDefaultTeam(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_AddDefaultTeam(
         Admin_AddDefaultTeamInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -138,7 +138,7 @@ public class CustomerGrpcService(
                 request.TeamId, request.CustomerId, true, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> Get(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Get(
         GetInput request,
         ServerCallContext context)
     {
@@ -147,7 +147,7 @@ public class CustomerGrpcService(
         return mapper.MapToGrpcResponse(await customerService.GetMeAsync(false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
         DismissDefaultLocationOnboardingSetup(
             DismissDefaultLocationOnboardingSetupInput request,
             ServerCallContext context)
@@ -158,7 +158,7 @@ public class CustomerGrpcService(
             await customerSettingsService.CompleteDefaultLocationOnboardingAsync(context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
         DismissSetupPreferredZones(
             DismissSetupPreferredZonesInput request,
             ServerCallContext context)
@@ -169,7 +169,7 @@ public class CustomerGrpcService(
             await customerSettingsService.CompletePreferredZoneOnboardingAsync(context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
         DismissSetupPreferredDesks(
             DismissSetupPreferredDesksInput request,
             ServerCallContext context)
@@ -203,7 +203,7 @@ public class CustomerGrpcService(
         };
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
         SetDefaultOrganization(
             SetDefaultOrganizationInput request, ServerCallContext context)
     {
@@ -214,7 +214,7 @@ public class CustomerGrpcService(
                 request.OrganizationId, null, false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
         AddDefaultLocation(
             AddDefaultLocationInput request, ServerCallContext context)
     {
@@ -225,7 +225,7 @@ public class CustomerGrpcService(
                 request.LocationId, null, false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> AddDefaultTeam(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddDefaultTeam(
         AddDefaultTeamInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -235,7 +235,7 @@ public class CustomerGrpcService(
                 request.TeamId, null, false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
         ClearDefaultOrganization(
             ClearDefaultOrganizationInput request, ServerCallContext context)
     {
@@ -246,7 +246,7 @@ public class CustomerGrpcService(
                 context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> RemoveDefaultLocation(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemoveDefaultLocation(
         RemoveDefaultLocationInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -256,7 +256,7 @@ public class CustomerGrpcService(
                 request.LocationId, null, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> RemoveDefaultTeam(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemoveDefaultTeam(
         RemoveDefaultTeamInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -266,7 +266,7 @@ public class CustomerGrpcService(
                 request.TeamId, null, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> AddPreferredDesk(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddPreferredDesk(
         AddPreferredDeskInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -276,7 +276,7 @@ public class CustomerGrpcService(
                 request.DeskId, null, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer> RemovePreferredDesk(
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemovePreferredDesk(
         RemovePreferredDeskInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -286,7 +286,7 @@ public class CustomerGrpcService(
                 request.DeskId, null, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
         AddPreferredOrganizationTag(
             AddPreferredOrganizationTagInput request, ServerCallContext context)
     {
@@ -297,7 +297,7 @@ public class CustomerGrpcService(
                 request.OrganizationTagId, null, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.UnityHub.Customer.V1.Customer>
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
         RemovePreferredOrganizationTag(RemovePreferredOrganizationTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);

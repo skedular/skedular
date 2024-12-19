@@ -1,10 +1,10 @@
-using Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Key;
+using Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Key;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
-using Event = Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Value.Event;
-using Type = Api.Shared.Clients.Events.UnityHub.SlackInternal.V1.Value.Type;
+using Event = Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Event;
+using Type = Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type;
 
 namespace Slack.Shared.Publishers;
 

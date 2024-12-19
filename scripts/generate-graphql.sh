@@ -58,4 +58,5 @@ dotnet fusion compose -p gateway.fgp -s ../../../organization/apis/Organization.
 dotnet fusion compose -p gateway.fgp -s ../../../payment/apis/Payment.Api
 dotnet fusion compose -p gateway.fgp -s ../../../slack/apis/Slack.Api
 dotnet fusion compose -p gateway.fgp -s ../../../team/apis/Team.Api
-dotnet run -- schema export --output ../../../api-definitions/graphql/unityhub/v1/schema.graphql
+mkdir -p ../../../api-definitions/graphql/skedular/v1
+dotnet run -- schema export --output ../../../api-definitions/graphql/skedular/v1/schema.graphql

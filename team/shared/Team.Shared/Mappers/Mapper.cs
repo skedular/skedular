@@ -1,22 +1,22 @@
-using Api.Shared.Clients.Events.UnityHub.Team.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Api.Shared.Models;
 using Enterprise.Shared;
 using Team.Shared.Models;
-using OrganizationMember = Api.Shared.Clients.Events.UnityHub.Team.V1.Value.OrganizationMember;
+using OrganizationMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember;
 
 namespace Team.Shared.Mappers;
 
 public interface IMapper
 {
-    Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Team MapTo(Models.Team src);
+    Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team MapTo(Models.Team src);
     public InvitationToJoinTeam MapTo(JoinInvitation src, string? inviteeIdToOverride);
 }
 
 public class Mapper : IMapper
 {
-    public Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Team MapTo(Models.Team src)
+    public Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team MapTo(Models.Team src)
     {
-        var team = new Api.Shared.Clients.Events.UnityHub.Team.V1.Value.Team
+        var team = new Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
