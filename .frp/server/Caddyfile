@@ -32,6 +32,18 @@ slackapi.unityhub.io {
 	reverse_proxy localhost:10700
 }
 
+dapp.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+dweb.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+dmsteams.skedular.app {
+	reverse_proxy localhost:7000
+}
+
 mapp.skedular.app {
 	reverse_proxy localhost:7000
 }

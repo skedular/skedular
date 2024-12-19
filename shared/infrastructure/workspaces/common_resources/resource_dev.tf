@@ -1,7 +1,7 @@
 locals {
   azure_app_display_name_dev = "UnityHub-dev"
   azure_app_description_dev  = "UnityHub-dev"
-  dns_records_dev            = ["mweb", "mapp", "mmsteams", "yweb", "yapp", "ymsteams", "contabo"]
+  dns_records_dev            = ["dweb", "dapp", "dmsteams", "mweb", "mapp", "mmsteams", "yweb", "yapp", "ymsteams", "contabo"]
 }
 
 resource "cloudflare_record" "cloudflare_dns_records_dev_1" {
