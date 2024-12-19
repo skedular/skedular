@@ -183,8 +183,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
                 sx={{
                   '& fieldset': {
                     border: 0,
-                    borderRight: 1,
-                    borderColor: 'divider',
+                    borderRight: 0,
                     borderRadius: 0,
                   },
                 }}
@@ -210,6 +209,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
             </FormControl>
           )}
 
+          <Divider orientation="vertical" flexItem />
           <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
         </StackRow>
 

@@ -10,25 +10,24 @@ import { PaymentService } from './services/PaymentService';
 import { PaymentMethodService } from './services/PaymentMethodService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularBillingClient {
-    public readonly organization: OrganizationService;
-    public readonly payment: PaymentService;
-    public readonly paymentMethod: PaymentMethodService;
-    public readonly request: BaseHttpRequest;
-    constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
-        this.request = new HttpRequest({
-            BASE: config?.BASE ?? '',
-            VERSION: config?.VERSION ?? '1.0.0',
-            WITH_CREDENTIALS: config?.WITH_CREDENTIALS ?? false,
-            CREDENTIALS: config?.CREDENTIALS ?? 'include',
-            TOKEN: config?.TOKEN,
-            USERNAME: config?.USERNAME,
-            PASSWORD: config?.PASSWORD,
-            HEADERS: config?.HEADERS,
-            ENCODE_PATH: config?.ENCODE_PATH,
-        });
-        this.organization = new OrganizationService(this.request);
-        this.payment = new PaymentService(this.request);
-        this.paymentMethod = new PaymentMethodService(this.request);
-    }
+  public readonly organization: OrganizationService;
+  public readonly payment: PaymentService;
+  public readonly paymentMethod: PaymentMethodService;
+  public readonly request: BaseHttpRequest;
+  constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
+    this.request = new HttpRequest({
+      BASE: config?.BASE ?? '',
+      VERSION: config?.VERSION ?? '1.0.0',
+      WITH_CREDENTIALS: config?.WITH_CREDENTIALS ?? false,
+      CREDENTIALS: config?.CREDENTIALS ?? 'include',
+      TOKEN: config?.TOKEN,
+      USERNAME: config?.USERNAME,
+      PASSWORD: config?.PASSWORD,
+      HEADERS: config?.HEADERS,
+      ENCODE_PATH: config?.ENCODE_PATH,
+    });
+    this.organization = new OrganizationService(this.request);
+    this.payment = new PaymentService(this.request);
+    this.paymentMethod = new PaymentMethodService(this.request);
+  }
 }
-
