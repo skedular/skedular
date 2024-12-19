@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.7.0
+# syntax = docker/dockerfile:1.12.0
 ARG FINAL_IMAGE=node:20-alpine
 ARG BUILD_IMAGE=node:20-alpine
 

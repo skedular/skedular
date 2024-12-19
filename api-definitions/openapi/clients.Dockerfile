@@ -1,5 +1,5 @@
-﻿# syntax = docker/dockerfile:1.7.0
-ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk:8.0
+﻿# syntax = docker/dockerfile:1.12.0
+ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk:9.0
 
 FROM $BUILD_IMAGE AS build
 LABEL maintainer="morteza.alizadeh@gmail.com"
