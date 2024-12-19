@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.12.0
-ARG FINAL_IMAGE=node:20-alpine
-ARG BUILD_IMAGE=node:20-alpine
+ARG FINAL_IMAGE=node:22-alpine
+ARG BUILD_IMAGE=node:22-alpine
 
 FROM $BUILD_IMAGE AS build
 ENV PNPM_HOME="/pnpm"
