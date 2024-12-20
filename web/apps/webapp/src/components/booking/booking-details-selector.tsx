@@ -6,7 +6,7 @@ import type { bookingDetailsSelector_query$key } from '@/queries/__generated__/b
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BodyIconTypography, StackRow } from '@repo/shared/components/commons';
-import { ZonesLine } from '@repo/shared/components/zone';
+import { Zones } from '@repo/shared/components/zone';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { Autocomplete } from 'mui-rff';
@@ -421,7 +421,7 @@ const BookingDetailsSelector = ({
                   <li {...props}>
                     <StackRow sx={{ alignItems: 'center' }}>
                       <BodyIconTypography label={castedOption.name} />
-                      <ZonesLine zones={castedOption.zones} />
+                      <Zones zones={castedOption.zones} />
                     </StackRow>
                   </li>
                 );

@@ -15,7 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BodyIconTypography, FormStackColumn, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import { DeskTypesLine } from '@repo/shared/components/deskType';
+import { DeskTypes } from '@repo/shared/components/deskType';
 import { DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, InfoIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -24,7 +24,7 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { ZonesLine } from '@repo/shared/components/zone';
+import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, sandstone } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
@@ -786,8 +786,8 @@ const DeskCard = ({
 
           <CardContent>
             <StackColumn>
-              <DeskTypesLine deskTypes={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
-              <ZonesLine zones={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
+              <DeskTypes deskTypes={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
+              <Zones zones={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
             </StackColumn>
 
             {extraInfo.length > 0 && <BodyIconTypography label={extraInfo.join(', ')} startElement={<InfoIcon />} />}

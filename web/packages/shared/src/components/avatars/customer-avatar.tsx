@@ -30,7 +30,7 @@ const CustomerAvatar = ({ name, photo, size, sx, showFullName, tip, onClick }: P
     finalSx = { width: 48, height: 48 };
   }
 
-  finalSx = { ...finalSx, bgcolor: stringToColor(getCustomerFullName(name)) };
+  finalSx = { ...finalSx, backgroundColor: stringToColor(getCustomerFullName(name)) };
 
   if (!showFullName) {
     return (

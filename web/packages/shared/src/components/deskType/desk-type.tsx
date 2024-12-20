@@ -15,7 +15,7 @@ type Props = {
 
 const DeskType = ({ deskType, maxWidth }: Props) => (
   <Tooltip title={deskType.name}>
-    <Chip label={`#${deskType.name}`} sx={{ maxWidth, bgcolor: stringToColor(deskType.id) }} />
+    <Chip label={`#${deskType.name}`} sx={{ maxWidth, backgroundColor: stringToColor(deskType.id) }} />
   </Tooltip>
 );
 

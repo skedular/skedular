@@ -33,7 +33,7 @@ import {
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
-import { ZonesLine } from '@repo/shared/components/zone';
+import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
@@ -689,12 +689,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                     </Tooltip>
                   )}
 
-                  <ZonesLine
-                    zones={zones.map(({ uniqueId, name }) => ({
-                      id: uniqueId,
-                      name,
-                    }))}
-                  />
+                  <Zones zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
                 </StackRow>
               );
             })}

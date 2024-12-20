@@ -18,7 +18,7 @@ import { BodyIconTypography, LeadIconTypography, StackColumn, StackRow } from '@
 import { DeskIcon, LocationIcon, TeamIcon } from '@repo/shared/components/icons';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { ZonesLine } from '@repo/shared/components/zone';
+import { Zones } from '@repo/shared/components/zone';
 import { GlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
@@ -215,7 +215,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
       {booking.desks?.map(({ uniqueId, name, zones }) => (
         <StackRow key={uniqueId} sx={{ alignItems: 'center' }}>
           <BodyIconTypography label={name} startElement={<DeskIcon />} />
-          <ZonesLine zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
+          <Zones zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
         </StackRow>
       ))}
     </StackColumn>

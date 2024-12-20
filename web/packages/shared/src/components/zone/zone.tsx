@@ -15,7 +15,7 @@ type Props = {
 
 const Zone = ({ zone, maxWidth }: Props) => (
   <Tooltip title={zone.name}>
-    <Chip label={`#${zone.name}`} sx={{ maxWidth, bgcolor: stringToColor(zone.id) }} />
+    <Chip label={`#${zone.name}`} sx={{ maxWidth, backgroundColor: stringToColor(zone.id) }} />
   </Tooltip>
 );
 

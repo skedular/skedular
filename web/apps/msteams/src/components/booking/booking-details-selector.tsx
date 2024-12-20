@@ -1,7 +1,7 @@
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BodyIconTypography, StackRow } from '@repo/shared/components/commons';
-import { ZonesLine } from '@repo/shared/components/zone';
+import { Zones } from '@repo/shared/components/zone';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { Dayjs } from 'dayjs';
@@ -421,7 +421,7 @@ const BookingDetailsSelector = ({
                   <li {...props}>
                     <StackRow sx={{ alignItems: 'center' }}>
                       <BodyIconTypography label={castedOption.name} />
-                      <ZonesLine zones={castedOption.zones} />
+                      <Zones zones={castedOption.zones} />
                     </StackRow>
                   </li>
                 );

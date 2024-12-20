@@ -114,11 +114,16 @@ const getDesignTokens = (mode: PaletteMode) => {
         }),
       },
       grey: {
-        ...gray,
+        ...(mode === 'dark' ? brand2 : gray),
       },
       background: {
         default: mode === 'dark' ? coal : sandstone,
         paper: mode === 'dark' ? coal : defaultTheme.palette.background.paper,
+      },
+      text: {
+        primary: mode === 'dark' ? sandstone : coal,
+        secondary: mode === 'dark' ? sandstone : coal,
+        warning: mode === 'dark' ? sandstone : coal,
       },
     },
     shape: {

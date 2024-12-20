@@ -44,7 +44,7 @@ const OrganizationAvatar = ({ name, photo, size, sx, showFullName, tip, onClick 
     finalSx = { width: 40, height: 40 };
   }
 
-  finalSx = { ...finalSx, bgcolor: stringToColor(name?.name ?? '') };
+  finalSx = { ...finalSx, backgroundColor: stringToColor(name?.name ?? '') };
 
   if (!showFullName) {
     return (
