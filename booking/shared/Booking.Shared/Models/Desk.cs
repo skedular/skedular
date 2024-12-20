@@ -2,7 +2,7 @@ using Enterprise.Shared.Models;
 
 namespace Booking.Shared.Models;
 
-public class Desk : ReplicatedModelBase
+public class Desk : ReplicatedModelBaseWithDeleted
 {
     public string? Name { get; set; }
     public bool Deactivated { get; set; }

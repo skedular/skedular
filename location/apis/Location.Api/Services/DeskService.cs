@@ -137,7 +137,8 @@ public class DeskService(
         var matchingDeskFound = await repositoryFactory.DeskRepository
             .Query(new Specification<Shared.Database.Entities.Desk>
             {
-                Criteria = query => query.Location.Id == desk.Location.Id &&
+                Criteria = query => !query.DeletedAt.HasValue &&
+                                    query.Location.Id == desk.Location.Id &&
                                     EF.Functions.ILike(query.Name, desk.Name)
             }).AnyAsync(cancellationToken);
         if (matchingDeskFound)
@@ -387,6 +388,7 @@ public class DeskService(
             .Query(new Specification<Shared.Database.Entities.Desk>
             {
                 Criteria = query =>
+                    !query.DeletedAt.HasValue &&
                     query.Location.Id == locationId &&
                     EF.Functions.ILike(query.Name, deskName) &&
                     query.Id != deskId

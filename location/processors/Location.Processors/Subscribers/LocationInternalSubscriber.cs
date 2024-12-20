@@ -56,7 +56,7 @@ public class LocationInternalSubscriber(
         _ = repositoryFactory.DailyDeskCountRecordingRepository.Add(new DailyDeskCountRecording
         {
             Id = randomHelper.Generate(),
-            Count = location.Desks.Count,
+            Count = location.Desks.Count(item => item.DeletedAt is null),
             Date = startOfToday,
             Location = location
         });

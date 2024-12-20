@@ -2,7 +2,7 @@ using Enterprise.Shared.Database;
 
 namespace Location.Shared.Models;
 
-public class Desk : EntityBase
+public class Desk : EntityBaseWithDeleted
 {
     public string Name { get; set; }
     public bool Deactivated { get; set; }

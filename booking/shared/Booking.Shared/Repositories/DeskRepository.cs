@@ -45,7 +45,9 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
 
     public void RemoveRange(ICollection<Desk> desks)
     {
-        DbContext.Desk.RemoveRange(desks);
+        var now = TimeProvider.GetUtcNow();
+        desks.ForEach(desk => desk.DeletedAt = now);
+        DbContext.Desk.UpdateRange(desks);
     }
 
     public Desk Update(Desk desk)
@@ -73,7 +75,8 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
     {
         var deskQuery = deskIdsToInclude.Count == 0
             ? DbContext.Desk
-                .Where(query => !query.Deactivated &&
+                .Where(query => !query.DeletedAt.HasValue &&
+                                !query.Deactivated &&
                                 query.Location != null &&
                                 (string.IsNullOrWhiteSpace(organizationId) || (query.Location.Organization != null &&
                                                                                query.Location.Organization.Id ==
@@ -96,7 +99,8 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
                                 )
                 )
             : DbContext.Desk
-                .Where(query => (!query.Deactivated &&
+                .Where(query => (!query.DeletedAt.HasValue &&
+                                 !query.Deactivated &&
                                  query.Location != null &&
                                  (string.IsNullOrWhiteSpace(organizationId) || (query.Location.Organization != null &&
                                      query.Location.Organization.Id ==

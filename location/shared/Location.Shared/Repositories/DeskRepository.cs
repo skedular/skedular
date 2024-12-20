@@ -1,4 +1,5 @@
-﻿using Enterprise.Shared.Database;
+﻿using Enterprise.Shared;
+using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Location.Shared.Database;
@@ -37,7 +38,7 @@ internal static class DeskExtensions
         this IQueryable<Desk> query,
         DeskSearchCriteria searchCriteria)
     {
-        query = query.Where(item => item.Location.Id == searchCriteria.LocationId);
+        query = query.Where(item => !item.DeletedAt.HasValue && item.Location.Id == searchCriteria.LocationId);
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
         {
@@ -86,9 +87,19 @@ public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvid
         return DbContext.Desk.Add(desk).Entity;
     }
 
-    public void RemoveRange(ICollection<Desk> desks) => DbContext.Desk.RemoveRange(desks);
+    public void RemoveRange(ICollection<Desk> desks)
+    {
+        var now = TimeProvider.GetUtcNow();
+        desks.ForEach(desk => desk.DeletedAt = now);
+        DbContext.Desk.UpdateRange(desks);
+    }
 
-    public Desk Remove(Desk desk) => DbContext.Desk.Remove(desk).Entity;
+    public Desk Remove(Desk desk)
+    {
+        var now = TimeProvider.GetUtcNow();
+        desk.DeletedAt = now;
+        return DbContext.Desk.Update(desk).Entity;
+    }
 
     public Desk Update(Desk desk)
     {

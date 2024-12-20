@@ -7,7 +7,7 @@ namespace Customer.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class Desk : ReplicatedEntityBase
+public class Desk : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
 
@@ -20,7 +20,7 @@ public class DeskConfiguration : IEntityTypeConfiguration<Desk>
 {
     public void Configure(EntityTypeBuilder<Desk> builder)
     {
-        builder.ConfigureReplicatedEntityBase();
+        builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxDeskNameLength);
 

@@ -41,7 +41,7 @@ internal static class LocationExtensions
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .Include(query => query.PhysicalAddress)
-            .Include(query => query.Desks)
+            .Include(query => query.Desks.Where(desk => !desk.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationTags)
             .Include(query => query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer);
@@ -85,7 +85,7 @@ internal static class LocationExtensions
             searchCriteria.ZoneIds.ForEach(id =>
                 query = query.Where(item =>
                     item.Desks.Any(desk =>
-                        desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
+                        !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
         }
 
         if (searchCriteria.DeskTypeIds.Length != 0)
@@ -93,7 +93,7 @@ internal static class LocationExtensions
             searchCriteria.DeskTypeIds.ForEach(id =>
                 query = query.Where(item =>
                     item.Desks.Any(desk =>
-                        desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
+                        !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
         }
 
         return query;

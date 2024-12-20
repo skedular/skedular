@@ -277,6 +277,7 @@ public class Mapper : IMapper
         location.Desks = locationAfterState.Desks.Select(item => new Shared.Models.Desk
         {
             Id = item.Id,
+            DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
             Deactivated = item.Deactivated,

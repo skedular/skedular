@@ -1,5 +1,6 @@
 ﻿using Customer.Shared.Database;
 using Customer.Shared.Database.Entities;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +32,12 @@ public class DeskRepository(CustomerDbContext dbContext, TimeProvider timeProvid
         return DbContext.Desk.Add(desk).Entity;
     }
 
-    public void RemoveRange(ICollection<Desk> desks) => DbContext.Desk.RemoveRange(desks);
+    public void RemoveRange(ICollection<Desk> desks)
+    {
+        var now = TimeProvider.GetUtcNow();
+        desks.ForEach(desk => desk.DeletedAt = now);
+        DbContext.Desk.UpdateRange(desks);
+    }
 
     public Desk Update(Desk desk)
     {
