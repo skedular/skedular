@@ -256,14 +256,9 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       field: 'zones',
       headerName: 'Zones',
       editable: false,
-      renderCell: (params) => (
-        <>
-          {params.value.length === 0 && 'N/A'}
-          {params.value.length !== 0 && <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} />}
-        </>
-      ),
+      renderCell: (params) => <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} hideIcon />,
       display: 'flex',
-      minWidth: 200,
+      minWidth: 250,
     },
     {
       field: 'teammates',

@@ -236,9 +236,9 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       field: 'zones',
       headerName: 'Zones',
       editable: false,
-      renderCell: (params) => <Zones zones={params.value} />,
+      renderCell: (params) => <Zones zones={params.value} hideIcon />,
       display: 'flex',
-      minWidth: 300,
+      minWidth: 250,
     },
     {
       field: 'teammates',

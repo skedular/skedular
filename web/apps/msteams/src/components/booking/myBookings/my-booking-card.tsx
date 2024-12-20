@@ -9,17 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
-import {
-  CalendarIcon,
-  DeleteIcon,
-  DeskIcon,
-  EditIcon,
-  EllipseMenuIcon,
-  LocationIcon,
-  NotesIcon,
-  TeamIcon,
-  ZoneIcon,
-} from '@repo/shared/components/icons';
+import { CalendarIcon, DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, LocationIcon, NotesIcon, TeamIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -259,13 +249,7 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
           <Divider />
           <SmallIconTypography startElement={<DeskIcon />} label={desks.length === 0 ? 'N/A' : desks} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
-          {zones.length === 0 && <SmallIconTypography startElement={<ZoneIcon />} label="N/A" sx={{ paddingTop: 1, paddingBottom: 1 }} />}
-          {zones.length !== 0 && (
-            <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
-              <ZoneIcon />
-              <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} />
-            </StackRow>
-          )}
+          <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} />
           <Divider />
           <SmallIconTypography
             startElement={<NotesIcon />}

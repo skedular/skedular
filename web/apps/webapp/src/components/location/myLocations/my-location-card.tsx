@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import LinearProgress from '@mui/material/LinearProgress';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
-import { DeskIcon, LocationIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { DeskIcon, LocationIcon } from '@repo/shared/components/icons';
 import { Zones } from '@repo/shared/components/zone';
 import { Dayjs } from 'dayjs';
 import { memo } from 'react';
@@ -104,10 +104,7 @@ const MyLocationCard = ({
 
         <Divider />
 
-        <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
-          <ZoneIcon />
-          <Zones zones={zones} />
-        </StackRow>
+        <Zones zones={zones} />
 
         <Divider />
 
