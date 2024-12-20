@@ -167,7 +167,7 @@ const OldTeams = ({ queryReference }: Props) => {
         </StackRow>
       </StackRowFullWidth>
 
-      <GridContainer spacing={1}>
+      <GridContainer>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <TeamBookingsCard

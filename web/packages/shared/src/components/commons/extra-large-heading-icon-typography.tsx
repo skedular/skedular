@@ -11,9 +11,10 @@ type Props = {
   sx?: SxProps<Theme>;
   spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];
+  invertDefaultColor?: boolean;
 };
 
-const ExtraLargeHeadingIconTypography = ({ startElement, endElement, stackMode, label, sx, spacing, color }: Props) => (
+const ExtraLargeHeadingIconTypography = ({ startElement, endElement, stackMode, label, sx, spacing, color, invertDefaultColor }: Props) => (
   <IconTypography
     startElement={startElement}
     endElement={endElement}
@@ -23,6 +24,8 @@ const ExtraLargeHeadingIconTypography = ({ startElement, endElement, stackMode, 
     sx={sx}
     spacing={spacing}
     color={color}
+    invertDefaultColor={invertDefaultColor}
   />
 );
+
 export default ExtraLargeHeadingIconTypography;

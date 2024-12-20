@@ -115,6 +115,10 @@ const toShortDate = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('dddd, Do MMM YYYY') : '';
 };
 
+const toShortDateWithoutWeekDay = (date?: Dayjs | string | null | undefined) => {
+  return date ? dayjs(date).format('Do MMM YYYY') : '';
+};
+
 const toLongDateTime = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('dddd, Do MMMM YYYY, HH:mm') : '';
 };
@@ -250,9 +254,9 @@ const toShortDateWithAdditionalDayInfo = (date: Dayjs): string => {
   let dateValue = '';
 
   if (isTodayDate(date)) {
-    dateValue = `Today, ${toShortDate(date)}`;
+    dateValue = `Today, ${toShortDateWithoutWeekDay(date)}`;
   } else if (isTomorrowDate(date)) {
-    dateValue = `Tomorrow, ${toShortDate(date)}`;
+    dateValue = `Tomorrow, ${toShortDateWithoutWeekDay(date)}`;
   } else {
     dateValue = toShortDate(date);
   }
@@ -309,5 +313,6 @@ export {
   toShortDateWithAdditionalDayInfo,
   toShortDateWithDayAndMonthOnly,
   toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo,
+  toShortDateWithoutWeekDay,
   toShortWeekDay,
 };

@@ -213,7 +213,7 @@ const OrganizationZonesTab = ({ queryReference, onReloadRequired, organizationId
         </StackRow>
       </StackRowFullWidth>
 
-      <GridContainer spacing={1}>
+      <GridContainer>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <ZoneCard rootDataRelay={rootData} organizationTagDetailsRelay={edge.node} connectionIds={connectionIds} />

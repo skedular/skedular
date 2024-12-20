@@ -211,7 +211,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
         </StackRow>
       </StackRowFullWidth>
 
-      <GridContainer spacing={1}>
+      <GridContainer>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <OrganizationMemberCard data={rootData} organizationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />

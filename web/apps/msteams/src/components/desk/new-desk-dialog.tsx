@@ -1,9 +1,7 @@
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormStackColumn } from '@repo/shared/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -150,15 +148,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
               <DeskName name="name" required={requiredFields.name} />
               <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
               <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
-
-              <DialogActions>
-                <Button color="secondary" variant="contained" onClick={onCancelClicked}>
-                  Cancel
-                </Button>
-                <Button color="primary" variant="contained" type="submit">
-                  Add
-                </Button>
-              </DialogActions>
+              <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}
         />

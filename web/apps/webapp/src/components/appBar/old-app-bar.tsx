@@ -118,13 +118,13 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
           backgroundColor: (theme) => theme.palette.background.paper,
         }}
       >
-        <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
+        <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
 
         <StackRow sx={{ alignItems: 'center' }}>
-          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
+          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' }, paddingRight: 2 }} />
           <Divider orientation="vertical" flexItem />
 
-          <IconButton sx={{ ml: 1 }} color="inherit">
+          <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
             <NotificationsIcon excludeTooltip />
           </IconButton>
 

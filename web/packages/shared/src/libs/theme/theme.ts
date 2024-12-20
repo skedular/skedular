@@ -4,7 +4,7 @@ import type { ResponsiveStyleValue, SxProps } from '@mui/system';
 import { gridClasses } from '@mui/x-data-grid';
 import getDesignTokens from './theme-primitives';
 
-export const defaultPadding: ResponsiveStyleValue<CSSProperties['paddingTop']> = { xs: 1, sm: 1, md: 5 };
+export const defaultPadding: ResponsiveStyleValue<CSSProperties['paddingTop']> = { xs: 1, sm: 1, md: 3 };
 export const maxScreenWidth = 1800;
 export const defaultGridStyle: SxProps<Theme> = {
   border: 'none',

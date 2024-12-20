@@ -3,9 +3,8 @@ import { OrganizationMemberSelector } from '@/components/organization';
 import type { addTeam_addTeamMutation } from '@/queries/__generated__/addTeam_addTeamMutation.graphql';
 import type { addTeam_completeTeamOnboardingMutation } from '@/queries/__generated__/addTeam_completeTeamOnboardingMutation.graphql';
 import type { addTeam_rootQuery } from '@/queries/__generated__/addTeam_rootQuery.graphql';
-import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -240,15 +239,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
                 useMemberId={true}
               />
             )}
-
-            <StackRow sx={{ justifyContent: 'flex-end' }}>
-              <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                {cancelButtonText ?? 'Cancel'}
-              </Button>
-              <Button color="primary" variant="contained" type="submit">
-                Create
-              </Button>
-            </StackRow>
+            <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Create" secondaryLabel="Cancel" />
           </FormStackColumn>
         )}
       />

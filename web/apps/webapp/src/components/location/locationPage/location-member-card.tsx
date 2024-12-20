@@ -12,7 +12,7 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Paper from '@mui/material/Paper';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, FormStackColumn, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { EditIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
@@ -142,6 +142,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
               <BodyIconTypography
                 label={getCustomerFullName(locationMemberDetails.customer)}
                 startElement={<CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />}
+                invertDefaultColor
               />
             }
           />
@@ -173,17 +174,8 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
                   label={getCustomerFullName(locationMemberDetails.customer)}
                   startElement={<CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />}
                 />
-
                 <LocationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />
-
-                <StackRow sx={{ justifyContent: 'flex-end' }}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Update
-                  </Button>
-                </StackRow>
+                <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}
           />

@@ -200,7 +200,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
                   <MenuItem key={organization.id} value={organization.id}>
                     <StackRow>
                       <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
-                      <StackColumn>
+                      <StackColumn spacing={-0.5}>
                         <LeadIconTypography label={organization.name} />
                         <CaptionIconTypography label="Organization" />
                       </StackColumn>
@@ -218,14 +218,14 @@ const AppBar = ({ rootDataRelay }: Props) => {
           )}
 
           <Divider orientation="vertical" flexItem />
-          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
+          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
         </StackRow>
 
         <StackRow sx={{ alignItems: 'center' }}>
-          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
+          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' }, paddingRight: 2 }} />
           <Divider orientation="vertical" flexItem />
 
-          <IconButton sx={{ ml: 1 }} color="inherit">
+          <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
             <NotificationsIcon excludeTooltip />
           </IconButton>
 

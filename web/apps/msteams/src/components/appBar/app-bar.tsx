@@ -100,7 +100,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
           <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
           <Divider orientation="vertical" flexItem />
 
-          <IconButton sx={{ ml: 1 }} color="inherit">
+          <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
             <NotificationsIcon excludeTooltip />
           </IconButton>
 

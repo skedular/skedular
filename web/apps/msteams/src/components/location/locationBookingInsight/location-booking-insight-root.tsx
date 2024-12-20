@@ -90,7 +90,7 @@ const LocationBookingInsightRootWithRelay = ({ onReloadRequired, organizationId,
         <CardHeader
           title={
             <>
-              <SectionIconTypography label="Booking Insights" />
+              <SectionIconTypography label="Booking Insights" invertDefaultColor />
               {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={locationName} analayticsLink />}
             </>
           }

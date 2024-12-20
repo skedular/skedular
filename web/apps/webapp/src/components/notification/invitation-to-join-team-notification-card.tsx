@@ -1,14 +1,11 @@
 import type { invitationToJoinTeamNotificationCard_NotificationDetails$key } from '@/queries/__generated__/invitationToJoinTeamNotificationCard_NotificationDetails.graphql';
 import type { invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation } from '@/queries/__generated__/invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation.graphql';
 import type { invitationToJoinTeamNotificationCard_rejectInvitationToJoinTeamMutation } from '@/queries/__generated__/invitationToJoinTeamNotificationCard_rejectInvitationToJoinTeamMutation.graphql';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, StackRow } from '@repo/shared/components/commons';
-import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
+import { BodyIconTypography, TwoButtonsCardActions } from '@repo/shared/components/commons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -181,45 +178,23 @@ const InvitationToJoinTeamNotificationCard = ({ notificationDetailsRelay }: Prop
                 }}
               />
             }
-            subheader={<BodyIconTypography label={`${getCustomerFullName(invitedBy)} has invited you to join team ${team?.name}`} />}
           />
-
-          <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <StackRow sx={{ justifyContent: 'flex-end' }}>
-              <Button color="secondary" variant="contained" startIcon={<CancelIcon />} onClick={handleRejectClick}>
-                Reject
-              </Button>
-              <Button color="primary" variant="contained" type="submit" startIcon={<CheckIcon />} onClick={handleAcceptClick}>
-                Accept
-              </Button>
-            </StackRow>
-          </CardActions>
+          <TwoButtonsCardActions
+            onPrimaryClicked={handleAcceptClick}
+            onSecondaryClicked={handleRejectClick}
+            primaryLabel="Accept"
+            secondaryLabel="Reject"
+          />
         </>
       )}
 
-      {cardState === CardState.Rejecting && (
-        <CardContent>
-          <BodyIconTypography label={`Rejecting invitation to join ${team?.name}`} />
-        </CardContent>
-      )}
-
-      {cardState === CardState.Rejected && (
-        <CardContent>
-          <BodyIconTypography label={`Rejected invitation to join ${team?.name}`} />
-        </CardContent>
-      )}
-
-      {cardState === CardState.Accepting && (
-        <CardContent>
-          <BodyIconTypography label={`Accepting invitation to join ${team?.name}`} />
-        </CardContent>
-      )}
-
-      {cardState === CardState.Accepted && (
-        <CardContent>
-          <BodyIconTypography label={`Accepted invitation to join ${team?.name}`} />
-        </CardContent>
-      )}
+      <CardContent>
+        <BodyIconTypography label={`${getCustomerFullName(invitedBy)} has invited you to join team ${team?.name}`} />
+        {cardState === CardState.Rejecting && <BodyIconTypography label={`Rejecting invitation to join ${team?.name}`} />}
+        {cardState === CardState.Rejected && <BodyIconTypography label={`Rejected invitation to join ${team?.name}`} />}
+        {cardState === CardState.Accepting && <BodyIconTypography label={`Accepting invitation to join ${team?.name}`} />}
+        {cardState === CardState.Accepted && <BodyIconTypography label={`Accepted invitation to join ${team?.name}`} />}
+      </CardContent>
     </Card>
   );
 };

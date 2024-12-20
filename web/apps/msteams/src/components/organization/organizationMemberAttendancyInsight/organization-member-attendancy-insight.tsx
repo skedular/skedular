@@ -113,13 +113,13 @@ const OrganizationMemberAttendancyInsight = ({
       <CardHeader
         title={
           <>
-            <SectionIconTypography label="Member Attendancy Insights" />
+            <SectionIconTypography label="Member Attendancy Insights" invertDefaultColor />
             {!hideOrganizationDetails && <OrganizationLink id={organizationId} name={rootData.organization?.name} analayticsLink />}
           </>
         }
-        subheader={<AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />}
       />
       <CardContent>
+        <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         <BarChart
           dataset={dataset}
           xAxis={[{ scaleType: 'band', dataKey: 'date' }]}

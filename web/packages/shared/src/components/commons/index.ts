@@ -15,3 +15,5 @@ export { default as StackColumn } from './stack-column';
 export { default as StackRow } from './stack-row';
 export { default as StackRowFullWidth } from './stack-row-full-width';
 export { default as SubtitleIconTypography } from './subtitle-icon-typography';
+export { default as TwoButtonsCardActions } from './two-buttons-card-actions';
+export { default as TwoButtonsDialogActions } from './two-buttons-dialog-actions';

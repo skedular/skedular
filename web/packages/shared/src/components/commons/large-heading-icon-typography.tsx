@@ -11,6 +11,7 @@ type Props = {
   sx?: SxProps<Theme>;
   spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];
+  invertDefaultColor?: boolean;
 };
 
 const LargeHeadingIconTypography = ({ startElement, endElement, stackMode, label, sx, spacing, color }: Props) => (

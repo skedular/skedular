@@ -3,13 +3,12 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography } from '@repo/shared/components/commons';
-import { DangerIcon, DeleteIcon } from '@repo/shared/components/icons';
+import { BodyIconTypography, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { DeleteIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -187,6 +186,7 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
             <BodyIconTypography
               label={getCustomerFullName(customer)}
               startElement={<CustomerAvatar name={customer} photo={{ url: customer.photoUrl }} />}
+              invertDefaultColor
             />
           }
         />
@@ -204,14 +204,12 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
         <DialogTitle>Remove desk</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove "${getCustomerFullName(customer)}"?`}</DialogContentText>
-          <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamMemberClick}>
-              Cancel
-            </Button>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingTeamMemberClick}>
-              Remove
-            </Button>
-          </DialogActions>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmRemovingTeamMemberClick}
+            onSecondaryClicked={handleCancelRemovingTeamMemberClick}
+            primaryLabel="Remove"
+            secondaryLabel="Cancel"
+          />
         </DialogContent>
       </Dialog>
     </>

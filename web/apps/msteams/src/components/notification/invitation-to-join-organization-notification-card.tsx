@@ -1,11 +1,8 @@
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography } from '@repo/shared/components/commons';
-import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
+import { BodyIconTypography, TwoButtonsCardActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -211,43 +208,23 @@ const InvitationToJoinOrganizationNotificationCard = ({ notificationDetailsRelay
                 }}
               />
             }
-            subheader={<BodyIconTypography label={`${getCustomerFullName(invitedBy)} has invited you to join organization ${organization?.name}`} />}
           />
-
-          <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <Button color="secondary" variant="contained" startIcon={<CancelIcon />} onClick={handleRejectClick}>
-              Reject
-            </Button>
-            <Button color="primary" variant="contained" type="submit" startIcon={<CheckIcon />} onClick={handleAcceptClick}>
-              Accept
-            </Button>
-          </CardActions>
+          <TwoButtonsCardActions
+            onPrimaryClicked={handleAcceptClick}
+            onSecondaryClicked={handleRejectClick}
+            primaryLabel="Accept"
+            secondaryLabel="Reject"
+          />
         </>
       )}
 
-      {cardState === CardState.Rejecting && (
-        <CardContent>
-          <BodyIconTypography label={`Rejecting invitation to join ${organization?.name}`} />
-        </CardContent>
-      )}
-
-      {cardState === CardState.Rejected && (
-        <CardContent>
-          <BodyIconTypography label={`Rejected invitation to join ${organization?.name}`} />
-        </CardContent>
-      )}
-
-      {cardState === CardState.Accepting && (
-        <CardContent>
-          <BodyIconTypography label={`Accepting invitation to join ${organization?.name}`} />
-        </CardContent>
-      )}
-
-      {cardState === CardState.Accepted && (
-        <CardContent>
-          <BodyIconTypography label={`Accepted invitation to join ${organization?.name}`} />
-        </CardContent>
-      )}
+      <CardContent>
+        <BodyIconTypography label={`${getCustomerFullName(invitedBy)} has invited you to join organization ${organization?.name}`} />
+        {cardState === CardState.Rejecting && <BodyIconTypography label={`Rejecting invitation to join ${organization?.name}`} />}
+        {cardState === CardState.Rejected && <BodyIconTypography label={`Rejected invitation to join ${organization?.name}`} />}
+        {cardState === CardState.Accepting && <BodyIconTypography label={`Accepting invitation to join ${organization?.name}`} />}
+        {cardState === CardState.Accepted && <BodyIconTypography label={`Accepted invitation to join ${organization?.name}`} />}
+      </CardContent>
     </Card>
   );
 };

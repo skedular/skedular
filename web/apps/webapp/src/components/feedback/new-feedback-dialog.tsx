@@ -1,12 +1,10 @@
 import type { newFeedbackDialog_query$key } from '@/queries/__generated__/newFeedbackDialog_query.graphql';
 import type { newFeedbackDialog_submitCustomerFeedbackMutation } from '@/queries/__generated__/newFeedbackDialog_submitCustomerFeedbackMutation.graphql';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
-import { FormStackColumn } from '@repo/shared/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -140,15 +138,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
                 from a mediocre one. If you notice something missing or something that bothers you, please let us know, and we&apos;ll address it
                 promptly!
               </Typography>
-
-              <DialogActions>
-                <Button color="secondary" variant="contained" onClick={onCancelClicked}>
-                  Cancel
-                </Button>
-                <Button color="primary" variant="contained" type="submit">
-                  Send
-                </Button>
-              </DialogActions>
+              <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Send" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}
         />

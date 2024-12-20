@@ -8,14 +8,15 @@ import Home from '@mui/icons-material/Home';
 import Info from '@mui/icons-material/Info';
 import Link from '@mui/icons-material/Link';
 import LocalOffer from '@mui/icons-material/LocalOffer';
-import Notes from '@mui/icons-material/Notes';
 import NotificationsActive from '@mui/icons-material/NotificationsActive';
 import Person from '@mui/icons-material/Person';
 import Place from '@mui/icons-material/Place';
 import Refresh from '@mui/icons-material/Refresh';
 import Settings from '@mui/icons-material/Settings';
+import Sms from '@mui/icons-material/Sms';
 import WbIridescent from '@mui/icons-material/WbIridescent';
 
+import type { SxProps, Theme } from '@mui/system';
 import TooltipIcon from './tooltip-icon';
 
 export { default as AddIcon, default as JoinIcon, default as NewIcon } from '@mui/icons-material/AddCircle';
@@ -60,187 +61,188 @@ export { default as ViewIcon } from '@mui/icons-material/Visibility';
 
 type Props = {
   fontSize?: 'inherit' | 'large' | 'medium' | 'small';
+  sx?: SxProps<Theme>;
   color?: 'inherit' | 'action' | 'disabled' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
   excludeTooltip?: boolean;
   tip?: string;
 };
 
-export const MembersIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const MembersIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Person fontSize={fontSize} color={color} />
+    <Person fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Members'}>
-      <Person fontSize={fontSize} color={color} />
+      <Person fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const OrganizationIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const OrganizationIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <CorporateFare fontSize={fontSize} color={color} />
+    <CorporateFare fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Organization'}>
-      <CorporateFare fontSize={fontSize} color={color} />
+      <CorporateFare fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const LocationIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const LocationIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Place fontSize={fontSize} color={color} />
+    <Place fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Location'}>
-      <Place fontSize={fontSize} color={color} />
+      <Place fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const TeamIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const TeamIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Diversity3 fontSize={fontSize} color={color} />
+    <Diversity3 fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Team'}>
-      <Diversity3 fontSize={fontSize} color={color} />
+      <Diversity3 fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const ZoneIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const ZoneIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <LocalOffer fontSize={fontSize} color={color} />
+    <LocalOffer fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Zone'}>
-      <LocalOffer fontSize={fontSize} color={color} />
+      <LocalOffer fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const DeskTypeIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const DeskTypeIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <LocalOffer fontSize={fontSize} color={color} />
+    <LocalOffer fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Desk type'}>
-      <LocalOffer fontSize={fontSize} color={color} />
+      <LocalOffer fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const DeskIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const DeskIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <EventSeat fontSize={fontSize} color={color} />
+    <EventSeat fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Desk'}>
-      <EventSeat fontSize={fontSize} color={color} />
+      <EventSeat fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const NotesIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const NotesIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Notes fontSize={fontSize} color={color} />
+    <Sms fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Notes'}>
-      <Notes fontSize={fontSize} color={color} />
+      <Sms fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const WebsiteIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const WebsiteIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Link fontSize={fontSize} color={color} />
+    <Link fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Website'}>
-      <Link fontSize={fontSize} color={color} />
+      <Link fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const SettingsIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const SettingsIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Settings fontSize={fontSize} color={color} />
+    <Settings fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Settings'}>
-      <Settings fontSize={fontSize} color={color} />
+      <Settings fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const RefreshIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const RefreshIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Refresh fontSize={fontSize} color={color} />
+    <Refresh fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Refresh'}>
-      <Refresh fontSize={fontSize} color={color} />
+      <Refresh fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const NotificationsIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const NotificationsIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <NotificationsActive fontSize={fontSize} color={color} />
+    <NotificationsActive fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Notification'}>
-      <NotificationsActive fontSize={fontSize} color={color} />
+      <NotificationsActive fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const AboutIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const AboutIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <WbIridescent fontSize={fontSize} color={color} />
+    <WbIridescent fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'About'}>
-      <WbIridescent fontSize={fontSize} color={color} />
+      <WbIridescent fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const InfoIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const InfoIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Info fontSize={fontSize} color={color} />
+    <Info fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Info'}>
-      <Info fontSize={fontSize} color={color} />
+      <Info fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const CalendarIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const CalendarIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <DateRange fontSize={fontSize} color={color} />
+    <DateRange fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Calendar'}>
-      <DateRange fontSize={fontSize} color={color} />
+      <DateRange fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const BookingIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const BookingIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <DateRange fontSize={fontSize} color={color} />
+    <DateRange fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Booking'}>
-      <DateRange fontSize={fontSize} color={color} />
+      <DateRange fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const WorkingFromOfficeIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const WorkingFromOfficeIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Business fontSize={fontSize} />
+    <Business fontSize={fontSize} sx={sx} color={color ?? 'primary'} />
   ) : (
     <TooltipIcon tip={tip ?? 'Working from office'}>
-      <Business fontSize={fontSize} color={color ?? 'primary'} />
+      <Business fontSize={fontSize} sx={sx} color={color ?? 'primary'} />
     </TooltipIcon>
   );
 
-export const WorkingFromHomeIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const WorkingFromHomeIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Home fontSize={fontSize} />
+    <Home fontSize={fontSize} sx={sx} color={color ?? 'action'} />
   ) : (
     <TooltipIcon tip={tip ?? 'Working from home'}>
-      <Home fontSize={fontSize} color={color ?? 'action'} />
+      <Home fontSize={fontSize} sx={sx} color={color ?? 'action'} />
     </TooltipIcon>
   );
 
-export const ViewDetailsIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const ViewDetailsIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Fullscreen fontSize={fontSize} color={color} />
+    <Fullscreen fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'View details'}>
-      <Fullscreen fontSize={fontSize} color={color} />
+      <Fullscreen fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 
-export const HomeIcon = ({ fontSize, excludeTooltip, tip, color }: Props) =>
+export const HomeIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Home fontSize={fontSize} />
+    <Home fontSize={fontSize} sx={sx} color={color ?? 'action'} />
   ) : (
     <TooltipIcon tip={tip ?? 'Home'}>
-      <Home fontSize={fontSize} color={color ?? 'action'} />
+      <Home fontSize={fontSize} sx={sx} color={color ?? 'action'} />
     </TooltipIcon>
   );

@@ -2,7 +2,9 @@ import type { CSSProperties, Variant } from '@mui/material/styles/createTypograp
 import Typography from '@mui/material/Typography';
 import type { SxProps, Theme } from '@mui/system';
 import { ResponsiveStyleValue } from '@mui/system';
-import type { JSX } from 'react';
+import { useContext, type JSX } from 'react';
+import { PaletteModeContext } from '../../libs/providers';
+import { coal, sandstone } from '../../libs/theme';
 import StackColumn from './stack-column';
 import StackRow from './stack-row';
 
@@ -15,16 +17,20 @@ type Props = {
   sx?: SxProps<Theme>;
   spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];
+  invertDefaultColor?: boolean;
 };
 
-const IconTypography = ({ startElement, endElement, stackMode, label, variant, sx, spacing, color }: Props) => {
+const IconTypography = ({ startElement, endElement, stackMode, label, variant, sx, spacing, color, invertDefaultColor }: Props) => {
+  const paletteMode = useContext(PaletteModeContext);
+  const finalColor = invertDefaultColor ? (paletteMode === 'dark' ? coal : sandstone) : color;
+
   if (!startElement && !label && !endElement) {
     return <></>;
   }
 
   if (!startElement && !endElement) {
     return (
-      <Typography variant={variant} sx={sx}>
+      <Typography variant={variant} sx={sx} color={finalColor}>
         {label}
       </Typography>
     );
@@ -35,7 +41,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, variant, s
       <StackColumn sx={sx} spacing={spacing}>
         {startElement}
         {label && (
-          <Typography variant={variant} color={color}>
+          <Typography variant={variant} color={finalColor}>
             {label}
           </Typography>
         )}
@@ -45,10 +51,10 @@ const IconTypography = ({ startElement, endElement, stackMode, label, variant, s
   }
 
   return (
-    <StackRow sx={sx} spacing={spacing}>
+    <StackRow sx={sx} spacing={spacing} color={finalColor}>
       {startElement}
       {label && (
-        <Typography variant={variant} color={color}>
+        <Typography variant={variant} color={finalColor}>
           {label}
         </Typography>
       )}

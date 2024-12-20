@@ -1,10 +1,8 @@
 import type { newDeskTypeDialog_addDeskTypeMutation } from '@/queries/__generated__/newDeskTypeDialog_addDeskTypeMutation.graphql';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormStackColumn } from '@repo/shared/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { DeskTypeName } from '@repo/shared/components/deskType';
 import {
   errorNotificationOptions,
@@ -117,15 +115,7 @@ const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
               <DeskTypeName name="name" required={requiredFields.name} />
-
-              <DialogActions>
-                <Button color="secondary" variant="contained" onClick={onCancelClicked}>
-                  Cancel
-                </Button>
-                <Button color="primary" variant="contained" type="submit">
-                  Add
-                </Button>
-              </DialogActions>
+              <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}
         />

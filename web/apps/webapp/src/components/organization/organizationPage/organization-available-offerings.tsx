@@ -124,8 +124,8 @@ const OrganizationAvailableOfferings = ({ rootDataRelay, onReloadRequired }: Pro
                 <CardHeader
                   title={
                     <>
-                      <BodyIconTypography label={name} />
-                      <BodyIconTypography label={`Unit price: $${(unitPrice / 100).toFixed(2)}`} />
+                      <BodyIconTypography label={name} invertDefaultColor />
+                      <BodyIconTypography label={`Unit price: $${(unitPrice / 100).toFixed(2)}`} invertDefaultColor />
                     </>
                   }
                 />

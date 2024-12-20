@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
-import { FormStackColumn, GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
+import { FormStackColumn, GridContainer, StackRow, StackRowFullWidth, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { EditIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -348,7 +348,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
             </StackRow>
           </StackRowFullWidth>
 
-          <GridContainer spacing={1}>
+          <GridContainer>
             {slicedrEdges.map((edge) => (
               <Grid key={edge.node.id}>
                 <TeamMemberCard
@@ -384,14 +384,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
                     useMemberId={true}
                   />
                 )}
-                <StackRow sx={{ justifyContent: 'flex-end' }}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Update
-                  </Button>
-                </StackRow>
+                <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}
           />

@@ -270,7 +270,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
         </StackRow>
       </StackRowFullWidth>
 
-      <GridContainer spacing={1}>
+      <GridContainer>
         {bookings.map((booking) => {
           const canJoinBooking =
             booking.customer.uniqueId === rootData.me?.id

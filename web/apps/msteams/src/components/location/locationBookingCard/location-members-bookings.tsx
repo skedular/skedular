@@ -1,9 +1,7 @@
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -13,17 +11,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { BodyIconTypography, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
-import {
-  BookingIcon,
-  DangerIcon,
-  DeleteIcon,
-  DeskIcon,
-  EllipseMenuIcon,
-  NotPreferredIcon,
-  PreferredIcon,
-  SettingsIcon,
-} from '@repo/shared/components/icons';
+import Box from '@mui/system/Box';
+import { BodyIconTypography, StackRow, StackRowFullWidth, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BookingIcon, DeleteIcon, DeskIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -32,6 +22,7 @@ import {
 } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { coal, sandstone } from '@repo/shared/libs/theme';
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { BookingsWeekGrid } from 'components/booking';
@@ -392,36 +383,36 @@ const LocationMembersBookings = ({
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={<LocationLink organizationId={organizationId} id={locationId} name={locationName} />}
-          subheader={
-            <StackRowFullWidth>
-              <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
-                <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
-                <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
-              </ToggleButtonGroup>
-              <StackRow>
-                <Link href={getLocationBookingsLink(locationId, organizationId)}>
-                  <BookingIcon />
-                </Link>
-
-                {rootData.location.canModify && (
-                  <Link href={getLocationSettingsLink(locationId, organizationId)}>
-                    <SettingsIcon color="secondary" />
-                  </Link>
-                )}
-              </StackRow>
-            </StackRowFullWidth>
-          }
           action={
             <>
               {moreActionsOption.length > 0 && (
-                <IconButton onClick={handleMoreActionsMenuClick}>
-                  <EllipseMenuIcon />
-                </IconButton>
+                <Box color={paletteMode === 'dark' ? coal : sandstone}>
+                  <IconButton onClick={handleMoreActionsMenuClick} color="inherit">
+                    <EllipseMenuIcon />
+                  </IconButton>
+                </Box>
               )}
             </>
           }
         />
         <CardContent>
+          <StackRowFullWidth>
+            <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
+              <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
+              <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
+            </ToggleButtonGroup>
+            <StackRow>
+              <Link href={getLocationBookingsLink(locationId, organizationId)}>
+                <BookingIcon />
+              </Link>
+
+              {rootData.location.canModify && (
+                <Link href={getLocationSettingsLink(locationId, organizationId)}>
+                  <SettingsIcon color="secondary" />
+                </Link>
+              )}
+            </StackRow>
+          </StackRowFullWidth>
           <BodyIconTypography
             label={rootData.location.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${rootData.location.deskCapacity}`}
             startElement={<DeskIcon />}
@@ -453,15 +444,12 @@ const LocationMembersBookings = ({
               ? `Bookings are scheduled for the location "${locationName}". Are you sure you want to remove it?`
               : `Are you sure you want to remove the location "${locationName}"?`}
           </DialogContentText>
-
-          <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingLocationClick}>
-              Cancel
-            </Button>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingLocationClick}>
-              Remove
-            </Button>
-          </DialogActions>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmRemovingLocationClick}
+            onSecondaryClicked={handleCancelRemovingLocationClick}
+            primaryLabel="Remove"
+            secondaryLabel="Cancel"
+          />
         </DialogContent>
       </Dialog>
     </>

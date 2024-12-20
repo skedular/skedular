@@ -1,8 +1,7 @@
 import type { addLocation_addLocationMutation } from '@/queries/__generated__/addLocation_addLocationMutation.graphql';
 import type { addLocation_completeLocationOnboardingMutation } from '@/queries/__generated__/addLocation_completeLocationOnboardingMutation.graphql';
-import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import {
   errorNotificationOptions,
@@ -188,15 +187,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
             <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
             <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
             <TextField label="Physical Address" name="physicalAddress" required={requiredFields.physicalAddress} multiline={true} />
-
-            <StackRow sx={{ justifyContent: 'flex-end' }}>
-              <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                {cancelButtonText ?? 'Cancel'}
-              </Button>
-              <Button color="primary" variant="contained" type="submit">
-                Create
-              </Button>
-            </StackRow>
+            <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Create" secondaryLabel="Cancel" />
           </FormStackColumn>
         )}
       />

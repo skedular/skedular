@@ -1,7 +1,6 @@
 import type { locationAboutTab_rootQuery } from '@/queries/__generated__/locationAboutTab_rootQuery.graphql';
 import type { locationAboutTab_updateLocationMutation } from '@/queries/__generated__/locationAboutTab_updateLocationMutation.graphql';
-import Button from '@mui/material/Button';
-import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -164,12 +163,7 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
           <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
           <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
           <TextField label="Physical Address" name="physicalAddress" required={requiredFields.physicalAddress} multiline={true} />
-
-          <StackRow sx={{ justifyContent: 'flex-end' }}>
-            <Button color="primary" variant="contained" type="submit">
-              Update
-            </Button>
-          </StackRow>
+          <TwoButtonsDialogActions primaryLabel="Update" hideSecondary />
         </FormStackColumn>
       )}
     />

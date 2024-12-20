@@ -267,7 +267,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
         </AccordionDetails>
       </Accordion>
 
-      <GridContainer spacing={1}>
+      <GridContainer>
         {nodes.map((node) => (
           <Grid key={node.id}>
             <BookingCard

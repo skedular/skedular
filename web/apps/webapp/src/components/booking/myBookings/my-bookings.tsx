@@ -4,6 +4,7 @@ import type { myBookings_query$key } from '@/queries/__generated__/myBookings_qu
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
+import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
@@ -292,9 +293,10 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
   }
 
   return (
-    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
       <SectionIconTypography label="My Bookings" />
       <Divider />
+      <Box sx={{ paddingBottom: defaultPadding }} />
 
       {viewMode === 'grid' && (
         <GridContainer>

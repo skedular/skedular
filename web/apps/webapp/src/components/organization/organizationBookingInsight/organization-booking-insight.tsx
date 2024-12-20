@@ -98,13 +98,13 @@ const OrganizationBookingInsight = ({ rootDataRelay, rootDataOrganizationAnalyti
       <CardHeader
         title={
           <>
-            <SectionIconTypography label="Booking Insights" />
+            <SectionIconTypography label="Booking Insights" invertDefaultColor />
             {!hideOrganizationDetails && <OrganizationLink id={organizationId} name={rootData.organization?.name} analayticsLink />}
           </>
         }
-        subheader={<AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />}
       />
       <CardContent>
+        <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'total' }]} {...chartSettings} />
       </CardContent>
     </Card>

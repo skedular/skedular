@@ -13,7 +13,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, FormStackColumn, LeadIconTypography, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, FormStackColumn, LeadIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   CustomerIcon,
   DeleteIcon,
@@ -655,6 +655,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
               <LeadIconTypography
                 label={shortDateFormatFrom}
                 startElement={<CustomerAvatar name={bookingDetails.customer} photo={{ url: bookingDetails.customer?.photoUrl }} />}
+                invertDefaultColor
               />
             }
           />
@@ -765,15 +766,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                     bookingFrom={from}
                     bookingTo={to}
                   />
-
-                  <StackRow sx={{ justifyContent: 'flex-end' }}>
-                    <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                      Cancel
-                    </Button>
-                    <Button color="primary" variant="contained" type="submit">
-                      Update
-                    </Button>
-                  </StackRow>
+                  <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
                 </FormStackColumn>
               );
             }}

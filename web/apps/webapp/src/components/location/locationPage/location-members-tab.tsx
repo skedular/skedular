@@ -9,13 +9,12 @@ import type { locationMembersTab_query$key } from '@/queries/__generated__/locat
 import type { locationMembersTab_rootQuery } from '@/queries/__generated__/locationMembersTab_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
-import { FormStackColumn, GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
+import { FormStackColumn, GridContainer, StackRow, StackRowFullWidth, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -318,7 +317,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
         </StackRow>
       </StackRowFullWidth>
 
-      <GridContainer spacing={1}>
+      <GridContainer>
         {slicedLocationMemberEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <LocationMemberCard data={rootData} locationMemberDetailsRelay={edge.node} connectionIds={connectionIds} />
@@ -346,14 +345,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
                   multiline={true}
                   helperText="member1@example.com,member2@example.com"
                 />
-                <DialogActions>
-                  <Button color="secondary" variant="contained" onClick={handleCancelInvitingPeopleClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Invite
-                  </Button>
-                </DialogActions>
+                <TwoButtonsDialogActions onSecondaryClicked={handleCancelInvitingPeopleClick} primaryLabel="Invite" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}
           />

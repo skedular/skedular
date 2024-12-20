@@ -4,7 +4,6 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -13,19 +12,11 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
+import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, FormStackColumn, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, FormStackColumn, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { DeskTypesLine } from '@repo/shared/components/deskType';
-import {
-  DangerIcon,
-  DeleteIcon,
-  DeskIcon,
-  EditIcon,
-  EllipseMenuIcon,
-  InfoIcon,
-  NotPreferredIcon,
-  PreferredIcon,
-} from '@repo/shared/components/icons';
+import { DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, InfoIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -35,6 +26,7 @@ import {
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { ZonesLine } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { coal, sandstone } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { MultipleChoicesDeskTypes, MultipleChoicesZones } from 'components/organization';
@@ -778,13 +770,15 @@ const DeskCard = ({
       {!editing && (
         <Card sx={{ minWidth: 320, height: '100%' }}>
           <CardHeader
-            title={<BodyIconTypography label={deskDetails.name} startElement={<DeskIcon />} />}
+            title={<BodyIconTypography label={deskDetails.name} startElement={<DeskIcon />} invertDefaultColor />}
             action={
               <>
                 {moreActionsOption.length > 0 && (
-                  <IconButton onClick={handleMoreActionsMenuClick}>
-                    <EllipseMenuIcon />
-                  </IconButton>
+                  <Box color={paletteMode === 'dark' ? coal : sandstone}>
+                    <IconButton onClick={handleMoreActionsMenuClick} color="inherit">
+                      <EllipseMenuIcon />
+                    </IconButton>
+                  </Box>
                 )}
               </>
             }
@@ -853,15 +847,7 @@ const DeskCard = ({
                 <DeskName name="name" required={requiredFields.name} />
                 <MultipleChoicesDeskTypes rootDataRelay={multipleChoicesDeskTypesData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
                 <MultipleChoicesZones rootDataRelay={multipleChoicesZonesData} name="zoneIds" required={requiredFields.zoneIds} />
-
-                <StackRow sx={{ justifyContent: 'flex-end' }}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Update
-                  </Button>
-                </StackRow>
+                <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}
           />
@@ -880,45 +866,36 @@ const DeskCard = ({
         <DialogTitle>Remove desk</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove desk "${deskDetails.name}"?`}</DialogContentText>
-
-          <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingDeskClick}>
-              Cancel
-            </Button>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingDeskClick}>
-              Remove
-            </Button>
-          </DialogActions>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmRemovingDeskClick}
+            onSecondaryClicked={handleCancelRemovingDeskClick}
+            primaryLabel="Remove"
+            secondaryLabel="Cancel"
+          />
         </DialogContent>
       </Dialog>
       <Dialog TransitionComponent={DialogTransition} open={deskDeactivateConfirmationDialogOpen} onClose={handleCancelDeactivateDeskClick}>
         <DialogTitle>Deactivate desk</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to deactivate desk "${deskDetails.name}"?`}</DialogContentText>
-
-          <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelDeactivateDeskClick}>
-              Cancel
-            </Button>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmDeactivatingDeskClick}>
-              Deactivate
-            </Button>
-          </DialogActions>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmDeactivatingDeskClick}
+            onSecondaryClicked={handleCancelDeactivateDeskClick}
+            primaryLabel="Deactivate"
+            secondaryLabel="Cancel"
+          />
         </DialogContent>
       </Dialog>
       <Dialog TransitionComponent={DialogTransition} open={deskActivateConfirmationDialogOpen} onClose={handleCancelActivateDeskClick}>
         <DialogTitle>Activate desk</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to activate desk "${deskDetails.name}"?`}</DialogContentText>
-
-          <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelActivateDeskClick}>
-              Cancel
-            </Button>
-            <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmActivatingDeskClick}>
-              Activate
-            </Button>
-          </DialogActions>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmActivatingDeskClick}
+            onSecondaryClicked={handleCancelActivateDeskClick}
+            primaryLabel="Activate"
+            secondaryLabel="Cancel"
+          />
         </DialogContent>
       </Dialog>
       <Dialog
@@ -929,15 +906,12 @@ const DeskCard = ({
         <DialogTitle>Set Desk Approval Requirement</DialogTitle>
         <DialogContent>
           <DialogContentText color="info">{`Are you sure you want to enable approval for desk "${deskDetails.name}"?`}</DialogContentText>
-
-          <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelSetDeskApprovalRequirementClick}>
-              Cancel
-            </Button>
-            <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleSetDeskApprovalRequirementClick}>
-              Enable
-            </Button>
-          </DialogActions>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleSetDeskApprovalRequirementClick}
+            onSecondaryClicked={handleCancelSetDeskApprovalRequirementClick}
+            primaryLabel="Enable"
+            secondaryLabel="Cancel"
+          />
         </DialogContent>
       </Dialog>
 
@@ -949,15 +923,12 @@ const DeskCard = ({
         <DialogTitle>Remove Approval Requirement for Desk</DialogTitle>
         <DialogContent>
           <DialogContentText color="info">{`Are you sure you want to remove approval for desk "${deskDetails.name}"?`}</DialogContentText>
-
-          <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemoveDeskApprovalRequirementDeskClick}>
-              Cancel
-            </Button>
-            <Button color="info" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemoveDeskApprovalRequirementDeskClick}>
-              Remove
-            </Button>
-          </DialogActions>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmRemoveDeskApprovalRequirementDeskClick}
+            onSecondaryClicked={handleCancelRemoveDeskApprovalRequirementDeskClick}
+            primaryLabel="Remove"
+            secondaryLabel="Cancel"
+          />
         </DialogContent>
       </Dialog>
     </>

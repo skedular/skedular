@@ -12,7 +12,7 @@ type Props = {
 };
 
 const LocationAnalyticsTab = ({ onReloadRequired, organizationId, locationId, locationName }: Props) => (
-  <GridContainer spacing={1}>
+  <GridContainer>
     <Grid>
       <LocationBookingInsightRoot
         onReloadRequired={onReloadRequired}

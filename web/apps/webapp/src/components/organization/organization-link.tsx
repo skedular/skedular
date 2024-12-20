@@ -1,10 +1,9 @@
 import { OrganizationBookingsCard } from '@/components/organization/organizationBookingCard';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
-import { LeadIconTypography, StackRow } from '@repo/shared/components/commons';
+import { LeadIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { OrganizationIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { memo, useState } from 'react';
@@ -92,10 +91,10 @@ const OrganizationLink = ({
   return (
     <>
       <StackRow>
-        {excludeLink && <LeadIconTypography label={name} startElement={<OrganizationIcon fontSize="medium" excludeTooltip />} />}
+        {excludeLink && <LeadIconTypography label={name} startElement={<OrganizationIcon fontSize="medium" excludeTooltip />} invertDefaultColor />}
         {!excludeLink && (
           <Link href={href}>
-            <LeadIconTypography label={name} startElement={<OrganizationIcon fontSize="medium" excludeTooltip />} />
+            <LeadIconTypography label={name} startElement={<OrganizationIcon fontSize="medium" excludeTooltip />} invertDefaultColor />
           </Link>
         )}
         {enableViewDetails && (
@@ -108,11 +107,7 @@ const OrganizationLink = ({
         <DialogContent>
           <OrganizationBookingsCard organizationId={id} organizationName={name} organizationsConnectionIds={[]} />
         </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={handleViewDetailsCloseClick}>
-            Close
-          </Button>
-        </DialogActions>
+        <TwoButtonsDialogActions onPrimaryClicked={handleViewDetailsCloseClick} primaryLabel="Close" hideSecondary />
       </Dialog>
     </>
   );

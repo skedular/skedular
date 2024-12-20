@@ -1,5 +1,4 @@
-import Button from '@mui/material/Button';
-import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -176,12 +175,7 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
             name="industrySubCategoryIds"
             required={requiredFields.industrySubCategoryIds}
           />
-
-          <StackRow sx={{ justifyContent: 'flex-end' }}>
-            <Button color="primary" variant="contained" type="submit">
-              Update
-            </Button>
-          </StackRow>
+          <TwoButtonsDialogActions primaryLabel="Update" hideSecondary />
         </FormStackColumn>
       )}
     />

@@ -1,9 +1,8 @@
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
-import { LeadIconTypography, StackRow } from '@repo/shared/components/commons';
+import { LeadIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { LocationIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { LocationBookingsCard } from 'components/location/locationBookingCard';
@@ -83,10 +82,10 @@ const LocationLink = ({
   return (
     <>
       <StackRow>
-        {excludeLink && <LeadIconTypography color="primary" label={name} startElement={<LocationIcon fontSize="small" color="primary" />} />}
+        {excludeLink && <LeadIconTypography label={name} startElement={<LocationIcon fontSize="medium" excludeTooltip />} invertDefaultColor />}
         {!excludeLink && (
           <Link href={href}>
-            <LeadIconTypography color="primary" label={name} startElement={<LocationIcon fontSize="small" color="primary" />} />
+            <LeadIconTypography label={name} startElement={<LocationIcon fontSize="medium" excludeTooltip />} invertDefaultColor />
           </Link>
         )}
         {enableViewDetails && (
@@ -105,11 +104,7 @@ const LocationLink = ({
             locationsConnectionIds={[]}
           />
         </DialogContent>
-        <DialogActions>
-          <Button color="primary" variant="contained" onClick={handleViewDetailsCloseClick}>
-            Close
-          </Button>
-        </DialogActions>
+        <TwoButtonsDialogActions onPrimaryClicked={handleViewDetailsCloseClick} primaryLabel="Close" hideSecondary />
       </Dialog>
     </>
   );

@@ -2,6 +2,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import LinearProgress from '@mui/material/LinearProgress';
+import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
@@ -270,8 +271,8 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
       <SectionIconTypography label="My Locations" />
-
       <Divider />
+      <Box sx={{ paddingBottom: defaultPadding }} />
 
       {viewMode === 'grid' && (
         <GridContainer>

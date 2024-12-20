@@ -1,9 +1,8 @@
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Link from '@mui/material/Link';
-import { LeadIconTypography, StackRow } from '@repo/shared/components/commons';
+import { LeadIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { TeamIcon, ViewDetailsIcon } from '@repo/shared/components/icons';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { TeamBookingsCard } from 'components/team/teamBookingCard';
@@ -68,10 +67,10 @@ const TeamLink = ({
   return (
     <>
       <StackRow>
-        {excludeLink && <LeadIconTypography label={name} startElement={<TeamIcon fontSize="medium" excludeTooltip />} />}
+        {excludeLink && <LeadIconTypography label={name} startElement={<TeamIcon fontSize="medium" excludeTooltip />} invertDefaultColor />}
         {!excludeLink && (
           <Link href={href}>
-            <LeadIconTypography label={name} startElement={<TeamIcon fontSize="medium" excludeTooltip />} />
+            <LeadIconTypography label={name} startElement={<TeamIcon fontSize="medium" excludeTooltip />} invertDefaultColor />
           </Link>
         )}
         {enableViewDetails && (
@@ -84,11 +83,7 @@ const TeamLink = ({
         <DialogContent>
           <TeamBookingsCard organizationId={organizationId} organizationName={organizationName} teamId={id} teamName={name} teamsConnectionIds={[]} />
         </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={handleViewDetailsCloseClick}>
-            Close
-          </Button>
-        </DialogActions>
+        <TwoButtonsDialogActions onPrimaryClicked={handleViewDetailsCloseClick} primaryLabel="Close" hideSecondary />
       </Dialog>
     </>
   );

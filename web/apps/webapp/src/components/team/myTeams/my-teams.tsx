@@ -3,6 +3,7 @@ import type { myTeams_teams_refetchableFragment } from '@/queries/__generated__/
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
+import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
@@ -145,8 +146,8 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
       <SectionIconTypography label="My Teams" />
-
       <Divider />
+      <Box sx={{ paddingBottom: defaultPadding }} />
 
       {viewMode === 'grid' && (
         <GridContainer>

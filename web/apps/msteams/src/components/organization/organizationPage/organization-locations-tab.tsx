@@ -195,7 +195,7 @@ const OrganizationLocationsTab = ({ queryReference }: Props) => {
         </StackRow>
       </StackRowFullWidth>
 
-      <GridContainer spacing={1}>
+      <GridContainer>
         {slicedEdges.map((edge) => {
           if (!edge.node.organization) {
             return <></>;

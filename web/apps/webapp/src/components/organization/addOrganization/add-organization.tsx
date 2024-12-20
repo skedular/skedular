@@ -2,9 +2,8 @@ import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from '@
 import type { addOrganization_addOrganizationMutation } from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
 import type { addOrganization_completeOrganizationOnboardingMutation } from '@/queries/__generated__/addOrganization_completeOrganizationOnboardingMutation.graphql';
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
-import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -185,17 +184,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               required={requiredFields.industrySubCategoryIds}
             />
             <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
-
-            <StackRow sx={{ justifyContent: 'flex-end' }}>
-              {showCancel && (
-                <Button color="secondary" variant="contained" onClick={onCancelled}>
-                  Cancel
-                </Button>
-              )}
-              <Button color="primary" variant="contained" type="submit">
-                Create
-              </Button>
-            </StackRow>
+            <TwoButtonsDialogActions onSecondaryClicked={onCancelled} primaryLabel="Create" secondaryLabel="Cancel" hideSecondary={!showCancel} />
           </FormStackColumn>
         )}
       />

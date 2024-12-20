@@ -3,7 +3,7 @@ import type { organizationBillingInfo_refetchableFragment } from '@/queries/__ge
 import type { organizationBillingInfo_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationBillingInfo_setOrganizationBillingInfoMutation.graphql';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import { BodyIconTypography, FormStackColumn, LeadIconTypography, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, FormStackColumn, LeadIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { SingleChoiceCountry } from '@repo/shared/components/forms';
 import { EditIcon } from '@repo/shared/components/icons';
 import {
@@ -270,15 +270,7 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
                 <TextField label="Province" name="province" required={requiredFields.province} />
                 <TextField label="Zipcode" name="zipcode" required={requiredFields.zipcode} />
                 <SingleChoiceCountry name="country" required={requiredFields.country} />
-
-                <StackRow sx={{ justifyContent: 'flex-end' }}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Update
-                  </Button>
-                </StackRow>
+                <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}
           />

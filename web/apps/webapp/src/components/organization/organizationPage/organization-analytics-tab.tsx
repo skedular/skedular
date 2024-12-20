@@ -11,7 +11,7 @@ type Props = {
 };
 
 const OrganizationAnalyticsTab = ({ onReloadRequired, organizationId, organizationName }: Props) => (
-  <GridContainer spacing={1}>
+  <GridContainer>
     <Grid>
       <OrganizationBookingInsightRoot
         onReloadRequired={onReloadRequired}

@@ -95,7 +95,7 @@ const LocationDeskOccupancyInsightRootWithRelay = ({
         <CardHeader
           title={
             <>
-              <SectionIconTypography label="Desk Occupancy Insights" />
+              <SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />
               {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={locationName} analayticsLink />}
             </>
           }

@@ -107,13 +107,13 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
       <CardHeader
         title={
           <>
-            <SectionIconTypography label="Desk Occupancy Insights" />
+            <SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />
             {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={rootData.location?.name} analayticsLink />}
           </>
         }
-        subheader={<AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />}
       />
       <CardContent>
+        <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'percentage' }]} {...chartSettings} />
       </CardContent>
     </Card>

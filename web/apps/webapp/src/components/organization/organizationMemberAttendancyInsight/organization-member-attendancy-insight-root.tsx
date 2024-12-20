@@ -90,7 +90,7 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({
         <CardHeader
           title={
             <>
-              <SectionIconTypography label="Member Attendancy Insights" />
+              <SectionIconTypography label="Member Attendancy Insights" invertDefaultColor />
               {!hideOrganizationDetails && <OrganizationLink id={organizationId} name={organizationName} analayticsLink />}
             </>
           }

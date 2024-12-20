@@ -1,8 +1,7 @@
 import { OrganizationMultipleChoicesIndustries } from '@/components/organization';
 import type { organizationAboutTab_rootQuery } from '@/queries/__generated__/organizationAboutTab_rootQuery.graphql';
 import type { organizationAboutTab_updateOrganizationMutation } from '@/queries/__generated__/organizationAboutTab_updateOrganizationMutation.graphql';
-import Button from '@mui/material/Button';
-import { FormStackColumn, StackRow } from '@repo/shared/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -175,12 +174,7 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
             name="industrySubCategoryIds"
             required={requiredFields.industrySubCategoryIds}
           />
-
-          <StackRow sx={{ justifyContent: 'flex-end' }}>
-            <Button color="primary" variant="contained" type="submit">
-              Update
-            </Button>
-          </StackRow>
+          <TwoButtonsDialogActions primaryLabel="Update" hideSecondary />
         </FormStackColumn>
       )}
     />

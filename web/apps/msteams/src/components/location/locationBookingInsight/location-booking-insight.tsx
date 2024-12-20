@@ -100,13 +100,13 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay,
       <CardHeader
         title={
           <>
-            <SectionIconTypography label="Booking Insights" />
+            <SectionIconTypography label="Booking Insights" invertDefaultColor />
             {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={rootData.location?.name} analayticsLink />}
           </>
         }
-        subheader={<AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />}
       />
       <CardContent>
+        <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'total' }]} {...chartSettings} />
       </CardContent>
     </Card>

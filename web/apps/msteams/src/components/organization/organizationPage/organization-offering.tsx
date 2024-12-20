@@ -130,8 +130,8 @@ const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
         <CardHeader
           title={
             <>
-              <BodyIconTypography label={offering.name} />
-              <BodyIconTypography label={`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`} />
+              <BodyIconTypography label={offering.name} invertDefaultColor />
+              <BodyIconTypography label={`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
             </>
           }
         />

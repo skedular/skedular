@@ -14,7 +14,7 @@ export const subbeam = 'rgb(249,214,110)';
 export const flame = 'rgb(254,147,111)';
 
 // emerald
-export const brand = {
+export const brand1 = {
   50: 'hsl(126, 55%, 48%)',
   100: 'hsl(126, 55%, 48%)',
   200: 'hsl(126, 55%, 48%)',
@@ -25,6 +25,20 @@ export const brand = {
   700: 'hsl(126, 55%, 48%)',
   800: 'hsl(126, 55%, 48%)',
   900: 'hsl(126, 55%, 48%)',
+};
+
+// sandstone
+export const brand2 = {
+  50: 'hsl(45, 11%, 92%)',
+  100: 'hsl(45, 11%, 92%)',
+  200: 'hsl(45, 11%, 92%)',
+  300: 'hsl(45, 11%, 92%)',
+  400: 'hsl(45, 11%, 92%)',
+  500: 'hsl(45, 11%, 92%)',
+  600: 'hsl(45, 11%, 92%)',
+  700: 'hsl(45, 11%, 92%)',
+  800: 'hsl(45, 11%, 92%)',
+  900: 'hsl(45, 11%, 92%)',
 };
 
 // coal
@@ -79,6 +93,26 @@ const getDesignTokens = (mode: PaletteMode) => {
     cssVariables: true,
     palette: {
       mode,
+      primaryAction: {
+        light: brand1[300],
+        main: brand1[400],
+        dark: brand1[800],
+        ...(mode === 'dark' && {
+          light: brand1[400],
+          main: brand1[500],
+          dark: brand1[700],
+        }),
+      },
+      secondaryAction: {
+        light: brand2[300],
+        main: brand2[400],
+        dark: brand2[800],
+        ...(mode === 'dark' && {
+          light: brand2[400],
+          main: brand2[500],
+          dark: brand2[700],
+        }),
+      },
       grey: {
         ...gray,
       },
@@ -183,6 +217,13 @@ const getDesignTokens = (mode: PaletteMode) => {
         styleOverrides: {
           root: {
             boxShadow: 'none',
+          },
+        },
+      },
+      MuiCardHeader: {
+        styleOverrides: {
+          root: {
+            backgroundColor: mode === 'dark' ? sandstone : coal,
           },
         },
       },

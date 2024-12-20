@@ -6,9 +6,20 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
-import { CalendarIcon, DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, LocationIcon, TeamIcon, ZoneIcon } from '@repo/shared/components/icons';
+import {
+  CalendarIcon,
+  DeleteIcon,
+  DeskIcon,
+  EditIcon,
+  EllipseMenuIcon,
+  LocationIcon,
+  NotesIcon,
+  TeamIcon,
+  ZoneIcon,
+} from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -17,6 +28,7 @@ import {
 } from '@repo/shared/components/notification';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
+import { coal, sandstone } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import dayjs from 'dayjs';
@@ -210,21 +222,29 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
 
   return (
     <>
-      <Card sx={{ width: 250 }}>
+      <Card sx={{ width: 315 }}>
         <CardHeader
-          title={<LeadIconTypography startElement={<LocationIcon />} label={bookingDetails.location?.name} sx={{ flexWrap: undefined }} />}
+          title={
+            <LeadIconTypography
+              startElement={<LocationIcon />}
+              label={bookingDetails.location?.name}
+              sx={{ flexWrap: undefined }}
+              invertDefaultColor
+            />
+          }
           action={
             <>
               {moreActionsOption.length > 0 && (
-                <IconButton onClick={handleMoreActionsMenuClick}>
-                  <EllipseMenuIcon />
-                </IconButton>
+                <Box color={paletteMode === 'dark' ? coal : sandstone}>
+                  <IconButton onClick={handleMoreActionsMenuClick} color="inherit">
+                    <EllipseMenuIcon />
+                  </IconButton>
+                </Box>
               )}
             </>
           }
         />
         <CardContent>
-          <Divider />
           <SmallIconTypography
             startElement={<CalendarIcon />}
             label={toShortDateWithAdditionalDayInfo(date)}
@@ -246,6 +266,12 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
               <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} />
             </StackRow>
           )}
+          <Divider />
+          <SmallIconTypography
+            startElement={<NotesIcon />}
+            label={bookingDetails.notes ? bookingDetails.notes : 'N/A'}
+            sx={{ paddingTop: 1, paddingBottom: 1 }}
+          />
           <Divider />
           <StackColumn sx={{ paddingTop: 1, paddingBottom: 1 }}>
             <SmallIconTypography label="Other teammates coming" />

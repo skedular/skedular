@@ -363,11 +363,9 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth, 
   return (
     <>
       <Card sx={{ maxWidth: 500, minWidth }}>
-        <CardHeader
-          title={<BodyIconTypography label={toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo(date)} />}
-          subheader={getMyBookingsComponents(myBookings)}
-        />
+        <CardHeader title={<BodyIconTypography label={toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo(date)} />} />
         <CardContent>
+          {getMyBookingsComponents(myBookings)}
           {summerizedRows.length !== 0 && (
             <>
               {summerizedRows.slice(0, summerizedRows.length - 1).map((row, index) => (

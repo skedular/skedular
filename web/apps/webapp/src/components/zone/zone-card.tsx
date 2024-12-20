@@ -9,14 +9,13 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
-import { BodyIconTypography, FormStackColumn, StackRow } from '@repo/shared/components/commons';
-import { DangerIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { BodyIconTypography, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon, ZoneIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -366,7 +365,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
     <>
       {!editing && (
         <Card sx={{ minWidth: 200, height: '100%' }}>
-          <CardHeader title={<BodyIconTypography label={organizationTagDetails.name} startElement={<ZoneIcon />} />} />
+          <CardHeader title={<BodyIconTypography label={organizationTagDetails.name} startElement={<ZoneIcon />} invertDefaultColor />} />
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
             {rootData.organization.canModify && (
@@ -412,15 +411,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
                 <ZoneName name="name" required={requiredFields.name} />
-
-                <StackRow sx={{ justifyContent: 'flex-end' }}>
-                  <Button color="secondary" variant="contained" onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                  <Button color="primary" variant="contained" type="submit">
-                    Update
-                  </Button>
-                </StackRow>
+                <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}
           />
@@ -431,14 +422,12 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
         <DialogTitle>Remove desk type</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove the desk type "${organizationTagDetails.name}"?`}</DialogContentText>
-          <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingZoneClick}>
-              Cancel
-            </Button>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingZoneClick}>
-              Remove
-            </Button>
-          </DialogActions>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmRemovingZoneClick}
+            onSecondaryClicked={handleCancelRemovingZoneClick}
+            primaryLabel="Remove"
+            secondaryLabel="Cancel"
+          />
         </DialogContent>
       </Dialog>
     </>

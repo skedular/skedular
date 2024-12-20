@@ -1,14 +1,11 @@
 import type { invitationToJoinLocationNotificationCard_NotificationDetails$key } from '@/queries/__generated__/invitationToJoinLocationNotificationCard_NotificationDetails.graphql';
 import type { invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation } from '@/queries/__generated__/invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation.graphql';
 import type { invitationToJoinLocationNotificationCard_rejectInvitationToJoinLocationMutation } from '@/queries/__generated__/invitationToJoinLocationNotificationCard_rejectInvitationToJoinLocationMutation.graphql';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography } from '@repo/shared/components/commons';
-import { CancelIcon, CheckIcon } from '@repo/shared/components/icons';
+import { BodyIconTypography, TwoButtonsCardActions } from '@repo/shared/components/commons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -196,43 +193,23 @@ const InvitationToJoinLocationNotificationCard = ({ notificationDetailsRelay }: 
                 }}
               />
             }
-            subheader={<BodyIconTypography label={`${getCustomerFullName(invitedBy)} has invited you to join location ${location?.name}`} />}
           />
-
-          <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <Button color="secondary" variant="contained" startIcon={<CancelIcon />} onClick={handleRejectClick}>
-              Reject
-            </Button>
-            <Button color="primary" variant="contained" type="submit" startIcon={<CheckIcon />} onClick={handleAcceptClick}>
-              Accept
-            </Button>
-          </CardActions>
+          <TwoButtonsCardActions
+            onPrimaryClicked={handleAcceptClick}
+            onSecondaryClicked={handleRejectClick}
+            primaryLabel="Accept"
+            secondaryLabel="Reject"
+          />
         </>
       )}
 
-      {cardState === CardState.Rejecting && (
-        <CardContent>
-          <BodyIconTypography label={`Rejecting invitation to join ${location?.name}`} />
-        </CardContent>
-      )}
-
-      {cardState === CardState.Rejected && (
-        <CardContent>
-          <BodyIconTypography label={`Rejected invitation to join ${location?.name}`} />
-        </CardContent>
-      )}
-
-      {cardState === CardState.Accepting && (
-        <CardContent>
-          <BodyIconTypography label={`Accepting invitation to join ${location?.name}`} />
-        </CardContent>
-      )}
-
-      {cardState === CardState.Accepted && (
-        <CardContent>
-          <BodyIconTypography label={`Accepted invitation to join ${location?.name}`} />
-        </CardContent>
-      )}
+      <CardContent>
+        <BodyIconTypography label={`${getCustomerFullName(invitedBy)} has invited you to join location ${location?.name}`} />
+        {cardState === CardState.Rejecting && <BodyIconTypography label={`Rejecting invitation to join ${location?.name}`} />}
+        {cardState === CardState.Rejected && <BodyIconTypography label={`Rejected invitation to join ${location?.name}`} />}
+        {cardState === CardState.Accepting && <BodyIconTypography label={`Accepting invitation to join ${location?.name}`} />}
+        {cardState === CardState.Accepted && <BodyIconTypography label={`Accepted invitation to join ${location?.name}`} />}
+      </CardContent>
     </Card>
   );
 };

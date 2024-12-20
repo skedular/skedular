@@ -1,10 +1,8 @@
 import type { invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation.graphql';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormStackColumn } from '@repo/shared/components/commons';
+import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -130,14 +128,7 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
                 multiline={true}
                 helperText="member1@example.com,member2@example.com"
               />
-              <DialogActions>
-                <Button color="secondary" variant="contained" onClick={onCancelClicked}>
-                  Cancel
-                </Button>
-                <Button color="primary" variant="contained" type="submit">
-                  Invite
-                </Button>
-              </DialogActions>
+              <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Invite" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}
         />

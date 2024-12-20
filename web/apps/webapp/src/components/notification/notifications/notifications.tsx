@@ -147,7 +147,7 @@ const Notifications = ({ queryReference }: Props) => {
         />
       </StackRow>
 
-      <GridContainer spacing={1}>
+      <GridContainer>
         {slicedEdges.map((edge) => (
           <Grid key={edge.node.id}>
             <NotificationCard notificationDetailsRelay={edge.node} />

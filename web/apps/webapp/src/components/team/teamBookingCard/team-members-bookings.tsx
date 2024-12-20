@@ -5,12 +5,10 @@ import type { teamMembersBookings_addCustomerDefaultTeamMutation } from '@/queri
 import type { teamMembersBookings_deleteTeamMutation } from '@/queries/__generated__/teamMembersBookings_deleteTeamMutation.graphql';
 import type { teamMembersBookings_query$key } from '@/queries/__generated__/teamMembersBookings_query.graphql';
 import type { teamMembersBookings_removeCustomerDefaultTeamMutation } from '@/queries/__generated__/teamMembersBookings_removeCustomerDefaultTeamMutation.graphql';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -20,8 +18,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { BodyIconTypography, StackColumn, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
-import { BookingIcon, DangerIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
+import Box from '@mui/system/Box';
+import { BodyIconTypography, StackColumn, StackRow, StackRowFullWidth, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -30,6 +29,7 @@ import {
 } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { coal, sandstone } from '@repo/shared/libs/theme';
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
@@ -368,36 +368,37 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
               {rootData.team.organization && <OrganizationLink id={rootData.team.organization.uniqueId} name={rootData.team.organization.name} />}
             </StackColumn>
           }
-          subheader={
-            <StackRowFullWidth>
-              <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
-                <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
-                <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
-              </ToggleButtonGroup>
-              <StackRow>
-                <Link component={NextLink} href={getTeamBookingsLink(teamId, organizationId)}>
-                  <BookingIcon />
-                </Link>
-
-                {rootData.team.canModify && (
-                  <Link component={NextLink} href={getTeamSettingsLink(teamId, organizationId)}>
-                    <SettingsIcon color="secondary" />
-                  </Link>
-                )}
-              </StackRow>
-            </StackRowFullWidth>
-          }
           action={
             <>
               {moreActionsOption.length > 0 && (
-                <IconButton onClick={handleMoreActionsMenuClick}>
-                  <EllipseMenuIcon />
-                </IconButton>
+                <Box color={paletteMode === 'dark' ? coal : sandstone}>
+                  <IconButton onClick={handleMoreActionsMenuClick} color="inherit">
+                    <EllipseMenuIcon />
+                  </IconButton>
+                </Box>
               )}
             </>
           }
         />
         <CardContent>
+          <StackRowFullWidth>
+            <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
+              <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
+              <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
+            </ToggleButtonGroup>
+            <StackRow>
+              <Link component={NextLink} href={getTeamBookingsLink(teamId, organizationId)}>
+                <BookingIcon />
+              </Link>
+
+              {rootData.team.canModify && (
+                <Link component={NextLink} href={getTeamSettingsLink(teamId, organizationId)}>
+                  <SettingsIcon color="secondary" />
+                </Link>
+              )}
+            </StackRow>
+          </StackRowFullWidth>
+
           <BookingsWeekGrid
             rootDataRelay={rootData}
             rootDataAllBookingsRelay={rootData}
@@ -424,15 +425,12 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
               ? `Bookings are scheduled for the team "${teamName}". Are you sure you want to remove it?`
               : `Are you sure you want to remove the team "${teamName}"?`}
           </DialogContentText>
-
-          <DialogActions>
-            <Button color="secondary" variant="outlined" onClick={handleCancelRemovingTeamClick}>
-              Cancel
-            </Button>
-            <Button color="warning" variant="contained" startIcon={<DangerIcon />} onClick={handleConfirmRemovingTeamClick}>
-              Remove
-            </Button>
-          </DialogActions>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmRemovingTeamClick}
+            onSecondaryClicked={handleCancelRemovingTeamClick}
+            primaryLabel="Remove"
+            secondaryLabel="Cancel"
+          />
         </DialogContent>
       </Dialog>
     </>

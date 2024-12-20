@@ -10,7 +10,7 @@ type Props = {
 };
 
 const GridContainer = ({ children, sx, spacing }: PropsWithChildren<Props>) => (
-  <Grid container spacing={spacing || { xs: 1, sm: 1, md: 1, lg: 15 }} sx={{ alignItems: 'flex-start', ...sx }}>
+  <Grid container spacing={spacing || { xs: 1, sm: 1, md: 1, lg: 7 }} sx={{ alignItems: 'flex-start', ...sx }}>
     {children}
   </Grid>
 );

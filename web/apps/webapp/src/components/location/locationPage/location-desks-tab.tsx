@@ -311,7 +311,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
         </StackRow>
       </StackRowFullWidth>
 
-      <GridContainer spacing={1}>
+      <GridContainer>
         {slicedEdges.map((edge) => {
           const foundBooking = rootDatarefetchAllBookings.allBookings?.find((booking) =>
             booking.desks.find(({ uniqueId }) => uniqueId === edge.node.id),

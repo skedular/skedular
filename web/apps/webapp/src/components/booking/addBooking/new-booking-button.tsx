@@ -5,9 +5,11 @@ import { NewIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { coal, emerald, sandstone } from '@repo/shared/libs/theme';
 import { startOfDay } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import { memo, useEffect, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import NewBookingDialog from './new-booking-dialog';
@@ -27,6 +29,7 @@ type Props = {
   hideIcon?: boolean;
   variant?: 'text' | 'outlined' | 'contained';
   size?: 'small' | 'medium' | 'large';
+  invertDefaultColor?: boolean;
 };
 
 const RootQuery = graphql`
@@ -60,8 +63,10 @@ const NewBookingButton = ({
   hideIcon,
   variant,
   size,
+  invertDefaultColor,
 }: Props) => {
   const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
+  const paletteMode = useContext(PaletteModeContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleButtonClicked = () => {
@@ -82,15 +87,29 @@ const NewBookingButton = ({
 
   return (
     <>
-      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ borderRadius: 4 }} color="inherit">
+      <Button
+        variant={variant ?? 'text'}
+        onClick={handleButtonClicked}
+        fullWidth={fullWidth}
+        sx={{ borderRadius: 4, backgroundColor: invertDefaultColor ? (paletteMode === 'dark' ? coal : sandstone) : 'inherit' }}
+      >
         {size === 'small' && (
-          <SmallIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
+          <SmallIconTypography
+            label={label ?? 'Add Booking'}
+            endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} sx={{ color: emerald }} />}
+          />
         )}
         {size === 'medium' && (
-          <BodyIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
+          <BodyIconTypography
+            label={label ?? 'Add Booking'}
+            endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} sx={{ color: emerald }} />}
+          />
         )}
         {(size === 'large' || !size) && (
-          <LeadIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
+          <LeadIconTypography
+            label={label ?? 'Add Booking'}
+            endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} sx={{ color: emerald }} />}
+          />
         )}
       </Button>
       <NewBookingDialog
@@ -126,6 +145,7 @@ type RelayProps = {
   hideIcon?: boolean;
   variant?: 'text' | 'outlined' | 'contained';
   size?: 'small' | 'medium' | 'large';
+  invertDefaultColor?: boolean;
 };
 
 const NewBookingButtonWithRelay = ({
@@ -142,6 +162,7 @@ const NewBookingButtonWithRelay = ({
   hideIcon,
   variant,
   size,
+  invertDefaultColor,
 }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<newBookingButton_rootQuery>(RootQuery);
 
@@ -191,6 +212,7 @@ const NewBookingButtonWithRelay = ({
         hideIcon={hideIcon}
         variant={variant}
         size={size}
+        invertDefaultColor={invertDefaultColor}
       />
     </ErrorBoundary>
   );

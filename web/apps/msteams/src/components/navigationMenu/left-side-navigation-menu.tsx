@@ -6,6 +6,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { sandstone } from '@repo/shared/libs/theme';
 import { memo, useContext } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -40,6 +41,10 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       borderRadius: 4,
       width: maxWidth - 30,
       marginLeft: 2,
+      transition: 'none',
+    },
+    '&.Mui-selected': {
+      backgroundColor: sandstone,
     },
   };
 
@@ -71,7 +76,14 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}` ? 4 : 0 }}
           >
             {showIconsOnly && <HomeIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Home" startElement={<HomeIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && (
+              <BodyIconTypography
+                label="Home"
+                startElement={<HomeIcon excludeTooltip />}
+                spacing={3}
+                invertDefaultColor={pathName === `/organizations/${finalOrganizationId}` && paletteMode === 'dark'}
+              />
+            )}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -83,7 +95,14 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/locations` ? 4 : 0 }}
           >
             {showIconsOnly && <LocationIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Locations" startElement={<LocationIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && (
+              <BodyIconTypography
+                label="Locations"
+                startElement={<LocationIcon excludeTooltip />}
+                spacing={3}
+                invertDefaultColor={pathName === `/organizations/${finalOrganizationId}/locations` && paletteMode === 'dark'}
+              />
+            )}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -95,7 +114,14 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/teams` ? 4 : 0 }}
           >
             {showIconsOnly && <TeamIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Teams" startElement={<TeamIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && (
+              <BodyIconTypography
+                label="Teams"
+                startElement={<TeamIcon excludeTooltip />}
+                spacing={3}
+                invertDefaultColor={pathName === `/organizations/${finalOrganizationId}/teams` && paletteMode === 'dark'}
+              />
+            )}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -107,7 +133,14 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/notifications` ? 4 : 0 }}
           >
             {showIconsOnly && <NotificationsIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Notifications" startElement={<NotificationsIcon excludeTooltip />} spacing={3} />}{' '}
+            {!showIconsOnly && (
+              <BodyIconTypography
+                label="Notifications"
+                startElement={<NotificationsIcon excludeTooltip />}
+                spacing={3}
+                invertDefaultColor={pathName === `/${finalOrganizationId}/notifications` && paletteMode === 'dark'}
+              />
+            )}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -119,7 +152,14 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/settings` ? 4 : 0 }}
           >
             {showIconsOnly && <SettingsIcon excludeTooltip />}
-            {!showIconsOnly && <BodyIconTypography label="Settings" startElement={<SettingsIcon excludeTooltip />} spacing={3} />}
+            {!showIconsOnly && (
+              <BodyIconTypography
+                label="Settings"
+                startElement={<SettingsIcon excludeTooltip />}
+                spacing={3}
+                invertDefaultColor={pathName === `/${finalOrganizationId}/settings` && paletteMode === 'dark'}
+              />
+            )}
           </ListItemButton>
         </Link>
       </ListItem>
