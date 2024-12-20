@@ -768,7 +768,7 @@ const DeskCard = ({
       {!editing && (
         <Card sx={{ minWidth: 320, height: '100%' }}>
           <CardHeader
-            title={<BodyIconTypography label={deskDetails.name} startElement={<DeskIcon />} />}
+            title={<BodyIconTypography label={deskDetails.name} startElement={<DeskIcon />} invertDefaultColor />}
             action={
               <>
                 {moreActionsOption.length > 0 && (
