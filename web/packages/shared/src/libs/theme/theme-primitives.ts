@@ -232,6 +232,13 @@ const getDesignTokens = (mode: PaletteMode) => {
           },
         },
       },
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 16,
+          },
+        },
+      },
     },
   };
 };
