@@ -39,7 +39,7 @@ const ThemedRootLayout = ({ children }: PropsWithChildren) => (
         defer
       />
     )}
-    <body className={inter.className}>
+    <body className={`${inter.className} ${barlow.className}`}>
       <AppRouterCacheProvider>
         <PaletteModeProvider>
           <RootLayout>{children}</RootLayout>
