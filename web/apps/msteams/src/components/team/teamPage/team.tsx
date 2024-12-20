@@ -1,11 +1,12 @@
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import { LeadIconTypography } from '@repo/shared/components/commons';
+import { TeamIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
 import { Bookings } from 'components/booking/bookingsPage';
-import { TeamLink } from 'components/team';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -83,8 +84,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
 
   return (
     <>
-      <TeamLink organizationId={organizationId} id={teamId} name={rootData.team?.name} excludeLink />
-
+      <LeadIconTypography label={rootData.team?.name} startElement={<TeamIcon fontSize="medium" excludeTooltip />} />
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />
         <Tab label="About" />

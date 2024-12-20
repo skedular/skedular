@@ -1,8 +1,9 @@
 import { Bookings } from '@/components/booking/bookingsPage';
-import { TeamLink } from '@/components/team';
 import type { team_rootQuery } from '@/queries/__generated__/team_rootQuery.graphql';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import { LeadIconTypography } from '@repo/shared/components/commons';
+import { TeamIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -84,8 +85,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
 
   return (
     <>
-      <TeamLink organizationId={rootData.team.organization?.uniqueId} id={teamId} name={rootData.team?.name} excludeLink />
-
+      <LeadIconTypography label={rootData.team?.name} startElement={<TeamIcon fontSize="medium" excludeTooltip />} />
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />
         <Tab label="About" />

@@ -1,11 +1,12 @@
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import { LeadIconTypography } from '@repo/shared/components/commons';
+import { LocationIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
 import { Bookings } from 'components/booking/bookingsPage';
-import { LocationLink } from 'components/location';
 import { OrganizationDeskTypes, OrganizationZones } from 'components/organization/organizationPage';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -101,7 +102,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
 
   return (
     <>
-      <LocationLink organizationId={organizationId} id={locationId} name={rootData.location?.name} excludeLink />
+      <LeadIconTypography label={rootData.location?.name} startElement={<LocationIcon fontSize="medium" excludeTooltip />} />
 
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />

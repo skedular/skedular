@@ -1,9 +1,10 @@
 import { Bookings } from '@/components/booking/bookingsPage';
-import { LocationLink } from '@/components/location';
 import { OrganizationDeskTypes, OrganizationZones } from '@/components/organization/organizationPage';
 import type { location_rootQuery } from '@/queries/__generated__/location_rootQuery.graphql';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import { LeadIconTypography } from '@repo/shared/components/commons';
+import { LocationIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -108,7 +109,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
 
   return (
     <>
-      <LocationLink organizationId={rootData.location.organization?.uniqueId} id={locationId} name={rootData.location?.name} excludeLink />
+      <LeadIconTypography label={rootData.location?.name} startElement={<LocationIcon fontSize="medium" excludeTooltip />} />
 
       <Tabs value={tabIndex} onChange={handleTabChange}>
         <Tab label="Bookings" />
