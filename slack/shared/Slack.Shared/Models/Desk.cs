@@ -2,7 +2,7 @@ using Enterprise.Shared.Models;
 
 namespace Slack.Shared.Models;
 
-public class Desk : ReplicatedModelBaseWithDeleted
+public class Desk : ReplicatedModelBase
 {
     public string? Name { get; set; }
     public bool Deactivated { get; set; }

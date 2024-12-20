@@ -413,8 +413,7 @@ public class BookingService(
         desks = await repositoryFactory.DeskRepository
             .Query(new Specification<Desk>
                 {
-                    Criteria = query => !query.DeletedAt.HasValue &&
-                                        !query.Deactivated &&
+                    Criteria = query => !query.Deactivated &&
                                         query.Location != null &&
                                         !query.Location.DeletedAt.HasValue &&
                                         deskIds.Contains(query.Id)

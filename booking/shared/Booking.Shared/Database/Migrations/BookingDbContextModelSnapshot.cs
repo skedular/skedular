@@ -204,9 +204,6 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -232,8 +229,6 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnName("xmin");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DeletedAt");
 
                     b.HasIndex("LocationId");
 

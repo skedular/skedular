@@ -94,7 +94,7 @@ public class BookingSubscriber(
             desks =
                 await repositoryFactory.DeskRepository.Query(new Specification<Desk>
                 {
-                    Criteria = query => !query.DeletedAt.HasValue && deskIds.Contains(query.Id)
+                    Criteria = query => deskIds.Contains(query.Id)
                 }).ToListAsync(cancellationToken);
         }
 

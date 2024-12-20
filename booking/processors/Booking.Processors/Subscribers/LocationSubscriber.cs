@@ -129,7 +129,8 @@ public class LocationSubscriber(
         }
 
         var itemsToRemove = existingLocation.Desks
-            .Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
+            .Where(desk => location.Desks.All(item => item.Id != desk.Id))
+            .ToList();
         var updatedItems = existingLocation.Desks
             .Where(desk => location.Desks.Any(item => item.Id == desk.Id))
             .Select(desk =>
@@ -163,7 +164,7 @@ public class LocationSubscriber(
             .ToList();
 
         repositoryFactory.DeskRepository.RemoveRange(itemsToRemove);
-        existingLocation.Desks = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingLocation.Desks = addedItems.Concat(updatedItems).ToList();
 
         return existingLocation;
     }

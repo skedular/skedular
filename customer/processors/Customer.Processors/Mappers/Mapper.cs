@@ -172,7 +172,6 @@ public class Mapper : IMapper
         location.Desks = locationAfterState.Desks.Select(item => new Desk
         {
             Id = item.Id,
-            DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
             Location = location
@@ -463,7 +462,6 @@ public class Mapper : IMapper
             {
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,

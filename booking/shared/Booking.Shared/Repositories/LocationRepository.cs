@@ -27,9 +27,9 @@ internal static class LocationExtensions
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query =>
-                query.Desks.Where(desk => !desk.DeletedAt.HasValue && (includeDeactivated || !desk.Deactivated)))
+                query.Desks.Where(desk => includeDeactivated || !desk.Deactivated))
             .Include(query =>
-                query.Desks.Where(desk => !desk.DeletedAt.HasValue && (includeDeactivated || !desk.Deactivated)))
+                query.Desks.Where(desk => includeDeactivated || !desk.Deactivated))
             .ThenInclude(query => query.OrganizationTags)
             .Include(query => query.Organization)
             .ThenInclude(query =>
