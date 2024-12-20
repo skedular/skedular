@@ -202,7 +202,8 @@ public class CustomerSubscriber(
         Shared.Database.Entities.Customer existingCustomer)
     {
         var itemsToRemove = existingCustomer.Identities
-            .Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
+            .Where(identity => customer.Identities.All(item => item.Id != identity.Id))
+            .ToList();
         var updatedItems = existingCustomer.Identities
             .Where(identity => customer.Identities.Any(item => item.Id == identity.Id))
             .Select(identity => repositoryFactory.IdentityRepository.Update(

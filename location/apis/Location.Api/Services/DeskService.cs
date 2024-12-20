@@ -152,7 +152,6 @@ public class DeskService(
                 .Query(new Specification<OrganizationTag>
                 {
                     Criteria = query =>
-                        !query.DeletedAt.HasValue &&
                         desk.DeskTypes.Concat(desk.Zones).Select(item => item.Id).Contains(query.Id) &&
                         query.Organization.Id == existingLocation.Organization.Id &&
                         !query.Organization.DeletedAt.HasValue
@@ -216,7 +215,6 @@ public class DeskService(
                 .Query(new Specification<OrganizationTag>
                 {
                     Criteria = query =>
-                        !query.DeletedAt.HasValue &&
                         deskTypeIds.Concat(zoneIds).Contains(query.Id) &&
                         query.Organization.Id == existingLocation.Organization.Id &&
                         !query.Organization.DeletedAt.HasValue
@@ -406,7 +404,6 @@ public class DeskService(
                 .Query(new Specification<OrganizationTag>
                 {
                     Criteria = query =>
-                        !query.DeletedAt.HasValue &&
                         deskTypes.Concat(zones).Select(item => item.Id).Contains(query.Id) &&
                         query.Organization.Id == existingLocation.Organization.Id &&
                         !query.Organization.DeletedAt.HasValue

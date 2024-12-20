@@ -2,7 +2,7 @@ using Enterprise.Shared.Models;
 
 namespace Organization.Shared.Models;
 
-public class Tag : ModelBaseWithDeleted
+public class Tag : ModelBase
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }

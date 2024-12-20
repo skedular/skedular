@@ -32,7 +32,7 @@ internal static class DeskExtensions
         this IQueryable<Desk> originalQuery) =>
         originalQuery
             .Include(query => query.Location)
-            .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
+            .Include(query => query.OrganizationTags);
 
     internal static IQueryable<Desk> AddSearchCriteria(
         this IQueryable<Desk> query,

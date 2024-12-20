@@ -114,8 +114,7 @@ public class TagService(
         var matchingTagFound = await repositoryFactory.TagRepository
             .Query(new Specification<Shared.Database.Entities.Tag>
             {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    query.Organization.Id == tag.Organization.Id &&
+                Criteria = query => query.Organization.Id == tag.Organization.Id &&
                                     query.Type == tag.Type &&
                                     EF.Functions.ILike(query.Name, tag.Name)
             }).AnyAsync(cancellationToken);
@@ -264,7 +263,6 @@ public class TagService(
             .Query(new Specification<Shared.Database.Entities.Tag>
             {
                 Criteria = query =>
-                    !query.DeletedAt.HasValue &&
                     query.Organization.Id == organizationId &&
                     query.Type == tagType &&
                     EF.Functions.ILike(query.Name, tagName) &&

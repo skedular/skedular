@@ -167,7 +167,7 @@ public class OrganizationSubscriber(
             .ToList();
 
         repositoryFactory.OrganizationTagRepository.RemoveRange(itemsToRemove);
-        existingOrganization.Tags = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingOrganization.Tags = addedItems.Concat(updatedItems).ToList();
 
         return existingOrganization;
     }

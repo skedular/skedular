@@ -123,7 +123,6 @@ public class Mapper : IMapper
         organization.Tags = organizationAfterState.Tags.Select(item => new OrganizationTag
         {
             Id = item.Id,
-            DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
             Type = item.TagType,
@@ -498,7 +497,6 @@ public class Mapper : IMapper
             {
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,

@@ -2,7 +2,7 @@ using Enterprise.Shared.Models;
 
 namespace Slack.Shared.Models;
 
-public class OrganizationTag : ReplicatedModelBaseWithDeleted
+public class OrganizationTag : ReplicatedModelBase
 {
     public string? Name { get; set; }
     public string? Description { get; set; }

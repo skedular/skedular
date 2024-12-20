@@ -558,7 +558,6 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Type = src.Type
@@ -745,7 +744,6 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Type = src.Type
