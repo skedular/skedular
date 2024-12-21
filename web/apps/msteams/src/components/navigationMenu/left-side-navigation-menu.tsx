@@ -79,7 +79,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
         <Link href={`/organizations/${finalOrganizationId}`}>
           <ListItemButton
             selected={pathName === `/organizations/${finalOrganizationId}`}
-            sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}` ? 4 : 0 }}
+            sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}` ? 4 : 0, paddingRight: 5 }}
           >
             {showIconsOnly && (
               <BodyIconTypography
@@ -103,7 +103,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
         <Link href={`/organizations/${finalOrganizationId}/locations`}>
           <ListItemButton
             selected={pathName.startsWith(`/organizations/${finalOrganizationId}/locations`)}
-            sx={{ ...styles, borderRadius: pathName.startsWith(`/organizations/${finalOrganizationId}/locations`) ? 4 : 0 }}
+            sx={{ ...styles, borderRadius: pathName.startsWith(`/organizations/${finalOrganizationId}/locations`) ? 4 : 0, paddingRight: 5 }}
           >
             {showIconsOnly && (
               <BodyIconTypography
@@ -127,7 +127,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
         <Link href={`/organizations/${finalOrganizationId}/teams`}>
           <ListItemButton
             selected={pathName.startsWith(`/organizations/${finalOrganizationId}/teams`)}
-            sx={{ ...styles, borderRadius: pathName.startsWith(`/organizations/${finalOrganizationId}/teams`) ? 4 : 0 }}
+            sx={{ ...styles, borderRadius: pathName.startsWith(`/organizations/${finalOrganizationId}/teams`) ? 4 : 0, paddingRight: 5 }}
           >
             {showIconsOnly && (
               <BodyIconTypography
@@ -151,7 +151,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
         <Link href={`/${finalOrganizationId}/notifications`}>
           <ListItemButton
             selected={pathName.startsWith(`/${finalOrganizationId}/notifications`)}
-            sx={{ ...styles, borderRadius: pathName.startsWith(`/${finalOrganizationId}/notifications`) ? 4 : 0 }}
+            sx={{ ...styles, borderRadius: pathName.startsWith(`/${finalOrganizationId}/notifications`) ? 4 : 0, paddingRight: 5 }}
           >
             {showIconsOnly && (
               <BodyIconTypography
@@ -175,7 +175,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
         <Link href={`/${finalOrganizationId}/settings`}>
           <ListItemButton
             selected={pathName.startsWith(`/${finalOrganizationId}/settings`)}
-            sx={{ ...styles, borderRadius: pathName.startsWith(`/${finalOrganizationId}/settings`) ? 4 : 0 }}
+            sx={{ ...styles, borderRadius: pathName.startsWith(`/${finalOrganizationId}/settings`) ? 4 : 0, paddingRight: 5 }}
           >
             {showIconsOnly && (
               <BodyIconTypography

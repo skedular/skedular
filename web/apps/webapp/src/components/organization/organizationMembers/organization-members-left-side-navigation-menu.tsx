@@ -53,7 +53,7 @@ const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth }:
     >
       <ListItem disablePadding>
         <Link component={NextLink} href={memberesLink}>
-          <ListItemButton selected={pathName === memberesLink} sx={{ ...styles, borderRadius: pathName === memberesLink ? 4 : 0 }}>
+          <ListItemButton selected={pathName === memberesLink} sx={{ ...styles, borderRadius: pathName === memberesLink ? 4 : 0, paddingRight: 5 }}>
             <BodyIconTypography label="Members" invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'} />
           </ListItemButton>
         </Link>
@@ -61,7 +61,7 @@ const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth }:
 
       <ListItem disablePadding>
         <Link component={NextLink} href={guestLink}>
-          <ListItemButton selected={pathName === guestLink} sx={{ ...styles, borderRadius: pathName === guestLink ? 4 : 0 }}>
+          <ListItemButton selected={pathName === guestLink} sx={{ ...styles, borderRadius: pathName === guestLink ? 4 : 0, paddingRight: 5 }}>
             <BodyIconTypography label="Guests" invertDefaultColor={pathName === guestLink && paletteMode === 'dark'} />
           </ListItemButton>
         </Link>

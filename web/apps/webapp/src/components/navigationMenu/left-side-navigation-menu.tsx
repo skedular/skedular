@@ -97,7 +97,10 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly, hideIc
 
       <ListItem disablePadding>
         <Link component={NextLink} href={organizationBaseLink}>
-          <ListItemButton selected={pathName === organizationBaseLink} sx={{ ...styles, borderRadius: pathName === organizationBaseLink ? 4 : 0 }}>
+          <ListItemButton
+            selected={pathName === organizationBaseLink}
+            sx={{ ...styles, borderRadius: pathName === organizationBaseLink ? 4 : 0, paddingRight: 5 }}
+          >
             {showIconsOnly && (
               <BodyIconTypography
                 startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
@@ -120,7 +123,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly, hideIc
         <Link component={NextLink} href={organizationLocationsBaseLink}>
           <ListItemButton
             selected={pathName.startsWith(organizationLocationsBaseLink)}
-            sx={{ ...styles, borderRadius: pathName.startsWith(organizationLocationsBaseLink) ? 4 : 0 }}
+            sx={{ ...styles, borderRadius: pathName.startsWith(organizationLocationsBaseLink) ? 4 : 0, paddingRight: 5 }}
           >
             {showIconsOnly && (
               <BodyIconTypography
@@ -144,7 +147,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly, hideIc
         <Link component={NextLink} href={organizationTeamsBaseLink}>
           <ListItemButton
             selected={pathName.startsWith(organizationTeamsBaseLink)}
-            sx={{ ...styles, borderRadius: pathName.startsWith(organizationTeamsBaseLink) ? 4 : 0 }}
+            sx={{ ...styles, borderRadius: pathName.startsWith(organizationTeamsBaseLink) ? 4 : 0, paddingRight: 5 }}
           >
             {showIconsOnly && (
               <BodyIconTypography
@@ -168,7 +171,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly, hideIc
         <Link component={NextLink} href={organizationMembersBaseLink}>
           <ListItemButton
             selected={pathName.startsWith(organizationMembersBaseLink)}
-            sx={{ ...styles, borderRadius: pathName.startsWith(organizationMembersBaseLink) ? 4 : 0 }}
+            sx={{ ...styles, borderRadius: pathName.startsWith(organizationMembersBaseLink) ? 4 : 0, paddingRight: 5 }}
           >
             {showIconsOnly && (
               <BodyIconTypography
@@ -191,7 +194,10 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly, hideIc
       {rootData.organization.canModify && (
         <ListItem disablePadding>
           <Link component={NextLink} href="/settings">
-            <ListItemButton selected={pathName.startsWith('/settings')} sx={{ ...styles, borderRadius: pathName.startsWith('/settings') ? 4 : 0 }}>
+            <ListItemButton
+              selected={pathName.startsWith('/settings')}
+              sx={{ ...styles, borderRadius: pathName.startsWith('/settings') ? 4 : 0, paddingRight: 5 }}
+            >
               {showIconsOnly && (
                 <BodyIconTypography
                   startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
