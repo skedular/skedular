@@ -94,8 +94,8 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link href={`/organizations/${finalOrganizationId}/locations`}>
           <ListItemButton
-            selected={pathName === `/organizations/${finalOrganizationId}/locations`}
-            sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/locations` ? 4 : 0 }}
+            selected={pathName.startsWith(`/organizations/${finalOrganizationId}/locations`)}
+            sx={{ ...styles, borderRadius: pathName.startsWith(`/organizations/${finalOrganizationId}/locations`) ? 4 : 0 }}
           >
             {showIconsOnly && <LocationIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
@@ -103,7 +103,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
                 label="Locations"
                 startElement={<LocationIcon excludeTooltip color="inherit" />}
                 spacing={3}
-                invertDefaultColor={pathName === `/organizations/${finalOrganizationId}/locations` && paletteMode === 'dark'}
+                invertDefaultColor={pathName.startsWith(`/organizations/${finalOrganizationId}/locations`) && paletteMode === 'dark'}
               />
             )}
           </ListItemButton>
@@ -113,8 +113,8 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link href={`/organizations/${finalOrganizationId}/teams`}>
           <ListItemButton
-            selected={pathName === `/organizations/${finalOrganizationId}/teams`}
-            sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/teams` ? 4 : 0 }}
+            selected={pathName.startsWith(`/organizations/${finalOrganizationId}/teams`)}
+            sx={{ ...styles, borderRadius: pathName.startsWith(`/organizations/${finalOrganizationId}/teams`) ? 4 : 0 }}
           >
             {showIconsOnly && <TeamIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
@@ -122,7 +122,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
                 label="Teams"
                 startElement={<TeamIcon excludeTooltip color="inherit" />}
                 spacing={3}
-                invertDefaultColor={pathName === `/organizations/${finalOrganizationId}/teams` && paletteMode === 'dark'}
+                invertDefaultColor={pathName.startsWith(`/organizations/${finalOrganizationId}/teams`) && paletteMode === 'dark'}
               />
             )}
           </ListItemButton>
@@ -132,8 +132,8 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link href={`/${finalOrganizationId}/notifications`}>
           <ListItemButton
-            selected={pathName === `/${finalOrganizationId}/notifications`}
-            sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/notifications` ? 4 : 0 }}
+            selected={pathName.startsWith(`/${finalOrganizationId}/notifications`)}
+            sx={{ ...styles, borderRadius: pathName.startsWith(`/${finalOrganizationId}/notifications`) ? 4 : 0 }}
           >
             {showIconsOnly && <NotificationsIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
@@ -141,7 +141,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
                 label="Notifications"
                 startElement={<NotificationsIcon excludeTooltip color="inherit" />}
                 spacing={3}
-                invertDefaultColor={pathName === `/${finalOrganizationId}/notifications` && paletteMode === 'dark'}
+                invertDefaultColor={pathName.startsWith(`/${finalOrganizationId}/notifications`) && paletteMode === 'dark'}
               />
             )}
           </ListItemButton>
@@ -151,8 +151,8 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link href={`/${finalOrganizationId}/settings`}>
           <ListItemButton
-            selected={pathName === `/${finalOrganizationId}/settings`}
-            sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/settings` ? 4 : 0 }}
+            selected={pathName.startsWith(`/${finalOrganizationId}/settings`)}
+            sx={{ ...styles, borderRadius: pathName.startsWith(`/${finalOrganizationId}/settings`) ? 4 : 0 }}
           >
             {showIconsOnly && <SettingsIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
@@ -160,7 +160,7 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
                 label="Settings"
                 startElement={<SettingsIcon excludeTooltip color="inherit" />}
                 spacing={3}
-                invertDefaultColor={pathName === `/${finalOrganizationId}/settings` && paletteMode === 'dark'}
+                invertDefaultColor={pathName.startsWith(`/${finalOrganizationId}/settings`) && paletteMode === 'dark'}
               />
             )}
           </ListItemButton>

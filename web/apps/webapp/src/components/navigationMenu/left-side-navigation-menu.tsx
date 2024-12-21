@@ -111,8 +111,8 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
       <ListItem disablePadding>
         <Link component={NextLink} href={organizationLocationsBaseLink}>
           <ListItemButton
-            selected={pathName === organizationLocationsBaseLink}
-            sx={{ ...styles, borderRadius: pathName === organizationLocationsBaseLink ? 4 : 0 }}
+            selected={pathName.startsWith(organizationLocationsBaseLink)}
+            sx={{ ...styles, borderRadius: pathName.startsWith(organizationLocationsBaseLink) ? 4 : 0 }}
           >
             {showIconsOnly && <LocationIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
@@ -120,7 +120,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
                 label="Locations"
                 startElement={<LocationIcon excludeTooltip color="inherit" />}
                 spacing={3}
-                invertDefaultColor={pathName === organizationLocationsBaseLink && paletteMode === 'dark'}
+                invertDefaultColor={pathName.startsWith(organizationLocationsBaseLink) && paletteMode === 'dark'}
               />
             )}
           </ListItemButton>
@@ -130,8 +130,8 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
       <ListItem disablePadding>
         <Link component={NextLink} href={organizationTeamsBaseLink}>
           <ListItemButton
-            selected={pathName === organizationTeamsBaseLink}
-            sx={{ ...styles, borderRadius: pathName === organizationTeamsBaseLink ? 4 : 0 }}
+            selected={pathName.startsWith(organizationTeamsBaseLink)}
+            sx={{ ...styles, borderRadius: pathName.startsWith(organizationTeamsBaseLink) ? 4 : 0 }}
           >
             {showIconsOnly && <TeamIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
@@ -139,7 +139,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
                 label="Teams"
                 startElement={<TeamIcon excludeTooltip color="inherit" />}
                 spacing={3}
-                invertDefaultColor={pathName === organizationTeamsBaseLink && paletteMode === 'dark'}
+                invertDefaultColor={pathName.startsWith(organizationTeamsBaseLink) && paletteMode === 'dark'}
               />
             )}
           </ListItemButton>
@@ -149,8 +149,8 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
       <ListItem disablePadding>
         <Link component={NextLink} href={organizationMembersBaseLink}>
           <ListItemButton
-            selected={pathName === organizationMembersBaseLink}
-            sx={{ ...styles, borderRadius: pathName === organizationMembersBaseLink ? 4 : 0 }}
+            selected={pathName.startsWith(organizationMembersBaseLink)}
+            sx={{ ...styles, borderRadius: pathName.startsWith(organizationMembersBaseLink) ? 4 : 0 }}
           >
             {showIconsOnly && <MembersIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
@@ -158,7 +158,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
                 label="Members"
                 startElement={<MembersIcon excludeTooltip color="inherit" />}
                 spacing={3}
-                invertDefaultColor={pathName === organizationMembersBaseLink && paletteMode === 'dark'}
+                invertDefaultColor={pathName.startsWith(organizationMembersBaseLink) && paletteMode === 'dark'}
               />
             )}
           </ListItemButton>
@@ -168,14 +168,14 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
       {rootData.organization.canModify && (
         <ListItem disablePadding>
           <Link component={NextLink} href="/settings">
-            <ListItemButton selected={pathName === '/settings'} sx={{ ...styles, borderRadius: pathName === '/settings' ? 4 : 0 }}>
+            <ListItemButton selected={pathName.startsWith('/settings')} sx={{ ...styles, borderRadius: pathName.startsWith('/settings') ? 4 : 0 }}>
               {showIconsOnly && <SettingsIcon excludeTooltip color="inherit" />}
               {!showIconsOnly && (
                 <BodyIconTypography
                   label="Admin"
                   startElement={<SettingsIcon excludeTooltip color="inherit" />}
                   spacing={3}
-                  invertDefaultColor={pathName === '/settings' && paletteMode === 'dark'}
+                  invertDefaultColor={pathName.startsWith('/settings') && paletteMode === 'dark'}
                 />
               )}
             </ListItemButton>
