@@ -166,6 +166,10 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     UpdateSwitchToModernUI(false);
   };
 
+  const handleBackClick = () => {
+    router.back();
+  };
+
   if (!rootData.myOrganizations) {
     return <></>;
   }
@@ -231,7 +235,9 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
           )}
           {showBreadcrumps && (
             <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-              <Button variant="text">{'< Back'}</Button>
+              <Button variant="text" onClick={handleBackClick}>
+                {'< Back'}
+              </Button>
               {breadcrumbs}
             </StackColumn>
           )}
