@@ -22,7 +22,7 @@ const OrganizationsPage = () => {
   }
 
   return (
-    <RootShell>
+    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage>
       <OrganizationMembers organizationId={finalOrganizationId} />
     </RootShell>
   );

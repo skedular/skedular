@@ -25,6 +25,8 @@ type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   collapsed?: boolean;
+  hideOrganizationSelector?: boolean;
+  hideWelcomeMessage?: boolean;
 };
 
 const RootQuery = graphql`
@@ -54,7 +56,14 @@ const maxRetryAttemptsToReload = 20;
 const drawerWithTextWidth = 250;
 const drawerWithoutTextWidth = 80;
 
-const RootShell = ({ queryReference, children, onReloadRequired, collapsed }: PropsWithChildren<Props>) => {
+const RootShell = ({
+  queryReference,
+  children,
+  onReloadRequired,
+  collapsed,
+  hideOrganizationSelector,
+  hideWelcomeMessage,
+}: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const switchToModernUI = useContext(SwitchToModernUIContext);
 
@@ -176,7 +185,14 @@ const RootShell = ({ queryReference, children, onReloadRequired, collapsed }: Pr
           </Grid>
           <StackColumn sx={{ width: '100vw' }}>
             {!switchToModernUI && <OldAppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
-            {switchToModernUI && <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
+            {switchToModernUI && (
+              <AppBar
+                rootDataRelay={rootData}
+                onReloadRequired={onReloadRequired}
+                hideOrganizationSelector={hideOrganizationSelector}
+                hideWelcomeMessage={hideWelcomeMessage}
+              />
+            )}
           </StackColumn>
           {!rootData.myOrganizations ||
             (rootData.myOrganizations.length === 0 && (
@@ -197,9 +213,11 @@ const MemoRootShell = memo(RootShell);
 
 type RelayProps = {
   collapsed?: boolean;
+  hideOrganizationSelector?: boolean;
+  hideWelcomeMessage?: boolean;
 };
 
-const RootShellWithRelay = ({ children, collapsed }: PropsWithChildren<RelayProps>) => {
+const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hideWelcomeMessage }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -238,7 +256,13 @@ const RootShellWithRelay = ({ children, collapsed }: PropsWithChildren<RelayProp
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} collapsed={collapsed}>
+      <MemoRootShell
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        collapsed={collapsed}
+        hideOrganizationSelector={hideOrganizationSelector}
+        hideWelcomeMessage={hideWelcomeMessage}
+      >
         {children}
       </MemoRootShell>
     </ErrorBoundary>

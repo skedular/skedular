@@ -3,7 +3,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
-import { HomeIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { sandstone } from '@repo/shared/libs/theme';
 import NextLink from 'next/link';
@@ -14,11 +13,9 @@ import { getModernOrganizationGuestsBaseLink, getModernOrganizationMembersBaseLi
 type Props = {
   organizationId: string;
   maxWidth: number;
-  showIconsOnly?: boolean;
-  hideIcons?: boolean;
 };
 
-const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth, showIconsOnly, hideIcons }: Props) => {
+const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth }: Props) => {
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
 
@@ -50,15 +47,7 @@ const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth, s
       <ListItem disablePadding>
         <Link component={NextLink} href={memberesLink}>
           <ListItemButton selected={pathName === memberesLink} sx={{ ...styles, borderRadius: pathName === memberesLink ? 4 : 0 }}>
-            {showIconsOnly && <HomeIcon color="inherit" />}
-            {!showIconsOnly && (
-              <BodyIconTypography
-                label="Members"
-                startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
-                spacing={3}
-                invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'}
-              />
-            )}
+            <BodyIconTypography label="Members" invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'} />
           </ListItemButton>
         </Link>
       </ListItem>
@@ -66,15 +55,7 @@ const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth, s
       <ListItem disablePadding>
         <Link component={NextLink} href={guestLink}>
           <ListItemButton selected={pathName === guestLink} sx={{ ...styles, borderRadius: pathName === guestLink ? 4 : 0 }}>
-            {showIconsOnly && <HomeIcon color="inherit" />}
-            {!showIconsOnly && (
-              <BodyIconTypography
-                label="Guests"
-                startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
-                spacing={3}
-                invertDefaultColor={pathName === guestLink && paletteMode === 'dark'}
-              />
-            )}
+            <BodyIconTypography label="Guests" invertDefaultColor={pathName === guestLink && paletteMode === 'dark'} />
           </ListItemButton>
         </Link>
       </ListItem>

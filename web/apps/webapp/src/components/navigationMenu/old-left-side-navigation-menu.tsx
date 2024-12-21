@@ -63,7 +63,12 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props
       <ListItem disablePadding>
         <Link component={NextLink} href="/">
           <ListItemButton selected={pathName === '/'} sx={{ ...styles, borderRadius: pathName === '/' ? 4 : 0 }}>
-            {showIconsOnly && <HomeIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName === '/' && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Home"
@@ -82,7 +87,12 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props
             selected={pathName.startsWith('/organizations')}
             sx={{ ...styles, borderRadius: pathName.startsWith('/organizations') ? 4 : 0 }}
           >
-            {showIconsOnly && <OrganizationIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <OrganizationIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName.startsWith('/organizations') && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Organizations"
@@ -98,7 +108,12 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props
       <ListItem disablePadding>
         <Link component={NextLink} href="/locations">
           <ListItemButton selected={pathName.startsWith('/locations')} sx={{ ...styles, borderRadius: pathName.startsWith('/locations') ? 4 : 0 }}>
-            {showIconsOnly && <LocationIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <LocationIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName.startsWith('/locations') && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Locations"
@@ -114,7 +129,12 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props
       <ListItem disablePadding>
         <Link component={NextLink} href="/teams">
           <ListItemButton selected={pathName.startsWith('/teams')} sx={{ ...styles, borderRadius: pathName.startsWith('/teams') ? 4 : 0 }}>
-            {showIconsOnly && <TeamIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <TeamIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName.startsWith('/teams') && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Teams"
@@ -133,7 +153,12 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props
             selected={pathName.startsWith('/notifications')}
             sx={{ ...styles, borderRadius: pathName.startsWith('/notifications') ? 4 : 0 }}
           >
-            {showIconsOnly && <NotificationsIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <NotificationsIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName.startsWith('/notifications') && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Notifications"
@@ -149,7 +174,12 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props
       <ListItem disablePadding>
         <Link component={NextLink} href="/settings">
           <ListItemButton selected={pathName.startsWith('/settings')} sx={{ ...styles, borderRadius: pathName.startsWith('/settings') ? 4 : 0 }}>
-            {showIconsOnly && <SettingsIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName.startsWith('/settings') && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Settings"

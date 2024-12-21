@@ -34,11 +34,13 @@ import { useInterval } from 'usehooks-ts';
 type Props = {
   rootDataRelay: appBar_query$key;
   onReloadRequired: () => void;
+  hideOrganizationSelector?: boolean;
+  hideWelcomeMessage?: boolean;
 };
 
 const createOrganizationId = '76eZvntIX6YA5FboBJlRk';
 
-const AppBar = ({ rootDataRelay }: Props) => {
+const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage }: Props) => {
   const rootData = useFragment<appBar_query$key>(
     graphql`
       fragment appBar_query on Query {
@@ -183,7 +185,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
         }}
       >
         <StackRow sx={{ alignItems: 'center' }}>
-          {rootData.myOrganizations.length > 0 && (
+          {!hideOrganizationSelector && rootData.myOrganizations.length !== 0 && (
             <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
               <Select
                 value={selectedOrganizationId}
@@ -217,8 +219,12 @@ const AppBar = ({ rootDataRelay }: Props) => {
             </FormControl>
           )}
 
-          <Divider orientation="vertical" flexItem />
-          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
+          {!hideOrganizationSelector && (
+            <>
+              <Divider orientation="vertical" flexItem />
+              <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
+            </>
+          )}
         </StackRow>
 
         <StackRow sx={{ alignItems: 'center' }}>

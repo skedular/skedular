@@ -81,7 +81,12 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
             selected={pathName === `/organizations/${finalOrganizationId}`}
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}` ? 4 : 0 }}
           >
-            {showIconsOnly && <HomeIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName === `/organizations/${finalOrganizationId}` && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Home"
@@ -100,7 +105,12 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
             selected={pathName.startsWith(`/organizations/${finalOrganizationId}/locations`)}
             sx={{ ...styles, borderRadius: pathName.startsWith(`/organizations/${finalOrganizationId}/locations`) ? 4 : 0 }}
           >
-            {showIconsOnly && <LocationIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <LocationIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName.startsWith(`/organizations/${finalOrganizationId}/locations`) && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Locations"
@@ -119,7 +129,12 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
             selected={pathName.startsWith(`/organizations/${finalOrganizationId}/teams`)}
             sx={{ ...styles, borderRadius: pathName.startsWith(`/organizations/${finalOrganizationId}/teams`) ? 4 : 0 }}
           >
-            {showIconsOnly && <TeamIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <TeamIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName.startsWith(`/organizations/${finalOrganizationId}/teams`) && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Teams"
@@ -138,7 +153,12 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
             selected={pathName.startsWith(`/${finalOrganizationId}/notifications`)}
             sx={{ ...styles, borderRadius: pathName.startsWith(`/${finalOrganizationId}/notifications`) ? 4 : 0 }}
           >
-            {showIconsOnly && <NotificationsIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <NotificationsIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName.startsWith(`/${finalOrganizationId}/notifications`) && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Notifications"
@@ -157,7 +177,12 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
             selected={pathName.startsWith(`/${finalOrganizationId}/settings`)}
             sx={{ ...styles, borderRadius: pathName.startsWith(`/${finalOrganizationId}/settings`) ? 4 : 0 }}
           >
-            {showIconsOnly && <SettingsIcon color="inherit" />}
+            {showIconsOnly && (
+              <BodyIconTypography
+                startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName.startsWith(`/${finalOrganizationId}/settings`) && paletteMode === 'dark'}
+              />
+            )}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Settings"
