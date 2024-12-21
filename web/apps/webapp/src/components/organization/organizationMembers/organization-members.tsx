@@ -18,6 +18,7 @@ import { nanoid } from 'nanoid';
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import OrganizationMembersLeftSideNavigationMenu from './organization-members-left-side-navigation-menu';
 
 type Props = {
   queryReference: PreloadedQuery<organizationMembers_rootQuery, Record<string, unknown>>;
@@ -266,41 +267,46 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
   ];
 
   return (
-    <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-        <SectionIconTypography label="Organization Members" />
-        <BodyIconTypography label="View members in your organization" />
-        <Divider />
-      </StackColumn>
+    <Box sx={{ display: 'flex', width: '100%' }}>
+      <OrganizationMembersLeftSideNavigationMenu organizationId={organizationId} maxWidth={170} hideIcons />
+      <Box>
+        <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+            <SectionIconTypography label="Organization Members" />
+            <BodyIconTypography label="View members in your organization" />
+            <Divider />
+          </StackColumn>
 
-      <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding, paddingTop: defaultPadding }}>
-        <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
-        <PushToRight />
-        <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-      </StackRow>
-      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          hideFooterPagination={rows.length <= 10}
-          initialState={{
-            pagination: {
-              rowCount: rows.length,
-              paginationModel: {
-                pageSize: 10,
-              },
-            },
-          }}
-          pageSizeOptions={[10]}
-          ignoreDiacritics
-          disableRowSelectionOnClick
-          getRowHeight={() => 'auto'}
-          rowSpacingType="margin"
-          getRowSpacing={() => ({ top: 3, bottom: 3 })}
-          sx={defaultGridStyle}
-        />
-      </StackColumn>
-    </StackColumn>
+          <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding, paddingTop: defaultPadding }}>
+            <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
+            <PushToRight />
+            <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+          </StackRow>
+          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              hideFooterPagination={rows.length <= 10}
+              initialState={{
+                pagination: {
+                  rowCount: rows.length,
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[10]}
+              ignoreDiacritics
+              disableRowSelectionOnClick
+              getRowHeight={() => 'auto'}
+              rowSpacingType="margin"
+              getRowSpacing={() => ({ top: 3, bottom: 3 })}
+              sx={defaultGridStyle}
+            />
+          </StackColumn>
+        </StackColumn>
+      </Box>
+    </Box>
   );
 };
 

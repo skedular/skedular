@@ -25,9 +25,10 @@ type Props = {
   onReloadRequired: () => void;
   maxWidth: number;
   showIconsOnly?: boolean;
+  hideIcons?: boolean;
 };
 
-const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Props) => {
+const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly, hideIcons }: Props) => {
   const rootData = useFragment<leftSideNavigationMenu_query$key>(
     graphql`
       fragment leftSideNavigationMenu_query on Query {
@@ -58,11 +59,13 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
   const styles = {
     width: maxWidth - 30,
     marginLeft: 2,
+    marginRight: 2,
     transition: 'border-radius 0.3s ease, width 0.3s ease',
     '&:hover': {
       borderRadius: 4,
       width: maxWidth - 30,
       marginLeft: 2,
+      marginRight: 2,
       transition: 'none',
     },
     '&.Mui-selected': {
@@ -99,7 +102,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Home"
-                startElement={<HomeIcon excludeTooltip color="inherit" />}
+                startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === organizationBaseLink && paletteMode === 'dark'}
               />
@@ -118,7 +121,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Locations"
-                startElement={<LocationIcon excludeTooltip color="inherit" />}
+                startElement={!hideIcons && <LocationIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName.startsWith(organizationLocationsBaseLink) && paletteMode === 'dark'}
               />
@@ -137,7 +140,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Teams"
-                startElement={<TeamIcon excludeTooltip color="inherit" />}
+                startElement={!hideIcons && <TeamIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName.startsWith(organizationTeamsBaseLink) && paletteMode === 'dark'}
               />
@@ -156,7 +159,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Members"
-                startElement={<MembersIcon excludeTooltip color="inherit" />}
+                startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName.startsWith(organizationMembersBaseLink) && paletteMode === 'dark'}
               />
@@ -173,7 +176,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
               {!showIconsOnly && (
                 <BodyIconTypography
                   label="Admin"
-                  startElement={<SettingsIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
                   spacing={3}
                   invertDefaultColor={pathName.startsWith('/settings') && paletteMode === 'dark'}
                 />

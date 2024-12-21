@@ -180,12 +180,12 @@ const RootShell = ({ queryReference, children, onReloadRequired, collapsed }: Pr
           </StackColumn>
           {!rootData.myOrganizations ||
             (rootData.myOrganizations.length === 0 && (
-              <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>
+              <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1 }}>
                 <OrganizationOnboarding onReloadRequired={onReloadRequired} />
               </Grid>
             ))}
           {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && (
-            <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>{children}</Grid>
+            <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1 }}>{children}</Grid>
           )}
         </Grid>
       </Box>

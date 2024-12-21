@@ -15,9 +15,10 @@ type Props = {
   onReloadRequired: () => void;
   maxWidth: number;
   showIconsOnly?: boolean;
+  hideIcons?: boolean;
 };
 
-const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
+const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) => {
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
   const logoUrl =
@@ -36,11 +37,13 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
   const styles = {
     width: maxWidth - 30,
     marginLeft: 2,
+    marginRight: 2,
     transition: 'border-radius 0.3s ease, width 0.3s ease',
     '&:hover': {
       borderRadius: 4,
       width: maxWidth - 30,
       marginLeft: 2,
+      marginRight: 2,
       transition: 'none',
     },
     '&.Mui-selected': {
@@ -64,7 +67,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Home"
-                startElement={<HomeIcon excludeTooltip color="inherit" />}
+                startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === '/' && paletteMode === 'dark'}
               />
@@ -83,7 +86,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Organizations"
-                startElement={<OrganizationIcon excludeTooltip color="inherit" />}
+                startElement={!hideIcons && <OrganizationIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName.startsWith('/organizations') && paletteMode === 'dark'}
               />
@@ -99,7 +102,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Locations"
-                startElement={<LocationIcon excludeTooltip color="inherit" />}
+                startElement={!hideIcons && <LocationIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName.startsWith('/locations') && paletteMode === 'dark'}
               />
@@ -115,7 +118,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Teams"
-                startElement={<TeamIcon excludeTooltip color="inherit" />}
+                startElement={!hideIcons && <TeamIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName.startsWith('/teams') && paletteMode === 'dark'}
               />
@@ -134,7 +137,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Notifications"
-                startElement={<NotificationsIcon excludeTooltip color="inherit" />}
+                startElement={!hideIcons && <NotificationsIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName.startsWith('/notifications') && paletteMode === 'dark'}
               />
@@ -150,7 +153,7 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Settings"
-                startElement={<SettingsIcon excludeTooltip color="inherit" />}
+                startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName.startsWith('/settings') && paletteMode === 'dark'}
               />
