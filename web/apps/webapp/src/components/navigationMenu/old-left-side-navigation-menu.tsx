@@ -60,11 +60,11 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/">
           <ListItemButton selected={pathName === '/'} sx={{ ...styles, borderRadius: pathName === '/' ? 4 : 0 }}>
-            {showIconsOnly && <HomeIcon excludeTooltip />}
+            {showIconsOnly && <HomeIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Home"
-                startElement={<HomeIcon excludeTooltip />}
+                startElement={<HomeIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === '/' && paletteMode === 'dark'}
               />
@@ -76,11 +76,11 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/organizations">
           <ListItemButton selected={pathName === '/organizations'} sx={{ ...styles, borderRadius: pathName === '/organizations' ? 4 : 0 }}>
-            {showIconsOnly && <OrganizationIcon excludeTooltip />}
+            {showIconsOnly && <OrganizationIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Organizations"
-                startElement={<OrganizationIcon excludeTooltip />}
+                startElement={<OrganizationIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === '/organizations' && paletteMode === 'dark'}
               />
@@ -92,11 +92,11 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/locations">
           <ListItemButton selected={pathName === '/locations'} sx={{ ...styles, borderRadius: pathName === '/locations' ? 4 : 0 }}>
-            {showIconsOnly && <LocationIcon excludeTooltip />}
+            {showIconsOnly && <LocationIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Locations"
-                startElement={<LocationIcon excludeTooltip />}
+                startElement={<LocationIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === '/locations' && paletteMode === 'dark'}
               />
@@ -108,11 +108,11 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/teams">
           <ListItemButton selected={pathName === '/teams'} sx={{ ...styles, borderRadius: pathName === '/teams' ? 4 : 0 }}>
-            {showIconsOnly && <TeamIcon excludeTooltip />}
+            {showIconsOnly && <TeamIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Teams"
-                startElement={<TeamIcon excludeTooltip />}
+                startElement={<TeamIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === '/teams' && paletteMode === 'dark'}
               />
@@ -124,11 +124,11 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/notifications">
           <ListItemButton selected={pathName === '/notifications'} sx={{ ...styles, borderRadius: pathName === '/notifications' ? 4 : 0 }}>
-            {showIconsOnly && <NotificationsIcon excludeTooltip />}
+            {showIconsOnly && <NotificationsIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Notifications"
-                startElement={<NotificationsIcon excludeTooltip />}
+                startElement={<NotificationsIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === '/notifications' && paletteMode === 'dark'}
               />
@@ -140,11 +140,11 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
       <ListItem disablePadding>
         <Link component={NextLink} href="/settings">
           <ListItemButton selected={pathName === '/settings'} sx={{ ...styles, borderRadius: pathName === '/settings' ? 4 : 0 }}>
-            {showIconsOnly && <SettingsIcon excludeTooltip />}
+            {showIconsOnly && <SettingsIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Settings"
-                startElement={<SettingsIcon excludeTooltip />}
+                startElement={<SettingsIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === '/settings' && paletteMode === 'dark'}
               />

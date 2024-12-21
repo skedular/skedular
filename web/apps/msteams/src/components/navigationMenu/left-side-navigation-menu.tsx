@@ -78,11 +78,11 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             selected={pathName === `/organizations/${finalOrganizationId}`}
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}` ? 4 : 0 }}
           >
-            {showIconsOnly && <HomeIcon excludeTooltip />}
+            {showIconsOnly && <HomeIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Home"
-                startElement={<HomeIcon excludeTooltip />}
+                startElement={<HomeIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === `/organizations/${finalOrganizationId}` && paletteMode === 'dark'}
               />
@@ -97,11 +97,11 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             selected={pathName === `/organizations/${finalOrganizationId}/locations`}
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/locations` ? 4 : 0 }}
           >
-            {showIconsOnly && <LocationIcon excludeTooltip />}
+            {showIconsOnly && <LocationIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Locations"
-                startElement={<LocationIcon excludeTooltip />}
+                startElement={<LocationIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === `/organizations/${finalOrganizationId}/locations` && paletteMode === 'dark'}
               />
@@ -116,11 +116,11 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             selected={pathName === `/organizations/${finalOrganizationId}/teams`}
             sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}/teams` ? 4 : 0 }}
           >
-            {showIconsOnly && <TeamIcon excludeTooltip />}
+            {showIconsOnly && <TeamIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Teams"
-                startElement={<TeamIcon excludeTooltip />}
+                startElement={<TeamIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === `/organizations/${finalOrganizationId}/teams` && paletteMode === 'dark'}
               />
@@ -135,11 +135,11 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             selected={pathName === `/${finalOrganizationId}/notifications`}
             sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/notifications` ? 4 : 0 }}
           >
-            {showIconsOnly && <NotificationsIcon excludeTooltip />}
+            {showIconsOnly && <NotificationsIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Notifications"
-                startElement={<NotificationsIcon excludeTooltip />}
+                startElement={<NotificationsIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === `/${finalOrganizationId}/notifications` && paletteMode === 'dark'}
               />
@@ -154,11 +154,11 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
             selected={pathName === `/${finalOrganizationId}/settings`}
             sx={{ ...styles, borderRadius: pathName === `/${finalOrganizationId}/settings` ? 4 : 0 }}
           >
-            {showIconsOnly && <SettingsIcon excludeTooltip />}
+            {showIconsOnly && <SettingsIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Settings"
-                startElement={<SettingsIcon excludeTooltip />}
+                startElement={<SettingsIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === `/${finalOrganizationId}/settings` && paletteMode === 'dark'}
               />

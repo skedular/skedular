@@ -95,7 +95,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
       <ListItem disablePadding>
         <Link component={NextLink} href={organizationBaseLink}>
           <ListItemButton selected={pathName === organizationBaseLink} sx={{ ...styles, borderRadius: pathName === organizationBaseLink ? 4 : 0 }}>
-            {showIconsOnly && <HomeIcon excludeTooltip />}
+            {showIconsOnly && <HomeIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Home"
@@ -114,11 +114,11 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             selected={pathName === organizationLocationsBaseLink}
             sx={{ ...styles, borderRadius: pathName === organizationLocationsBaseLink ? 4 : 0 }}
           >
-            {showIconsOnly && <LocationIcon excludeTooltip />}
+            {showIconsOnly && <LocationIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Locations"
-                startElement={<LocationIcon excludeTooltip />}
+                startElement={<LocationIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === organizationLocationsBaseLink && paletteMode === 'dark'}
               />
@@ -133,11 +133,11 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             selected={pathName === organizationTeamsBaseLink}
             sx={{ ...styles, borderRadius: pathName === organizationTeamsBaseLink ? 4 : 0 }}
           >
-            {showIconsOnly && <TeamIcon excludeTooltip />}
+            {showIconsOnly && <TeamIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Teams"
-                startElement={<TeamIcon excludeTooltip />}
+                startElement={<TeamIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === organizationTeamsBaseLink && paletteMode === 'dark'}
               />
@@ -152,11 +152,11 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
             selected={pathName === organizationMembersBaseLink}
             sx={{ ...styles, borderRadius: pathName === organizationMembersBaseLink ? 4 : 0 }}
           >
-            {showIconsOnly && <MembersIcon excludeTooltip />}
+            {showIconsOnly && <MembersIcon excludeTooltip color="inherit" />}
             {!showIconsOnly && (
               <BodyIconTypography
                 label="Members"
-                startElement={<MembersIcon excludeTooltip />}
+                startElement={<MembersIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === organizationMembersBaseLink && paletteMode === 'dark'}
               />
@@ -169,11 +169,11 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
         <ListItem disablePadding>
           <Link component={NextLink} href="/settings">
             <ListItemButton selected={pathName === '/settings'} sx={{ ...styles, borderRadius: pathName === '/settings' ? 4 : 0 }}>
-              {showIconsOnly && <SettingsIcon excludeTooltip />}
+              {showIconsOnly && <SettingsIcon excludeTooltip color="inherit" />}
               {!showIconsOnly && (
                 <BodyIconTypography
                   label="Admin"
-                  startElement={<SettingsIcon excludeTooltip />}
+                  startElement={<SettingsIcon excludeTooltip color="inherit" />}
                   spacing={3}
                   invertDefaultColor={pathName === '/settings' && paletteMode === 'dark'}
                 />
