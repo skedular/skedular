@@ -139,7 +139,18 @@ const RootShell = ({ queryReference, children, onReloadRequired }: PropsWithChil
           {switchToModernUI && <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />}
         </Drawer>
         <Grid container>
-          <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, display: { xs: 'block', sm: 'none' } }}>
+          <Grid
+            sx={{
+              xs: 12,
+              sm: 6,
+              md: 3,
+              lg: 2,
+              xl: 2,
+              flexGrow: 1,
+              display: { xs: 'block', sm: 'none' },
+              backgroundColor: (theme) => theme.palette.background.paper,
+            }}
+          >
             {!switchToModernUI && <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />}
             {switchToModernUI && (
               <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />
