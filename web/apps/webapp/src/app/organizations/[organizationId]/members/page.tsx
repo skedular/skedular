@@ -2,6 +2,8 @@
 
 import { OrganizationMembers } from '@/components/organization/organizationMembers';
 import { RootShell } from '@/components/rootShell';
+import { Breadcrumbs } from '@mui/material';
+import { BodyIconTypography } from '@repo/shared/components/commons';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
 
@@ -21,8 +23,15 @@ const OrganizationsPage = () => {
     throw new Error('organizationId is required');
   }
 
+  const breadcrumbs = (
+    <Breadcrumbs>
+      <BodyIconTypography label="View Members" />
+      <BodyIconTypography label="Organization" />
+    </Breadcrumbs>
+  );
+
   return (
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage>
+    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <OrganizationMembers organizationId={finalOrganizationId} />
     </RootShell>
   );

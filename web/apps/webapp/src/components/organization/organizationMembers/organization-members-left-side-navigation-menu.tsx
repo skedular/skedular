@@ -43,7 +43,14 @@ const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth }:
   const guestLink = getModernOrganizationGuestsBaseLink(organizationId);
 
   return (
-    <List sx={{ backgroundColor: (theme) => theme.palette.background.paper, borderRight: 1, borderColor: (theme) => theme.palette.divider }}>
+    <List
+      sx={{
+        backgroundColor: (theme) => theme.palette.background.paper,
+        borderRight: 1,
+        borderColor: (theme) => theme.palette.divider,
+        paddingTop: { xs: 1, sm: 1, md: 3 },
+      }}
+    >
       <ListItem disablePadding>
         <Link component={NextLink} href={memberesLink}>
           <ListItemButton selected={pathName === memberesLink} sx={{ ...styles, borderRadius: pathName === memberesLink ? 4 : 0 }}>

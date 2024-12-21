@@ -4,6 +4,7 @@ import { SelectedOrganizationContext, UpdateSelectedOrganizationContext } from '
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import { Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
@@ -27,6 +28,7 @@ import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import type { JSX } from 'react';
 import { memo, useContext, useEffect, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
@@ -36,11 +38,13 @@ type Props = {
   onReloadRequired: () => void;
   hideOrganizationSelector?: boolean;
   hideWelcomeMessage?: boolean;
+  showBreadcrumps?: boolean;
+  breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
 const createOrganizationId = '76eZvntIX6YA5FboBJlRk';
 
-const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage }: Props) => {
+const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: Props) => {
   const rootData = useFragment<appBar_query$key>(
     graphql`
       fragment appBar_query on Query {
@@ -219,11 +223,17 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage }:
             </FormControl>
           )}
 
-          {!hideOrganizationSelector && (
+          {!hideWelcomeMessage && (
             <>
               <Divider orientation="vertical" flexItem />
               <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
             </>
+          )}
+          {showBreadcrumps && (
+            <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
+              <Button variant="text">{'< Back'}</Button>
+              {breadcrumbs}
+            </StackColumn>
           )}
         </StackRow>
 

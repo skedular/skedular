@@ -27,6 +27,8 @@ type Props = {
   collapsed?: boolean;
   hideOrganizationSelector?: boolean;
   hideWelcomeMessage?: boolean;
+  showBreadcrumps?: boolean;
+  breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
 const RootQuery = graphql`
@@ -63,6 +65,8 @@ const RootShell = ({
   collapsed,
   hideOrganizationSelector,
   hideWelcomeMessage,
+  showBreadcrumps,
+  breadcrumbs,
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const switchToModernUI = useContext(SwitchToModernUIContext);
@@ -191,6 +195,8 @@ const RootShell = ({
                 onReloadRequired={onReloadRequired}
                 hideOrganizationSelector={hideOrganizationSelector}
                 hideWelcomeMessage={hideWelcomeMessage}
+                showBreadcrumps={showBreadcrumps}
+                breadcrumbs={breadcrumbs}
               />
             )}
           </StackColumn>
@@ -215,9 +221,18 @@ type RelayProps = {
   collapsed?: boolean;
   hideOrganizationSelector?: boolean;
   hideWelcomeMessage?: boolean;
+  showBreadcrumps?: boolean;
+  breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
-const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hideWelcomeMessage }: PropsWithChildren<RelayProps>) => {
+const RootShellWithRelay = ({
+  children,
+  collapsed,
+  hideOrganizationSelector,
+  hideWelcomeMessage,
+  showBreadcrumps,
+  breadcrumbs,
+}: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -262,6 +277,8 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
         collapsed={collapsed}
         hideOrganizationSelector={hideOrganizationSelector}
         hideWelcomeMessage={hideWelcomeMessage}
+        showBreadcrumps={showBreadcrumps}
+        breadcrumbs={breadcrumbs}
       >
         {children}
       </MemoRootShell>

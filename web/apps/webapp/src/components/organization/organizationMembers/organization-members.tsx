@@ -268,7 +268,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
 
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
-      <OrganizationMembersLeftSideNavigationMenu organizationId={organizationId} maxWidth={170} hideIcons />
+      <OrganizationMembersLeftSideNavigationMenu organizationId={organizationId} maxWidth={170} />
       <Box>
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
