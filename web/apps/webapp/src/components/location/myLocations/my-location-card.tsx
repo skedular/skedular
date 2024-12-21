@@ -88,7 +88,6 @@ const MyLocationCard = ({
               hideIcon
               variant="contained"
               size="small"
-              invertDefaultColor
             />
           </StackRow>
         }
