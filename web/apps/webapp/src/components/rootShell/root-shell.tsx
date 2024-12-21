@@ -24,7 +24,7 @@ import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'reac
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  title?: string | null;
+  collapsed?: boolean;
 };
 
 const RootQuery = graphql`
@@ -54,7 +54,7 @@ const maxRetryAttemptsToReload = 20;
 const drawerWithTextWidth = 250;
 const drawerWithoutTextWidth = 80;
 
-const RootShell = ({ queryReference, children, onReloadRequired }: PropsWithChildren<Props>) => {
+const RootShell = ({ queryReference, children, onReloadRequired, collapsed }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const switchToModernUI = useContext(SwitchToModernUIContext);
 
@@ -117,6 +117,8 @@ const RootShell = ({ queryReference, children, onReloadRequired }: PropsWithChil
     return <Loading message="Kindly hold on as we proceed to activate your account..." />;
   }
 
+  const finalDrawerWidth = collapsed ? drawerWithoutTextWidth : drawerWithTextWidth;
+
   return (
     <>
       <Observability />
@@ -125,18 +127,27 @@ const RootShell = ({ queryReference, children, onReloadRequired }: PropsWithChil
         <Drawer
           sx={{
             display: { xs: 'none', sm: 'block' },
-            width: drawerWithTextWidth,
+            width: finalDrawerWidth,
             flexShrink: 0,
             '& .MuiDrawer-paper': {
-              width: drawerWithTextWidth,
+              width: finalDrawerWidth,
               boxSizing: 'border-box',
             },
           }}
           variant="persistent"
           open={true}
         >
-          {!switchToModernUI && <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />}
-          {switchToModernUI && <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />}
+          {!switchToModernUI && (
+            <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={finalDrawerWidth} showIconsOnly={collapsed} />
+          )}
+          {switchToModernUI && (
+            <LeftSideNavigationMenu
+              rootDataRelay={rootData}
+              onReloadRequired={onReloadRequired}
+              maxWidth={finalDrawerWidth}
+              showIconsOnly={collapsed}
+            />
+          )}
         </Drawer>
         <Grid container>
           <Grid
@@ -151,9 +162,16 @@ const RootShell = ({ queryReference, children, onReloadRequired }: PropsWithChil
               backgroundColor: (theme) => theme.palette.background.paper,
             }}
           >
-            {!switchToModernUI && <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />}
+            {!switchToModernUI && (
+              <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={finalDrawerWidth} showIconsOnly={collapsed} />
+            )}
             {switchToModernUI && (
-              <LeftSideNavigationMenu rootDataRelay={rootData} onReloadRequired={onReloadRequired} maxWidth={drawerWithTextWidth} />
+              <LeftSideNavigationMenu
+                rootDataRelay={rootData}
+                onReloadRequired={onReloadRequired}
+                maxWidth={finalDrawerWidth}
+                showIconsOnly={collapsed}
+              />
             )}
           </Grid>
           <StackColumn sx={{ width: '100vw' }}>
@@ -178,10 +196,10 @@ const RootShell = ({ queryReference, children, onReloadRequired }: PropsWithChil
 const MemoRootShell = memo(RootShell);
 
 type RelayProps = {
-  title?: string | null;
+  collapsed?: boolean;
 };
 
-const RootShellWithRelay = ({ title, children }: PropsWithChildren<RelayProps>) => {
+const RootShellWithRelay = ({ children, collapsed }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -220,7 +238,7 @@ const RootShellWithRelay = ({ title, children }: PropsWithChildren<RelayProps>) 
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} title={title}>
+      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} collapsed={collapsed}>
         {children}
       </MemoRootShell>
     </ErrorBoundary>
