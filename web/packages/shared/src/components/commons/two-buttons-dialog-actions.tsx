@@ -4,17 +4,6 @@ import { useContext } from 'react';
 import { PaletteModeContext } from '../../libs/providers';
 import BodyIconTypography from './body-icon-typography';
 
-declare module '@mui/material/styles' {
-  interface Palette {
-    primaryAction: Palette['primary'];
-    secondaryAction: Palette['primary'];
-  }
-  interface PaletteOptions {
-    primaryAction?: PaletteOptions['primary'];
-    secondaryAction?: PaletteOptions['primary'];
-  }
-}
-
 type Props = {
   onPrimaryClicked?: () => void;
   onSecondaryClicked?: () => void;
@@ -30,23 +19,12 @@ const TwoButtonsDialogActions = ({ onPrimaryClicked, onSecondaryClicked, primary
   return (
     <DialogActions>
       {!hideSecondary && (
-        <Button
-          variant="contained"
-          onClick={onSecondaryClicked}
-          sx={{ backgroundColor: (theme) => theme.palette.secondaryAction.main }}
-          disabled={disabled}
-        >
+        <Button variant="contained" onClick={onSecondaryClicked} color="secondary" disabled={disabled}>
           <BodyIconTypography label={secondaryLabel} invertDefaultColor={paletteMode === 'dark'} />
         </Button>
       )}
 
-      <Button
-        variant="contained"
-        type={onPrimaryClicked ? undefined : 'submit'}
-        sx={{ backgroundColor: (theme) => theme.palette.primaryAction.main }}
-        onClick={onPrimaryClicked}
-        disabled={disabled}
-      >
+      <Button variant="contained" type={onPrimaryClicked ? undefined : 'submit'} onClick={onPrimaryClicked} color="primary" disabled={disabled}>
         <BodyIconTypography label={primaryLabel} invertDefaultColor />
       </Button>
     </DialogActions>

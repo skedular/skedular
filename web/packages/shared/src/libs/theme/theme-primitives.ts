@@ -93,7 +93,7 @@ const getDesignTokens = (mode: PaletteMode) => {
     cssVariables: true,
     palette: {
       mode,
-      primaryAction: {
+      primary: {
         light: brand1[300],
         main: brand1[400],
         dark: brand1[800],
@@ -103,7 +103,7 @@ const getDesignTokens = (mode: PaletteMode) => {
           dark: brand1[700],
         }),
       },
-      secondaryAction: {
+      secondary: {
         light: brand2[300],
         main: brand2[400],
         dark: brand2[800],

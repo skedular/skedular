@@ -244,7 +244,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
           </IconButton>
 
           <Menu
-            sx={{ mt: 4 }}
+            sx={{ marginTop: 4 }}
             anchorEl={profileOpenAnchorEl}
             anchorOrigin={{
               vertical: 'top',
@@ -257,6 +257,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
             }}
             open={Boolean(profileOpenAnchorEl)}
             onClose={handleProfileMenuCloseClick}
+            slotProps={{ paper: { sx: { borderRadius: 2, boxShadow: 3 } } }}
           >
             <MenuItem>
               <StackColumn>
