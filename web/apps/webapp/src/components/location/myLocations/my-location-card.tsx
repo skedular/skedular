@@ -104,7 +104,7 @@ const MyLocationCard = ({
 
         <Divider />
 
-        <Zones zones={zones} />
+        <Zones zones={zones} sx={{ paddingTop: 1, paddingBottom: 1 }} />
 
         <Divider />
 

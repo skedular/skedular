@@ -249,7 +249,7 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
           <Divider />
           <SmallIconTypography startElement={<DeskIcon />} label={desks.length === 0 ? 'N/A' : desks} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
-          <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} />
+          <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <SmallIconTypography
             startElement={<NotesIcon />}

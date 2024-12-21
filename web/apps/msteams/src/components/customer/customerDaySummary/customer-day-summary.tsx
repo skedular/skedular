@@ -224,7 +224,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth, 
       {booking.desks?.map(({ uniqueId, name, zones }) => (
         <StackRow key={uniqueId} sx={{ alignItems: 'center' }}>
           <BodyIconTypography label={name} startElement={<DeskIcon />} />
-          <Zones zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
+          <Zones zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
         </StackRow>
       ))}
     </StackColumn>

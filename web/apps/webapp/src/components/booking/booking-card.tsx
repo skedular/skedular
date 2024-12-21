@@ -689,7 +689,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                     </Tooltip>
                   )}
 
-                  <Zones zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
+                  <Zones zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
                 </StackRow>
               );
             })}

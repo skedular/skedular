@@ -784,8 +784,11 @@ const DeskCard = ({
 
           <CardContent>
             <StackColumn>
-              <DeskTypes deskTypes={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
-              <Zones zones={deskDetails.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} />
+              <DeskTypes
+                deskTypes={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))}
+                sx={{ paddingTop: 1, paddingBottom: 1 }}
+              />
+              <Zones zones={deskDetails.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
             </StackColumn>
 
             {extraInfo.length > 0 && <BodyIconTypography label={extraInfo.join(', ')} startElement={<InfoIcon />} />}
