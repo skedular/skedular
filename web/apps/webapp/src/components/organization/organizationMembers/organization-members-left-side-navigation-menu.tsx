@@ -49,6 +49,7 @@ const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth }:
         borderRight: 1,
         borderColor: (theme) => theme.palette.divider,
         paddingTop: { xs: 1, sm: 1, md: 3 },
+        height: '100vh',
       }}
     >
       <ListItem disablePadding>
