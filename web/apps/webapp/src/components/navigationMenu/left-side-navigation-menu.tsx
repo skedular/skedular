@@ -67,6 +67,9 @@ const LeftSideNavigationMenu = ({ rootDataRelay, maxWidth, showIconsOnly }: Prop
     },
     '&.Mui-selected': {
       backgroundColor: sandstone,
+      '&:hover': {
+        backgroundColor: sandstone,
+      },
     },
   };
 

@@ -45,6 +45,9 @@ const OldLeftSideNavigationMenu = ({ maxWidth, showIconsOnly }: Props) => {
     },
     '&.Mui-selected': {
       backgroundColor: sandstone,
+      '&:hover': {
+        backgroundColor: sandstone,
+      },
     },
   };
 
