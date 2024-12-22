@@ -30,35 +30,34 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             "ZXRhZGF0YRIKCgJpZBgBIAEoCRIUCgxkb21haW5Tb3VyY2UYAiABKAkSEQoJ",
             "YXBwU291cmNlGAMgASgJEhgKBHR5cGUYBCABKA4yCi50ZWFtLlR5cGUSKAoE",
             "dGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFQoNY29y",
-            "cmVsYXRpb25JZBgGIAEoCSJ9CgREYXRhEiQKDnRlYW1BZnRlclN0YXRlGAEg",
-            "ASgLMgoudGVhbS5UZWFtSAASRAoeaW52aXRhdGlvblRvSm9pblRlYW1BZnRl",
-            "clN0YXRlGAIgASgLMhoudGVhbS5JbnZpdGF0aW9uVG9Kb2luVGVhbUgAQgkK",
-            "B3BheWxvYWQiwgEKBFRlYW0SCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIg",
-            "ASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIMCgRuYW1lGAMgASgJ",
-            "Eg0KBWFib3V0GAQgASgJEh0KB21lbWJlcnMYBSADKAsyDC50ZWFtLk1lbWJl",
-            "chIWCg5vcmdhbml6YXRpb25JZBgGIAEoCRIQCgh0aW1lem9uZRgHIAEoCRIZ",
-            "ChFwcmltYXJ5TG9jYXRpb25JZBgIIAEoCSKMAQoGTWVtYmVyEgoKAmlkGAEg",
-            "ASgJEiwKDm1lbWJlcnNoaXBUeXBlGAIgASgOMhQudGVhbS5NZW1iZXJzaGlw",
-            "VHlwZRISCgpjdXN0b21lcklkGAMgASgJEjQKEm9yZ2FuaXphdGlvbk1lbWJl",
-            "chgEIAEoCzIYLnRlYW0uT3JnYW5pemF0aW9uTWVtYmVyIl4KEk9yZ2FuaXph",
-            "dGlvbk1lbWJlchISCgpjdXN0b21lcklkGAEgASgJEhwKFG9yZ2FuaXphdGlv",
-            "bk1lbWJlcklkGAIgASgJEhYKDm9yZ2FuaXphdGlvbklkGAMgASgJIokBChRJ",
-            "bnZpdGF0aW9uVG9Kb2luVGVhbRIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQY",
-            "AiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEg4KBnRlYW1JZBgD",
-            "IAEoCRITCgtpbnZpdGVkQnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSABKAkq",
-            "bAoEVHlwZRIQCgxUZWFtVXBzZXJ0ZWQQABIPCgtUZWFtRGVsZXRlZBABEiAK",
-            "HEludml0YXRpb25Ub0pvaW5UZWFtVXBzZXJ0ZWQQAhIfChtJbnZpdGF0aW9u",
-            "VG9Kb2luVGVhbURlbGV0ZWQQAypkCg5NZW1iZXJzaGlwVHlwZRIXChNNZW1i",
-            "ZXJzaGlwVHlwZU93bmVyEAASHwobTWVtYmVyc2hpcFR5cGVBZG1pbmlzdHJh",
-            "dG9yEAESGAoUTWVtYmVyc2hpcFR5cGVNZW1iZXIQAkIzqgIwQXBpLlNoYXJl",
-            "ZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5UZWFtLlYxLlZhbHVlYgZwcm90",
-            "bzM="));
+            "cmVsYXRpb25JZBgGIAEoCSJpCgREYXRhEhoKBHRlYW0YASABKAsyCi50ZWFt",
+            "LlRlYW1IABI6ChRpbnZpdGF0aW9uVG9Kb2luVGVhbRgCIAEoCzIaLnRlYW0u",
+            "SW52aXRhdGlvblRvSm9pblRlYW1IAEIJCgdwYXlsb2FkIsIBCgRUZWFtEgoK",
+            "AmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1",
+            "Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEoCRIdCgdt",
+            "ZW1iZXJzGAUgAygLMgwudGVhbS5NZW1iZXISFgoOb3JnYW5pemF0aW9uSWQY",
+            "BiABKAkSEAoIdGltZXpvbmUYByABKAkSGQoRcHJpbWFyeUxvY2F0aW9uSWQY",
+            "CCABKAkijAEKBk1lbWJlchIKCgJpZBgBIAEoCRIsCg5tZW1iZXJzaGlwVHlw",
+            "ZRgCIAEoDjIULnRlYW0uTWVtYmVyc2hpcFR5cGUSEgoKY3VzdG9tZXJJZBgD",
+            "IAEoCRI0ChJvcmdhbml6YXRpb25NZW1iZXIYBCABKAsyGC50ZWFtLk9yZ2Fu",
+            "aXphdGlvbk1lbWJlciJeChJPcmdhbml6YXRpb25NZW1iZXISEgoKY3VzdG9t",
+            "ZXJJZBgBIAEoCRIcChRvcmdhbml6YXRpb25NZW1iZXJJZBgCIAEoCRIWCg5v",
+            "cmdhbml6YXRpb25JZBgDIAEoCSKJAQoUSW52aXRhdGlvblRvSm9pblRlYW0S",
+            "CgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3Rv",
+            "YnVmLlRpbWVzdGFtcBIOCgZ0ZWFtSWQYAyABKAkSEwoLaW52aXRlZEJ5SWQY",
+            "BCABKAkSEQoJaW52aXRlZUlkGAUgASgJKmwKBFR5cGUSEAoMVGVhbVVwc2Vy",
+            "dGVkEAASDwoLVGVhbURlbGV0ZWQQARIgChxJbnZpdGF0aW9uVG9Kb2luVGVh",
+            "bVVwc2VydGVkEAISHwobSW52aXRhdGlvblRvSm9pblRlYW1EZWxldGVkEAMq",
+            "ZAoOTWVtYmVyc2hpcFR5cGUSFwoTTWVtYmVyc2hpcFR5cGVPd25lchAAEh8K",
+            "G01lbWJlcnNoaXBUeXBlQWRtaW5pc3RyYXRvchABEhgKFE1lbWJlcnNoaXBU",
+            "eXBlTWVtYmVyEAJCM6oCMEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tl",
+            "ZHVsYXIuVGVhbS5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Data.Parser, new[]{ "TeamAfterState", "InvitationToJoinTeamAfterState" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Data.Parser, new[]{ "Team", "InvitationToJoinTeam" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "PrimaryLocationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Member), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Member.Parser, new[]{ "Id", "MembershipType", "CustomerId", "OrganizationMember" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember.Parser, new[]{ "CustomerId", "OrganizationMemberId", "OrganizationId" }, null, null, null, null),
@@ -766,11 +765,11 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Data(Data other) : this() {
       switch (other.PayloadCase) {
-        case PayloadOneofCase.TeamAfterState:
-          TeamAfterState = other.TeamAfterState.Clone();
+        case PayloadOneofCase.Team:
+          Team = other.Team.Clone();
           break;
-        case PayloadOneofCase.InvitationToJoinTeamAfterState:
-          InvitationToJoinTeamAfterState = other.InvitationToJoinTeamAfterState.Clone();
+        case PayloadOneofCase.InvitationToJoinTeam:
+          InvitationToJoinTeam = other.InvitationToJoinTeam.Clone();
           break;
       }
 
@@ -783,27 +782,27 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       return new Data(this);
     }
 
-    /// <summary>Field number for the "teamAfterState" field.</summary>
-    public const int TeamAfterStateFieldNumber = 1;
+    /// <summary>Field number for the "team" field.</summary>
+    public const int TeamFieldNumber = 1;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team TeamAfterState {
-      get { return payloadCase_ == PayloadOneofCase.TeamAfterState ? (global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team) payload_ : null; }
+    public global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team Team {
+      get { return payloadCase_ == PayloadOneofCase.Team ? (global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.TeamAfterState;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.Team;
       }
     }
 
-    /// <summary>Field number for the "invitationToJoinTeamAfterState" field.</summary>
-    public const int InvitationToJoinTeamAfterStateFieldNumber = 2;
+    /// <summary>Field number for the "invitationToJoinTeam" field.</summary>
+    public const int InvitationToJoinTeamFieldNumber = 2;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam InvitationToJoinTeamAfterState {
-      get { return payloadCase_ == PayloadOneofCase.InvitationToJoinTeamAfterState ? (global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam) payload_ : null; }
+    public global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam InvitationToJoinTeam {
+      get { return payloadCase_ == PayloadOneofCase.InvitationToJoinTeam ? (global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.InvitationToJoinTeamAfterState;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.InvitationToJoinTeam;
       }
     }
 
@@ -811,8 +810,8 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
     /// <summary>Enum of possible cases for the "payload" oneof.</summary>
     public enum PayloadOneofCase {
       None = 0,
-      TeamAfterState = 1,
-      InvitationToJoinTeamAfterState = 2,
+      Team = 1,
+      InvitationToJoinTeam = 2,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -843,8 +842,8 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(TeamAfterState, other.TeamAfterState)) return false;
-      if (!object.Equals(InvitationToJoinTeamAfterState, other.InvitationToJoinTeamAfterState)) return false;
+      if (!object.Equals(Team, other.Team)) return false;
+      if (!object.Equals(InvitationToJoinTeam, other.InvitationToJoinTeam)) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -853,8 +852,8 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (payloadCase_ == PayloadOneofCase.TeamAfterState) hash ^= TeamAfterState.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeamAfterState) hash ^= InvitationToJoinTeamAfterState.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.Team) hash ^= Team.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeam) hash ^= InvitationToJoinTeam.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -874,13 +873,13 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (payloadCase_ == PayloadOneofCase.TeamAfterState) {
+      if (payloadCase_ == PayloadOneofCase.Team) {
         output.WriteRawTag(10);
-        output.WriteMessage(TeamAfterState);
+        output.WriteMessage(Team);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeamAfterState) {
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeam) {
         output.WriteRawTag(18);
-        output.WriteMessage(InvitationToJoinTeamAfterState);
+        output.WriteMessage(InvitationToJoinTeam);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -892,13 +891,13 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (payloadCase_ == PayloadOneofCase.TeamAfterState) {
+      if (payloadCase_ == PayloadOneofCase.Team) {
         output.WriteRawTag(10);
-        output.WriteMessage(TeamAfterState);
+        output.WriteMessage(Team);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeamAfterState) {
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeam) {
         output.WriteRawTag(18);
-        output.WriteMessage(InvitationToJoinTeamAfterState);
+        output.WriteMessage(InvitationToJoinTeam);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -910,11 +909,11 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (payloadCase_ == PayloadOneofCase.TeamAfterState) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(TeamAfterState);
+      if (payloadCase_ == PayloadOneofCase.Team) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Team);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeamAfterState) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(InvitationToJoinTeamAfterState);
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeam) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(InvitationToJoinTeam);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -929,17 +928,17 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
         return;
       }
       switch (other.PayloadCase) {
-        case PayloadOneofCase.TeamAfterState:
-          if (TeamAfterState == null) {
-            TeamAfterState = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team();
+        case PayloadOneofCase.Team:
+          if (Team == null) {
+            Team = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team();
           }
-          TeamAfterState.MergeFrom(other.TeamAfterState);
+          Team.MergeFrom(other.Team);
           break;
-        case PayloadOneofCase.InvitationToJoinTeamAfterState:
-          if (InvitationToJoinTeamAfterState == null) {
-            InvitationToJoinTeamAfterState = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam();
+        case PayloadOneofCase.InvitationToJoinTeam:
+          if (InvitationToJoinTeam == null) {
+            InvitationToJoinTeam = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam();
           }
-          InvitationToJoinTeamAfterState.MergeFrom(other.InvitationToJoinTeamAfterState);
+          InvitationToJoinTeam.MergeFrom(other.InvitationToJoinTeam);
           break;
       }
 
@@ -964,20 +963,20 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             break;
           case 10: {
             global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team subBuilder = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team();
-            if (payloadCase_ == PayloadOneofCase.TeamAfterState) {
-              subBuilder.MergeFrom(TeamAfterState);
+            if (payloadCase_ == PayloadOneofCase.Team) {
+              subBuilder.MergeFrom(Team);
             }
             input.ReadMessage(subBuilder);
-            TeamAfterState = subBuilder;
+            Team = subBuilder;
             break;
           }
           case 18: {
             global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam subBuilder = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam();
-            if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeamAfterState) {
-              subBuilder.MergeFrom(InvitationToJoinTeamAfterState);
+            if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeam) {
+              subBuilder.MergeFrom(InvitationToJoinTeam);
             }
             input.ReadMessage(subBuilder);
-            InvitationToJoinTeamAfterState = subBuilder;
+            InvitationToJoinTeam = subBuilder;
             break;
           }
         }
@@ -1001,20 +1000,20 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             break;
           case 10: {
             global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team subBuilder = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team();
-            if (payloadCase_ == PayloadOneofCase.TeamAfterState) {
-              subBuilder.MergeFrom(TeamAfterState);
+            if (payloadCase_ == PayloadOneofCase.Team) {
+              subBuilder.MergeFrom(Team);
             }
             input.ReadMessage(subBuilder);
-            TeamAfterState = subBuilder;
+            Team = subBuilder;
             break;
           }
           case 18: {
             global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam subBuilder = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam();
-            if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeamAfterState) {
-              subBuilder.MergeFrom(InvitationToJoinTeamAfterState);
+            if (payloadCase_ == PayloadOneofCase.InvitationToJoinTeam) {
+              subBuilder.MergeFrom(InvitationToJoinTeam);
             }
             input.ReadMessage(subBuilder);
-            InvitationToJoinTeamAfterState = subBuilder;
+            InvitationToJoinTeam = subBuilder;
             break;
           }
         }

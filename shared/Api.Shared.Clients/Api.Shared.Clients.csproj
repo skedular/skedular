@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <Folder Include="Events\" />
+      <Folder Include="Events\Skedular\" />
       <Folder Include="OpenApi\" />
     </ItemGroup>
 

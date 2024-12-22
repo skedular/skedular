@@ -31,31 +31,31 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
             "AiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhQKDGRvbWFpblNv",
             "dXJjZRgDIAEoCRIRCglhcHBTb3VyY2UYBCABKAkSGwoEdHlwZRgFIAEoDjIN",
             "LmJpbGxpbmcuVHlwZRIoCgR0aW1lGAYgASgLMhouZ29vZ2xlLnByb3RvYnVm",
-            "LlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAcgASgJIqgBCgREYXRhElMK",
-            "JW9yZ2FuaXphdGlvbk9mZmVyaW5nQmlsbGluZ0FmdGVyU3RhdGUYASABKAsy",
-            "JC5iaWxsaW5nLk9yZ2FuaXphdGlvbk9mZmVyaW5nQmlsbGluZxJLCiFvcmdh",
-            "bml6YXRpb25CaWxsaW5nSW5mb0FmdGVyU3RhdGUYAiABKAsyIC5iaWxsaW5n",
-            "Lk9yZ2FuaXphdGlvbkJpbGxpbmdJbmZvIo0BChtPcmdhbml6YXRpb25PZmZl",
-            "cmluZ0JpbGxpbmcSEgoKb2ZmZXJpbmdJZBgBIAEoCRIWCg5vcmdhbml6YXRp",
-            "b25JZBgCIAEoCRIRCgl0b3RhbENvc3QYAyABKAMSLwoLaW52b2ljZURhdGUY",
-            "BCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIq4CChdPcmdhbml6",
-            "YXRpb25CaWxsaW5nSW5mbxIWCg5vcmdhbml6YXRpb25JZBgBIAEoCRIbChNi",
-            "aWxsaW5nQ29udGFjdEVtYWlsGAIgASgJEiIKGmJpbGxpbmdDb250YWN0QWRk",
-            "cmVzc0xpbmUxGAMgASgJEiIKGmJpbGxpbmdDb250YWN0QWRkcmVzc0xpbmUy",
-            "GAQgASgJEhwKFGJpbGxpbmdDb250YWN0U3VidXJiGAUgASgJEhoKEmJpbGxp",
-            "bmdDb250YWN0Q2l0eRgGIAEoCRIeChZiaWxsaW5nQ29udGFjdFByb3ZpbmNl",
-            "GAcgASgJEh0KFWJpbGxpbmdDb250YWN0WmlwY29kZRgIIAEoCRIdChViaWxs",
-            "aW5nQ29udGFjdENvdW50cnkYCSABKAkqewoEVHlwZRInCiNCaWxsaW5nT3Jn",
-            "YW5pemF0aW9uT2ZmZXJpbmdVcHNlcnRlZBAAEiYKIkJpbGxpbmdPcmdhbml6",
-            "YXRpb25PZmZlcmluZ0RlbGV0ZWQQARIiCh5Pcmdhbml6YXRpb25CaWxsaW5n",
-            "SW5mb1VwZGF0ZWQQAkI2qgIzQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5T",
-            "a2VkdWxhci5CaWxsaW5nLlYxLlZhbHVlYgZwcm90bzM="));
+            "LlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAcgASgJIpQBCgREYXRhEkkK",
+            "G29yZ2FuaXphdGlvbk9mZmVyaW5nQmlsbGluZxgBIAEoCzIkLmJpbGxpbmcu",
+            "T3JnYW5pemF0aW9uT2ZmZXJpbmdCaWxsaW5nEkEKF29yZ2FuaXphdGlvbkJp",
+            "bGxpbmdJbmZvGAIgASgLMiAuYmlsbGluZy5Pcmdhbml6YXRpb25CaWxsaW5n",
+            "SW5mbyKNAQobT3JnYW5pemF0aW9uT2ZmZXJpbmdCaWxsaW5nEhIKCm9mZmVy",
+            "aW5nSWQYASABKAkSFgoOb3JnYW5pemF0aW9uSWQYAiABKAkSEQoJdG90YWxD",
+            "b3N0GAMgASgDEi8KC2ludm9pY2VEYXRlGAQgASgLMhouZ29vZ2xlLnByb3Rv",
+            "YnVmLlRpbWVzdGFtcCKuAgoXT3JnYW5pemF0aW9uQmlsbGluZ0luZm8SFgoO",
+            "b3JnYW5pemF0aW9uSWQYASABKAkSGwoTYmlsbGluZ0NvbnRhY3RFbWFpbBgC",
+            "IAEoCRIiChpiaWxsaW5nQ29udGFjdEFkZHJlc3NMaW5lMRgDIAEoCRIiChpi",
+            "aWxsaW5nQ29udGFjdEFkZHJlc3NMaW5lMhgEIAEoCRIcChRiaWxsaW5nQ29u",
+            "dGFjdFN1YnVyYhgFIAEoCRIaChJiaWxsaW5nQ29udGFjdENpdHkYBiABKAkS",
+            "HgoWYmlsbGluZ0NvbnRhY3RQcm92aW5jZRgHIAEoCRIdChViaWxsaW5nQ29u",
+            "dGFjdFppcGNvZGUYCCABKAkSHQoVYmlsbGluZ0NvbnRhY3RDb3VudHJ5GAkg",
+            "ASgJKnsKBFR5cGUSJwojQmlsbGluZ09yZ2FuaXphdGlvbk9mZmVyaW5nVXBz",
+            "ZXJ0ZWQQABImCiJCaWxsaW5nT3JnYW5pemF0aW9uT2ZmZXJpbmdEZWxldGVk",
+            "EAESIgoeT3JnYW5pemF0aW9uQmlsbGluZ0luZm9VcGRhdGVkEAJCNqoCM0Fw",
+            "aS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuQmlsbGluZy5WMS5W",
+            "YWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Metadata.Parser, new[]{ "Id", "DeletedAt", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Data.Parser, new[]{ "OrganizationOfferingBillingAfterState", "OrganizationBillingInfoAfterState" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Data.Parser, new[]{ "OrganizationOfferingBilling", "OrganizationBillingInfo" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling.Parser, new[]{ "OfferingId", "OrganizationId", "TotalCost", "InvoiceDate" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo.Parser, new[]{ "OrganizationId", "BillingContactEmail", "BillingContactAddressLine1", "BillingContactAddressLine2", "BillingContactSuburb", "BillingContactCity", "BillingContactProvince", "BillingContactZipcode", "BillingContactCountry" }, null, null, null, null)
           }));
@@ -799,8 +799,8 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Data(Data other) : this() {
-      organizationOfferingBillingAfterState_ = other.organizationOfferingBillingAfterState_ != null ? other.organizationOfferingBillingAfterState_.Clone() : null;
-      organizationBillingInfoAfterState_ = other.organizationBillingInfoAfterState_ != null ? other.organizationBillingInfoAfterState_.Clone() : null;
+      organizationOfferingBilling_ = other.organizationOfferingBilling_ != null ? other.organizationOfferingBilling_.Clone() : null;
+      organizationBillingInfo_ = other.organizationBillingInfo_ != null ? other.organizationBillingInfo_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -810,27 +810,27 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
       return new Data(this);
     }
 
-    /// <summary>Field number for the "organizationOfferingBillingAfterState" field.</summary>
-    public const int OrganizationOfferingBillingAfterStateFieldNumber = 1;
-    private global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling organizationOfferingBillingAfterState_;
+    /// <summary>Field number for the "organizationOfferingBilling" field.</summary>
+    public const int OrganizationOfferingBillingFieldNumber = 1;
+    private global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling organizationOfferingBilling_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling OrganizationOfferingBillingAfterState {
-      get { return organizationOfferingBillingAfterState_; }
+    public global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling OrganizationOfferingBilling {
+      get { return organizationOfferingBilling_; }
       set {
-        organizationOfferingBillingAfterState_ = value;
+        organizationOfferingBilling_ = value;
       }
     }
 
-    /// <summary>Field number for the "organizationBillingInfoAfterState" field.</summary>
-    public const int OrganizationBillingInfoAfterStateFieldNumber = 2;
-    private global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo organizationBillingInfoAfterState_;
+    /// <summary>Field number for the "organizationBillingInfo" field.</summary>
+    public const int OrganizationBillingInfoFieldNumber = 2;
+    private global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo organizationBillingInfo_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo OrganizationBillingInfoAfterState {
-      get { return organizationBillingInfoAfterState_; }
+    public global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo OrganizationBillingInfo {
+      get { return organizationBillingInfo_; }
       set {
-        organizationBillingInfoAfterState_ = value;
+        organizationBillingInfo_ = value;
       }
     }
 
@@ -849,8 +849,8 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(OrganizationOfferingBillingAfterState, other.OrganizationOfferingBillingAfterState)) return false;
-      if (!object.Equals(OrganizationBillingInfoAfterState, other.OrganizationBillingInfoAfterState)) return false;
+      if (!object.Equals(OrganizationOfferingBilling, other.OrganizationOfferingBilling)) return false;
+      if (!object.Equals(OrganizationBillingInfo, other.OrganizationBillingInfo)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -858,8 +858,8 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (organizationOfferingBillingAfterState_ != null) hash ^= OrganizationOfferingBillingAfterState.GetHashCode();
-      if (organizationBillingInfoAfterState_ != null) hash ^= OrganizationBillingInfoAfterState.GetHashCode();
+      if (organizationOfferingBilling_ != null) hash ^= OrganizationOfferingBilling.GetHashCode();
+      if (organizationBillingInfo_ != null) hash ^= OrganizationBillingInfo.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -878,13 +878,13 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (organizationOfferingBillingAfterState_ != null) {
+      if (organizationOfferingBilling_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(OrganizationOfferingBillingAfterState);
+        output.WriteMessage(OrganizationOfferingBilling);
       }
-      if (organizationBillingInfoAfterState_ != null) {
+      if (organizationBillingInfo_ != null) {
         output.WriteRawTag(18);
-        output.WriteMessage(OrganizationBillingInfoAfterState);
+        output.WriteMessage(OrganizationBillingInfo);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -896,13 +896,13 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (organizationOfferingBillingAfterState_ != null) {
+      if (organizationOfferingBilling_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(OrganizationOfferingBillingAfterState);
+        output.WriteMessage(OrganizationOfferingBilling);
       }
-      if (organizationBillingInfoAfterState_ != null) {
+      if (organizationBillingInfo_ != null) {
         output.WriteRawTag(18);
-        output.WriteMessage(OrganizationBillingInfoAfterState);
+        output.WriteMessage(OrganizationBillingInfo);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -914,11 +914,11 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (organizationOfferingBillingAfterState_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationOfferingBillingAfterState);
+      if (organizationOfferingBilling_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationOfferingBilling);
       }
-      if (organizationBillingInfoAfterState_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationBillingInfoAfterState);
+      if (organizationBillingInfo_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationBillingInfo);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -932,17 +932,17 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
       if (other == null) {
         return;
       }
-      if (other.organizationOfferingBillingAfterState_ != null) {
-        if (organizationOfferingBillingAfterState_ == null) {
-          OrganizationOfferingBillingAfterState = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling();
+      if (other.organizationOfferingBilling_ != null) {
+        if (organizationOfferingBilling_ == null) {
+          OrganizationOfferingBilling = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling();
         }
-        OrganizationOfferingBillingAfterState.MergeFrom(other.OrganizationOfferingBillingAfterState);
+        OrganizationOfferingBilling.MergeFrom(other.OrganizationOfferingBilling);
       }
-      if (other.organizationBillingInfoAfterState_ != null) {
-        if (organizationBillingInfoAfterState_ == null) {
-          OrganizationBillingInfoAfterState = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo();
+      if (other.organizationBillingInfo_ != null) {
+        if (organizationBillingInfo_ == null) {
+          OrganizationBillingInfo = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo();
         }
-        OrganizationBillingInfoAfterState.MergeFrom(other.OrganizationBillingInfoAfterState);
+        OrganizationBillingInfo.MergeFrom(other.OrganizationBillingInfo);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -964,17 +964,17 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (organizationOfferingBillingAfterState_ == null) {
-              OrganizationOfferingBillingAfterState = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling();
+            if (organizationOfferingBilling_ == null) {
+              OrganizationOfferingBilling = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling();
             }
-            input.ReadMessage(OrganizationOfferingBillingAfterState);
+            input.ReadMessage(OrganizationOfferingBilling);
             break;
           }
           case 18: {
-            if (organizationBillingInfoAfterState_ == null) {
-              OrganizationBillingInfoAfterState = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo();
+            if (organizationBillingInfo_ == null) {
+              OrganizationBillingInfo = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo();
             }
-            input.ReadMessage(OrganizationBillingInfoAfterState);
+            input.ReadMessage(OrganizationBillingInfo);
             break;
           }
         }
@@ -997,17 +997,17 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            if (organizationOfferingBillingAfterState_ == null) {
-              OrganizationOfferingBillingAfterState = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling();
+            if (organizationOfferingBilling_ == null) {
+              OrganizationOfferingBilling = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationOfferingBilling();
             }
-            input.ReadMessage(OrganizationOfferingBillingAfterState);
+            input.ReadMessage(OrganizationOfferingBilling);
             break;
           }
           case 18: {
-            if (organizationBillingInfoAfterState_ == null) {
-              OrganizationBillingInfoAfterState = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo();
+            if (organizationBillingInfo_ == null) {
+              OrganizationBillingInfo = new global::Api.Shared.Clients.Events.Skedular.Billing.V1.Value.OrganizationBillingInfo();
             }
-            input.ReadMessage(OrganizationBillingInfoAfterState);
+            input.ReadMessage(OrganizationBillingInfo);
             break;
           }
         }

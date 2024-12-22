@@ -18,12 +18,12 @@ public class NotificationSubscriber(IEmailService emailService) : IEventSubscrib
         {
             case Type.NotificationUpserted:
                 {
-                    if (@event.Data.AfterState.NotificationType != NotificationType.Email)
+                    if (@event.Data.Notification.NotificationType != NotificationType.Email)
                     {
                         return EventSubscriberResults.Success;
                     }
 
-                    var email = @event.Data.AfterState.Email;
+                    var email = @event.Data.Notification.Email;
                     await emailService.SendEmailAsync(
                         email.TemplateId,
                         email.TemplateData,

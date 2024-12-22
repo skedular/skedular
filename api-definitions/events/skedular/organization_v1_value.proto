@@ -29,9 +29,9 @@ message Metadata {
 
 message Data {
   oneof payload {
-    Organization organizationAfterState = 1;
-    InvitationToJoinOrganization invitationToJoinOrganizationAfterState = 2;
-    Offering offeringAfterState = 3;
+    Organization organization = 1;
+    InvitationToJoinOrganization invitationToJoinOrganization = 2;
+    Offering offering = 3;
   }
 }
 

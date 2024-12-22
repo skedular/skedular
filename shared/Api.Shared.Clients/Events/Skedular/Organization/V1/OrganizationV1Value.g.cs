@@ -31,44 +31,43 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "GAEgASgJEhQKDGRvbWFpblNvdXJjZRgCIAEoCRIRCglhcHBTb3VyY2UYAyAB",
             "KAkSIAoEdHlwZRgEIAEoDjISLm9yZ2FuaXphdGlvbi5UeXBlEigKBHRpbWUY",
             "BSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0",
-            "aW9uSWQYBiABKAki4wEKBERhdGESPAoWb3JnYW5pemF0aW9uQWZ0ZXJTdGF0",
-            "ZRgBIAEoCzIaLm9yZ2FuaXphdGlvbi5Pcmdhbml6YXRpb25IABJcCiZpbnZp",
-            "dGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uQWZ0ZXJTdGF0ZRgCIAEoCzIqLm9y",
-            "Z2FuaXphdGlvbi5JbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uSAASNAoS",
-            "b2ZmZXJpbmdBZnRlclN0YXRlGAMgASgLMhYub3JnYW5pemF0aW9uLk9mZmVy",
-            "aW5nSABCCQoHcGF5bG9hZCKSAgoMT3JnYW5pemF0aW9uEgoKAmlkGAEgASgJ",
-            "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
-            "bXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEoCRIPCgdsb2dvVXJsGAUg",
-            "ASgJEg8KB3dlYnNpdGUYBiABKAkSJQoHbWVtYmVycxgHIAMoCzIULm9yZ2Fu",
-            "aXphdGlvbi5NZW1iZXISKAoIT2ZmZXJpbmcYCCABKAsyFi5vcmdhbml6YXRp",
-            "b24uT2ZmZXJpbmcSFgoOYXp1cmVUZW5hbnRJZHMYCSADKAkSHwoEdGFncxgK",
-            "IAMoCzIRLm9yZ2FuaXphdGlvbi5UYWciXgoGTWVtYmVyEgoKAmlkGAEgASgJ",
-            "EhIKCmN1c3RvbWVySWQYAiABKAkSNAoObWVtYmVyc2hpcFR5cGUYAyABKA4y",
-            "HC5vcmdhbml6YXRpb24uTWVtYmVyc2hpcFR5cGUi0QEKCE9mZmVyaW5nEgoK",
-            "AmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoFc3RhcnQYAyABKAsyGi5nb29n",
-            "bGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEoCzIaLmdvb2dsZS5w",
-            "cm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1JlbmV3GAUgASgIEhEKCXVuaXRQ",
-            "cmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21lcklkcxgHIAMoCRIWCg5vcmdh",
-            "bml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlvbhIKCgJpZBgBIAEoCSKZAQoc",
-            "SW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbhIKCgJpZBgBIAEoCRItCglk",
-            "ZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhYK",
-            "Dm9yZ2FuaXphdGlvbklkGAMgASgJEhMKC2ludml0ZWRCeUlkGAQgASgJEhEK",
-            "CWludml0ZWVJZBgFIAEoCSJFCgNUYWcSCgoCaWQYASABKAkSDAoEbmFtZRgC",
-            "IAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIPCgd0YWdUeXBlGAQgASgJKq0B",
-            "CgRUeXBlEhgKFE9yZ2FuaXphdGlvblVwc2VydGVkEAASFwoTT3JnYW5pemF0",
-            "aW9uRGVsZXRlZBABEigKJEludml0YXRpb25Ub0pvaW5Pcmdhbml6YXRpb25V",
-            "cHNlcnRlZBACEicKI0ludml0YXRpb25Ub0pvaW5Pcmdhbml6YXRpb25EZWxl",
-            "dGVkEAMSHwobT3JnYW5pemF0aW9uT2ZmZXJpbmdVcGRhdGVkEAQqZAoOTWVt",
-            "YmVyc2hpcFR5cGUSFwoTTWVtYmVyc2hpcFR5cGVPd25lchAAEh8KG01lbWJl",
-            "cnNoaXBUeXBlQWRtaW5pc3RyYXRvchABEhgKFE1lbWJlcnNoaXBUeXBlTWVt",
-            "YmVyEAJCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIu",
-            "T3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "aW9uSWQYBiABKAkixQEKBERhdGESMgoMb3JnYW5pemF0aW9uGAEgASgLMhou",
+            "b3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvbkgAElIKHGludml0YXRpb25Ub0pv",
+            "aW5Pcmdhbml6YXRpb24YAiABKAsyKi5vcmdhbml6YXRpb24uSW52aXRhdGlv",
+            "blRvSm9pbk9yZ2FuaXphdGlvbkgAEioKCG9mZmVyaW5nGAMgASgLMhYub3Jn",
+            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCKSAgoMT3JnYW5pemF0",
+            "aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5w",
+            "cm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEo",
+            "CRIPCgdsb2dvVXJsGAUgASgJEg8KB3dlYnNpdGUYBiABKAkSJQoHbWVtYmVy",
+            "cxgHIAMoCzIULm9yZ2FuaXphdGlvbi5NZW1iZXISKAoIT2ZmZXJpbmcYCCAB",
+            "KAsyFi5vcmdhbml6YXRpb24uT2ZmZXJpbmcSFgoOYXp1cmVUZW5hbnRJZHMY",
+            "CSADKAkSHwoEdGFncxgKIAMoCzIRLm9yZ2FuaXphdGlvbi5UYWciXgoGTWVt",
+            "YmVyEgoKAmlkGAEgASgJEhIKCmN1c3RvbWVySWQYAiABKAkSNAoObWVtYmVy",
+            "c2hpcFR5cGUYAyABKA4yHC5vcmdhbml6YXRpb24uTWVtYmVyc2hpcFR5cGUi",
+            "0QEKCE9mZmVyaW5nEgoKAmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoFc3Rh",
+            "cnQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgE",
+            "IAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1JlbmV3",
+            "GAUgASgIEhEKCXVuaXRQcmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21lcklk",
+            "cxgHIAMoCRIWCg5vcmdhbml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlvbhIK",
+            "CgJpZBgBIAEoCSKZAQocSW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbhIK",
+            "CgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9i",
+            "dWYuVGltZXN0YW1wEhYKDm9yZ2FuaXphdGlvbklkGAMgASgJEhMKC2ludml0",
+            "ZWRCeUlkGAQgASgJEhEKCWludml0ZWVJZBgFIAEoCSJFCgNUYWcSCgoCaWQY",
+            "ASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIPCgd0",
+            "YWdUeXBlGAQgASgJKq0BCgRUeXBlEhgKFE9yZ2FuaXphdGlvblVwc2VydGVk",
+            "EAASFwoTT3JnYW5pemF0aW9uRGVsZXRlZBABEigKJEludml0YXRpb25Ub0pv",
+            "aW5Pcmdhbml6YXRpb25VcHNlcnRlZBACEicKI0ludml0YXRpb25Ub0pvaW5P",
+            "cmdhbml6YXRpb25EZWxldGVkEAMSHwobT3JnYW5pemF0aW9uT2ZmZXJpbmdV",
+            "cGRhdGVkEAQqZAoOTWVtYmVyc2hpcFR5cGUSFwoTTWVtYmVyc2hpcFR5cGVP",
+            "d25lchAAEh8KG01lbWJlcnNoaXBUeXBlQWRtaW5pc3RyYXRvchABEhgKFE1l",
+            "bWJlcnNoaXBUeXBlTWVtYmVyEAJCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5F",
+            "dmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "OrganizationAfterState", "InvitationToJoinOrganizationAfterState", "OfferingAfterState" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "InvitationToJoinOrganization", "Offering" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Member), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Member.Parser, new[]{ "Id", "CustomerId", "MembershipType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
@@ -779,14 +778,14 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Data(Data other) : this() {
       switch (other.PayloadCase) {
-        case PayloadOneofCase.OrganizationAfterState:
-          OrganizationAfterState = other.OrganizationAfterState.Clone();
+        case PayloadOneofCase.Organization:
+          Organization = other.Organization.Clone();
           break;
-        case PayloadOneofCase.InvitationToJoinOrganizationAfterState:
-          InvitationToJoinOrganizationAfterState = other.InvitationToJoinOrganizationAfterState.Clone();
+        case PayloadOneofCase.InvitationToJoinOrganization:
+          InvitationToJoinOrganization = other.InvitationToJoinOrganization.Clone();
           break;
-        case PayloadOneofCase.OfferingAfterState:
-          OfferingAfterState = other.OfferingAfterState.Clone();
+        case PayloadOneofCase.Offering:
+          Offering = other.Offering.Clone();
           break;
       }
 
@@ -799,39 +798,39 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       return new Data(this);
     }
 
-    /// <summary>Field number for the "organizationAfterState" field.</summary>
-    public const int OrganizationAfterStateFieldNumber = 1;
+    /// <summary>Field number for the "organization" field.</summary>
+    public const int OrganizationFieldNumber = 1;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization OrganizationAfterState {
-      get { return payloadCase_ == PayloadOneofCase.OrganizationAfterState ? (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization) payload_ : null; }
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization Organization {
+      get { return payloadCase_ == PayloadOneofCase.Organization ? (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.OrganizationAfterState;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.Organization;
       }
     }
 
-    /// <summary>Field number for the "invitationToJoinOrganizationAfterState" field.</summary>
-    public const int InvitationToJoinOrganizationAfterStateFieldNumber = 2;
+    /// <summary>Field number for the "invitationToJoinOrganization" field.</summary>
+    public const int InvitationToJoinOrganizationFieldNumber = 2;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization InvitationToJoinOrganizationAfterState {
-      get { return payloadCase_ == PayloadOneofCase.InvitationToJoinOrganizationAfterState ? (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization) payload_ : null; }
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization InvitationToJoinOrganization {
+      get { return payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization ? (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.InvitationToJoinOrganizationAfterState;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.InvitationToJoinOrganization;
       }
     }
 
-    /// <summary>Field number for the "offeringAfterState" field.</summary>
-    public const int OfferingAfterStateFieldNumber = 3;
+    /// <summary>Field number for the "offering" field.</summary>
+    public const int OfferingFieldNumber = 3;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering OfferingAfterState {
-      get { return payloadCase_ == PayloadOneofCase.OfferingAfterState ? (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering) payload_ : null; }
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering Offering {
+      get { return payloadCase_ == PayloadOneofCase.Offering ? (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.OfferingAfterState;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.Offering;
       }
     }
 
@@ -839,9 +838,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     /// <summary>Enum of possible cases for the "payload" oneof.</summary>
     public enum PayloadOneofCase {
       None = 0,
-      OrganizationAfterState = 1,
-      InvitationToJoinOrganizationAfterState = 2,
-      OfferingAfterState = 3,
+      Organization = 1,
+      InvitationToJoinOrganization = 2,
+      Offering = 3,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -872,9 +871,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(OrganizationAfterState, other.OrganizationAfterState)) return false;
-      if (!object.Equals(InvitationToJoinOrganizationAfterState, other.InvitationToJoinOrganizationAfterState)) return false;
-      if (!object.Equals(OfferingAfterState, other.OfferingAfterState)) return false;
+      if (!object.Equals(Organization, other.Organization)) return false;
+      if (!object.Equals(InvitationToJoinOrganization, other.InvitationToJoinOrganization)) return false;
+      if (!object.Equals(Offering, other.Offering)) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -883,9 +882,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (payloadCase_ == PayloadOneofCase.OrganizationAfterState) hash ^= OrganizationAfterState.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganizationAfterState) hash ^= InvitationToJoinOrganizationAfterState.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.OfferingAfterState) hash ^= OfferingAfterState.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.Organization) hash ^= Organization.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) hash ^= InvitationToJoinOrganization.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.Offering) hash ^= Offering.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -905,17 +904,17 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (payloadCase_ == PayloadOneofCase.OrganizationAfterState) {
+      if (payloadCase_ == PayloadOneofCase.Organization) {
         output.WriteRawTag(10);
-        output.WriteMessage(OrganizationAfterState);
+        output.WriteMessage(Organization);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganizationAfterState) {
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) {
         output.WriteRawTag(18);
-        output.WriteMessage(InvitationToJoinOrganizationAfterState);
+        output.WriteMessage(InvitationToJoinOrganization);
       }
-      if (payloadCase_ == PayloadOneofCase.OfferingAfterState) {
+      if (payloadCase_ == PayloadOneofCase.Offering) {
         output.WriteRawTag(26);
-        output.WriteMessage(OfferingAfterState);
+        output.WriteMessage(Offering);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -927,17 +926,17 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (payloadCase_ == PayloadOneofCase.OrganizationAfterState) {
+      if (payloadCase_ == PayloadOneofCase.Organization) {
         output.WriteRawTag(10);
-        output.WriteMessage(OrganizationAfterState);
+        output.WriteMessage(Organization);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganizationAfterState) {
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) {
         output.WriteRawTag(18);
-        output.WriteMessage(InvitationToJoinOrganizationAfterState);
+        output.WriteMessage(InvitationToJoinOrganization);
       }
-      if (payloadCase_ == PayloadOneofCase.OfferingAfterState) {
+      if (payloadCase_ == PayloadOneofCase.Offering) {
         output.WriteRawTag(26);
-        output.WriteMessage(OfferingAfterState);
+        output.WriteMessage(Offering);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -949,14 +948,14 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (payloadCase_ == PayloadOneofCase.OrganizationAfterState) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationAfterState);
+      if (payloadCase_ == PayloadOneofCase.Organization) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Organization);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganizationAfterState) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(InvitationToJoinOrganizationAfterState);
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(InvitationToJoinOrganization);
       }
-      if (payloadCase_ == PayloadOneofCase.OfferingAfterState) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(OfferingAfterState);
+      if (payloadCase_ == PayloadOneofCase.Offering) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Offering);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -971,23 +970,23 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         return;
       }
       switch (other.PayloadCase) {
-        case PayloadOneofCase.OrganizationAfterState:
-          if (OrganizationAfterState == null) {
-            OrganizationAfterState = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization();
+        case PayloadOneofCase.Organization:
+          if (Organization == null) {
+            Organization = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization();
           }
-          OrganizationAfterState.MergeFrom(other.OrganizationAfterState);
+          Organization.MergeFrom(other.Organization);
           break;
-        case PayloadOneofCase.InvitationToJoinOrganizationAfterState:
-          if (InvitationToJoinOrganizationAfterState == null) {
-            InvitationToJoinOrganizationAfterState = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization();
+        case PayloadOneofCase.InvitationToJoinOrganization:
+          if (InvitationToJoinOrganization == null) {
+            InvitationToJoinOrganization = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization();
           }
-          InvitationToJoinOrganizationAfterState.MergeFrom(other.InvitationToJoinOrganizationAfterState);
+          InvitationToJoinOrganization.MergeFrom(other.InvitationToJoinOrganization);
           break;
-        case PayloadOneofCase.OfferingAfterState:
-          if (OfferingAfterState == null) {
-            OfferingAfterState = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering();
+        case PayloadOneofCase.Offering:
+          if (Offering == null) {
+            Offering = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering();
           }
-          OfferingAfterState.MergeFrom(other.OfferingAfterState);
+          Offering.MergeFrom(other.Offering);
           break;
       }
 
@@ -1012,29 +1011,29 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           case 10: {
             global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization subBuilder = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization();
-            if (payloadCase_ == PayloadOneofCase.OrganizationAfterState) {
-              subBuilder.MergeFrom(OrganizationAfterState);
+            if (payloadCase_ == PayloadOneofCase.Organization) {
+              subBuilder.MergeFrom(Organization);
             }
             input.ReadMessage(subBuilder);
-            OrganizationAfterState = subBuilder;
+            Organization = subBuilder;
             break;
           }
           case 18: {
             global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization subBuilder = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization();
-            if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganizationAfterState) {
-              subBuilder.MergeFrom(InvitationToJoinOrganizationAfterState);
+            if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) {
+              subBuilder.MergeFrom(InvitationToJoinOrganization);
             }
             input.ReadMessage(subBuilder);
-            InvitationToJoinOrganizationAfterState = subBuilder;
+            InvitationToJoinOrganization = subBuilder;
             break;
           }
           case 26: {
             global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering subBuilder = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering();
-            if (payloadCase_ == PayloadOneofCase.OfferingAfterState) {
-              subBuilder.MergeFrom(OfferingAfterState);
+            if (payloadCase_ == PayloadOneofCase.Offering) {
+              subBuilder.MergeFrom(Offering);
             }
             input.ReadMessage(subBuilder);
-            OfferingAfterState = subBuilder;
+            Offering = subBuilder;
             break;
           }
         }
@@ -1058,29 +1057,29 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           case 10: {
             global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization subBuilder = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization();
-            if (payloadCase_ == PayloadOneofCase.OrganizationAfterState) {
-              subBuilder.MergeFrom(OrganizationAfterState);
+            if (payloadCase_ == PayloadOneofCase.Organization) {
+              subBuilder.MergeFrom(Organization);
             }
             input.ReadMessage(subBuilder);
-            OrganizationAfterState = subBuilder;
+            Organization = subBuilder;
             break;
           }
           case 18: {
             global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization subBuilder = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization();
-            if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganizationAfterState) {
-              subBuilder.MergeFrom(InvitationToJoinOrganizationAfterState);
+            if (payloadCase_ == PayloadOneofCase.InvitationToJoinOrganization) {
+              subBuilder.MergeFrom(InvitationToJoinOrganization);
             }
             input.ReadMessage(subBuilder);
-            InvitationToJoinOrganizationAfterState = subBuilder;
+            InvitationToJoinOrganization = subBuilder;
             break;
           }
           case 26: {
             global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering subBuilder = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering();
-            if (payloadCase_ == PayloadOneofCase.OfferingAfterState) {
-              subBuilder.MergeFrom(OfferingAfterState);
+            if (payloadCase_ == PayloadOneofCase.Offering) {
+              subBuilder.MergeFrom(Offering);
             }
             input.ReadMessage(subBuilder);
-            OfferingAfterState = subBuilder;
+            Offering = subBuilder;
             break;
           }
         }

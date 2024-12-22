@@ -46,7 +46,7 @@ public class OrganizationOutboxPublisher(
                         applicationConfiguration.AppSource,
                         organization.IsNotDeleted() ? Type.OrganizationUpserted : Type.OrganizationDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data { OrganizationAfterState = mapper.MapTo(organization) }
+                    Data = new Data { Organization = mapper.MapTo(organization) }
                 }, unitOfWork, cancellationToken)));
 
     public async Task PublishInvitesToJoinOrganizationNotificationAsync(
@@ -65,7 +65,7 @@ public class OrganizationOutboxPublisher(
                             ? Type.InvitationToJoinOrganizationUpserted
                             : Type.InvitationToJoinOrganizationDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data { InvitationToJoinOrganizationAfterState = mapper.MapTo(joinInvitation, null) }
+                    Data = new Data { InvitationToJoinOrganization = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,
                 cancellationToken)));

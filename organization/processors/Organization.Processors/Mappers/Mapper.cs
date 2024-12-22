@@ -95,7 +95,7 @@ public class Mapper : IMapper
 {
     public Customer MapTo(Event src)
     {
-        var customer = src.Data.AfterState;
+        var customer = src.Data.Customer;
         var deletedAt = customer.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -128,7 +128,7 @@ public class Mapper : IMapper
 
     public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
     {
-        var location = src.Data.LocationAfterState;
+        var location = src.Data.Location;
         var deletedAt = location.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -143,7 +143,7 @@ public class Mapper : IMapper
 
     public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
     {
-        var team = src.Data.TeamAfterState;
+        var team = src.Data.Team;
         var deletedAt = team.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -158,7 +158,7 @@ public class Mapper : IMapper
 
     public Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src)
     {
-        var booking = src.Data.AfterState;
+        var booking = src.Data.Booking;
         var deletedAt = booking.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 

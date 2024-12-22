@@ -59,7 +59,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
 {
     public Shared.Models.Customer MapTo(Event src)
     {
-        var customer = src.Data.AfterState;
+        var customer = src.Data.Customer;
         var deletedAt = customer.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -90,7 +90,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
 
     public Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
     {
-        var organizationAfterState = src.Data.OrganizationAfterState;
+        var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -108,7 +108,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
 
     public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
     {
-        var locationAfterState = src.Data.LocationAfterState;
+        var locationAfterState = src.Data.Location;
         var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -125,7 +125,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
 
     public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
     {
-        var teamAfterState = src.Data.TeamAfterState;
+        var teamAfterState = src.Data.Team;
         var deletedAt = teamAfterState.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -203,7 +203,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
     public Shared.Models.Notification MapInvitationToJoinOrganizationToNotification(
         Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src)
     {
-        var notification = src.Data.InvitationToJoinOrganizationAfterState;
+        var notification = src.Data.InvitationToJoinOrganization;
         var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -223,7 +223,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
     public Shared.Models.Notification MapInvitationToJoinLocationToNotification(
         Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
     {
-        var notification = src.Data.InvitationToJoinLocationAfterState;
+        var notification = src.Data.InvitationToJoinLocation;
         var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
@@ -243,7 +243,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
     public Shared.Models.Notification MapInvitationToJoinTeamToNotification(
         Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
     {
-        var notification = src.Data.InvitationToJoinTeamAfterState;
+        var notification = src.Data.InvitationToJoinTeam;
         var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 

@@ -46,7 +46,7 @@ public class BillingOutboxPublisher(
                     applicationConfiguration.AppSource,
                     Type.BillingOrganizationOfferingUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { OrganizationOfferingBillingAfterState = mapper.MapTo(organizationOffering) }
+                Data = new Data { OrganizationOfferingBilling = mapper.MapTo(organizationOffering) }
             };
 
             await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
@@ -66,7 +66,7 @@ public class BillingOutboxPublisher(
                     applicationConfiguration.AppSource,
                     Type.OrganizationBillingInfoUpdated,
                     context.GetCorrelationId()),
-                Data = new Data { OrganizationBillingInfoAfterState = mapper.MapTo(organization) }
+                Data = new Data { OrganizationBillingInfo = mapper.MapTo(organization) }
             };
 
             await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);

@@ -24,7 +24,7 @@ message Metadata {
   string correlationId = 6;
 }
 
-message Data { Booking afterState = 1; }
+message Data { Booking booking = 1; }
 
 message Booking {
   string id = 1;

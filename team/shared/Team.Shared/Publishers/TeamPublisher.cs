@@ -40,7 +40,7 @@ public class TeamPublisher(
                         applicationConfiguration.AppSource,
                         team.IsNotDeleted() ? Type.TeamUpserted : Type.TeamDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data { TeamAfterState = mapper.MapTo(team) }
+                    Data = new Data { Team = mapper.MapTo(team) }
                 },
                 cancellationToken)));
 
@@ -62,7 +62,7 @@ public class TeamPublisher(
                         context.GetCorrelationId()),
                     Data = new Data
                     {
-                        InvitationToJoinTeamAfterState = mapper.MapTo(joinInvitation, inviteeIdToOverride)
+                        InvitationToJoinTeam = mapper.MapTo(joinInvitation, inviteeIdToOverride)
                     }
                 },
                 cancellationToken)));

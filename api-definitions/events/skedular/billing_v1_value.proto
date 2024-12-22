@@ -27,8 +27,8 @@ message Metadata {
 }
 
 message Data {
-  OrganizationOfferingBilling organizationOfferingBillingAfterState = 1;
-  OrganizationBillingInfo organizationBillingInfoAfterState = 2;
+  OrganizationOfferingBilling organizationOfferingBilling = 1;
+  OrganizationBillingInfo organizationBillingInfo = 2;
 }
 
 message OrganizationOfferingBilling {

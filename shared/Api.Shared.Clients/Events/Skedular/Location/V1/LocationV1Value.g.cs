@@ -30,36 +30,35 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "YXRpb24uRGF0YSKeAQoITWV0YWRhdGESCgoCaWQYASABKAkSFAoMZG9tYWlu",
             "U291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIcCgR0eXBlGAQgASgO",
             "Mg4ubG9jYXRpb24uVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3Rv",
-            "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIpUBCgREYXRh",
-            "EjAKEmxvY2F0aW9uQWZ0ZXJTdGF0ZRgBIAEoCzISLmxvY2F0aW9uLkxvY2F0",
-            "aW9uSAASUAoiaW52aXRhdGlvblRvSm9pbkxvY2F0aW9uQWZ0ZXJTdGF0ZRgC",
-            "IAEoCzIiLmxvY2F0aW9uLkludml0YXRpb25Ub0pvaW5Mb2NhdGlvbkgAQgkK",
-            "B3BheWxvYWQizgEKCExvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRB",
-            "dBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgD",
-            "IAEoCRINCgVhYm91dBgEIAEoCRIhCgdtZW1iZXJzGAUgAygLMhAubG9jYXRp",
-            "b24uTWVtYmVyEhYKDm9yZ2FuaXphdGlvbklkGAYgASgJEhAKCHRpbWV6b25l",
-            "GAcgASgJEh0KBWRlc2tzGAggAygLMg4ubG9jYXRpb24uRGVzayJaCgZNZW1i",
-            "ZXISCgoCaWQYASABKAkSMAoObWVtYmVyc2hpcFR5cGUYAiABKA4yGC5sb2Nh",
-            "dGlvbi5NZW1iZXJzaGlwVHlwZRISCgpjdXN0b21lcklkGAMgASgJInsKBERl",
-            "c2sSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZWFjdGl2YXRlZBgD",
-            "IAEoCBIeChZyZXF1aXJlQm9va2luZ0FwcHJvdmFsGAQgASgIEhMKC2Rlc2tU",
-            "eXBlSWRzGAUgAygJEg8KB3pvbmVJZHMYBiADKAkikQEKGEludml0YXRpb25U",
-            "b0pvaW5Mb2NhdGlvbhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsy",
-            "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhIKCmxvY2F0aW9uSWQYAyAB",
-            "KAkSEwoLaW52aXRlZEJ5SWQYBCABKAkSEQoJaW52aXRlZUlkGAUgASgJKnwK",
-            "BFR5cGUSFAoQTG9jYXRpb25VcHNlcnRlZBAAEhMKD0xvY2F0aW9uRGVsZXRl",
-            "ZBABEiQKIEludml0YXRpb25Ub0pvaW5Mb2NhdGlvblVwc2VydGVkEAISIwof",
-            "SW52aXRhdGlvblRvSm9pbkxvY2F0aW9uRGVsZXRlZBADKmQKDk1lbWJlcnNo",
-            "aXBUeXBlEhcKE01lbWJlcnNoaXBUeXBlT3duZXIQABIfChtNZW1iZXJzaGlw",
-            "VHlwZUFkbWluaXN0cmF0b3IQARIYChRNZW1iZXJzaGlwVHlwZU1lbWJlchAC",
-            "QjeqAjRBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkxvY2F0",
-            "aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIoEBCgREYXRh",
+            "EiYKCGxvY2F0aW9uGAEgASgLMhIubG9jYXRpb24uTG9jYXRpb25IABJGChhp",
+            "bnZpdGF0aW9uVG9Kb2luTG9jYXRpb24YAiABKAsyIi5sb2NhdGlvbi5JbnZp",
+            "dGF0aW9uVG9Kb2luTG9jYXRpb25IAEIJCgdwYXlsb2FkIs4BCghMb2NhdGlv",
+            "bhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJv",
+            "dG9idWYuVGltZXN0YW1wEgwKBG5hbWUYAyABKAkSDQoFYWJvdXQYBCABKAkS",
+            "IQoHbWVtYmVycxgFIAMoCzIQLmxvY2F0aW9uLk1lbWJlchIWCg5vcmdhbml6",
+            "YXRpb25JZBgGIAEoCRIQCgh0aW1lem9uZRgHIAEoCRIdCgVkZXNrcxgIIAMo",
+            "CzIOLmxvY2F0aW9uLkRlc2siWgoGTWVtYmVyEgoKAmlkGAEgASgJEjAKDm1l",
+            "bWJlcnNoaXBUeXBlGAIgASgOMhgubG9jYXRpb24uTWVtYmVyc2hpcFR5cGUS",
+            "EgoKY3VzdG9tZXJJZBgDIAEoCSJ7CgREZXNrEgoKAmlkGAEgASgJEgwKBG5h",
+            "bWUYAiABKAkSEwoLZGVhY3RpdmF0ZWQYAyABKAgSHgoWcmVxdWlyZUJvb2tp",
+            "bmdBcHByb3ZhbBgEIAEoCBITCgtkZXNrVHlwZUlkcxgFIAMoCRIPCgd6b25l",
+            "SWRzGAYgAygJIpEBChhJbnZpdGF0aW9uVG9Kb2luTG9jYXRpb24SCgoCaWQY",
+            "ASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
+            "bWVzdGFtcBISCgpsb2NhdGlvbklkGAMgASgJEhMKC2ludml0ZWRCeUlkGAQg",
+            "ASgJEhEKCWludml0ZWVJZBgFIAEoCSp8CgRUeXBlEhQKEExvY2F0aW9uVXBz",
+            "ZXJ0ZWQQABITCg9Mb2NhdGlvbkRlbGV0ZWQQARIkCiBJbnZpdGF0aW9uVG9K",
+            "b2luTG9jYXRpb25VcHNlcnRlZBACEiMKH0ludml0YXRpb25Ub0pvaW5Mb2Nh",
+            "dGlvbkRlbGV0ZWQQAypkCg5NZW1iZXJzaGlwVHlwZRIXChNNZW1iZXJzaGlw",
+            "VHlwZU93bmVyEAASHwobTWVtYmVyc2hpcFR5cGVBZG1pbmlzdHJhdG9yEAES",
+            "GAoUTWVtYmVyc2hpcFR5cGVNZW1iZXIQAkI3qgI0QXBpLlNoYXJlZC5DbGll",
+            "bnRzLkV2ZW50cy5Ta2VkdWxhci5Mb2NhdGlvbi5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "LocationAfterState", "InvitationToJoinLocationAfterState" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "Location", "InvitationToJoinLocation" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Desks" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Member), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Member.Parser, new[]{ "Id", "MembershipType", "CustomerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "DeskTypeIds", "ZoneIds" }, null, null, null, null),
@@ -767,11 +766,11 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Data(Data other) : this() {
       switch (other.PayloadCase) {
-        case PayloadOneofCase.LocationAfterState:
-          LocationAfterState = other.LocationAfterState.Clone();
+        case PayloadOneofCase.Location:
+          Location = other.Location.Clone();
           break;
-        case PayloadOneofCase.InvitationToJoinLocationAfterState:
-          InvitationToJoinLocationAfterState = other.InvitationToJoinLocationAfterState.Clone();
+        case PayloadOneofCase.InvitationToJoinLocation:
+          InvitationToJoinLocation = other.InvitationToJoinLocation.Clone();
           break;
       }
 
@@ -784,27 +783,27 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       return new Data(this);
     }
 
-    /// <summary>Field number for the "locationAfterState" field.</summary>
-    public const int LocationAfterStateFieldNumber = 1;
+    /// <summary>Field number for the "location" field.</summary>
+    public const int LocationFieldNumber = 1;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location LocationAfterState {
-      get { return payloadCase_ == PayloadOneofCase.LocationAfterState ? (global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location) payload_ : null; }
+    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location Location {
+      get { return payloadCase_ == PayloadOneofCase.Location ? (global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.LocationAfterState;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.Location;
       }
     }
 
-    /// <summary>Field number for the "invitationToJoinLocationAfterState" field.</summary>
-    public const int InvitationToJoinLocationAfterStateFieldNumber = 2;
+    /// <summary>Field number for the "invitationToJoinLocation" field.</summary>
+    public const int InvitationToJoinLocationFieldNumber = 2;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation InvitationToJoinLocationAfterState {
-      get { return payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState ? (global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation) payload_ : null; }
+    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation InvitationToJoinLocation {
+      get { return payloadCase_ == PayloadOneofCase.InvitationToJoinLocation ? (global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.InvitationToJoinLocationAfterState;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.InvitationToJoinLocation;
       }
     }
 
@@ -812,8 +811,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     /// <summary>Enum of possible cases for the "payload" oneof.</summary>
     public enum PayloadOneofCase {
       None = 0,
-      LocationAfterState = 1,
-      InvitationToJoinLocationAfterState = 2,
+      Location = 1,
+      InvitationToJoinLocation = 2,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -844,8 +843,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(LocationAfterState, other.LocationAfterState)) return false;
-      if (!object.Equals(InvitationToJoinLocationAfterState, other.InvitationToJoinLocationAfterState)) return false;
+      if (!object.Equals(Location, other.Location)) return false;
+      if (!object.Equals(InvitationToJoinLocation, other.InvitationToJoinLocation)) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -854,8 +853,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (payloadCase_ == PayloadOneofCase.LocationAfterState) hash ^= LocationAfterState.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) hash ^= InvitationToJoinLocationAfterState.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.Location) hash ^= Location.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocation) hash ^= InvitationToJoinLocation.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -875,13 +874,13 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (payloadCase_ == PayloadOneofCase.LocationAfterState) {
+      if (payloadCase_ == PayloadOneofCase.Location) {
         output.WriteRawTag(10);
-        output.WriteMessage(LocationAfterState);
+        output.WriteMessage(Location);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) {
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocation) {
         output.WriteRawTag(18);
-        output.WriteMessage(InvitationToJoinLocationAfterState);
+        output.WriteMessage(InvitationToJoinLocation);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -893,13 +892,13 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (payloadCase_ == PayloadOneofCase.LocationAfterState) {
+      if (payloadCase_ == PayloadOneofCase.Location) {
         output.WriteRawTag(10);
-        output.WriteMessage(LocationAfterState);
+        output.WriteMessage(Location);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) {
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocation) {
         output.WriteRawTag(18);
-        output.WriteMessage(InvitationToJoinLocationAfterState);
+        output.WriteMessage(InvitationToJoinLocation);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -911,11 +910,11 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (payloadCase_ == PayloadOneofCase.LocationAfterState) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(LocationAfterState);
+      if (payloadCase_ == PayloadOneofCase.Location) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Location);
       }
-      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(InvitationToJoinLocationAfterState);
+      if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocation) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(InvitationToJoinLocation);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -930,17 +929,17 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         return;
       }
       switch (other.PayloadCase) {
-        case PayloadOneofCase.LocationAfterState:
-          if (LocationAfterState == null) {
-            LocationAfterState = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location();
+        case PayloadOneofCase.Location:
+          if (Location == null) {
+            Location = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location();
           }
-          LocationAfterState.MergeFrom(other.LocationAfterState);
+          Location.MergeFrom(other.Location);
           break;
-        case PayloadOneofCase.InvitationToJoinLocationAfterState:
-          if (InvitationToJoinLocationAfterState == null) {
-            InvitationToJoinLocationAfterState = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation();
+        case PayloadOneofCase.InvitationToJoinLocation:
+          if (InvitationToJoinLocation == null) {
+            InvitationToJoinLocation = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation();
           }
-          InvitationToJoinLocationAfterState.MergeFrom(other.InvitationToJoinLocationAfterState);
+          InvitationToJoinLocation.MergeFrom(other.InvitationToJoinLocation);
           break;
       }
 
@@ -965,20 +964,20 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           case 10: {
             global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location subBuilder = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location();
-            if (payloadCase_ == PayloadOneofCase.LocationAfterState) {
-              subBuilder.MergeFrom(LocationAfterState);
+            if (payloadCase_ == PayloadOneofCase.Location) {
+              subBuilder.MergeFrom(Location);
             }
             input.ReadMessage(subBuilder);
-            LocationAfterState = subBuilder;
+            Location = subBuilder;
             break;
           }
           case 18: {
             global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation subBuilder = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation();
-            if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) {
-              subBuilder.MergeFrom(InvitationToJoinLocationAfterState);
+            if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocation) {
+              subBuilder.MergeFrom(InvitationToJoinLocation);
             }
             input.ReadMessage(subBuilder);
-            InvitationToJoinLocationAfterState = subBuilder;
+            InvitationToJoinLocation = subBuilder;
             break;
           }
         }
@@ -1002,20 +1001,20 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           case 10: {
             global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location subBuilder = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location();
-            if (payloadCase_ == PayloadOneofCase.LocationAfterState) {
-              subBuilder.MergeFrom(LocationAfterState);
+            if (payloadCase_ == PayloadOneofCase.Location) {
+              subBuilder.MergeFrom(Location);
             }
             input.ReadMessage(subBuilder);
-            LocationAfterState = subBuilder;
+            Location = subBuilder;
             break;
           }
           case 18: {
             global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation subBuilder = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation();
-            if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocationAfterState) {
-              subBuilder.MergeFrom(InvitationToJoinLocationAfterState);
+            if (payloadCase_ == PayloadOneofCase.InvitationToJoinLocation) {
+              subBuilder.MergeFrom(InvitationToJoinLocation);
             }
             input.ReadMessage(subBuilder);
-            InvitationToJoinLocationAfterState = subBuilder;
+            InvitationToJoinLocation = subBuilder;
             break;
           }
         }

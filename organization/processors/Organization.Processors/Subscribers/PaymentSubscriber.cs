@@ -41,7 +41,7 @@ public class PaymentSubscriber(
         Event @event,
         CancellationToken cancellationToken)
     {
-        var organizationPaymentMethod = @event.Data.OrganizationPaymentMethodAfterState;
+        var organizationPaymentMethod = @event.Data.OrganizationPaymentMethod;
         var organization = await repositoryFactory.OrganizationRepository
             .Query(new Specification<Shared.Database.Entities.Organization>
             {

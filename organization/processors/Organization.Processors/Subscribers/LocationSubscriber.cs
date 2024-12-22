@@ -24,7 +24,7 @@ public class LocationSubscriber(
             case Type.LocationUpserted:
                 {
                     var location = mapper.MapTo(@event);
-                    if (string.IsNullOrWhiteSpace(@event.Data.LocationAfterState.OrganizationId))
+                    if (string.IsNullOrWhiteSpace(@event.Data.Location.OrganizationId))
                     {
                         break;
                     }

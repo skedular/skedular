@@ -22,7 +22,7 @@ message Metadata {
 }
 
 message Data {
-  OrganizationPaymentMethod organizationPaymentMethodAfterState = 1;
+  OrganizationPaymentMethod organizationPaymentMethod = 1;
 }
 
 message OrganizationPaymentMethod {

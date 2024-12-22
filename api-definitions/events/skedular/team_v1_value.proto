@@ -28,8 +28,8 @@ message Metadata {
 
 message Data { 
   oneof payload {
-    Team teamAfterState = 1;
-    InvitationToJoinTeam invitationToJoinTeamAfterState = 2;
+    Team team = 1;
+    InvitationToJoinTeam invitationToJoinTeam = 2;
   }
 }
 

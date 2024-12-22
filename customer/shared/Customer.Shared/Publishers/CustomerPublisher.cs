@@ -34,7 +34,7 @@ public class CustomerPublisher(
                         applicationConfiguration.AppSource,
                         customer.IsNotDeleted() ? Type.CustomerUpserted : Type.CustomerDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data { AfterState = mapper.MapTo(customer) }
+                    Data = new Data { Customer = mapper.MapTo(customer) }
                 },
                 cancellationToken)));
 }

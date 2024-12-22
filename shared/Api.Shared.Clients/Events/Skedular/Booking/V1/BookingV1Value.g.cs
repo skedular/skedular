@@ -30,32 +30,32 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Zy5EYXRhIp0BCghNZXRhZGF0YRIKCgJpZBgBIAEoCRIUCgxkb21haW5Tb3Vy",
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5i",
             "b29raW5nLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
-            "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSIsCgREYXRhEiQKCmFm",
-            "dGVyU3RhdGUYASABKAsyEC5ib29raW5nLkJvb2tpbmci4gIKB0Jvb2tpbmcS",
-            "CgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3Rv",
-            "YnVmLlRpbWVzdGFtcBISCgpjdXN0b21lcklkGAMgASgJEhYKDm9yZ2FuaXph",
-            "dGlvbklkGAQgASgJEigKBGZyb20YBSABKAsyGi5nb29nbGUucHJvdG9idWYu",
-            "VGltZXN0YW1wEiYKAnRvGAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz",
-            "dGFtcBINCgVub3RlcxgHIAEoCRISCgpsb2NhdGlvbklkGAggASgJEg8KB2Rl",
-            "c2tJZHMYCSADKAkSDgoGdGVhbUlkGAogASgJEjYKEmRlc2tCb29raW5nRGV0",
-            "YWlscxgLIAMoCzIaLmJvb2tpbmcuRGVza0Jvb2tpbmdEZXRhaWwSIgoEdHlw",
-            "ZRgMIAEoDjIULmJvb2tpbmcuQm9va2luZ1R5cGUiVwoRRGVza0Jvb2tpbmdE",
-            "ZXRhaWwSCgoCaWQYASABKAkSDgoGZGVza0lkGAIgASgJEiYKBnN0YXR1cxgD",
-            "IAEoDjIWLmJvb2tpbmcuQm9va2luZ1N0YXR1cyovCgRUeXBlEhMKD0Jvb2tp",
-            "bmdVcHNlcnRlZBAAEhIKDkJvb2tpbmdEZWxldGVkEAEqQAoNQm9va2luZ1N0",
-            "YXR1cxITCg9Bd2FpdEFjY2VwdGFuY2UQABIMCghBY2NlcHRlZBABEgwKCERl",
-            "Y2xpbmVkEAIqtwEKC0Jvb2tpbmdUeXBlEhMKD1dvcmtpbmdGcm9tSG9tZRAA",
-            "EhUKEVdvcmtpbmdGcm9tT2ZmaWNlEAESDQoJU2lja0xlYXZlEAISDwoLQW5u",
-            "dWFsTGVhdmUQAxISCg5XZWxsQmVpbmdMZWF2ZRAEEhEKDUNsaWVudE9mZmlj",
-            "ZXMQBRIMCghWYWNhdGlvbhAGEhQKEFRyYXZlbGluZ0ZvcldvcmsQBxIRCg1O",
-            "b25Xb3JraW5nRGF5EAhCNqoCM0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMu",
-            "U2tlZHVsYXIuQm9va2luZy5WMS5WYWx1ZWIGcHJvdG8z"));
+            "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSIpCgREYXRhEiEKB2Jv",
+            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmci4gIKB0Jvb2tpbmcSCgoC",
+            "aWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm",
+            "LlRpbWVzdGFtcBISCgpjdXN0b21lcklkGAMgASgJEhYKDm9yZ2FuaXphdGlv",
+            "bklkGAQgASgJEigKBGZyb20YBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGlt",
+            "ZXN0YW1wEiYKAnRvGAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFt",
+            "cBINCgVub3RlcxgHIAEoCRISCgpsb2NhdGlvbklkGAggASgJEg8KB2Rlc2tJ",
+            "ZHMYCSADKAkSDgoGdGVhbUlkGAogASgJEjYKEmRlc2tCb29raW5nRGV0YWls",
+            "cxgLIAMoCzIaLmJvb2tpbmcuRGVza0Jvb2tpbmdEZXRhaWwSIgoEdHlwZRgM",
+            "IAEoDjIULmJvb2tpbmcuQm9va2luZ1R5cGUiVwoRRGVza0Jvb2tpbmdEZXRh",
+            "aWwSCgoCaWQYASABKAkSDgoGZGVza0lkGAIgASgJEiYKBnN0YXR1cxgDIAEo",
+            "DjIWLmJvb2tpbmcuQm9va2luZ1N0YXR1cyovCgRUeXBlEhMKD0Jvb2tpbmdV",
+            "cHNlcnRlZBAAEhIKDkJvb2tpbmdEZWxldGVkEAEqQAoNQm9va2luZ1N0YXR1",
+            "cxITCg9Bd2FpdEFjY2VwdGFuY2UQABIMCghBY2NlcHRlZBABEgwKCERlY2xp",
+            "bmVkEAIqtwEKC0Jvb2tpbmdUeXBlEhMKD1dvcmtpbmdGcm9tSG9tZRAAEhUK",
+            "EVdvcmtpbmdGcm9tT2ZmaWNlEAESDQoJU2lja0xlYXZlEAISDwoLQW5udWFs",
+            "TGVhdmUQAxISCg5XZWxsQmVpbmdMZWF2ZRAEEhEKDUNsaWVudE9mZmljZXMQ",
+            "BRIMCghWYWNhdGlvbhAGEhQKEFRyYXZlbGluZ0ZvcldvcmsQBxIRCg1Ob25X",
+            "b3JraW5nRGF5EAhCNqoCM0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tl",
+            "ZHVsYXIuQm9va2luZy5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data.Parser, new[]{ "AfterState" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data.Parser, new[]{ "Booking" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "CustomerId", "OrganizationId", "From", "To", "Notes", "LocationId", "DeskIds", "TeamId", "DeskBookingDetails", "Type" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail.Parser, new[]{ "Id", "DeskId", "Status" }, null, null, null, null)
           }));
@@ -770,7 +770,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Data(Data other) : this() {
-      afterState_ = other.afterState_ != null ? other.afterState_.Clone() : null;
+      booking_ = other.booking_ != null ? other.booking_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -780,15 +780,15 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       return new Data(this);
     }
 
-    /// <summary>Field number for the "afterState" field.</summary>
-    public const int AfterStateFieldNumber = 1;
-    private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking afterState_;
+    /// <summary>Field number for the "booking" field.</summary>
+    public const int BookingFieldNumber = 1;
+    private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking booking_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking AfterState {
-      get { return afterState_; }
+    public global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking Booking {
+      get { return booking_; }
       set {
-        afterState_ = value;
+        booking_ = value;
       }
     }
 
@@ -807,7 +807,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(AfterState, other.AfterState)) return false;
+      if (!object.Equals(Booking, other.Booking)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -815,7 +815,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (afterState_ != null) hash ^= AfterState.GetHashCode();
+      if (booking_ != null) hash ^= Booking.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -834,9 +834,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (afterState_ != null) {
+      if (booking_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(AfterState);
+        output.WriteMessage(Booking);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -848,9 +848,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (afterState_ != null) {
+      if (booking_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(AfterState);
+        output.WriteMessage(Booking);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -862,8 +862,8 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (afterState_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(AfterState);
+      if (booking_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Booking);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -877,11 +877,11 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (other == null) {
         return;
       }
-      if (other.afterState_ != null) {
-        if (afterState_ == null) {
-          AfterState = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking();
+      if (other.booking_ != null) {
+        if (booking_ == null) {
+          Booking = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking();
         }
-        AfterState.MergeFrom(other.AfterState);
+        Booking.MergeFrom(other.Booking);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -903,10 +903,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (afterState_ == null) {
-              AfterState = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking();
+            if (booking_ == null) {
+              Booking = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking();
             }
-            input.ReadMessage(AfterState);
+            input.ReadMessage(Booking);
             break;
           }
         }
@@ -929,10 +929,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            if (afterState_ == null) {
-              AfterState = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking();
+            if (booking_ == null) {
+              Booking = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking();
             }
-            input.ReadMessage(AfterState);
+            input.ReadMessage(Booking);
             break;
           }
         }

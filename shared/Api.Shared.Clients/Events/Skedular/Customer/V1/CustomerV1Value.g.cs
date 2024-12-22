@@ -30,44 +30,44 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "dG9tZXIuRGF0YSKeAQoITWV0YWRhdGESCgoCaWQYASABKAkSFAoMZG9tYWlu",
             "U291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIcCgR0eXBlGAQgASgO",
             "Mg4uY3VzdG9tZXIuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3Rv",
-            "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIi4KBERhdGES",
-            "JgoKYWZ0ZXJTdGF0ZRgBIAEoCzISLmN1c3RvbWVyLkN1c3RvbWVyIpgFCghD",
-            "dXN0b21lchIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29n",
-            "bGUucHJvdG9idWYuVGltZXN0YW1wEiYKCmlkZW50aXRpZXMYAyADKAsyEi5j",
-            "dXN0b21lci5JZGVudGl0eRITCgtkZXNpZ25hdGlvbhgEIAEoCRINCgV0aXRs",
-            "ZRgFIAEoCRIMCgRuYW1lGAYgASgJEhEKCWdpdmVuTmFtZRgHIAEoCRISCgpt",
-            "aWRkbGVOYW1lGAggASgJEhIKCmZhbWlseU5hbWUYCSABKAkSEAoIcGhvdG9V",
-            "cmwYCiABKAkSEgoKcGhvdG9VcmwyNBgLIAEoCRISCgpwaG90b1VybDMyGAwg",
-            "ASgJEhIKCnBob3RvVXJsNDgYDSABKAkSEgoKcGhvdG9Vcmw3MhgOIAEoCRIT",
-            "CgtwaG90b1VybDE5MhgPIAEoCRITCgtwaG90b1VybDUxMhgQIAEoCRIQCgh0",
-            "aW1lem9uZRgRIAEoCRIOCgZsb2NhbGUYEiABKAkSLAoQZGVmYXVsdExvY2F0",
-            "aW9ucxgTIAMoCzISLmN1c3RvbWVyLkxvY2F0aW9uEh0KFWRlZmF1bHRPcmdh",
-            "bml6YXRpb25JZBgUIAEoCRIkCgxkZWZhdWx0RGVza3MYFSADKAsyDi5jdXN0",
-            "b21lci5EZXNrEiQKCHNldHRpbmdzGBYgASgLMhIuY3VzdG9tZXIuU2V0dGlu",
-            "Z3MSJAoMZGVmYXVsdFRlYW1zGBcgAygLMg4uY3VzdG9tZXIuVGVhbRI6Chdk",
-            "ZWZhdWx0T3JnYW5pemF0aW9uVGFncxgYIAMoCzIZLmN1c3RvbWVyLk9yZ2Fu",
-            "aXphdGlvblRhZxITCgtwaG9uZU51bWJlchgZIAEoCSI8CghJZGVudGl0eRIK",
-            "CgJpZBgBIAEoCRINCgVlbWFpbBgCIAEoCRIVCg1lbWFpbFZlcmlmaWVkGAMg",
-            "ASgIIqACCghTZXR0aW5ncxIKCgJpZBgBIAEoCRIkChxpc09yZ2FuaXphdGlv",
-            "bk9uYm9hcmRpbmdEb25lGAIgASgIEiAKGGlzTG9jYXRpb25PbmJvYXJkaW5n",
-            "RG9uZRgDIAEoCBIcChRpc1RlYW1PbmJvYXJkaW5nRG9uZRgEIAEoCBIrCiNp",
-            "c0RlZmF1bHRPcmdhbml6YXRpb25PbmJvYXJkaW5nRG9uZRgFIAEoCBInCh9p",
-            "c0RlZmF1bHRMb2NhdGlvbk9uYm9hcmRpbmdEb25lGAYgASgIEiUKHWlzUHJl",
-            "ZmVycmVkWm9uZU9uYm9hcmRpbmdEb25lGAcgASgIEiUKHWlzUHJlZmVycmVk",
-            "RGVza09uYm9hcmRpbmdEb25lGAggASgIIi4KCExvY2F0aW9uEgoKAmlkGAEg",
-            "ASgJEhYKDm9yZ2FuaXphdGlvbklkGAIgASgJIioKBFRlYW0SCgoCaWQYASAB",
-            "KAkSFgoOb3JnYW5pemF0aW9uSWQYAiABKAkiJgoERGVzaxIKCgJpZBgBIAEo",
-            "CRISCgpsb2NhdGlvbklkGAIgASgJIjUKD09yZ2FuaXphdGlvblRhZxIKCgJp",
-            "ZBgBIAEoCRIWCg5vcmdhbml6YXRpb25JZBgCIAEoCSoxCgRUeXBlEhQKEEN1",
-            "c3RvbWVyVXBzZXJ0ZWQQABITCg9DdXN0b21lckRlbGV0ZWQQAUI3qgI0QXBp",
-            "LlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5DdXN0b21lci5WMS5W",
-            "YWx1ZWIGcHJvdG8z"));
+            "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIiwKBERhdGES",
+            "JAoIY3VzdG9tZXIYASABKAsyEi5jdXN0b21lci5DdXN0b21lciKYBQoIQ3Vz",
+            "dG9tZXISCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xl",
+            "LnByb3RvYnVmLlRpbWVzdGFtcBImCgppZGVudGl0aWVzGAMgAygLMhIuY3Vz",
+            "dG9tZXIuSWRlbnRpdHkSEwoLZGVzaWduYXRpb24YBCABKAkSDQoFdGl0bGUY",
+            "BSABKAkSDAoEbmFtZRgGIAEoCRIRCglnaXZlbk5hbWUYByABKAkSEgoKbWlk",
+            "ZGxlTmFtZRgIIAEoCRISCgpmYW1pbHlOYW1lGAkgASgJEhAKCHBob3RvVXJs",
+            "GAogASgJEhIKCnBob3RvVXJsMjQYCyABKAkSEgoKcGhvdG9VcmwzMhgMIAEo",
+            "CRISCgpwaG90b1VybDQ4GA0gASgJEhIKCnBob3RvVXJsNzIYDiABKAkSEwoL",
+            "cGhvdG9VcmwxOTIYDyABKAkSEwoLcGhvdG9Vcmw1MTIYECABKAkSEAoIdGlt",
+            "ZXpvbmUYESABKAkSDgoGbG9jYWxlGBIgASgJEiwKEGRlZmF1bHRMb2NhdGlv",
+            "bnMYEyADKAsyEi5jdXN0b21lci5Mb2NhdGlvbhIdChVkZWZhdWx0T3JnYW5p",
+            "emF0aW9uSWQYFCABKAkSJAoMZGVmYXVsdERlc2tzGBUgAygLMg4uY3VzdG9t",
+            "ZXIuRGVzaxIkCghzZXR0aW5ncxgWIAEoCzISLmN1c3RvbWVyLlNldHRpbmdz",
+            "EiQKDGRlZmF1bHRUZWFtcxgXIAMoCzIOLmN1c3RvbWVyLlRlYW0SOgoXZGVm",
+            "YXVsdE9yZ2FuaXphdGlvblRhZ3MYGCADKAsyGS5jdXN0b21lci5Pcmdhbml6",
+            "YXRpb25UYWcSEwoLcGhvbmVOdW1iZXIYGSABKAkiPAoISWRlbnRpdHkSCgoC",
+            "aWQYASABKAkSDQoFZW1haWwYAiABKAkSFQoNZW1haWxWZXJpZmllZBgDIAEo",
+            "CCKgAgoIU2V0dGluZ3MSCgoCaWQYASABKAkSJAocaXNPcmdhbml6YXRpb25P",
+            "bmJvYXJkaW5nRG9uZRgCIAEoCBIgChhpc0xvY2F0aW9uT25ib2FyZGluZ0Rv",
+            "bmUYAyABKAgSHAoUaXNUZWFtT25ib2FyZGluZ0RvbmUYBCABKAgSKwojaXNE",
+            "ZWZhdWx0T3JnYW5pemF0aW9uT25ib2FyZGluZ0RvbmUYBSABKAgSJwofaXNE",
+            "ZWZhdWx0TG9jYXRpb25PbmJvYXJkaW5nRG9uZRgGIAEoCBIlCh1pc1ByZWZl",
+            "cnJlZFpvbmVPbmJvYXJkaW5nRG9uZRgHIAEoCBIlCh1pc1ByZWZlcnJlZERl",
+            "c2tPbmJvYXJkaW5nRG9uZRgIIAEoCCIuCghMb2NhdGlvbhIKCgJpZBgBIAEo",
+            "CRIWCg5vcmdhbml6YXRpb25JZBgCIAEoCSIqCgRUZWFtEgoKAmlkGAEgASgJ",
+            "EhYKDm9yZ2FuaXphdGlvbklkGAIgASgJIiYKBERlc2sSCgoCaWQYASABKAkS",
+            "EgoKbG9jYXRpb25JZBgCIAEoCSI1Cg9Pcmdhbml6YXRpb25UYWcSCgoCaWQY",
+            "ASABKAkSFgoOb3JnYW5pemF0aW9uSWQYAiABKAkqMQoEVHlwZRIUChBDdXN0",
+            "b21lclVwc2VydGVkEAASEwoPQ3VzdG9tZXJEZWxldGVkEAFCN6oCNEFwaS5T",
+            "aGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuQ3VzdG9tZXIuVjEuVmFs",
+            "dWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Data.Parser, new[]{ "AfterState" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Data.Parser, new[]{ "Customer" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer.Parser, new[]{ "Id", "DeletedAt", "Identities", "Designation", "Title", "Name", "GivenName", "MiddleName", "FamilyName", "PhotoUrl", "PhotoUrl24", "PhotoUrl32", "PhotoUrl48", "PhotoUrl72", "PhotoUrl192", "PhotoUrl512", "Timezone", "Locale", "DefaultLocations", "DefaultOrganizationId", "DefaultDesks", "Settings", "DefaultTeams", "DefaultOrganizationTags", "PhoneNumber" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity.Parser, new[]{ "Id", "Email", "EmailVerified" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings.Parser, new[]{ "Id", "IsOrganizationOnboardingDone", "IsLocationOnboardingDone", "IsTeamOnboardingDone", "IsDefaultOrganizationOnboardingDone", "IsDefaultLocationOnboardingDone", "IsPreferredZoneOnboardingDone", "IsPreferredDeskOnboardingDone" }, null, null, null, null),
@@ -769,7 +769,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Data(Data other) : this() {
-      afterState_ = other.afterState_ != null ? other.afterState_.Clone() : null;
+      customer_ = other.customer_ != null ? other.customer_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -779,15 +779,15 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       return new Data(this);
     }
 
-    /// <summary>Field number for the "afterState" field.</summary>
-    public const int AfterStateFieldNumber = 1;
-    private global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer afterState_;
+    /// <summary>Field number for the "customer" field.</summary>
+    public const int CustomerFieldNumber = 1;
+    private global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer customer_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer AfterState {
-      get { return afterState_; }
+    public global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer Customer {
+      get { return customer_; }
       set {
-        afterState_ = value;
+        customer_ = value;
       }
     }
 
@@ -806,7 +806,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(AfterState, other.AfterState)) return false;
+      if (!object.Equals(Customer, other.Customer)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -814,7 +814,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (afterState_ != null) hash ^= AfterState.GetHashCode();
+      if (customer_ != null) hash ^= Customer.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -833,9 +833,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (afterState_ != null) {
+      if (customer_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(AfterState);
+        output.WriteMessage(Customer);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -847,9 +847,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (afterState_ != null) {
+      if (customer_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(AfterState);
+        output.WriteMessage(Customer);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -861,8 +861,8 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (afterState_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(AfterState);
+      if (customer_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Customer);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -876,11 +876,11 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (other == null) {
         return;
       }
-      if (other.afterState_ != null) {
-        if (afterState_ == null) {
-          AfterState = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer();
+      if (other.customer_ != null) {
+        if (customer_ == null) {
+          Customer = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer();
         }
-        AfterState.MergeFrom(other.AfterState);
+        Customer.MergeFrom(other.Customer);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -902,10 +902,10 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (afterState_ == null) {
-              AfterState = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer();
+            if (customer_ == null) {
+              Customer = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer();
             }
-            input.ReadMessage(AfterState);
+            input.ReadMessage(Customer);
             break;
           }
         }
@@ -928,10 +928,10 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            if (afterState_ == null) {
-              AfterState = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer();
+            if (customer_ == null) {
+              Customer = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer();
             }
-            input.ReadMessage(AfterState);
+            input.ReadMessage(Customer);
             break;
           }
         }

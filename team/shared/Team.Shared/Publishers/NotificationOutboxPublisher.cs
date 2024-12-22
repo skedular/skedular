@@ -85,7 +85,7 @@ public class NotificationOutboxPublisher(
                 context.GetCorrelationId()),
             Data = new Data
             {
-                AfterState = new Notification
+                Notification = new Notification
                 {
                     Id = randomHelper.Generate(),
                     NotificationType = NotificationType.Email,
@@ -101,7 +101,7 @@ public class NotificationOutboxPublisher(
             }
         };
 
-        @event.Data.AfterState.Email.ToAddresses.Add(inviteeCustomerEmail);
+        @event.Data.Notification.Email.ToAddresses.Add(inviteeCustomerEmail);
 
         await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
     }
@@ -133,7 +133,7 @@ public class NotificationOutboxPublisher(
                 context.GetCorrelationId()),
             Data = new Data
             {
-                AfterState = new Notification
+                Notification = new Notification
                 {
                     Id = randomHelper.Generate(),
                     NotificationType = NotificationType.Email,
@@ -149,7 +149,7 @@ public class NotificationOutboxPublisher(
             }
         };
 
-        @event.Data.AfterState.Email.ToAddresses.AddRange(inviteeCustomer.Identities.Select(item => item.Email));
+        @event.Data.Notification.Email.ToAddresses.AddRange(inviteeCustomer.Identities.Select(item => item.Email));
 
         await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
     }

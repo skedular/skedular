@@ -46,7 +46,7 @@ public class TeamOutboxPublisher(
                         applicationConfiguration.AppSource,
                         team.IsNotDeleted() ? Type.TeamUpserted : Type.TeamDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data { TeamAfterState = mapper.MapTo(team) }
+                    Data = new Data { Team = mapper.MapTo(team) }
                 }, unitOfWork, cancellationToken)));
 
     public async Task PublishInvitesToJoinTeamNotificationAsync(
@@ -65,7 +65,7 @@ public class TeamOutboxPublisher(
                             ? Type.InvitationToJoinTeamUpserted
                             : Type.InvitationToJoinTeamDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data { InvitationToJoinTeamAfterState = mapper.MapTo(joinInvitation, null) }
+                    Data = new Data { InvitationToJoinTeam = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,
                 cancellationToken)));

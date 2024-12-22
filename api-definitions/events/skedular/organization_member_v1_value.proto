@@ -26,7 +26,7 @@ message Metadata {
 }
 
 message Data { 
-  OrganizationMember afterState = 1;
+  OrganizationMember organizationMember = 1;
 }
 
 message OrganizationMember {

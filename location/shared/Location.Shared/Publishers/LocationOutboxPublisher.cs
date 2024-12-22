@@ -46,7 +46,7 @@ public class LocationOutboxPublisher(
                         applicationConfiguration.AppSource,
                         location.IsNotDeleted() ? Type.LocationUpserted : Type.LocationDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data { LocationAfterState = mapper.MapTo(location) }
+                    Data = new Data { Location = mapper.MapTo(location) }
                 }, unitOfWork, cancellationToken)));
 
     public async Task PublishInvitesToJoinLocationNotificationAsync(
@@ -65,7 +65,7 @@ public class LocationOutboxPublisher(
                             ? Type.InvitationToJoinLocationUpserted
                             : Type.InvitationToJoinLocationDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data { InvitationToJoinLocationAfterState = mapper.MapTo(joinInvitation, null) }
+                    Data = new Data { InvitationToJoinLocation = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,
                 cancellationToken)));

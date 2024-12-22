@@ -23,7 +23,7 @@ message Metadata {
   string correlationId = 6;
 }
 
-message Data { Notification afterState = 1; }
+message Data { Notification notification = 1; }
 
 enum NotificationType { Email = 0; }
 

@@ -26,7 +26,7 @@ public partial class Metadata : IMetadata { }
     retryTopicPartitionCount: 3,
     deadLetterTopicName: "payment.v1.event.deadletter",
     deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package payment;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.Payment.V1.Value\";enum Type { OrganizationPaymentMethodsUpdated = 0; }message Event {  Metadata metadata = 1;  Data data = 2;}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}message Data {  OrganizationPaymentMethod organizationPaymentMethodAfterState = 1;}message OrganizationPaymentMethod {  string organizationId = 1;  bool hasAttachedPaymentMethod = 2;}")]
+    protobufSchema: "syntax = \"proto3\";package payment;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.Payment.V1.Value\";enum Type { OrganizationPaymentMethodsUpdated = 0; }message Event {  Metadata metadata = 1;  Data data = 2;}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}message Data {  OrganizationPaymentMethod organizationPaymentMethod = 1;}message OrganizationPaymentMethod {  string organizationId = 1;  bool hasAttachedPaymentMethod = 2;}")]
 public partial class Event : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =

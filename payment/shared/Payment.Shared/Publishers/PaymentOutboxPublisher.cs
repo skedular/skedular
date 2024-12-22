@@ -40,7 +40,7 @@ public class PaymentOutboxPublisher(
                 context.GetCorrelationId()),
             Data = new Data
             {
-                OrganizationPaymentMethodAfterState = new OrganizationPaymentMethod
+                OrganizationPaymentMethod = new OrganizationPaymentMethod
                 {
                     OrganizationId = organizationId, HasAttachedPaymentMethod = hasAttachedPaymentMethod
                 }

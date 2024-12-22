@@ -74,8 +74,8 @@ public class BookingSubscriber(
 
     private async Task TrackActiveMembersAsync(Event @event, CancellationToken cancellationToken)
     {
-        var customerId = @event.Data.AfterState.CustomerId;
-        var organizationId = @event.Data.AfterState.OrganizationId;
+        var customerId = @event.Data.Booking.CustomerId;
+        var organizationId = @event.Data.Booking.OrganizationId;
 
         if (string.IsNullOrWhiteSpace(customerId))
         {

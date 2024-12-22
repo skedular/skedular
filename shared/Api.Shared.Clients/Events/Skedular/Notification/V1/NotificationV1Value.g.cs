@@ -31,24 +31,24 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
             "GAEgASgJEhQKDGRvbWFpblNvdXJjZRgCIAEoCRIRCglhcHBTb3VyY2UYAyAB",
             "KAkSIAoEdHlwZRgEIAEoDjISLm5vdGlmaWNhdGlvbi5UeXBlEigKBHRpbWUY",
             "BSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0",
-            "aW9uSWQYBiABKAkiNgoERGF0YRIuCgphZnRlclN0YXRlGAEgASgLMhoubm90",
-            "aWZpY2F0aW9uLk5vdGlmaWNhdGlvbiKuAQoMTm90aWZpY2F0aW9uEgoKAmlk",
-            "GAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
-            "aW1lc3RhbXASOAoQbm90aWZpY2F0aW9uVHlwZRgDIAEoDjIeLm5vdGlmaWNh",
-            "dGlvbi5Ob3RpZmljYXRpb25UeXBlEikKBWVtYWlsGAQgASgLMhoubm90aWZp",
-            "Y2F0aW9uLkVtYWlsRGV0YWlscyKUAQoMRW1haWxEZXRhaWxzEgoKAmlkGAEg",
-            "ASgJEhIKCnRlbXBsYXRlSWQYAiABKAkSFAoMdGVtcGxhdGVEYXRhGAMgASgJ",
-            "Eg4KBnNlbmRlchgEIAEoCRITCgt0b0FkZHJlc3NlcxgFIAMoCRITCgtjY0Fk",
-            "ZHJlc3NlcxgGIAMoCRIUCgxiY2NBZGRyZXNzZXMYByADKAkqIAoEVHlwZRIY",
-            "ChROb3RpZmljYXRpb25VcHNlcnRlZBAAKh0KEE5vdGlmaWNhdGlvblR5cGUS",
-            "CQoFRW1haWwQAEI7qgI4QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2Vk",
-            "dWxhci5Ob3RpZmljYXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
+            "aW9uSWQYBiABKAkiOAoERGF0YRIwCgxub3RpZmljYXRpb24YASABKAsyGi5u",
+            "b3RpZmljYXRpb24uTm90aWZpY2F0aW9uIq4BCgxOb3RpZmljYXRpb24SCgoC",
+            "aWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm",
+            "LlRpbWVzdGFtcBI4ChBub3RpZmljYXRpb25UeXBlGAMgASgOMh4ubm90aWZp",
+            "Y2F0aW9uLk5vdGlmaWNhdGlvblR5cGUSKQoFZW1haWwYBCABKAsyGi5ub3Rp",
+            "ZmljYXRpb24uRW1haWxEZXRhaWxzIpQBCgxFbWFpbERldGFpbHMSCgoCaWQY",
+            "ASABKAkSEgoKdGVtcGxhdGVJZBgCIAEoCRIUCgx0ZW1wbGF0ZURhdGEYAyAB",
+            "KAkSDgoGc2VuZGVyGAQgASgJEhMKC3RvQWRkcmVzc2VzGAUgAygJEhMKC2Nj",
+            "QWRkcmVzc2VzGAYgAygJEhQKDGJjY0FkZHJlc3NlcxgHIAMoCSogCgRUeXBl",
+            "EhgKFE5vdGlmaWNhdGlvblVwc2VydGVkEAAqHQoQTm90aWZpY2F0aW9uVHlw",
+            "ZRIJCgVFbWFpbBAAQjuqAjhBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNr",
+            "ZWR1bGFyLk5vdGlmaWNhdGlvbi5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.NotificationType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Data.Parser, new[]{ "AfterState" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Data.Parser, new[]{ "Notification" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification), global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification.Parser, new[]{ "Id", "DeletedAt", "NotificationType", "Email" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.EmailDetails), global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.EmailDetails.Parser, new[]{ "Id", "TemplateId", "TemplateData", "Sender", "ToAddresses", "CcAddresses", "BccAddresses" }, null, null, null, null)
           }));
@@ -748,7 +748,7 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Data(Data other) : this() {
-      afterState_ = other.afterState_ != null ? other.afterState_.Clone() : null;
+      notification_ = other.notification_ != null ? other.notification_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -758,15 +758,15 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
       return new Data(this);
     }
 
-    /// <summary>Field number for the "afterState" field.</summary>
-    public const int AfterStateFieldNumber = 1;
-    private global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification afterState_;
+    /// <summary>Field number for the "notification" field.</summary>
+    public const int NotificationFieldNumber = 1;
+    private global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification notification_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification AfterState {
-      get { return afterState_; }
+    public global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification Notification {
+      get { return notification_; }
       set {
-        afterState_ = value;
+        notification_ = value;
       }
     }
 
@@ -785,7 +785,7 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(AfterState, other.AfterState)) return false;
+      if (!object.Equals(Notification, other.Notification)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -793,7 +793,7 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (afterState_ != null) hash ^= AfterState.GetHashCode();
+      if (notification_ != null) hash ^= Notification.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -812,9 +812,9 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (afterState_ != null) {
+      if (notification_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(AfterState);
+        output.WriteMessage(Notification);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -826,9 +826,9 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (afterState_ != null) {
+      if (notification_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(AfterState);
+        output.WriteMessage(Notification);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -840,8 +840,8 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (afterState_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(AfterState);
+      if (notification_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Notification);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -855,11 +855,11 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
       if (other == null) {
         return;
       }
-      if (other.afterState_ != null) {
-        if (afterState_ == null) {
-          AfterState = new global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification();
+      if (other.notification_ != null) {
+        if (notification_ == null) {
+          Notification = new global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification();
         }
-        AfterState.MergeFrom(other.AfterState);
+        Notification.MergeFrom(other.Notification);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -881,10 +881,10 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (afterState_ == null) {
-              AfterState = new global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification();
+            if (notification_ == null) {
+              Notification = new global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification();
             }
-            input.ReadMessage(AfterState);
+            input.ReadMessage(Notification);
             break;
           }
         }
@@ -907,10 +907,10 @@ namespace Api.Shared.Clients.Events.Skedular.Notification.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            if (afterState_ == null) {
-              AfterState = new global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification();
+            if (notification_ == null) {
+              Notification = new global::Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Notification();
             }
-            input.ReadMessage(AfterState);
+            input.ReadMessage(Notification);
             break;
           }
         }

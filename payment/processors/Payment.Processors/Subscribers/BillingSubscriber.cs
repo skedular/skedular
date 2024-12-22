@@ -49,7 +49,7 @@ public class BillingSubscriber(
         Event @event,
         CancellationToken cancellationToken)
     {
-        var organizationOfferingBilling = @event.Data.OrganizationOfferingBillingAfterState;
+        var organizationOfferingBilling = @event.Data.OrganizationOfferingBilling;
         if (organizationOfferingBilling.TotalCost == 0)
         {
             // Total cost is Zero, no need to try charge customer 

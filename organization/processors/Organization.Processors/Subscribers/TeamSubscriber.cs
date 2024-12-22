@@ -24,7 +24,7 @@ public class TeamSubscriber(
             case Type.TeamUpserted:
                 {
                     var team = mapper.MapTo(@event);
-                    if (string.IsNullOrWhiteSpace(@event.Data.TeamAfterState.OrganizationId))
+                    if (string.IsNullOrWhiteSpace(@event.Data.Team.OrganizationId))
                     {
                         break;
                     }

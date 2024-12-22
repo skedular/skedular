@@ -28,8 +28,8 @@ message Metadata {
 
 message Data { 
   oneof payload {
-    Location locationAfterState = 1;
-    InvitationToJoinLocation invitationToJoinLocationAfterState = 2;
+    Location location = 1;
+    InvitationToJoinLocation invitationToJoinLocation = 2;
   }
 }
 
