@@ -1,1 +1,1 @@
-export { default as LeftSideNavigationMenu } from './left-side-navigation-menu';
+export { default as LeftSideNavigationMenuContent } from './left-side-navigation-menu-content';

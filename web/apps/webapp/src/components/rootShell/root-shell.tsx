@@ -1,5 +1,5 @@
 import { AppBar, OldAppBar } from '@/components/appBar';
-import { LeftSideNavigationMenu, OldLeftSideNavigationMenu } from '@/components/navigationMenu';
+import { LeftSideNavigationMenuContent } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
 import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
@@ -50,7 +50,7 @@ const RootQuery = graphql`
     teamCustomerRecordSynced
     ...oldAppBar_query
     ...appBar_query
-    ...leftSideNavigationMenu_query
+    ...leftSideNavigationMenuContent_query
   }
 `;
 
@@ -150,17 +150,12 @@ const RootShell = ({
           variant="persistent"
           open={true}
         >
-          {!switchToModernUI && (
-            <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={finalDrawerWidth} showIconsOnly={collapsed} />
-          )}
-          {switchToModernUI && (
-            <LeftSideNavigationMenu
-              rootDataRelay={rootData}
-              onReloadRequired={onReloadRequired}
-              maxWidth={finalDrawerWidth}
-              showIconsOnly={collapsed}
-            />
-          )}
+          <LeftSideNavigationMenuContent
+            rootDataRelay={rootData}
+            onReloadRequired={onReloadRequired}
+            maxWidth={finalDrawerWidth}
+            showIconsOnly={collapsed}
+          />
         </Drawer>
         <Grid container>
           <Grid
@@ -175,17 +170,12 @@ const RootShell = ({
               backgroundColor: (theme) => theme.palette.background.paper,
             }}
           >
-            {!switchToModernUI && (
-              <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={finalDrawerWidth} showIconsOnly={collapsed} />
-            )}
-            {switchToModernUI && (
-              <LeftSideNavigationMenu
-                rootDataRelay={rootData}
-                onReloadRequired={onReloadRequired}
-                maxWidth={finalDrawerWidth}
-                showIconsOnly={collapsed}
-              />
-            )}
+            <LeftSideNavigationMenuContent
+              rootDataRelay={rootData}
+              onReloadRequired={onReloadRequired}
+              maxWidth={finalDrawerWidth}
+              showIconsOnly={collapsed}
+            />
           </Grid>
           <StackColumn sx={{ width: '100vw' }}>
             {!switchToModernUI && <OldAppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}

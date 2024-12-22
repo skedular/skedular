@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6dd1b54db27eb882bcfaa76a56122c03>>
+ * @generated SignedSource<<a59b42673c4845528c0a6ede761d79e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,16 +10,16 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type leftSideNavigationMenu_query$data = {
+export type modernLeftSideNavigationMenuContent_query$data = {
   readonly organization?: {
     readonly canModify: boolean;
     readonly id: string;
   } | null | undefined;
-  readonly " $fragmentType": "leftSideNavigationMenu_query";
+  readonly " $fragmentType": "modernLeftSideNavigationMenuContent_query";
 };
-export type leftSideNavigationMenu_query$key = {
-  readonly " $data"?: leftSideNavigationMenu_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"leftSideNavigationMenu_query">;
+export type modernLeftSideNavigationMenuContent_query$key = {
+  readonly " $data"?: modernLeftSideNavigationMenuContent_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"modernLeftSideNavigationMenuContent_query">;
 };
 
 const node: ReaderFragment = {
@@ -35,7 +35,7 @@ const node: ReaderFragment = {
   ],
   "kind": "Fragment",
   "metadata": null,
-  "name": "leftSideNavigationMenu_query",
+  "name": "modernLeftSideNavigationMenuContent_query",
   "selections": [
     {
       "condition": "organizationExists",
@@ -80,6 +80,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "693a7385f8df628bd21e0017652681a2";
+(node as any).hash = "94e4fbd6d402f75e96ebc0bb145b21bb";
 
 export default node;

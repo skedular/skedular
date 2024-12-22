@@ -17,7 +17,7 @@ type Props = {
   hideIcons?: boolean;
 };
 
-const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) => {
+const LeftSideNavigationMenuContent = ({ maxWidth, showIconsOnly, hideIcons }: Props) => {
   const location = useLocation();
   const pathName = location.pathname;
   const paletteMode = useContext(PaletteModeContext);
@@ -198,4 +198,4 @@ const LeftSideNavigationMenu = ({ maxWidth, showIconsOnly, hideIcons }: Props) =
   );
 };
 
-export default memo(LeftSideNavigationMenu);
+export default memo(LeftSideNavigationMenuContent);

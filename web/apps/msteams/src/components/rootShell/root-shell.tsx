@@ -9,7 +9,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import graphql from 'babel-plugin-relay/macro';
 import { AppBar, OldAppBar } from 'components/appBar';
-import { LeftSideNavigationMenu } from 'components/navigationMenu';
+import { LeftSideNavigationMenuContent } from 'components/navigationMenu';
 import { Observability } from 'components/observability';
 import { nanoid } from 'nanoid';
 import { memo, PropsWithChildren, useCallback, useContext, useEffect, useState, useTransition } from 'react';
@@ -123,7 +123,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, collapsed }: Pr
           variant="persistent"
           open={true}
         >
-          <LeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={finalDrawerWidth} showIconsOnly={collapsed} />
+          <LeftSideNavigationMenuContent onReloadRequired={onReloadRequired} maxWidth={finalDrawerWidth} showIconsOnly={collapsed} />
         </Drawer>
         <Grid container>
           <Grid
@@ -138,7 +138,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, collapsed }: Pr
               backgroundColor: (theme) => theme.palette.background.paper,
             }}
           >
-            <LeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={finalDrawerWidth} showIconsOnly={collapsed} />
+            <LeftSideNavigationMenuContent onReloadRequired={onReloadRequired} maxWidth={finalDrawerWidth} showIconsOnly={collapsed} />
           </Grid>
           <StackColumn sx={{ width: '100vw' }}>
             {!switchToModernUI && <OldAppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
