@@ -21,7 +21,7 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
     public bool IsOrganizationMember(Organization organization, Shared.Database.Entities.Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Active: true,
+            Status: OrganizationMemberStatus.Active,
             MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
             or OrganizationMembershipType.Member
         };

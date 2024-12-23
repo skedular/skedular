@@ -164,7 +164,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             MembershipType = src.MembershipType,
-            Active = src.Active,
+            Status = src.Status,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = MapTo(src.Customer)!,
             Organization = organization
@@ -327,7 +327,7 @@ public class Mapper : IMapper
                 OrganizationMembershipType.Member => OrganizationMemberMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            IsActive = src.Active,
+            IsActive = src.Status == OrganizationMemberStatus.Active,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             Customer = MapTo(src.Customer),
         };
@@ -448,7 +448,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.MembershipType = src.MembershipType;
-        dest.Active = src.Active;
+        dest.Status = src.Status;
         dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
         dest.Organization = organization;
         dest.Customer = customer;
@@ -603,7 +603,7 @@ public class Mapper : IMapper
                 OrganizationMembershipType.Member => MembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Active = src.Active,
+            Status = src.Status,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             Customer = MapToGrpcResponse(src.Customer)
         };
@@ -654,7 +654,7 @@ public class Mapper : IMapper
                 MembershipType.Member => OrganizationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Active = src.Active,
+            Status = src.Status,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = new Customer { Id = src.Customer.Id },
             Organization = organization

@@ -126,7 +126,7 @@ public class OrganizationGrpcService(
                 var field = item.Field switch
                 {
                     MemberOrderField.Membership => OrganizationMemberOrderField.MembershipType,
-                    MemberOrderField.Active => OrganizationMemberOrderField.Active,
+                    MemberOrderField.Status => OrganizationMemberOrderField.Status,
                     MemberOrderField.Name => OrganizationMemberOrderField.Name,
                     MemberOrderField.GivenName => OrganizationMemberOrderField.GivenName,
                     MemberOrderField.MiddleName => OrganizationMemberOrderField.MiddleName,

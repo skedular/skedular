@@ -64,7 +64,7 @@ public class Mapper : IMapper
                 OrganizationMembershipType.Member => MembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Active = item.Active,
+            Status = item.Status,
         }));
 
         return organization;

@@ -399,11 +399,6 @@ namespace Team.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<bool>("Active")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -428,6 +423,13 @@ namespace Team.Shared.Database.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasDefaultValue("ACTIVE");
+
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -436,13 +438,13 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Active");
-
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("MembershipType");
 
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("Status");
 
                     b.HasIndex("CustomerId", "OrganizationId")
                         .IsUnique();

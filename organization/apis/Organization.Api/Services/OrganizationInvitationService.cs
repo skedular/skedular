@@ -172,7 +172,7 @@ public class OrganizationInvitationService(
             {
                 Id = randomHelper.Generate(),
                 MembershipType = joinInvitation.MembershipType,
-                Active = true,
+                Status = OrganizationMemberStatus.Active,
                 Organization = organization,
                 Customer = customerEntity
             });

@@ -397,6 +397,7 @@ enum OrganizationMemberMembershipType {
 
 enum OrganizationMemberOrderField {
   MembershipType
+  Status
   Name
   GivenName
   MiddleName

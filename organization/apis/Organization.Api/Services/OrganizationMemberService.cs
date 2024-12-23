@@ -109,7 +109,7 @@ public class OrganizationMemberService(
         var myMembershipDetails =
             organization.OrganizationMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (!myMembershipDetails.Active)
+        if (myMembershipDetails.Status != OrganizationMemberStatus.Active)
         {
             throw new Unauthorized();
         }

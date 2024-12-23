@@ -472,7 +472,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 MembershipType = src.MembershipType,
-                Active = src.Active,
+                Status = src.Status,
                 Customer = MapTo(src.Customer)!,
                 Organization = MapTo(src.Organization)!
             };

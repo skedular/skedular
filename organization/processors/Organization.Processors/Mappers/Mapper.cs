@@ -400,7 +400,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.MembershipType = src.MembershipType;
-        dest.Active = src.Active;
+        dest.Status = src.Status;
         dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
         dest.Organization = organization;
         dest.Customer = customer;
@@ -434,7 +434,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             MembershipType = src.MembershipType,
-            Active = src.Active,
+            Status = src.Status,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = MapTo(src.Customer)!,
             Organization = organization

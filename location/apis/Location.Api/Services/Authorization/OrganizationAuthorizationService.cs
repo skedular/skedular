@@ -19,7 +19,7 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
     public bool CanView(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Active: true,
+            Status: OrganizationMemberStatus.Active,
             MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
             or OrganizationMembershipType.Member
         };
@@ -27,21 +27,21 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
     public bool CanModify(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Active: true,
+            Status: OrganizationMemberStatus.Active,
             MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
         };
 
     public bool CanDelete(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Active: true,
+            Status: OrganizationMemberStatus.Active,
             MembershipType: OrganizationMembershipType.Owner
         };
 
     public bool CanInvitePeople(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Active: true,
+            Status: OrganizationMemberStatus.Active,
             MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
         };
 
@@ -50,14 +50,14 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Active: true,
+            Status: OrganizationMemberStatus.Active,
             MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
         };
 
     public bool CanViewAnalytics(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Active: true,
+            Status: OrganizationMemberStatus.Active,
             MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
         };
 }

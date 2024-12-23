@@ -15,14 +15,14 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
     public bool CanViewPaymentMethod(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Active: true,
+            Status: OrganizationMemberStatus.Active,
             MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
         };
 
     public bool CanManagePaymentMethod(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Active: true,
+            Status: OrganizationMemberStatus.Active,
             MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
         };
 }

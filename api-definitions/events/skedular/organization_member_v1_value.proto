@@ -34,7 +34,7 @@ message OrganizationMember {
   string organizationId = 3;
   string customerId = 4;
   MembershipType membershipType = 5;
-  bool active = 6;
+  string status = 6;
 }
 
 enum MembershipType {

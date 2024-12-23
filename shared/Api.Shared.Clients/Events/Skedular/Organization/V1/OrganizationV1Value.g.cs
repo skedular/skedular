@@ -44,7 +44,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "CSADKAkSHwoEdGFncxgKIAMoCzIRLm9yZ2FuaXphdGlvbi5UYWcibgoGTWVt",
             "YmVyEgoKAmlkGAEgASgJEhIKCmN1c3RvbWVySWQYAiABKAkSNAoObWVtYmVy",
             "c2hpcFR5cGUYAyABKA4yHC5vcmdhbml6YXRpb24uTWVtYmVyc2hpcFR5cGUS",
-            "DgoGYWN0aXZlGAQgASgIItEBCghPZmZlcmluZxIKCgJpZBgBIAEoCRIMCgRj",
+            "DgoGc3RhdHVzGAQgASgJItEBCghPZmZlcmluZxIKCgJpZBgBIAEoCRIMCgRj",
             "b2RlGAIgASgJEikKBXN0YXJ0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
             "bWVzdGFtcBInCgNlbmQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
             "YW1wEhEKCWF1dG9SZW5ldxgFIAEoCBIRCgl1bml0UHJpY2UYBiABKAUSGQoR",
@@ -70,7 +70,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "InvitationToJoinOrganization", "Offering" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Member), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Member.Parser, new[]{ "Id", "CustomerId", "MembershipType", "Active" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Member), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Member.Parser, new[]{ "Id", "CustomerId", "MembershipType", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "InvitedById", "InviteeId" }, null, null, null, null),
@@ -1644,7 +1644,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       id_ = other.id_;
       customerId_ = other.customerId_;
       membershipType_ = other.membershipType_;
-      active_ = other.active_;
+      status_ = other.status_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1690,15 +1690,15 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "active" field.</summary>
-    public const int ActiveFieldNumber = 4;
-    private bool active_;
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 4;
+    private string status_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Active {
-      get { return active_; }
+    public string Status {
+      get { return status_; }
       set {
-        active_ = value;
+        status_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -1720,7 +1720,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (Id != other.Id) return false;
       if (CustomerId != other.CustomerId) return false;
       if (MembershipType != other.MembershipType) return false;
-      if (Active != other.Active) return false;
+      if (Status != other.Status) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1731,7 +1731,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (CustomerId.Length != 0) hash ^= CustomerId.GetHashCode();
       if (MembershipType != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.MembershipType.Owner) hash ^= MembershipType.GetHashCode();
-      if (Active != false) hash ^= Active.GetHashCode();
+      if (Status.Length != 0) hash ^= Status.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1762,9 +1762,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(24);
         output.WriteEnum((int) MembershipType);
       }
-      if (Active != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(Active);
+      if (Status.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Status);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -1788,9 +1788,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(24);
         output.WriteEnum((int) MembershipType);
       }
-      if (Active != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(Active);
+      if (Status.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Status);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -1811,8 +1811,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (MembershipType != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.MembershipType.Owner) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MembershipType);
       }
-      if (Active != false) {
-        size += 1 + 1;
+      if (Status.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Status);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1835,8 +1835,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (other.MembershipType != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.MembershipType.Owner) {
         MembershipType = other.MembershipType;
       }
-      if (other.Active != false) {
-        Active = other.Active;
+      if (other.Status.Length != 0) {
+        Status = other.Status;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1869,8 +1869,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             MembershipType = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.MembershipType) input.ReadEnum();
             break;
           }
-          case 32: {
-            Active = input.ReadBool();
+          case 34: {
+            Status = input.ReadString();
             break;
           }
         }
@@ -1904,8 +1904,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             MembershipType = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.MembershipType) input.ReadEnum();
             break;
           }
-          case 32: {
-            Active = input.ReadBool();
+          case 34: {
+            Status = input.ReadString();
             break;
           }
         }

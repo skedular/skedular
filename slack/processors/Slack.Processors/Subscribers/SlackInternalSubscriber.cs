@@ -361,7 +361,7 @@ public class SlackInternalSubscriber(
                     OrganizationMembershipType.Member => MembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
-                Active = organizationMember.Active,
+                Status = organizationMember.Status,
                 IsOrganizationOnboardingDone = true
             };
         }).ForEachAsync(async (member, ct) =>
