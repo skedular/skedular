@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25c1a989f3c799e6364054518139567c>>
+ * @generated SignedSource<<0f8fc42d5a98bb88350497ccd62e67d6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type oldAppBar_query$data = {
+export type modernAppBar_query$data = {
   readonly me: {
     readonly email: string | null | undefined;
     readonly familyName: string | null | undefined;
@@ -18,19 +18,26 @@ export type oldAppBar_query$data = {
     readonly middleName: string | null | undefined;
     readonly photoUrl: string | null | undefined;
   } | null | undefined;
+  readonly myOrganizations: ReadonlyArray<{
+    readonly canModify: boolean;
+    readonly canViewAnalytics: boolean;
+    readonly id: string;
+    readonly logoUrl: string | null | undefined;
+    readonly name: string;
+  }> | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"mobileLeftSideNavigationMenu_query" | "newFeedbackDialog_query">;
-  readonly " $fragmentType": "oldAppBar_query";
+  readonly " $fragmentType": "modernAppBar_query";
 };
-export type oldAppBar_query$key = {
-  readonly " $data"?: oldAppBar_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"oldAppBar_query">;
+export type modernAppBar_query$key = {
+  readonly " $data"?: modernAppBar_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"modernAppBar_query">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "oldAppBar_query",
+  "name": "modernAppBar_query",
   "selections": [
     {
       "alias": null,
@@ -79,6 +86,52 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "OrganizationDetails",
+      "kind": "LinkedField",
+      "name": "myOrganizations",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "logoUrl",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canModify",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canViewAnalytics",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "mobileLeftSideNavigationMenu_query"
@@ -93,6 +146,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "7daed5bb62b64ca24115958948e8f6ec";
+(node as any).hash = "b8cdfbfd3ea3ab1c36757c82c3c3c83e";
 
 export default node;

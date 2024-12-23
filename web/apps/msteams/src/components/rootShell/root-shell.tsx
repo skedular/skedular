@@ -1,15 +1,14 @@
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid2';
-import { SmallHeadingIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { SmallHeadingIconTypography } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import graphql from 'babel-plugin-relay/macro';
-import { AppBar, OldAppBar } from 'components/appBar';
-import { LeftSideNavigationMenuContent } from 'components/navigationMenu';
+import { AppBar } from 'components/appBar';
+import { LeftSideNavigationMenu } from 'components/navigationMenu';
 import { Observability } from 'components/observability';
 import { nanoid } from 'nanoid';
 import { memo, PropsWithChildren, useCallback, useContext, useEffect, useState, useTransition } from 'react';
@@ -22,6 +21,9 @@ type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   collapsed?: boolean;
+  hideWelcomeMessage?: boolean;
+  showBreadcrumps?: boolean;
+  breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
 const RootQuery = graphql`
@@ -44,13 +46,19 @@ const RootQuery = graphql`
 `;
 
 const maxRetryAttemptsToReload = 20;
-const drawerWithTextWidth = 250;
-const drawerWithoutTextWidth = 80;
 
-const RootShell = ({ queryReference, children, onReloadRequired, collapsed }: PropsWithChildren<Props>) => {
+const RootShell = ({
+  queryReference,
+  children,
+  onReloadRequired,
+  collapsed,
+  hideWelcomeMessage,
+  showBreadcrumps,
+  breadcrumbs,
+}: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
-  const switchToModernUI = useContext(SwitchToModernUIContext);
 
+  const switchToModernUI = useContext(SwitchToModernUIContext);
   const [reloadCount, setReloadCount] = useState(0);
   const areCustomerRecordsSync = useCallback(
     () =>
@@ -103,48 +111,22 @@ const RootShell = ({ queryReference, children, onReloadRequired, collapsed }: Pr
     return <Loading message="Kindly hold on as we proceed to activate your account..." />;
   }
 
-  const finalDrawerWidth = collapsed ? drawerWithoutTextWidth : drawerWithTextWidth;
-
   return (
     <>
       <Observability />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
-        <Drawer
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            width: finalDrawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: finalDrawerWidth,
-              boxSizing: 'border-box',
-            },
-          }}
-          variant="persistent"
-          open={true}
-        >
-          <LeftSideNavigationMenuContent onReloadRequired={onReloadRequired} maxWidth={finalDrawerWidth} showIconsOnly={collapsed} />
-        </Drawer>
+        <LeftSideNavigationMenu collapsed={collapsed} />
         <Grid container>
+          <AppBar rootDataRelay={rootData} hideWelcomeMessage={hideWelcomeMessage} showBreadcrumps={showBreadcrumps} breadcrumbs={breadcrumbs} />
           <Grid
             sx={{
-              xs: 12,
-              sm: 6,
-              md: 3,
-              lg: 2,
-              xl: 2,
-              flexGrow: 1,
-              display: { xs: 'block', sm: 'none' },
-              backgroundColor: (theme) => theme.palette.background.paper,
+              paddingLeft: switchToModernUI ? undefined : 2,
+              paddingTop: switchToModernUI ? undefined : 2,
             }}
           >
-            <LeftSideNavigationMenuContent onReloadRequired={onReloadRequired} maxWidth={finalDrawerWidth} showIconsOnly={collapsed} />
+            {children}
           </Grid>
-          <StackColumn sx={{ width: '100vw' }}>
-            {!switchToModernUI && <OldAppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
-            {switchToModernUI && <AppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
-          </StackColumn>
-          <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1, paddingLeft: 1 }}>{children}</Grid>
         </Grid>
       </Box>
     </>

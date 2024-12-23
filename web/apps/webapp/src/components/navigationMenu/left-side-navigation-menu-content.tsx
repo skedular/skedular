@@ -7,13 +7,13 @@ import OldLeftSideNavigationMenu from './old-left-side-navigation-menu-content';
 
 type Props = {
   rootDataRelay: leftSideNavigationMenuContent_query$key;
-  onReloadRequired: () => void;
-  maxWidth: number;
-  showIconsOnly?: boolean;
+  collapsed?: boolean;
+  enableCollapseButton?: boolean;
+  toggleCollapse?: (collapsed: boolean) => void;
   hideIcons?: boolean;
 };
 
-const LeftSideNavigationMenuContent = ({ rootDataRelay, onReloadRequired, maxWidth, showIconsOnly, hideIcons }: Props) => {
+const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollapseButton, toggleCollapse, hideIcons }: Props) => {
   const rootData = useFragment<leftSideNavigationMenuContent_query$key>(
     graphql`
       fragment leftSideNavigationMenuContent_query on Query {
@@ -27,13 +27,18 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, onReloadRequired, maxWid
   return switchToModernUI ? (
     <ModernLeftSideNavigationMenuContent
       rootDataRelay={rootData}
-      onReloadRequired={onReloadRequired}
-      maxWidth={maxWidth}
-      showIconsOnly={showIconsOnly}
+      collapsed={collapsed}
+      enableCollapseButton={enableCollapseButton}
+      toggleCollapse={toggleCollapse}
       hideIcons={hideIcons}
     />
   ) : (
-    <OldLeftSideNavigationMenu onReloadRequired={onReloadRequired} maxWidth={maxWidth} showIconsOnly={showIconsOnly} hideIcons={hideIcons} />
+    <OldLeftSideNavigationMenu
+      collapsed={collapsed}
+      enableCollapseButton={enableCollapseButton}
+      toggleCollapse={toggleCollapse}
+      hideIcons={hideIcons}
+    />
   );
 };
 

@@ -8,7 +8,7 @@ import { sandstone } from '@repo/shared/libs/theme';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
-import { getModernOrganizationGuestsBaseLink, getModernOrganizationMembersBaseLink } from '../organization-link';
+import { getModernOrganizationMembersBaseLink } from '../organization-link';
 
 type Props = {
   organizationId: string;
@@ -40,7 +40,6 @@ const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth }:
   };
 
   const memberesLink = getModernOrganizationMembersBaseLink(organizationId);
-  const guestLink = getModernOrganizationGuestsBaseLink(organizationId);
 
   return (
     <List
@@ -56,14 +55,6 @@ const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth }:
         <Link component={NextLink} href={memberesLink}>
           <ListItemButton selected={pathName === memberesLink} sx={{ ...styles, borderRadius: pathName === memberesLink ? 4 : 0, paddingRight: 5 }}>
             <BodyIconTypography label="Members" invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'} />
-          </ListItemButton>
-        </Link>
-      </ListItem>
-
-      <ListItem disablePadding>
-        <Link component={NextLink} href={guestLink}>
-          <ListItemButton selected={pathName === guestLink} sx={{ ...styles, borderRadius: pathName === guestLink ? 4 : 0, paddingRight: 5 }}>
-            <BodyIconTypography label="Guests" invertDefaultColor={pathName === guestLink && paletteMode === 'dark'} />
           </ListItemButton>
         </Link>
       </ListItem>

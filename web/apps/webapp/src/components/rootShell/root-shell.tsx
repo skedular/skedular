@@ -1,14 +1,13 @@
-import { AppBar, OldAppBar } from '@/components/appBar';
-import { LeftSideNavigationMenuContent } from '@/components/navigationMenu';
+import { AppBar } from '@/components/appBar';
+import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
 import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid2';
-import { SmallHeadingIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { SmallHeadingIconTypography } from '@repo/shared/components/commons';
 import { LogoutIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -50,13 +49,11 @@ const RootQuery = graphql`
     teamCustomerRecordSynced
     ...oldAppBar_query
     ...appBar_query
-    ...leftSideNavigationMenuContent_query
+    ...leftSideNavigationMenu_query
   }
 `;
 
 const maxRetryAttemptsToReload = 20;
-const drawerWithTextWidth = 250;
-const drawerWithoutTextWidth = 80;
 
 const RootShell = ({
   queryReference,
@@ -69,8 +66,8 @@ const RootShell = ({
   breadcrumbs,
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
-  const switchToModernUI = useContext(SwitchToModernUIContext);
 
+  const switchToModernUI = useContext(SwitchToModernUIContext);
   const [reloadCount, setReloadCount] = useState(0);
   const areCustomerRecordsSync = useCallback(
     () =>
@@ -130,74 +127,42 @@ const RootShell = ({
     return <Loading message="Kindly hold on as we proceed to activate your account..." />;
   }
 
-  const finalDrawerWidth = collapsed ? drawerWithoutTextWidth : drawerWithTextWidth;
-
   return (
     <>
       <Observability />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
-        <Drawer
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            width: finalDrawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: finalDrawerWidth,
-              boxSizing: 'border-box',
-            },
-          }}
-          variant="persistent"
-          open={true}
-        >
-          <LeftSideNavigationMenuContent
-            rootDataRelay={rootData}
-            onReloadRequired={onReloadRequired}
-            maxWidth={finalDrawerWidth}
-            showIconsOnly={collapsed}
-          />
-        </Drawer>
+        <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />
         <Grid container>
-          <Grid
-            sx={{
-              xs: 12,
-              sm: 6,
-              md: 3,
-              lg: 2,
-              xl: 2,
-              flexGrow: 1,
-              display: { xs: 'block', sm: 'none' },
-              backgroundColor: (theme) => theme.palette.background.paper,
-            }}
-          >
-            <LeftSideNavigationMenuContent
-              rootDataRelay={rootData}
-              onReloadRequired={onReloadRequired}
-              maxWidth={finalDrawerWidth}
-              showIconsOnly={collapsed}
-            />
-          </Grid>
-          <StackColumn sx={{ width: '100vw' }}>
-            {!switchToModernUI && <OldAppBar rootDataRelay={rootData} onReloadRequired={onReloadRequired} />}
-            {switchToModernUI && (
-              <AppBar
-                rootDataRelay={rootData}
-                onReloadRequired={onReloadRequired}
-                hideOrganizationSelector={hideOrganizationSelector}
-                hideWelcomeMessage={hideWelcomeMessage}
-                showBreadcrumps={showBreadcrumps}
-                breadcrumbs={breadcrumbs}
-              />
-            )}
-          </StackColumn>
+          <AppBar
+            rootDataRelay={rootData}
+            hideOrganizationSelector={hideOrganizationSelector}
+            hideWelcomeMessage={hideWelcomeMessage}
+            showBreadcrumps={showBreadcrumps}
+            breadcrumbs={breadcrumbs}
+          />
           {!rootData.myOrganizations ||
             (rootData.myOrganizations.length === 0 && (
-              <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1 }}>
+              <Grid
+                sx={{
+                  flexGrow: 1,
+                  paddingLeft: switchToModernUI ? undefined : 2,
+                  paddingTop: switchToModernUI ? undefined : 2,
+                }}
+              >
                 <OrganizationOnboarding onReloadRequired={onReloadRequired} />
               </Grid>
             ))}
           {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && (
-            <Grid sx={{ xs: 12, sm: 6, md: 3, lg: 2, xl: 2, flexGrow: 1 }}>{children}</Grid>
+            <Grid
+              sx={{
+                flexGrow: 1,
+                paddingLeft: switchToModernUI ? undefined : 2,
+                paddingTop: switchToModernUI ? undefined : 2,
+              }}
+            >
+              {children}
+            </Grid>
           )}
         </Grid>
       </Box>

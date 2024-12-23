@@ -1,13 +1,19 @@
 import { NewFeedbackDialog } from '@/components/feedback';
-import type { oldAppBar_query$key } from '@/queries/__generated__/oldAppBar_query.graphql';
+import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
+import { getOrganizationAddLink, getOrganizationBaseLink } from '@/components/organization/organization-link';
+import { SelectedOrganizationContext, UpdateSelectedOrganizationContext } from '@/libs/providers';
+import type { modernAppBar_query$key } from '@/queries/__generated__/modernAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { CustomerAvatar } from '@repo/shared/components/avatars';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
   CaptionIconTypography,
@@ -18,6 +24,7 @@ import {
   StackRowFullWidth,
 } from '@repo/shared/components/commons';
 import {
+  AddIcon,
   FeedbackIcon,
   HamburgerMenuIcon,
   LogoutIcon,
@@ -30,25 +37,39 @@ import { PaletteModeContext, SwitchToModernUIContext, UpdatePaletteModeContext, 
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
-import { memo, useContext, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import type { JSX } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
-import MobileLeftSideNavigationMenu from '../navigationMenu/mobile-left-side-navigation-menu';
 
 type Props = {
-  rootDataRelay: oldAppBar_query$key;
+  rootDataRelay: modernAppBar_query$key;
+  hideOrganizationSelector?: boolean;
+  hideWelcomeMessage?: boolean;
+  showBreadcrumps?: boolean;
+  breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
-const OldAppBar = ({ rootDataRelay }: Props) => {
-  const rootData = useFragment<oldAppBar_query$key>(
+const createOrganizationId = '76eZvntIX6YA5FboBJlRk';
+
+const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: Props) => {
+  const rootData = useFragment<modernAppBar_query$key>(
     graphql`
-      fragment oldAppBar_query on Query {
+      fragment modernAppBar_query on Query {
         me {
           email
           givenName
           middleName
           familyName
           photoUrl
+        }
+        myOrganizations {
+          id
+          logoUrl
+          name
+          canModify
+          canViewAnalytics
         }
         ...mobileLeftSideNavigationMenu_query
         ...newFeedbackDialog_query
@@ -57,7 +78,11 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const router = useRouter();
+  const { organizationId } = useParams();
   const [currentTime, setCurrentTime] = useState(localNow());
+  const selectedOrganization = useContext(SelectedOrganizationContext);
+  const updateSelectedOrganization = useContext(UpdateSelectedOrganizationContext);
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const switchToModernUI = useContext(SwitchToModernUIContext);
@@ -66,7 +91,49 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
+  let finalOrganizationId = '';
+  if (typeof organizationId === 'string') {
+    finalOrganizationId = organizationId;
+  } else if (Array.isArray(organizationId)) {
+    if (typeof organizationId[0] !== 'undefined') {
+      finalOrganizationId = organizationId[0];
+    }
+  }
+
+  const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(() => {
+    if (finalOrganizationId && rootData.myOrganizations && rootData.myOrganizations.some((item) => item.id === finalOrganizationId)) {
+      return finalOrganizationId;
+    }
+
+    if (selectedOrganization && rootData.myOrganizations && rootData.myOrganizations.some((item) => item.id === selectedOrganization)) {
+      return selectedOrganization;
+    }
+
+    return rootData.myOrganizations && rootData.myOrganizations.length > 0 ? rootData.myOrganizations[0]?.id : undefined;
+  });
+
   useInterval(() => setCurrentTime(localNow()), 1000);
+
+  useEffect(() => {
+    if (finalOrganizationId || !selectedOrganizationId) {
+      return;
+    }
+
+    router.push(getOrganizationBaseLink(selectedOrganizationId));
+  }, [router, finalOrganizationId, selectedOrganizationId]);
+
+  const handleSelectedOrganizationChange = (event: SelectChangeEvent) => {
+    const id = event.target.value as string;
+
+    if (id === createOrganizationId) {
+      router.push(getOrganizationAddLink());
+    } else {
+      setSelectedOrganizationId(id);
+      updateSelectedOrganization(id);
+
+      router.push(getOrganizationBaseLink(id));
+    }
+  };
 
   const handleProfileMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
     setProfileOpenAnchorEl(event.currentTarget);
@@ -110,9 +177,17 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
     UpdateSwitchToModernUI(false);
   };
 
+  const handleBackClick = () => {
+    router.back();
+  };
+
   const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
     setMobileDrawerOpen(newOpen);
   };
+
+  if (!rootData.myOrganizations) {
+    return <></>;
+  }
 
   const customerName = getCustomerFullName({
     name: null,
@@ -133,9 +208,58 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
             backgroundColor: (theme) => theme.palette.background.paper,
           }}
         >
-          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
-
           <StackRow sx={{ alignItems: 'center' }}>
+            {!hideOrganizationSelector && rootData.myOrganizations.length !== 0 && (
+              <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
+                <Select
+                  value={selectedOrganizationId}
+                  onChange={handleSelectedOrganizationChange}
+                  sx={{
+                    '& fieldset': {
+                      border: 0,
+                      borderRight: 0,
+                      borderRadius: 0,
+                    },
+                  }}
+                >
+                  {rootData.myOrganizations.map((organization) => (
+                    <MenuItem key={organization.id} value={organization.id}>
+                      <StackRow>
+                        <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
+                        <StackColumn spacing={-0.5}>
+                          <LeadIconTypography label={organization.name} />
+                          <CaptionIconTypography label="Organization" />
+                        </StackColumn>
+                      </StackRow>
+                    </MenuItem>
+                  ))}
+
+                  <Divider />
+
+                  <MenuItem value={createOrganizationId}>
+                    <LeadIconTypography label="Create Organization" startElement={<AddIcon />} />
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            )}
+
+            {!hideWelcomeMessage && (
+              <>
+                <Divider orientation="vertical" flexItem />
+                <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
+              </>
+            )}
+            {showBreadcrumps && (
+              <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
+                <Button variant="text" onClick={handleBackClick}>
+                  {'< Back'}
+                </Button>
+                {breadcrumbs}
+              </StackColumn>
+            )}
+          </StackRow>
+
+          <StackRow>
             <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' }, paddingRight: 2 }} />
             <Divider orientation="vertical" flexItem />
 
@@ -244,4 +368,4 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
   );
 };
 
-export default memo(OldAppBar);
+export default memo(ModernAppBar);

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25c1a989f3c799e6364054518139567c>>
+ * @generated SignedSource<<f7089c369ae693eb0ebd453fbf6de437>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type oldAppBar_query$data = {
+export type modernAppBar_query$data = {
   readonly me: {
     readonly email: string | null | undefined;
     readonly familyName: string | null | undefined;
@@ -18,19 +18,19 @@ export type oldAppBar_query$data = {
     readonly middleName: string | null | undefined;
     readonly photoUrl: string | null | undefined;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"mobileLeftSideNavigationMenu_query" | "newFeedbackDialog_query">;
-  readonly " $fragmentType": "oldAppBar_query";
+  readonly " $fragmentSpreads": FragmentRefs<"newFeedbackDialog_query">;
+  readonly " $fragmentType": "modernAppBar_query";
 };
-export type oldAppBar_query$key = {
-  readonly " $data"?: oldAppBar_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"oldAppBar_query">;
+export type modernAppBar_query$key = {
+  readonly " $data"?: modernAppBar_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"modernAppBar_query">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "oldAppBar_query",
+  "name": "modernAppBar_query",
   "selections": [
     {
       "alias": null,
@@ -81,11 +81,6 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "mobileLeftSideNavigationMenu_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "newFeedbackDialog_query"
     }
   ],
@@ -93,6 +88,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "7daed5bb62b64ca24115958948e8f6ec";
+(node as any).hash = "f80b65d430079c27fd831599634a4c62";
 
 export default node;

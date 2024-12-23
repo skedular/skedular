@@ -20,7 +20,9 @@ import type { SxProps, Theme } from '@mui/system';
 import TooltipIcon from './tooltip-icon';
 
 export { default as AddIcon, default as JoinIcon, default as NewIcon } from '@mui/icons-material/AddCircle';
+export { default as CollpaseDrawerIcon } from '@mui/icons-material/ArrowBackIos';
 export { default as AscDirectionIcon } from '@mui/icons-material/ArrowDownward';
+export { default as ExpanDrawerIcon } from '@mui/icons-material/ArrowForwardIos';
 export { default as DescDirectionIcon } from '@mui/icons-material/ArrowUpward';
 export { default as CancelIcon } from '@mui/icons-material/Cancel';
 export { default as CheckIcon } from '@mui/icons-material/Check';
@@ -44,6 +46,7 @@ export { default as ArrowUpIcon } from '@mui/icons-material/KeyboardArrowUp';
 export { default as ListViewIcon } from '@mui/icons-material/List';
 export { default as LogoutIcon } from '@mui/icons-material/Logout';
 export { default as MenuIcon } from '@mui/icons-material/Menu';
+export { default as HamburgerMenuIcon } from '@mui/icons-material/MenuRounded';
 export { default as MoreItemsIcon } from '@mui/icons-material/MoreHoriz';
 export { default as EllipseMenuIcon } from '@mui/icons-material/MoreVert';
 export { default as ExpandIcon } from '@mui/icons-material/OpenInFull';

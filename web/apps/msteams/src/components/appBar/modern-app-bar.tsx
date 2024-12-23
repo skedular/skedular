@@ -1,3 +1,4 @@
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
@@ -13,7 +14,7 @@ import {
   StackRow,
   StackRowFullWidth,
 } from '@repo/shared/components/commons';
-import { FeedbackIcon, HamburgerMenuIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
+import { FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
 import { SwitchToModernUIContext, UpdateSwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
@@ -21,17 +22,21 @@ import { NewFeedbackDialog } from 'components/feedback';
 import { MobileLeftSideNavigationMenu } from 'components/navigationMenu';
 import { memo, useContext, useState } from 'react';
 import { useFragment } from 'react-relay';
+import { useNavigate } from 'react-router-dom';
 import { useInterval } from 'usehooks-ts';
-import type { oldAppBar_query$key } from './__generated__/oldAppBar_query.graphql';
+import type { modernAppBar_query$key } from './__generated__/modernAppBar_query.graphql';
 
 type Props = {
-  rootDataRelay: oldAppBar_query$key;
+  rootDataRelay: modernAppBar_query$key;
+  hideWelcomeMessage?: boolean;
+  showBreadcrumps?: boolean;
+  breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
-const OldAppBar = ({ rootDataRelay }: Props) => {
-  const rootData = useFragment<oldAppBar_query$key>(
+const ModernAppBar = ({ rootDataRelay, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: Props) => {
+  const rootData = useFragment<modernAppBar_query$key>(
     graphql`
-      fragment oldAppBar_query on Query {
+      fragment modernAppBar_query on Query {
         me {
           email
           givenName
@@ -45,6 +50,7 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const navigate = useNavigate();
   const [currentTime, setCurrentTime] = useState(localNow());
   const switchToModernUI = useContext(SwitchToModernUIContext);
   const UpdateSwitchToModernUI = useContext(UpdateSwitchToModernUIContext);
@@ -83,6 +89,10 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
     UpdateSwitchToModernUI(false);
   };
 
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
     setMobileDrawerOpen(newOpen);
   };
@@ -97,12 +107,33 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
   return (
     <>
       <StackColumn sx={{ width: '100vw' }}>
-        <StackRowFullWidth sx={{ paddingLeft: 1, paddingRight: 1, borderBottom: 1, borderColor: 'divider' }}>
-          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
+        <StackRowFullWidth
+          sx={{
+            paddingLeft: 1,
+            paddingRight: 1,
+            borderBottom: 1,
+            borderColor: 'divider',
+            backgroundColor: (theme) => theme.palette.background.paper,
+          }}
+        >
+          {!hideWelcomeMessage && <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />}
+
+          {showBreadcrumps && (
+            <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
+              <Button variant="text" onClick={handleBackClick}>
+                {'< Back'}
+              </Button>
+              {breadcrumbs}
+            </StackColumn>
+          )}
 
           <StackRow sx={{ alignItems: 'center' }}>
             <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
             <Divider orientation="vertical" flexItem />
+
+            <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
+              <NotificationsIcon excludeTooltip />
+            </IconButton>
 
             <IconButton onClick={handleProfileMenuOpenClick}>
               <CustomerAvatar
@@ -187,4 +218,4 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
   );
 };
 
-export default memo(OldAppBar);
+export default memo(ModernAppBar);

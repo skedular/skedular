@@ -1,9 +1,7 @@
 import type { locationSelector_allLocations_query$key } from '@/queries/__generated__/locationSelector_allLocations_query.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
-import type { SelectProps } from '@mui/material/Select';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { styled } from '@mui/material/styles';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { LocationAvatar } from '@repo/shared/components/avatars';
 import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
 import { LocationIcon } from '@repo/shared/components/icons';
@@ -15,22 +13,6 @@ type Props = {
   rootDataRelay: locationSelector_allLocations_query$key;
   onChange: (id?: string) => void;
 };
-
-const DefaultSelect1 = styled(Select)(({ theme }) => ({
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    width: 'min(100%, 300px)',
-  },
-  '& .MuiOutlinedInput-root': {
-    borderRadius: 30,
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    borderRadius: 30,
-  },
-  '& .MuiSelect-select': {
-    borderRadius: 30,
-  },
-})) as React.ComponentType<SelectProps>;
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
@@ -102,44 +84,6 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
           </MenuItem>
         ))}
       </DefaultSelect>
-
-      <DefaultSelect1
-        value={id}
-        onChange={handleChanged}
-        size="small"
-        renderValue={(selectedId) => {
-          const selectedItem = allItems.find((item) => item.id === selectedId);
-          if (selectedItem) {
-            return (
-              <StackRow>
-                <LeadIconTypography label="Location" startElement={<LocationIcon />} />
-                <Divider orientation="vertical" flexItem />
-                <PushToRight />
-                <SmallIconTypography label={selectedItem.name} />
-              </StackRow>
-            );
-          }
-
-          return (
-            <StackRow>
-              <LeadIconTypography label="Location" startElement={<LocationIcon />} />
-              <Divider orientation="vertical" flexItem />
-              <PushToRight />
-              <SmallIconTypography label="All" />
-            </StackRow>
-          );
-        }}
-      >
-        <MenuItem value={allId}>
-          <BodyIconTypography label="All" />
-        </MenuItem>
-
-        {allItems.map((item) => (
-          <MenuItem key={item.id} value={item.id}>
-            <BodyIconTypography startElement={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
-          </MenuItem>
-        ))}
-      </DefaultSelect1>
     </>
   );
 };

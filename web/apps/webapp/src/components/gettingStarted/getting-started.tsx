@@ -83,12 +83,11 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
     <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
       <Box
         sx={{
-          border: '2px dashed gray',
-          paddingTop: defaultPadding,
-          paddingLeft: defaultPadding,
-          paddingRight: defaultPadding,
-          paddingBottom: defaultPadding,
+          border: 2,
           borderRadius: 4,
+          borderColor: 'gray',
+          borderStyle: 'dashed',
+          padding: defaultPadding,
           position: 'relative', // Ensure the parent container is relative, this is to make sure the CancelIcon can be placed to the top right corner of the box
         }}
       >
