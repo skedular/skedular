@@ -216,7 +216,7 @@ public class OrganizationMemberConnection : Connection<OrganizationMemberEdge>;
 public class OrganizationMemberDetails : Node
 {
     [GraphQLName("membershipType")] public OrganizationMemberMembershipType? MembershipType { get; set; }
-    [GraphQLName("isActive")] public bool IsActive { get; set; }
+    [GraphQLName("status")] public OrganizationMemberStatus Status { get; set; }
 
     [GraphQLName("isOrganizationOnboardingDone")]
     public bool IsOrganizationOnboardingDone { get; set; }
@@ -466,4 +466,10 @@ public class ZoneOrganizationTagWhereInput
 {
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
+}
+
+public enum OrganizationMemberStatus
+{
+    Active,
+    Inactive,
 }

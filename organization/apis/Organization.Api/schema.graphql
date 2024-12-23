@@ -138,7 +138,7 @@ type OrganizationMemberConnection {
 
 type OrganizationMemberDetails {
   membershipType: OrganizationMemberMembershipType
-  isActive: Boolean!
+  status: OrganizationMemberStatus!
   isOrganizationOnboardingDone: Boolean!
   customer: OrganizationCustomerDetails!
   id: ID!
@@ -403,6 +403,11 @@ enum OrganizationMemberOrderField {
   MiddleName
   FamilyName
   PhoneNumber
+}
+
+enum OrganizationMemberStatus {
+  Active
+  Inactive
 }
 
 enum OrganizationOrderField {

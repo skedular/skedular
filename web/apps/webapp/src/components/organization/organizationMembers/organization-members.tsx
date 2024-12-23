@@ -99,7 +99,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
                 photoUrl
                 phoneNumber
               }
-              isActive
+              status
             }
           }
         }
@@ -179,7 +179,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
     teams: member.teams.map((team) => team.name).join(', '),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
-    status: member.isActive,
+    status: member.status === 'Active',
   }));
 
   const columns: GridColDef<(typeof rows)[number]>[] = [

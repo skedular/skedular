@@ -124,7 +124,13 @@ message Member {
     Customer customer = 2;
     MembershipType membershipType = 3;
     bool isOrganizationOnboardingDone = 4;
-    string status = 5;
+    OrganizationMemberStatus status = 5;
+}
+
+enum OrganizationMemberStatus
+{
+    Active = 0;
+    Inactive = 1;
 }
 
 message Admin_AddMemberInput {

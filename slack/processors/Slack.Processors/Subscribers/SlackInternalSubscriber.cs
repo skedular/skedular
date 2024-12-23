@@ -12,7 +12,6 @@ using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
-using Microsoft.Graph.Drives.Item.Items.Item.Workbook.Worksheets.Item.Charts.ItemWithName;
 using Slack.Processors.Mappers;
 using Slack.Shared;
 using Slack.Shared.Components;
@@ -36,6 +35,7 @@ using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.Member;
 using MembershipType = Api.Shared.Services.Grpc.Skedular.Organization.V1.MembershipType;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 using Organization = Slack.Shared.Database.Entities.Organization;
+using OrganizationMemberStatus = Api.Shared.Models.OrganizationMemberStatus;
 using TeamConfiguration = Slack.Shared.Configurations.TeamConfiguration;
 using Type = Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
@@ -361,7 +361,14 @@ public class SlackInternalSubscriber(
                     OrganizationMembershipType.Member => MembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
-                Status = organizationMember.Status,
+                Status = organizationMember.Status switch
+                {
+                    OrganizationMemberStatus.Active => Api.Shared.Services.Grpc.Skedular.Organization.V1
+                        .OrganizationMemberStatus.Active,
+                    OrganizationMemberStatus.Inactive => Api.Shared.Services.Grpc.Skedular.Organization.V1
+                        .OrganizationMemberStatus.Inactive,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
                 IsOrganizationOnboardingDone = true
             };
         }).ForEachAsync(async (member, ct) =>

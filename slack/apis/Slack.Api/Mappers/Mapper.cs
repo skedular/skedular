@@ -320,7 +320,14 @@ public class Mapper : IMapper
                 MembershipType.Member => OrganizationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Status = src.Status,
+            Status = src.Status switch
+            {
+                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active =>
+                    global::Api.Shared.Models.OrganizationMemberStatus.Active,
+                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive =>
+                    global::Api.Shared.Models.OrganizationMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = MapTo(src.Customer)
         };
 

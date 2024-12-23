@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d679fd010204d6f3e0d659e5150af863>>
+ * @generated SignedSource<<fff5672d0f25936cd1234f7d3d771537>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -183,7 +183,7 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "isActive",
+                    "name": "status",
                     "storageKey": null
                   }
                 ],
@@ -210,16 +210,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "45fb6277b342008d8a016792519557fc",
+    "cacheID": "d1ba19348d1f0eaeec510bd54ca3cff7",
     "id": null,
     "metadata": {},
     "name": "organizationMembers_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMembers_organizationMembers_refetchableFragment(\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...organizationMembers_organizationMembers_query\n}\n\nfragment organizationMembers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        isActive\n      }\n    }\n  }\n}\n"
+    "text": "query organizationMembers_organizationMembers_refetchableFragment(\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...organizationMembers_organizationMembers_query\n}\n\nfragment organizationMembers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8e813e6da842b69f8529ad922a54cd4f";
+(node as any).hash = "03177795d6d6d4f96936bbf7411702d4";
 
 export default node;

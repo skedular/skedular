@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f441ee40289fdbf14c11a7f50181979b>>
+ * @generated SignedSource<<891e848337fcbd51d4a6acd146e8c146>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationMemberStatus = "Active" | "Inactive" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationMembers_organizationMembers_query$data = {
   readonly organizationMembers: {
@@ -26,7 +27,7 @@ export type organizationMembers_organizationMembers_query$data = {
           readonly uniqueId: string;
         };
         readonly id: string;
-        readonly isActive: boolean;
+        readonly status: OrganizationMemberStatus;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -185,7 +186,7 @@ const node: ReaderFragment = {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "isActive",
+                  "name": "status",
                   "storageKey": null
                 }
               ],
@@ -214,6 +215,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "8e813e6da842b69f8529ad922a54cd4f";
+(node as any).hash = "03177795d6d6d4f96936bbf7411702d4";
 
 export default node;

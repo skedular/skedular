@@ -20,6 +20,7 @@ using Offering = Api.Shared.Services.Offering.Offering;
 using OrganizationDailyBookingsTotal = Organization.Shared.Models.OrganizationDailyBookingsTotal;
 using OrganizationMember = Organization.Shared.Models.OrganizationMember;
 using OrganizationMemberAttendancePercentage = Organization.Shared.Models.OrganizationMemberAttendancePercentage;
+using OrganizationMemberStatus = Organization.Api.GraphQL.OrganizationMemberStatus;
 using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
 using Tag = Organization.Shared.Models.Tag;
 using Team = Organization.Shared.Models.Team;
@@ -327,9 +328,14 @@ public class Mapper : IMapper
                 OrganizationMembershipType.Member => OrganizationMemberMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            IsActive = src.Status == OrganizationMemberStatus.Active,
+            Status = src.Status switch
+            {
+                global::Api.Shared.Models.OrganizationMemberStatus.Active => OrganizationMemberStatus.Active,
+                global::Api.Shared.Models.OrganizationMemberStatus.Inactive => OrganizationMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-            Customer = MapTo(src.Customer),
+            Customer = MapTo(src.Customer)
         };
 
     public OrganizationAnalytics MapTo(
@@ -603,7 +609,14 @@ public class Mapper : IMapper
                 OrganizationMembershipType.Member => MembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Status = src.Status,
+            Status = src.Status switch
+            {
+                global::Api.Shared.Models.OrganizationMemberStatus.Active =>
+                    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active,
+                global::Api.Shared.Models.OrganizationMemberStatus.Inactive =>
+                    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             Customer = MapToGrpcResponse(src.Customer)
         };
@@ -654,7 +667,14 @@ public class Mapper : IMapper
                 MembershipType.Member => OrganizationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Status = src.Status,
+            Status = src.Status switch
+            {
+                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active =>
+                    global::Api.Shared.Models.OrganizationMemberStatus.Active,
+                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive =>
+                    global::Api.Shared.Models.OrganizationMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = new Customer { Id = src.Customer.Id },
             Organization = organization

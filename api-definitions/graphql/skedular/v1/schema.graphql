@@ -611,9 +611,9 @@ type OrganizationMemberConnection {
 type OrganizationMemberDetails {
   customer: OrganizationCustomerDetails!
   id: ID!
-  isActive: Boolean!
   isOrganizationOnboardingDone: Boolean!
   membershipType: OrganizationMemberMembershipType
+  status: OrganizationMemberStatus!
 }
 
 type OrganizationMemberDetailsPayload {
@@ -1535,6 +1535,11 @@ enum OrganizationMemberOrderField {
   Name
   PhoneNumber
   Status
+}
+
+enum OrganizationMemberStatus {
+  Active
+  Inactive
 }
 
 enum OrganizationOrderField {
