@@ -18,13 +18,11 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
     public bool CanAddOrganizationTagAsDefault(Organization organization, Shared.Database.Entities.Customer customer) =>
         IsOrganizationMember(organization, customer);
 
-    public bool IsOrganizationMember(Organization organization, Shared.Database.Entities.Customer customer)
-    {
-        var organizationMember =
-            organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
-
-        return organizationMember?.MembershipType is OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator
-            or OrganizationMembershipType.Member;
-    }
+    public bool IsOrganizationMember(Organization organization, Shared.Database.Entities.Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Active: true,
+            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            or OrganizationMembershipType.Member
+        };
 }

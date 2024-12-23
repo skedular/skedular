@@ -12,6 +12,7 @@ using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.Graph.Drives.Item.Items.Item.Workbook.Worksheets.Item.Charts.ItemWithName;
 using Slack.Processors.Mappers;
 using Slack.Shared;
 using Slack.Shared.Components;
@@ -360,6 +361,7 @@ public class SlackInternalSubscriber(
                     OrganizationMembershipType.Member => MembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
+                Active = organizationMember.Active,
                 IsOrganizationOnboardingDone = true
             };
         }).ForEachAsync(async (member, ct) =>

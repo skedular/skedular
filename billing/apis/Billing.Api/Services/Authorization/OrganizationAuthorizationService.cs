@@ -18,23 +18,20 @@ public class OrganizationAuthorizationService(
     IRepositoryFactory repositoryFactory)
     : IOrganizationAuthorizationService
 {
-    public bool CanViewBillingInfo(Organization organization, Customer customer)
-    {
-        var organizationMember =
-            organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
+    public bool CanViewBillingInfo(Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Active: true,
+            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            or OrganizationMembershipType.Member
+        };
 
-        return organizationMember?.MembershipType is OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator or OrganizationMembershipType.Member;
-    }
-
-    public bool CanManageBillingInfo(Organization organization, Customer customer)
-    {
-        var organizationMember =
-            organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
-
-        return organizationMember?.MembershipType is OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
-    }
+    public bool CanManageBillingInfo(Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Active: true,
+            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+        };
 
     public async Task<OrganizationLevelPermissions> GetPermissionsAsync(
         string organizationId,
@@ -44,6 +41,7 @@ public class OrganizationAuthorizationService(
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             organizationId,
             cancellationToken);
+
         if (organization is null)
         {
             throw new OrganizationNotFound();

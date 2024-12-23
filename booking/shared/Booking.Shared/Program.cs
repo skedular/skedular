@@ -8,7 +8,7 @@ namespace Booking.Shared;
 public class Program
 {
     public static async Task Main(string[] args) =>
-        await MigrationHelper.RunMigrationAsync<BookingDbContext>(() => CreateHostBuilder(args), default);
+        await MigrationHelper.RunMigrationAsync<BookingDbContext>(() => CreateHostBuilder(args), CancellationToken.None);
 
     // ReSharper disable once MemberCanBePrivate.Global
     public static IHostBuilder CreateHostBuilder(string[] args) =>

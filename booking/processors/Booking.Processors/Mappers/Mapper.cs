@@ -214,6 +214,7 @@ public class Mapper : IMapper
                     MembershipType.Member => OrganizationMembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
+                Active = item.Active,
                 Customer = new Shared.Models.Customer { Id = item.CustomerId },
                 Organization = organization
             };
@@ -392,6 +393,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.MembershipType = src.MembershipType;
+        dest.Active = src.Active;
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;

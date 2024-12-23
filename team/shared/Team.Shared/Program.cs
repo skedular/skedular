@@ -8,7 +8,7 @@ namespace Team.Shared;
 public class Program
 {
     public static async Task Main(string[] args) =>
-        await MigrationHelper.RunMigrationAsync<TeamDbContext>(() => CreateHostBuilder(args), default);
+        await MigrationHelper.RunMigrationAsync<TeamDbContext>(() => CreateHostBuilder(args), CancellationToken.None);
 
     // ReSharper disable once MemberCanBePrivate.Global
     public static IHostBuilder CreateHostBuilder(string[] args) =>

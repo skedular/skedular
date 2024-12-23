@@ -10,6 +10,7 @@ namespace MsTeams.Shared.Database.Entities;
 public class OrganizationMember : ReplicatedEntityBaseWithDeleted
 {
     public string? MembershipType { get; set; }
+    public bool Active { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; } = string.Empty;
@@ -30,6 +31,7 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
         builder
             .Property(item => item.MembershipType)
             .HasMaxLength(Constants.MaxMembershipTypeLength);
+        builder.Property(item => item.Active).HasDefaultValue(true);
 
         builder
             .HasOne(item => item.Organization)
@@ -42,6 +44,7 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
             .HasForeignKey(item => item.CustomerId);
 
         builder.HasIndex(item => item.MembershipType);
+        builder.HasIndex(item => item.Active);
         builder.HasIndex(item => new { item.CustomerId, item.OrganizationId }).IsUnique();
     }
 }

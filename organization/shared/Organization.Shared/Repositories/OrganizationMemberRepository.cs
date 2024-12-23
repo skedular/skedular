@@ -71,6 +71,9 @@ internal static class OrganizationMemberExtensions
             OrganizationMemberOrderField.MembershipType => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.MembershipType)
                 : originalQuery.OrderByDescending(x => x.MembershipType),
+            OrganizationMemberOrderField.Active => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Active)
+                : originalQuery.OrderByDescending(x => x.Active),
             OrganizationMemberOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Customer.Name)
                 : originalQuery.OrderByDescending(x => x.Customer.Name),
@@ -90,6 +93,9 @@ internal static class OrganizationMemberExtensions
                 OrganizationMemberOrderField.MembershipType => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.MembershipType)
                     : query.ThenByDescending(x => x.MembershipType),
+                OrganizationMemberOrderField.Active => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Active)
+                    : query.ThenByDescending(x => x.Active),
                 OrganizationMemberOrderField.Name => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Customer.Name)
                     : query.ThenByDescending(x => x.Customer.Name),

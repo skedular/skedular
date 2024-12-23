@@ -97,8 +97,8 @@ public static class ServiceExtensions
 
                 options.UseNpgsql(databaseSetup.NpgsqlDataSource, sqlOptions =>
                 {
-                    sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
-                                                         QuerySplittingBehavior.SplitQuery);
+                    sqlOptions.UseQuerySplittingBehavior(
+                        applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
 
                     if (option != Migration.SetAssembly)
                     {
@@ -107,7 +107,7 @@ public static class ServiceExtensions
 
                     sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
                 });
-
+                
                 if (option == Migration.SetAssembly)
                 {
                     options.ConfigureWarnings(warnings =>
@@ -140,8 +140,8 @@ public static class ServiceExtensions
 
                 options.UseNpgsql(databaseSetup.NpgsqlDataSource, sqlOptions =>
                 {
-                    sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
-                                                         QuerySplittingBehavior.SplitQuery);
+                    sqlOptions.UseQuerySplittingBehavior(
+                        applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
 
                     if (option != Migration.SetAssembly)
                     {
@@ -150,7 +150,7 @@ public static class ServiceExtensions
 
                     sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
                 });
-
+                
                 if (option == Migration.SetAssembly)
                 {
                     options.ConfigureWarnings(warnings =>

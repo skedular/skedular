@@ -109,6 +109,11 @@ public class OrganizationMemberService(
         var myMembershipDetails =
             organization.OrganizationMembers.Single(item => item.Customer.Id == customer.Id);
 
+        if (!myMembershipDetails.Active)
+        {
+            throw new Unauthorized();
+        }
+        
         if (myMembershipDetails.MembershipType == OrganizationMembershipType.Administrator &&
             membershipType == OrganizationMembershipType.Owner)
         {

@@ -8,7 +8,6 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.OrganizationMember
 enum Type {
   OrganizationMemberUpserted = 0;
   OrganizationMemberDeleted = 1;
-  OrganizationMemberStatusUpdated = 2;
 }
 
 message Event {
@@ -34,21 +33,12 @@ message OrganizationMember {
   google.protobuf.Timestamp deletedAt = 2;
   string organizationId = 3;
   string customerId = 4;
-  OrganizationMemberStatus organizationMemberStatus = 5;
+  MembershipType membershipType = 5;
+  bool active = 6;
 }
 
-message OrganizationMemberStatus {
-  google.protobuf.Timestamp from = 1;
-  google.protobuf.Timestamp to = 2;
-  Status status = 3;
-}
-
-enum Status {
-  WorkingFromOffice = 0;
-  WorkingFromHome = 1;
-  TravellingForWork = 2;
-  WorkingFromClientOffice = 3;
-  OnVacation = 4;
-  OffSick = 5;
-  NonWorkingDay = 6;
+enum MembershipType {
+  MembershipTypeOwner = 0;
+  MembershipTypeAdministrator = 1;
+  MembershipTypeMember = 2;
 }

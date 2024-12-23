@@ -124,6 +124,7 @@ message Member {
     Customer customer = 2;
     MembershipType membershipType = 3;
     bool isOrganizationOnboardingDone = 4;
+    bool active = 5;
 }
 
 message Admin_AddMemberInput {
@@ -152,11 +153,12 @@ message MemberOrderInput {
 
 enum MemberOrderField {
     Membership = 0;
-    Name= 1;
-    GivenName= 2;
-    MiddleName= 3;
-    FamilyName= 4;
-    PhoneNumber= 5;
+    Active = 1;
+    Name= 2;
+    GivenName= 3;
+    MiddleName= 4;
+    FamilyName= 5;
+    PhoneNumber= 6;
 }
 
 message MemberConnection {

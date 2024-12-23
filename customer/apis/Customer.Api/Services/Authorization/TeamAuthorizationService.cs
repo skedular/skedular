@@ -10,12 +10,9 @@ public interface ITeamAuthorizationService
 
 public class TeamAuthorizationService : ITeamAuthorizationService
 {
-    public bool CanAddTeamAsDefault(Team team, Shared.Database.Entities.Customer customer)
-    {
-        var teamMember =
-            team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
-
-        return teamMember?.MembershipType is TeamMembershipType.Owner or TeamMembershipType.Administrator
-            or TeamMembershipType.Member;
-    }
+    public bool CanAddTeamAsDefault(Team team, Shared.Database.Entities.Customer customer) =>
+        team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member
+        };
 }

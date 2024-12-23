@@ -1,243 +1,243 @@
 ﻿schema {
-  query: Query
-  mutation: Mutation
+    query: Query
+    mutation: Mutation
 }
 
 type BookingConnection {
-  pageInfo: PageInfo!
-  edges: [BookingEdge!]!
-  totalCount: Int
+    pageInfo: PageInfo!
+    edges: [BookingEdge!]!
+    totalCount: Int
 }
 
 type BookingCustomerDetails {
-  uniqueId: ID!
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
+    uniqueId: ID!
+    name: String
+    givenName: String
+    middleName: String
+    familyName: String
+    photoUrl: String
+    photoUrl24: String
+    photoUrl32: String
+    photoUrl48: String
+    photoUrl72: String
+    photoUrl192: String
+    photoUrl512: String
 }
 
 type BookingDeskDetails {
-  uniqueId: ID!
-  name: String!
-  deactivated: Boolean!
-  requireBookingApproval: Boolean!
-  location: BookingLocationDetails
-  deskTypes: [BookingOrganizationDeskTypeDetails!]!
-  zones: [BookingOrganizationZoneDetails!]!
+    uniqueId: ID!
+    name: String!
+    deactivated: Boolean!
+    requireBookingApproval: Boolean!
+    location: BookingLocationDetails
+    deskTypes: [BookingOrganizationDeskTypeDetails!]!
+    zones: [BookingOrganizationZoneDetails!]!
 }
 
 type BookingDetails {
-  from: DateTime!
-  to: DateTime!
-  notes: String
-  type: BookingType!
-  customer: BookingCustomerDetails!
-  organization: BookingOrganizationDetails
-  location: BookingLocationDetails
-  desks: [BookingDeskDetails!]!
-  team: BookingTeamDetails
-  id: ID!
+    from: DateTime!
+    to: DateTime!
+    notes: String
+    type: BookingType!
+    customer: BookingCustomerDetails!
+    organization: BookingOrganizationDetails
+    location: BookingLocationDetails
+    desks: [BookingDeskDetails!]!
+    team: BookingTeamDetails
+    id: ID!
 }
 
 type BookingEdge {
-  node: BookingDetails!
-  cursor: String!
+    node: BookingDetails!
+    cursor: String!
 }
 
 type BookingLocationDetails {
-  uniqueId: ID!
-  name: String!
+    uniqueId: ID!
+    name: String!
 }
 
 type BookingOrganizationDeskTypeDetails {
-  uniqueId: ID!
-  name: String!
+    uniqueId: ID!
+    name: String!
 }
 
 type BookingOrganizationDetails {
-  uniqueId: ID!
-  name: String!
+    uniqueId: ID!
+    name: String!
 }
 
 type BookingOrganizationZoneDetails {
-  uniqueId: ID!
-  name: String!
+    uniqueId: ID!
+    name: String!
 }
 
 type BookingPayload {
-  clientMutationId: String
-  booking: BookingDetails!
+    clientMutationId: String
+    booking: BookingDetails!
 }
 
 type BookingTeamDetails {
-  uniqueId: ID!
-  name: String!
+    uniqueId: ID!
+    name: String!
 }
 
 type LocationBookingPermissions {
-  canAddBooking: Boolean!
-  canUpdateBooking: Boolean!
-  canDeleteBooking: Boolean!
-  canAddBookingOnBehalf: Boolean!
-  canUpdateBookingOnBehalf: Boolean!
-  canDeleteBookingOnBehalf: Boolean!
+    canAddBooking: Boolean!
+    canUpdateBooking: Boolean!
+    canDeleteBooking: Boolean!
+    canAddBookingOnBehalf: Boolean!
+    canUpdateBookingOnBehalf: Boolean!
+    canDeleteBookingOnBehalf: Boolean!
 }
 
 type Mutation {
-  addBooking(input: AddBookingInput!): BookingPayload @cost(weight: "10")
-  updateBooking(input: UpdateBookingInput!): BookingPayload @cost(weight: "10")
-  deleteBooking(input: DeleteBookingInput!): BookingPayload @cost(weight: "10")
+    addBooking(input: AddBookingInput!): BookingPayload @cost(weight: "10")
+    updateBooking(input: UpdateBookingInput!): BookingPayload @cost(weight: "10")
+    deleteBooking(input: DeleteBookingInput!): BookingPayload @cost(weight: "10")
 }
 
 type OrganizationBookingPermissions {
-  canAddBooking: Boolean!
-  canUpdateBooking: Boolean!
-  canDeleteBooking: Boolean!
-  canAddBookingOnBehalf: Boolean!
-  canUpdateBookingOnBehalf: Boolean!
-  canDeleteBookingOnBehalf: Boolean!
+    canAddBooking: Boolean!
+    canUpdateBooking: Boolean!
+    canDeleteBooking: Boolean!
+    canAddBookingOnBehalf: Boolean!
+    canUpdateBookingOnBehalf: Boolean!
+    canDeleteBookingOnBehalf: Boolean!
 }
 
 type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
 }
 
 type Query {
-  bookingVersion: Version!
-  bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
-  booking(id: String!): BookingDetails @cost(weight: "10")
-  bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): BookingConnection @cost(weight: "10")
-  allBookings(where: BookingWhereInput!): [BookingDetails!] @cost(weight: "10")
-  availableDesks(where: AvailableDesksWhereInput!): [BookingDeskDetails!] @cost(weight: "10")
-  organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions @cost(weight: "10")
-  locationBookingPermissions(locationId: String!): LocationBookingPermissions @cost(weight: "10")
-  teamBookingPermissions(teamId: String!): TeamBookingPermissions @cost(weight: "10")
+    bookingVersion: Version!
+    bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
+    booking(id: String!): BookingDetails @cost(weight: "10")
+    bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): BookingConnection @cost(weight: "10")
+    allBookings(where: BookingWhereInput!): [BookingDetails!] @cost(weight: "10")
+    availableDesks(where: AvailableDesksWhereInput!): [BookingDeskDetails!] @cost(weight: "10")
+    organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions @cost(weight: "10")
+    locationBookingPermissions(locationId: String!): LocationBookingPermissions @cost(weight: "10")
+    teamBookingPermissions(teamId: String!): TeamBookingPermissions @cost(weight: "10")
 }
 
 type TeamBookingPermissions {
-  canAddBooking: Boolean!
-  canUpdateBooking: Boolean!
-  canDeleteBooking: Boolean!
-  canAddBookingOnBehalf: Boolean!
-  canUpdateBookingOnBehalf: Boolean!
-  canDeleteBookingOnBehalf: Boolean!
+    canAddBooking: Boolean!
+    canUpdateBooking: Boolean!
+    canDeleteBooking: Boolean!
+    canAddBookingOnBehalf: Boolean!
+    canUpdateBookingOnBehalf: Boolean!
+    canDeleteBookingOnBehalf: Boolean!
 }
 
 type Version {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
 }
 
 input AddBookingInput {
-  clientMutationId: String
-  id: String
-  customerId: String!
-  from: DateTime!
-  to: DateTime!
-  notes: String
-  type: BookingType!
-  organizationId: String
-  locationId: String
-  deskIds: [String!]!
-  teamId: String
+    clientMutationId: String
+    id: String
+    customerId: String!
+    from: DateTime!
+    to: DateTime!
+    notes: String
+    type: BookingType!
+    organizationId: String
+    locationId: String
+    deskIds: [String!]!
+    teamId: String
 }
 
 input AvailableDesksWhereInput {
-  organizationId: String
-  locationId: String
-  date: DateTime!
-  deskIdsToInclude: [String!]
-  deskTypeIds: [String!]
-  zoneIds: [String!]
-  combineDeskTypesZones: Boolean
+    organizationId: String
+    locationId: String
+    date: DateTime!
+    deskIdsToInclude: [String!]
+    deskTypeIds: [String!]
+    zoneIds: [String!]
+    combineDeskTypesZones: Boolean
 }
 
 input BookingOrderInput {
-  direction: OrderDirection!
-  field: BookingOrderField!
+    direction: OrderDirection!
+    field: BookingOrderField!
 }
 
 input BookingWhereInput {
-  fromGT: DateTime
-  fromGTE: DateTime
-  fromLT: DateTime
-  fromLTE: DateTime
-  toGT: DateTime
-  toGTE: DateTime
-  toLT: DateTime
-  toLTE: DateTime
-  notesContains: String
-  type: String
-  nameContains: String
-  organizationIds: [String!]
-  locationIds: [String!]
-  teamIds: [String!]
-  includeMineOnly: Boolean
-  includeFutureBookingsOnly: Boolean
-  combineOrganizationsLocationsTeams: Boolean
+    fromGT: DateTime
+    fromGTE: DateTime
+    fromLT: DateTime
+    fromLTE: DateTime
+    toGT: DateTime
+    toGTE: DateTime
+    toLT: DateTime
+    toLTE: DateTime
+    notesContains: String
+    type: String
+    nameContains: String
+    organizationIds: [String!]
+    locationIds: [String!]
+    teamIds: [String!]
+    includeMineOnly: Boolean
+    includeFutureBookingsOnly: Boolean
+    combineOrganizationsLocationsTeams: Boolean
 }
 
 input DeleteBookingInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input UpdateBookingInput {
-  clientMutationId: String
-  id: String!
-  customerId: String!
-  from: DateTime!
-  to: DateTime!
-  notes: String
-  type: BookingType!
-  organizationId: String
-  locationId: String
-  deskIds: [String!]!
-  teamId: String
+    clientMutationId: String
+    id: String!
+    customerId: String!
+    from: DateTime!
+    to: DateTime!
+    notes: String
+    type: BookingType!
+    organizationId: String
+    locationId: String
+    deskIds: [String!]!
+    teamId: String
 }
 
 enum BookingOrderField {
-  From
-  To
-  Notes
-  Name
-  GivenName
-  MiddleName
-  FamilyName
-  OrganizationName
-  LocationName
-  TeamName
-  BookingType
+    From
+    To
+    Notes
+    Name
+    GivenName
+    MiddleName
+    FamilyName
+    OrganizationName
+    LocationName
+    TeamName
+    BookingType
 }
 
 enum BookingType {
-  WorkingFromHome
-  WorkingFromOffice
-  SickLeave
-  AnnualLeave
-  WellBeingLeave
-  ClientOffices
-  Vacation
-  TravelingForWork
-  NonWorkingDay
+    WorkingFromHome
+    WorkingFromOffice
+    SickLeave
+    AnnualLeave
+    WellBeingLeave
+    ClientOffices
+    Vacation
+    TravelingForWork
+    NonWorkingDay
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+    Ascending
+    Descending
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

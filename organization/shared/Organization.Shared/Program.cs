@@ -8,7 +8,7 @@ namespace Organization.Shared;
 public class Program
 {
     public static async Task Main(string[] args) =>
-        await MigrationHelper.RunMigrationAsync<OrganizationDbContext>(() => CreateHostBuilder(args), default);
+        await MigrationHelper.RunMigrationAsync<OrganizationDbContext>(() => CreateHostBuilder(args), CancellationToken.None);
 
     // ReSharper disable once MemberCanBePrivate.Global
     public static IHostBuilder CreateHostBuilder(string[] args) =>

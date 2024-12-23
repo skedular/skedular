@@ -26,9 +26,11 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner
-                or LocationMembershipType.Administrator or LocationMembershipType.Member;
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+            {
+                MembershipType: LocationMembershipType.Owner or LocationMembershipType.Administrator
+                or LocationMembershipType.Member
+            };
         }
 
         return organizationAuthorizationService.CanView(location.Organization, customer);
@@ -38,9 +40,10 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner
-                or LocationMembershipType.Administrator;
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+            {
+                MembershipType: LocationMembershipType.Owner or LocationMembershipType.Administrator
+            };
         }
 
         return organizationAuthorizationService.CanModify(location.Organization, customer);
@@ -50,8 +53,10 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner;
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+            {
+                MembershipType: LocationMembershipType.Owner
+            };
         }
 
         return organizationAuthorizationService.CanDelete(location.Organization, customer);
@@ -61,9 +66,10 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner
-                or LocationMembershipType.Administrator;
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+            {
+                MembershipType: LocationMembershipType.Owner or LocationMembershipType.Administrator
+            };
         }
 
         return organizationAuthorizationService.CanInvitePeople(location.Organization, customer);
@@ -75,9 +81,10 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner
-                or LocationMembershipType.Administrator;
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+            {
+                MembershipType: LocationMembershipType.Owner or LocationMembershipType.Administrator
+            };
         }
 
         return organizationAuthorizationService.CanCancelPeopleExistingInvitations(location.Organization, customer);
@@ -87,9 +94,10 @@ public class LocationAuthorizationService(
     {
         if (location.Organization is null)
         {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id)?.MembershipType is
-                LocationMembershipType.Owner
-                or LocationMembershipType.Administrator;
+            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+            {
+                MembershipType: LocationMembershipType.Owner or LocationMembershipType.Administrator
+            };
         }
 
         return organizationAuthorizationService.CanViewAnalytics(location.Organization, customer);

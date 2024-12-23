@@ -53,18 +53,18 @@ public class Mapper : IMapper
         organization.Offering.ActiveCustomerIds.AddRange(
             organizationOffering.OrganizationOfferingActiveMembers.Select(item => item.OrganizationMember.Customer.Id));
 
-        organization.Members.AddRange(src.OrganizationMembers.Select(item =>
+        organization.Members.AddRange(src.OrganizationMembers.Select(item => new Member
         {
-            var membershipType =
-                item.MembershipType switch
-                {
-                    OrganizationMembershipType.Owner => MembershipType.Owner,
-                    OrganizationMembershipType.Administrator => MembershipType.Administrator,
-                    OrganizationMembershipType.Member => MembershipType.Member,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-            return new Member { Id = item.Id, CustomerId = item.Customer.Id, MembershipType = membershipType };
+            Id = item.Id,
+            CustomerId = item.Customer.Id,
+            MembershipType = item.MembershipType switch
+            {
+                OrganizationMembershipType.Owner => MembershipType.Owner,
+                OrganizationMembershipType.Administrator => MembershipType.Administrator,
+                OrganizationMembershipType.Member => MembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Active = item.Active,
         }));
 
         return organization;

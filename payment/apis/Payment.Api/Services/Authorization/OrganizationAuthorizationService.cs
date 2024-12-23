@@ -12,21 +12,17 @@ public interface IOrganizationAuthorizationService
 
 public class OrganizationAuthorizationService : IOrganizationAuthorizationService
 {
-    public bool CanViewPaymentMethod(Organization organization, Customer customer)
-    {
-        var organizationMember =
-            organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
+    public bool CanViewPaymentMethod(Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Active: true,
+            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+        };
 
-        return organizationMember?.MembershipType is OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
-    }
-
-    public bool CanManagePaymentMethod(Organization organization, Customer customer)
-    {
-        var organizationMember =
-            organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id);
-
-        return organizationMember?.MembershipType is OrganizationMembershipType.Owner
-            or OrganizationMembershipType.Administrator;
-    }
+    public bool CanManagePaymentMethod(Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Active: true,
+            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+        };
 }

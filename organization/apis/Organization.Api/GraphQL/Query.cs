@@ -171,8 +171,8 @@ public class Query(IMapper mapper)
                         {
                             OrganizationMemberOrderField.MembershipType =>
                                 Shared.Models.OrganizationMemberOrderField.MembershipType,
-                            OrganizationMemberOrderField.Name =>
-                                Shared.Models.OrganizationMemberOrderField.Name,
+                            OrganizationMemberOrderField.Active => Shared.Models.OrganizationMemberOrderField.Active,
+                            OrganizationMemberOrderField.Name => Shared.Models.OrganizationMemberOrderField.Name,
                             OrganizationMemberOrderField.GivenName =>
                                 Shared.Models.OrganizationMemberOrderField.GivenName,
                             OrganizationMemberOrderField.MiddleName =>

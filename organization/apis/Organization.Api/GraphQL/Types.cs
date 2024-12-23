@@ -245,6 +245,7 @@ public enum OrganizationMemberMembershipType
 public enum OrganizationMemberOrderField
 {
     MembershipType,
+    Active,
     Name,
     GivenName,
     MiddleName,

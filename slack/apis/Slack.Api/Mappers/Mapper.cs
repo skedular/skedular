@@ -320,6 +320,7 @@ public class Mapper : IMapper
                 MembershipType.Member => OrganizationMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            Active = src.Active,
             Customer = MapTo(src.Customer)
         };
 
