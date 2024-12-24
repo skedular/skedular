@@ -24,6 +24,11 @@ public interface IOrganizationMemberService
         string membershipType,
         CancellationToken cancellationToken);
 
+    Task<ICollection<OrganizationMember>> ChangeStatusAsync(
+        ICollection<string> organizationMemberIds,
+        string status,
+        CancellationToken cancellationToken);
+
     Task<Shared.Models.Organization> UpdateMembersAsync(
         string organizationId,
         ICollection<OrganizationMember> members,
@@ -113,7 +118,7 @@ public class OrganizationMemberService(
         {
             throw new Unauthorized();
         }
-        
+
         if (myMembershipDetails.MembershipType == OrganizationMembershipType.Administrator &&
             membershipType == OrganizationMembershipType.Owner)
         {
@@ -147,6 +152,63 @@ public class OrganizationMemberService(
         await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return mapper.MapTo(organizationMember, mapper.MapTo(organization));
+    }
+
+    public async Task<ICollection<OrganizationMember>> ChangeStatusAsync(
+        ICollection<string> organizationMemberIds,
+        string status,
+        CancellationToken cancellationToken)
+    {
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var distinctOrganizationMemberIds = organizationMemberIds.Distinct().ToList();
+        var organizationMembers =
+            await repositoryFactory.OrganizationMemberRepository.GetByIdsAsync(
+                distinctOrganizationMemberIds,
+                cancellationToken);
+        if (organizationMembers.Count != distinctOrganizationMemberIds.Count)
+        {
+            throw new OrganizationMemberNotFound();
+        }
+
+        if (organizationMembers.Count == 0)
+        {
+            return [];
+        }
+
+        var organizationIds = organizationMembers.Select(item => item.Organization.Id).Distinct().ToList();
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(
+            organizationIds,
+            cancellationToken);
+
+        if (!organizationMembers.All(
+                item => organizationAuthorizationService.CanModify(
+                    organizations.Single(organization => organization.Id == item.Organization.Id),
+                    customer)))
+        {
+            throw new Unauthorized();
+        }
+
+        await using var transaction =
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+                cancellationToken);
+
+        foreach (var organizationMember in organizationMembers)
+        {
+            organizationMember.Status = status;
+            repositoryFactory.OrganizationMemberRepository.Update(organizationMember);
+        }
+
+        await organizationOutboxPublisher.PublishOrganizationAsync(
+            organizations.Select(mapper.MapTo),
+            repositoryFactory.OrganizationRepository.UnitOfWork,
+            cancellationToken);
+
+        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return organizationMembers.Select(item => mapper.MapTo(item,
+            mapper.MapTo(organizations.Single(organization => organization.Id == item.Organization.Id)))).ToList();
     }
 
     public async Task<Shared.Models.Organization> UpdateMembersAsync(

@@ -14,6 +14,7 @@ namespace Organization.Shared.Repositories;
 public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 {
     Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<OrganizationMember>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     OrganizationMember Add(OrganizationMember organizationMember);
     void AddRange(ICollection<OrganizationMember> organizationMembers);
     OrganizationMember Update(OrganizationMember organizationMember);
@@ -121,8 +122,16 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
 {
     public async Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
-            .Include(query => query.Organization)
+            .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<OrganizationMember>> GetByIdsAsync(
+        ICollection<string> ids,
+        CancellationToken cancellationToken) =>
+        await DbContext.OrganizationMember
+            .Where(query => ids.Contains(query.Id))
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
 
     public OrganizationMember Add(OrganizationMember organizationMember)
     {

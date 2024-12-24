@@ -379,6 +379,7 @@ type Mutation {
   cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload @cost(weight: "10")
   changeLocationMemberOwnershipType(input: ChangeLocationMemberOwnershipTypeInput!): LocationMemberDetailsPayload @cost(weight: "10")
   changeOrganizationMemberOwnershipType(input: ChangeOrganizationMemberOwnershipTypeInput!): OrganizationMemberDetailsPayload @cost(weight: "10")
+  changeOrganizationMemberStatus(input: ChangeOrganizationMemberStatusInput!): OrganizationMembersDetailsPayload @cost(weight: "10")
   changeTeamMemberOwnershipType(input: ChangeTeamMemberOwnershipTypeInput!): TeamMemberDetailsPayload @cost(weight: "10")
   clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload @cost(weight: "10")
   completeDefaultLocationOnboarding(input: CompleteDefaultLocationOnboardingInput!): CustomerPayload @cost(weight: "10")
@@ -628,6 +629,11 @@ type OrganizationMemberEdge {
 
 type OrganizationMemberPayload {
   clientMutationId: String
+}
+
+type OrganizationMembersDetailsPayload {
+  clientMutationId: String
+  members: [OrganizationMemberDetails!]!
 }
 
 type OrganizationOfferingDetails {
@@ -1074,6 +1080,12 @@ input ChangeOrganizationMemberOwnershipTypeInput {
   clientMutationId: String
   id: String!
   membershipType: OrganizationMemberMembershipType!
+}
+
+input ChangeOrganizationMemberStatusInput {
+  clientMutationId: String
+  id: [String!]!
+  status: OrganizationMemberStatus!
 }
 
 input ChangeTeamMemberOwnershipTypeInput {

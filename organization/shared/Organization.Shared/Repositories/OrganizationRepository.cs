@@ -15,8 +15,17 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
         string id,
         CancellationToken cancellationToken);
 
+    Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
+        ICollection<string> ids,
+        CancellationToken cancellationToken);
+
     Task<Database.Entities.Organization?> GetByIdAsync(
         string id,
+        bool includeAllOfferings,
+        CancellationToken cancellationToken);
+
+    Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
+        ICollection<string> ids,
         bool includeAllOfferings,
         CancellationToken cancellationToken);
 
@@ -148,6 +157,11 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
     public async Task<Database.Entities.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await GetByIdAsync(id, false, cancellationToken);
 
+    public async Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
+        ICollection<string> ids,
+        CancellationToken cancellationToken) =>
+        await GetByIdsAsync(ids, false, cancellationToken);
+
     public async Task<Database.Entities.Organization?> GetByIdAsync(
         string id,
         bool includeAllOfferings,
@@ -155,6 +169,15 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         await DbContext.Organization
             .AddDependentObjects(includeAllOfferings)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
+        ICollection<string> ids,
+        bool includeAllOfferings,
+        CancellationToken cancellationToken) =>
+        await DbContext.Organization
+            .Where(query => ids.Contains(query.Id))
+            .AddDependentObjects(includeAllOfferings)
+            .ToListAsync(cancellationToken);
 
     public async Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(
         string customerId,
