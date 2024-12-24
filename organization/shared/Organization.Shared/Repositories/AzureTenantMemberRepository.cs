@@ -1,5 +1,6 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
+using Microsoft.EntityFrameworkCore;
 using Organization.Shared.Database;
 using Organization.Shared.Database.Entities;
 
@@ -10,6 +11,10 @@ public interface IAzureTenantMemberRepository : IRepository<AzureTenantMember>
     AzureTenantMember Add(AzureTenantMember azureTenantMember);
     AzureTenantMember Update(AzureTenantMember azureTenantMember);
     void RemoveRange(ICollection<AzureTenantMember> tenantMembers);
+    
+    Task<ICollection<AzureTenantMember>> GetByTenantIdAsync(
+        string tenantId,
+        CancellationToken cancellationToken);
 }
 
 public class AzureTenantMemberRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
@@ -35,4 +40,12 @@ public class AzureTenantMemberRepository(OrganizationDbContext dbContext, TimePr
         tenantMembers.ForEach(teamMember => teamMember.DeletedAt = now);
         DbContext.AzureTenantMember.UpdateRange(tenantMembers);
     }
+
+    public async Task<ICollection<AzureTenantMember>> GetByTenantIdAsync(
+        string tenantId,
+        CancellationToken cancellationToken) =>
+        await DbContext.AzureTenantMember
+            .Where(query => query.AzureTenant.Id == tenantId)
+            .Include(query => query.AzureTenant)
+            .ToListAsync(cancellationToken);
 }
