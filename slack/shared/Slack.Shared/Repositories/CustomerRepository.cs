@@ -35,8 +35,9 @@ public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvi
                     dbContext,
                     id,
                     cancellationToken) =>
-                Queryable
-                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query => query.Id == id));
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query => query.Id == id));
 
     private static readonly Func<SlackDbContext, string, CancellationToken, Task<Customer?>>
         s_getByVerifiableTokenQueryAsync =
@@ -44,8 +45,9 @@ public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvi
                     dbContext,
                     verifiableToken,
                     cancellationToken) =>
-                Queryable
-                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query =>
                         !query.DeletedAt.HasValue &&
                         query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
 
@@ -55,8 +57,9 @@ public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvi
                     dbContext,
                     email,
                     cancellationToken) =>
-                Queryable
-                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query =>
                         !query.DeletedAt.HasValue &&
                         query.Identities.Any(identity =>
                             identity.Email != null &&

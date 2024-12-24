@@ -308,9 +308,9 @@ public class CustomerService(
 
         if (existingCustomer.Identities.All(item => item.Id != identity.Id))
         {
-            await using var transaction =
-                await transactionBuilder.BeginTransactionAsync(repositoryFactory.CustomerRepository.UnitOfWork,
-                    cancellationToken);
+            await using var transaction = await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.CustomerRepository.UnitOfWork,
+                cancellationToken);
 
             var identityToAdd = mapper.MapTo(identity, existingCustomer);
             repositoryFactory.IdentityRepository.Add(identityToAdd);

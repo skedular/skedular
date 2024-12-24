@@ -361,12 +361,19 @@ public class OrganizationMemberService(
                 repositoryFactory.OrganizationMemberRepository.UnitOfWork,
                 cancellationToken);
 
-        var customer =
-            await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                member.Customer.Id,
-                cancellationToken);
-        var organizationMemberToAdd =
-            repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(member, organization, customer));
+        var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
+            member.Customer.Id,
+            cancellationToken);
+
+        var organizationMember = await repositoryFactory.OrganizationMemberRepository.GetByIdAsync(
+            member.Id,
+            cancellationToken);
+
+        var organizationMemberToAdd = organizationMember is null
+            ? repositoryFactory.OrganizationMemberRepository.Add(
+                mapper.MapToEntity(member, organization, customer))
+            : repositoryFactory.OrganizationMemberRepository.Update(
+                mapper.MergeToEntity(member, organizationMember, organization, customer));
 
         organization.OrganizationMembers = organization.OrganizationMembers.Concat([organizationMemberToAdd]).ToList();
 

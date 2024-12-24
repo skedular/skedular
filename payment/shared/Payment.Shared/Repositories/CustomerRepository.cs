@@ -34,8 +34,9 @@ public class CustomerRepository(PaymentDbContext dbContext, TimeProvider timePro
                     dbContext,
                     id,
                     cancellationToken) =>
-                Queryable
-                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query => query.Id == id));
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query => query.Id == id));
 
     private static readonly Func<PaymentDbContext, string, CancellationToken, Task<Customer?>>
         s_getByVerifiableTokenQueryAsync =
@@ -43,8 +44,9 @@ public class CustomerRepository(PaymentDbContext dbContext, TimeProvider timePro
                     dbContext,
                     verifiableToken,
                     cancellationToken) =>
-                Queryable
-                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query =>
                         !query.DeletedAt.HasValue &&
                         query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
 

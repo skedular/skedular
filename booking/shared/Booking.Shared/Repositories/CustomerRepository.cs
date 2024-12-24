@@ -46,8 +46,9 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                     dbContext,
                     id,
                     cancellationToken) =>
-                Queryable
-                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query => query.Id == id));
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query => query.Id == id));
 
     private static readonly Func<BookingDbContext, string, CancellationToken, Task<Customer?>>
         s_getByVerifiableTokenQueryAsync =
@@ -55,8 +56,9 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                     dbContext,
                     verifiableToken,
                     cancellationToken) =>
-                Queryable
-                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query =>
                         !query.DeletedAt.HasValue &&
                         query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
 
@@ -66,8 +68,9 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                     dbContext,
                     email,
                     cancellationToken) =>
-                Queryable
-                    .FirstOrDefault<Customer>(dbContext.Customer.AddDependentObjects(), query =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query =>
                         !query.DeletedAt.HasValue &&
                         query.Identities.Any(identity =>
                             identity.Email != null &&
