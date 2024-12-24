@@ -96,7 +96,7 @@ public class LocationSubscriber(
             : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation,
                 organization));
 
-        existingLocation = RebuildDesks(location, existingLocation);
+        existingLocation = await RebuildDesks(location, existingLocation, cancellationToken);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -116,11 +116,17 @@ public class LocationSubscriber(
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private Location RebuildDesks(Shared.Models.Location location, Location existingLocation)
+    private async Task<Location> RebuildDesks(
+        Shared.Models.Location location,
+        Location existingLocation, 
+        CancellationToken cancellationToken)
     {
-        var itemsToRemove = existingLocation.Desks
+        var desks = await repositoryFactory.DeskRepository.GetByLocationIdAsync(
+            existingLocation.Id,
+            cancellationToken);
+        var itemsToRemove = desks
             .Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
-        var updatedItems = existingLocation.Desks
+        var updatedItems = desks
             .Where(desk => location.Desks.Any(item => item.Id == desk.Id))
             .Select(desk =>
                 repositoryFactory.DeskRepository.Update(
@@ -130,7 +136,7 @@ public class LocationSubscriber(
                         existingLocation)))
             .ToList();
         var addedItems = location.Desks
-            .Where(desk => existingLocation.Desks.All(item => item.Id != desk.Id))
+            .Where(desk => desks.All(item => item.Id != desk.Id))
             .Select(desk =>
                 repositoryFactory.DeskRepository.Add(mapper.MapToEntity(desk, existingLocation)))
             .ToList();

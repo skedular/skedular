@@ -42,10 +42,10 @@ public class LocationMemberRepository(BookingDbContext dbContext, TimeProvider t
     }
 
     public async Task<ICollection<LocationMember>> GetByLocationIdAsync(
-        string organizationId,
+        string locationId,
         CancellationToken cancellationToken) =>
         await DbContext.LocationMember
-            .Where(query => query.Location.Id == organizationId)
+            .Where(query => query.Location.Id == locationId)
             .Include(query => query.Customer)
             .ToListAsync(cancellationToken);
 }

@@ -128,9 +128,12 @@ public class LocationSubscriber(
             }
         }
 
-        var itemsToRemove = existingLocation.Desks
+        var desks = await repositoryFactory.DeskRepository.GetByLocationIdAsync(
+            existingLocation.Id,
+            cancellationToken);
+        var itemsToRemove = desks
             .Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
-        var updatedItems = existingLocation.Desks
+        var updatedItems = desks
             .Where(desk => location.Desks.Any(item => item.Id == desk.Id))
             .Select(desk =>
             {
@@ -150,7 +153,7 @@ public class LocationSubscriber(
             })
             .ToList();
         var addedItems = location.Desks
-            .Where(desk => existingLocation.Desks.All(item => item.Id != desk.Id))
+            .Where(desk => desks.All(item => item.Id != desk.Id))
             .Select(desk =>
             {
                 var filteredOrganizationTags = organizationTags

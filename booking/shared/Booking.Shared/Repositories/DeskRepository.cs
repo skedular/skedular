@@ -24,6 +24,10 @@ public interface IDeskRepository : IRepository<Desk>
         ICollection<string> zoneIds,
         bool combineDeskTypesZones,
         CancellationToken cancellationToken);
+
+    Task<ICollection<Desk>> GetByLocationIdAsync(
+        string locationId,
+        CancellationToken cancellationToken);
 }
 
 public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -151,4 +155,12 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
                 : deskTypeMatchResult || zoneMatchResult;
         }).ToList();
     }
+
+    public async Task<ICollection<Desk>> GetByLocationIdAsync(
+        string locationId,
+        CancellationToken cancellationToken) =>
+        await DbContext.Desk
+            .Where(query => query.Location != null && query.Location.Id == locationId)
+            .Include(query => query.OrganizationTags)
+            .ToListAsync(cancellationToken);
 }
