@@ -116,11 +116,14 @@ public class OrganizationSubscriber(
         Organization existingOrganization,
         CancellationToken cancellationToken)
     {
-        var itemsToRemove = existingOrganization.OrganizationMembers
+        var organizationMembers = await repositoryFactory.OrganizationMemberRepository.GetByOrganizationIdAsync(
+            existingOrganization.Id,
+            cancellationToken);
+        var itemsToRemove = organizationMembers
             .Where(organizationMember => organization.OrganizationMembers.All(item => item.Id != organizationMember.Id))
             .ToList();
         var updatedItems = new List<OrganizationMember>();
-        foreach (var organizationMember in existingOrganization.OrganizationMembers.Where(organizationMember =>
+        foreach (var organizationMember in organizationMembers.Where(organizationMember =>
                      organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(
@@ -138,7 +141,7 @@ public class OrganizationSubscriber(
         var addedItems = new List<OrganizationMember>();
         foreach (var organizationMember in organization.OrganizationMembers
                      .Where(organizationMember =>
-                         existingOrganization.OrganizationMembers.All(item => item.Id != organizationMember.Id)))
+                         organizationMembers.All(item => item.Id != organizationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(
                 organizationMember.Customer.Id,

@@ -18,6 +18,10 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
     void RemoveRange(ICollection<OrganizationMember> organizationMembers);
+
+    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
+        string organizationId,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationMemberRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
@@ -57,4 +61,12 @@ public class OrganizationMemberRepository(CustomerDbContext dbContext, TimeProvi
         organizationMember.ModifiedAt = now;
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }
+
+    public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
+        string organizationId,
+        CancellationToken cancellationToken) =>
+        await DbContext.OrganizationMember
+            .Where(query => query.Organization.Id == organizationId)
+            .Include(query => query.Customer)
+            .ToListAsync(cancellationToken);
 }

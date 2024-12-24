@@ -2,6 +2,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Location.Shared.Database;
 using Location.Shared.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Location.Shared.Repositories;
 
@@ -10,6 +11,10 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
     void RemoveRange(ICollection<OrganizationMember> organizationMembers);
+    
+    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
+        string organizationId,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationMemberRepository(LocationDbContext dbContext, TimeProvider timeProvider)
@@ -35,4 +40,13 @@ public class OrganizationMemberRepository(LocationDbContext dbContext, TimeProvi
         organizationMember.ModifiedAt = now;
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }
+
+    public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
+        string organizationId,
+        CancellationToken cancellationToken) =>
+        await DbContext.OrganizationMember
+            .Where(query => query.Organization.Id == organizationId)
+            .Include(query => query.Customer)
+            .ToListAsync(cancellationToken);
 }
+

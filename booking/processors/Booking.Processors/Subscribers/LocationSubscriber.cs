@@ -173,11 +173,14 @@ public class LocationSubscriber(
         Location existingLocation,
         CancellationToken cancellationToken)
     {
-        var itemsToRemove = existingLocation.LocationMembers
+        var locationMembers = await repositoryFactory.LocationMemberRepository.GetByLocationIdAsync(
+            existingLocation.Id,
+            cancellationToken);
+        var itemsToRemove = locationMembers
             .Where(locationMember => location.LocationMembers.All(item => item.Id != locationMember.Id))
             .ToList();
         var updatedItems = new List<LocationMember>();
-        foreach (var locationMember in existingLocation.LocationMembers
+        foreach (var locationMember in locationMembers
                      .Where(locationMember => location.LocationMembers.Any(item => item.Id == locationMember.Id)))
         {
             var customer =
@@ -195,7 +198,7 @@ public class LocationSubscriber(
         var addedItems = new List<LocationMember>();
         foreach (var locationMember in location.LocationMembers
                      .Where(locationMember =>
-                         existingLocation.LocationMembers.All(item => item.Id != locationMember.Id)))
+                         locationMembers.All(item => item.Id != locationMember.Id)))
         {
             var customer =
                 await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id,

@@ -34,12 +34,14 @@ internal static class OrganizationExtensions
             .ThenInclude(query => query.Identities);
 
         return includeAllOfferings
-            ? updatedQuery.Include(query => query.OrganizationOfferings
+            ? updatedQuery
+                .Include(query => query.OrganizationOfferings
                     .OrderByDescending(organizationOffering => organizationOffering.End))
                 .ThenInclude(query => query.OrganizationOfferingStripePaymentIntents)
                 .Include(query => query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod =>
                     !organizationStripePaymentMethod.DeletedAt.HasValue))
-            : updatedQuery.Include(query => query.OrganizationOfferings
+            : updatedQuery
+                .Include(query => query.OrganizationOfferings
                     .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
                     .OrderByDescending(organizationOffering => organizationOffering.End)
                     .Take(1))

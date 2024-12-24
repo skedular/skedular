@@ -116,11 +116,14 @@ public class TeamSubscriber(
         Team existingTeam,
         CancellationToken cancellationToken)
     {
-        var itemsToRemove = existingTeam.TeamMembers
+        var teamMembers = await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(
+            existingTeam.Id,
+            cancellationToken);
+        var itemsToRemove = teamMembers
             .Where(teamMember => team.TeamMembers.All(item => item.Id != teamMember.Id))
             .ToList();
         var updatedItems = new List<TeamMember>();
-        foreach (var teamMember in existingTeam.TeamMembers
+        foreach (var teamMember in teamMembers
                      .Where(teamMember => team.TeamMembers.Any(item => item.Id == teamMember.Id)))
         {
             var customer =
@@ -159,7 +162,7 @@ public class TeamSubscriber(
         var addedItems = new List<TeamMember>();
         foreach (var teamMember in team.TeamMembers
                      .Where(teamMember =>
-                         existingTeam.TeamMembers.All(item => item.Id != teamMember.Id)))
+                         teamMembers.All(item => item.Id != teamMember.Id)))
         {
             var customer =
                 await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken);
