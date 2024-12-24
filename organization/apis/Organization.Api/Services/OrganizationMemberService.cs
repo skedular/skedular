@@ -29,6 +29,10 @@ public interface IOrganizationMemberService
         string status,
         CancellationToken cancellationToken);
 
+    Task<ICollection<OrganizationMember>> RemoveAsync(
+        ICollection<string> organizationMemberIds,
+        CancellationToken cancellationToken);
+
     Task<Shared.Models.Organization> UpdateMembersAsync(
         string organizationId,
         ICollection<OrganizationMember> members,
@@ -172,7 +176,7 @@ public class OrganizationMemberService(
 
         // Exclude calling customer from the list
         organizationMembers = organizationMembers.Where(item => item.Customer.Id != customer.Id).ToList();
-        
+
         if (organizationMembers.Count == 0)
         {
             return [];
@@ -204,6 +208,68 @@ public class OrganizationMemberService(
 
         await organizationOutboxPublisher.PublishOrganizationAsync(
             organizations.Select(mapper.MapTo),
+            repositoryFactory.OrganizationRepository.UnitOfWork,
+            cancellationToken);
+
+        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return organizationMembers.Select(item => mapper.MapTo(item,
+            mapper.MapTo(organizations.Single(organization => organization.Id == item.Organization.Id)))).ToList();
+    }
+
+    public async Task<ICollection<OrganizationMember>> RemoveAsync(
+        ICollection<string> organizationMemberIds,
+        CancellationToken cancellationToken)
+    {
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var distinctOrganizationMemberIds = organizationMemberIds.Distinct().ToList();
+        var organizationMembers =
+            await repositoryFactory.OrganizationMemberRepository.GetByIdsAsync(
+                distinctOrganizationMemberIds,
+                cancellationToken);
+        if (organizationMembers.Count != distinctOrganizationMemberIds.Count)
+        {
+            throw new OrganizationMemberNotFound();
+        }
+
+        // Exclude calling customer from the list
+        organizationMembers = organizationMembers.Where(item => item.Customer.Id != customer.Id).ToList();
+
+        if (organizationMembers.Count == 0)
+        {
+            return [];
+        }
+
+        var organizationIds = organizationMembers.Select(item => item.Organization.Id).Distinct().ToList();
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(
+            organizationIds,
+            cancellationToken);
+
+        if (!organizationMembers.All(
+                item => organizationAuthorizationService.CanModify(
+                    organizations.Single(organization => organization.Id == item.Organization.Id),
+                    customer)))
+        {
+            throw new Unauthorized();
+        }
+
+        await using var transaction =
+            await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+                cancellationToken);
+
+        repositoryFactory.OrganizationMemberRepository.RemoveRange(organizationMembers);
+
+        await organizationOutboxPublisher.PublishOrganizationAsync(
+            organizations.Select(item =>
+            {
+                var mapped = mapper.MapTo(item);
+                mapped.OrganizationMembers = mapped.OrganizationMembers
+                    .Where(organizationMember => organizationMember.DeletedAt is null).ToList();
+
+                return mapped;
+            }),
             repositoryFactory.OrganizationRepository.UnitOfWork,
             cancellationToken);
 

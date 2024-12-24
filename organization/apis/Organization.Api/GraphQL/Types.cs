@@ -71,12 +71,19 @@ public class ChangeOrganizationMemberOwnershipTypeInput
     [GraphQLName("membershipType")] public OrganizationMemberMembershipType MembershipType { get; set; }
 }
 
-[GraphQLName("ChangeOrganizationMemberStatusInput")]
-public class ChangeOrganizationMemberStatusInput
+[GraphQLName("ChangeOrganizationMembersStatusInput")]
+public class ChangeOrganizationMembersStatusInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("ids")] public required string[] Ids { get; set; }
     [GraphQLName("status")] public OrganizationMemberStatus Status { get; set; }
+}
+
+[GraphQLName("RemoveOrganizationMembersInput")]
+public class RemoveOrganizationMembersInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; }
 }
 
 [GraphQLName("DeleteOrganizationInput")]

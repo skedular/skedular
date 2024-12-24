@@ -1,7 +1,8 @@
 import { TeamSelector } from '@/components/team/teamSelector';
-import type { organizationMembers_changeOrganizationMemberStatusMutation } from '@/queries/__generated__/organizationMembers_changeOrganizationMemberStatusMutation.graphql';
+import type { organizationMembers_changeOrganizationMembersStatusMutation } from '@/queries/__generated__/organizationMembers_changeOrganizationMembersStatusMutation.graphql';
 import type { organizationMembers_organizationMembers_query$key } from '@/queries/__generated__/organizationMembers_organizationMembers_query.graphql';
 import type { organizationMembers_organizationMembers_refetchableFragment } from '@/queries/__generated__/organizationMembers_organizationMembers_refetchableFragment.graphql';
+import type { organizationMembers_removeOrganizationMembersInputMutation } from '@/queries/__generated__/organizationMembers_removeOrganizationMembersInputMutation.graphql';
 import type { organizationMembers_rootQuery } from '@/queries/__generated__/organizationMembers_rootQuery.graphql';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -85,7 +86,7 @@ type RowType = {
   status: boolean;
 };
 
-const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   const rootData = usePreloadedQuery<organizationMembers_rootQuery>(RootQuery, queryReference);
   const [rootDataOrganizationMembers, refetchOrganizationMembers] = useRefetchableFragment<
     organizationMembers_organizationMembers_refetchableFragment,
@@ -93,8 +94,10 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
   >(
     graphql`
       fragment organizationMembers_organizationMembers_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationMembers_organizationMembers_refetchableFragment") {
-        organizationMembers(where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }) {
+        organizationMembers(first: $count, after: $cursor, where: { organizationId: $organizationId, nameContains: $peopleNameSearchText })
+          @connection(key: "organizationMembers_organizationMembers") {
           __id
           totalCount
           edges {
@@ -119,9 +122,9 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
     rootData,
   );
 
-  const [commitChangeOrganizationMemberStatus] = useMutation<organizationMembers_changeOrganizationMemberStatusMutation>(graphql`
-    mutation organizationMembers_changeOrganizationMemberStatusMutation($input: ChangeOrganizationMemberStatusInput!) {
-      changeOrganizationMemberStatus(input: $input) {
+  const [commitChangeOrganizationMembersStatus] = useMutation<organizationMembers_changeOrganizationMembersStatusMutation>(graphql`
+    mutation organizationMembers_changeOrganizationMembersStatusMutation($input: ChangeOrganizationMembersStatusInput!) {
+      changeOrganizationMembersStatus(input: $input) {
         members {
           id
           customer {
@@ -140,12 +143,27 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
     }
   `);
 
+  const [commitRemoveOrganizationMembersInput] = useMutation<organizationMembers_removeOrganizationMembersInputMutation>(graphql`
+    mutation organizationMembers_removeOrganizationMembersInputMutation($connectionIds: [ID!]!, $input: RemoveOrganizationMembersInput!) {
+      removeOrganizationMembersInput(input: $input) {
+        members {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>([]);
+
+  const connectionIds = useMemo(
+    () => (rootDataOrganizationMembers.organizationMembers ? [rootDataOrganizationMembers.organizationMembers.__id] : []),
+    [rootDataOrganizationMembers.organizationMembers],
+  );
   const members = useMemo(() => {
     if (!rootDataOrganizationMembers.organizationMembers) {
       return [];
@@ -214,7 +232,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
   const handleDeactivateMembersClick = () => {
     const toastId = themedToast(<NotificationContent content={'Deactivating members...'} />, infoNotificationOptions);
 
-    commitChangeOrganizationMemberStatus({
+    commitChangeOrganizationMembersStatus({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -250,7 +268,7 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
   const handleActivateMembersClick = () => {
     const toastId = themedToast(<NotificationContent content={'Activating members...'} />, infoNotificationOptions);
 
-    commitChangeOrganizationMemberStatus({
+    commitChangeOrganizationMembersStatus({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -278,6 +296,42 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
         toast.update(toastId, {
           ...errorNotificationOptions,
           render: <NotificationContent content={`Failed to activate members. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveMembersClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Removing members...'} />, infoNotificationOptions);
+
+    commitRemoveOrganizationMembersInput({
+      variables: {
+        connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedMembers.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove members. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Members removed.'} />,
+        });
+        setSeledctedMembers([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove members. Error: ${error.message}.`} />,
         });
       },
     });
@@ -408,7 +462,14 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
                 >
                   Activate Member
                 </Button>
-                <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} disabled={seledctedMembers.length === 0}>
+                <Button
+                  size="medium"
+                  variant="contained"
+                  color="warning"
+                  startIcon={<DeleteIcon />}
+                  disabled={seledctedMembers.length === 0}
+                  onClick={handleRemoveMembersClick}
+                >
                   Remove Member
                 </Button>
               </StackRow>

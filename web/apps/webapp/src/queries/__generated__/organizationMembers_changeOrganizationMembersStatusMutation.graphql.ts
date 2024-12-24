@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<35503718b73a4c447e833c2960606740>>
+ * @generated SignedSource<<f76abdc0cffda5d09f352565dd184e8d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,16 +10,16 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type OrganizationMemberStatus = "Active" | "Inactive" | "%future added value";
-export type ChangeOrganizationMemberStatusInput = {
+export type ChangeOrganizationMembersStatusInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
   status: OrganizationMemberStatus;
 };
-export type organizationMembers_changeOrganizationMemberStatusMutation$variables = {
-  input: ChangeOrganizationMemberStatusInput;
+export type organizationMembers_changeOrganizationMembersStatusMutation$variables = {
+  input: ChangeOrganizationMembersStatusInput;
 };
-export type organizationMembers_changeOrganizationMemberStatusMutation$data = {
-  readonly changeOrganizationMemberStatus: {
+export type organizationMembers_changeOrganizationMembersStatusMutation$data = {
+  readonly changeOrganizationMembersStatus: {
     readonly members: ReadonlyArray<{
       readonly customer: {
         readonly email: string | null | undefined;
@@ -36,9 +36,9 @@ export type organizationMembers_changeOrganizationMemberStatusMutation$data = {
     }>;
   } | null | undefined;
 };
-export type organizationMembers_changeOrganizationMemberStatusMutation = {
-  response: organizationMembers_changeOrganizationMemberStatusMutation$data;
-  variables: organizationMembers_changeOrganizationMemberStatusMutation$variables;
+export type organizationMembers_changeOrganizationMembersStatusMutation = {
+  response: organizationMembers_changeOrganizationMembersStatusMutation$data;
+  variables: organizationMembers_changeOrganizationMembersStatusMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,7 +61,7 @@ v1 = [
     ],
     "concreteType": "OrganizationMembersDetailsPayload",
     "kind": "LinkedField",
-    "name": "changeOrganizationMemberStatus",
+    "name": "changeOrganizationMembersStatus",
     "plural": false,
     "selections": [
       {
@@ -165,7 +165,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMembers_changeOrganizationMemberStatusMutation",
+    "name": "organizationMembers_changeOrganizationMembersStatusMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -174,20 +174,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMembers_changeOrganizationMemberStatusMutation",
+    "name": "organizationMembers_changeOrganizationMembersStatusMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "5d299763c60401c861cda2b07f3bbfbe",
+    "cacheID": "9a757ff4f7cffe18052c5719b1eb2281",
     "id": null,
     "metadata": {},
-    "name": "organizationMembers_changeOrganizationMemberStatusMutation",
+    "name": "organizationMembers_changeOrganizationMembersStatusMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMembers_changeOrganizationMemberStatusMutation(\n  $input: ChangeOrganizationMemberStatusInput!\n) {\n  changeOrganizationMemberStatus(input: $input) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n    }\n  }\n}\n"
+    "text": "mutation organizationMembers_changeOrganizationMembersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "30e41c5da2cc4f00cda46d5f518cd8c9";
+(node as any).hash = "0529ef74b63294468384c38eb6b27cab";
 
 export default node;
