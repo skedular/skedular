@@ -97,7 +97,7 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
   return (
     <>
       <StackColumn sx={{ width: '100vw' }}>
-        <StackRowFullWidth sx={{ paddingLeft: 1, paddingRight: 1, borderBottom: 1, borderColor: 'divider' }}>
+        <StackRowFullWidth sx={{ paddingLeft: 1, paddingRight: 1, borderBottom: 1, borderColor: (theme) => theme.palette.divider }}>
           <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
 
           <StackRow sx={{ alignItems: 'center' }}>

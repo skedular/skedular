@@ -298,7 +298,7 @@ input ChangeOrganizationMemberOwnershipTypeInput {
 
 input ChangeOrganizationMemberStatusInput {
   clientMutationId: String
-  id: [String!]!
+  ids: [String!]!
   status: OrganizationMemberStatus!
 }
 

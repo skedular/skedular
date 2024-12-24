@@ -112,7 +112,7 @@ const ModernAppBar = ({ rootDataRelay, hideWelcomeMessage, showBreadcrumps, brea
             paddingLeft: 1,
             paddingRight: 1,
             borderBottom: 1,
-            borderColor: 'divider',
+            borderColor: (theme) => theme.palette.divider,
             backgroundColor: (theme) => theme.palette.background.paper,
           }}
         >

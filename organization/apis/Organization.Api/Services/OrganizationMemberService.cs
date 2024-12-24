@@ -170,6 +170,9 @@ public class OrganizationMemberService(
             throw new OrganizationMemberNotFound();
         }
 
+        // Exclude calling customer from the list
+        organizationMembers = organizationMembers.Where(item => item.Customer.Id != customer.Id).ToList();
+        
         if (organizationMembers.Count == 0)
         {
             return [];

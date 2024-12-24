@@ -75,7 +75,7 @@ public class ChangeOrganizationMemberOwnershipTypeInput
 public class ChangeOrganizationMemberStatusInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string[] Ids { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; }
     [GraphQLName("status")] public OrganizationMemberStatus Status { get; set; }
 }
 

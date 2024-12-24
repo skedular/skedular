@@ -14,7 +14,6 @@ export const defaultGridStyle: SxProps<Theme> = {
     border: 'none',
   },
   [`& .${gridClasses.row}`]: {
-    paddingLeft: 1,
     paddingTop: 1,
     paddingBottom: 1,
     borderRadius: 2,

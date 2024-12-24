@@ -98,7 +98,7 @@ const Dashboard = ({ queryReference, onReloadRequired, organizationId, defaultSt
 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-      <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding, paddingTop: defaultPadding }}>
+      <StackRow sx={{ padding: defaultPadding }}>
         <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
         <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
         <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />

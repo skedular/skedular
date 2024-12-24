@@ -1,23 +1,34 @@
 import { TeamSelector } from '@/components/team/teamSelector';
+import type { organizationMembers_changeOrganizationMemberStatusMutation } from '@/queries/__generated__/organizationMembers_changeOrganizationMemberStatusMutation.graphql';
 import type { organizationMembers_organizationMembers_query$key } from '@/queries/__generated__/organizationMembers_organizationMembers_query.graphql';
 import type { organizationMembers_organizationMembers_refetchableFragment } from '@/queries/__generated__/organizationMembers_organizationMembers_refetchableFragment.graphql';
 import type { organizationMembers_rootQuery } from '@/queries/__generated__/organizationMembers_rootQuery.graphql';
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import type { GridColDef } from '@mui/x-data-grid';
+import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BodyIconTypography, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { DeleteIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
-import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
-import { getCustomerFullName } from '@repo/shared/libs/utils';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { defaultGridStyle, defaultPadding, emerald, flame, maxScreenWidth } from '@repo/shared/libs/theme';
+import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
-import { memo, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import { toast } from 'react-toastify';
 import OrganizationMembersLeftSideNavigationMenu from './organization-members-left-side-navigation-menu';
 
 type Props = {
@@ -108,9 +119,33 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
     rootData,
   );
 
+  const [commitChangeOrganizationMemberStatus] = useMutation<organizationMembers_changeOrganizationMemberStatusMutation>(graphql`
+    mutation organizationMembers_changeOrganizationMemberStatusMutation($input: ChangeOrganizationMemberStatusInput!) {
+      changeOrganizationMemberStatus(input: $input) {
+        members {
+          id
+          customer {
+            uniqueId
+            email
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
+            phoneNumber
+          }
+          status
+        }
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
+  const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>([]);
   const members = useMemo(() => {
     if (!rootDataOrganizationMembers.organizationMembers) {
       return [];
@@ -172,6 +207,82 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
     handleRefetchOrganizationMembers(str);
   };
 
+  const handleSelectedMembersChanged = (newRowSelectionModel: GridRowSelectionModel) => {
+    setSeledctedMembers(newRowSelectionModel);
+  };
+
+  const handleDeactivateMembersClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Deactivating members...'} />, infoNotificationOptions);
+
+    commitChangeOrganizationMemberStatus({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedMembers.map((id) => id as string),
+          status: 'Inactive',
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate members. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Members deactivated.'} />,
+        });
+        setSeledctedMembers([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate members. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateMembersClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Activating members...'} />, infoNotificationOptions);
+
+    commitChangeOrganizationMemberStatus({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedMembers.map((id) => id as string),
+          status: 'Active',
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate members. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Members activateed.'} />,
+        });
+        setSeledctedMembers([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate members. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   const rows: RowType[] = members.map((member) => ({
     id: member.id,
     avatar: member.customer,
@@ -228,40 +339,22 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
       field: 'status',
       headerName: 'Status',
       editable: false,
-      renderCell: (params) => {
-        return (
-          <StackRow>
-            {params.value && (
-              <>
-                <SmallIconTypography label="Active" />
-                <Box
-                  sx={{
-                    width: 15,
-                    height: 15,
-                    borderRadius: '50%',
-                    backgroundColor: 'green',
-                  }}
-                />
-              </>
-            )}
-            {!params.value && (
-              <>
-                <SmallIconTypography label="Deactive" />
-                <Box
-                  sx={{
-                    width: 15,
-                    height: 15,
-                    borderRadius: '50%',
-                    backgroundColor: 'orange',
-                  }}
-                />
-              </>
-            )}
-          </StackRow>
-        );
-
-        return params.value;
-      },
+      renderCell: (params) => (
+        <StackRow>
+          {params.value && (
+            <StackRow sx={{ flexWrap: undefined }}>
+              <SmallIconTypography label="Active" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
+            </StackRow>
+          )}
+          {!params.value && (
+            <StackRow sx={{ flexWrap: undefined }}>
+              <SmallIconTypography label="Deactive" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
+            </StackRow>
+          )}
+        </StackRow>
+      ),
       display: 'flex',
     },
   ];
@@ -277,13 +370,56 @@ const OrganizationMembers = ({ queryReference, onReloadRequired, organizationId 
             <Divider />
           </StackColumn>
 
-          <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding, paddingTop: defaultPadding }}>
+          <StackRow sx={{ padding: defaultPadding }}>
             <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
             <PushToRight />
             <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
           </StackRow>
+
+          <StackRow sx={{ padding: defaultPadding }}>
+            <Box
+              sx={{
+                backgroundColor: (theme) => theme.palette.background.paper,
+                padding: defaultPadding,
+                border: 1,
+                borderColor: (theme) => theme.palette.divider,
+                borderRadius: 2,
+                flexGrow: 1,
+              }}
+            >
+              <StackRow sx={{ alignItems: 'center' }}>
+                <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
+                <PushToRight />
+                <Button
+                  size="medium"
+                  variant="contained"
+                  color="secondary"
+                  disabled={seledctedMembers.length === 0}
+                  onClick={handleDeactivateMembersClick}
+                >
+                  Deactuvate Member
+                </Button>
+                <Button
+                  size="medium"
+                  variant="contained"
+                  color="secondary"
+                  disabled={seledctedMembers.length === 0}
+                  onClick={handleActivateMembersClick}
+                >
+                  Activate Member
+                </Button>
+                <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} disabled={seledctedMembers.length === 0}>
+                  Remove Member
+                </Button>
+              </StackRow>
+            </Box>
+          </StackRow>
+
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
             <DataGrid
+              checkboxSelection
+              rowSelectionModel={seledctedMembers}
+              onRowSelectionModelChange={handleSelectedMembersChanged}
               rows={rows}
               columns={columns}
               hideFooterPagination={rows.length <= 10}

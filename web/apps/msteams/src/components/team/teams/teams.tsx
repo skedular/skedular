@@ -42,7 +42,7 @@ const Teams = ({ queryReference, onReloadRequired, organizationId }: Props) => {
 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-      <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding, paddingTop: defaultPadding }}>
+      <StackRow sx={{ padding: defaultPadding }}>
         <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <PushToRight />

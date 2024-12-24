@@ -204,7 +204,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
             paddingLeft: 1,
             paddingRight: 1,
             borderBottom: paletteMode === 'dark' ? 1 : undefined,
-            borderColor: 'divider',
+            borderColor: (theme) => theme.palette.divider,
             backgroundColor: (theme) => theme.palette.background.paper,
           }}
         >

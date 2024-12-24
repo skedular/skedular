@@ -62,7 +62,7 @@ const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) 
 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-      <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingBottom: defaultPadding, paddingTop: defaultPadding }}>
+      <StackRow sx={{ padding: defaultPadding }}>
         <DeskTypeSelector rootDataRelay={rootData} onChange={handleDeskTypeChanged} />
         <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
