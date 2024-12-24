@@ -2,6 +2,7 @@ using Billing.Shared.Database;
 using Billing.Shared.Database.Entities;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Billing.Shared.Repositories;
 
@@ -11,6 +12,10 @@ public interface IOrganizationOfferingRepository : IRepository<OrganizationOffer
     OrganizationOffering Update(OrganizationOffering organizationOffering);
     void UpdateRange(ICollection<OrganizationOffering> organizationOfferings);
     void RemoveRange(ICollection<OrganizationOffering> organizationOfferings);
+    
+    Task<ICollection<OrganizationOffering>> GetByOrganizationIdAsync(
+        string organizationId,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationOfferingRepository(BillingDbContext dbContext, TimeProvider timeProvider)
@@ -43,4 +48,12 @@ public class OrganizationOfferingRepository(BillingDbContext dbContext, TimeProv
         organizationOfferings.ForEach(organizationOffering => organizationOffering.DeletedAt = now);
         DbContext.OrganizationOffering.UpdateRange(organizationOfferings);
     }
+    
+    public async Task<ICollection<OrganizationOffering>> GetByOrganizationIdAsync(
+        string organizationId,
+        CancellationToken cancellationToken) =>
+        await DbContext.OrganizationOffering
+            .Where(query => query.Organization.Id == organizationId)
+            .Include(query => query.Organization)
+            .ToListAsync(cancellationToken);
 }

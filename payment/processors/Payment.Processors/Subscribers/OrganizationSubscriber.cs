@@ -114,7 +114,7 @@ public class OrganizationSubscriber(
 
         existingOrganization =
             await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
-        _ = RebuildOrganizationOffering(organization, existingOrganization);
+        _ = await RebuildOrganizationOffering(organization, existingOrganization, cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -176,14 +176,18 @@ public class OrganizationSubscriber(
         return existingOrganization;
     }
 
-    private Organization RebuildOrganizationOffering(
+    private async Task<Organization> RebuildOrganizationOffering(
         Shared.Models.Organization organization,
-        Organization existingOrganization)
+        Organization existingOrganization,
+        CancellationToken cancellationToken)
     {
-        var itemsToRemove = existingOrganization.OrganizationOfferings
+        var organizationOfferings = await repositoryFactory.OrganizationOfferingRepository.GetByOrganizationIdAsync(
+            existingOrganization.Id,
+            cancellationToken);
+        var itemsToRemove = organizationOfferings
             .Where(organizationOffering =>
                 organization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id)).ToList();
-        var updatedItems = existingOrganization.OrganizationOfferings
+        var updatedItems = organizationOfferings
             .Where(organizationOffering =>
                 organization.OrganizationOfferings.Any(item => item.Id == organizationOffering.Id)).Select(
                 organizationOffering =>
@@ -196,7 +200,7 @@ public class OrganizationSubscriber(
                 }).ToList();
         var addedItems = organization.OrganizationOfferings
             .Where(organizationOffering =>
-                existingOrganization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id)).Select(
+                organizationOfferings.All(item => item.Id != organizationOffering.Id)).Select(
                 organizationOffering =>
                     repositoryFactory.OrganizationOfferingRepository.Add(
                         mapper.MapToEntity(organizationOffering, existingOrganization))).ToList();
