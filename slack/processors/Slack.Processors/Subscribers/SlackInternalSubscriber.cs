@@ -120,17 +120,20 @@ public class SlackInternalSubscriber(
             nextCursor = response.ResponseMetadata.NextCursor;
         } while (!string.IsNullOrWhiteSpace(nextCursor));
 
-        var itemsToRemove = existingWorkspace.WorkspaceMembers
+        var workspaceMembers = await repositoryFactory.WorkspaceMemberRepository.GetByWorkspaceIdAsync(
+            workspaceId,
+            cancellationToken);
+        var itemsToRemove = workspaceMembers
             .Where(workspaceMember => users.All(item => item.Id != workspaceMember.Id))
             .ToList();
-        var updatedItems = existingWorkspace.WorkspaceMembers
+        var updatedItems = workspaceMembers
             .Where(workspaceMember => users.Any(item => item.Id == workspaceMember.Id))
             .Select(workspaceMember => repositoryFactory.WorkspaceMemberRepository.Update(
                 mapper.MergeToEntity(
                     users.First(item => item.Id == workspaceMember.Id),
                     workspaceMember,
                     existingWorkspace))).ToList();
-        var addedItems = users.Where(user => existingWorkspace.WorkspaceMembers.All(item => item.Id != user.Id))
+        var addedItems = users.Where(user => workspaceMembers.All(item => item.Id != user.Id))
             .Select(user =>
                 repositoryFactory.WorkspaceMemberRepository.Add(
                     mapper.MapToEntity(user, existingWorkspace)))
@@ -171,17 +174,20 @@ public class SlackInternalSubscriber(
             nextCursor = response.ResponseMetadata.NextCursor;
         } while (!string.IsNullOrWhiteSpace(nextCursor));
 
-        var itemsToRemove = existingWorkspace.Channels
+        var workspaceChannels = await repositoryFactory.WorkspaceChannelRepository.GetByWorkspaceIdAsync(
+            workspaceId,
+            cancellationToken);
+        var itemsToRemove = workspaceChannels
             .Where(channel => channels.All(item => item.Id != channel.Id))
             .ToList();
-        var updatedItems = existingWorkspace.Channels
+        var updatedItems = workspaceChannels
             .Where(channel => channels.Any(item => item.Id == channel.Id))
             .Select(channel => repositoryFactory.WorkspaceChannelRepository.Update(
                 mapper.MergeToEntity(
                     channels.First(item => item.Id == channel.Id), channel, existingWorkspace)))
             .ToList();
         var addedItems = channels
-            .Where(channel => existingWorkspace.Channels.All(item => item.Id != channel.Id))
+            .Where(channel => workspaceChannels.All(item => item.Id != channel.Id))
             .Select(channel =>
                 repositoryFactory.WorkspaceChannelRepository.Add(
                     mapper.MapToEntity(channel, existingWorkspace)))

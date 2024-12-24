@@ -13,6 +13,10 @@ public interface IWorkspaceChannelRepository : IRepository<WorkspaceChannel>
     WorkspaceChannel Update(WorkspaceChannel workspaceChannel);
     WorkspaceChannel Remove(WorkspaceChannel workspaceChannel);
     void RemoveRange(ICollection<WorkspaceChannel> workspaceChannels);
+
+    Task<ICollection<WorkspaceChannel>> GetByWorkspaceIdAsync(
+        string workspaceId,
+        CancellationToken cancellationToken);
 }
 
 public class WorkspaceChannelRepository(SlackDbContext dbContext, TimeProvider timeProvider)
@@ -50,4 +54,11 @@ public class WorkspaceChannelRepository(SlackDbContext dbContext, TimeProvider t
         workspaceChannels.ForEach(workspaceChannel => workspaceChannel.DeletedAt = now);
         DbContext.WorkspaceChannel.UpdateRange(workspaceChannels);
     }
+
+    public async Task<ICollection<WorkspaceChannel>> GetByWorkspaceIdAsync(
+        string workspaceId,
+        CancellationToken cancellationToken) =>
+        await DbContext.WorkspaceChannel
+            .Where(query => query.Workspace.Id == workspaceId)
+            .ToListAsync(cancellationToken);
 }

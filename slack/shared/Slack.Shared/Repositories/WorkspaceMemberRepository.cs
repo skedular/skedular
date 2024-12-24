@@ -15,6 +15,10 @@ public interface IWorkspaceMemberRepository : IRepository<WorkspaceMember>
     WorkspaceMember Update(WorkspaceMember workspaceMember);
     WorkspaceMember Remove(WorkspaceMember workspaceMember);
     void RemoveRange(ICollection<WorkspaceMember> workspaceMembers);
+
+    Task<ICollection<WorkspaceMember>> GetByWorkspaceIdAsync(
+        string workspaceId,
+        CancellationToken cancellationToken);
 }
 
 internal static class WorkspaceMemberExtensions
@@ -67,4 +71,11 @@ public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider ti
         workspaceMembers.ForEach(workspaceMember => workspaceMember.DeletedAt = now);
         DbContext.WorkspaceMember.UpdateRange(workspaceMembers);
     }
+
+    public async Task<ICollection<WorkspaceMember>> GetByWorkspaceIdAsync(
+        string workspaceId,
+        CancellationToken cancellationToken) =>
+        await DbContext.WorkspaceMember
+            .Where(query => query.Workspace.Id == workspaceId)
+            .ToListAsync(cancellationToken);
 }
