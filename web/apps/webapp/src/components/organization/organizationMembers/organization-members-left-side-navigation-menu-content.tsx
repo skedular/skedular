@@ -15,7 +15,7 @@ type Props = {
   maxWidth: number;
 };
 
-const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth }: Props) => {
+const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, maxWidth }: Props) => {
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
 
@@ -62,4 +62,4 @@ const OrganizationMembersLeftSideNavigationMenu = ({ organizationId, maxWidth }:
   );
 };
 
-export default memo(OrganizationMembersLeftSideNavigationMenu);
+export default memo(OrganizationMembersLeftSideNavigationMenuContent);

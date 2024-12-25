@@ -5,6 +5,7 @@ import { SelectedOrganizationContext, UpdateSelectedOrganizationContext } from '
 import type { modernAppBar_query$key } from '@/queries/__generated__/modernAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
@@ -13,11 +14,13 @@ import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Toolbar from '@mui/material/Toolbar';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
   CaptionIconTypography,
   LeadIconTypography,
+  PushToRight,
   SmallIconTypography,
   StackColumn,
   StackRow,
@@ -197,168 +200,160 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
 
   return (
     <>
-      <StackColumn sx={{ width: '100vw' }}>
-        <StackRow
+      <AppBar position="sticky">
+        <Toolbar
           sx={{
-            justifyContent: 'space-between',
-            width: '100%',
-            alignItems: 'center',
-            paddingLeft: 1,
-            paddingRight: 1,
+            backgroundColor: (theme) => theme.palette.background.paper,
             borderBottom: paletteMode === 'dark' ? 1 : undefined,
             borderColor: (theme) => theme.palette.divider,
-            backgroundColor: (theme) => theme.palette.background.paper,
           }}
         >
-          <StackRow sx={{ alignItems: 'center' }}>
-            {!hideOrganizationSelector && rootData.myOrganizations.length !== 0 && (
-              <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
-                <Select
-                  value={selectedOrganizationId}
-                  onChange={handleSelectedOrganizationChange}
-                  sx={{
-                    '& fieldset': {
-                      border: 0,
-                      borderRight: 0,
-                      borderRadius: 0,
-                    },
-                  }}
-                >
-                  {rootData.myOrganizations.map((organization) => (
-                    <MenuItem key={organization.id} value={organization.id}>
-                      <StackRow>
-                        <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
-                        <StackColumn spacing={-0.5}>
-                          <LeadIconTypography label={organization.name} />
-                          <CaptionIconTypography label="Organization" />
-                        </StackColumn>
-                      </StackRow>
-                    </MenuItem>
-                  ))}
-
-                  <Divider />
-
-                  <MenuItem value={createOrganizationId}>
-                    <LeadIconTypography label="Create Organization" startElement={<AddIcon />} />
+          {!hideOrganizationSelector && rootData.myOrganizations.length !== 0 && (
+            <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
+              <Select
+                value={selectedOrganizationId}
+                onChange={handleSelectedOrganizationChange}
+                sx={{
+                  '& fieldset': {
+                    border: 0,
+                    borderRight: 0,
+                    borderRadius: 0,
+                  },
+                }}
+              >
+                {rootData.myOrganizations.map((organization) => (
+                  <MenuItem key={organization.id} value={organization.id}>
+                    <StackRow>
+                      <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
+                      <StackColumn spacing={-0.5}>
+                        <LeadIconTypography label={organization.name} />
+                        <CaptionIconTypography label="Organization" />
+                      </StackColumn>
+                    </StackRow>
                   </MenuItem>
-                </Select>
-              </FormControl>
-            )}
+                ))}
 
-            {!hideWelcomeMessage && (
-              <>
-                <Divider orientation="vertical" flexItem />
-                <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
-              </>
-            )}
-            {showBreadcrumps && (
-              <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-                <Button variant="text" onClick={handleBackClick}>
-                  {'< Back'}
-                </Button>
-                {breadcrumbs}
+                <Divider />
+
+                <MenuItem value={createOrganizationId}>
+                  <LeadIconTypography label="Create Organization" startElement={<AddIcon />} />
+                </MenuItem>
+              </Select>
+            </FormControl>
+          )}
+
+          {!hideWelcomeMessage && (
+            <>
+              <Divider orientation="vertical" flexItem />
+              <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
+            </>
+          )}
+          {showBreadcrumps && (
+            <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
+              <Button variant="text" onClick={handleBackClick}>
+                {'< Back'}
+              </Button>
+              {breadcrumbs}
+            </StackColumn>
+          )}
+
+          <PushToRight />
+          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' }, paddingRight: 2 }} />
+          <Divider orientation="vertical" flexItem />
+
+          <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
+            <NotificationsIcon excludeTooltip />
+          </IconButton>
+
+          <IconButton onClick={handleProfileMenuOpenClick}>
+            <CustomerAvatar
+              name={{
+                name: null,
+                givenName: rootData.me?.givenName,
+                middleName: rootData.me?.middleName,
+                familyName: rootData.me?.familyName,
+              }}
+              photo={{
+                url: rootData.me?.photoUrl,
+              }}
+            />
+          </IconButton>
+
+          <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
+            <HamburgerMenuIcon />
+          </IconButton>
+
+          <Menu
+            sx={{ marginTop: 4 }}
+            anchorEl={profileOpenAnchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(profileOpenAnchorEl)}
+            onClose={handleProfileMenuCloseClick}
+            slotProps={{ paper: { sx: { borderRadius: 2, boxShadow: 3 } } }}
+          >
+            <MenuItem>
+              <StackColumn>
+                <LeadIconTypography label={customerName} />
+                <CaptionIconTypography label={rootData.me?.email} />
               </StackColumn>
+            </MenuItem>
+
+            <Divider />
+
+            <MenuItem>
+              <Link component={NextLink} href="/settings" color="inherit">
+                <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
+              </Link>
+            </MenuItem>
+
+            {paletteMode === 'dark' && (
+              <MenuItem onClick={handleLightThemeClicked}>
+                <SmallIconTypography startElement={<DarkModeIcon />} label="Dark Mode" />
+              </MenuItem>
             )}
-          </StackRow>
 
-          <StackRow>
-            <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' }, paddingRight: 2 }} />
-            <Divider orientation="vertical" flexItem />
-
-            <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
-              <NotificationsIcon excludeTooltip />
-            </IconButton>
-
-            <IconButton onClick={handleProfileMenuOpenClick}>
-              <CustomerAvatar
-                name={{
-                  name: null,
-                  givenName: rootData.me?.givenName,
-                  middleName: rootData.me?.middleName,
-                  familyName: rootData.me?.familyName,
-                }}
-                photo={{
-                  url: rootData.me?.photoUrl,
-                }}
-              />
-            </IconButton>
-
-            <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
-              <HamburgerMenuIcon />
-            </IconButton>
-
-            <Menu
-              sx={{ marginTop: 4 }}
-              anchorEl={profileOpenAnchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(profileOpenAnchorEl)}
-              onClose={handleProfileMenuCloseClick}
-              slotProps={{ paper: { sx: { borderRadius: 2, boxShadow: 3 } } }}
-            >
-              <MenuItem>
-                <StackColumn>
-                  <LeadIconTypography label={customerName} />
-                  <CaptionIconTypography label={rootData.me?.email} />
-                </StackColumn>
+            {paletteMode === 'light' && (
+              <MenuItem onClick={handleDarkThemeClicked}>
+                <SmallIconTypography startElement={<LightModeIcon />} label="Light Mode" />
               </MenuItem>
+            )}
 
-              <Divider />
-
-              <MenuItem>
-                <Link component={NextLink} href="/settings" color="inherit">
-                  <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
-                </Link>
+            {!switchToModernUI && (
+              <MenuItem onClick={handleModernUIClicked}>
+                <SmallIconTypography startElement={<ToggleOffIcon />} label="Switch to modern UI" />
               </MenuItem>
+            )}
 
-              {paletteMode === 'dark' && (
-                <MenuItem onClick={handleLightThemeClicked}>
-                  <SmallIconTypography startElement={<DarkModeIcon />} label="Dark Mode" />
-                </MenuItem>
-              )}
-
-              {paletteMode === 'light' && (
-                <MenuItem onClick={handleDarkThemeClicked}>
-                  <SmallIconTypography startElement={<LightModeIcon />} label="Light Mode" />
-                </MenuItem>
-              )}
-
-              {!switchToModernUI && (
-                <MenuItem onClick={handleModernUIClicked}>
-                  <SmallIconTypography startElement={<ToggleOffIcon />} label="Switch to modern UI" />
-                </MenuItem>
-              )}
-
-              {switchToModernUI && (
-                <MenuItem onClick={handleClassicUIClicked}>
-                  <SmallIconTypography startElement={<ToggleOnIcon />} label="Switch to classic UI" />
-                </MenuItem>
-              )}
-
-              <Divider />
-
-              <MenuItem onClick={handleSubmitFeedbackClicked}>
-                <SmallIconTypography startElement={<FeedbackIcon />} label="Send us feedback" />
+            {switchToModernUI && (
+              <MenuItem onClick={handleClassicUIClicked}>
+                <SmallIconTypography startElement={<ToggleOnIcon />} label="Switch to classic UI" />
               </MenuItem>
+            )}
 
-              <Divider />
+            <Divider />
 
-              <MenuItem onClick={handleSignOutClick}>
-                <SmallIconTypography startElement={<LogoutIcon />} label="Sign out" />
-              </MenuItem>
-            </Menu>
-          </StackRow>
+            <MenuItem onClick={handleSubmitFeedbackClicked}>
+              <SmallIconTypography startElement={<FeedbackIcon />} label="Send us feedback" />
+            </MenuItem>
+
+            <Divider />
+
+            <MenuItem onClick={handleSignOutClick}>
+              <SmallIconTypography startElement={<LogoutIcon />} label="Sign out" />
+            </MenuItem>
+          </Menu>
 
           <MobileLeftSideNavigationMenu rootDataRelay={rootData} open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
-        </StackRow>
-      </StackColumn>
+        </Toolbar>
+      </AppBar>
 
       <NewFeedbackDialog
         rootDataRelay={rootData}

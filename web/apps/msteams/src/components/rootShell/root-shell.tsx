@@ -117,7 +117,7 @@ const RootShell = ({
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
         <LeftSideNavigationMenu collapsed={collapsed} />
-        <Grid container>
+        <Grid container sx={{ flexGrow: 1 }}>
           <AppBar rootDataRelay={rootData} hideWelcomeMessage={hideWelcomeMessage} showBreadcrumps={showBreadcrumps} breadcrumbs={breadcrumbs} />
           <Grid
             sx={{

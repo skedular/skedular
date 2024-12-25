@@ -30,7 +30,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransit
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
-import OrganizationMembersLeftSideNavigationMenu from './organization-members-left-side-navigation-menu';
+import OrganizationMembersLeftSideNavigationMenuContent from './organization-members-left-side-navigation-menu-content';
 
 type Props = {
   queryReference: PreloadedQuery<organizationMembers_rootQuery, Record<string, unknown>>;
@@ -415,7 +415,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
 
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
-      <OrganizationMembersLeftSideNavigationMenu organizationId={organizationId} maxWidth={170} />
+      <OrganizationMembersLeftSideNavigationMenuContent organizationId={organizationId} maxWidth={170} />
       <Box>
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>

@@ -133,7 +133,7 @@ const RootShell = ({
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
         <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />
-        <Grid container>
+        <Grid container sx={{ flexGrow: 1 }}>
           <AppBar
             rootDataRelay={rootData}
             hideOrganizationSelector={hideOrganizationSelector}

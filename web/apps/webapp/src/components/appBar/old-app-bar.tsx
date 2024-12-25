@@ -2,19 +2,21 @@ import { NewFeedbackDialog } from '@/components/feedback';
 import type { oldAppBar_query$key } from '@/queries/__generated__/oldAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import AppBar from '@mui/material/AppBar';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Toolbar from '@mui/material/Toolbar';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
   CaptionIconTypography,
   LeadIconTypography,
+  PushToRight,
   SmallIconTypography,
   StackColumn,
-  StackRow,
 } from '@repo/shared/components/commons';
 import {
   FeedbackIcon,
@@ -122,119 +124,114 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      <StackColumn sx={{ width: '100vw' }}>
-        <StackRow
+      <AppBar position="sticky">
+        <Toolbar
           sx={{
-            justifyContent: 'space-between',
-            width: '100%',
-            alignItems: 'center',
-            paddingLeft: 1,
-            paddingRight: 1,
+            backgroundColor: (theme) => theme.palette.background.paper,
             borderBottom: paletteMode === 'dark' ? 1 : undefined,
             borderColor: (theme) => theme.palette.divider,
-            backgroundColor: (theme) => theme.palette.background.paper,
           }}
         >
           <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
 
-          <StackRow sx={{ alignItems: 'center' }}>
-            <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' }, paddingRight: 2 }} />
-            <Divider orientation="vertical" flexItem />
+          <PushToRight />
 
-            <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
-              <NotificationsIcon excludeTooltip />
-            </IconButton>
+          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' }, paddingRight: 2 }} />
+          <Divider orientation="vertical" flexItem />
 
-            <IconButton onClick={handleProfileMenuOpenClick}>
-              <CustomerAvatar
-                name={{
-                  name: null,
-                  givenName: rootData.me?.givenName,
-                  middleName: rootData.me?.middleName,
-                  familyName: rootData.me?.familyName,
-                }}
-                photo={{
-                  url: rootData.me?.photoUrl,
-                }}
-              />
-            </IconButton>
+          <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
+            <NotificationsIcon excludeTooltip />
+          </IconButton>
 
-            <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
-              <HamburgerMenuIcon />
-            </IconButton>
-
-            <Menu
-              sx={{ marginTop: 4 }}
-              anchorEl={profileOpenAnchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+          <IconButton onClick={handleProfileMenuOpenClick}>
+            <CustomerAvatar
+              name={{
+                name: null,
+                givenName: rootData.me?.givenName,
+                middleName: rootData.me?.middleName,
+                familyName: rootData.me?.familyName,
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+              photo={{
+                url: rootData.me?.photoUrl,
               }}
-              open={Boolean(profileOpenAnchorEl)}
-              onClose={handleProfileMenuCloseClick}
-              slotProps={{ paper: { sx: { borderRadius: 2, boxShadow: 3 } } }}
-            >
-              <MenuItem>
-                <StackColumn>
-                  <LeadIconTypography label={customerName} />
-                  <CaptionIconTypography label={rootData.me?.email} />
-                </StackColumn>
+            />
+          </IconButton>
+
+          <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
+            <HamburgerMenuIcon />
+          </IconButton>
+
+          <Menu
+            sx={{ marginTop: 4 }}
+            anchorEl={profileOpenAnchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(profileOpenAnchorEl)}
+            onClose={handleProfileMenuCloseClick}
+            slotProps={{ paper: { sx: { borderRadius: 2, boxShadow: 3 } } }}
+          >
+            <MenuItem>
+              <StackColumn>
+                <LeadIconTypography label={customerName} />
+                <CaptionIconTypography label={rootData.me?.email} />
+              </StackColumn>
+            </MenuItem>
+
+            <Divider />
+
+            <MenuItem>
+              <Link component={NextLink} href="/settings" color="inherit">
+                <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
+              </Link>
+            </MenuItem>
+
+            {paletteMode === 'dark' && (
+              <MenuItem onClick={handleLightThemeClicked}>
+                <SmallIconTypography startElement={<DarkModeIcon />} label="Dark Mode" />
               </MenuItem>
+            )}
 
-              <Divider />
-
-              <MenuItem>
-                <Link component={NextLink} href="/settings" color="inherit">
-                  <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
-                </Link>
+            {paletteMode === 'light' && (
+              <MenuItem onClick={handleDarkThemeClicked}>
+                <SmallIconTypography startElement={<LightModeIcon />} label="Light Mode" />
               </MenuItem>
+            )}
 
-              {paletteMode === 'dark' && (
-                <MenuItem onClick={handleLightThemeClicked}>
-                  <SmallIconTypography startElement={<DarkModeIcon />} label="Dark Mode" />
-                </MenuItem>
-              )}
-
-              {paletteMode === 'light' && (
-                <MenuItem onClick={handleDarkThemeClicked}>
-                  <SmallIconTypography startElement={<LightModeIcon />} label="Light Mode" />
-                </MenuItem>
-              )}
-
-              {!switchToModernUI && (
-                <MenuItem onClick={handleModernUIClicked}>
-                  <SmallIconTypography startElement={<ToggleOffIcon />} label="Switch to modern UI" />
-                </MenuItem>
-              )}
-
-              {switchToModernUI && (
-                <MenuItem onClick={handleClassicUIClicked}>
-                  <SmallIconTypography startElement={<ToggleOnIcon />} label="Switch to classic UI" />
-                </MenuItem>
-              )}
-
-              <Divider />
-
-              <MenuItem onClick={handleSubmitFeedbackClicked}>
-                <SmallIconTypography startElement={<FeedbackIcon />} label="Send us feedback" />
+            {!switchToModernUI && (
+              <MenuItem onClick={handleModernUIClicked}>
+                <SmallIconTypography startElement={<ToggleOffIcon />} label="Switch to modern UI" />
               </MenuItem>
+            )}
 
-              <Divider />
-
-              <MenuItem onClick={handleSignOutClick}>
-                <SmallIconTypography startElement={<LogoutIcon />} label="Sign out" />
+            {switchToModernUI && (
+              <MenuItem onClick={handleClassicUIClicked}>
+                <SmallIconTypography startElement={<ToggleOnIcon />} label="Switch to classic UI" />
               </MenuItem>
-            </Menu>
-          </StackRow>
+            )}
+
+            <Divider />
+
+            <MenuItem onClick={handleSubmitFeedbackClicked}>
+              <SmallIconTypography startElement={<FeedbackIcon />} label="Send us feedback" />
+            </MenuItem>
+
+            <Divider />
+
+            <MenuItem onClick={handleSignOutClick}>
+              <SmallIconTypography startElement={<LogoutIcon />} label="Sign out" />
+            </MenuItem>
+          </Menu>
 
           <MobileLeftSideNavigationMenu rootDataRelay={rootData} open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
-        </StackRow>
-      </StackColumn>
+        </Toolbar>
+      </AppBar>
 
       <NewFeedbackDialog
         rootDataRelay={rootData}
