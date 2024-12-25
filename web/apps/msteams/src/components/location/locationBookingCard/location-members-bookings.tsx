@@ -411,7 +411,7 @@ const LocationMembersBookings = ({
       />
 
       <Dialog TransitionComponent={DialogTransition} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
-        <DialogTitle>Remove location</DialogTitle>
+        <DialogTitle>Remove Location</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {rootData.location.hasFutureBooking

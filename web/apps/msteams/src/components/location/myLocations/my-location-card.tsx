@@ -2,17 +2,49 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
+import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
-import { DeskIcon, LocationIcon } from '@repo/shared/components/icons';
+import {
+  LeadIconTypography,
+  PushToRight,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
+import { DeskIcon, EllipseMenuIcon, LocationIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import { Zones } from '@repo/shared/components/zone';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { coal, sandstone } from '@repo/shared/libs/theme';
+import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewBookingButton } from 'components/booking/addBooking';
 import { Dayjs } from 'dayjs';
-import { memo } from 'react';
-import { useFragment } from 'react-relay';
+import { nanoid } from 'nanoid';
+import { memo, useContext, useState } from 'react';
+import { useFragment, useMutation } from 'react-relay';
+import { toast } from 'react-toastify';
+import type { myLocationCard_deleteLocationMutation } from './__generated__/myLocationCard_deleteLocationMutation.graphql';
 import type { myLocationCard_LocationDetails$key } from './__generated__/myLocationCard_LocationDetails.graphql';
 
 type Props = {
@@ -37,6 +69,7 @@ type CustomerDetails = {
 
 const MyLocationCard = ({
   locationDetailsRelay,
+  connectionIds,
   onReloadRequired,
   organizationId,
   sharedWithTeammates,
@@ -63,72 +96,194 @@ const MyLocationCard = ({
         physicalAddress {
           formattedAddress
         }
+        hasFutureBooking
+        canModify
+        canDelete
       }
     `,
     locationDetailsRelay,
   );
 
+  const [commitDeleteLocation] = useMutation<myLocationCard_deleteLocationMutation>(graphql`
+    mutation myLocationCard_deleteLocationMutation($connectionIds: [ID!]!, $input: DeleteLocationInput!) {
+      deleteLocation(input: $input) {
+        location {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
+  const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
+
+  let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam]];
+
+  if (locationDetails.canDelete) {
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam]);
+  }
+
+  const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setMoreActionsAnchorEl(event.currentTarget);
+  };
+
+  const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditTeam:
+        break;
+
+      case MoreActionsMenuOptionType.DeleteTeam:
+        handleRemoveTeamClicked();
+        break;
+    }
+  };
+
+  const handleRemoveTeamClicked = () => {
+    setTeamRemoveConfirmationDialogOpen(true);
+  };
+
+  const handleCancelRemovingTeamClick = () => {
+    setTeamRemoveConfirmationDialogOpen(false);
+  };
+
+  const handleConfirmRemovingTeamClick = () => {
+    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}'...`} />, infoNotificationOptions);
+
+    commitDeleteLocation({
+      variables: {
+        connectionIds: connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          id: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' has been successfully removed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   const desksCount = locationDetails.desks.length;
   const zones = locationDetails.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }));
 
   return (
-    <Card sx={{ width: 600 }}>
-      <CardHeader
-        title={
+    <>
+      <Card sx={{ width: 600 }}>
+        <CardHeader
+          title={
+            <StackRow>
+              <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
+              <PushToRight />
+              <NewBookingButton
+                hideLocationControl={false}
+                hideOrganizationControl={true}
+                onReloadRequired={onReloadRequired}
+                defaultDate={defaultDate}
+                organizationId={organizationId}
+                locationId={locationDetails.id}
+                label="Book Now"
+                hideIcon
+                variant="contained"
+                size="small"
+              />
+            </StackRow>
+          }
+          action={
+            <>
+              {moreActionsOption.length > 0 && (
+                <Box color={paletteMode === 'dark' ? coal : sandstone}>
+                  <IconButton onClick={handleMoreActionsMenuClick} color="inherit">
+                    <EllipseMenuIcon />
+                  </IconButton>
+                </Box>
+              )}
+            </>
+          }
+        />
+        <CardContent>
+          <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%' }}>
+            <SmallIconTypography label={`${desksCount} Desks`} sx={{ flexGrow: 0, flexShrink: 0 }} startElement={<DeskIcon />} />
+            <StackColumn sx={{ paddingLeft: 40, alignItems: 'flex-end', width: '100%' }}>
+              <SmallIconTypography label={`${availableDesksCount} Available Today`} />
+              <LinearProgress value={availablePercentage} variant="determinate" sx={{ width: '100%' }} />
+            </StackColumn>
+          </StackRow>
+
+          <Divider />
+
+          <Zones zones={zones} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+
+          <Divider />
+
           <StackRow>
-            <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
-            <PushToRight />
-            <NewBookingButton
-              hideLocationControl={false}
-              hideOrganizationControl={true}
-              onReloadRequired={onReloadRequired}
-              defaultDate={defaultDate}
-              organizationId={organizationId}
-              locationId={locationDetails.id}
-              label="Book Now"
-              hideIcon
-              variant="contained"
-              size="small"
+            <StackColumn>
+              <SmallIconTypography label="Shared with teammates" />
+              <StackRow>
+                <AvatarGroup max={5}>
+                  {sharedWithTeammates.map((item) => (
+                    <CustomerAvatar key={item?.uniqueId} name={item} photo={{ url: item?.photoUrl }} size="medium" showFullName />
+                  ))}
+                </AvatarGroup>
+              </StackRow>
+            </StackColumn>
+
+            <Divider orientation="vertical" flexItem />
+
+            <SmallIconTypography
+              label={locationDetails.physicalAddress?.formattedAddress ? locationDetails.physicalAddress?.formattedAddress : 'N/A'}
+              sx={{ whiteSpace: 'pre-line' }}
             />
           </StackRow>
-        }
+        </CardContent>
+      </Card>
+
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
       />
-      <CardContent>
-        <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%' }}>
-          <SmallIconTypography label={`${desksCount} Desks`} sx={{ flexGrow: 0, flexShrink: 0 }} startElement={<DeskIcon />} />
-          <StackColumn sx={{ paddingLeft: 40, alignItems: 'flex-end', width: '100%' }}>
-            <SmallIconTypography label={`${availableDesksCount} Available Today`} />
-            <LinearProgress value={availablePercentage} variant="determinate" sx={{ width: '100%' }} />
-          </StackColumn>
-        </StackRow>
 
-        <Divider />
-
-        <Zones zones={zones} sx={{ paddingTop: 1, paddingBottom: 1 }} />
-
-        <Divider />
-
-        <StackRow>
-          <StackColumn>
-            <SmallIconTypography label="Shared with teammates" />
-            <StackRow>
-              <AvatarGroup max={5}>
-                {sharedWithTeammates.map((item) => (
-                  <CustomerAvatar key={item?.uniqueId} name={item} photo={{ url: item?.photoUrl }} size="medium" showFullName />
-                ))}
-              </AvatarGroup>
-            </StackRow>
-          </StackColumn>
-
-          <Divider orientation="vertical" flexItem />
-
-          <SmallIconTypography
-            label={locationDetails.physicalAddress?.formattedAddress ? locationDetails.physicalAddress?.formattedAddress : 'N/A'}
-            sx={{ whiteSpace: 'pre-line' }}
+      <Dialog TransitionComponent={DialogTransition} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
+        <DialogTitle>Remove Location</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {locationDetails.hasFutureBooking
+              ? `Bookings are scheduled for the location "${locationDetails.name}". Are you sure you want to remove it?`
+              : `Are you sure you want to remove the location "${locationDetails.name}"?`}
+          </DialogContentText>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmRemovingTeamClick}
+            onSecondaryClicked={handleCancelRemovingTeamClick}
+            primaryLabel="Remove"
+            secondaryLabel="Cancel"
           />
-        </StackRow>
-      </CardContent>
-    </Card>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

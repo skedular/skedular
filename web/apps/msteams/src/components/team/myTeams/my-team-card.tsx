@@ -198,7 +198,7 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
       />
 
       <Dialog TransitionComponent={DialogTransition} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
-        <DialogTitle>Remove team</DialogTitle>
+        <DialogTitle>Remove Team</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {teamDetails.hasFutureBooking

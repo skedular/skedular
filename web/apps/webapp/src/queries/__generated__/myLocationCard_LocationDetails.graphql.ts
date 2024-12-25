@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<46d5287ccf945ff29ac4a9e5901ca669>>
+ * @generated SignedSource<<3adf13b5b1e8be9ae9aedc248697d0e8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,8 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type myLocationCard_LocationDetails$data = {
+  readonly canDelete: boolean;
+  readonly canModify: boolean;
   readonly deskTypes: ReadonlyArray<{
     readonly name: string | null | undefined;
     readonly uniqueId: string;
@@ -18,6 +20,7 @@ export type myLocationCard_LocationDetails$data = {
   readonly desks: ReadonlyArray<{
     readonly id: string;
   }>;
+  readonly hasFutureBooking: boolean;
   readonly id: string;
   readonly name: string;
   readonly physicalAddress: {
@@ -116,6 +119,27 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "hasFutureBooking",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "canModify",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "canDelete",
+      "storageKey": null
     }
   ],
   "type": "LocationDetails",
@@ -123,6 +147,6 @@ return {
 };
 })();
 
-(node as any).hash = "d05d016920b93bd0cf4949ec5bcbdaba";
+(node as any).hash = "3104d6f1b7fb9fe0f0f279802314ebba";
 
 export default node;

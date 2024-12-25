@@ -392,7 +392,7 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       />
 
       <Dialog TransitionComponent={DialogTransition} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
-        <DialogTitle>Remove team</DialogTitle>
+        <DialogTitle>Remove Team</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {rootData.team.hasFutureBooking
