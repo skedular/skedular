@@ -3,22 +3,25 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
+import { MembersIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { sandstone } from '@repo/shared/libs/theme';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
 import { getModernOrganizationMembersBaseLink } from '../organization-link';
+import { collapsedDrawerWidth, expandedDrawerWidth } from './commons';
 
 type Props = {
   organizationId: string;
-  maxWidth: number;
+  collapsed?: boolean;
+  hideIcons?: boolean;
 };
 
-const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, maxWidth }: Props) => {
+const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
-
+  const maxWidth = collapsed ? collapsedDrawerWidth : expandedDrawerWidth;
   const styles = {
     width: maxWidth,
     marginLeft: 2,
@@ -32,6 +35,7 @@ const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, maxW
       transition: 'none',
     },
     '&.Mui-selected': {
+      width: maxWidth,
       backgroundColor: sandstone,
       '&:hover': {
         backgroundColor: sandstone,
@@ -54,7 +58,26 @@ const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, maxW
       <ListItem disablePadding>
         <Link component={NextLink} href={memberesLink}>
           <ListItemButton selected={pathName === memberesLink} sx={{ ...styles, borderRadius: pathName === memberesLink ? 4 : 0, paddingRight: 5 }}>
-            <BodyIconTypography label="Members" invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'} />
+
+          <ListItemButton
+              selected={pathName === memberesLink}
+              sx={{ ...styles, borderRadius: pathName === memberesLink ? 4 : 0, paddingRight: 5 }}
+            >
+              {collapsed && (
+                <BodyIconTypography
+                  startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
+                  invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'}
+                />
+              )}
+              {!collapsed && (
+                <BodyIconTypography
+                  label="Members"
+                  startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
+                  spacing={3}
+                  invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'}
+                />
+              )}
+            </ListItemButton>
           </ListItemButton>
         </Link>
       </ListItem>
