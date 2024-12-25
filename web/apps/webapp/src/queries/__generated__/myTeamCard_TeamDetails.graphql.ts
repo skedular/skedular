@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5f064fb0e96c3b63af26afea5ea27f4>>
+ * @generated SignedSource<<331dfd97778b85ea18d234f37f31be0f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,9 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type myTeamCard_TeamDetails$data = {
+  readonly canDelete: boolean;
+  readonly canModify: boolean;
+  readonly hasFutureBooking: boolean;
   readonly id: string;
   readonly members: ReadonlyArray<{
     readonly organizationMember: {
@@ -125,6 +128,27 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "hasFutureBooking",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "canModify",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "canDelete",
+      "storageKey": null
     }
   ],
   "type": "TeamDetails",
@@ -132,6 +156,6 @@ return {
 };
 })();
 
-(node as any).hash = "2392c7f842b6d885a0b4b6358aef4e58";
+(node as any).hash = "a8c5dea2b93b49165b9ed9baa69ea493";
 
 export default node;
