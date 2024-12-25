@@ -192,13 +192,14 @@ public class TeamMemberService(
                         cancellationToken);
             }
 
-            updatedItems.Add(repositoryFactory.TeamMemberRepository.Update(
-                mapper.MergeToEntity(
-                    members.Single(item => item.Id == teamMember.Id),
-                    teamMember,
-                    team,
-                    customerToAdd,
-                    organizationMember)));
+            var updatedTeamMember = mapper.MergeToEntity(
+                members.Single(item => item.Id == teamMember.Id),
+                teamMember,
+                team,
+                customerToAdd,
+                organizationMember);
+            updatedTeamMember.DeletedAt = null;
+            updatedItems.Add(repositoryFactory.TeamMemberRepository.Update(updatedTeamMember));
         }
 
         var addedItems = new List<Shared.Database.Entities.TeamMember>();

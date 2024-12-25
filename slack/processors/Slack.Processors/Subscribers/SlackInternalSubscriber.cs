@@ -128,11 +128,15 @@ public class SlackInternalSubscriber(
             .ToList();
         var updatedItems = workspaceMembers
             .Where(workspaceMember => users.Any(item => item.Id == workspaceMember.Id))
-            .Select(workspaceMember => repositoryFactory.WorkspaceMemberRepository.Update(
-                mapper.MergeToEntity(
+            .Select(workspaceMember =>
+            {
+                var updatedWorkspaceMember = mapper.MergeToEntity(
                     users.First(item => item.Id == workspaceMember.Id),
                     workspaceMember,
-                    existingWorkspace))).ToList();
+                    existingWorkspace);
+                updatedWorkspaceMember.DeletedAt = null;
+                return repositoryFactory.WorkspaceMemberRepository.Update(updatedWorkspaceMember);
+            }).ToList();
         var addedItems = users.Where(user => workspaceMembers.All(item => item.Id != user.Id))
             .Select(user =>
                 repositoryFactory.WorkspaceMemberRepository.Add(
@@ -182,9 +186,13 @@ public class SlackInternalSubscriber(
             .ToList();
         var updatedItems = workspaceChannels
             .Where(channel => channels.Any(item => item.Id == channel.Id))
-            .Select(channel => repositoryFactory.WorkspaceChannelRepository.Update(
-                mapper.MergeToEntity(
-                    channels.First(item => item.Id == channel.Id), channel, existingWorkspace)))
+            .Select(channel =>
+            {
+                var updatedWorkspaceChannel = mapper.MergeToEntity(
+                    channels.First(item => item.Id == channel.Id), channel, existingWorkspace);
+                updatedWorkspaceChannel.DeletedAt = null;
+                return repositoryFactory.WorkspaceChannelRepository.Update(updatedWorkspaceChannel);
+            })
             .ToList();
         var addedItems = channels
             .Where(channel => workspaceChannels.All(item => item.Id != channel.Id))

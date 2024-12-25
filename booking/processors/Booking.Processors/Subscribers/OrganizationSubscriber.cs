@@ -115,16 +115,16 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in organizationMembers.Where(organizationMember =>
                      organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
-            var customer =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                    organizationMember.Customer.Id,
-                    cancellationToken);
-            updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(
-                mapper.MergeToEntity(
-                    organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
-                    organizationMember,
-                    existingOrganization,
-                    customer)));
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
+                organizationMember.Customer.Id,
+                cancellationToken);
+            var updatedOrganizationMember = mapper.MergeToEntity(
+                organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
+                organizationMember,
+                existingOrganization,
+                customer);
+            updatedOrganizationMember.DeletedAt = null;
+            updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(updatedOrganizationMember));
         }
 
         var addedItems = new List<OrganizationMember>();
@@ -132,9 +132,9 @@ public class OrganizationSubscriber(
                      .Where(organizationMember =>
                          organizationMembers.All(item => item.Id != organizationMember.Id)))
         {
-            var customer =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id,
-                    cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
+                organizationMember.Customer.Id,
+                cancellationToken);
             addedItems.Add(
                 repositoryFactory.OrganizationMemberRepository.Add(
                     mapper.MapToEntity(organizationMember, existingOrganization, customer)));

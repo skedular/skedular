@@ -120,12 +120,13 @@ public class OrganizationSubscriber(
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
                 organizationMember.Customer.Id,
                 cancellationToken);
-            updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(
-                mapper.MergeToEntity(
-                    organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
-                    organizationMember,
-                    existingOrganization,
-                    customer)));
+            var updatedOrganizationMember = mapper.MergeToEntity(
+                organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
+                organizationMember,
+                existingOrganization,
+                customer);
+            updatedOrganizationMember.DeletedAt = null;
+            updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(updatedOrganizationMember));
         }
 
         var addedItems = new List<OrganizationMember>();

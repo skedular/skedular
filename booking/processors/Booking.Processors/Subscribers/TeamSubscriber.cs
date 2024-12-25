@@ -122,11 +122,13 @@ public class TeamSubscriber(
                 await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id,
                     cancellationToken);
 
-            updatedItems.Add(repositoryFactory.TeamMemberRepository.Update(mapper.MergeToEntity(
+            var updatedTeamMember = mapper.MergeToEntity(
                 team.TeamMembers.First(item => item.Id == teamMember.Id),
                 teamMember,
                 existingTeam,
-                customer)));
+                customer);
+            updatedTeamMember.DeletedAt = null;
+            updatedItems.Add(repositoryFactory.TeamMemberRepository.Update(updatedTeamMember));
         }
 
         var addedItems = new List<TeamMember>();

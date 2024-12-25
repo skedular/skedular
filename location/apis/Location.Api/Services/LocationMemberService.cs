@@ -170,16 +170,16 @@ public class LocationMemberService(
                      .Where(teamMember =>
                          members.Any(item => item.Id == teamMember.Id)))
         {
-            var customerToAdd =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id,
+            var customerToAdd = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
+                teamMember.Customer.Id,
                     cancellationToken);
-
-            updatedItems.Add(repositoryFactory.LocationMemberRepository.Update(
-                mapper.MergeToEntity(
-                    members.Single(item => item.Id == teamMember.Id),
-                    teamMember,
-                    location,
-                    customerToAdd)));
+            var updatedLocationMember = mapper.MergeToEntity(
+                members.Single(item => item.Id == teamMember.Id),
+                teamMember,
+                location,
+                customerToAdd);
+            updatedLocationMember.DeletedAt = null;
+            updatedItems.Add(repositoryFactory.LocationMemberRepository.Update(updatedLocationMember));
         }
 
         var addedItems = new List<Shared.Database.Entities.LocationMember>();

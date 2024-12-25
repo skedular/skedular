@@ -375,7 +375,11 @@ public class TeamService(
             .ToList();
         var updatedItems = existingTeam.TeamMembers
             .Where(teamMember => teamMembers.Any(item => item.Customer.Id == teamMember.Customer.Id))
-            .Select(teamMember => repositoryFactory.TeamMemberRepository.Update(teamMember)).ToList();
+            .Select(teamMember =>
+            {
+                teamMember.DeletedAt = null;
+                return repositoryFactory.TeamMemberRepository.Update(teamMember);
+            }).ToList();
         var addedItems = teamMembers
             .Where(teamMember => existingTeam.TeamMembers.All(item => item.Customer.Id != teamMember.Customer.Id))
             .Select(teamMember => repositoryFactory.TeamMemberRepository.Add(teamMember)).ToList();

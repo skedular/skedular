@@ -144,12 +144,13 @@ public class LocationSubscriber(
                             .Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
-                return repositoryFactory.DeskRepository.Update(
-                    mapper.MergeToEntity(
-                        location.Desks.First(item => item.Id == desk.Id),
-                        desk,
-                        existingLocation,
-                        filteredOrganizationTags));
+                var updatedDesk = mapper.MergeToEntity(
+                    location.Desks.First(item => item.Id == desk.Id),
+                    desk,
+                    existingLocation,
+                    filteredOrganizationTags);
+                updatedDesk.DeletedAt = null;
+                return repositoryFactory.DeskRepository.Update(updatedDesk);
             })
             .ToList();
         var addedItems = location.Desks
@@ -191,11 +192,13 @@ public class LocationSubscriber(
                     cancellationToken);
             await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-            updatedItems.Add(repositoryFactory.LocationMemberRepository.Update(mapper.MergeToEntity(
+            var updatedLocationMember = mapper.MergeToEntity(
                 location.LocationMembers.First(item => item.Id == locationMember.Id),
                 locationMember,
                 existingLocation,
-                customer)));
+                customer);
+            updatedLocationMember.DeletedAt = null;
+            updatedItems.Add(repositoryFactory.LocationMemberRepository.Update(updatedLocationMember));
         }
 
         var addedItems = new List<LocationMember>();

@@ -151,12 +151,14 @@ public class TeamSubscriber(
                         cancellationToken);
             }
 
-            updatedItems.Add(repositoryFactory.TeamMemberRepository.Update(mapper.MergeToEntity(
+            var updatedTeamMember = mapper.MergeToEntity(
                 team.TeamMembers.First(item => item.Id == teamMember.Id),
                 teamMember,
                 existingTeam,
                 customer,
-                organizationMember)));
+                organizationMember);
+            updatedTeamMember.DeletedAt = null;
+            updatedItems.Add(repositoryFactory.TeamMemberRepository.Update(updatedTeamMember));
         }
 
         var addedItems = new List<TeamMember>();
