@@ -41,7 +41,7 @@ import { PaletteModeContext, SwitchToModernUIContext, UpdatePaletteModeContext, 
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { memo, useContext, useEffect, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -82,6 +82,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
     rootDataRelay,
   );
 
+  const pathName = usePathname();
   const router = useRouter();
   const { organizationId } = useParams();
   const [currentTime, setCurrentTime] = useState(localNow());
@@ -119,12 +120,12 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
   useInterval(() => setCurrentTime(localNow()), 1000);
 
   useEffect(() => {
-    if (finalOrganizationId || !selectedOrganizationId) {
+    if (pathName === getOrganizationAddLink() || finalOrganizationId || !selectedOrganizationId) {
       return;
     }
 
     router.push(getOrganizationBaseLink(selectedOrganizationId));
-  }, [router, finalOrganizationId, selectedOrganizationId]);
+  }, [router, finalOrganizationId, selectedOrganizationId, pathName]);
 
   const handleSelectedOrganizationChange = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;
@@ -268,7 +269,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
 
           {!hideWelcomeMessage && (
             <>
-              <Divider orientation="vertical" flexItem />
+              {!hideOrganizationSelector && <Divider orientation="vertical" flexItem />}
               <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
             </>
           )}

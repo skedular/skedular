@@ -19,7 +19,7 @@ const AddOrganizationPage = () => {
   const handleReloadRequired = () => {};
 
   return (
-    <RootShell>
+    <RootShell hideOrganizationSelector>
       <AddOrganization showCancel={true} onAdded={handleAdded} onCancelled={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );
