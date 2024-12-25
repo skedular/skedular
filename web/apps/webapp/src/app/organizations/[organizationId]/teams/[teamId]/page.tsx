@@ -2,10 +2,12 @@
 
 import { RootShell } from '@/components/rootShell';
 import { Team } from '@/components/team/teamPage';
+import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { useParams } from 'next/navigation';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 
 const TeamPage = () => {
+  const switchToModernUI = useContext(SwitchToModernUIContext);
   const { organizationId, teamId } = useParams();
   let finalOrganizationId = '';
 
@@ -37,7 +39,8 @@ const TeamPage = () => {
 
   return (
     <RootShell>
-      <Team organizationId={finalOrganizationId} teamId={finalTeamId} />
+      {!switchToModernUI && <Team organizationId={finalOrganizationId} teamId={finalTeamId} />}
+      {switchToModernUI && <Team organizationId={finalOrganizationId} teamId={finalTeamId} />}
     </RootShell>
   );
 };

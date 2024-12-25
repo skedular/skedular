@@ -1,13 +1,11 @@
 'use client';
 
-import { OldOrganization, Organization } from '@/components/organization/organizationPage';
+import { Organization } from '@/components/organization/organizationPage';
 import { RootShell } from '@/components/rootShell';
-import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { useParams } from 'next/navigation';
-import { memo, useContext } from 'react';
+import { memo } from 'react';
 
 const OrganizationPage = () => {
-  const switchToModernUI = useContext(SwitchToModernUIContext);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -25,8 +23,7 @@ const OrganizationPage = () => {
 
   return (
     <RootShell>
-      {!switchToModernUI && <OldOrganization organizationId={finalOrganizationId} />}
-      {switchToModernUI && <Organization organizationId={finalOrganizationId} />}
+      <Organization organizationId={finalOrganizationId} />
     </RootShell>
   );
 };
