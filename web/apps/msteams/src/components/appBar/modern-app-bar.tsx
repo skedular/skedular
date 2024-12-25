@@ -6,6 +6,7 @@ import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
@@ -119,10 +120,10 @@ const ModernAppBar = ({ rootDataRelay, hideWelcomeMessage, showBreadcrumps, brea
 
           {showBreadcrumps && (
             <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-              <Button variant="text" onClick={handleBackClick}>
+              <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap' }}>
                 {'< Back'}
               </Button>
-              {breadcrumbs}
+              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>{breadcrumbs}</Box>
             </StackColumn>
           )}
 

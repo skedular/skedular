@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import type { SelectChangeEvent } from '@mui/material/Select';
 import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
-import { Box } from '@mui/system';
+import Box from '@mui/system/Box';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
@@ -275,10 +275,10 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
           )}
           {showBreadcrumps && (
             <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-              <Button variant="text" onClick={handleBackClick}>
+              <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap' }}>
                 {'< Back'}
               </Button>
-              {breadcrumbs}
+              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>{breadcrumbs}</Box>
             </StackColumn>
           )}
 
