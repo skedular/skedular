@@ -7,13 +7,17 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/system/Box';
 import { BodyIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import { BookingIcon, DeleteIcon, DeskIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
+import { BookingIcon, DeskIcon, EllipseMenuIcon, SettingsIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -29,7 +33,6 @@ import { BookingsWeekGrid } from 'components/booking';
 import { getLocationBookingsLink, getLocationSettingsLink, LocationLink } from 'components/location';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
-import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -51,36 +54,6 @@ enum DateRangeType {
   ThisWeek,
   NextWeek,
 }
-
-enum MoreActionsMenuOptionType {
-  SetAsPreferredLocation,
-  RemoveAsPreferredLocation,
-  RemoveLocation,
-}
-
-type MoreActionsMenuItemType = {
-  id: MoreActionsMenuOptionType;
-  label: string;
-  icon: JSX.Element;
-};
-
-const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
-  [MoreActionsMenuOptionType.SetAsPreferredLocation]: {
-    id: MoreActionsMenuOptionType.SetAsPreferredLocation,
-    label: 'Set as preferred location',
-    icon: <NotPreferredIcon color="primary" />,
-  },
-  [MoreActionsMenuOptionType.RemoveAsPreferredLocation]: {
-    id: MoreActionsMenuOptionType.RemoveAsPreferredLocation,
-    label: 'Remove as preferred location',
-    icon: <PreferredIcon color="primary" />,
-  },
-  [MoreActionsMenuOptionType.RemoveLocation]: {
-    id: MoreActionsMenuOptionType.RemoveLocation,
-    label: 'Remove location',
-    icon: <DeleteIcon color="warning" />,
-  },
-};
 
 const LocationMembersBookings = ({
   rootDataRelay,
@@ -428,13 +401,13 @@ const LocationMembersBookings = ({
           />
         </CardContent>
       </Card>
-      <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
-        {moreActionsOption.map((option) => (
-          <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <BodyIconTypography label={option.label} startElement={option.icon} />
-          </MenuItem>
-        ))}
-      </Menu>
+
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
+      />
 
       <Dialog TransitionComponent={DialogTransition} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
         <DialogTitle>Remove location</DialogTitle>

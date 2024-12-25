@@ -14,13 +14,17 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/system/Box';
-import { BodyIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
+import { StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BookingIcon, EllipseMenuIcon, SettingsIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -34,7 +38,6 @@ import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
-import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -52,36 +55,6 @@ enum DateRangeType {
   ThisWeek,
   NextWeek,
 }
-
-enum MoreActionsMenuOptionType {
-  SetAsPreferredTeam,
-  RemoveAsPreferredTeam,
-  RemoveTeam,
-}
-
-type MoreActionsMenuItemType = {
-  id: MoreActionsMenuOptionType;
-  label: string;
-  icon: JSX.Element;
-};
-
-const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
-  [MoreActionsMenuOptionType.SetAsPreferredTeam]: {
-    id: MoreActionsMenuOptionType.SetAsPreferredTeam,
-    label: 'Set as preferred team',
-    icon: <NotPreferredIcon color="primary" />,
-  },
-  [MoreActionsMenuOptionType.RemoveAsPreferredTeam]: {
-    id: MoreActionsMenuOptionType.RemoveAsPreferredTeam,
-    label: 'Remove as preferred team',
-    icon: <PreferredIcon color="primary" />,
-  },
-  [MoreActionsMenuOptionType.RemoveTeam]: {
-    id: MoreActionsMenuOptionType.RemoveTeam,
-    label: 'Remove team',
-    icon: <DeleteIcon color="warning" />,
-  },
-};
 
 const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, teamsConnectionIds, hideRemoveTeamOption }: Props) => {
   const rootData = useFragment(
@@ -409,13 +382,13 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
           />
         </CardContent>
       </Card>
-      <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
-        {moreActionsOption.map((option) => (
-          <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <BodyIconTypography label={option.label} startElement={option.icon} />
-          </MenuItem>
-        ))}
-      </Menu>
+
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
+      />
 
       <Dialog TransitionComponent={DialogTransition} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
         <DialogTitle>Remove team</DialogTitle>

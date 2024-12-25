@@ -1,7 +1,7 @@
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { SmallIconTypography } from '@repo/shared/components/commons';
-import { DeleteIcon, EditIcon } from '@repo/shared/components/icons';
+import { SmallIconTypography } from '../commons';
+import { DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon } from '../icons';
 
 type Props = {
   anchorEl: null | HTMLElement;
@@ -15,12 +15,25 @@ export enum MoreActionsMenuOptionType {
   DeleteBooking,
   EditTeam,
   DeleteTeam,
+  ActivateDesk,
+  DeactivateDesk,
+  EnableDeskApprovalRequirement,
+  RemoveDeskApprovalRequirement,
+  SetAsPreferredLocation,
+  RemoveAsPreferredLocation,
+  RemoveLocation,
+  MarkAsDefaultOrganization,
+  ClearAsPreferredOrganization,
+  RemoveOrganization,
+  SetAsPreferredTeam,
+  RemoveAsPreferredTeam,
+  RemoveTeam,
 }
 
 export type MoreActionsMenuItemType = {
   id: MoreActionsMenuOptionType;
   label: string;
-  icon: JSX.Element;
+  icon?: JSX.Element;
 };
 
 export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
@@ -42,6 +55,67 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.DeleteTeam]: {
     id: MoreActionsMenuOptionType.DeleteTeam,
     label: 'Remove Team',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.SetAsPreferredTeam]: {
+    id: MoreActionsMenuOptionType.SetAsPreferredTeam,
+    label: 'Set as preferred team',
+    icon: <NotPreferredIcon color="primary" />,
+  },
+  [MoreActionsMenuOptionType.RemoveAsPreferredTeam]: {
+    id: MoreActionsMenuOptionType.RemoveAsPreferredTeam,
+    label: 'Remove as preferred team',
+    icon: <PreferredIcon color="primary" />,
+  },
+  [MoreActionsMenuOptionType.RemoveTeam]: {
+    id: MoreActionsMenuOptionType.RemoveTeam,
+    label: 'Remove team',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.ActivateDesk]: {
+    id: MoreActionsMenuOptionType.ActivateDesk,
+    label: 'Activate desk',
+  },
+  [MoreActionsMenuOptionType.DeactivateDesk]: {
+    id: MoreActionsMenuOptionType.DeactivateDesk,
+    label: 'Dectivate desk',
+  },
+  [MoreActionsMenuOptionType.EnableDeskApprovalRequirement]: {
+    id: MoreActionsMenuOptionType.EnableDeskApprovalRequirement,
+    label: 'Enable desk approval requirement',
+  },
+  [MoreActionsMenuOptionType.RemoveDeskApprovalRequirement]: {
+    id: MoreActionsMenuOptionType.RemoveDeskApprovalRequirement,
+    label: 'Remove desk approval requirement',
+  },
+  [MoreActionsMenuOptionType.SetAsPreferredLocation]: {
+    id: MoreActionsMenuOptionType.SetAsPreferredLocation,
+    label: 'Set as preferred location',
+    icon: <NotPreferredIcon color="primary" />,
+  },
+  [MoreActionsMenuOptionType.RemoveAsPreferredLocation]: {
+    id: MoreActionsMenuOptionType.RemoveAsPreferredLocation,
+    label: 'Remove as preferred location',
+    icon: <PreferredIcon color="primary" />,
+  },
+  [MoreActionsMenuOptionType.RemoveLocation]: {
+    id: MoreActionsMenuOptionType.RemoveLocation,
+    label: 'Remove location',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.MarkAsDefaultOrganization]: {
+    id: MoreActionsMenuOptionType.MarkAsDefaultOrganization,
+    label: 'Mark as default organization',
+    icon: <NotPreferredIcon color="primary" />,
+  },
+  [MoreActionsMenuOptionType.ClearAsPreferredOrganization]: {
+    id: MoreActionsMenuOptionType.ClearAsPreferredOrganization,
+    label: 'Clear as default organization',
+    icon: <PreferredIcon color="primary" />,
+  },
+  [MoreActionsMenuOptionType.RemoveOrganization]: {
+    id: MoreActionsMenuOptionType.RemoveOrganization,
+    label: 'Remove organization',
     icon: <DeleteIcon color="warning" />,
   },
 };

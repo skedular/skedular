@@ -7,13 +7,17 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/system/Box';
-import { BodyIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
+import { StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BookingIcon, EllipseMenuIcon, SettingsIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -29,7 +33,6 @@ import { BookingsWeekGrid } from 'components/booking';
 import { getOrganizationBookingsBaseLink, getOrganizationSettingsBaseLink, OrganizationLink } from 'components/organization';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
-import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -50,36 +53,6 @@ enum DateRangeType {
   ThisWeek,
   NextWeek,
 }
-
-enum MoreActionsMenuOptionType {
-  MarkAsDefaultOrganization,
-  ClearAsPreferredOrganization,
-  RemoveOrganization,
-}
-
-type MoreActionsMenuItemType = {
-  id: MoreActionsMenuOptionType;
-  label: string;
-  icon: JSX.Element;
-};
-
-const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
-  [MoreActionsMenuOptionType.MarkAsDefaultOrganization]: {
-    id: MoreActionsMenuOptionType.MarkAsDefaultOrganization,
-    label: 'Mark as default organization',
-    icon: <NotPreferredIcon color="primary" />,
-  },
-  [MoreActionsMenuOptionType.ClearAsPreferredOrganization]: {
-    id: MoreActionsMenuOptionType.ClearAsPreferredOrganization,
-    label: 'Clear as default organization',
-    icon: <PreferredIcon color="primary" />,
-  },
-  [MoreActionsMenuOptionType.RemoveOrganization]: {
-    id: MoreActionsMenuOptionType.RemoveOrganization,
-    label: 'Remove organization',
-    icon: <DeleteIcon color="warning" />,
-  },
-};
 
 const OrganizationMembersBookings = ({
   rootDataRelay,
@@ -408,13 +381,13 @@ const OrganizationMembersBookings = ({
           />
         </CardContent>
       </Card>
-      <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
-        {moreActionsOption.map((option) => (
-          <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <BodyIconTypography label={option.label} startElement={option.icon} />
-          </MenuItem>
-        ))}
-      </Menu>
+
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
+      />
 
       <Dialog TransitionComponent={DialogTransition} open={organizationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingOrganizationClick}>
         <DialogTitle>Remove organization</DialogTitle>

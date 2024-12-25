@@ -8,8 +8,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
@@ -17,6 +15,12 @@ import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BodyIconTypography, FormStackColumn, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { DeskTypes } from '@repo/shared/components/deskType';
 import { DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, InfoIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -76,37 +80,6 @@ const deskSchema = object({
   deskTypeIds: array().nullable(),
   zoneIds: array().nullable(),
 });
-
-enum MoreActionsMenuOptionType {
-  ActivateDesk,
-  DeactivateDesk,
-  EnableDeskApprovalRequirement,
-  RemoveDeskApprovalRequirement,
-}
-
-type MoreActionsMenuItemType = {
-  id: MoreActionsMenuOptionType;
-  label: string;
-};
-
-const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
-  [MoreActionsMenuOptionType.ActivateDesk]: {
-    id: MoreActionsMenuOptionType.ActivateDesk,
-    label: 'Activate desk',
-  },
-  [MoreActionsMenuOptionType.DeactivateDesk]: {
-    id: MoreActionsMenuOptionType.DeactivateDesk,
-    label: 'Dectivate desk',
-  },
-  [MoreActionsMenuOptionType.EnableDeskApprovalRequirement]: {
-    id: MoreActionsMenuOptionType.EnableDeskApprovalRequirement,
-    label: 'Enable desk approval requirement',
-  },
-  [MoreActionsMenuOptionType.RemoveDeskApprovalRequirement]: {
-    id: MoreActionsMenuOptionType.RemoveDeskApprovalRequirement,
-    label: 'Remove desk approval requirement',
-  },
-};
 
 const DeskCard = ({
   rootDataRelay,
@@ -857,13 +830,12 @@ const DeskCard = ({
         </Paper>
       )}
 
-      <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
-        {moreActionsOption.map((option) => (
-          <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </Menu>
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
+      />
 
       <Dialog TransitionComponent={DialogTransition} open={deskRemoveConfirmationDialogOpen} onClose={handleCancelRemovingDeskClick}>
         <DialogTitle>Remove desk</DialogTitle>
