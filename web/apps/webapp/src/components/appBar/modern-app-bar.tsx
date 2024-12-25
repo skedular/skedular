@@ -13,8 +13,10 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
+import { Box } from '@mui/system';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
@@ -124,7 +126,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
     router.push(getOrganizationBaseLink(selectedOrganizationId));
   }, [router, finalOrganizationId, selectedOrganizationId]);
 
-  const handleSelectedOrganizationChange = (event: SelectChangeEvent) => {
+  const handleSelectedOrganizationChange = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;
 
     if (id === createOrganizationId) {
@@ -220,6 +222,28 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
                     borderRadius: 0,
                   },
                 }}
+                renderValue={(selectedId) => {
+                  if (!rootData.myOrganizations) {
+                    return <></>;
+                  }
+
+                  const selectedItem = rootData.myOrganizations.find((item) => item.id === selectedId);
+                  if (!selectedItem) {
+                    return <></>;
+                  }
+
+                  return (
+                    <StackRow>
+                      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                        <OrganizationAvatar name={{ name: selectedItem.name }} photo={{ url: selectedItem.logoUrl }} />
+                      </Box>
+                      <StackColumn spacing={-0.5}>
+                        <LeadIconTypography label={selectedItem.name} />
+                        <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
+                      </StackColumn>
+                    </StackRow>
+                  );
+                }}
               >
                 {rootData.myOrganizations.map((organization) => (
                   <MenuItem key={organization.id} value={organization.id}>
@@ -227,7 +251,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
                       <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
                       <StackColumn spacing={-0.5}>
                         <LeadIconTypography label={organization.name} />
-                        <CaptionIconTypography label="Organization" />
+                        <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
                       </StackColumn>
                     </StackRow>
                   </MenuItem>
