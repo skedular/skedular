@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d36928563f026656526fadd004756947>>
+ * @generated SignedSource<<dd8e9ec808d12b2439babae3c14be103>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,8 @@ export type myLocations_locations_availableOrganizationDesks_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly canDelete: boolean;
+        readonly canModify: boolean;
         readonly deskTypes: ReadonlyArray<{
           readonly name: string | null | undefined;
           readonly uniqueId: string;
@@ -27,6 +29,7 @@ export type myLocations_locations_availableOrganizationDesks_query$data = {
         readonly desks: ReadonlyArray<{
           readonly id: string;
         }>;
+        readonly hasFutureBooking: boolean;
         readonly id: string;
         readonly name: string;
         readonly physicalAddress: {
@@ -249,6 +252,27 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasFutureBooking",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "canModify",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "canDelete",
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "myLocationCard_LocationDetails"
@@ -367,6 +391,6 @@ return {
 };
 })();
 
-(node as any).hash = "e80b87ea2f2a8c6afe8a5a02f879ded5";
+(node as any).hash = "7acb4062aae589d6ce1be2ce8172c8fc";
 
 export default node;

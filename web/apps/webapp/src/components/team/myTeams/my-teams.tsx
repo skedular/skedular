@@ -139,7 +139,7 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
     return rootDataRefetchable.teams.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name));
   }, [rootDataRefetchable.teams]);
 
-  const teamDetails = useMemo(() => teams.find((team) => team.id === selectedTeamId), [selectedTeamId, teams]);
+  const teamDetails = useMemo(() => teams.find((item) => item.id === selectedTeamId), [selectedTeamId, teams]);
 
   const handleRefetch = useCallback(
     (primaryLocationIds: string[]) => {

@@ -1,18 +1,41 @@
 import AvatarGroup from '@mui/material/AvatarGroup';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
+import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { EllipseMenuIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import { Zones } from '@repo/shared/components/zone';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
-import { startOfDay } from '@repo/shared/libs/utils';
+import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
-import { useFragment, useRefetchableFragment } from 'react-relay';
+import { nanoid } from 'nanoid';
+import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
+import { toast } from 'react-toastify';
+import type { myLocations_deleteLocationMutation } from './__generated__/myLocations_deleteLocationMutation.graphql';
 import type { myLocations_locations_availableOrganizationDesks_query$key } from './__generated__/myLocations_locations_availableOrganizationDesks_query.graphql';
 import type { myLocations_locations_availableOrganizationDesks_refetchableFragment } from './__generated__/myLocations_locations_availableOrganizationDesks_refetchableFragment.graphql';
 import type { myLocations_query$key } from './__generated__/myLocations_query.graphql';
@@ -58,6 +81,7 @@ type RowType = {
   desksAvailability: DesksAvailabilityDetails;
   zones: ZoneDetails[];
   teammates: ReadonlyArray<CustomerDetails>;
+  moreActions: string;
 };
 
 const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, organizationId, deskTypeIds, zoneIds, viewMode }: Props) => {
@@ -120,6 +144,9 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               physicalAddress {
                 formattedAddress
               }
+              hasFutureBooking
+              canModify
+              canDelete
               ...myLocationCard_LocationDetails
             }
           }
@@ -143,8 +170,30 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     rootDataRefetchableRelay,
   );
 
-  const [today] = useState(startOfDay());
+  const [commitDeleteLocation] = useMutation<myLocations_deleteLocationMutation>(graphql`
+    mutation myLocations_deleteLocationMutation($connectionIds: [ID!]!, $input: DeleteLocationInput!) {
+      deleteLocation(input: $input) {
+        location {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const connectionIds = useMemo(() => (rootDataRefetchable.locations ? [rootDataRefetchable.locations.__id] : []), [rootDataRefetchable.locations]);
+  const [selectedLocationId, setSelectedLocationId] = useState<null | string>(null);
+  const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
+  const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
+
+  const moreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation],
+  ];
+
+  const [today] = useState(startOfDay());
   const locations = useMemo(() => {
     if (!rootDataRefetchable.locations) {
       return [];
@@ -152,6 +201,8 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
 
     return rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name));
   }, [rootDataRefetchable.locations]);
+
+  const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
 
   const organizationMembers = useMemo(() => {
     if (!rootData.organizationMembers) {
@@ -180,6 +231,66 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
 
   useEffect(() => handleRefetch(deskTypeIds, zoneIds), [handleRefetch, deskTypeIds, zoneIds]);
 
+  const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditLocation:
+        break;
+
+      case MoreActionsMenuOptionType.DeleteLocation:
+        handleRemoveLocationClicked();
+        break;
+    }
+  };
+
+  const handleRemoveLocationClicked = () => {
+    setLocationRemoveConfirmationDialogOpen(true);
+  };
+
+  const handleCancelRemovingLocationClick = () => {
+    setLocationRemoveConfirmationDialogOpen(false);
+  };
+
+  const handleConfirmRemovingLocationClick = () => {
+    if (!locationDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}'...`} />, infoNotificationOptions);
+
+    commitDeleteLocation({
+      variables: {
+        connectionIds: connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          id: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' has been successfully removed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   const rows: RowType[] = locations.map((location) => {
     const desksCount = location.desks.length;
     const availableDesksCount = rootDataRefetchable.availableDesks
@@ -199,6 +310,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       zones,
       teammates: organizationMembers.map(({ customer }) => customer),
       physicalAddress: location.physicalAddress?.formattedAddress,
+      moreActions: location.id,
     };
   });
 
@@ -262,6 +374,23 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       display: 'flex',
       minWidth: 200,
     },
+    {
+      field: 'moreActions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <IconButton
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            setSelectedLocationId(params.value);
+            setMoreActionsAnchorEl(event.currentTarget);
+          }}
+        >
+          <EllipseMenuIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   if (!rootDataRefetchable.locations || !rootDataRefetchable.availableDesks || !rootData.organizationMembers) {
@@ -269,52 +398,80 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
   }
 
   return (
-    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-      <SectionIconTypography label="My Locations" />
-      <Divider />
-      <Box sx={{ paddingBottom: defaultPadding }} />
+    <>
+      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+        <SectionIconTypography label="My Locations" />
+        <Divider />
+        <Box sx={{ paddingBottom: defaultPadding }} />
 
-      {viewMode === 'grid' && (
-        <GridContainer>
-          {locations.map((location) => {
-            const desksCount = location.desks.length;
-            const availableDesksCount = rootDataRefetchable.availableDesks
-              ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length
-              : 0;
-            const availablePercentage = (availableDesksCount / desksCount) * 100;
+        {viewMode === 'grid' && (
+          <GridContainer>
+            {locations.map((location) => {
+              const desksCount = location.desks.length;
+              const availableDesksCount = rootDataRefetchable.availableDesks
+                ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length
+                : 0;
+              const availablePercentage = (availableDesksCount / desksCount) * 100;
 
-            return (
-              <Grid key={location.id}>
-                <MyLocationCard
-                  locationDetailsRelay={location}
-                  onReloadRequired={onReloadRequired}
-                  organizationId={organizationId}
-                  defaultDate={today}
-                  connectionIds={connectionIds}
-                  availableDesksCount={availableDesksCount}
-                  availablePercentage={availablePercentage}
-                  sharedWithTeammates={organizationMembers!.map(({ customer }) => customer)}
-                />
-              </Grid>
-            );
-          })}
-        </GridContainer>
+              return (
+                <Grid key={location.id}>
+                  <MyLocationCard
+                    locationDetailsRelay={location}
+                    onReloadRequired={onReloadRequired}
+                    organizationId={organizationId}
+                    defaultDate={today}
+                    connectionIds={connectionIds}
+                    availableDesksCount={availableDesksCount}
+                    availablePercentage={availablePercentage}
+                    sharedWithTeammates={organizationMembers!.map(({ customer }) => customer)}
+                  />
+                </Grid>
+              );
+            })}
+          </GridContainer>
+        )}
+
+        {viewMode === 'list' && (
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            ignoreDiacritics
+            disableRowSelectionOnClick
+            hideFooter
+            getRowHeight={() => 'auto'}
+            rowSpacingType="margin"
+            getRowSpacing={() => ({ top: 3, bottom: 3 })}
+            sx={defaultGridStyle}
+          />
+        )}
+      </StackColumn>
+
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
+      />
+
+      {locationDetails && (
+        <Dialog TransitionComponent={DialogTransition} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
+          <DialogTitle>Remove Location</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {locationDetails.hasFutureBooking
+                ? `Bookings are scheduled for the location "${locationDetails.name}". Are you sure you want to remove it?`
+                : `Are you sure you want to remove the location "${locationDetails.name}"?`}
+            </DialogContentText>
+            <TwoButtonsDialogActions
+              onPrimaryClicked={handleConfirmRemovingLocationClick}
+              onSecondaryClicked={handleCancelRemovingLocationClick}
+              primaryLabel="Remove"
+              secondaryLabel="Cancel"
+            />
+          </DialogContent>
+        </Dialog>
       )}
-
-      {viewMode === 'list' && (
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          ignoreDiacritics
-          disableRowSelectionOnClick
-          hideFooter
-          getRowHeight={() => 'auto'}
-          rowSpacingType="margin"
-          getRowSpacing={() => ({ top: 3, bottom: 3 })}
-          sx={defaultGridStyle}
-        />
-      )}
-    </StackColumn>
+    </>
   );
 };
 

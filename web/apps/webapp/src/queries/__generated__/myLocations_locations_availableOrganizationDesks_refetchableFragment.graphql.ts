@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<efd4129aefc208d00f325330db4cdc4e>>
+ * @generated SignedSource<<9791bc4821570921eb567e1709f9bb5c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -397,16 +397,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5ec8ff94ee8e63daf3deee9f532a96e7",
+    "cacheID": "a8e24433be6cf2fc259e55aff264b1fd",
     "id": null,
     "metadata": {},
     "name": "myLocations_locations_availableOrganizationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query myLocations_locations_availableOrganizationDesks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskTypeIds: [String!]\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String\n  $todayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...myLocations_locations_availableOrganizationDesks_query_1G22uz\n}\n\nfragment myLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  deskTypes {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n  desks {\n    id\n  }\n  physicalAddress {\n    formattedAddress\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        desks {\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n        ...myLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableDesks(where: {organizationId: $organizationId, date: $todayDate, deskIdsToInclude: [], zoneIds: $zoneIds, deskTypeIds: $deskTypeIds, combineDeskTypesZones: true}) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query myLocations_locations_availableOrganizationDesks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskTypeIds: [String!]\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String\n  $todayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...myLocations_locations_availableOrganizationDesks_query_1G22uz\n}\n\nfragment myLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  deskTypes {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n  desks {\n    id\n  }\n  physicalAddress {\n    formattedAddress\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        desks {\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...myLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableDesks(where: {organizationId: $organizationId, date: $todayDate, deskIdsToInclude: [], zoneIds: $zoneIds, deskTypeIds: $deskTypeIds, combineDeskTypesZones: true}) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e80b87ea2f2a8c6afe8a5a02f879ded5";
+(node as any).hash = "7acb4062aae589d6ce1be2ce8172c8fc";
 
 export default node;

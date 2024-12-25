@@ -21,7 +21,8 @@ export enum MoreActionsMenuOptionType {
   RemoveDeskApprovalRequirement,
   SetAsPreferredLocation,
   RemoveAsPreferredLocation,
-  RemoveLocation,
+  EditLocation,
+  DeleteLocation,
   MarkAsDefaultOrganization,
   ClearAsPreferredOrganization,
   RemoveOrganization,
@@ -98,8 +99,13 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     label: 'Remove as preferred location',
     icon: <PreferredIcon color="primary" />,
   },
-  [MoreActionsMenuOptionType.RemoveLocation]: {
-    id: MoreActionsMenuOptionType.RemoveLocation,
+  [MoreActionsMenuOptionType.EditLocation]: {
+    id: MoreActionsMenuOptionType.EditLocation,
+    label: 'Edit Location',
+    icon: <EditIcon color="primary" />,
+  },
+  [MoreActionsMenuOptionType.DeleteLocation]: {
+    id: MoreActionsMenuOptionType.DeleteLocation,
     label: 'Remove location',
     icon: <DeleteIcon color="warning" />,
   },

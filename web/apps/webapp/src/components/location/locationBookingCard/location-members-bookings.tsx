@@ -195,7 +195,7 @@ const LocationMembersBookings = ({
   }
 
   if (rootData.location.canDelete && !hideRemoveLocationOption) {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveLocation]);
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation]);
   }
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -213,7 +213,7 @@ const LocationMembersBookings = ({
         handleRemoveAsPreferredLocationClicked();
         break;
 
-      case MoreActionsMenuOptionType.RemoveLocation:
+      case MoreActionsMenuOptionType.DeleteLocation:
         handleRemoveLocationClicked();
         break;
     }
