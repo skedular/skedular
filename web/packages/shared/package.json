@@ -38,6 +38,9 @@
     "./components/loading": {
       "default": "./dist/components/loading/index.js"
     },
+    "./components/moreActionsMenu": {
+      "default": "./dist/components/moreActionsMenu/index.js"
+    },
     "./components/notification": {
       "default": "./dist/components/notification/index.js"
     },

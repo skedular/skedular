@@ -1,20 +1,38 @@
 import type { myBookings_bookings_query$key } from '@/queries/__generated__/myBookings_bookings_query.graphql';
 import type { myBookings_bookings_refetchableFragment } from '@/queries/__generated__/myBookings_bookings_refetchableFragment.graphql';
+import type { myBookings_deleteBookingMutation } from '@/queries/__generated__/myBookings_deleteBookingMutation.graphql';
 import type { myBookings_query$key } from '@/queries/__generated__/myBookings_query.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
+import IconButton from '@mui/material/IconButton';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { GridContainer, SectionIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { EllipseMenuIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { Zones } from '@repo/shared/components/zone';
+import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
-import { toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
+import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
-import { memo, startTransition, useCallback, useEffect, useMemo } from 'react';
-import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
+import { nanoid } from 'nanoid';
+import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
+import { toast } from 'react-toastify';
 import MyBookingCard from './my-booking-card';
 
 type Props = {
@@ -63,6 +81,7 @@ type RowType = {
   desks: ReadonlyArray<DeskDetails>;
   zones: ReadonlyArray<ZoneDetails>;
   teammates: ReadonlyArray<CustomerDetails>;
+  moreActions: string;
 };
 
 const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, from, to, locationIds, teamIds, viewMode }: Props) => {
@@ -140,6 +159,28 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
     rootDataBookingRelay,
   );
 
+  const [commitDeleteBooking] = useMutation<myBookings_deleteBookingMutation>(graphql`
+    mutation myBookings_deleteBookingMutation($connectionIds: [ID!]!, $input: DeleteBookingInput!) {
+      deleteBooking(input: $input) {
+        booking {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
+  const [selectedBookingId, setSelectedBookingId] = useState<null | string>(null);
+  const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
+
+  const moreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteBooking],
+  ];
+
   const bookings = useMemo(() => {
     if (!rootDataRefetchable.bookings) {
       return [];
@@ -191,6 +232,74 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
 
   useEffect(() => handleRefetch(from, to, locationIds, teamIds), [handleRefetch, from, to, locationIds, teamIds]);
 
+  const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    const bookingId = selectedBookingId;
+    setMoreActionsAnchorEl(null);
+    setSelectedBookingId(null);
+
+    if (!bookingId) {
+      return;
+    }
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditBooking:
+        break;
+
+      case MoreActionsMenuOptionType.DeleteBooking:
+        handleRemoveBookingClick(bookingId);
+        break;
+    }
+  };
+
+  const handleRemoveBookingClick = (id: string) => {
+    const bookingDetails = myBookings.find((booking) => booking.id === id);
+    if (!bookingDetails) {
+      return;
+    }
+
+    const shortDateFormatFrom = toShortDate(bookingDetails.from);
+    let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.customer)}`;
+    if (bookingDetails.location) {
+      bookingDetailsInfo += ` at the "${bookingDetails.location!.name}"`;
+    }
+
+    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+
+    const toastId = themedToast(<NotificationContent content={`Removing booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
+
+    commitDeleteBooking({
+      variables: {
+        connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          id: bookingDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
+        });
+        UpdateGlobalReloadId();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}.`} />,
+        });
+      },
+    });
+  };
+
   const rows: RowType[] = myBookings.map((myBooking) => {
     const zones = myBooking.desks
       .flatMap(({ zones }) => zones)
@@ -216,6 +325,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       zones,
       teammates,
       date: toShortDateWithAdditionalDayInfo(dayjs(myBooking.from)),
+      moreActions: myBooking.id,
     };
   });
 
@@ -281,6 +391,23 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       display: 'text',
       minWidth: 300,
     },
+    {
+      field: 'moreActions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <IconButton
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            setSelectedBookingId(params.value);
+            setMoreActionsAnchorEl(event.currentTarget);
+          }}
+        >
+          <EllipseMenuIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   if (!rootDataRefetchable.bookings) {
@@ -288,46 +415,55 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
   }
 
   return (
-    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-      <SectionIconTypography label="My Bookings" />
-      <Divider />
-      <Box sx={{ paddingBottom: defaultPadding }} />
+    <>
+      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+        <SectionIconTypography label="My Bookings" />
+        <Divider />
+        <Box sx={{ paddingBottom: defaultPadding }} />
 
-      {viewMode === 'grid' && (
-        <GridContainer>
-          {myBookings.map((myBooking) => {
-            const key = convertDateToKey(myBooking.from);
-            const otherTeammates = groupedBookingsByFromDate[key]?.filter(
-              (booking) => booking.customer?.uniqueId !== rootData.me?.id && booking.location?.uniqueId === myBooking.location?.uniqueId,
-            );
+        {viewMode === 'grid' && (
+          <GridContainer>
+            {myBookings.map((myBooking) => {
+              const key = convertDateToKey(myBooking.from);
+              const otherTeammates = groupedBookingsByFromDate[key]?.filter(
+                (booking) => booking.customer?.uniqueId !== rootData.me?.id && booking.location?.uniqueId === myBooking.location?.uniqueId,
+              );
 
-            return (
-              <Grid key={myBooking.id}>
-                <MyBookingCard
-                  bookingDetailsRelay={myBooking}
-                  connectionIds={connectionIds}
-                  otherTeammates={otherTeammates!.map(({ customer }) => customer)}
-                />
-              </Grid>
-            );
-          })}
-        </GridContainer>
-      )}
+              return (
+                <Grid key={myBooking.id}>
+                  <MyBookingCard
+                    bookingDetailsRelay={myBooking}
+                    connectionIds={connectionIds}
+                    otherTeammates={otherTeammates!.map(({ customer }) => customer)}
+                  />
+                </Grid>
+              );
+            })}
+          </GridContainer>
+        )}
 
-      {viewMode === 'list' && (
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          ignoreDiacritics
-          disableRowSelectionOnClick
-          hideFooter
-          getRowHeight={() => 'auto'}
-          rowSpacingType="margin"
-          getRowSpacing={() => ({ top: 3, bottom: 3 })}
-          sx={defaultGridStyle}
-        />
-      )}
-    </StackColumn>
+        {viewMode === 'list' && (
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            ignoreDiacritics
+            disableRowSelectionOnClick
+            hideFooter
+            getRowHeight={() => 'auto'}
+            rowSpacingType="margin"
+            getRowSpacing={() => ({ top: 3, bottom: 3 })}
+            sx={defaultGridStyle}
+          />
+        )}
+      </StackColumn>
+
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
+      />
+    </>
   );
 };
 

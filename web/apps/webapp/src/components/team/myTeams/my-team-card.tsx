@@ -9,12 +9,16 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import { DeleteIcon, EditIcon, EllipseMenuIcon, TeamIcon } from '@repo/shared/components/icons';
+import { EllipseMenuIcon, TeamIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -43,30 +47,6 @@ type CustomerDetails = {
   familyName?: string | null | undefined;
   name?: string | null | undefined;
   photoUrl?: string | null | undefined;
-};
-
-enum MoreActionsMenuOptionType {
-  EditTeam,
-  DeleteTeam,
-}
-
-type MoreActionsMenuItemType = {
-  id: MoreActionsMenuOptionType;
-  label: string;
-  icon: JSX.Element;
-};
-
-const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
-  [MoreActionsMenuOptionType.EditTeam]: {
-    id: MoreActionsMenuOptionType.EditTeam,
-    label: 'Edit Team',
-    icon: <EditIcon color="primary" />,
-  },
-  [MoreActionsMenuOptionType.DeleteTeam]: {
-    id: MoreActionsMenuOptionType.DeleteTeam,
-    label: 'Remove Team',
-    icon: <DeleteIcon color="warning" />,
-  },
 };
 
 const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
@@ -209,13 +189,12 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
         </CardContent>
       </Card>
 
-      <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
-        {moreActionsOption.map((option) => (
-          <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <SmallIconTypography label={option.label} startElement={option.icon} />
-          </MenuItem>
-        ))}
-      </Menu>
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
+      />
 
       <Dialog TransitionComponent={DialogTransition} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
         <DialogTitle>Remove team</DialogTitle>

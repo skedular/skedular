@@ -4,12 +4,16 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
-import { CalendarIcon, DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, LocationIcon, NotesIcon, TeamIcon } from '@repo/shared/components/icons';
+import { CalendarIcon, DeskIcon, EllipseMenuIcon, LocationIcon, NotesIcon, TeamIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -23,7 +27,6 @@ import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditional
 import graphql from 'babel-plugin-relay/macro';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -49,30 +52,6 @@ type CustomerDetails = {
   familyName?: string | null | undefined;
   name?: string | null | undefined;
   photoUrl?: string | null | undefined;
-};
-
-enum MoreActionsMenuOptionType {
-  EditBooking,
-  DeleteBooking,
-}
-
-type MoreActionsMenuItemType = {
-  id: MoreActionsMenuOptionType;
-  label: string;
-  icon: JSX.Element;
-};
-
-const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreActionsMenuItemType> = {
-  [MoreActionsMenuOptionType.EditBooking]: {
-    id: MoreActionsMenuOptionType.EditBooking,
-    label: 'Edit Booking',
-    icon: <EditIcon color="primary" />,
-  },
-  [MoreActionsMenuOptionType.DeleteBooking]: {
-    id: MoreActionsMenuOptionType.DeleteBooking,
-    label: 'Delete',
-    icon: <DeleteIcon color="warning" />,
-  },
 };
 
 const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: Props) => {
@@ -150,12 +129,12 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
         break;
 
       case MoreActionsMenuOptionType.DeleteBooking:
-        handleDeleteClick();
+        handleRemoveBookingClick();
         break;
     }
   };
 
-  const handleDeleteClick = () => {
+  const handleRemoveBookingClick = () => {
     let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.customer)}`;
     if (bookingDetails.location) {
       bookingDetailsInfo += ` at the "${bookingDetails.location!.name}"`;
@@ -270,13 +249,12 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
         </CardContent>
       </Card>
 
-      <Menu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onClose={handleMoreActionsMenuItemClick}>
-        {moreActionsOption.map((option) => (
-          <MenuItem key={option.id} onClick={() => handleMoreActionsMenuItemClick(option.id)}>
-            <SmallIconTypography label={option.label} startElement={option.icon} />
-          </MenuItem>
-        ))}
-      </Menu>
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
+      />
     </>
   );
 };
