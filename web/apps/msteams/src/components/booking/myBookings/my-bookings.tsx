@@ -253,7 +253,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
   };
 
   const handleRemoveBookingClick = (id: string) => {
-    const bookingDetails = myBookings.find((booking) => booking.id === id);
+    const bookingDetails = myBookings.find((item) => item.id === id);
     if (!bookingDetails) {
       return;
     }

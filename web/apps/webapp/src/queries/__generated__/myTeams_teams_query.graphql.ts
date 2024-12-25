@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8c1e1f98acba8248c5f9ac5aadd59660>>
+ * @generated SignedSource<<72cad48973f07edae7831406c6f39a74>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,9 @@ export type myTeams_teams_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly canDelete: boolean;
+        readonly canModify: boolean;
+        readonly hasFutureBooking: boolean;
         readonly id: string;
         readonly members: ReadonlyArray<{
           readonly organizationMember: {
@@ -236,6 +239,27 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasFutureBooking",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "canModify",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "canDelete",
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "myTeamCard_TeamDetails"
@@ -306,6 +330,6 @@ return {
 };
 })();
 
-(node as any).hash = "b0975b57ca3ea93ab7a14a0d4ee22c70";
+(node as any).hash = "c2daadf14fb8d66d4241e41abdfa0c7c";
 
 export default node;

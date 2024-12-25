@@ -92,6 +92,12 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
 
+  let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam]];
+
+  if (teamDetails.canDelete) {
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam]);
+  }
+
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
   };
@@ -151,12 +157,6 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
       },
     });
   };
-
-  let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam]];
-
-  if (teamDetails.canDelete) {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam]);
-  }
 
   return (
     <>
