@@ -13,7 +13,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { sandstone } from '@repo/shared/libs/theme';
+import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -78,6 +78,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
         backgroundColor: sandstone,
       },
     },
+    ...selectedListItemPaddings,
   };
 
   const handleCollpaseClicked = () => {
@@ -132,7 +133,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
           <Link component={NextLink} href={organizationBaseLink}>
             <ListItemButton
               selected={pathName === organizationBaseLink}
-              sx={{ ...styles, borderRadius: pathName === organizationBaseLink ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === organizationBaseLink) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -156,7 +157,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
           <Link component={NextLink} href={organizationLocationsBaseLink}>
             <ListItemButton
               selected={pathName.startsWith(organizationLocationsBaseLink)}
-              sx={{ ...styles, borderRadius: pathName.startsWith(organizationLocationsBaseLink) ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationLocationsBaseLink)) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -180,7 +181,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
           <Link component={NextLink} href={organizationTeamsBaseLink}>
             <ListItemButton
               selected={pathName.startsWith(organizationTeamsBaseLink)}
-              sx={{ ...styles, borderRadius: pathName.startsWith(organizationTeamsBaseLink) ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationTeamsBaseLink)) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -204,7 +205,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
           <Link component={NextLink} href={organizationMembersBaseLink}>
             <ListItemButton
               selected={pathName.startsWith(organizationMembersBaseLink)}
-              sx={{ ...styles, borderRadius: pathName.startsWith(organizationMembersBaseLink) ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationMembersBaseLink)) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -229,7 +230,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
             <Link component={NextLink} href="/settings">
               <ListItemButton
                 selected={pathName.startsWith('/settings')}
-                sx={{ ...styles, borderRadius: pathName.startsWith('/settings') ? 4 : 0, paddingRight: 5 }}
+                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith('/settings')) }}
               >
                 {collapsed && (
                   <BodyIconTypography

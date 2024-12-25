@@ -7,7 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { CollpaseDrawerIcon, HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { sandstone } from '@repo/shared/libs/theme';
+import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import { memo, useContext } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { collapsedDrawerWidth, expandedDrawerWidth } from './commons';
@@ -57,6 +57,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
         backgroundColor: sandstone,
       },
     },
+    ...selectedListItemPaddings,
   };
 
   const { organizationId } = useParams();
@@ -117,7 +118,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
           <Link href={`/organizations/${finalOrganizationId}`}>
             <ListItemButton
               selected={pathName === `/organizations/${finalOrganizationId}`}
-              sx={{ ...styles, borderRadius: pathName === `/organizations/${finalOrganizationId}` ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === `/organizations/${finalOrganizationId}`) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -141,7 +142,10 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
           <Link href={`/organizations/${finalOrganizationId}/locations`}>
             <ListItemButton
               selected={pathName.startsWith(`/organizations/${finalOrganizationId}/locations`)}
-              sx={{ ...styles, borderRadius: pathName.startsWith(`/organizations/${finalOrganizationId}/locations`) ? 4 : 0, paddingRight: 5 }}
+              sx={{
+                ...styles,
+                borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(`/organizations/${finalOrganizationId}/locations`)),
+              }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -165,7 +169,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
           <Link href={`/organizations/${finalOrganizationId}/teams`}>
             <ListItemButton
               selected={pathName.startsWith(`/organizations/${finalOrganizationId}/teams`)}
-              sx={{ ...styles, borderRadius: pathName.startsWith(`/organizations/${finalOrganizationId}/teams`) ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(`/organizations/${finalOrganizationId}/teams`)) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -189,7 +193,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
           <Link href={`/${finalOrganizationId}/notifications`}>
             <ListItemButton
               selected={pathName.startsWith(`/${finalOrganizationId}/notifications`)}
-              sx={{ ...styles, borderRadius: pathName.startsWith(`/${finalOrganizationId}/notifications`) ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(`/${finalOrganizationId}/notifications`)) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -213,7 +217,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
           <Link href={`/${finalOrganizationId}/settings`}>
             <ListItemButton
               selected={pathName.startsWith(`/${finalOrganizationId}/settings`)}
-              sx={{ ...styles, borderRadius: pathName.startsWith(`/${finalOrganizationId}/settings`) ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(`/${finalOrganizationId}/settings`)) }}
             >
               {collapsed && (
                 <BodyIconTypography

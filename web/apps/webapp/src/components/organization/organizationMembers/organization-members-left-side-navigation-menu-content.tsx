@@ -5,7 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { MembersIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { sandstone } from '@repo/shared/libs/theme';
+import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
@@ -41,6 +41,7 @@ const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, coll
         backgroundColor: sandstone,
       },
     },
+    ...selectedListItemPaddings,
   };
 
   const memberesLink = getModernOrganizationMembersBaseLink(organizationId);
@@ -57,11 +58,13 @@ const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, coll
     >
       <ListItem disablePadding>
         <Link component={NextLink} href={memberesLink}>
-          <ListItemButton selected={pathName === memberesLink} sx={{ ...styles, borderRadius: pathName === memberesLink ? 4 : 0, paddingRight: 5 }}>
-
           <ListItemButton
+            selected={pathName === memberesLink}
+            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === memberesLink) }}
+          >
+            <ListItemButton
               selected={pathName === memberesLink}
-              sx={{ ...styles, borderRadius: pathName === memberesLink ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === memberesLink) }}
             >
               {collapsed && (
                 <BodyIconTypography

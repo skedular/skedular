@@ -14,7 +14,7 @@ import {
   TeamIcon,
 } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { sandstone } from '@repo/shared/libs/theme';
+import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -65,6 +65,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
         backgroundColor: sandstone,
       },
     },
+    ...selectedListItemPaddings,
   };
 
   const handleCollpaseClicked = () => {
@@ -108,7 +109,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
 
         <ListItem disablePadding>
           <Link component={NextLink} href="/">
-            <ListItemButton selected={pathName === '/'} sx={{ ...styles, borderRadius: pathName === '/' ? 4 : 0, paddingRight: 5 }}>
+            <ListItemButton selected={pathName === '/'} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === '/') }}>
               {collapsed && (
                 <BodyIconTypography
                   startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
@@ -131,7 +132,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
           <Link component={NextLink} href="/organizations">
             <ListItemButton
               selected={pathName.startsWith('/organizations')}
-              sx={{ ...styles, borderRadius: pathName.startsWith('/organizations') ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith('/organizations')) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -155,7 +156,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
           <Link component={NextLink} href="/locations">
             <ListItemButton
               selected={pathName.startsWith('/locations')}
-              sx={{ ...styles, borderRadius: pathName.startsWith('/locations') ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith('/locations')) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -179,7 +180,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
           <Link component={NextLink} href="/teams">
             <ListItemButton
               selected={pathName.startsWith('/teams')}
-              sx={{ ...styles, borderRadius: pathName.startsWith('/teams') ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith('/teams')) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -203,7 +204,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
           <Link component={NextLink} href="/notifications">
             <ListItemButton
               selected={pathName.startsWith('/notifications')}
-              sx={{ ...styles, borderRadius: pathName.startsWith('/notifications') ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith('/notifications')) }}
             >
               {collapsed && (
                 <BodyIconTypography
@@ -227,7 +228,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
           <Link component={NextLink} href="/settings">
             <ListItemButton
               selected={pathName.startsWith('/settings')}
-              sx={{ ...styles, borderRadius: pathName.startsWith('/settings') ? 4 : 0, paddingRight: 5 }}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith('/settings')) }}
             >
               {collapsed && (
                 <BodyIconTypography

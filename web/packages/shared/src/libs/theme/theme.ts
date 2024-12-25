@@ -33,6 +33,9 @@ export const defaultOldGridStyle: SxProps<Theme> = {
   },
 };
 
+export const selectedListItemPaddings = { paddingRight: 5 };
+export const getSelectedListItemBorderRadius = (selected: boolean): number => (selected ? 4 : 0);
+
 const createTheme = (mode: PaletteMode): Theme => createMuiTheme(getDesignTokens(mode));
 
 export default createTheme;
