@@ -369,14 +369,17 @@ public class OrganizationMemberService(
             member.Id,
             cancellationToken);
 
-        var organizationMemberToAdd = organizationMember is null
-            ? repositoryFactory.OrganizationMemberRepository.Add(
-                mapper.MapToEntity(member, organization, customer))
-            : repositoryFactory.OrganizationMemberRepository.Update(
+        if (organizationMember is null)
+        {
+            repositoryFactory.OrganizationMemberRepository.Add(
+                mapper.MapToEntity(member, organization, customer));
+        }
+        else
+        {
+            repositoryFactory.OrganizationMemberRepository.Update(
                 mapper.MergeToEntity(member, organizationMember, organization, customer));
-
-        organization.OrganizationMembers = organization.OrganizationMembers.Concat([organizationMemberToAdd]).ToList();
-
+        }
+        
         await organizationOutboxPublisher.PublishOrganizationAsync(
             [mapper.MapTo(organization)],
             repositoryFactory.OrganizationRepository.UnitOfWork,
