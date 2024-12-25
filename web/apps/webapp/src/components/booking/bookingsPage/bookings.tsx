@@ -10,7 +10,7 @@ import type { bookings_query$key } from '@/queries/__generated__/bookings_query.
 import type { bookings_rootQuery } from '@/queries/__generated__/bookings_rootQuery.graphql';
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
-import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
+import { GridContainer, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { WeekPicker } from '@repo/shared/components/datePickers';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -232,44 +232,42 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
 
   return (
     <>
-      <StackRowFullWidth>
-        <StackRow>
-          <NewBookingButton
-            onReloadRequired={onReloadRequired}
-            organizationId={organizationId}
-            locationId={locationId}
-            connectionIds={connectionIds}
-            hideLocationControl={true}
-            hideOrganizationControl={true}
-            defaultDate={startWeek}
-          />
-          <WeekPicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChange} />
-          <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-        </StackRow>
-        <StackRow>
-          <TablePagination
-            count={rootDataBookings.bookings.totalCount ? rootDataBookings.bookings.totalCount : 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-          />
-          <Sorting
-            options={[
-              { id: 'From', label: 'Booking date' },
-              { id: 'Name', label: 'Name' },
-              { id: 'GivenName', label: 'Given Name' },
-              { id: 'MiddleName', label: 'Middle Name' },
-              { id: 'FamilyName', label: 'Family Name' },
-              { id: 'OrganizationName', label: 'Organization' },
-              { id: 'TeamName', label: 'Team' },
-            ]}
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
-          />
-        </StackRow>
-      </StackRowFullWidth>
+      <StackRow>
+        <NewBookingButton
+          onReloadRequired={onReloadRequired}
+          organizationId={organizationId}
+          locationId={locationId}
+          connectionIds={connectionIds}
+          hideLocationControl={true}
+          hideOrganizationControl={true}
+          defaultDate={startWeek}
+        />
+        <WeekPicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChange} />
+        <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+        <PushToRight />
+        <TablePagination
+          component="div"
+          count={rootDataBookings.bookings.totalCount ? rootDataBookings.bookings.totalCount : 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[
+            { id: 'From', label: 'Booking date' },
+            { id: 'Name', label: 'Name' },
+            { id: 'GivenName', label: 'Given Name' },
+            { id: 'MiddleName', label: 'Middle Name' },
+            { id: 'FamilyName', label: 'Family Name' },
+            { id: 'OrganizationName', label: 'Organization' },
+            { id: 'TeamName', label: 'Team' },
+          ]}
+          defaultOption={sortingOrder.field}
+          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+          onValueChange={handleSortingChanged}
+        />
+      </StackRow>
 
       <GridContainer>
         {bookings.map((booking) => {

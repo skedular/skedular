@@ -5,7 +5,7 @@ import type { TeamOrderField, TeamOrderInput, oldTeams_refetchableFragment } fro
 import type { oldTeams_rootQuery } from '@/queries/__generated__/oldTeams_rootQuery.graphql';
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
-import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
+import { GridContainer, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -148,24 +148,24 @@ const OldTeams = ({ queryReference }: Props) => {
     <>
       <NewTeamButton />
 
-      <StackRowFullWidth>
+      <StackRow>
         <Search size="small" placeholder="Find a team..." defaultValue={teamNameSearchText} onChange={handleSearchTextChange} />
-        <StackRow>
-          <TablePagination
-            count={rootData.teams.totalCount ? rootData.teams.totalCount : 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-          />
-          <Sorting
-            options={[{ id: 'Name', label: 'Name' }]}
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
-          />
-        </StackRow>
-      </StackRowFullWidth>
+        <PushToRight />
+        <TablePagination
+          component="div"
+          count={rootData.teams.totalCount ? rootData.teams.totalCount : 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[{ id: 'Name', label: 'Name' }]}
+          defaultOption={sortingOrder.field}
+          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+          onValueChange={handleSortingChanged}
+        />
+      </StackRow>
 
       <GridContainer>
         {slicedEdges.map((edge) => (

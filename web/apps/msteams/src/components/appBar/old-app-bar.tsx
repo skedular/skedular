@@ -11,7 +11,6 @@ import {
   SmallIconTypography,
   StackColumn,
   StackRow,
-  StackRowFullWidth,
 } from '@repo/shared/components/commons';
 import { FeedbackIcon, HamburgerMenuIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
 import { SwitchToModernUIContext, UpdateSwitchToModernUIContext } from '@repo/shared/libs/providers';
@@ -97,7 +96,17 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
   return (
     <>
       <StackColumn sx={{ width: '100vw' }}>
-        <StackRowFullWidth sx={{ paddingLeft: 1, paddingRight: 1, borderBottom: 1, borderColor: (theme) => theme.palette.divider }}>
+        <StackRow
+          sx={{
+            justifyContent: 'space-between',
+            width: '100%',
+            alignItems: 'center',
+            paddingLeft: 1,
+            paddingRight: 1,
+            borderBottom: 1,
+            borderColor: (theme) => theme.palette.divider,
+          }}
+        >
           <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />
 
           <StackRow sx={{ alignItems: 'center' }}>
@@ -174,7 +183,7 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
           </StackRow>
 
           <MobileLeftSideNavigationMenu open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
-        </StackRowFullWidth>
+        </StackRow>
       </StackColumn>
 
       <NewFeedbackDialog

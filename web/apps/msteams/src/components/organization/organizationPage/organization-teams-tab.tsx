@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
-import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
+import { GridContainer, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -170,24 +170,24 @@ const OrganizationTeamsTab = ({ queryReference, organizationId }: Props) => {
     <>
       <NewTeamButton organizationId={organizationId} />
 
-      <StackRowFullWidth>
+      <StackRow>
         <Search size="small" placeholder="Find a team..." defaultValue={teamNameSearchText} onChange={handleSearchTextChange} />
-        <StackRow>
-          <TablePagination
-            count={rootDataTeams.teams?.totalCount ? rootDataTeams.teams.totalCount : 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-          />
-          <Sorting
-            options={[{ id: 'Name', label: 'Name' }]}
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
-          />
-        </StackRow>
-      </StackRowFullWidth>
+        <PushToRight />
+        <TablePagination
+          component="div"
+          count={rootDataTeams.teams?.totalCount ? rootDataTeams.teams.totalCount : 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[{ id: 'Name', label: 'Name' }]}
+          defaultOption={sortingOrder.field}
+          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+          onValueChange={handleSortingChanged}
+        />
+      </StackRow>
 
       <GridContainer>
         {slicedEdges.map((edge) => {

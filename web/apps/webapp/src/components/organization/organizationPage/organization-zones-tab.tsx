@@ -10,7 +10,7 @@ import type {
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
-import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
+import { GridContainer, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -193,24 +193,24 @@ const OrganizationZonesTab = ({ queryReference, onReloadRequired, organizationId
         </Button>
       )}
 
-      <StackRowFullWidth>
+      <StackRow>
         <Search size="small" placeholder="Find a desk type..." defaultValue={zoneNameSearchText} onChange={handleSearchTextChange} />
-        <StackRow>
-          <TablePagination
-            count={rootDataPaginatedOrganizationTags.zones.totalCount ? rootDataPaginatedOrganizationTags.zones.totalCount : 0}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-          />
-          <Sorting
-            options={[{ id: 'Name', label: 'Name' }]}
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
-          />
-        </StackRow>
-      </StackRowFullWidth>
+        <PushToRight />
+        <TablePagination
+          component="div"
+          count={rootDataPaginatedOrganizationTags.zones.totalCount ? rootDataPaginatedOrganizationTags.zones.totalCount : 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[{ id: 'Name', label: 'Name' }]}
+          defaultOption={sortingOrder.field}
+          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+          onValueChange={handleSortingChanged}
+        />
+      </StackRow>
 
       <GridContainer>
         {slicedEdges.map((edge) => (

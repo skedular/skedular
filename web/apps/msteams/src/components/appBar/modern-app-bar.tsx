@@ -12,7 +12,6 @@ import {
   SmallIconTypography,
   StackColumn,
   StackRow,
-  StackRowFullWidth,
 } from '@repo/shared/components/commons';
 import { FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, SettingsIcon, ToggleOffIcon, ToggleOnIcon } from '@repo/shared/components/icons';
 import { SwitchToModernUIContext, UpdateSwitchToModernUIContext } from '@repo/shared/libs/providers';
@@ -107,8 +106,11 @@ const ModernAppBar = ({ rootDataRelay, hideWelcomeMessage, showBreadcrumps, brea
   return (
     <>
       <StackColumn sx={{ width: '100vw' }}>
-        <StackRowFullWidth
+        <StackRow
           sx={{
+            justifyContent: 'space-between',
+            width: '100%',
+            alignItems: 'center',
             paddingLeft: 1,
             paddingRight: 1,
             borderBottom: 1,
@@ -205,7 +207,7 @@ const ModernAppBar = ({ rootDataRelay, hideWelcomeMessage, showBreadcrumps, brea
           </StackRow>
 
           <MobileLeftSideNavigationMenu open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
-        </StackRowFullWidth>
+        </StackRow>
       </StackColumn>
 
       <NewFeedbackDialog

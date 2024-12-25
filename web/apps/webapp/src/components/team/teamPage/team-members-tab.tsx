@@ -17,7 +17,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
-import { FormStackColumn, GridContainer, StackRow, StackRowFullWidth, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormStackColumn, GridContainer, PushToRight, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { AddIcon, EditIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -420,29 +420,29 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
             </Button>
           )}
 
-          <StackRowFullWidth>
+          <StackRow>
             <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-            <StackRow>
-              <TablePagination
-                count={count}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={pageSize}
-                onRowsPerPageChange={handlePageSizeChange}
-              />
-              <Sorting
-                options={[
-                  { id: 'Name', label: 'Name' },
-                  { id: 'GivenName', label: 'Given name' },
-                  { id: 'MiddleName', label: 'Middle name' },
-                  { id: 'FamilyName', label: 'Family Name' },
-                ]}
-                defaultOption={sortingOrder.field}
-                defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-                onValueChange={handleSortingChanged}
-              />
-            </StackRow>
-          </StackRowFullWidth>
+            <PushToRight />
+            <TablePagination
+              component="div"
+              count={count}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={pageSize}
+              onRowsPerPageChange={handlePageSizeChange}
+            />
+            <Sorting
+              options={[
+                { id: 'Name', label: 'Name' },
+                { id: 'GivenName', label: 'Given name' },
+                { id: 'MiddleName', label: 'Middle name' },
+                { id: 'FamilyName', label: 'Family Name' },
+              ]}
+              defaultOption={sortingOrder.field}
+              defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+              onValueChange={handleSortingChanged}
+            />
+          </StackRow>
 
           <GridContainer>
             {slicedrEdges.map((edge) => (

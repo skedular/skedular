@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/system/Box';
-import { BodyIconTypography, StackRow, StackRowFullWidth, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BodyIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { BookingIcon, DeleteIcon, DeskIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -396,7 +396,7 @@ const LocationMembersBookings = ({
           }
         />
         <CardContent>
-          <StackRowFullWidth>
+          <StackRow>
             <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
               <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
               <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
@@ -412,7 +412,7 @@ const LocationMembersBookings = ({
                 </Link>
               )}
             </StackRow>
-          </StackRowFullWidth>
+          </StackRow>
           <BodyIconTypography
             label={rootData.location.deskCapacity === 0 ? 'No desk available' : `Desk Capacity: ${rootData.location.deskCapacity}`}
             startElement={<DeskIcon />}

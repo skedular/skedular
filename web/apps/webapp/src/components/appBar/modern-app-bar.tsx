@@ -21,7 +21,6 @@ import {
   SmallIconTypography,
   StackColumn,
   StackRow,
-  StackRowFullWidth,
 } from '@repo/shared/components/commons';
 import {
   AddIcon,
@@ -199,8 +198,11 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
   return (
     <>
       <StackColumn sx={{ width: '100vw' }}>
-        <StackRowFullWidth
+        <StackRow
           sx={{
+            justifyContent: 'space-between',
+            width: '100%',
+            alignItems: 'center',
             paddingLeft: 1,
             paddingRight: 1,
             borderBottom: paletteMode === 'dark' ? 1 : undefined,
@@ -355,7 +357,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
           </StackRow>
 
           <MobileLeftSideNavigationMenu rootDataRelay={rootData} open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
-        </StackRowFullWidth>
+        </StackRow>
       </StackColumn>
 
       <NewFeedbackDialog

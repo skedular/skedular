@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
-import { GridContainer, StackRow, StackRowFullWidth } from '@repo/shared/components/commons';
+import { GridContainer, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -181,34 +181,34 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
     <>
       {rootData.organization.canInvitePeople && <InvitePeopleToJoinOrganizationButton organizationId={organizationId} />}
 
-      <StackRowFullWidth>
+      <StackRow>
         <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-        <StackRow>
-          <TablePagination
-            count={
-              rootDataPaginatedOrganizationMembers.organizationMembers.totalCount
-                ? rootDataPaginatedOrganizationMembers.organizationMembers.totalCount
-                : 0
-            }
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={pageSize}
-            onRowsPerPageChange={handlePageSizeChange}
-          />
-          <Sorting
-            options={[
-              { id: 'Name', label: 'Name' },
-              { id: 'GivenName', label: 'Given name' },
-              { id: 'MiddleName', label: 'Middle name' },
-              { id: 'FamilyName', label: 'Family Name' },
-              { id: 'MembershipType', label: 'Membership type' },
-            ]}
-            defaultOption={sortingOrder.field}
-            defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
-            onValueChange={handleSortingChanged}
-          />
-        </StackRow>
-      </StackRowFullWidth>
+        <PushToRight />
+        <TablePagination
+          component="div"
+          count={
+            rootDataPaginatedOrganizationMembers.organizationMembers.totalCount
+              ? rootDataPaginatedOrganizationMembers.organizationMembers.totalCount
+              : 0
+          }
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handlePageSizeChange}
+        />
+        <Sorting
+          options={[
+            { id: 'Name', label: 'Name' },
+            { id: 'GivenName', label: 'Given name' },
+            { id: 'MiddleName', label: 'Middle name' },
+            { id: 'FamilyName', label: 'Family Name' },
+            { id: 'MembershipType', label: 'Membership type' },
+          ]}
+          defaultOption={sortingOrder.field}
+          defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}
+          onValueChange={handleSortingChanged}
+        />
+      </StackRow>
 
       <GridContainer>
         {slicedEdges.map((edge) => (

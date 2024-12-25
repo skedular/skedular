@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
-import { GridContainer, StackRow } from '@repo/shared/components/commons';
+import { GridContainer, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -132,8 +132,10 @@ const Notifications = ({ queryReference }: Props) => {
 
   return (
     <>
-      <StackRow sx={{ justifyContent: 'flex-end' }}>
+      <StackRow>
+        <PushToRight />
         <TablePagination
+          component="div"
           count={rootData.myNotifications.totalCount ? rootData.myNotifications.totalCount : 0}
           page={page}
           onPageChange={handleChangePage}

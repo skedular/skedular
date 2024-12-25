@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/system/Box';
-import { BodyIconTypography, StackRow, StackRowFullWidth, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BodyIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon, SettingsIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -371,7 +371,7 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
           }
         />
         <CardContent>
-          <StackRowFullWidth>
+          <StackRow>
             <ToggleButtonGroup color="primary" value={dateRangeType} exclusive onChange={handleDateRangeTypeChange} size="small">
               <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
               <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
@@ -387,7 +387,7 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
                 </Link>
               )}
             </StackRow>
-          </StackRowFullWidth>
+          </StackRow>
           <BookingsWeekGrid
             rootDataRelay={rootData}
             rootDataAllBookingsRelay={rootData}
