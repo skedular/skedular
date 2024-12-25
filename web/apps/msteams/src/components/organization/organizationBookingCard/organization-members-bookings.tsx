@@ -10,7 +10,7 @@ import Link from '@mui/material/Link';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/system/Box';
-import { StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { PushToRight, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { BookingIcon, EllipseMenuIcon, SettingsIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -360,6 +360,7 @@ const OrganizationMembersBookings = ({
               <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
               <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
             </ToggleButtonGroup>
+            <PushToRight />
             <StackRow>
               <Link href={getOrganizationBookingsBaseLink(organizationId)}>
                 <BookingIcon />

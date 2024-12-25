@@ -17,7 +17,7 @@ import Link from '@mui/material/Link';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/system/Box';
-import { StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { PushToRight, StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { BookingIcon, EllipseMenuIcon, SettingsIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -359,6 +359,7 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
               <ToggleButton value={DateRangeType.ThisWeek}>This week</ToggleButton>
               <ToggleButton value={DateRangeType.NextWeek}>Next week</ToggleButton>
             </ToggleButtonGroup>
+            <PushToRight />
             <StackRow>
               <Link component={NextLink} href={getTeamBookingsLink(teamId, organizationId)}>
                 <BookingIcon />
