@@ -137,9 +137,12 @@ const MemoRootShell = memo(RootShell);
 
 type RelayProps = {
   collapsed?: boolean;
+  hideWelcomeMessage?: boolean;
+  showBreadcrumps?: boolean;
+  breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
-const RootShellWithRelay = ({ children, collapsed }: PropsWithChildren<RelayProps>) => {
+const RootShellWithRelay = ({ children, collapsed, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -179,7 +182,14 @@ const RootShellWithRelay = ({ children, collapsed }: PropsWithChildren<RelayProp
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} collapsed={collapsed}>
+      <MemoRootShell
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        collapsed={collapsed}
+        hideWelcomeMessage={hideWelcomeMessage}
+        showBreadcrumps={showBreadcrumps}
+        breadcrumbs={breadcrumbs}
+      >
         {children}
       </MemoRootShell>
     </ErrorBoundary>

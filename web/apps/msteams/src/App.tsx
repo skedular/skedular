@@ -12,6 +12,7 @@ import { Notifications } from 'app/notifications';
 import { Organization } from 'app/organizations/organization';
 import { AddOrganizationLocation } from 'app/organizations/organization/locations/add';
 import { OrganizationLocation } from 'app/organizations/organization/locations/location';
+import { OrganizationMembers } from 'app/organizations/organization/members';
 import { AddOrganizationTeam } from 'app/organizations/organization/teams/add';
 import { OrganizationTeam } from 'app/organizations/organization/teams/team';
 import { Settings } from 'app/settings';
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: '/organizations/:organizationId',
     element: <Organization />,
+  },
+  {
+    path: '/organizations/:organizationId/members',
+    element: <OrganizationMembers />,
   },
   {
     path: '/organizations/:organizationId/locations',
