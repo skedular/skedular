@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<340456c8cef7f545f39495c1db3d46a7>>
+ * @generated SignedSource<<2c314e57ed09d6c0543a4e4342c2a270>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -182,6 +182,18 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "TeamOrganizationDetails",
+                    "kind": "LinkedField",
+                    "name": "organization",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "TeamMemberDetails",
                     "kind": "LinkedField",
                     "name": "members",
@@ -340,16 +352,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7f9176a73149ceba69796ad96c566398",
+    "cacheID": "337045f047b276b458b94989b59bf8f0",
     "id": null,
     "metadata": {},
     "name": "myTeams_teams_refetchableFragment",
     "operationKind": "query",
-    "text": "query myTeams_teams_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...myTeams_teams_query_1G22uz\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment myTeams_teams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {organizationId: $organizationId, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query myTeams_teams_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  ...myTeams_teams_query_1G22uz\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueId\n  }\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment myTeams_teams_query_1G22uz on Query {\n  teams(first: $count, after: $cursor, where: {organizationId: $organizationId, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c2daadf14fb8d66d4241e41abdfa0c7c";
+(node as any).hash = "b718cdc86c7228e83044a24e9c45d3f3";
 
 export default node;

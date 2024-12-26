@@ -1,7 +1,10 @@
 'use client';
 
+import { OrganizationTeam } from '@/components/organization/organizationTeam';
 import { RootShell } from '@/components/rootShell';
 import { Team } from '@/components/team/teamPage';
+import { Breadcrumbs } from '@mui/material';
+import { BodyIconTypography } from '@repo/shared/components/commons';
 import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { useParams } from 'next/navigation';
 import { memo, useContext } from 'react';
@@ -37,10 +40,16 @@ const TeamPage = () => {
     throw new Error('teamId is required');
   }
 
+  const breadcrumbs = (
+    <Breadcrumbs>
+      <BodyIconTypography label="Team Settings" />
+    </Breadcrumbs>
+  );
+
   return (
-    <RootShell>
+    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       {!switchToModernUI && <Team organizationId={finalOrganizationId} teamId={finalTeamId} />}
-      {switchToModernUI && <Team organizationId={finalOrganizationId} teamId={finalTeamId} />}
+      {switchToModernUI && <OrganizationTeam organizationId={finalOrganizationId} teamId={finalTeamId} />}
     </RootShell>
   );
 };

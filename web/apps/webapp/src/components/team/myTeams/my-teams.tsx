@@ -1,3 +1,4 @@
+import { getModernOrganizationTeamSetupBaseLink } from '@/components/organization';
 import type { myTeams_deleteTeamMutation } from '@/queries/__generated__/myTeams_deleteTeamMutation.graphql';
 import type { myTeams_teams_query$key } from '@/queries/__generated__/myTeams_teams_query.graphql';
 import type { myTeams_teams_refetchableFragment } from '@/queries/__generated__/myTeams_teams_refetchableFragment.graphql';
@@ -32,6 +33,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
+import { useRouter } from 'next/navigation';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -82,6 +84,9 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
             node {
               id
               name
+              organization {
+                uniqueId
+              }
               members {
                 organizationMember {
                   uniqueId
@@ -118,6 +123,7 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
     }
   `);
 
+  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const connectionIds = useMemo(() => (rootDataRefetchable.teams ? [rootDataRefetchable.teams.__id] : []), [rootDataRefetchable.teams]);
@@ -164,6 +170,10 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
 
     switch (id) {
       case MoreActionsMenuOptionType.EditTeam:
+        if (teamDetails) {
+          router.push(getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
+        }
+
         break;
 
       case MoreActionsMenuOptionType.DeleteTeam:

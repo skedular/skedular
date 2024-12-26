@@ -6,9 +6,8 @@ import { BodyIconTypography } from '@repo/shared/components/commons';
 import { MembersIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
-import NextLink from 'next/link';
-import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { getModernOrganizationMembersBaseLink } from '../';
 import { collapsedDrawerWidth, expandedDrawerWidth } from './commons';
 
@@ -19,7 +18,8 @@ type Props = {
 };
 
 const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
-  const pathName = usePathname();
+  const location = useLocation();
+  const pathName = location.pathname;
   const paletteMode = useContext(PaletteModeContext);
   const maxWidth = collapsed ? collapsedDrawerWidth : expandedDrawerWidth;
   const styles = {
@@ -57,7 +57,7 @@ const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, coll
       }}
     >
       <ListItem disablePadding>
-        <Link component={NextLink} href={memberesLink}>
+        <Link href={memberesLink}>
           <ListItemButton
             selected={pathName === memberesLink}
             sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === memberesLink) }}

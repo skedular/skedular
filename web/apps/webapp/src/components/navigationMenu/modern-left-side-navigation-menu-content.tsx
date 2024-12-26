@@ -137,7 +137,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
             >
               {collapsed && (
                 <BodyIconTypography
-                  startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <HomeIcon color="inherit" />}
                   invertDefaultColor={pathName === organizationBaseLink && paletteMode === 'dark'}
                 />
               )}
@@ -161,7 +161,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
             >
               {collapsed && (
                 <BodyIconTypography
-                  startElement={!hideIcons && <LocationIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <LocationIcon color="inherit" />}
                   invertDefaultColor={pathName.startsWith(organizationLocationsBaseLink) && paletteMode === 'dark'}
                 />
               )}
@@ -185,7 +185,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
             >
               {collapsed && (
                 <BodyIconTypography
-                  startElement={!hideIcons && <TeamIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <TeamIcon color="inherit" />}
                   invertDefaultColor={pathName.startsWith(organizationTeamsBaseLink) && paletteMode === 'dark'}
                 />
               )}
@@ -209,7 +209,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
             >
               {collapsed && (
                 <BodyIconTypography
-                  startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <MembersIcon color="inherit" />}
                   invertDefaultColor={pathName.startsWith(organizationMembersBaseLink) && paletteMode === 'dark'}
                 />
               )}
@@ -234,7 +234,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
               >
                 {collapsed && (
                   <BodyIconTypography
-                    startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
+                    startElement={!hideIcons && <SettingsIcon color="inherit" />}
                     invertDefaultColor={pathName.startsWith('/settings') && paletteMode === 'dark'}
                   />
                 )}

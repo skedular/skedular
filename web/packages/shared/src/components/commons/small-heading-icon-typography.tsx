@@ -8,18 +8,20 @@ type Props = {
   endElement?: React.ReactNode | JSX.Element;
   stackMode?: 'row' | 'column';
   label?: string | null | undefined;
+  noWrap?: boolean;
   sx?: SxProps<Theme>;
   spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];
   invertDefaultColor?: boolean;
 };
 
-const SmallHeadingIconTypography = ({ startElement, endElement, stackMode, label, sx, spacing, color, invertDefaultColor }: Props) => (
+const SmallHeadingIconTypography = ({ startElement, endElement, stackMode, label, noWrap, sx, spacing, color, invertDefaultColor }: Props) => (
   <IconTypography
     startElement={startElement}
     endElement={endElement}
     stackMode={stackMode}
     label={label}
+    noWrap={noWrap}
     variant="h4"
     sx={sx}
     spacing={spacing}

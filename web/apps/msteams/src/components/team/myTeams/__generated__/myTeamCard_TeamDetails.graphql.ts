@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<331dfd97778b85ea18d234f37f31be0f>>
+ * @generated SignedSource<<7ee5dbc3e8a3c3fe313d2a54da158d79>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,6 +29,9 @@ export type myTeamCard_TeamDetails$data = {
     } | null | undefined;
   }>;
   readonly name: string;
+  readonly organization: {
+    readonly uniqueId: string;
+  } | null | undefined;
   readonly " $fragmentType": "myTeamCard_TeamDetails";
 };
 export type myTeamCard_TeamDetails$key = {
@@ -65,6 +68,18 @@ return {
       "storageKey": null
     },
     (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "TeamOrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": [
+        (v1/*: any*/)
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -156,6 +171,6 @@ return {
 };
 })();
 
-(node as any).hash = "a8c5dea2b93b49165b9ed9baa69ea493";
+(node as any).hash = "4e651e33fae8ec0ab07eb78703e56fac";
 
 export default node;

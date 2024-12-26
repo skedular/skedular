@@ -1,3 +1,4 @@
+import { getModernOrganizationTeamSetupBaseLink } from '@/components/organization';
 import type { myTeamCard_deleteTeamMutation } from '@/queries/__generated__/myTeamCard_deleteTeamMutation.graphql';
 import type { myTeamCard_TeamDetails$key } from '@/queries/__generated__/myTeamCard_TeamDetails.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -30,6 +31,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, sandstone } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
+import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -55,6 +57,9 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
       fragment myTeamCard_TeamDetails on TeamDetails {
         id
         name
+        organization {
+          uniqueId
+        }
         members {
           organizationMember {
             uniqueId
@@ -86,6 +91,7 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
     }
   `);
 
+  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
@@ -107,6 +113,7 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
 
     switch (id) {
       case MoreActionsMenuOptionType.EditTeam:
+        router.push(getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteTeam:

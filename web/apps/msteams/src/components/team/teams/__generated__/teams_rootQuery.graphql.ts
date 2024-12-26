@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3751fbb6f5ac20dc8ebb37394e3138d2>>
+ * @generated SignedSource<<5c7a5b14246ae7ac5d1b4279f15d1d67>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -213,6 +213,18 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "TeamOrganizationDetails",
+                    "kind": "LinkedField",
+                    "name": "organization",
+                    "plural": false,
+                    "selections": [
+                      (v7/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "TeamMemberDetails",
                     "kind": "LinkedField",
                     "name": "members",
@@ -360,12 +372,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ac5294fa4e40ed73fff3b7d0b5e4d351",
+    "cacheID": "b27f2da3d8c4397a2a9c932f007f2521",
     "id": null,
     "metadata": {},
     "name": "teams_rootQuery",
     "operationKind": "query",
-    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]!\n) {\n  ...locationSelector_allLocations_query\n  ...myTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment myTeams_teams_query on Query {\n  teams(where: {organizationId: $organizationId, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query teams_rootQuery(\n  $organizationId: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]!\n) {\n  ...locationSelector_allLocations_query\n  ...myTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueId\n  }\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment myTeams_teams_query on Query {\n  teams(where: {organizationId: $organizationId, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n              givenName\n              middleName\n              familyName\n              name\n              photoUrl\n            }\n          }\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...myTeamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

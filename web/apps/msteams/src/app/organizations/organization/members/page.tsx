@@ -1,11 +1,9 @@
-'use client';
-
 import { Breadcrumbs } from '@mui/material';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { OrganizationMembers } from 'components/organization/organizationMembers';
 import { RootShell } from 'components/rootShell';
-import { useParams } from 'next/navigation';
 import { memo } from 'react';
+import { useParams } from 'react-router-dom';
 
 const OrganizationsPage = () => {
   const { organizationId } = useParams();

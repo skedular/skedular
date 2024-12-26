@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<72cad48973f07edae7831406c6f39a74>>
+ * @generated SignedSource<<d12270cd337c13fcbda4ce6c3223179c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,6 +33,9 @@ export type myTeams_teams_query$data = {
           } | null | undefined;
         }>;
         readonly name: string;
+        readonly organization: {
+          readonly uniqueId: string;
+        } | null | undefined;
         readonly " $fragmentSpreads": FragmentRefs<"myTeamCard_TeamDetails">;
       };
     }>;
@@ -174,6 +177,18 @@ return {
                   "storageKey": null
                 },
                 (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "TeamOrganizationDetails",
+                  "kind": "LinkedField",
+                  "name": "organization",
+                  "plural": false,
+                  "selections": [
+                    (v2/*: any*/)
+                  ],
+                  "storageKey": null
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -330,6 +345,6 @@ return {
 };
 })();
 
-(node as any).hash = "c2daadf14fb8d66d4241e41abdfa0c7c";
+(node as any).hash = "b718cdc86c7228e83044a24e9c45d3f3";
 
 export default node;

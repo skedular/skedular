@@ -112,7 +112,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
             <ListItemButton selected={pathName === '/'} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === '/') }}>
               {collapsed && (
                 <BodyIconTypography
-                  startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <HomeIcon color="inherit" />}
                   invertDefaultColor={pathName === '/' && paletteMode === 'dark'}
                 />
               )}
@@ -136,7 +136,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
             >
               {collapsed && (
                 <BodyIconTypography
-                  startElement={!hideIcons && <OrganizationIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <OrganizationIcon color="inherit" />}
                   invertDefaultColor={pathName.startsWith('/organizations') && paletteMode === 'dark'}
                 />
               )}
@@ -160,7 +160,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
             >
               {collapsed && (
                 <BodyIconTypography
-                  startElement={!hideIcons && <LocationIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <LocationIcon color="inherit" />}
                   invertDefaultColor={pathName.startsWith('/locations') && paletteMode === 'dark'}
                 />
               )}
@@ -184,7 +184,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
             >
               {collapsed && (
                 <BodyIconTypography
-                  startElement={!hideIcons && <TeamIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <TeamIcon color="inherit" />}
                   invertDefaultColor={pathName.startsWith('/teams') && paletteMode === 'dark'}
                 />
               )}
@@ -208,7 +208,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
             >
               {collapsed && (
                 <BodyIconTypography
-                  startElement={!hideIcons && <NotificationsIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <NotificationsIcon color="inherit" />}
                   invertDefaultColor={pathName.startsWith('/notifications') && paletteMode === 'dark'}
                 />
               )}
@@ -232,7 +232,7 @@ const OldLeftSideNavigationMenu = ({ collapsed, enableCollapseButton, toggleColl
             >
               {collapsed && (
                 <BodyIconTypography
-                  startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
+                  startElement={!hideIcons && <SettingsIcon color="inherit" />}
                   invertDefaultColor={pathName.startsWith('/settings') && paletteMode === 'dark'}
                 />
               )}

@@ -13,6 +13,7 @@ type Props = {
   endElement?: React.ReactNode | JSX.Element;
   stackMode?: 'row' | 'column';
   label?: string | null | undefined;
+  noWrap?: boolean;
   variant?: Variant;
   sx?: SxProps<Theme>;
   spacing?: ResponsiveStyleValue<number | string>;
@@ -20,7 +21,7 @@ type Props = {
   invertDefaultColor?: boolean;
 };
 
-const IconTypography = ({ startElement, endElement, stackMode, label, variant, sx, spacing, color, invertDefaultColor }: Props) => {
+const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, variant, sx, spacing, color, invertDefaultColor }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const finalColor = invertDefaultColor ? (paletteMode === 'dark' ? coal : sandstone) : color;
 
@@ -30,7 +31,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, variant, s
 
   if (!startElement && !endElement) {
     return (
-      <Typography variant={variant} sx={sx} color={finalColor}>
+      <Typography variant={variant} sx={sx} color={finalColor} noWrap={noWrap}>
         {label}
       </Typography>
     );
@@ -41,7 +42,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, variant, s
       <StackColumn sx={sx} spacing={spacing}>
         {startElement}
         {label && (
-          <Typography variant={variant} color={finalColor}>
+          <Typography variant={variant} color={finalColor} noWrap={noWrap}>
             {label}
           </Typography>
         )}
@@ -54,7 +55,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, variant, s
     <StackRow sx={sx} spacing={spacing} color={finalColor}>
       {startElement}
       {label && (
-        <Typography variant={variant} color={finalColor}>
+        <Typography variant={variant} color={finalColor} noWrap={noWrap}>
           {label}
         </Typography>
       )}

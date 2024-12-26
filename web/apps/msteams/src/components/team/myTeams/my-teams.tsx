@@ -29,9 +29,11 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { getModernOrganizationTeamSetupBaseLink } from 'components/organization';
 import { nanoid } from 'nanoid';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useMutation, useRefetchableFragment } from 'react-relay';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import type { myTeams_deleteTeamMutation } from './__generated__/myTeams_deleteTeamMutation.graphql';
 import type { myTeams_teams_query$key } from './__generated__/myTeams_teams_query.graphql';
@@ -83,6 +85,9 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
             node {
               id
               name
+              organization {
+                uniqueId
+              }
               members {
                 organizationMember {
                   uniqueId
@@ -119,6 +124,7 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
     }
   `);
 
+  const navigate = useNavigate();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const connectionIds = useMemo(() => (rootDataRefetchable.teams ? [rootDataRefetchable.teams.__id] : []), [rootDataRefetchable.teams]);
@@ -165,6 +171,10 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
 
     switch (id) {
       case MoreActionsMenuOptionType.EditTeam:
+        if (teamDetails) {
+          navigate(getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
+        }
+
         break;
 
       case MoreActionsMenuOptionType.DeleteTeam:
