@@ -415,9 +415,9 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   ];
 
   return (
-    <Box sx={{ display: 'flex', width: '100%' }}>
+    <Box sx={{ display: 'flex' }}>
       <OrganizationMembersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
-      <Box sx={{ marginLeft: expandedDrawerWidthPx }}>
+      <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
             <SectionIconTypography label="Organization Members" />

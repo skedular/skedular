@@ -55,9 +55,9 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
   }, [section]);
 
   return (
-    <Box sx={{ display: 'flex', width: '100%' }}>
+    <Box sx={{ display: 'flex' }}>
       <OrganizationTeamLeftSideNavigationMenuContent organizationId={organizationId} teamId={teamId} hideIcons />
-      <Box sx={{ marginLeft: expandedDrawerWidthPx }}>
+      <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackColumn
             sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
