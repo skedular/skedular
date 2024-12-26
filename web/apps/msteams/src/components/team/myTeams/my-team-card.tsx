@@ -7,6 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
@@ -99,6 +100,14 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
 
+  let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam]];
+
+  if (teamDetails.canDelete) {
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam]);
+  }
+
+  const editLink = getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id);
+
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
   };
@@ -108,7 +117,7 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
 
     switch (id) {
       case MoreActionsMenuOptionType.EditTeam:
-        navigate(getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
+        navigate(editLink);
         break;
 
       case MoreActionsMenuOptionType.DeleteTeam:
@@ -160,17 +169,15 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
     });
   };
 
-  let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam]];
-
-  if (teamDetails.canDelete) {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam]);
-  }
-
   return (
     <>
       <Card sx={{ width: 600 }}>
         <CardHeader
-          title={<LeadIconTypography startElement={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} invertDefaultColor />}
+          title={
+            <Link href={editLink}>
+              <LeadIconTypography startElement={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+            </Link>
+          }
           action={
             <>
               {moreActionsOption.length > 0 && (

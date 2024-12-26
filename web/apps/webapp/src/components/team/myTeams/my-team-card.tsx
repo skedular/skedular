@@ -10,6 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
@@ -31,6 +32,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, sandstone } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
+import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
@@ -104,6 +106,8 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam]);
   }
 
+  const editLink = getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id);
+
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
   };
@@ -113,7 +117,7 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
 
     switch (id) {
       case MoreActionsMenuOptionType.EditTeam:
-        router.push(getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
+        router.push(editLink);
         break;
 
       case MoreActionsMenuOptionType.DeleteTeam:
@@ -169,7 +173,11 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
     <>
       <Card sx={{ width: 600 }}>
         <CardHeader
-          title={<LeadIconTypography startElement={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} invertDefaultColor />}
+          title={
+            <Link component={NextLink} href={editLink}>
+              <LeadIconTypography startElement={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+            </Link>
+          }
           action={
             <>
               {moreActionsOption.length > 0 && (
