@@ -229,6 +229,15 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
     });
   };
 
+  const handleRowClick = (id: string) => {
+    const teamDetails = teams.find((item) => item.id === id);
+    if (!teamDetails) {
+      return;
+    }
+
+    router.push(getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
+  };
+
   const rows: RowType[] = teams.map((team) => {
     return {
       id: team.id,
@@ -318,6 +327,7 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
             rowSpacingType="margin"
             getRowSpacing={() => ({ top: 3, bottom: 3 })}
             sx={defaultGridStyle}
+            onRowClick={(params) => handleRowClick(params.id as string)}
           />
         )}
       </StackColumn>
