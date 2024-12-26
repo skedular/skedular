@@ -7,7 +7,8 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
 import { nanoid } from 'nanoid';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { memo, useEffect, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
@@ -30,19 +31,50 @@ const RootQuery = graphql`
 
 const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => {
   const rootData = usePreloadedQuery<organizationTeam_rootQuery>(RootQuery, queryReference);
+  const searchParams = useSearchParams();
+  const section = searchParams.get('section');
+  const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  useEffect(() => {
+    if (!section) {
+      return;
+    }
+
+    const element = sectionRefs.current[section];
+    if (!element) {
+      return;
+    }
+
+    const appBarHeight = document.querySelector('.app-bar')?.clientHeight || 0;
+    const elementTop = element.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: elementTop - appBarHeight,
+      behavior: 'smooth',
+    });
+  }, [section]);
 
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
       <OrganizationTeamLeftSideNavigationMenuContent organizationId={organizationId} teamId={teamId} hideIcons />
       <Box>
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+          <StackColumn
+            sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+            ref={(divElement) => {
+              sectionRefs.current['setup'] = divElement;
+            }}
+          >
             <SectionIconTypography label="Team Setup" />
             <BodyIconTypography label="Edit your team name and details" />
             <Divider />
           </StackColumn>
 
-          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+          <StackColumn
+            sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+            ref={(divElement) => {
+              sectionRefs.current['members'] = divElement;
+            }}
+          >
             <SectionIconTypography label="Team Members" />
             <BodyIconTypography label="Manage your team members" />
             <Divider />

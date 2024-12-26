@@ -97,7 +97,7 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
 
   return (
     <>
-      <AppBar position="sticky">
+      <AppBar position="sticky" className="app-bar">
         <Toolbar
           sx={{
             backgroundColor: (theme) => theme.palette.background.paper,
