@@ -11,6 +11,7 @@ import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { expandedDrawerWidthPx } from './commons';
 import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
 
 type Props = {
@@ -56,7 +57,7 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
       <OrganizationTeamLeftSideNavigationMenuContent organizationId={organizationId} teamId={teamId} hideIcons />
-      <Box>
+      <Box sx={{ marginLeft: expandedDrawerWidthPx }}>
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackColumn
             sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}

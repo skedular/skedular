@@ -30,6 +30,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransit
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { expandedDrawerWidthPx } from './commons';
 import OrganizationMembersLeftSideNavigationMenuContent from './organization-members-left-side-navigation-menu-content';
 
 type Props = {
@@ -416,7 +417,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
       <OrganizationMembersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
-      <Box>
+      <Box sx={{ marginLeft: expandedDrawerWidthPx }}>
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
             <SectionIconTypography label="Organization Members" />

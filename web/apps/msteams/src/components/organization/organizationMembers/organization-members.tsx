@@ -31,6 +31,7 @@ import type { organizationMembers_organizationMembers_query$key } from './__gene
 import type { organizationMembers_organizationMembers_refetchableFragment } from './__generated__/organizationMembers_organizationMembers_refetchableFragment.graphql';
 import type { organizationMembers_removeOrganizationMembersInputMutation } from './__generated__/organizationMembers_removeOrganizationMembersInputMutation.graphql';
 import type { organizationMembers_rootQuery } from './__generated__/organizationMembers_rootQuery.graphql';
+import { expandedDrawerWidthPx } from './commons';
 import OrganizationMembersLeftSideNavigationMenuContent from './organization-members-left-side-navigation-menu-content';
 
 type Props = {
@@ -417,7 +418,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
       <OrganizationMembersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
-      <Box>
+      <Box sx={{ marginLeft: expandedDrawerWidthPx }}>
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
             <SectionIconTypography label="Organization Members" />

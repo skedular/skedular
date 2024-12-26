@@ -10,7 +10,7 @@ import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
 import { getModernOrganizationMembersBaseLink } from '../';
-import { collapsedDrawerWidth, expandedDrawerWidth } from './commons';
+import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
 
 type Props = {
   organizationId: string;
@@ -61,6 +61,8 @@ const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, coll
         borderColor: (theme) => theme.palette.divider,
         paddingTop: { xs: 1, sm: 1, md: 3 },
         height: '100vh',
+        position: 'fixed',
+        width: collapsed ? collapsedDrawerWidthPx : expandedDrawerWidthPx,
       }}
     >
       <ListItem disablePadding>
