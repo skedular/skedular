@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
 import { NewIcon } from '@repo/shared/components/icons';
 import { memo, useState } from 'react';
 import InvitePeopleToJoinOrganizationDialog from './invite-people-to-join-organization-dialog';
@@ -29,15 +30,16 @@ const InvitePeopleToJoinOrganizationButton = ({ organizationId, fullWidth, label
 
   return (
     <>
-      <Button
-        variant={variant ?? 'text'}
-        size={size ?? 'large'}
-        onClick={handleButtonClicked}
-        fullWidth={fullWidth}
-        endIcon={hideIcon ? null : <NewIcon />}
-        sx={{ borderRadius: 4 }}
-      >
-        {label ?? 'Invite New Members'}
+      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth}>
+        {size === 'small' && (
+          <SmallIconTypography label={label ?? 'Invite New Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
+        )}
+        {size === 'medium' && (
+          <BodyIconTypography label={label ?? 'Invite New Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
+        )}
+        {(size === 'large' || !size) && (
+          <LeadIconTypography label={label ?? 'Invite New Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
+        )}
       </Button>
       <InvitePeopleToJoinOrganizationDialog
         isDialogOpen={isDialogOpen}

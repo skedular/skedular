@@ -14,7 +14,7 @@ type Props = {
 };
 
 const NewLocationButton = ({ organizationId, fullWidth, label, hideIcon, variant, size }: Props) => (
-  <Button href={getLocationAddLink(organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth} sx={{ borderRadius: 4 }}>
+  <Button href={getLocationAddLink(organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth}>
     {size === 'small' && (
       <SmallIconTypography label={label ?? 'Add Location'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
     )}

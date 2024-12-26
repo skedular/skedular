@@ -13,20 +13,18 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const NewTeamButton = ({ organizationId, fullWidth, label, hideIcon, variant, size }: Props) => {
-  return (
-    <Button href={getTeamAddLink(organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth} sx={{ borderRadius: 4 }}>
-      {size === 'small' && (
-        <SmallIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
-      )}
-      {size === 'medium' && (
-        <BodyIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
-      )}
-      {(size === 'large' || !size) && (
-        <LeadIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
-      )}
-    </Button>
-  );
-};
+const NewTeamButton = ({ organizationId, fullWidth, label, hideIcon, variant, size }: Props) => (
+  <Button href={getTeamAddLink(organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth}>
+    {size === 'small' && (
+      <SmallIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
+    )}
+    {size === 'medium' && (
+      <BodyIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
+    )}
+    {(size === 'large' || !size) && (
+      <LeadIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
+    )}
+  </Button>
+);
 
 export default memo(NewTeamButton);

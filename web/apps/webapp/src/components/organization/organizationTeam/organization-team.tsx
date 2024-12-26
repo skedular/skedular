@@ -1,14 +1,26 @@
 import type { organizationTeam_rootQuery } from '@/queries/__generated__/organizationTeam_rootQuery.graphql';
+import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { BodyIconTypography, SectionIconTypography, StackColumn } from '@repo/shared/components/commons';
+import Toolbar from '@mui/material/Toolbar';
+import {
+  BodyIconTypography,
+  PushToRight,
+  SectionIconTypography,
+  SmallHeadingIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { coal, defaultPadding, maxScreenWidth, sandstone } from '@repo/shared/libs/theme';
 import { nanoid } from 'nanoid';
 import { useSearchParams } from 'next/navigation';
-import { memo, useEffect, useRef, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { expandedDrawerWidthPx } from './commons';
@@ -32,6 +44,8 @@ const RootQuery = graphql`
 
 const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => {
   const rootData = usePreloadedQuery<organizationTeam_rootQuery>(RootQuery, queryReference);
+
+  const paletteMode = useContext(PaletteModeContext);
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -58,6 +72,35 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
     <Box sx={{ display: 'flex' }}>
       <OrganizationTeamLeftSideNavigationMenuContent organizationId={organizationId} teamId={teamId} hideIcons />
       <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+        <AppBar position="sticky">
+          <Toolbar
+            sx={{
+              backgroundColor: (theme) => (paletteMode === 'dark' ? sandstone : coal),
+              borderBottom: paletteMode === 'dark' ? 1 : undefined,
+              borderColor: (theme) => theme.palette.divider,
+            }}
+          >
+            <SmallHeadingIconTypography label="Edit Team Information" invertDefaultColor />
+
+            <PushToRight />
+            <StackRow>
+              <Button sx={{ border: 1, borderColor: paletteMode === 'dark' ? coal : sandstone }} variant="contained" color="inherit">
+                <SmallIconTypography label="Cancel" invertDefaultColor />
+              </Button>
+
+              <Button
+                sx={{
+                  borderColor: paletteMode === 'dark' ? coal : sandstone,
+                  backgroundColor: paletteMode === 'dark' ? coal : sandstone,
+                }}
+                variant="contained"
+                color="inherit"
+              >
+                <SmallIconTypography label="Save & Exit" />
+              </Button>
+            </StackRow>
+          </Toolbar>
+        </AppBar>
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackColumn
             sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}

@@ -14,7 +14,7 @@ type Props = {
 };
 
 const NewTeamButton = ({ organizationId, fullWidth, label, hideIcon, variant, size }: Props) => (
-  <Button href={getTeamAddLink(organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth} sx={{ borderRadius: 4 }}>
+  <Button href={getTeamAddLink(organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth}>
     {size === 'small' && (
       <SmallIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
     )}

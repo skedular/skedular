@@ -82,7 +82,7 @@ const NewBookingButton = ({
 
   return (
     <>
-      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ borderRadius: 4 }}>
+      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth}>
         {size === 'small' && (
           <SmallIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
         )}
