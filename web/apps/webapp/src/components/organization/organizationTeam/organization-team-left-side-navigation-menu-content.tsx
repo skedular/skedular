@@ -72,26 +72,21 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
       <ListItem disablePadding>
         <Link component={NextLink} href={setupLink}>
           <ListItemButton selected={fullPath === setupLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === setupLink) }}>
-            <ListItemButton
-              selected={fullPath === setupLink}
-              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === setupLink) }}
-            >
-              {collapsed && (
-                <BodyIconTypography
-                  startElement={!hideIcons && <EditIcon color="inherit" />}
-                  invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
-                />
-              )}
-              {!collapsed && (
-                <BodyIconTypography
-                  label="Team Setup"
-                  startElement={!hideIcons && <EditIcon color="inherit" />}
-                  spacing={3}
-                  invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
-                  noWrap
-                />
-              )}
-            </ListItemButton>
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <EditIcon color="inherit" />}
+                invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Team Setup"
+                startElement={!hideIcons && <EditIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
           </ListItemButton>
         </Link>
       </ListItem>
@@ -102,26 +97,21 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
             selected={fullPath === memberesLink}
             sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === memberesLink) }}
           >
-            <ListItemButton
-              selected={fullPath === memberesLink}
-              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === memberesLink) }}
-            >
-              {collapsed && (
-                <BodyIconTypography
-                  startElement={!hideIcons && <MembersIcon color="inherit" />}
-                  invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
-                />
-              )}
-              {!collapsed && (
-                <BodyIconTypography
-                  label="Team Members"
-                  startElement={!hideIcons && <MembersIcon color="inherit" />}
-                  spacing={3}
-                  invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
-                  noWrap
-                />
-              )}
-            </ListItemButton>
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <MembersIcon color="inherit" />}
+                invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Team Members"
+                startElement={!hideIcons && <MembersIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
           </ListItemButton>
         </Link>
       </ListItem>

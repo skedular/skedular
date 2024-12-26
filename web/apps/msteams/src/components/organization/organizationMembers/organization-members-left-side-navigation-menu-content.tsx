@@ -64,25 +64,20 @@ const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, coll
             selected={pathName === memberesLink}
             sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === memberesLink) }}
           >
-            <ListItemButton
-              selected={pathName === memberesLink}
-              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === memberesLink) }}
-            >
-              {collapsed && (
-                <BodyIconTypography
-                  startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
-                  invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'}
-                />
-              )}
-              {!collapsed && (
-                <BodyIconTypography
-                  label="Members"
-                  startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
-                  spacing={3}
-                  invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'}
-                />
-              )}
-            </ListItemButton>
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
+                invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Members"
+                startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
+                spacing={3}
+                invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'}
+              />
+            )}
           </ListItemButton>
         </Link>
       </ListItem>
