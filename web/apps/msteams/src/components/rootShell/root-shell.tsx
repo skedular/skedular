@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid2';
 import { SmallHeadingIconTypography } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -118,17 +117,10 @@ const RootShell = ({
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
         <LeftSideNavigationMenu collapsed={collapsed} />
-        <Grid container sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1 }}>
           <AppBar rootDataRelay={rootData} hideWelcomeMessage={hideWelcomeMessage} showBreadcrumps={showBreadcrumps} breadcrumbs={breadcrumbs} />
-          <Grid
-            sx={{
-              paddingLeft: switchToModernUI ? undefined : 2,
-              paddingTop: switchToModernUI ? undefined : 2,
-            }}
-          >
-            {children}
-          </Grid>
-        </Grid>
+          <Box sx={{ paddingLeft: switchToModernUI ? undefined : 2, paddingTop: switchToModernUI ? undefined : 2 }}>{children}</Box>
+        </Box>
       </Box>
     </>
   );

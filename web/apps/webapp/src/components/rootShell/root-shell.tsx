@@ -6,7 +6,6 @@ import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_root
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid2';
 import { SmallHeadingIconTypography } from '@repo/shared/components/commons';
 import { LogoutIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
@@ -134,7 +133,7 @@ const RootShell = ({
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
         <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />
-        <Grid container sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1 }}>
           <AppBar
             rootDataRelay={rootData}
             hideOrganizationSelector={hideOrganizationSelector}
@@ -144,28 +143,14 @@ const RootShell = ({
           />
           {!rootData.myOrganizations ||
             (rootData.myOrganizations.length === 0 && (
-              <Grid
-                sx={{
-                  flexGrow: 1,
-                  paddingLeft: switchToModernUI ? undefined : 2,
-                  paddingTop: switchToModernUI ? undefined : 2,
-                }}
-              >
+              <Box sx={{ paddingLeft: switchToModernUI ? undefined : 2, paddingTop: switchToModernUI ? undefined : 2 }}>
                 <OrganizationOnboarding onReloadRequired={onReloadRequired} />
-              </Grid>
+              </Box>
             ))}
           {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && (
-            <Grid
-              sx={{
-                flexGrow: 1,
-                paddingLeft: switchToModernUI ? undefined : 2,
-                paddingTop: switchToModernUI ? undefined : 2,
-              }}
-            >
-              {children}
-            </Grid>
+            <Box sx={{ paddingLeft: switchToModernUI ? undefined : 2, paddingTop: switchToModernUI ? undefined : 2 }}>{children}</Box>
           )}
-        </Grid>
+        </Box>
       </Box>
     </>
   );
