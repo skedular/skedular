@@ -61,6 +61,7 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
     <List
       sx={{
         backgroundColor: (theme) => theme.palette.background.paper,
+        borderRight: 1,
         borderColor: (theme) => theme.palette.divider,
         paddingTop: { xs: 1, sm: 1, md: 3 },
         height: '100vh',

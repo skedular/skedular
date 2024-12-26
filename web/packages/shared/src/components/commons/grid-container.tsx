@@ -2,7 +2,7 @@ import type { GridSpacing } from '@mui/material/Grid2';
 import Grid from '@mui/material/Grid2';
 import { Theme } from '@mui/material/styles';
 import type { ResponsiveStyleValue, SxProps } from '@mui/system';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 type Props = {
   sx?: SxProps<Theme>;

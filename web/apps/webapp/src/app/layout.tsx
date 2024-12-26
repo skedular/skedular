@@ -17,7 +17,8 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Barlow, Inter } from 'next/font/google';
 import Script from 'next/script';
-import { PropsWithChildren, useContext } from 'react';
+import type { PropsWithChildren } from 'react';
+import { useContext } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

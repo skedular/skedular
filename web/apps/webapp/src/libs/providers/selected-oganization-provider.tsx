@@ -1,4 +1,5 @@
-import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import type { PropsWithChildren } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
 export const SelectedOrganizationContext = createContext<string | undefined>(undefined);

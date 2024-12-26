@@ -2,7 +2,8 @@
 
 import { getEnvironment } from '@repo/shared/clients/graphql/skedular';
 import { signIn, useSession } from 'next-auth/react';
-import { PropsWithChildren, useMemo } from 'react';
+import type { PropsWithChildren } from 'react';
+import { useMemo } from 'react';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 
 interface SessionExtended {

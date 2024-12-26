@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

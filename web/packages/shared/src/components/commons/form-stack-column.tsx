@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
 import type { SxProps, Theme } from '@mui/system';
 import { ResponsiveStyleValue } from '@mui/system';
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
 interface AnyObject {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

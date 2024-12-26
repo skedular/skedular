@@ -16,7 +16,8 @@ import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { nanoid } from 'nanoid';
 import { signOut } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { PropsWithChildren, memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import type { PropsWithChildren } from 'react';
+import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 

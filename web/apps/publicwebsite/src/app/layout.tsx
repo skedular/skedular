@@ -6,7 +6,8 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Barlow, Inter } from 'next/font/google';
 import Script from 'next/script';
-import { PropsWithChildren, useContext } from 'react';
+import type { PropsWithChildren } from 'react';
+import { useContext } from 'react';
 
 const inter = Inter({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] });
 const barlow = Barlow({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] });

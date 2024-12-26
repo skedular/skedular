@@ -1,4 +1,5 @@
-import { createContext, PropsWithChildren, useState } from 'react';
+import type { PropsWithChildren } from 'react';
+import { createContext, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export const GlobalReloadIdContext = createContext<string>(uuidv4());

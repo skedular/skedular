@@ -1,5 +1,6 @@
 import { getEnvironment } from '@repo/shared/clients/graphql/skedular';
-import { PropsWithChildren, useMemo } from 'react';
+import type { PropsWithChildren } from 'react';
+import { useMemo } from 'react';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 
 type Props = {
