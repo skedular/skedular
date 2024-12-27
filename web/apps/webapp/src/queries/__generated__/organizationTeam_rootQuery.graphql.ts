@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f49397ba198e992f45fc75ff67efaaa8>>
+ * @generated SignedSource<<62740aa19ebcd8cc99fc3d4b4ddd84b4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type organizationTeam_rootQuery$variables = {
 };
 export type organizationTeam_rootQuery$data = {
   readonly team: {
+    readonly about: string | null | undefined;
     readonly id: string;
     readonly name: string;
   } | null | undefined;
@@ -59,6 +60,13 @@ v1 = [
         "kind": "ScalarField",
         "name": "name",
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "about",
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -82,16 +90,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "67cb503fcdb8cbc38639bf26810d2e92",
+    "cacheID": "5630d5f0774e26ef8806cb9589d285bc",
     "id": null,
     "metadata": {},
     "name": "organizationTeam_rootQuery",
     "operationKind": "query",
-    "text": "query organizationTeam_rootQuery(\n  $teamId: String!\n) {\n  team(id: $teamId) {\n    id\n    name\n  }\n}\n"
+    "text": "query organizationTeam_rootQuery(\n  $teamId: String!\n) {\n  team(id: $teamId) {\n    id\n    name\n    about\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2bc8a634db81a49eb719121c71698f97";
+(node as any).hash = "9cc1e6e22adb19aec686db6f5b12dc9d";
 
 export default node;

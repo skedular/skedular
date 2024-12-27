@@ -239,6 +239,17 @@ const getDesignTokens = (mode: PaletteMode) => {
           },
         },
       },
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            maxWidth: 600,
+            ['& .MuiOutlinedInput-root']: {
+              backgroundColor: mode === 'dark' ? coal : defaultTheme.palette.background.paper,
+              borderRadius: 12,
+            },
+          },
+        },
+      },
     },
   };
 };

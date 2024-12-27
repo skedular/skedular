@@ -1,4 +1,5 @@
 import type { organizationTeam_rootQuery } from '@/queries/__generated__/organizationTeam_rootQuery.graphql';
+import type { organizationTeam_updateTeamMutation } from '@/queries/__generated__/organizationTeam_updateTeamMutation.graphql';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -6,6 +7,8 @@ import Divider from '@mui/material/Divider';
 import Toolbar from '@mui/material/Toolbar';
 import {
   BodyIconTypography,
+  FormStackColumn,
+  LeadIconTypography,
   PushToRight,
   SectionIconTypography,
   SmallHeadingIconTypography,
@@ -18,11 +21,14 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, defaultPadding, maxScreenWidth, sandstone } from '@repo/shared/libs/theme';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { Form } from 'react-final-form';
+import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { object, string } from 'yup';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
 
@@ -33,11 +39,26 @@ type Props = {
   teamId: string;
 };
 
+type TeamDetails = {
+  name: string;
+  about: string | null;
+  timezone: string;
+  primaryLocationId?: string;
+};
+
+const teamSchema = object({
+  name: string().min(3, 'Team name must be at least three charcters long.').required('Team name is required'),
+  about: string().nullable(),
+  timezone: string().nullable(),
+  primaryLocationId: string().nullable(),
+});
+
 const RootQuery = graphql`
   query organizationTeam_rootQuery($teamId: String!) {
     team(id: $teamId) {
       id
       name
+      about
     }
   }
 `;
@@ -45,11 +66,41 @@ const RootQuery = graphql`
 const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => {
   const rootData = usePreloadedQuery<organizationTeam_rootQuery>(RootQuery, queryReference);
 
+  const [commitUpdateTeam] = useMutation<organizationTeam_updateTeamMutation>(graphql`
+    mutation organizationTeam_updateTeamMutation($input: UpdateTeamInput!) @raw_response_type {
+      updateTeam(input: $input) {
+        team {
+          id
+          name
+          about
+          timezone
+          organization {
+            name
+          }
+          primaryLocation {
+            uniqueId
+            name
+          }
+          members {
+            customer {
+              uniqueId
+            }
+            organizationMember {
+              uniqueId
+            }
+          }
+        }
+      }
+    }
+  `);
+
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const validate = makeValidate(teamSchema);
+  const requiredFields = makeRequired(teamSchema);
 
   useEffect(() => {
     if (!section) {
@@ -69,9 +120,17 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
     });
   }, [section]);
 
+  const handleDetailUpdateClick = () => {};
+
   const handleCancelClick = () => {
     router.back();
   };
+
+  if (!rootData.team) {
+    return null;
+  }
+
+  const team = rootData.team;
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -80,7 +139,7 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
         <AppBar position="sticky">
           <Toolbar
             sx={{
-              backgroundColor: (theme) => (paletteMode === 'dark' ? sandstone : coal),
+              backgroundColor: paletteMode === 'dark' ? sandstone : coal,
               borderBottom: paletteMode === 'dark' ? 1 : undefined,
               borderColor: (theme) => theme.palette.divider,
             }}
@@ -121,6 +180,24 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
             <SectionIconTypography label="Team Setup" />
             <BodyIconTypography label="Edit your team name and details" />
             <Divider />
+          </StackColumn>
+
+          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+            <LeadIconTypography label="Team" />
+            <Form
+              onSubmit={handleDetailUpdateClick}
+              initialValues={{
+                name: team.name,
+                about: team.about,
+              }}
+              validate={validate}
+              render={({ handleSubmit }) => (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <TextField label="Name" name="name" required={requiredFields.name} />
+                  <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
+                </FormStackColumn>
+              )}
+            />
           </StackColumn>
 
           <StackColumn
