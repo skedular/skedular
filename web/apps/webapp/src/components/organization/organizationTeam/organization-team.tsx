@@ -19,7 +19,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, defaultPadding, maxScreenWidth, sandstone } from '@repo/shared/libs/theme';
 import { nanoid } from 'nanoid';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -45,6 +45,7 @@ const RootQuery = graphql`
 const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => {
   const rootData = usePreloadedQuery<organizationTeam_rootQuery>(RootQuery, queryReference);
 
+  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
@@ -67,6 +68,10 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
       behavior: 'smooth',
     });
   }, [section]);
+
+  const handleCancelClick = () => {
+    router.back();
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -95,6 +100,7 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
                 }}
                 variant="contained"
                 color="inherit"
+                onClick={handleCancelClick}
               >
                 <SmallIconTypography label="Cancel" invertDefaultColor />
               </Button>

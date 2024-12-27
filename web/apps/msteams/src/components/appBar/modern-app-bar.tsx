@@ -120,8 +120,8 @@ const ModernAppBar = ({ rootDataRelay, hideWelcomeMessage, showBreadcrumps, brea
 
           {showBreadcrumps && (
             <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-              <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap' }}>
-                {'< Back'}
+              <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
+                {'< back'}
               </Button>
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>{breadcrumbs}</Box>
             </StackColumn>
