@@ -84,18 +84,22 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
 
             <PushToRight />
             <StackRow>
-              <Button sx={{ border: 1, borderColor: paletteMode === 'dark' ? coal : sandstone }} variant="contained" color="inherit">
-                <SmallIconTypography label="Cancel" invertDefaultColor />
-              </Button>
-
               <Button
                 sx={{
+                  border: 1,
                   borderColor: paletteMode === 'dark' ? coal : sandstone,
-                  backgroundColor: paletteMode === 'dark' ? coal : sandstone,
+                  textTransform: 'none',
+                  '&:hover': {
+                    backgroundColor: 'inherit',
+                  },
                 }}
                 variant="contained"
                 color="inherit"
               >
+                <SmallIconTypography label="Cancel" invertDefaultColor />
+              </Button>
+
+              <Button variant="contained" color="primary" sx={{ textTransform: 'none' }}>
                 <SmallIconTypography label="Save & Exit" />
               </Button>
             </StackRow>
