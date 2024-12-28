@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<62740aa19ebcd8cc99fc3d4b4ddd84b4>>
+ * @generated SignedSource<<b07243b33e21da7a6ee103575d658e42>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,10 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type organizationTeam_rootQuery$variables = {
+  organizationExists: boolean;
+  organizationId: string;
   teamId: string;
 };
 export type organizationTeam_rootQuery$data = {
@@ -18,6 +21,7 @@ export type organizationTeam_rootQuery$data = {
     readonly id: string;
     readonly name: string;
   } | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceLocation_locations_query">;
 };
 export type organizationTeam_rootQuery = {
   response: organizationTeam_rootQuery$data;
@@ -25,81 +29,179 @@ export type organizationTeam_rootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "teamId"
-  }
-],
-v1 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "id",
-        "variableName": "teamId"
-      }
-    ],
-    "concreteType": "TeamDetails",
-    "kind": "LinkedField",
-    "name": "team",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "id",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "name",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "about",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationExists"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationId"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "teamId"
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": [
+    {
+      "kind": "Variable",
+      "name": "id",
+      "variableName": "teamId"
+    }
+  ],
+  "concreteType": "TeamDetails",
+  "kind": "LinkedField",
+  "name": "team",
+  "plural": false,
+  "selections": [
+    (v3/*: any*/),
+    (v4/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "about",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationTeam_rootQuery",
-    "selections": (v1/*: any*/),
+    "selections": [
+      (v5/*: any*/),
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "singleChoiceLocation_locations_query"
+      }
+    ],
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/),
+      (v2/*: any*/)
+    ],
     "kind": "Operation",
     "name": "organizationTeam_rootQuery",
-    "selections": (v1/*: any*/)
+    "selections": [
+      (v5/*: any*/),
+      {
+        "condition": "organizationExists",
+        "kind": "Condition",
+        "passingValue": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": [
+              {
+                "fields": [
+                  {
+                    "kind": "Variable",
+                    "name": "organizationId",
+                    "variableName": "organizationId"
+                  }
+                ],
+                "kind": "ObjectValue",
+                "name": "where"
+              }
+            ],
+            "concreteType": "LocationConnection",
+            "kind": "LinkedField",
+            "name": "locations",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "totalCount",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "LocationEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "LocationDetails",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/),
+                      (v4/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
+              }
+            ],
+            "storageKey": null
+          }
+        ]
+      }
+    ]
   },
   "params": {
-    "cacheID": "5630d5f0774e26ef8806cb9589d285bc",
+    "cacheID": "4ffb773ff09624b604fee0ff389d8abb",
     "id": null,
     "metadata": {},
     "name": "organizationTeam_rootQuery",
     "operationKind": "query",
-    "text": "query organizationTeam_rootQuery(\n  $teamId: String!\n) {\n  team(id: $teamId) {\n    id\n    name\n    about\n  }\n}\n"
+    "text": "query organizationTeam_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $teamId: String!\n) {\n  team(id: $teamId) {\n    id\n    name\n    about\n  }\n  ...singleChoiceLocation_locations_query\n}\n\nfragment singleChoiceLocation_locations_query on Query {\n  locations(where: {organizationId: $organizationId}) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9cc1e6e22adb19aec686db6f5b12dc9d";
+(node as any).hash = "1e092b7164ec2c940178e973969100bd";
 
 export default node;

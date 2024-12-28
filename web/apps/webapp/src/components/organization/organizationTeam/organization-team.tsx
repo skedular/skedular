@@ -1,3 +1,4 @@
+import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import type { organizationTeam_rootQuery } from '@/queries/__generated__/organizationTeam_rootQuery.graphql';
 import type { organizationTeam_updateTeamMutation } from '@/queries/__generated__/organizationTeam_updateTeamMutation.graphql';
 import AppBar from '@mui/material/AppBar';
@@ -16,6 +17,7 @@ import {
   StackColumn,
   StackRow,
 } from '@repo/shared/components/commons';
+import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -54,12 +56,13 @@ const teamSchema = object({
 });
 
 const RootQuery = graphql`
-  query organizationTeam_rootQuery($teamId: String!) {
+  query organizationTeam_rootQuery($organizationId: String!, $organizationExists: Boolean!, $teamId: String!) {
     team(id: $teamId) {
       id
       name
       about
     }
+    ...singleChoiceLocation_locations_query
   }
 `;
 
@@ -195,6 +198,13 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
                 <FormStackColumn onSubmit={handleSubmit}>
                   <TextField label="Name" name="name" required={requiredFields.name} />
                   <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
+                  <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+                  <SingleChoiceLocation
+                    rootDataRelay={rootData}
+                    id="primaryLocationId"
+                    required={requiredFields.primaryLocationId}
+                    label="Primary Location"
+                  />
                 </FormStackColumn>
               )}
             />
@@ -231,13 +241,15 @@ const OrganizationTeamWithRelay = ({ organizationId, teamId }: RelayProps) => {
   useEffect(() => {
     loadQuery(
       {
+        organizationId,
+        organizationExists: !!organizationId,
         teamId,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, teamId]);
+  }, [loadQuery, triggerReloadId, organizationId, teamId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

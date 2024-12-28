@@ -47,9 +47,11 @@ const TeamPage = () => {
       </Breadcrumbs>
     );
 
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationTeam organizationId={finalOrganizationId} teamId={finalTeamId} />
-    </RootShell>;
+    return (
+      <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+        <OrganizationTeam organizationId={finalOrganizationId} teamId={finalTeamId} />
+      </RootShell>
+    );
   }
 
   return (
