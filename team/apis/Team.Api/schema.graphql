@@ -70,6 +70,7 @@ type TeamCustomerDetails {
   photoUrl72: String
   photoUrl192: String
   photoUrl512: String
+  phoneNumber: String
 }
 
 type TeamDetails {
@@ -270,6 +271,7 @@ enum TeamMemberOrderField {
   GivenName
   MiddleName
   FamilyName
+  PhoneNumber
 }
 
 enum TeamMemberStatus {

@@ -812,6 +812,7 @@ type TeamCustomerDetails {
   givenName: String
   middleName: String
   name: String
+  phoneNumber: String
   photoUrl: String
   photoUrl192: String
   photoUrl24: String
@@ -1619,6 +1620,7 @@ enum TeamMemberOrderField {
   MembershipType
   MiddleName
   Name
+  PhoneNumber
   Status
 }
 

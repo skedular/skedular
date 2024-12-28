@@ -93,6 +93,7 @@ public class Mapper : IMapper
             PhotoUrl72 = customer.PhotoUrl72,
             PhotoUrl192 = customer.PhotoUrl192,
             PhotoUrl512 = customer.PhotoUrl512,
+            PhoneNumber = customer.PhoneNumber,
             Identities = customer.Identities.Select(item =>
                     new Shared.Models.Identity
                     {
@@ -224,6 +225,7 @@ public class Mapper : IMapper
         dest.PhotoUrl72 = src.PhotoUrl72;
         dest.PhotoUrl192 = src.PhotoUrl192;
         dest.PhotoUrl512 = src.PhotoUrl512;
+        dest.PhoneNumber = src.PhoneNumber;
         dest.Identities = identities;
         return dest;
     }
@@ -459,6 +461,7 @@ public class Mapper : IMapper
                 PhotoUrl72 = src.PhotoUrl72,
                 PhotoUrl192 = src.PhotoUrl192,
                 PhotoUrl512 = src.PhotoUrl512,
+                PhoneNumber = src.PhoneNumber,
                 Identities = MapTo(src.Identities).ToList()
             };
 

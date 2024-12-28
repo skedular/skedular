@@ -180,6 +180,7 @@ message Customer {
     string photoUrl72 = 10;
     string photoUrl192 = 11;
     string photoUrl512 = 12;
+    string phoneNumber = 13;
 }
 
 message Admin_UpdateMembersInput {

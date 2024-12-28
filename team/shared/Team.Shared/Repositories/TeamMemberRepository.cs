@@ -96,6 +96,9 @@ internal static class TeamMemberExtensions
             TeamMemberOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Customer.FamilyName)
                 : originalQuery.OrderByDescending(x => x.Customer.FamilyName),
+            TeamMemberOrderField.PhoneNumber => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Customer.PhoneNumber)
+                : originalQuery.OrderByDescending(x => x.Customer.PhoneNumber),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch
@@ -118,6 +121,9 @@ internal static class TeamMemberExtensions
                 TeamMemberOrderField.FamilyName => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Customer.FamilyName)
                     : query.ThenByDescending(x => x.Customer.FamilyName),
+                TeamMemberOrderField.PhoneNumber => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Customer.PhoneNumber)
+                    : query.ThenByDescending(x => x.Customer.PhoneNumber),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }
