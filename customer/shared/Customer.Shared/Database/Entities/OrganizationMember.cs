@@ -1,5 +1,5 @@
 using Api.Shared;
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -36,7 +36,7 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
         builder
             .Property(item => item.Status)
             .HasMaxLength(Constants.MaxMemberStatusLength)
-            .HasDefaultValue(OrganizationMemberStatus.Active);
+            .HasDefaultValue(OrganizationMemberStatusConstants.Active);
 
         builder
             .HasOne(item => item.Organization)

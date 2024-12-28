@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -21,7 +21,7 @@ public interface IOrganizationMemberService
 
     Task<OrganizationMember> ChangeMembershipTypeAsync(
         string organizationMemberId,
-        string membershipType,
+        OrganizationMembershipType membershipType,
         CancellationToken cancellationToken);
 
     Task<ICollection<OrganizationMember>> ChangeStatusAsync(
@@ -91,7 +91,7 @@ public class OrganizationMemberService(
 
     public async Task<OrganizationMember> ChangeMembershipTypeAsync(
         string organizationMemberId,
-        string membershipType,
+        OrganizationMembershipType membershipType,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -118,24 +118,32 @@ public class OrganizationMemberService(
         var myMembershipDetails =
             organization.OrganizationMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.Status != OrganizationMemberStatus.Active)
+        if (myMembershipDetails.Status != OrganizationMemberStatusConstants.Active)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == OrganizationMembershipType.Administrator &&
+        if (myMembershipDetails.MembershipType == OrganizationMembershipTypeConstants.Administrator &&
             membershipType == OrganizationMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == OrganizationMembershipType.Member &&
+        if (myMembershipDetails.MembershipType == OrganizationMembershipTypeConstants.Member &&
             membershipType == OrganizationMembershipType.Administrator)
         {
             throw new Unauthorized();
         }
 
-        if (organizationMember.MembershipType == membershipType)
+        var mappedMembershipType = membershipType switch
+        {
+            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
+            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
+            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        if (organizationMember.MembershipType == mappedMembershipType)
         {
             return mapper.MapTo(organizationMember, mapper.MapTo(organization));
         }
@@ -144,7 +152,7 @@ public class OrganizationMemberService(
             repositoryFactory.OrganizationMemberRepository.UnitOfWork,
             cancellationToken);
 
-        organizationMember.MembershipType = membershipType;
+        organizationMember.MembershipType = mappedMembershipType;
         repositoryFactory.OrganizationMemberRepository.Update(organizationMember);
 
         await organizationOutboxPublisher.PublishOrganizationAsync(

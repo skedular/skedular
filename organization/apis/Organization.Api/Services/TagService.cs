@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -111,11 +111,18 @@ public class TagService(
             throw new Unauthorized();
         }
 
+        var tagType = tag.Type switch
+        {
+            OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+            OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
         var matchingTagFound = await repositoryFactory.TagRepository
             .Query(new Specification<Shared.Database.Entities.Tag>
             {
                 Criteria = query => query.Organization.Id == tag.Organization.Id &&
-                                    query.Type == tag.Type &&
+                                    query.Type == tagType &&
                                     EF.Functions.ILike(query.Name, tag.Name)
             }).AnyAsync(cancellationToken);
         if (matchingTagFound)
@@ -257,7 +264,12 @@ public class TagService(
 
         var tagId = tag.Id;
         var tagName = tag.Name;
-        var tagType = tag.Type;
+        var tagType = tag.Type switch
+        {
+            OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+            OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         var organizationId = existingTag.Organization.Id;
         var matchingTagFound = await repositoryFactory.TagRepository
             .Query(new Specification<Shared.Database.Entities.Tag>
@@ -270,12 +282,12 @@ public class TagService(
             }).AnyAsync(cancellationToken);
         if (matchingTagFound)
         {
-            if (tagType == OrganizationTagType.DeskType)
+            if (tag.Type == OrganizationTagType.DeskType)
             {
                 throw new DeskTypeWithSameNameExist();
             }
 
-            if (tagType == OrganizationTagType.Zone)
+            if (tag.Type == OrganizationTagType.Zone)
             {
                 throw new ZoneWithSameNameExist();
             }

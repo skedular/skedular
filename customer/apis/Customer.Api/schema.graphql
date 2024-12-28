@@ -227,7 +227,7 @@ input SubmitCustomerFeedbackInput {
   clientMutationId: String
   id: String
   feedbackContent: String!
-  channel: FeedbackChannel!
+  channel: FeedbackChannelType!
 }
 
 input UpdateMyCustomerDetailsInput {
@@ -254,7 +254,7 @@ enum CustomerOrderField {
   PhoneNumber
 }
 
-enum FeedbackChannel {
+enum FeedbackChannelType {
   Web
   Slack
   MsTeams

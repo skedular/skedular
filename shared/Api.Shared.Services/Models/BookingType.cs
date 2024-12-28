@@ -1,8 +1,21 @@
-namespace Api.Shared.Models;
+namespace Api.Shared.Services.Models;
 
-public static class  BookingType
+public enum BookingType
 {
-    public const string WorkingFromHome = "WORKING_FROM_HOME"; 
+    WorkingFromHome,
+    WorkingFromOffice,
+    SickLeave,
+    AnnualLeave,
+    WellBeingLeave,
+    ClientOffices,
+    Vacation,
+    TravelingForWork,
+    NonWorkingDay
+}
+
+public static class BookingTypeConstants
+{
+    public const string WorkingFromHome = "WORKING_FROM_HOME";
     public const string WorkingFromOffice = "WORKING_FROM_OFFICE";
     public const string SickLeave = "SICK_LEAVE";
     public const string AnnualLeave = "ANNUAL_LEAVE";

@@ -1,7 +1,9 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
+using Location.Shared.Models;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -74,7 +76,7 @@ public class ChangeLocationMemberOwnershipTypeInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("membershipType")] public LocationMemberMembershipType MembershipType { get; set; }
+    [GraphQLName("membershipType")] public LocationMembershipType MembershipType { get; set; }
 }
 
 [GraphQLName("DeleteLocationInput")]
@@ -103,11 +105,6 @@ public class DeskDetails : Node
 
 [GraphQLName("DeskEdge")]
 public class DeskEdge : Edge<DeskDetails>;
-
-public enum DeskOrderField
-{
-    Name
-}
 
 [GraphQLName("DeskOrderInput")]
 public class DeskOrderInput
@@ -216,7 +213,7 @@ public class LocationMemberConnection : Connection<LocationMemberEdge>;
 [GraphQLName("LocationMemberDetails")]
 public class LocationMemberDetails : Node
 {
-    [GraphQLName("membershipType")] public LocationMemberMembershipType? MembershipType { get; set; }
+    [GraphQLName("membershipType")] public LocationMembershipType? MembershipType { get; set; }
     [GraphQLName("customer")] public LocationCustomerDetails Customer { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
@@ -231,22 +228,6 @@ public class LocationMemberDetailsPayload
 [GraphQLName("LocationMemberEdge")]
 public class LocationMemberEdge : Edge<LocationMemberDetails>;
 
-public enum LocationMemberMembershipType
-{
-    Owner,
-    Administrator,
-    Member
-}
-
-public enum LocationMemberOrderField
-{
-    MembershipType,
-    Name,
-    GivenName,
-    MiddleName,
-    FamilyName
-}
-
 [GraphQLName("LocationMemberOrderInput")]
 public class LocationMemberOrderInput
 {
@@ -259,13 +240,6 @@ public class LocationMemberWhereInput
 {
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-}
-
-public enum LocationOrderField
-{
-    Name,
-    About,
-    Timezone
 }
 
 [GraphQLName("LocationOrderInput")]

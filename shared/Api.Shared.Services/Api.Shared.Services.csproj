@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="OpenApi\" />
+        <Folder Include="OpenApi\"/>
     </ItemGroup>
 
 </Project>

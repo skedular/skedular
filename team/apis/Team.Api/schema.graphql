@@ -21,7 +21,7 @@ type Mutation {
   updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload @cost(weight: "10")
   updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload @cost(weight: "10")
   deleteTeam(input: DeleteTeamInput!): TeamPayload @cost(weight: "10")
-  deleteTeamMember(input: DeleteTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
+  removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   changeTeamMemberOwnershipType(input: ChangeTeamMemberOwnershipTypeInput!): TeamMemberDetailsPayload @cost(weight: "10")
   inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload @cost(weight: "10")
   acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload @cost(weight: "10")
@@ -39,7 +39,7 @@ type PageInfo {
 type Query {
   teamVersion: Version!
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
-  teamMemberMembershipTypes: [TeamMemberMembershipType!]!
+  teamMembershipTypes: [TeamMembershipType!]!
   team(id: String!): TeamDetails @cost(weight: "10")
   teams(after: String first: Int before: String last: Int where: TeamWhereInput! orderBy: [TeamOrderInput!]): TeamConnection @cost(weight: "10")
   myTeams(organizationId: String): [TeamDetails!] @cost(weight: "10")
@@ -102,7 +102,7 @@ type TeamMemberConnection {
 }
 
 type TeamMemberDetails {
-  membershipType: TeamMemberMembershipType
+  membershipType: TeamMembershipType
   customer: TeamCustomerDetails!
   organizationMember: TeamOrganizationMemberDetails
   id: ID!
@@ -171,15 +171,10 @@ input CancelInvitationToJoinTeamInput {
 input ChangeTeamMemberOwnershipTypeInput {
   clientMutationId: String
   id: String!
-  membershipType: TeamMemberMembershipType!
+  membershipType: TeamMembershipType!
 }
 
 input DeleteTeamInput {
-  clientMutationId: String
-  id: String!
-}
-
-input DeleteTeamMemberInput {
   clientMutationId: String
   id: String!
 }
@@ -191,6 +186,11 @@ input InviteCustomersToJoinTeamInput {
 }
 
 input RejectInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input RemoveTeamMemberInput {
   clientMutationId: String
   id: String!
 }
@@ -250,18 +250,18 @@ enum OrderDirection {
   Descending
 }
 
-enum TeamMemberMembershipType {
-  Owner
-  Administrator
-  Member
-}
-
 enum TeamMemberOrderField {
   MembershipType
   Name
   GivenName
   MiddleName
   FamilyName
+}
+
+enum TeamMembershipType {
+  Owner
+  Administrator
+  Member
 }
 
 enum TeamOrderField {

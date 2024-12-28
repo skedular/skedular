@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Team.Shared.Models;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember;

@@ -8,7 +8,7 @@ namespace Organization.Shared.Database.Entities;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class OrganizationSsoSetting : EntityBase
-{ 
+{
     public string EntityId { get; set; }
     public string LoginUrl { get; set; }
     public string RedirectUrl { get; set; }

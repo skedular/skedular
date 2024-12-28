@@ -8,7 +8,8 @@ namespace Billing.Shared;
 public class Program
 {
     public static async Task Main(string[] args) =>
-        await MigrationHelper.RunMigrationAsync<BillingDbContext>(() => CreateHostBuilder(args), CancellationToken.None);
+        await MigrationHelper.RunMigrationAsync<BillingDbContext>(() => CreateHostBuilder(args),
+            CancellationToken.None);
 
     // ReSharper disable once MemberCanBePrivate.Global
     public static IHostBuilder CreateHostBuilder(string[] args) =>

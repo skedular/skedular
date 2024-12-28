@@ -5,7 +5,7 @@
 type Notification {
   sourceId: ID!
   eventRaisedAt: DateTime!
-  notificationType: NotificationNotificationType!
+  notificationType: NotificationType!
   invitedBy: NotificationCustomerDetails
   invitee: NotificationCustomerDetails
   organization: NotificationOrganizationDetails
@@ -82,15 +82,15 @@ input NotificationOrderInput {
   field: NotificationOrderField!
 }
 
-enum NotificationNotificationType {
+enum NotificationOrderField {
+  Date
+  Type
+}
+
+enum NotificationType {
   InvitationToJoinOrganization
   InvitationToJoinLocation
   InvitationToJoinTeam
-}
-
-enum NotificationOrderField {
-  EventRaisedAt
-  NotificationType
 }
 
 enum OrderDirection {

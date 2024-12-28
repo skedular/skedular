@@ -1,6 +1,5 @@
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Organization.Shared.Database;
 using Organization.Shared.Database.Entities;
 
@@ -12,6 +11,7 @@ public interface IOrganizationSsoSettingRepository : IRepository<OrganizationSso
         string organizationId,
         CancellationToken cancellationToken);
 }
+
 public class OrganizationSsoSettingRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<OrganizationDbContext, OrganizationSsoSetting>(dbContext, timeProvider),
         IOrganizationSsoSettingRepository
@@ -20,6 +20,6 @@ public class OrganizationSsoSettingRepository(OrganizationDbContext dbContext, T
         string organizationId,
         CancellationToken cancellationToken) =>
         await DbContext.OrganizationSsoSetting
-            .Include(x=>x.Organization)
+            .Include(x => x.Organization)
             .FirstOrDefaultAsync(query => query.Organization.Id == organizationId, cancellationToken);
 }

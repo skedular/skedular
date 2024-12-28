@@ -11,6 +11,6 @@ public record NotificationOrder(OrderDirection Direction, NotificationOrderField
 
 public enum NotificationOrderField
 {
-    EventRaisedAt,
-    Type
+    Date,
+    Type,
 }

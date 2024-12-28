@@ -6,3 +6,10 @@ public enum FeedbackChannelType
     Slack = 1,
     MsTeams = 2
 }
+
+public static class FeedbackChannelTypeConstants
+{
+    public const string Web = "WEB";
+    public const string Slack = "SLACK";
+    public const string MsTeams = "MSTEAMS";
+}

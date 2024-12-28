@@ -1,6 +1,13 @@
 namespace Notification.Shared.Models;
 
-public static class NotificationType
+public enum NotificationType
+{
+    InvitationToJoinOrganization,
+    InvitationToJoinLocation,
+    InvitationToJoinTeam
+}
+
+public static class NotificationTypeConstants
 {
     public const string InvitationToJoinOrganization = "INVITATION_TO_JOIN_ORGANIZATION";
     public const string InvitationToJoinLocation = "INVITATION_TO_JOIN_LOCATION";

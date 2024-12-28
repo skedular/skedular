@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dabb784f18c6673faeaf47afc67d785e>>
+ * @generated SignedSource<<1a1b740febdc6a7c423033e74fbef524>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,24 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type DeleteTeamMemberInput = {
+export type RemoveTeamMemberInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type teamMemberCard_deleteTeamMemberMutation$variables = {
+export type teamMemberCard_removeTeamMemberMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: DeleteTeamMemberInput;
+  input: RemoveTeamMemberInput;
 };
-export type teamMemberCard_deleteTeamMemberMutation$data = {
-  readonly deleteTeamMember: {
+export type teamMemberCard_removeTeamMemberMutation$data = {
+  readonly removeTeamMember: {
     readonly teamMember: {
       readonly id: string;
     };
   } | null | undefined;
 };
-export type teamMemberCard_deleteTeamMemberMutation = {
-  response: teamMemberCard_deleteTeamMemberMutation$data;
-  variables: teamMemberCard_deleteTeamMemberMutation$variables;
+export type teamMemberCard_removeTeamMemberMutation = {
+  response: teamMemberCard_removeTeamMemberMutation$data;
+  variables: teamMemberCard_removeTeamMemberMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,14 +61,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "teamMemberCard_deleteTeamMemberMutation",
+    "name": "teamMemberCard_removeTeamMemberMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "TeamMemberPayload",
         "kind": "LinkedField",
-        "name": "deleteTeamMember",
+        "name": "removeTeamMember",
         "plural": false,
         "selections": [
           {
@@ -94,14 +94,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "teamMemberCard_deleteTeamMemberMutation",
+    "name": "teamMemberCard_removeTeamMemberMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "TeamMemberPayload",
         "kind": "LinkedField",
-        "name": "deleteTeamMember",
+        "name": "removeTeamMember",
         "plural": false,
         "selections": [
           {
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "265fa3c40b1cde0c9fdd50fa0df145f1",
+    "cacheID": "679c4ab88dfa06b145441af1e7ecd718",
     "id": null,
     "metadata": {},
-    "name": "teamMemberCard_deleteTeamMemberMutation",
+    "name": "teamMemberCard_removeTeamMemberMutation",
     "operationKind": "mutation",
-    "text": "mutation teamMemberCard_deleteTeamMemberMutation(\n  $input: DeleteTeamMemberInput!\n) {\n  deleteTeamMember(input: $input) {\n    teamMember {\n      id\n    }\n  }\n}\n"
+    "text": "mutation teamMemberCard_removeTeamMemberMutation(\n  $input: RemoveTeamMemberInput!\n) {\n  removeTeamMember(input: $input) {\n    teamMember {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "322f52f3bc1170980dc21a61e0d521ba";
+(node as any).hash = "eb35c2e76d57edad7b744d491738fd0d";
 
 export default node;

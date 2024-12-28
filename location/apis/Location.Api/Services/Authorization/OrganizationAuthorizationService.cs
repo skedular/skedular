@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Location.Shared.Database.Entities;
 using Customer = Location.Shared.Models.Customer;
 
@@ -19,30 +19,33 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
     public bool CanView(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
-            or OrganizationMembershipType.Member
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
+            or OrganizationMembershipTypeConstants.Member
         };
 
     public bool CanModify(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 
     public bool CanDelete(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
         };
 
     public bool CanInvitePeople(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 
     public bool CanCancelPeopleExistingInvitations(
@@ -50,14 +53,16 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 
     public bool CanViewAnalytics(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 }

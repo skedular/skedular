@@ -1,5 +1,5 @@
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Team.Api.GraphQL;
@@ -18,7 +18,7 @@ namespace Team.Api.Mappers;
 
 public interface IMapper
 {
-    Shared.Models.TeamMember MapTo(Shared.Database.Entities.TeamMember src);
+    TeamMember MapTo(Shared.Database.Entities.TeamMember src);
     Shared.Models.Team MapTo(Shared.Database.Entities.Team src);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
 
@@ -73,17 +73,23 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public TeamMember MapTo(Shared.Database.Entities.TeamMember src)=>
-    new()
-    {
-        Id = src.Id,
-        CreatedAt = src.CreatedAt,
-        DeletedAt = src.DeletedAt,
-        ModifiedAt = src.ModifiedAt,
-        MembershipType = src.MembershipType,
-        Customer = MapTo(src.Customer)!,
-        OrganizationMember = MapTo(src.OrganizationMember)
-    };
+    public TeamMember MapTo(Shared.Database.Entities.TeamMember src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            MembershipType = src.MembershipType switch
+            {
+                TeamMembershipTypeConstants.Owner => TeamMembershipType.Owner,
+                TeamMembershipTypeConstants.Administrator => TeamMembershipType.Administrator,
+                TeamMembershipTypeConstants.Member => TeamMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Customer = MapTo(src.Customer)!,
+            OrganizationMember = MapTo(src.OrganizationMember)
+        };
 
 
     public Shared.Models.Team MapTo(Shared.Database.Entities.Team src)
@@ -178,7 +184,13 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType,
+            MembershipType = src.MembershipType switch
+            {
+                TeamMembershipTypeConstants.Owner => TeamMembershipType.Owner,
+                TeamMembershipTypeConstants.Administrator => TeamMembershipType.Administrator,
+                TeamMembershipTypeConstants.Member => TeamMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = MapTo(src.Customer)!,
             Team = team,
             OrganizationMember = MapTo(src.OrganizationMember)
@@ -188,13 +200,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            MembershipType = src.MembershipType switch
-            {
-                TeamMembershipType.Owner => TeamMemberMembershipType.Owner,
-                TeamMembershipType.Administrator => TeamMemberMembershipType.Administrator,
-                TeamMembershipType.Member => TeamMemberMembershipType.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            MembershipType = src.MembershipType,
             Customer = MapTo(src.Customer),
             OrganizationMember = MapTo(src.OrganizationMember)
         };
@@ -259,9 +265,9 @@ public class Mapper : IMapper
 
     public ICollection<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src) =>
         src.CustomerIds
-            .Select(item => new TeamMember {Customer = new Customer { Id = item } })
+            .Select(item => new TeamMember { Customer = new Customer { Id = item } })
             .Concat(src.OrganizationMemberIds.Select(item =>
-                new TeamMember {OrganizationMember = new OrganizationMember { Id = item } }))
+                new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
             .ToList();
 
     public JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
@@ -272,8 +278,21 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
-            MembershipType = src.MembershipType,
+            Status = src.Status switch
+            {
+                InvitationStatusConstants.Pending => InvitationStatus.Pending,
+                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
+                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
+                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            MembershipType = src.MembershipType switch
+            {
+                TeamMembershipTypeConstants.Owner => TeamMembershipType.Owner,
+                TeamMembershipTypeConstants.Administrator => TeamMembershipType.Administrator,
+                TeamMembershipTypeConstants.Member => TeamMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Team = MapTo(src.Team),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -375,7 +394,13 @@ public class Mapper : IMapper
         Shared.Database.Entities.OrganizationMember? organizationMember)
     {
         dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType;
+        dest.MembershipType = src.MembershipType switch
+        {
+            TeamMembershipType.Owner => TeamMembershipTypeConstants.Owner,
+            TeamMembershipType.Administrator => TeamMembershipTypeConstants.Administrator,
+            TeamMembershipType.Member => TeamMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Team = team;
         dest.Customer = customer;
         dest.OrganizationMember = organizationMember;
@@ -504,8 +529,19 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                MembershipType = src.MembershipType,
-                Status = src.Status,
+                MembershipType = src.MembershipType switch
+                {
+                    OrganizationMembershipTypeConstants.Owner => OrganizationMembershipType.Owner,
+                    OrganizationMembershipTypeConstants.Administrator => OrganizationMembershipType.Administrator,
+                    OrganizationMembershipTypeConstants.Member => OrganizationMembershipType.Member,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
+                Status = src.Status switch
+                {
+                    OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
+                    OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
                 Customer = MapTo(src.Customer)!,
                 Organization = MapTo(src.Organization)!
             };
@@ -589,7 +625,14 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
+            Status = src.Status switch
+            {
+                InvitationStatusConstants.Pending => InvitationStatus.Pending,
+                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
+                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
+                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Team = team,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)

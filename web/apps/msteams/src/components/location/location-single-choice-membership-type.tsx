@@ -17,15 +17,15 @@ const LocationSingleChoiceMembershipType = ({ rootDataRelay, name, required }: P
   const rootData = useFragment(
     graphql`
       fragment locationSingleChoiceMembershipType_query on Query {
-        locationMemberMembershipTypes
+        locationMembershipTypes
       }
     `,
     rootDataRelay,
   );
 
-  const locationMemberMembershipTypes = useMemo<string[]>(
-    () => rootData.locationMemberMembershipTypes.map((locationMemberMembershipType) => locationMemberMembershipType),
-    [rootData.locationMemberMembershipTypes],
+  const locationMembershipTypes = useMemo<string[]>(
+    () => rootData.locationMembershipTypes.map((locationMembershipType) => locationMembershipType),
+    [rootData.locationMembershipTypes],
   );
 
   const filter = createFilterOptions<string>();
@@ -36,7 +36,7 @@ const LocationSingleChoiceMembershipType = ({ rootDataRelay, name, required }: P
       name={name}
       multiple={false}
       required={required}
-      options={locationMemberMembershipTypes}
+      options={locationMembershipTypes}
       getOptionValue={(option) => option as string}
       getOptionLabel={(option: string | string) => convertStringToLowercaseExceptFirstLetter(option as string)}
       renderOption={(props, option) => {

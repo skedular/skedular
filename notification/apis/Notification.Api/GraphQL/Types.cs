@@ -2,6 +2,7 @@ using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
+using Notification.Shared.Models;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -13,7 +14,7 @@ public class Notification : Node
 {
     [GraphQLName("sourceId")] [ID] public string SourceId { get; set; } = string.Empty;
     [GraphQLName("eventRaisedAt")] public DateTimeOffset EventRaisedAt { get; set; }
-    [GraphQLName("notificationType")] public NotificationNotificationType NotificationType { get; set; }
+    [GraphQLName("notificationType")] public NotificationType NotificationType { get; set; }
     [GraphQLName("invitedBy")] public NotificationCustomerDetails? InvitedBy { get; set; }
     [GraphQLName("invitee")] public NotificationCustomerDetails? Invitee { get; set; }
     [GraphQLName("organization")] public NotificationOrganizationDetails? Organization { get; set; }
@@ -51,19 +52,6 @@ public class NotificationLocationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-}
-
-public enum NotificationNotificationType
-{
-    InvitationToJoinOrganization,
-    InvitationToJoinLocation,
-    InvitationToJoinTeam
-}
-
-public enum NotificationOrderField
-{
-    EventRaisedAt,
-    NotificationType
 }
 
 [GraphQLName("NotificationOrderInput")]

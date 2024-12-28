@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Customer = Booking.Shared.Models.Customer;
 using Team = Booking.Shared.Database.Entities.Team;
@@ -29,8 +29,8 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
-                or TeamMembershipType.Member
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                or TeamMembershipTypeConstants.Member
             };
         }
 
@@ -43,8 +43,8 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
-                or TeamMembershipType.Member
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                or TeamMembershipTypeConstants.Member
             };
         }
 
@@ -57,8 +57,8 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
-                or TeamMembershipType.Member
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                or TeamMembershipTypeConstants.Member
             };
         }
 
@@ -71,8 +71,8 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
-                or TeamMembershipType.Member
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                or TeamMembershipTypeConstants.Member
             };
         }
 
@@ -85,8 +85,8 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
-                or TeamMembershipType.Member
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                or TeamMembershipTypeConstants.Member
             };
         }
 
@@ -99,8 +99,8 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
-                or TeamMembershipType.Member
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                or TeamMembershipTypeConstants.Member
             };
         }
 
@@ -113,8 +113,8 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
-                or TeamMembershipType.Member
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                or TeamMembershipTypeConstants.Member
             };
         }
 

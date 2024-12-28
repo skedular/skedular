@@ -118,7 +118,7 @@ public class LocationSubscriber(
 
     private async Task<Location> RebuildDesks(
         Shared.Models.Location location,
-        Location existingLocation, 
+        Location existingLocation,
         CancellationToken cancellationToken)
     {
         var desks = await repositoryFactory.DeskRepository.GetByLocationIdAsync(

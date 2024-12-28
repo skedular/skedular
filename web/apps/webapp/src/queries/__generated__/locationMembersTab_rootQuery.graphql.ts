@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5eaa4cf49f2881ec80891cc7c2d8ade5>>
+ * @generated SignedSource<<d37253f47e517044d6c0496aba375ec9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -145,7 +145,7 @@ return {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "locationMemberMembershipTypes",
+        "name": "locationMembershipTypes",
         "storageKey": null
       },
       {
@@ -302,12 +302,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "912be1adf812014f66d40c983747394b",
+    "cacheID": "2fc086d979ff930c598ef326a4d243b9",
     "id": null,
     "metadata": {},
     "name": "locationMembersTab_rootQuery",
     "operationKind": "query",
-    "text": "query locationMembersTab_rootQuery(\n  $locationId: String!\n  $peopleNameSearchText: String\n  $locationMembersSortingValues: [LocationMemberOrderInput!]\n) {\n  ...locationMembersTab_query\n  ...locationMembersTab_locationMembers_query\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationMembersTab_locationMembers_query on Query {\n  locationMembers(first: 50, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationMembersTab_query on Query {\n  location(id: $locationId) {\n    id\n    name\n  }\n  ...locationSingleChoiceMembershipType_query\n}\n\nfragment locationSingleChoiceMembershipType_query on Query {\n  locationMemberMembershipTypes\n}\n"
+    "text": "query locationMembersTab_rootQuery(\n  $locationId: String!\n  $peopleNameSearchText: String\n  $locationMembersSortingValues: [LocationMemberOrderInput!]\n) {\n  ...locationMembersTab_query\n  ...locationMembersTab_locationMembers_query\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationMembersTab_locationMembers_query on Query {\n  locationMembers(first: 50, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationMembersTab_query on Query {\n  location(id: $locationId) {\n    id\n    name\n  }\n  ...locationSingleChoiceMembershipType_query\n}\n\nfragment locationSingleChoiceMembershipType_query on Query {\n  locationMembershipTypes\n}\n"
   }
 };
 })();

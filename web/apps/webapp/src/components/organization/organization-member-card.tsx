@@ -1,7 +1,7 @@
 import { OrganizationSingleChoiceMembershipType } from '@/components/organization';
 import type { organizationMemberCard_OrganizationMemberDetails$key } from '@/queries/__generated__/organizationMemberCard_OrganizationMemberDetails.graphql';
 import type {
-  OrganizationMemberMembershipType,
+  OrganizationMembershipType,
   organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation,
 } from '@/queries/__generated__/organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation.graphql';
 import type { organizationSingleChoiceMembershipType_query$key } from '@/queries/__generated__/organizationSingleChoiceMembershipType_query.graphql';
@@ -89,7 +89,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
   };
 
   const handleSaveClick = ({ membershipType: membershipTypeStr }: OrganizationMemberDetails) => {
-    const membershipType = membershipTypeStr as unknown as OrganizationMemberMembershipType;
+    const membershipType = membershipTypeStr as unknown as OrganizationMembershipType;
     const toastId = themedToast(<NotificationContent content={`Updating organization membership...`} />, infoNotificationOptions);
 
     commitChangeOrganizationMemberOwnershipType({

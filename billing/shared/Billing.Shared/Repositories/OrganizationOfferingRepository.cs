@@ -12,7 +12,7 @@ public interface IOrganizationOfferingRepository : IRepository<OrganizationOffer
     OrganizationOffering Update(OrganizationOffering organizationOffering);
     void UpdateRange(ICollection<OrganizationOffering> organizationOfferings);
     void RemoveRange(ICollection<OrganizationOffering> organizationOfferings);
-    
+
     Task<ICollection<OrganizationOffering>> GetByOrganizationIdAsync(
         string organizationId,
         CancellationToken cancellationToken);
@@ -48,7 +48,7 @@ public class OrganizationOfferingRepository(BillingDbContext dbContext, TimeProv
         organizationOfferings.ForEach(organizationOffering => organizationOffering.DeletedAt = now);
         DbContext.OrganizationOffering.UpdateRange(organizationOfferings);
     }
-    
+
     public async Task<ICollection<OrganizationOffering>> GetByOrganizationIdAsync(
         string organizationId,
         CancellationToken cancellationToken) =>

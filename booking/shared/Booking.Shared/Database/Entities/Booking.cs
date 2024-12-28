@@ -1,5 +1,5 @@
 using Api.Shared;
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -31,7 +31,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         builder.Property(item => item.Notes).HasMaxLength(Constants.MaxBookingNotesLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingTypeLength)
-            .HasDefaultValue(BookingType.WorkingFromOffice);
+            .HasDefaultValue(BookingTypeConstants.WorkingFromOffice);
 
         builder
             .HasOne(item => item.Customer)

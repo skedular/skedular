@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<58160730b7147c17ee44addfb5999b7d>>
+ * @generated SignedSource<<4d1cd3915e3b958585fa3c8fe86a02c0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,11 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type OrganizationMemberMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
+export type OrganizationMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
 export type ChangeOrganizationMemberOwnershipTypeInput = {
   clientMutationId?: string | null | undefined;
   id: string;
-  membershipType: OrganizationMemberMembershipType;
+  membershipType: OrganizationMembershipType;
 };
 export type organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation$variables = {
   input: ChangeOrganizationMemberOwnershipTypeInput;
@@ -22,7 +22,7 @@ export type organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation
   readonly changeOrganizationMemberOwnershipType: {
     readonly member: {
       readonly id: string;
-      readonly membershipType: OrganizationMemberMembershipType | null | undefined;
+      readonly membershipType: OrganizationMembershipType | null | undefined;
     } | null | undefined;
   } | null | undefined;
 };
@@ -30,7 +30,7 @@ export type organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation
   readonly changeOrganizationMemberOwnershipType: {
     readonly member: {
       readonly id: string;
-      readonly membershipType: OrganizationMemberMembershipType | null | undefined;
+      readonly membershipType: OrganizationMembershipType | null | undefined;
     } | null | undefined;
   } | null | undefined;
 };

@@ -24,6 +24,10 @@ public interface ILocationMemberRepository : IRepository<LocationMember>
         LocationMemberSearchCriteria searchCriteria,
         ICollection<LocationMemberOrder> orderByFields,
         CancellationToken cancellationToken);
+
+    Task<ICollection<LocationMember>> GetByLocationIdAsync(
+        string locationId,
+        CancellationToken cancellationToken);
 }
 
 internal static class LocationMemberExtensions
@@ -154,4 +158,12 @@ public class LocationMemberRepository(LocationDbContext dbContext, TimeProvider 
             .AddDependentObjects()
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
+
+    public async Task<ICollection<LocationMember>> GetByLocationIdAsync(
+        string locationId,
+        CancellationToken cancellationToken) =>
+        await DbContext.LocationMember
+            .Where(query => query.Location.Id == locationId)
+            .Include(query => query.Customer)
+            .ToListAsync(cancellationToken);
 }

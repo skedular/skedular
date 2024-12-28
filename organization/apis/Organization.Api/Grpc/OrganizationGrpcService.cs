@@ -1,6 +1,6 @@
 using System.Reflection;
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
@@ -186,7 +186,7 @@ public class OrganizationGrpcService(
                 request.Last.FromNullInt()),
             new TagSearchCriteria(
                 request.Where.OrganizationId,
-                OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.DeskType,
                 request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
@@ -196,8 +196,8 @@ public class OrganizationGrpcService(
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    DeskTypeOrderField.DeskTypeName => TagOrderField.Name,
-                    DeskTypeOrderField.DeskTypeDescription => TagOrderField.Description,
+                    DeskTypeOrderField.DeskTypeName => OrganizationTagOrderField.Name,
+                    DeskTypeOrderField.DeskTypeDescription => OrganizationTagOrderField.Description,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -265,7 +265,7 @@ public class OrganizationGrpcService(
                 request.Last.FromNullInt()),
             new TagSearchCriteria(
                 request.Where.OrganizationId,
-                OrganizationTagType.Zone,
+                OrganizationTagTypeConstants.Zone,
                 request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
@@ -275,8 +275,8 @@ public class OrganizationGrpcService(
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    ZoneOrderField.ZoneName => TagOrderField.Name,
-                    ZoneOrderField.ZoneDescription => TagOrderField.Description,
+                    ZoneOrderField.ZoneName => OrganizationTagOrderField.Name,
+                    ZoneOrderField.ZoneDescription => OrganizationTagOrderField.Description,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 

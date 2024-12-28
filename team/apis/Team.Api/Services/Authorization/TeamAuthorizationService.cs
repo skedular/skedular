@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Exceptions;
 using Team.Shared.Models;
 using Team.Shared.Repositories;
@@ -27,8 +27,8 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
-                or TeamMembershipType.Member
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                or TeamMembershipTypeConstants.Member
             };
         }
 
@@ -41,7 +41,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
             };
         }
 
@@ -54,7 +54,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner
+                MembershipType: TeamMembershipTypeConstants.Owner
             };
         }
 
@@ -67,7 +67,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
             };
         }
 
@@ -82,7 +82,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator
+                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
             };
         }
 

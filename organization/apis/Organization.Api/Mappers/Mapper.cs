@@ -1,5 +1,5 @@
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
@@ -20,7 +20,7 @@ using Offering = Api.Shared.Services.Offering.Offering;
 using OrganizationDailyBookingsTotal = Organization.Shared.Models.OrganizationDailyBookingsTotal;
 using OrganizationMember = Organization.Shared.Models.OrganizationMember;
 using OrganizationMemberAttendancePercentage = Organization.Shared.Models.OrganizationMemberAttendancePercentage;
-using OrganizationMemberStatus = Organization.Api.GraphQL.OrganizationMemberStatus;
+using OrganizationMemberStatus = Api.Shared.Services.Models.OrganizationMemberStatus;
 using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
 using Tag = Organization.Shared.Models.Tag;
 using Team = Organization.Shared.Models.Team;
@@ -164,8 +164,19 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType,
-            Status = src.Status,
+            MembershipType = src.MembershipType switch
+            {
+                OrganizationMembershipTypeConstants.Owner => OrganizationMembershipType.Owner,
+                OrganizationMembershipTypeConstants.Administrator => OrganizationMembershipType.Administrator,
+                OrganizationMembershipTypeConstants.Member => OrganizationMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
+                OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = MapTo(src.Customer)!,
             Organization = organization
@@ -179,8 +190,21 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
-            MembershipType = src.MembershipType,
+            Status = src.Status switch
+            {
+                InvitationStatusConstants.Pending => InvitationStatus.Pending,
+                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
+                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
+                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            MembershipType = src.MembershipType switch
+            {
+                OrganizationMembershipTypeConstants.Owner => OrganizationMembershipType.Owner,
+                OrganizationMembershipTypeConstants.Administrator => OrganizationMembershipType.Administrator,
+                OrganizationMembershipTypeConstants.Member => OrganizationMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Organization = MapTo(src.Organization),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -321,19 +345,8 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            MembershipType = src.MembershipType switch
-            {
-                OrganizationMembershipType.Owner => OrganizationMemberMembershipType.Owner,
-                OrganizationMembershipType.Administrator => OrganizationMemberMembershipType.Administrator,
-                OrganizationMembershipType.Member => OrganizationMemberMembershipType.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Status = src.Status switch
-            {
-                global::Api.Shared.Models.OrganizationMemberStatus.Active => OrganizationMemberStatus.Active,
-                global::Api.Shared.Models.OrganizationMemberStatus.Inactive => OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            MembershipType = src.MembershipType,
+            Status = src.Status,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             Customer = MapTo(src.Customer)
         };
@@ -453,8 +466,19 @@ public class Mapper : IMapper
         Shared.Database.Entities.Customer customer)
     {
         dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType;
-        dest.Status = src.Status;
+        dest.MembershipType = src.MembershipType switch
+        {
+            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
+            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
+            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        dest.Status = src.Status switch
+        {
+            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
+            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
         dest.Organization = organization;
         dest.Customer = customer;
@@ -489,7 +513,12 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Description = src.Description,
-            Type = src.Type
+            Type = src.Type switch
+            {
+                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         };
 
     public Shared.Database.Entities.Tag MapTo(Tag src, Shared.Database.Entities.Organization organization) =>
@@ -503,7 +532,12 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Name = src.Name;
         dest.Description = src.Description;
-        dest.Type = src.Type;
+        dest.Type = src.Type switch
+        {
+            OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+            OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Organization = organization;
         return dest;
     }
@@ -540,7 +574,18 @@ public class Mapper : IMapper
         new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = OrganizationTagType.Zone };
 
     public OrganizationTagDetails MapTo(Tag src) =>
-        new() { Id = src.Id, Name = src.Name, Description = src.Description, TagType = src.Type };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            Description = src.Description,
+            TagType = src.Type switch
+            {
+                OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+                OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            }
+        };
 
     public OrganizationTagEdge MapTo(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
@@ -611,9 +656,9 @@ public class Mapper : IMapper
             },
             Status = src.Status switch
             {
-                global::Api.Shared.Models.OrganizationMemberStatus.Active =>
+                OrganizationMemberStatus.Active =>
                     global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active,
-                global::Api.Shared.Models.OrganizationMemberStatus.Inactive =>
+                OrganizationMemberStatus.Inactive =>
                     global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
@@ -670,9 +715,9 @@ public class Mapper : IMapper
             Status = src.Status switch
             {
                 global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active =>
-                    global::Api.Shared.Models.OrganizationMemberStatus.Active,
+                    OrganizationMemberStatus.Active,
                 global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive =>
-                    global::Api.Shared.Models.OrganizationMemberStatus.Inactive,
+                    OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
@@ -920,7 +965,14 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
+            Status = src.Status switch
+            {
+                InvitationStatusConstants.Pending => InvitationStatus.Pending,
+                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
+                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
+                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Organization = organization,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -1004,7 +1056,12 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Description = src.Description,
-            Type = src.Type,
+            Type = src.Type switch
+            {
+                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Organization = organization
         };
 

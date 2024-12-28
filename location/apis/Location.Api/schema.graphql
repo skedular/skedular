@@ -122,7 +122,7 @@ type LocationMemberConnection {
 }
 
 type LocationMemberDetails {
-  membershipType: LocationMemberMembershipType
+  membershipType: LocationMembershipType
   customer: LocationCustomerDetails!
   id: ID!
 }
@@ -179,7 +179,7 @@ type PageInfo {
 type Query {
   locationVersion: Version!
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
-  locationMemberMembershipTypes: [LocationMemberMembershipType!]! @cost(weight: "10")
+  locationMembershipTypes: [LocationMembershipType!]!
   location(id: String!): LocationDetails @cost(weight: "10")
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): LocationConnection @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
@@ -243,7 +243,7 @@ input CancelInvitationToJoinLocationInput {
 input ChangeLocationMemberOwnershipTypeInput {
   clientMutationId: String
   id: String!
-  membershipType: LocationMemberMembershipType!
+  membershipType: LocationMembershipType!
 }
 
 input DeleteDeskInput {
@@ -334,18 +334,18 @@ enum DeskOrderField {
   Name
 }
 
-enum LocationMemberMembershipType {
-  Owner
-  Administrator
-  Member
-}
-
 enum LocationMemberOrderField {
   MembershipType
   Name
   GivenName
   MiddleName
   FamilyName
+}
+
+enum LocationMembershipType {
+  Owner
+  Administrator
+  Member
 }
 
 enum LocationOrderField {

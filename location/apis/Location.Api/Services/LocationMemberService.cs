@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -21,13 +21,7 @@ public interface ILocationMemberService
 
     Task<LocationMember> ChangeMembershipTypeAsync(
         string locationMemberId,
-        string membershipType,
-        CancellationToken cancellationToken);
-
-    Task<Shared.Models.Location> UpdateMembersAsync(
-        string locationId,
-        ICollection<LocationMember> members,
-        bool ignoreAuthorizationCheck,
+        LocationMembershipType membershipType,
         CancellationToken cancellationToken);
 }
 
@@ -73,7 +67,7 @@ public class LocationMemberService(
 
     public async Task<LocationMember> ChangeMembershipTypeAsync(
         string locationMemberId,
-        string membershipType,
+        LocationMembershipType membershipType,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -100,19 +94,27 @@ public class LocationMemberService(
         var myMembershipDetails =
             location.LocationMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.MembershipType == LocationMembershipType.Administrator &&
+        if (myMembershipDetails.MembershipType == LocationMembershipTypeConstants.Administrator &&
             membershipType == LocationMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == LocationMembershipType.Member &&
+        if (myMembershipDetails.MembershipType == LocationMembershipTypeConstants.Member &&
             membershipType == LocationMembershipType.Administrator)
         {
             throw new Unauthorized();
         }
 
-        if (locationMember.MembershipType == membershipType)
+        var mappedMembershipType = membershipType switch
+        {
+            LocationMembershipType.Owner => LocationMembershipTypeConstants.Owner,
+            LocationMembershipType.Administrator => LocationMembershipTypeConstants.Administrator,
+            LocationMembershipType.Member => LocationMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        if (locationMember.MembershipType == mappedMembershipType)
         {
             return mapper.MapTo(locationMember, mapper.MapTo(location));
         }
@@ -121,7 +123,7 @@ public class LocationMemberService(
             repositoryFactory.LocationMemberRepository.UnitOfWork,
             cancellationToken);
 
-        locationMember.MembershipType = membershipType;
+        locationMember.MembershipType = mappedMembershipType;
         repositoryFactory.LocationMemberRepository.Update(locationMember);
 
         await locationOutboxPublisher.PublishLocationAsync(
@@ -132,79 +134,5 @@ public class LocationMemberService(
         await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return mapper.MapTo(locationMember, mapper.MapTo(location));
-    }
-
-    public async Task<Shared.Models.Location> UpdateMembersAsync(
-        string locationId,
-        ICollection<LocationMember> members,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken)
-    {
-        Customer? customer = null;
-        if (!ignoreAuthorizationCheck)
-        {
-            (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        }
-
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
-        if (location is null)
-        {
-            throw new LocationNotFound();
-        }
-
-        if (customer is not null && !locationAuthorizationService.CanModify(location, customer))
-        {
-            throw new Unauthorized();
-        }
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.LocationMemberRepository.UnitOfWork,
-            cancellationToken);
-
-        var itemsToRemove = location.LocationMembers
-            .Where(teamMember => members.All(item => item.Id != teamMember.Id))
-            .ToList();
-
-        var updatedItems = new List<Shared.Database.Entities.LocationMember>();
-        foreach (var teamMember in location.LocationMembers
-                     .Where(teamMember =>
-                         members.Any(item => item.Id == teamMember.Id)))
-        {
-            var customerToAdd = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                teamMember.Customer.Id,
-                cancellationToken);
-            var updatedLocationMember = mapper.MergeToEntity(
-                members.Single(item => item.Id == teamMember.Id),
-                teamMember,
-                location,
-                customerToAdd);
-            updatedLocationMember.DeletedAt = null;
-            updatedItems.Add(repositoryFactory.LocationMemberRepository.Update(updatedLocationMember));
-        }
-
-        var addedItems = new List<Shared.Database.Entities.LocationMember>();
-        foreach (var teamMember in members.Where(teamMember =>
-                     location.LocationMembers.All(item => item.Id != teamMember.Id)))
-        {
-            var customerToAdd =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id,
-                    cancellationToken);
-
-            addedItems.Add(repositoryFactory.LocationMemberRepository.Add(
-                mapper.MapToEntity(teamMember, location, customerToAdd)));
-        }
-
-        repositoryFactory.LocationMemberRepository.RemoveRange(itemsToRemove);
-        location.LocationMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
-
-        await locationOutboxPublisher.PublishLocationAsync(
-            [mapper.MapTo(location)],
-            repositoryFactory.LocationRepository.UnitOfWork,
-            cancellationToken);
-
-        await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-        return mapper.MapTo(location);
     }
 }

@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using HotChocolate;
 using HotChocolate.Types;
@@ -81,13 +81,7 @@ public class Mutation(IMapper mapper)
         var organizationMember =
             await organizationMemberService.ChangeMembershipTypeAsync(
                 input.Id,
-                input.MembershipType switch
-                {
-                    OrganizationMemberMembershipType.Owner => OrganizationMembershipType.Owner,
-                    OrganizationMemberMembershipType.Administrator => OrganizationMembershipType.Administrator,
-                    OrganizationMemberMembershipType.Member => OrganizationMembershipType.Member,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
+                input.MembershipType,
                 cancellationToken);
         return new OrganizationMemberDetailsPayload
         {
@@ -106,8 +100,8 @@ public class Mutation(IMapper mapper)
                 input.Ids,
                 input.Status switch
                 {
-                    OrganizationMemberStatus.Active => global::Api.Shared.Models.OrganizationMemberStatus.Active,
-                    OrganizationMemberStatus.Inactive => global::Api.Shared.Models.OrganizationMemberStatus.Inactive,
+                    OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
+                    OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 cancellationToken);

@@ -213,7 +213,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             SourceId = notification.Id,
-            Type = NotificationType.InvitationToJoinOrganization,
+            Type = NotificationTypeConstants.InvitationToJoinOrganization,
             InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
             Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
             Organization = new Organization { Id = notification.OrganizationId }
@@ -233,7 +233,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             SourceId = notification.Id,
-            Type = NotificationType.InvitationToJoinLocation,
+            Type = NotificationTypeConstants.InvitationToJoinLocation,
             InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
             Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
             Location = new Location { Id = notification.LocationId }
@@ -253,7 +253,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             SourceId = notification.Id,
-            Type = NotificationType.InvitationToJoinTeam,
+            Type = NotificationTypeConstants.InvitationToJoinTeam,
             InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
             Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
             Team = new Team { Id = notification.TeamId }

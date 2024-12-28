@@ -332,7 +332,7 @@ type LocationMemberConnection {
 type LocationMemberDetails {
   customer: LocationCustomerDetails!
   id: ID!
-  membershipType: LocationMemberMembershipType
+  membershipType: LocationMembershipType
 }
 
 type LocationMemberDetailsPayload {
@@ -396,7 +396,6 @@ type Mutation {
   deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
   deleteTeam(input: DeleteTeamInput!): TeamPayload @cost(weight: "10")
-  deleteTeamMember(input: DeleteTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
   inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
   inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InviteCustomersToJoinOrganizationPayload @cost(weight: "10")
@@ -410,6 +409,7 @@ type Mutation {
   removeCustomerDefaultTeam(input: RemoveCustomerDefaultTeamInput!): CustomerPayload @cost(weight: "10")
   removeOrganizationMembersInput(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodResponse @cost(weight: "10")
+  removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload @cost(weight: "10")
   setOrganizationBillingInfo(input: SetOrganizationBillingInfoInput!): OrganizationBillingInfoPayload @cost(weight: "10")
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload @cost(weight: "10")
@@ -432,7 +432,7 @@ type Notification {
   invitedBy: NotificationCustomerDetails
   invitee: NotificationCustomerDetails
   location: NotificationLocationDetails
-  notificationType: NotificationNotificationType!
+  notificationType: NotificationType!
   organization: NotificationOrganizationDetails
   sourceId: ID!
   team: NotificationTeamDetails
@@ -617,7 +617,7 @@ type OrganizationMemberDetails {
   customer: OrganizationCustomerDetails!
   id: ID!
   isOrganizationOnboardingDone: Boolean!
-  membershipType: OrganizationMemberMembershipType
+  membershipType: OrganizationMembershipType
   status: OrganizationMemberStatus!
 }
 
@@ -731,8 +731,8 @@ type Query {
   locationBookingPermissions(locationId: String!): LocationBookingPermissions @cost(weight: "10")
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
   locationDesks(after: String before: String first: Int last: Int orderBy: [DeskOrderInput!] where: DeskWhereInput!): DeskConnection @cost(weight: "10")
-  locationMemberMembershipTypes: [LocationMemberMembershipType!]! @cost(weight: "10")
   locationMembers(after: String before: String first: Int last: Int orderBy: [LocationMemberOrderInput!] where: LocationMemberWhereInput!): LocationMemberConnection @cost(weight: "10")
+  locationMembershipTypes: [LocationMembershipType!]!
   locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): LocationConnection @cost(weight: "10")
   locationVersion: Version!
   me: CustomerDetails @cost(weight: "10")
@@ -751,8 +751,8 @@ type Query {
   organizationCurrentOfferingCharges(organizationId: String!): [OrganizationCurrentOfferingChargesDetails!] @cost(weight: "10")
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
-  organizationMemberMembershipTypes: [OrganizationMemberMembershipType!]!
   organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): OrganizationMemberConnection @cost(weight: "10")
+  organizationMembershipTypes: [OrganizationMembershipType!]!
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!] @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): OrganizationConnection @cost(weight: "10")
   organizationVersion: Version!
@@ -763,8 +763,8 @@ type Query {
   team(id: String!): TeamDetails @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions @cost(weight: "10")
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
-  teamMemberMembershipTypes: [TeamMemberMembershipType!]!
   teamMembers(after: String before: String first: Int last: Int orderBy: [TeamMemberOrderInput!] where: TeamMemberWhereInput!): TeamMemberConnection @cost(weight: "10")
+  teamMembershipTypes: [TeamMembershipType!]!
   teams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: TeamWhereInput!): TeamConnection @cost(weight: "10")
   teamVersion: Version!
   zones(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ZoneOrganizationTagWhereInput!): OrganizationTagConnection @cost(weight: "10")
@@ -854,7 +854,7 @@ type TeamMemberConnection {
 type TeamMemberDetails {
   customer: TeamCustomerDetails!
   id: ID!
-  membershipType: TeamMemberMembershipType
+  membershipType: TeamMembershipType
   organizationMember: TeamOrganizationMemberDetails
 }
 
@@ -1082,13 +1082,13 @@ input CancelOrganizationOfferingInput {
 input ChangeLocationMemberOwnershipTypeInput {
   clientMutationId: String
   id: String!
-  membershipType: LocationMemberMembershipType!
+  membershipType: LocationMembershipType!
 }
 
 input ChangeOrganizationMemberOwnershipTypeInput {
   clientMutationId: String
   id: String!
-  membershipType: OrganizationMemberMembershipType!
+  membershipType: OrganizationMembershipType!
 }
 
 input ChangeOrganizationMembersStatusInput {
@@ -1100,7 +1100,7 @@ input ChangeOrganizationMembersStatusInput {
 input ChangeTeamMemberOwnershipTypeInput {
   clientMutationId: String
   id: String!
-  membershipType: TeamMemberMembershipType!
+  membershipType: TeamMembershipType!
 }
 
 input ClearCustomerDefaultOrganizationInput {
@@ -1176,11 +1176,6 @@ input DeleteOrganizationInput {
 }
 
 input DeleteTeamInput {
-  clientMutationId: String
-  id: String!
-}
-
-input DeleteTeamMemberInput {
   clientMutationId: String
   id: String!
 }
@@ -1330,6 +1325,11 @@ input RemoveOrganizationPaymentMethodInput {
   id: String!
 }
 
+input RemoveTeamMemberInput {
+  clientMutationId: String
+  id: String!
+}
+
 input SetCustomerDefaultOrganizationInput {
   clientMutationId: String
   organizationId: String!
@@ -1349,7 +1349,7 @@ input SetOrganizationBillingInfoInput {
 }
 
 input SubmitCustomerFeedbackInput {
-  channel: FeedbackChannel!
+  channel: FeedbackChannelType!
   clientMutationId: String
   feedbackContent: String!
   id: String
@@ -1527,16 +1527,10 @@ enum DeskOrderField {
   Name
 }
 
-enum FeedbackChannel {
+enum FeedbackChannelType {
   MsTeams
   Slack
   Web
-}
-
-enum LocationMemberMembershipType {
-  Administrator
-  Member
-  Owner
 }
 
 enum LocationMemberOrderField {
@@ -1547,32 +1541,32 @@ enum LocationMemberOrderField {
   Name
 }
 
+enum LocationMembershipType {
+  Administrator
+  Member
+  Owner
+}
+
 enum LocationOrderField {
   About
   Name
   Timezone
 }
 
-enum NotificationNotificationType {
+enum NotificationOrderField {
+  Date
+  Type
+}
+
+enum NotificationType {
   InvitationToJoinLocation
   InvitationToJoinOrganization
   InvitationToJoinTeam
 }
 
-enum NotificationOrderField {
-  EventRaisedAt
-  NotificationType
-}
-
 enum OrderDirection {
   Ascending
   Descending
-}
-
-enum OrganizationMemberMembershipType {
-  Administrator
-  Member
-  Owner
 }
 
 enum OrganizationMemberOrderField {
@@ -1590,6 +1584,12 @@ enum OrganizationMemberStatus {
   Inactive
 }
 
+enum OrganizationMembershipType {
+  Administrator
+  Member
+  Owner
+}
+
 enum OrganizationOrderField {
   Name
 }
@@ -1600,18 +1600,18 @@ enum OrganizationTagOrderField {
   TagType
 }
 
-enum TeamMemberMembershipType {
-  Administrator
-  Member
-  Owner
-}
-
 enum TeamMemberOrderField {
   FamilyName
   GivenName
   MembershipType
   MiddleName
   Name
+}
+
+enum TeamMembershipType {
+  Administrator
+  Member
+  Owner
 }
 
 enum TeamOrderField {

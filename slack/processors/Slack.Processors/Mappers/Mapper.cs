@@ -1,7 +1,7 @@
 using Api.Shared;
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Slack.Shared.Models;
 using SlackNet;
@@ -265,8 +265,19 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType;
-        dest.Status = src.Status;
+        dest.MembershipType = src.MembershipType switch
+        {
+            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
+            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
+            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        dest.Status = src.Status switch
+        {
+            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
+            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;

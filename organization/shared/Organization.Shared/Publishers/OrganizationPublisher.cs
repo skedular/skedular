@@ -60,10 +60,7 @@ public class OrganizationPublisher(
                             ? Type.InvitationToJoinOrganizationUpserted
                             : Type.InvitationToJoinOrganizationDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data
-                    {
-                        InvitationToJoinOrganization = mapper.MapTo(joinInvitation, inviteeIdToOverride)
-                    }
+                    Data = new Data { InvitationToJoinOrganization = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
                 },
                 cancellationToken)));
 }

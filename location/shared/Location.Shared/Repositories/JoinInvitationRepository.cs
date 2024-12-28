@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Location.Shared.Database;
 using Location.Shared.Database.Entities;
@@ -42,7 +42,7 @@ public class JoinInvitationRepository(LocationDbContext dbContext, TimeProvider 
         ICollection<string> emails,
         CancellationToken cancellationToken) => await DbContext.JoinInvitation
         .Where(query => !query.DeletedAt.HasValue &&
-                        query.Status == InvitationStatus.Pending && emails.Any(email =>
+                        query.Status == InvitationStatusConstants.Pending && emails.Any(email =>
                             query.Invitee == null && query.Email != null && EF.Functions.ILike(query.Email, email)))
         .AddDependentObjects()
         .OrderBy(query => query.Id)

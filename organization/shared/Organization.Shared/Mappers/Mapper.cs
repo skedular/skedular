@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
@@ -47,7 +47,12 @@ public class Mapper : IMapper
             Id = item.Id,
             Name = item.Name.ToSafeString(),
             Description = item.Description.ToSafeString(),
-            TagType = item.Type.ToSafeString()
+            TagType = item.Type switch
+            {
+                OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+                OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         }));
 
         organization.Offering.ActiveCustomerIds.AddRange(

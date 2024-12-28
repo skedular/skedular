@@ -1,6 +1,14 @@
-﻿namespace Api.Shared.Models;
+﻿namespace Api.Shared.Services.Models;
 
-public static class InvitationStatus
+public enum InvitationStatus
+{
+    Pending,
+    Accepted,
+    Rejected,
+    Cancelled
+}
+
+public static class InvitationStatusConstants
 {
     public const string Pending = "PENDING";
     public const string Accepted = "ACCEPTED";

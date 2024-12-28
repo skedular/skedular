@@ -16,6 +16,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Customer Add(Customer customer);
     Customer Update(Customer customer);
     Customer Remove(Customer customer);
+    Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
 }
 
 internal static class CustomerExtensions
@@ -115,4 +116,12 @@ public class CustomerRepository(LocationDbContext dbContext, TimeProvider timePr
         customer.DeletedAt = now;
         return DbContext.Customer.Update(customer).Entity;
     }
+    
+    public async Task<ICollection<Customer>>
+        GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .Where(query => ids.Contains(query.Id))
+            .AddDependentObjects()
+            .OrderBy(query => query.Id)
+            .ToListAsync(cancellationToken);
 }

@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Customer = Billing.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
@@ -183,8 +183,19 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType;
-        dest.Status = src.Status;
+        dest.MembershipType = src.MembershipType switch
+        {
+            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
+            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
+            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        dest.Status = src.Status switch
+        {
+            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
+            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;

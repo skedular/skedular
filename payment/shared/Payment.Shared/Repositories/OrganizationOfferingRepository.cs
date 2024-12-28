@@ -12,7 +12,7 @@ public interface IOrganizationOfferingRepository : IRepository<OrganizationOffer
     OrganizationOffering Update(OrganizationOffering organizationOffering);
     void UpdateRange(ICollection<OrganizationOffering> organizationOfferings);
     void RemoveRange(ICollection<OrganizationOffering> organizationOfferings);
-    
+
     Task<ICollection<OrganizationOffering>> GetByOrganizationIdAsync(
         string organizationId,
         CancellationToken cancellationToken);

@@ -1,12 +1,12 @@
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Services.Models;
 using Booking.Api.GraphQL;
 using Booking.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
 using BookingEdge = Booking.Api.GraphQL.BookingEdge;
-using BookingType = Booking.Api.GraphQL.BookingType;
+using BookingType = Api.Shared.Services.Models.BookingType;
 using Customer = Booking.Shared.Models.Customer;
 using Desk = Booking.Shared.Database.Entities.Desk;
 using Identity = Booking.Shared.Models.Identity;
@@ -72,7 +72,19 @@ public class Mapper : IMapper
             From = src.From,
             To = src.To,
             Notes = src.Notes,
-            Type = src.Type,
+            Type = src.Type switch
+            {
+                BookingTypeConstants.WorkingFromHome => BookingType.WorkingFromHome,
+                BookingTypeConstants.WorkingFromOffice => BookingType.WorkingFromOffice,
+                BookingTypeConstants.SickLeave => BookingType.SickLeave,
+                BookingTypeConstants.AnnualLeave => BookingType.AnnualLeave,
+                BookingTypeConstants.WellBeingLeave => BookingType.WellBeingLeave,
+                BookingTypeConstants.ClientOffices => BookingType.ClientOffices,
+                BookingTypeConstants.Vacation => BookingType.Vacation,
+                BookingTypeConstants.TravelingForWork => BookingType.TravelingForWork,
+                BookingTypeConstants.NonWorkingDay => BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = MapTo(src.Customer)!,
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
@@ -114,19 +126,7 @@ public class Mapper : IMapper
             From = src.From,
             To = src.To,
             Notes = src.Notes,
-            Type = src.Type switch
-            {
-                global::Api.Shared.Models.BookingType.WorkingFromHome => BookingType.WorkingFromHome,
-                global::Api.Shared.Models.BookingType.WorkingFromOffice => BookingType.WorkingFromOffice,
-                global::Api.Shared.Models.BookingType.SickLeave => BookingType.SickLeave,
-                global::Api.Shared.Models.BookingType.AnnualLeave => BookingType.AnnualLeave,
-                global::Api.Shared.Models.BookingType.WellBeingLeave => BookingType.WellBeingLeave,
-                global::Api.Shared.Models.BookingType.ClientOffices => BookingType.ClientOffices,
-                global::Api.Shared.Models.BookingType.Vacation => BookingType.Vacation,
-                global::Api.Shared.Models.BookingType.TravelingForWork => BookingType.TravelingForWork,
-                global::Api.Shared.Models.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Type = src.Type,
             Customer = MapTo(src.Customer),
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
@@ -141,19 +141,7 @@ public class Mapper : IMapper
             From = src.From,
             To = src.To,
             Notes = src.Notes,
-            Type = src.Type switch
-            {
-                BookingType.WorkingFromHome => global::Api.Shared.Models.BookingType.WorkingFromHome,
-                BookingType.WorkingFromOffice => global::Api.Shared.Models.BookingType.WorkingFromOffice,
-                BookingType.SickLeave => global::Api.Shared.Models.BookingType.SickLeave,
-                BookingType.AnnualLeave => global::Api.Shared.Models.BookingType.AnnualLeave,
-                BookingType.WellBeingLeave => global::Api.Shared.Models.BookingType.WellBeingLeave,
-                BookingType.ClientOffices => global::Api.Shared.Models.BookingType.ClientOffices,
-                BookingType.Vacation => global::Api.Shared.Models.BookingType.Vacation,
-                BookingType.TravelingForWork => global::Api.Shared.Models.BookingType.TravelingForWork,
-                BookingType.NonWorkingDay => global::Api.Shared.Models.BookingType.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Type = src.Type,
             Customer = new Customer { Id = src.CustomerId },
             Organization =
                 string.IsNullOrWhiteSpace(src.OrganizationId)
@@ -172,19 +160,7 @@ public class Mapper : IMapper
             From = src.From,
             To = src.To,
             Notes = src.Notes,
-            Type = src.Type switch
-            {
-                BookingType.WorkingFromHome => global::Api.Shared.Models.BookingType.WorkingFromHome,
-                BookingType.WorkingFromOffice => global::Api.Shared.Models.BookingType.WorkingFromOffice,
-                BookingType.SickLeave => global::Api.Shared.Models.BookingType.SickLeave,
-                BookingType.AnnualLeave => global::Api.Shared.Models.BookingType.AnnualLeave,
-                BookingType.WellBeingLeave => global::Api.Shared.Models.BookingType.WellBeingLeave,
-                BookingType.ClientOffices => global::Api.Shared.Models.BookingType.ClientOffices,
-                BookingType.Vacation => global::Api.Shared.Models.BookingType.Vacation,
-                BookingType.TravelingForWork => global::Api.Shared.Models.BookingType.TravelingForWork,
-                BookingType.NonWorkingDay => global::Api.Shared.Models.BookingType.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Type = src.Type,
             Customer = new Customer { Id = src.CustomerId },
             Organization =
                 string.IsNullOrWhiteSpace(src.OrganizationId)
@@ -218,7 +194,19 @@ public class Mapper : IMapper
         dest.From = src.From;
         dest.To = src.To;
         dest.Notes = src.Notes;
-        dest.Type = src.Type;
+        dest.Type = src.Type switch
+        {
+            BookingType.WorkingFromHome => BookingTypeConstants.WorkingFromHome,
+            BookingType.WorkingFromOffice => BookingTypeConstants.WorkingFromOffice,
+            BookingType.SickLeave => BookingTypeConstants.SickLeave,
+            BookingType.AnnualLeave => BookingTypeConstants.AnnualLeave,
+            BookingType.WellBeingLeave => BookingTypeConstants.WellBeingLeave,
+            BookingType.ClientOffices => BookingTypeConstants.ClientOffices,
+            BookingType.Vacation => BookingTypeConstants.Vacation,
+            BookingType.TravelingForWork => BookingTypeConstants.TravelingForWork,
+            BookingType.NonWorkingDay => BookingTypeConstants.NonWorkingDay,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Customer = customer;
         dest.Organization = organization;
         dest.Location = location;
@@ -241,24 +229,21 @@ public class Mapper : IMapper
             Customer = MapToGrpcResponse(src.Customer),
             Type = src.Type switch
             {
-                global::Api.Shared.Models.BookingType.WorkingFromHome => global::Api.Shared.Services.Grpc.Skedular
-                    .Booking.V1.BookingType.WorkingFromHome,
-                global::Api.Shared.Models.BookingType.WorkingFromOffice => global::Api.Shared.Services.Grpc.Skedular
-                    .Booking.V1.BookingType.WorkingFromOffice,
-                global::Api.Shared.Models.BookingType.SickLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1
-                    .BookingType.SickLeave,
-                global::Api.Shared.Models.BookingType.AnnualLeave => global::Api.Shared.Services.Grpc.Skedular.Booking
-                    .V1.BookingType.AnnualLeave,
-                global::Api.Shared.Models.BookingType.WellBeingLeave => global::Api.Shared.Services.Grpc.Skedular
-                    .Booking.V1.BookingType.WellBeingLeave,
-                global::Api.Shared.Models.BookingType.ClientOffices => global::Api.Shared.Services.Grpc.Skedular.Booking
-                    .V1.BookingType.ClientOffices,
-                global::Api.Shared.Models.BookingType.Vacation => global::Api.Shared.Services.Grpc.Skedular.Booking.V1
-                    .BookingType.Vacation,
-                global::Api.Shared.Models.BookingType.TravelingForWork => global::Api.Shared.Services.Grpc.Skedular
-                    .Booking.V1.BookingType.TravelingForWork,
-                global::Api.Shared.Models.BookingType.NonWorkingDay => global::Api.Shared.Services.Grpc.Skedular.Booking
-                    .V1.BookingType.NonWorkingDay,
+                BookingType.WorkingFromHome => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType
+                    .WorkingFromHome,
+                BookingType.WorkingFromOffice => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType
+                    .WorkingFromOffice,
+                BookingType.SickLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave,
+                BookingType.AnnualLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave,
+                BookingType.WellBeingLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType
+                    .WellBeingLeave,
+                BookingType.ClientOffices => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType
+                    .ClientOffices,
+                BookingType.Vacation => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation,
+                BookingType.TravelingForWork => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType
+                    .TravelingForWork,
+                BookingType.NonWorkingDay => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType
+                    .NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Organization = MapToGrpcResponse(src.Organization),
@@ -280,24 +265,21 @@ public class Mapper : IMapper
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
-                    .Models.BookingType.WorkingFromHome,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
-                    .Models.BookingType.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
-                    .BookingType.SickLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
-                    .Models.BookingType.AnnualLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
-                    .Models.BookingType.WellBeingLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => global::Api.Shared
-                    .Models.BookingType.ClientOffices,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
-                    .BookingType.Vacation,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
-                    .Models.BookingType.TravelingForWork,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
-                    .Models.BookingType.NonWorkingDay,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => BookingType
+                    .WorkingFromHome,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => BookingType
+                    .WorkingFromOffice,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => BookingType.SickLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => BookingType.AnnualLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => BookingType
+                    .WellBeingLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => BookingType
+                    .ClientOffices,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => BookingType.Vacation,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => BookingType
+                    .TravelingForWork,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType
+                    .NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = src.CustomerId },
@@ -322,24 +304,21 @@ public class Mapper : IMapper
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
-                    .Models.BookingType.WorkingFromHome,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
-                    .Models.BookingType.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
-                    .BookingType.SickLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
-                    .Models.BookingType.AnnualLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
-                    .Models.BookingType.WellBeingLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => global::Api.Shared
-                    .Models.BookingType.ClientOffices,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
-                    .BookingType.Vacation,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
-                    .Models.BookingType.TravelingForWork,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
-                    .Models.BookingType.NonWorkingDay,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => BookingType
+                    .WorkingFromHome,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => BookingType
+                    .WorkingFromOffice,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => BookingType.SickLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => BookingType.AnnualLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => BookingType
+                    .WellBeingLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => BookingType
+                    .ClientOffices,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => BookingType.Vacation,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => BookingType
+                    .TravelingForWork,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType
+                    .NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = src.CustomerId },
@@ -364,24 +343,21 @@ public class Mapper : IMapper
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => global::Api.Shared
-                    .Models.BookingType.WorkingFromHome,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => global::Api.Shared
-                    .Models.BookingType.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => global::Api.Shared.Models
-                    .BookingType.SickLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => global::Api.Shared
-                    .Models.BookingType.AnnualLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => global::Api.Shared
-                    .Models.BookingType.WellBeingLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => global::Api.Shared
-                    .Models.BookingType.ClientOffices,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => global::Api.Shared.Models
-                    .BookingType.Vacation,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => global::Api.Shared
-                    .Models.BookingType.TravelingForWork,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => global::Api.Shared
-                    .Models.BookingType.NonWorkingDay,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => BookingType
+                    .WorkingFromHome,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => BookingType
+                    .WorkingFromOffice,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => BookingType.SickLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => BookingType.AnnualLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => BookingType
+                    .WellBeingLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => BookingType
+                    .ClientOffices,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => BookingType.Vacation,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => BookingType
+                    .TravelingForWork,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType
+                    .NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = src.CustomerId },
@@ -650,5 +626,15 @@ public class Mapper : IMapper
         src.Select(MapTo);
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
-        new() { Id = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name, Type = src.Type };
+        new()
+        {
+            Id = src.Id,
+            Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
+            Type = src.Type switch
+            {
+                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            }
+        };
 }

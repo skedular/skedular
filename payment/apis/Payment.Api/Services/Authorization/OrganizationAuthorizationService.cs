@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Payment.Shared.Models;
 using Organization = Payment.Shared.Database.Entities.Organization;
 
@@ -15,14 +15,16 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
     public bool CanViewPaymentMethod(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 
     public bool CanManagePaymentMethod(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 }

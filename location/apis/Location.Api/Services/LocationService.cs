@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
@@ -132,7 +132,7 @@ public class LocationService(
                 locationMembers.Add(new LocationMember
                 {
                     Id = randomHelper.Generate(),
-                    MembershipType = LocationMembershipType.Owner,
+                    MembershipType = LocationMembershipTypeConstants.Owner,
                     Customer = customerEntity,
                     Location = locationEntity
                 });
@@ -355,8 +355,7 @@ public class LocationService(
             repositoryFactory.AddressRepository.Update(physicalAddress);
         }
 
-        location =
-            mapper.MapTo(
+        location = mapper.MapTo(
                 repositoryFactory.LocationRepository.Update(
                     mapper.MergeTo(location, existingLocation, physicalAddress)));
 

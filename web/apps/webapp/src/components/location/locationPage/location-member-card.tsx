@@ -1,7 +1,7 @@
 import { LocationSingleChoiceMembershipType } from '@/components/location';
 import type { locationMemberCard_LocationMemberDetails$key } from '@/queries/__generated__/locationMemberCard_LocationMemberDetails.graphql';
 import type {
-  LocationMemberMembershipType,
+  LocationMembershipType,
   locationMemberCard_changeLocationMemberOwnershipTypeMutation,
 } from '@/queries/__generated__/locationMemberCard_changeLocationMemberOwnershipTypeMutation.graphql';
 import type { locationSingleChoiceMembershipType_query$key } from '@/queries/__generated__/locationSingleChoiceMembershipType_query.graphql';
@@ -88,7 +88,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
   };
 
   const handleSaveClick = ({ membershipType: membershipTypeStr }: LocationMemberDetails) => {
-    const membershipType = membershipTypeStr as unknown as LocationMemberMembershipType;
+    const membershipType = membershipTypeStr as unknown as LocationMembershipType;
     const toastId = themedToast(<NotificationContent content={`Updating location membership...`} />, infoNotificationOptions);
 
     commitChangeLocationMemberOwnershipType({

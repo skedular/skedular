@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Location.Shared.Models;
 using Desk = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk;

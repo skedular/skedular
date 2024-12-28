@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<84e04a9a97a8bf4ad30ff9debe477bb8>>
+ * @generated SignedSource<<8f9c4fc75a76e0f6549acb8be2a47485>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,11 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type LocationMemberMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
+export type LocationMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
 export type ChangeLocationMemberOwnershipTypeInput = {
   clientMutationId?: string | null | undefined;
   id: string;
-  membershipType: LocationMemberMembershipType;
+  membershipType: LocationMembershipType;
 };
 export type locationMemberCard_changeLocationMemberOwnershipTypeMutation$variables = {
   input: ChangeLocationMemberOwnershipTypeInput;
@@ -22,7 +22,7 @@ export type locationMemberCard_changeLocationMemberOwnershipTypeMutation$data = 
   readonly changeLocationMemberOwnershipType: {
     readonly member: {
       readonly id: string;
-      readonly membershipType: LocationMemberMembershipType | null | undefined;
+      readonly membershipType: LocationMembershipType | null | undefined;
     } | null | undefined;
   } | null | undefined;
 };
@@ -30,7 +30,7 @@ export type locationMemberCard_changeLocationMemberOwnershipTypeMutation$rawResp
   readonly changeLocationMemberOwnershipType: {
     readonly member: {
       readonly id: string;
-      readonly membershipType: LocationMemberMembershipType | null | undefined;
+      readonly membershipType: LocationMembershipType | null | undefined;
     } | null | undefined;
   } | null | undefined;
 };

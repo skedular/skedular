@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Location.Shared.Database;
 using Location.Shared.Database.Entities;

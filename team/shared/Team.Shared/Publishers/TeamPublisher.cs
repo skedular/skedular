@@ -60,10 +60,7 @@ public class TeamPublisher(
                             ? Type.InvitationToJoinTeamUpserted
                             : Type.InvitationToJoinTeamDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data
-                    {
-                        InvitationToJoinTeam = mapper.MapTo(joinInvitation, inviteeIdToOverride)
-                    }
+                    Data = new Data { InvitationToJoinTeam = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
                 },
                 cancellationToken)));
 }

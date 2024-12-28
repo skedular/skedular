@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b28e47182da48095831539009642da06>>
+ * @generated SignedSource<<9b1d06abe7043b047832054d04770568>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -152,7 +152,7 @@ return {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "organizationMemberMembershipTypes",
+        "name": "organizationMembershipTypes",
         "storageKey": null
       },
       {
@@ -309,12 +309,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "75807138da3d7bb9c81b209263c3daf8",
+    "cacheID": "24aa5fbbc9be44c4f05f668d8f7941cc",
     "id": null,
     "metadata": {},
     "name": "organizationMembersTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMembersTab_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMembersTab_query\n  ...organizationMembersTab_organizationMembers_query\n}\n\nfragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment organizationMembersTab_organizationMembers_query on Query {\n  organizationMembers(first: 50, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationMemberCard_OrganizationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMembersTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    canInvitePeople\n  }\n  ...organizationSingleChoiceMembershipType_query\n}\n\nfragment organizationSingleChoiceMembershipType_query on Query {\n  organizationMemberMembershipTypes\n}\n"
+    "text": "query organizationMembersTab_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMembersTab_query\n  ...organizationMembersTab_organizationMembers_query\n}\n\nfragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment organizationMembersTab_organizationMembers_query on Query {\n  organizationMembers(first: 50, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationMemberCard_OrganizationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMembersTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    canInvitePeople\n  }\n  ...organizationSingleChoiceMembershipType_query\n}\n\nfragment organizationSingleChoiceMembershipType_query on Query {\n  organizationMembershipTypes\n}\n"
   }
 };
 })();

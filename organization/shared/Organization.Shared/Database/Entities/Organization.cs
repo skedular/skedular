@@ -42,7 +42,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Website).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
-        
+
         builder
             .HasOne(item => item.TermsOfUse)
             .WithMany(item => item.Organizations);

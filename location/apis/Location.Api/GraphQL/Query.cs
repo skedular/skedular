@@ -1,4 +1,5 @@
 using System.Reflection;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -34,12 +35,11 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public LocationMemberMembershipType[] LocationMemberMembershipTypes(
-        CancellationToken cancellationToken) =>
+    public LocationMembershipType[] LocationMembershipTypes() =>
     [
-        LocationMemberMembershipType.Owner,
-        LocationMemberMembershipType.Administrator,
-        LocationMemberMembershipType.Member
+        LocationMembershipType.Owner,
+        LocationMembershipType.Administrator,
+        LocationMembershipType.Member
     ];
 
     [UseResolverScope]
@@ -84,15 +84,7 @@ public class Query(IMapper mapper)
                         var direction = item.Direction == OrderDirection.Ascending
                             ? OrderDirection.Ascending
                             : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            LocationOrderField.Name => Shared.Models.LocationOrderField.Name,
-                            LocationOrderField.About => Shared.Models.LocationOrderField.About,
-                            LocationOrderField.Timezone => Shared.Models.LocationOrderField.Timezone,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new LocationOrder(direction, field);
+                        return new LocationOrder(direction, item.Field);
                     }).ToList(),
                 false,
                 cancellationToken);
@@ -157,18 +149,7 @@ public class Query(IMapper mapper)
                         var direction = item.Direction == OrderDirection.Ascending
                             ? OrderDirection.Ascending
                             : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            LocationMemberOrderField.MembershipType => Shared.Models.LocationMemberOrderField
-                                .MembershipType,
-                            LocationMemberOrderField.Name => Shared.Models.LocationMemberOrderField.Name,
-                            LocationMemberOrderField.GivenName => Shared.Models.LocationMemberOrderField.GivenName,
-                            LocationMemberOrderField.MiddleName => Shared.Models.LocationMemberOrderField.MiddleName,
-                            LocationMemberOrderField.FamilyName => Shared.Models.LocationMemberOrderField.FamilyName,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new LocationMemberOrder(direction, field);
+                        return new LocationMemberOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);
 
@@ -214,13 +195,7 @@ public class Query(IMapper mapper)
                         var direction = item.Direction == OrderDirection.Ascending
                             ? OrderDirection.Ascending
                             : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            DeskOrderField.Name => Shared.Models.DeskOrderField.Name,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new DeskOrder(direction, field);
+                        return new DeskOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);
 

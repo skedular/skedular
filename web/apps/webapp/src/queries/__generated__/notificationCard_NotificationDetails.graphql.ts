@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<20a00fc42aa79f9908995d3e12be1a1d>>
+ * @generated SignedSource<<67c6e9f58c21ac2bc6b8f66a7ee06ace>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,11 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type NotificationNotificationType = "InvitationToJoinLocation" | "InvitationToJoinOrganization" | "InvitationToJoinTeam" | "%future added value";
+export type NotificationType = "InvitationToJoinLocation" | "InvitationToJoinOrganization" | "InvitationToJoinTeam" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type notificationCard_NotificationDetails$data = {
   readonly id: string;
-  readonly notificationType: NotificationNotificationType;
+  readonly notificationType: NotificationType;
   readonly " $fragmentSpreads": FragmentRefs<"invitationToJoinLocationNotificationCard_NotificationDetails" | "invitationToJoinOrganizationNotificationCard_NotificationDetails" | "invitationToJoinTeamNotificationCard_NotificationDetails">;
   readonly " $fragmentType": "notificationCard_NotificationDetails";
 };

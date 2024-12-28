@@ -7,7 +7,6 @@ service LocationService {
     rpc Admin_Add (Admin_AddInput) returns (Location);
     rpc Admin_GetPaginatedLocations (Admin_GetPaginatedLocationsInput) returns (LocationConnection);
     rpc Admin_Get (Admin_GetInput) returns (Location);
-    rpc Admin_UpdateMembers (Admin_UpdateMembersInput) returns (Location);
 
     rpc GetVersion (VersionInput) returns (Version);
     rpc Get (GetInput) returns (Location);
@@ -45,11 +44,6 @@ message PageInfo {
     bool hasPreviousPage =2;
     string startCursor =3;
     string endCursor =4;
-}
-
-message Admin_UpdateMembersInput {
-    string id = 1;
-    repeated Member members = 2;
 }
 
 enum MembershipType {

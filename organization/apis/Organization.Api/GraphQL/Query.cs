@@ -1,5 +1,5 @@
 using System.Reflection;
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -44,11 +44,11 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public OrganizationMemberMembershipType[] OrganizationMemberMembershipTypes() =>
+    public OrganizationMembershipType[] OrganizationMembershipTypes() =>
     [
-        OrganizationMemberMembershipType.Owner,
-        OrganizationMemberMembershipType.Administrator,
-        OrganizationMemberMembershipType.Member
+        OrganizationMembershipType.Owner,
+        OrganizationMembershipType.Administrator,
+        OrganizationMembershipType.Member
     ];
 
     [UseResolverScope]
@@ -99,13 +99,7 @@ public class Query(IMapper mapper)
                         var direction = item.Direction == OrderDirection.Ascending
                             ? OrderDirection.Ascending
                             : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            OrganizationOrderField.Name => Shared.Models.OrganizationOrderField.Name,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new OrganizationOrder(direction, field);
+                        return new OrganizationOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);
 
@@ -167,24 +161,7 @@ public class Query(IMapper mapper)
                         var direction = item.Direction == OrderDirection.Ascending
                             ? OrderDirection.Ascending
                             : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            OrganizationMemberOrderField.MembershipType =>
-                                Shared.Models.OrganizationMemberOrderField.MembershipType,
-                            OrganizationMemberOrderField.Status => Shared.Models.OrganizationMemberOrderField.Status,
-                            OrganizationMemberOrderField.Name => Shared.Models.OrganizationMemberOrderField.Name,
-                            OrganizationMemberOrderField.GivenName =>
-                                Shared.Models.OrganizationMemberOrderField.GivenName,
-                            OrganizationMemberOrderField.MiddleName =>
-                                Shared.Models.OrganizationMemberOrderField.MiddleName,
-                            OrganizationMemberOrderField.FamilyName =>
-                                Shared.Models.OrganizationMemberOrderField.FamilyName,
-                            OrganizationMemberOrderField.PhoneNumber =>
-                                Shared.Models.OrganizationMemberOrderField.PhoneNumber,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new OrganizationMemberOrder(direction, field);
+                        return new OrganizationMemberOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);
 
@@ -249,7 +226,7 @@ public class Query(IMapper mapper)
             first,
             before,
             last,
-            new TagSearchCriteria(where.OrganizationId, OrganizationTagType.DeskType, where.NameContains),
+            new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.DeskType, where.NameContains),
             orderBy,
             cachedCustomerService,
             tagService,
@@ -271,7 +248,7 @@ public class Query(IMapper mapper)
             first,
             before,
             last,
-            new TagSearchCriteria(where.OrganizationId, OrganizationTagType.Zone, where.NameContains),
+            new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Zone, where.NameContains),
             orderBy,
             cachedCustomerService,
             tagService,
@@ -304,15 +281,7 @@ public class Query(IMapper mapper)
                         var direction = item.Direction == OrderDirection.Ascending
                             ? OrderDirection.Ascending
                             : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            OrganizationTagOrderField.Name => TagOrderField.Name,
-                            OrganizationTagOrderField.Description => TagOrderField.Description,
-                            OrganizationTagOrderField.TagType => TagOrderField.TagType,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new TagOrder(direction, field);
+                        return new TagOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);
 

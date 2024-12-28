@@ -1,4 +1,5 @@
 using System.Reflection;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -34,9 +35,11 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public TeamMemberMembershipType[] TeamMemberMembershipTypes() =>
+    public TeamMembershipType[] TeamMembershipTypes() =>
     [
-        TeamMemberMembershipType.Owner, TeamMemberMembershipType.Administrator, TeamMemberMembershipType.Member
+        TeamMembershipType.Owner,
+        TeamMembershipType.Administrator,
+        TeamMembershipType.Member
     ];
 
     [UseResolverScope]
@@ -77,14 +80,7 @@ public class Query(IMapper mapper)
                         var direction = item.Direction == OrderDirection.Ascending
                             ? OrderDirection.Ascending
                             : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            TeamOrderField.Name => Shared.Models.TeamOrderField.Name,
-                            TeamOrderField.About => Shared.Models.TeamOrderField.About,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new TeamOrder(direction, field);
+                        return new TeamOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);
 
@@ -148,18 +144,7 @@ public class Query(IMapper mapper)
                         var direction = item.Direction == OrderDirection.Ascending
                             ? OrderDirection.Ascending
                             : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            TeamMemberOrderField.MembershipType => Shared.Models.TeamMemberOrderField
-                                .MembershipType,
-                            TeamMemberOrderField.Name => Shared.Models.TeamMemberOrderField.Name,
-                            TeamMemberOrderField.GivenName => Shared.Models.TeamMemberOrderField.GivenName,
-                            TeamMemberOrderField.MiddleName => Shared.Models.TeamMemberOrderField.MiddleName,
-                            TeamMemberOrderField.FamilyName => Shared.Models.TeamMemberOrderField.FamilyName,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new TeamMemberOrder(direction, field);
+                        return new TeamMemberOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);
 

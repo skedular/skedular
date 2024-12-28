@@ -11,8 +11,7 @@ namespace Customer.Shared.Database.Entities;
 public class CustomerFeedback : EntityBase
 {
     public string? Content { get; set; }
-
-    public FeedbackChannelType? Channel { get; set; }
+    public string Channel { get; set; }
 
     public virtual Customer Customer { get; set; }
 }
@@ -25,6 +24,10 @@ public class CustomerFeedbackConfiguration : IEntityTypeConfiguration<CustomerFe
         builder.ConfigureEntityBase();
 
         builder.Property(item => item.Content).HasMaxLength(Constants.MaxFeedbackLength);
+        builder
+            .Property(item => item.Channel)
+            .HasMaxLength(Constants.MaxFeedbackChannelLength)
+            .HasDefaultValue(FeedbackChannelTypeConstants.Web);
 
         builder
             .HasOne(item => item.Customer)

@@ -1,4 +1,3 @@
-using Api.Shared.Models;
 using HotChocolate;
 using HotChocolate.Types;
 using Team.Api.Mappers;
@@ -64,12 +63,12 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamMemberPayload?> DeleteTeamMemberAsync(
-        DeleteTeamMemberInput input,
+    public async Task<TeamMemberPayload?> RemoveTeamMemberAsync(
+        RemoveTeamMemberInput input,
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
-        var teamMember = await teamMemberService.DeleteAsync(input.Id, cancellationToken);
+        var teamMember = await teamMemberService.RemoveAsync(input.Id, cancellationToken);
         return new TeamMemberPayload
         {
             ClientMutationId = input.ClientMutationId, TeamMember = mapper.MapTo(teamMember)
@@ -85,13 +84,7 @@ public class Mutation(IMapper mapper)
         var teamMember =
             await teamMemberService.ChangeMembershipTypeAsync(
                 input.Id,
-                input.MembershipType switch
-                {
-                    TeamMemberMembershipType.Owner => TeamMembershipType.Owner,
-                    TeamMemberMembershipType.Administrator => TeamMembershipType.Administrator,
-                    TeamMemberMembershipType.Member => TeamMembershipType.Member,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
+                input.MembershipType,
                 cancellationToken);
         return new TeamMemberDetailsPayload
         {

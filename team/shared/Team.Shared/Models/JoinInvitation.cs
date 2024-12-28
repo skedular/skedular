@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace Team.Shared.Models;
@@ -5,8 +6,8 @@ namespace Team.Shared.Models;
 public class JoinInvitation : ModelBaseWithDeleted
 {
     public string? Email { get; set; }
-    public string Status { get; set; }
-    public string MembershipType { get; set; }
+    public InvitationStatus Status { get; set; }
+    public TeamMembershipType MembershipType { get; set; }
 
     public Team Team { get; set; }
     public Customer CreatedBy { get; set; }

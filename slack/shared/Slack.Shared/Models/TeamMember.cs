@@ -1,10 +1,11 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace Slack.Shared.Models;
 
 public class TeamMember : ReplicatedModelBaseWithDeleted
 {
-    public string? MembershipType { get; set; }
+    public TeamMembershipType? MembershipType { get; set; }
 
     public Team Team { get; set; }
     public Customer Customer { get; set; }

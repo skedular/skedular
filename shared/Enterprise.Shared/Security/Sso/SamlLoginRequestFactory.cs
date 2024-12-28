@@ -1,8 +1,8 @@
 using System.IO.Compression;
 using System.Text;
 using System.Web;
-using Microsoft.Extensions.Logging;
 using Enterprise.Shared.Security.Sso.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Security.Sso;
 
@@ -27,7 +27,7 @@ public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger) : 
 
     private static string GenerateSamlRequest(string organizationId, string appUrl)
     {
-        var samlId = $"{Constants.SamlIdPrefix}{organizationId}"; 
+        var samlId = $"{Constants.SamlIdPrefix}{organizationId}";
         //ref : https://learn.microsoft.com/en-us/entra/identity-platform/single-sign-on-saml-protocol
         return $@"
                     <samlp:AuthnRequest
@@ -38,6 +38,7 @@ public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger) : 
                       <Issuer xmlns=""urn:oasis:names:tc:SAML:2.0:assertion"">{appUrl}</Issuer>
                     </samlp:AuthnRequest>";
     }
+
     private static byte[] DeflateCompress(byte[] data)
     {
         using var output = new MemoryStream();

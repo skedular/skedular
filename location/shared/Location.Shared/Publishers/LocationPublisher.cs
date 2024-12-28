@@ -60,10 +60,7 @@ public class LocationPublisher(
                             ? Type.InvitationToJoinLocationUpserted
                             : Type.InvitationToJoinLocationDeleted,
                         context.GetCorrelationId()),
-                    Data = new Data
-                    {
-                        InvitationToJoinLocation = mapper.MapTo(joinInvitation, inviteeIdToOverride)
-                    }
+                    Data = new Data { InvitationToJoinLocation = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
                 },
                 cancellationToken)));
 }

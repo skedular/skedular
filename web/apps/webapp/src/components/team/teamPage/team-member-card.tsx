@@ -1,6 +1,6 @@
 import type { teamMemberCard_TeamMemberDetails$key } from '@/queries/__generated__/teamMemberCard_TeamMemberDetails.graphql';
-import type { teamMemberCard_deleteTeamMemberMutation } from '@/queries/__generated__/teamMemberCard_deleteTeamMemberMutation.graphql';
 import type { teamMemberCard_query$key } from '@/queries/__generated__/teamMemberCard_query.graphql';
+import type { teamMemberCard_removeTeamMemberMutation } from '@/queries/__generated__/teamMemberCard_removeTeamMemberMutation.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -82,9 +82,9 @@ const TeamMemberCard = ({ rootDataRelay, teamMemberDetailsRelay, connectionIds, 
     teamMemberDetailsRelay,
   );
 
-  const [commitDeleteTeamMember] = useMutation<teamMemberCard_deleteTeamMemberMutation>(graphql`
-    mutation teamMemberCard_deleteTeamMemberMutation($connectionIds: [ID!]!, $input: DeleteTeamMemberInput!) {
-      deleteTeamMember(input: $input) {
+  const [commitRemoveTeamMember] = useMutation<teamMemberCard_removeTeamMemberMutation>(graphql`
+    mutation teamMemberCard_removeTeamMemberMutation($connectionIds: [ID!]!, $input: RemoveTeamMemberInput!) {
+      removeTeamMember(input: $input) {
         teamMember {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -124,7 +124,7 @@ const TeamMemberCard = ({ rootDataRelay, teamMemberDetailsRelay, connectionIds, 
 
     const toastId = themedToast(<NotificationContent content={`Removing team member...`} />, infoNotificationOptions);
 
-    commitDeleteTeamMember({
+    commitRemoveTeamMember({
       variables: {
         connectionIds,
         input: {

@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Billing.Shared.Models;
 using Billing.Shared.Repositories;
 using Enterprise.Shared.Exceptions;
@@ -21,16 +21,18 @@ public class OrganizationAuthorizationService(
     public bool CanViewBillingInfo(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
-            or OrganizationMembershipType.Member
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
+            or OrganizationMembershipTypeConstants.Member
         };
 
     public bool CanManageBillingInfo(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 
     public async Task<OrganizationLevelPermissions> GetPermissionsAsync(

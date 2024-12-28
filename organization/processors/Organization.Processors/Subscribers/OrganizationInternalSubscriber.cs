@@ -1,7 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key;
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;

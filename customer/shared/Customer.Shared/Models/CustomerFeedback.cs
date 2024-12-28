@@ -5,6 +5,6 @@ namespace Customer.Shared.Models;
 public class CustomerFeedback : ModelBase
 {
     public string? Content { get; set; }
-    public FeedbackChannelType? Channel { get; set; }
+    public FeedbackChannelType Channel { get; set; }
     public Customer Customer { get; set; }
 }

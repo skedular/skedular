@@ -1,8 +1,8 @@
 using Api.Shared;
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Grpc.Skedular.Slack.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Slack.Shared.Models;
@@ -18,6 +18,7 @@ using LocationPermissions = Slack.Shared.Models.LocationPermissions;
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.Member;
 using MembershipType = Api.Shared.Services.Grpc.Skedular.Organization.V1.MembershipType;
 using Organization = Slack.Shared.Database.Entities.Organization;
+using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationPermissions = Slack.Shared.Models.OrganizationPermissions;
 using OrganizationTag = Slack.Shared.Models.OrganizationTag;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
@@ -253,7 +254,12 @@ public class Mapper : IMapper
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
-                Type = item.Type.ToSafeString(),
+                Type = item.Type switch
+                {
+                    OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                    OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
                 Organization = new Shared.Models.Organization { Id = item.Organization.Id }
             }).ToList();
 
@@ -322,10 +328,9 @@ public class Mapper : IMapper
             },
             Status = src.Status switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active =>
-                    global::Api.Shared.Models.OrganizationMemberStatus.Active,
-                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive =>
-                    global::Api.Shared.Models.OrganizationMemberStatus.Inactive,
+                OrganizationMemberStatus.Active => global::Api.Shared.Services.Models.OrganizationMemberStatus.Active,
+                OrganizationMemberStatus.Inactive => global::Api.Shared.Services.Models.OrganizationMemberStatus
+                    .Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer)

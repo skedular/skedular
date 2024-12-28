@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Ardalis.GuardClauses;
 using Enterprise.Shared.Context;
@@ -133,8 +133,8 @@ public class OrganizationService(
             organizationMembers.Add(new OrganizationMember
             {
                 Id = randomHelper.Generate(),
-                MembershipType = OrganizationMembershipType.Owner,
-                Status = OrganizationMemberStatus.Active,
+                MembershipType = OrganizationMembershipTypeConstants.Owner,
+                Status = OrganizationMemberStatusConstants.Active,
                 Customer = customerEntity,
                 Organization = organizationEntity
             });

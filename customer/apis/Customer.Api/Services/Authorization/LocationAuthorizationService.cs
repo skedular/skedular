@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Customer.Shared.Database.Entities;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Exceptions;
@@ -68,7 +68,7 @@ public class LocationAuthorizationService(
     public bool IsLocationMember(Location location, Shared.Database.Entities.Customer customer) =>
         location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            MembershipType: LocationMembershipType.Owner or LocationMembershipType.Administrator
-            or LocationMembershipType.Member
+            MembershipType: LocationMembershipTypeConstants.Owner or LocationMembershipTypeConstants.Administrator
+            or LocationMembershipTypeConstants.Member
         };
 }

@@ -1,3 +1,4 @@
+using Customer.Shared.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -172,19 +173,6 @@ public class CustomerOrganizationTagDetails
     [GraphQLName("name")] public string? Name { get; set; }
 }
 
-public enum CustomerOrderField
-{
-    Designation,
-    Title,
-    Name,
-    GivenName,
-    MiddleName,
-    FamilyName,
-    Timezone,
-    Locale,
-    PhoneNumber
-}
-
 [GraphQLName("CustomerOrderInput")]
 public class CustomerOrderInput
 {
@@ -220,13 +208,6 @@ public class CustomersByDefaultLocationWhereInput
 {
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-}
-
-public enum FeedbackChannel
-{
-    Web,
-    Slack,
-    MsTeams
 }
 
 [GraphQLName("RemoveCustomerDefaultDeskInput")]
@@ -270,7 +251,7 @@ public class SubmitCustomerFeedbackInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("feedbackContent")] public string FeedbackContent { get; set; } = string.Empty;
-    [GraphQLName("channel")] public FeedbackChannel Channel { get; set; }
+    [GraphQLName("channel")] public FeedbackChannelType Channel { get; set; }
 }
 
 [GraphQLName("SubmitCustomerFeedbackPayload")]

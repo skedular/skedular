@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 
@@ -21,24 +21,21 @@ public class Mapper : IMapper
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
-                BookingType.WorkingFromHome => 
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromHome,
-                BookingType.WorkingFromOffice => 
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromOffice,
-                BookingType.SickLeave => 
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.SickLeave,
-                BookingType.AnnualLeave => 
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.AnnualLeave,
-                BookingType.WellBeingLeave => 
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WellBeingLeave,
-                BookingType.ClientOffices => 
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.ClientOffices,
-                BookingType.Vacation => 
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.Vacation,
-                BookingType.TravelingForWork => 
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.TravelingForWork,
-                BookingType.NonWorkingDay => 
-                    Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.NonWorkingDay,
+                BookingType.WorkingFromHome => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType
+                    .WorkingFromHome,
+                BookingType.WorkingFromOffice => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType
+                    .WorkingFromOffice,
+                BookingType.SickLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.SickLeave,
+                BookingType.AnnualLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.AnnualLeave,
+                BookingType.WellBeingLeave => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType
+                    .WellBeingLeave,
+                BookingType.ClientOffices => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType
+                    .ClientOffices,
+                BookingType.Vacation => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.Vacation,
+                BookingType.TravelingForWork => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType
+                    .TravelingForWork,
+                BookingType.NonWorkingDay => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType
+                    .NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             CustomerId = src.Customer.Id,

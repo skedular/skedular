@@ -1,4 +1,3 @@
-using Api.Shared.Models;
 using HotChocolate;
 using HotChocolate.Types;
 using Location.Api.Mappers;
@@ -99,13 +98,7 @@ public class Mutation(IMapper mapper)
         var locationMember =
             await locationMemberService.ChangeMembershipTypeAsync(
                 input.Id,
-                input.MembershipType switch
-                {
-                    LocationMemberMembershipType.Owner => LocationMembershipType.Owner,
-                    LocationMemberMembershipType.Administrator => LocationMembershipType.Administrator,
-                    LocationMemberMembershipType.Member => LocationMembershipType.Member,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
+                input.MembershipType,
                 cancellationToken);
         return new LocationMemberDetailsPayload
         {

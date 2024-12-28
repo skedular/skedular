@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Customer.Shared.Database.Entities;
 
 namespace Customer.Api.Services.Authorization;
@@ -13,6 +13,7 @@ public class TeamAuthorizationService : ITeamAuthorizationService
     public bool CanAddTeamAsDefault(Team team, Shared.Database.Entities.Customer customer) =>
         team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            MembershipType: TeamMembershipType.Owner or TeamMembershipType.Administrator or TeamMembershipType.Member
+            MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+            or TeamMembershipTypeConstants.Member
         };
 }

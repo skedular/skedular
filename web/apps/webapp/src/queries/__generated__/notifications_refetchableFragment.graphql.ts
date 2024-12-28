@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<81d51f1a0280509d866024a085b89cf9>>
+ * @generated SignedSource<<7540e583c2e6be755a6042fd26d70e00>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type NotificationOrderField = "EventRaisedAt" | "NotificationType" | "%future added value";
+export type NotificationOrderField = "Date" | "Type" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type NotificationOrderInput = {
   direction: OrderDirection;

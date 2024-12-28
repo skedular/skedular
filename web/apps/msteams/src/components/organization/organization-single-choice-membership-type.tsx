@@ -17,15 +17,15 @@ const OrganizationSingleChoiceMembershipType = ({ rootDataRelay, name, required 
   const rootData = useFragment(
     graphql`
       fragment organizationSingleChoiceMembershipType_query on Query {
-        organizationMemberMembershipTypes
+        organizationMembershipTypes
       }
     `,
     rootDataRelay,
   );
 
-  const organizationMemberMembershipTypes = useMemo<string[]>(
-    () => rootData.organizationMemberMembershipTypes.map((organizationMemberMembershipType) => organizationMemberMembershipType),
-    [rootData.organizationMemberMembershipTypes],
+  const organizationMembershipTypes = useMemo<string[]>(
+    () => rootData.organizationMembershipTypes.map((organizationMembershipType) => organizationMembershipType),
+    [rootData.organizationMembershipTypes],
   );
 
   const filter = createFilterOptions<string>();
@@ -36,7 +36,7 @@ const OrganizationSingleChoiceMembershipType = ({ rootDataRelay, name, required 
       name={name}
       multiple={false}
       required={required}
-      options={organizationMemberMembershipTypes}
+      options={organizationMembershipTypes}
       getOptionValue={(option) => option as string}
       getOptionLabel={(option: string | string) => convertStringToLowercaseExceptFirstLetter(option as string)}
       renderOption={(props, option) => {

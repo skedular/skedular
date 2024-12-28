@@ -62,20 +62,20 @@ internal static class TagExtensions
         var orderByField = orderByFields.First();
         return orderByFields.Skip(1).Aggregate(orderByField.Field switch
         {
-            TagOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+            OrganizationTagOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Name)
                 : originalQuery.OrderByDescending(x => x.Name),
-            TagOrderField.Description => orderByField.Direction == OrderDirection.Ascending
+            OrganizationTagOrderField.Description => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Description)
                 : originalQuery.OrderByDescending(x => x.Description),
-            TagOrderField.TagType => orderByField.Direction == OrderDirection.Ascending
+            OrganizationTagOrderField.TagType => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Type)
                 : originalQuery.OrderByDescending(x => x.Type),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch
             {
-                TagOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                OrganizationTagOrderField.Name => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Name)
                     : query.ThenByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()

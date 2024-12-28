@@ -135,11 +135,11 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
 
         ArgumentException.ThrowIfNullOrWhiteSpace(responseNode.Attributes?["InResponseTo"]?.Value);
         response.InResponseTo = responseNode.Attributes?["InResponseTo"]?.Value!;
-        
+
         var issuerNode = samlResponse.SelectSingleNode("//saml:Assertion/saml:Issuer", namespaceManager);
         ArgumentException.ThrowIfNullOrWhiteSpace(issuerNode?.InnerText);
         response.Issuer = issuerNode.InnerText;
-        
+
         var authnInstantNode = samlResponse.SelectSingleNode("//saml:AuthnStatement/@AuthnInstant", namespaceManager);
         if (DateTime.TryParse(authnInstantNode?.Value, out var authnInstant))
         {

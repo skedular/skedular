@@ -1,4 +1,5 @@
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Microsoft.Graph.Models;
 using Organization.Shared.Models;
@@ -399,8 +400,19 @@ public class Mapper : IMapper
         Shared.Database.Entities.Customer customer)
     {
         dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType;
-        dest.Status = src.Status;
+        dest.MembershipType = src.MembershipType switch
+        {
+            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
+            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
+            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        dest.Status = src.Status switch
+        {
+            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
+            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone;
         dest.Organization = organization;
         dest.Customer = customer;
@@ -415,7 +427,14 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
+            Status = src.Status switch
+            {
+                InvitationStatusConstants.Pending => InvitationStatus.Pending,
+                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
+                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
+                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Organization = MapTo(src.Organization),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -433,8 +452,19 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType,
-            Status = src.Status,
+            MembershipType = src.MembershipType switch
+            {
+                OrganizationMembershipTypeConstants.Owner => OrganizationMembershipType.Owner,
+                OrganizationMembershipTypeConstants.Administrator => OrganizationMembershipType.Administrator,
+                OrganizationMembershipTypeConstants.Member => OrganizationMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
+                OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = MapTo(src.Customer)!,
             Organization = organization
@@ -638,7 +668,14 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
+            Status = src.Status switch
+            {
+                InvitationStatusConstants.Pending => InvitationStatus.Pending,
+                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
+                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
+                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Organization = organization,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)

@@ -2,7 +2,6 @@ using Api.Shared;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Notification.Shared.Models;
 
 namespace Notification.Shared.Database.Entities;
 

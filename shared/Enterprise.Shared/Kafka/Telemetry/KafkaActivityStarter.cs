@@ -70,8 +70,7 @@ public class KafkaActivityStarter(IActivityAccessor activityAccessor) : IKafkaAc
         {
             KafkaOperationType.Provide => "send",
             KafkaOperationType.Consume => "receive",
-            _ => throw new ArgumentOutOfRangeException(nameof(kafkaOperationType),
-                kafkaOperationType, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(kafkaOperationType), kafkaOperationType, null)
         };
 
     private static IDictionary<string, object?> BuildKafkaTags(string topic, int? partition)

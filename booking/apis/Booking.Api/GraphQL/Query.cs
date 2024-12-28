@@ -94,23 +94,7 @@ public class Query(IMapper mapper)
                         var direction = item.Direction == OrderDirection.Ascending
                             ? OrderDirection.Ascending
                             : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            BookingOrderField.From => Shared.Models.BookingOrderField.From,
-                            BookingOrderField.To => Shared.Models.BookingOrderField.To,
-                            BookingOrderField.Notes => Shared.Models.BookingOrderField.Notes,
-                            BookingOrderField.Name => Shared.Models.BookingOrderField.Name,
-                            BookingOrderField.GivenName => Shared.Models.BookingOrderField.GivenName,
-                            BookingOrderField.MiddleName => Shared.Models.BookingOrderField.MiddleName,
-                            BookingOrderField.FamilyName => Shared.Models.BookingOrderField.FamilyName,
-                            BookingOrderField.OrganizationName => Shared.Models.BookingOrderField.OrganizationName,
-                            BookingOrderField.LocationName => Shared.Models.BookingOrderField.LocationName,
-                            BookingOrderField.TeamName => Shared.Models.BookingOrderField.TeamName,
-                            BookingOrderField.BookingType => Shared.Models.BookingOrderField.BookingType,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new BookingOrder(direction, field);
+                        return new BookingOrder(direction, item.Field);
                     }).ToList(),
                 false,
                 cancellationToken);

@@ -66,7 +66,7 @@ internal static class NotificationExtensions
         var orderByField = orderByFields.First();
         return orderByFields.Skip(1).Aggregate(orderByField.Field switch
         {
-            NotificationOrderField.EventRaisedAt => orderByField.Direction == OrderDirection.Ascending
+            NotificationOrderField.Date => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.EventRaisedAt)
                 : originalQuery.OrderByDescending(x => x.EventRaisedAt),
             NotificationOrderField.Type => orderByField.Direction == OrderDirection.Ascending
@@ -76,7 +76,7 @@ internal static class NotificationExtensions
         }, (query, orderField) =>
             orderField.Field switch
             {
-                NotificationOrderField.EventRaisedAt => orderField.Direction == OrderDirection.Ascending
+                NotificationOrderField.Date => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.EventRaisedAt)
                     : query.ThenByDescending(x => x.EventRaisedAt),
                 NotificationOrderField.Type => orderField.Direction == OrderDirection.Ascending

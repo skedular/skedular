@@ -107,7 +107,7 @@ public static class ServiceExtensions
 
                     sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
                 });
-                
+
                 if (option == Migration.SetAssembly)
                 {
                     options.ConfigureWarnings(warnings =>
@@ -150,7 +150,7 @@ public static class ServiceExtensions
 
                     sqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
                 });
-                
+
                 if (option == Migration.SetAssembly)
                 {
                     options.ConfigureWarnings(warnings =>

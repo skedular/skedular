@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Location.Shared.Models;
@@ -136,7 +136,12 @@ public class Mapper : IMapper
             Id = item.Id,
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
-            Type = item.TagType,
+            Type = item.TagType switch
+            {
+                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Organization = organization
         }).ToList();
 
@@ -285,8 +290,19 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType;
-        dest.Status = src.Status;
+        dest.MembershipType = src.MembershipType switch
+        {
+            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
+            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
+            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        dest.Status = src.Status switch
+        {
+            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
+            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;
@@ -300,7 +316,12 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
-        dest.Type = src.Type;
+        dest.Type = src.Type switch
+        {
+            OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+            OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Organization = organization;
         return dest;
     }
@@ -361,7 +382,14 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
+            Status = src.Status switch
+            {
+                InvitationStatusConstants.Pending => InvitationStatus.Pending,
+                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
+                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
+                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Location = MapTo(src.Location),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -397,7 +425,13 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType,
+            MembershipType = src.MembershipType switch
+            {
+                LocationMembershipTypeConstants.Owner => LocationMembershipType.Owner,
+                LocationMembershipTypeConstants.Administrator => LocationMembershipType.Administrator,
+                LocationMembershipTypeConstants.Member => LocationMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = MapTo(src.Customer)!,
             Location = location
         };
@@ -414,8 +448,19 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType,
-            Status = src.Status,
+            MembershipType = src.MembershipType switch
+            {
+                OrganizationMembershipTypeConstants.Owner => OrganizationMembershipType.Owner,
+                OrganizationMembershipTypeConstants.Administrator => OrganizationMembershipType.Administrator,
+                OrganizationMembershipTypeConstants.Member => OrganizationMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
+                OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = MapTo(src.Customer)!,
             Organization = organization
         };

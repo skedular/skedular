@@ -1,5 +1,5 @@
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Models;
 using Customer.Api.GraphQL;
 using Customer.Shared.Models;
 using Enterprise.Shared;
@@ -7,7 +7,6 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Models;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
 using Desk = Customer.Shared.Models.Desk;
-using FeedbackChannel = Customer.Api.GraphQL.FeedbackChannel;
 using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
 using Organization = Customer.Shared.Models.Organization;
@@ -197,13 +196,7 @@ public class Mapper(IContext context) : IMapper
         {
             Id = src.Id.ToSafeString(),
             Content = src.FeedbackContent,
-            Channel = src.Channel switch
-            {
-                FeedbackChannel.Web => FeedbackChannelType.Web,
-                FeedbackChannel.Slack => FeedbackChannelType.Slack,
-                FeedbackChannel.MsTeams => FeedbackChannelType.MsTeams,
-                _ => throw new ArgumentOutOfRangeException()
-            }
+            Channel = src.Channel
         };
 
     public SubmitCustomerFeedbackPayload MapTo(CustomerFeedback src, string? clientMutationId) =>
@@ -254,13 +247,32 @@ public class Mapper(IContext context) : IMapper
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             Content = src.Content,
-            Channel = src.Channel,
+            Channel = src.Channel switch
+            {
+                FeedbackChannelTypeConstants.Web => FeedbackChannelType.Web,
+                FeedbackChannelTypeConstants.Slack => FeedbackChannelType.Slack,
+                FeedbackChannelTypeConstants.MsTeams => FeedbackChannelType.MsTeams,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = MapTo(src.Customer)
         };
 
-    public Shared.Database.Entities.CustomerFeedback MapTo(CustomerFeedback src,
+    public Shared.Database.Entities.CustomerFeedback MapTo(
+        CustomerFeedback src,
         Shared.Database.Entities.Customer customer) =>
-        new() { Id = src.Id, Content = src.Content, Channel = src.Channel, Customer = customer };
+        new()
+        {
+            Id = src.Id,
+            Content = src.Content,
+            Channel = src.Channel switch
+            {
+                FeedbackChannelType.Web => FeedbackChannelTypeConstants.Web,
+                FeedbackChannelType.Slack => FeedbackChannelTypeConstants.Slack,
+                FeedbackChannelType.MsTeams => FeedbackChannelTypeConstants.MsTeams,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Customer = customer
+        };
 
     public Shared.Models.Customer MapTo(Admin_AddInput src) =>
         new()
@@ -407,7 +419,12 @@ public class Mapper(IContext context) : IMapper
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
-                Type = item.Type.ToSafeString(),
+                Type = item.Type switch
+                {
+                    OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+                    OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
                 Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
                 {
                     Id = item.Organization.Id
@@ -560,7 +577,12 @@ public class Mapper(IContext context) : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Type = src.Type,
+                Type = src.Type switch
+                {
+                    OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                    OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
                 Organization = new Organization { Id = src.Organization.Id }
             };
 

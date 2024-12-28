@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dace581f4b0c4a11fcc8fe9dad45d627>>
+ * @generated SignedSource<<294633f64db94c97624be2ac7cd1570e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,10 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationMemberMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
+export type OrganizationMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationSingleChoiceMembershipType_query$data = {
-  readonly organizationMemberMembershipTypes: ReadonlyArray<OrganizationMemberMembershipType>;
+  readonly organizationMembershipTypes: ReadonlyArray<OrganizationMembershipType>;
   readonly " $fragmentType": "organizationSingleChoiceMembershipType_query";
 };
 export type organizationSingleChoiceMembershipType_query$key = {
@@ -30,7 +30,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "organizationMemberMembershipTypes",
+      "name": "organizationMembershipTypes",
       "storageKey": null
     }
   ],
@@ -38,6 +38,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "179cc423db8c3bb4ee6d7ca5d03d4654";
+(node as any).hash = "f1abfa0a3721cb69389f51aaf7fdb72c";
 
 export default node;

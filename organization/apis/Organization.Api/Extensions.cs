@@ -1,4 +1,3 @@
-using Enterprise.Shared.Security.Sso;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Api.Services.Authorization;

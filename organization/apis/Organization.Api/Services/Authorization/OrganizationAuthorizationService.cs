@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Exceptions;
 using Organization.Shared.Models;
 using Organization.Shared.Repositories;
@@ -24,30 +24,33 @@ public class OrganizationAuthorizationService(
     public bool CanView(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
-            or OrganizationMembershipType.Member
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
+            or OrganizationMembershipTypeConstants.Member
         };
 
     public bool CanModify(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 
     public bool CanDelete(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
         };
 
     public bool CanInvitePeople(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 
     public bool CanCancelPeopleExistingInvitations(
@@ -55,15 +58,17 @@ public class OrganizationAuthorizationService(
         Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 
     public bool CanViewAnalytics(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
         };
 
     public async Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)

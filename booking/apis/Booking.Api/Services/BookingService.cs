@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
@@ -1001,7 +1001,7 @@ public class BookingService(
         Location location)
     {
         var preferredZoneIds = customer.PreferredOrganizationTags
-            .Where(item => item.Type == OrganizationTagType.Zone)
+            .Where(item => item.Type == OrganizationTagTypeConstants.Zone)
             .Select(item => item.Id)
             .ToList();
         if (preferredZoneIds.Count == 0)

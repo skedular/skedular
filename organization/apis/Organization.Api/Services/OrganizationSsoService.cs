@@ -71,7 +71,7 @@ public class OrganizationSsoService(
         samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, response);
         return existingOrganizationSsoSetting.RedirectUrl;
     }
-    
+
     // Split and return the original ID without the prefix
     private static string ExtractSamlOriginalId(string prefixedId) =>
         prefixedId.StartsWith(Constants.SamlIdPrefix) ? prefixedId[Constants.SamlIdPrefix.Length..] : prefixedId;

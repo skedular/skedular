@@ -60,14 +60,7 @@ public class Query(IMapper mapper)
                         var direction = item.Direction == OrderDirection.Ascending
                             ? OrderDirection.Ascending
                             : OrderDirection.Descending;
-                        var field = item.Field switch
-                        {
-                            NotificationOrderField.EventRaisedAt => Shared.Models.NotificationOrderField.EventRaisedAt,
-                            NotificationOrderField.NotificationType => Shared.Models.NotificationOrderField.Type,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-
-                        return new NotificationOrder(direction, field);
+                        return new NotificationOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);
 

@@ -169,8 +169,12 @@ namespace Customer.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int?>("Channel")
-                        .HasColumnType("integer");
+                    b.Property<string>("Channel")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasDefaultValue("WEB");
 
                     b.Property<string>("Content")
                         .HasMaxLength(10240)

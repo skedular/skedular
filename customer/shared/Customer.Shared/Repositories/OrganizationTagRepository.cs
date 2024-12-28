@@ -1,6 +1,5 @@
 using Customer.Shared.Database;
 using Customer.Shared.Database.Entities;
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 

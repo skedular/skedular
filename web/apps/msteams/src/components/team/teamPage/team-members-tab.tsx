@@ -400,8 +400,6 @@ const TeamMembersTab = ({ queryReference, organizationId }: Props) => {
           />
         </Paper>
       )}
-
-      
     </>
   );
 };

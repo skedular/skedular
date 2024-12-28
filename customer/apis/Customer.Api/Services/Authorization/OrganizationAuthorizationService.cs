@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Customer.Shared.Database.Entities;
 
 namespace Customer.Api.Services.Authorization;
@@ -21,8 +21,9 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
     public bool IsOrganizationMember(Organization organization, Shared.Database.Entities.Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            Status: OrganizationMemberStatus.Active,
-            MembershipType: OrganizationMembershipType.Owner or OrganizationMembershipType.Administrator
-            or OrganizationMembershipType.Member
+            Status: OrganizationMemberStatusConstants.Active,
+            MembershipType: OrganizationMembershipTypeConstants.Owner
+            or OrganizationMembershipTypeConstants.Administrator
+            or OrganizationMembershipTypeConstants.Member
         };
 }

@@ -21,6 +21,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
+        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
         <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj"/>
     </ItemGroup>
 

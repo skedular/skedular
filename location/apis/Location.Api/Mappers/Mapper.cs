@@ -1,5 +1,5 @@
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Location.Api.GraphQL;
@@ -85,19 +85,6 @@ public interface IMapper
     IEnumerable<Edge<LocationMember>> MapTo(
         IEnumerable<Edge<Shared.Database.Entities.LocationMember>> src,
         Shared.Models.Location location);
-
-    Shared.Database.Entities.LocationMember MapToEntity(
-        LocationMember src,
-        Shared.Database.Entities.Location location,
-        Shared.Database.Entities.Customer customer);
-
-    Shared.Database.Entities.LocationMember MergeToEntity(
-        LocationMember src,
-        Shared.Database.Entities.LocationMember dest,
-        Shared.Database.Entities.Location location,
-        Shared.Database.Entities.Customer customer);
-
-    ICollection<LocationMember> MapTo(Admin_UpdateMembersInput src);
 
     Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Location location);
     Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Location location);
@@ -208,8 +195,9 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            DeskTypes = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.DeskType)).ToList(),
-            Zones = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Zone)).ToList()
+            DeskTypes =
+                MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.DeskType)).ToList(),
+            Zones = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Zone)).ToList()
         };
 
     public Desk MapTo(
@@ -241,24 +229,19 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType,
+            MembershipType = src.MembershipType switch
+            {
+                LocationMembershipTypeConstants.Owner => LocationMembershipType.Owner,
+                LocationMembershipTypeConstants.Administrator => LocationMembershipType.Administrator,
+                LocationMembershipTypeConstants.Member => LocationMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = MapTo(src.Customer)!,
             Location = location
         };
 
     public LocationMemberDetails MapTo(LocationMember src) =>
-        new()
-        {
-            Id = src.Id,
-            MembershipType = src.MembershipType switch
-            {
-                LocationMembershipType.Owner => LocationMemberMembershipType.Owner,
-                LocationMembershipType.Administrator => LocationMemberMembershipType.Administrator,
-                LocationMembershipType.Member => LocationMemberMembershipType.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Customer = MapTo(src.Customer)
-        };
+        new() { Id = src.Id, MembershipType = src.MembershipType, Customer = MapTo(src.Customer) };
 
     public DeskEdge MapTo(Edge<Shared.Models.Desk> src) =>
         new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
@@ -291,28 +274,6 @@ public class Mapper : IMapper
     public IEnumerable<Edge<LocationMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.LocationMember>> src,
         Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
-
-    public Shared.Database.Entities.LocationMember MapToEntity(
-        LocationMember src,
-        Shared.Database.Entities.Location location,
-        Shared.Database.Entities.Customer customer) =>
-        MergeToEntity(src, new Shared.Database.Entities.LocationMember(), location, customer);
-
-    public Shared.Database.Entities.LocationMember MergeToEntity(
-        LocationMember src,
-        Shared.Database.Entities.LocationMember dest,
-        Shared.Database.Entities.Location location,
-        Shared.Database.Entities.Customer customer)
-    {
-        dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType;
-        dest.Location = location;
-        dest.Customer = customer;
-        return dest;
-    }
-
-    public ICollection<LocationMember> MapTo(Admin_UpdateMembersInput src) =>
-        src.Members.Select(item => MapTo(item, new Shared.Models.Location { Id = src.Id })).ToList();
 
     public Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Location location) =>
         MergeToEntity(src, new Address(), location);
@@ -411,8 +372,21 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
-            MembershipType = src.MembershipType,
+            Status = src.Status switch
+            {
+                InvitationStatusConstants.Pending => InvitationStatus.Pending,
+                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
+                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
+                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            MembershipType = src.MembershipType switch
+            {
+                LocationMembershipTypeConstants.Owner => LocationMembershipType.Owner,
+                LocationMembershipTypeConstants.Administrator => LocationMembershipType.Administrator,
+                LocationMembershipTypeConstants.Member => LocationMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Location = MapTo(src.Location),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -494,11 +468,11 @@ public class Mapper : IMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Location = location,
             DeskTypes = MapTo(
-                    src.OrganizationTags.Where(item => item.Type == OrganizationTagType.DeskType),
+                    src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.DeskType),
                     location.Organization)
                 .ToList(),
             Zones = MapTo(
-                    src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Zone),
+                    src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Zone),
                     location.Organization)
                 .ToList()
         };
@@ -551,7 +525,17 @@ public class Mapper : IMapper
         src.Select(item => MapTo(item, location));
 
     private static OrganizationTagDetails MapTo(OrganizationTag src) =>
-        new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type };
+        new()
+        {
+            UniqueId = src.Id,
+            Name = src.Name,
+            TagType = src.Type switch
+            {
+                OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+                OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            }
+        };
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
         new()
@@ -560,7 +544,12 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
-            Type = src.Type
+            Type = src.Type switch
+            {
+                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         };
 
     private static Shared.Models.Address? MapTo(LocationAddressDetails? src, Shared.Models.Location location) =>
@@ -584,21 +573,6 @@ public class Mapper : IMapper
 
     private static OrganizationZone MapToGrpcResponseOrganizationZone(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
-
-    private static LocationMember MapTo(Member src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            MembershipType = src.MembershipType switch
-            {
-                MembershipType.Owner => LocationMembershipType.Owner,
-                MembershipType.Administrator => LocationMembershipType.Administrator,
-                MembershipType.Member => LocationMembershipType.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Customer = new Customer { Id = src.Customer.Id },
-            Location = location
-        };
 
     private IEnumerable<OrganizationTag> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationTag> src,
@@ -730,7 +704,14 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status,
+            Status = src.Status switch
+            {
+                InvitationStatusConstants.Pending => InvitationStatus.Pending,
+                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
+                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
+                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Location = location,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -746,7 +727,12 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
-            Type = src.Type
+            Type = src.Type switch
+            {
+                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         };
 
         if (organization is not null)

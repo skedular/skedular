@@ -1,4 +1,4 @@
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -23,7 +23,7 @@ public interface ITeamMemberService
 
     Task<TeamMember> ChangeMembershipTypeAsync(
         string teamMemberId,
-        string membershipType,
+        TeamMembershipType membershipType,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Team> UpdateAsync(
@@ -39,7 +39,7 @@ public interface ITeamMemberService
         Organization? organization,
         CancellationToken cancellationToken);
 
-    Task<TeamMember> DeleteAsync(string id, CancellationToken cancellationToken);
+    Task<TeamMember> RemoveAsync(string id, CancellationToken cancellationToken);
 }
 
 public class TeamMemberService(
@@ -85,7 +85,7 @@ public class TeamMemberService(
 
     public async Task<TeamMember> ChangeMembershipTypeAsync(
         string teamMemberId,
-        string membershipType,
+        TeamMembershipType membershipType,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -111,19 +111,27 @@ public class TeamMemberService(
         var myMembershipDetails =
             team.TeamMembers.Single(item => item.Customer.Id == customer.Id);
 
-        if (myMembershipDetails.MembershipType == TeamMembershipType.Administrator &&
+        if (myMembershipDetails.MembershipType == TeamMembershipTypeConstants.Administrator &&
             membershipType == TeamMembershipType.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == TeamMembershipType.Member &&
+        if (myMembershipDetails.MembershipType == TeamMembershipTypeConstants.Member &&
             membershipType == TeamMembershipType.Administrator)
         {
             throw new Unauthorized();
         }
 
-        if (teamMember.MembershipType == membershipType)
+        var mappedMembershipType = membershipType switch
+        {
+            TeamMembershipType.Owner => TeamMembershipTypeConstants.Owner,
+            TeamMembershipType.Administrator => TeamMembershipTypeConstants.Administrator,
+            TeamMembershipType.Member => TeamMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        if (teamMember.MembershipType == mappedMembershipType)
         {
             return mapper.MapTo(teamMember, mapper.MapTo(team));
         }
@@ -132,7 +140,7 @@ public class TeamMemberService(
             repositoryFactory.TeamMemberRepository.UnitOfWork,
             cancellationToken);
 
-        teamMember.MembershipType = membershipType;
+        teamMember.MembershipType = mappedMembershipType;
         repositoryFactory.TeamMemberRepository.Update(teamMember);
 
         await teamOutboxPublisher.PublishTeamAsync(
@@ -249,8 +257,8 @@ public class TeamMemberService(
                 CreatedAt = now,
                 MembershipType =
                     customer is not null && item.Id == customer.Id
-                        ? TeamMembershipType.Owner
-                        : TeamMembershipType.Member,
+                        ? TeamMembershipTypeConstants.Owner
+                        : TeamMembershipTypeConstants.Member,
                 Customer = item,
                 Team = existingTeam
             }));
@@ -270,8 +278,8 @@ public class TeamMemberService(
                 Id = randomHelper.Generate(),
                 CreatedAt = now,
                 MembershipType = customer is not null && item.Customer.Id == customer.Id
-                    ? TeamMembershipType.Owner
-                    : TeamMembershipType.Member,
+                    ? TeamMembershipTypeConstants.Owner
+                    : TeamMembershipTypeConstants.Member,
                 Customer = item.Customer,
                 Team = existingTeam,
                 OrganizationMember = item
@@ -281,7 +289,7 @@ public class TeamMemberService(
         return rebuiltTeamMembers;
     }
 
-    public async Task<TeamMember> DeleteAsync(
+    public async Task<TeamMember> RemoveAsync(
         string id,
         CancellationToken cancellationToken)
     {

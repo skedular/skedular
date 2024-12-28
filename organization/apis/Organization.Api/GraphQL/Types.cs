@@ -1,7 +1,9 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
+using Organization.Shared.Models;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -68,7 +70,7 @@ public class ChangeOrganizationMemberOwnershipTypeInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("membershipType")] public OrganizationMemberMembershipType MembershipType { get; set; }
+    [GraphQLName("membershipType")] public OrganizationMembershipType MembershipType { get; set; }
 }
 
 [GraphQLName("ChangeOrganizationMembersStatusInput")]
@@ -230,7 +232,7 @@ public class OrganizationMemberConnection : Connection<OrganizationMemberEdge>;
 [GraphQLName("OrganizationMemberDetails")]
 public class OrganizationMemberDetails : Node
 {
-    [GraphQLName("membershipType")] public OrganizationMemberMembershipType? MembershipType { get; set; }
+    [GraphQLName("membershipType")] public OrganizationMembershipType? MembershipType { get; set; }
     [GraphQLName("status")] public OrganizationMemberStatus Status { get; set; }
 
     [GraphQLName("isOrganizationOnboardingDone")]
@@ -257,24 +259,6 @@ public class OrganizationMembersDetailsPayload
 [GraphQLName("OrganizationMemberEdge")]
 public class OrganizationMemberEdge : Edge<OrganizationMemberDetails>;
 
-public enum OrganizationMemberMembershipType
-{
-    Owner,
-    Administrator,
-    Member
-}
-
-public enum OrganizationMemberOrderField
-{
-    MembershipType,
-    Status,
-    Name,
-    GivenName,
-    MiddleName,
-    FamilyName,
-    PhoneNumber
-}
-
 [GraphQLName("OrganizationMemberOrderInput")]
 public class OrganizationMemberOrderInput
 {
@@ -300,11 +284,6 @@ public class OrganizationOfferingDetails : Node
     [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
     [GraphQLName("free")] public bool Free { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
-}
-
-public enum OrganizationOrderField
-{
-    Name
 }
 
 [GraphQLName("OrganizationOrderInput")]
@@ -455,13 +434,6 @@ public class OrganizationTagDetails : Node
 [GraphQLName("OrganizationTagEdge")]
 public class OrganizationTagEdge : Edge<OrganizationTagDetails>;
 
-public enum OrganizationTagOrderField
-{
-    Name,
-    Description,
-    TagType
-}
-
 [GraphQLName("OrganizationTagOrderInput")]
 public class OrganizationTagOrderInput
 {
@@ -488,10 +460,4 @@ public class ZoneOrganizationTagWhereInput
 {
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-}
-
-public enum OrganizationMemberStatus
-{
-    Active,
-    Inactive,
 }

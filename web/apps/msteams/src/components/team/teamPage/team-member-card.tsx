@@ -24,8 +24,8 @@ import { memo, useContext, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import type { teamMemberCard_TeamMemberDetails$key } from './__generated__/teamMemberCard_TeamMemberDetails.graphql';
-import type { teamMemberCard_deleteTeamMemberMutation } from './__generated__/teamMemberCard_deleteTeamMemberMutation.graphql';
 import type { teamMemberCard_query$key } from './__generated__/teamMemberCard_query.graphql';
+import type { teamMemberCard_removeTeamMemberMutation } from './__generated__/teamMemberCard_removeTeamMemberMutation.graphql';
 
 type Props = {
   rootDataRelay: teamMemberCard_query$key;
@@ -83,9 +83,9 @@ const TeamMemberCard = ({ rootDataRelay, teamMemberDetailsRelay, connectionIds, 
     teamMemberDetailsRelay,
   );
 
-  const [commitDeleteTeamMember] = useMutation<teamMemberCard_deleteTeamMemberMutation>(graphql`
-    mutation teamMemberCard_deleteTeamMemberMutation($connectionIds: [ID!]!, $input: DeleteTeamMemberInput!) {
-      deleteTeamMember(input: $input) {
+  const [commitRemoveTeamMember] = useMutation<teamMemberCard_removeTeamMemberMutation>(graphql`
+    mutation teamMemberCard_removeTeamMemberMutation($connectionIds: [ID!]!, $input: RemoveTeamMemberInput!) {
+      removeTeamMember(input: $input) {
         teamMember {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -125,7 +125,7 @@ const TeamMemberCard = ({ rootDataRelay, teamMemberDetailsRelay, connectionIds, 
 
     const toastId = themedToast(<NotificationContent content={`Removing team member...`} />, infoNotificationOptions);
 
-    commitDeleteTeamMember({
+    commitRemoveTeamMember({
       variables: {
         connectionIds,
         input: {

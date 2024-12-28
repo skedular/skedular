@@ -1,4 +1,3 @@
-using Api.Shared.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -13,7 +12,6 @@ using Team.Shared.Repositories;
 using Booking = Team.Shared.Database.Entities.Booking;
 using Customer = Team.Shared.Models.Customer;
 using Location = Team.Shared.Database.Entities.Location;
-using TeamMember = Team.Shared.Database.Entities.TeamMember;
 using Organization = Team.Shared.Database.Entities.Organization;
 
 namespace Team.Api.Services;
@@ -386,9 +384,11 @@ public class TeamService(
                 organization,
                 cancellationToken)
             : [];
-        var teamMembers = updateTeamMembers ? await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(
-            existingTeam.Id,
-            cancellationToken) : null;
+        var teamMembers = updateTeamMembers
+            ? await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(
+                existingTeam.Id,
+                cancellationToken)
+            : null;
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(
             repositoryFactory.TeamRepository.UnitOfWork,

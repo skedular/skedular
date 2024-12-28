@@ -1,3 +1,5 @@
+using Api.Shared.Services.Models;
+using Booking.Shared.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -97,21 +99,6 @@ public class BookingOrganizationZoneDetails
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
 
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-}
-
-public enum BookingOrderField
-{
-    From,
-    To,
-    Notes,
-    Name,
-    GivenName,
-    MiddleName,
-    FamilyName,
-    OrganizationName,
-    LocationName,
-    TeamName,
-    BookingType
 }
 
 [GraphQLName("BookingOrderInput")]
@@ -246,17 +233,4 @@ public class AvailableDesksWhereInput
     [GraphQLName("deskTypeIds")] public string[]? DeskTypeIds { get; set; }
     [GraphQLName("zoneIds")] public string[]? ZoneIds { get; set; }
     [GraphQLName("combineDeskTypesZones")] public bool? CombineDeskTypesZones { get; set; }
-}
-
-public enum BookingType
-{
-    WorkingFromHome,
-    WorkingFromOffice,
-    SickLeave,
-    AnnualLeave,
-    WellBeingLeave,
-    ClientOffices,
-    Vacation,
-    TravelingForWork,
-    NonWorkingDay
 }

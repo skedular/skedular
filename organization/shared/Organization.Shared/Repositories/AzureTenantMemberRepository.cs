@@ -11,7 +11,7 @@ public interface IAzureTenantMemberRepository : IRepository<AzureTenantMember>
     AzureTenantMember Add(AzureTenantMember azureTenantMember);
     AzureTenantMember Update(AzureTenantMember azureTenantMember);
     void RemoveRange(ICollection<AzureTenantMember> tenantMembers);
-    
+
     Task<ICollection<AzureTenantMember>> GetByTenantIdAsync(
         string tenantId,
         CancellationToken cancellationToken);

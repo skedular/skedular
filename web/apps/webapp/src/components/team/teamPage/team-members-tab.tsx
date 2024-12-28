@@ -581,7 +581,7 @@ const TeamMembersTabWithRelay = ({ onReloadRequired, organizationId, teamId }: R
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeamMembersTab queryReference={queryReference} onReloadRequired={handleReloadRequired}  organizationId={organizationId} />
+      <MemoTeamMembersTab queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
     </ErrorBoundary>
   );
 };

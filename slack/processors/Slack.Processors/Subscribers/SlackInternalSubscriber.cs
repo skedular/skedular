@@ -1,11 +1,11 @@
 ﻿using Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Key;
 using Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value;
-using Api.Shared.Models;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Kafka.Consume;
@@ -35,7 +35,7 @@ using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.Member;
 using MembershipType = Api.Shared.Services.Grpc.Skedular.Organization.V1.MembershipType;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 using Organization = Slack.Shared.Database.Entities.Organization;
-using OrganizationMemberStatus = Api.Shared.Models.OrganizationMemberStatus;
+using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
 using TeamConfiguration = Slack.Shared.Configurations.TeamConfiguration;
 using Type = Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
@@ -370,17 +370,15 @@ public class SlackInternalSubscriber(
                 Customer = new Customer { Id = customerId },
                 MembershipType = organizationMember.MembershipType switch
                 {
-                    OrganizationMembershipType.Owner => MembershipType.Owner,
-                    OrganizationMembershipType.Administrator => MembershipType.Administrator,
-                    OrganizationMembershipType.Member => MembershipType.Member,
+                    OrganizationMembershipTypeConstants.Owner => MembershipType.Owner,
+                    OrganizationMembershipTypeConstants.Administrator => MembershipType.Administrator,
+                    OrganizationMembershipTypeConstants.Member => MembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 Status = organizationMember.Status switch
                 {
-                    OrganizationMemberStatus.Active => Api.Shared.Services.Grpc.Skedular.Organization.V1
-                        .OrganizationMemberStatus.Active,
-                    OrganizationMemberStatus.Inactive => Api.Shared.Services.Grpc.Skedular.Organization.V1
-                        .OrganizationMemberStatus.Inactive,
+                    OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
+                    OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 IsOrganizationOnboardingDone = true

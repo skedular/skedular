@@ -51,10 +51,11 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             NotificationType = src.Type switch
             {
-                NotificationType.InvitationToJoinOrganization => NotificationNotificationType
-                    .InvitationToJoinOrganization,
-                NotificationType.InvitationToJoinLocation => NotificationNotificationType.InvitationToJoinLocation,
-                NotificationType.InvitationToJoinTeam => NotificationNotificationType.InvitationToJoinTeam,
+                NotificationTypeConstants.InvitationToJoinOrganization =>
+                    NotificationType.InvitationToJoinOrganization,
+                NotificationTypeConstants.InvitationToJoinLocation =>
+                    NotificationType.InvitationToJoinLocation,
+                NotificationTypeConstants.InvitationToJoinTeam => NotificationType.InvitationToJoinTeam,
                 _ => throw new ArgumentOutOfRangeException()
             },
             InvitedBy = MapTo(src.InvitedBy),

@@ -11,7 +11,7 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
     void RemoveRange(ICollection<OrganizationMember> organizationMembers);
-    
+
     Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
         string organizationId,
         CancellationToken cancellationToken);
@@ -49,4 +49,3 @@ public class OrganizationMemberRepository(LocationDbContext dbContext, TimeProvi
             .Include(query => query.Customer)
             .ToListAsync(cancellationToken);
 }
-

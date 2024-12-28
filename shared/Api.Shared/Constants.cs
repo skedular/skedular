@@ -30,8 +30,6 @@ public static class Constants
 
     public const int MaxEmailLength = 64 + 1 + 255; // RFC 5321 and RFC 5322
 
-    public const int MaxFeedbackLength = 10240;
-
     public const int MaxDescriptionLength = 1000;
 
     public const int MaxOrganizationNameLength = 200;
@@ -85,6 +83,9 @@ public static class Constants
     public const int MaxInvitationStatusLength = 32;
     public const int MaxNotificationTypeLength = 128;
     public const int MaxBookingTypeLength = 32;
-    
+
     public const int MaxMemberStatusLength = 64;
+    
+    public const int MaxFeedbackLength = 10240;
+    public const int MaxFeedbackChannelLength = 32;
 }

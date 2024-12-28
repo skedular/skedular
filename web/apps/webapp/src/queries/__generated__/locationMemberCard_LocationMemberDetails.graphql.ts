@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4a1899a00492c406432fdb4a8ad1aa75>>
+ * @generated SignedSource<<2c502b529cbbaaea72447fa7f730e5af>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type LocationMemberMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
+export type LocationMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type locationMemberCard_LocationMemberDetails$data = {
   readonly customer: {
@@ -20,7 +20,7 @@ export type locationMemberCard_LocationMemberDetails$data = {
     readonly photoUrl: string | null | undefined;
   };
   readonly id: string;
-  readonly membershipType: LocationMemberMembershipType | null | undefined;
+  readonly membershipType: LocationMembershipType | null | undefined;
   readonly " $fragmentType": "locationMemberCard_LocationMemberDetails";
 };
 export type locationMemberCard_LocationMemberDetails$key = {

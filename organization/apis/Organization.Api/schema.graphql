@@ -139,7 +139,7 @@ type OrganizationMemberConnection {
 }
 
 type OrganizationMemberDetails {
-  membershipType: OrganizationMemberMembershipType
+  membershipType: OrganizationMembershipType
   status: OrganizationMemberStatus!
   isOrganizationOnboardingDone: Boolean!
   customer: OrganizationCustomerDetails!
@@ -220,7 +220,7 @@ type Query {
   organizationVersion: Version!
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
-  organizationMemberMembershipTypes: [OrganizationMemberMembershipType!]!
+  organizationMembershipTypes: [OrganizationMembershipType!]!
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organization(id: String!): OrganizationDetails @cost(weight: "10")
   organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): OrganizationConnection @cost(weight: "10")
@@ -294,7 +294,7 @@ input CancelOrganizationOfferingInput {
 input ChangeOrganizationMemberOwnershipTypeInput {
   clientMutationId: String
   id: String!
-  membershipType: OrganizationMemberMembershipType!
+  membershipType: OrganizationMembershipType!
 }
 
 input ChangeOrganizationMembersStatusInput {
@@ -407,12 +407,6 @@ enum OrderDirection {
   Descending
 }
 
-enum OrganizationMemberMembershipType {
-  Owner
-  Administrator
-  Member
-}
-
 enum OrganizationMemberOrderField {
   MembershipType
   Status
@@ -426,6 +420,12 @@ enum OrganizationMemberOrderField {
 enum OrganizationMemberStatus {
   Active
   Inactive
+}
+
+enum OrganizationMembershipType {
+  Owner
+  Administrator
+  Member
 }
 
 enum OrganizationOrderField {

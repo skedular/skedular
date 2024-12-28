@@ -94,7 +94,7 @@ paths:
       responses:
         "200":
           description: onboarding response
-                              
+  
   /organization/api/v1/{organizationId}/sso/login:
     post:
       tags:
@@ -120,7 +120,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-                
+  
   /organization/api/v1/acs:
     post:
       tags:

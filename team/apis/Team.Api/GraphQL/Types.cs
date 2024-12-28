@@ -1,7 +1,9 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
+using Team.Shared.Models;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -53,7 +55,7 @@ public class ChangeTeamMemberOwnershipTypeInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("membershipType")] public TeamMemberMembershipType MembershipType { get; set; }
+    [GraphQLName("membershipType")] public TeamMembershipType MembershipType { get; set; }
 }
 
 [GraphQLName("DeleteTeamInput")]
@@ -63,8 +65,8 @@ public class DeleteTeamInput
     [GraphQLName("id")] public required string Id { get; set; }
 }
 
-[GraphQLName("DeleteTeamMemberInput")]
-public class DeleteTeamMemberInput
+[GraphQLName("RemoveTeamMemberInput")]
+public class RemoveTeamMemberInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
@@ -142,7 +144,7 @@ public class TeamMemberConnection : Connection<TeamMemberEdge>;
 [GraphQLName("TeamMemberDetails")]
 public class TeamMemberDetails : Node
 {
-    [GraphQLName("membershipType")] public TeamMemberMembershipType? MembershipType { get; set; }
+    [GraphQLName("membershipType")] public TeamMembershipType? MembershipType { get; set; }
     [GraphQLName("customer")] public TeamCustomerDetails Customer { get; set; }
     [GraphQLName("organizationMember")] public TeamOrganizationMemberDetails? OrganizationMember { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
@@ -158,22 +160,6 @@ public class TeamMemberDetailsPayload
 [GraphQLName("TeamMemberEdge")]
 public class TeamMemberEdge : Edge<TeamMemberDetails>;
 
-public enum TeamMemberMembershipType
-{
-    Owner,
-    Administrator,
-    Member
-}
-
-public enum TeamMemberOrderField
-{
-    MembershipType,
-    Name,
-    GivenName,
-    MiddleName,
-    FamilyName
-}
-
 [GraphQLName("TeamMemberOrderInput")]
 public class TeamMemberOrderInput
 {
@@ -186,12 +172,6 @@ public class TeamMemberWhereInput
 {
     [GraphQLName("teamId")] public required string TeamId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-}
-
-public enum TeamOrderField
-{
-    Name,
-    About
 }
 
 [GraphQLName("TeamOrderInput")]

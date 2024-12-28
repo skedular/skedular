@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
-using Api.Shared.Models;
+using Api.Shared.Services.Models;
 using Customer.Shared.Database.Entities;
 using Desk = Customer.Shared.Models.Desk;
 using Identity = Customer.Shared.Models.Identity;
@@ -131,7 +131,12 @@ public class Mapper : IMapper
             Id = item.Id,
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
-            Type = item.TagType,
+            Type = item.TagType switch
+            {
+                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Organization = organization
         }).ToList();
 
@@ -167,8 +172,8 @@ public class Mapper : IMapper
                     .Owner,
                 Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Administrator =>
                     LocationMembershipType.Administrator,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Member =>
-                    LocationMembershipType.Member,
+                Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Member => LocationMembershipType
+                    .Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Shared.Models.Customer { Id = item.CustomerId },
@@ -212,12 +217,10 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             MembershipType = item.MembershipType switch
             {
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Owner => TeamMembershipType
-                    .Owner,
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Owner => TeamMembershipType.Owner,
                 Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Administrator =>
                     TeamMembershipType.Administrator,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Member =>
-                    TeamMembershipType.Member,
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Member => TeamMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Shared.Models.Customer { Id = item.CustomerId },
@@ -346,8 +349,19 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType;
-        dest.Status = src.Status;
+        dest.MembershipType = src.MembershipType switch
+        {
+            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
+            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
+            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        dest.Status = src.Status switch
+        {
+            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
+            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;
@@ -367,7 +381,13 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType;
+        dest.MembershipType = src.MembershipType switch
+        {
+            LocationMembershipType.Owner => LocationMembershipTypeConstants.Owner,
+            LocationMembershipType.Administrator => LocationMembershipTypeConstants.Administrator,
+            LocationMembershipType.Member => LocationMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Location = location;
         dest.Customer = customer;
         return dest;
@@ -389,7 +409,13 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType;
+        dest.MembershipType = src.MembershipType switch
+        {
+            TeamMembershipType.Owner => TeamMembershipTypeConstants.Owner,
+            TeamMembershipType.Administrator => TeamMembershipTypeConstants.Administrator,
+            TeamMembershipType.Member => TeamMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Team = team;
         dest.Customer = customer;
         dest.OrganizationMember = organizationMember;
@@ -404,7 +430,12 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
-        dest.Type = src.Type;
+        dest.Type = src.Type switch
+        {
+            OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+            OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Organization = organization;
         return dest;
     }
@@ -507,6 +538,11 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Type = src.Type
+                Type = src.Type switch
+                {
+                    OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                    OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
             };
 }

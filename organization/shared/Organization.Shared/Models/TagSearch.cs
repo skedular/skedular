@@ -18,9 +18,9 @@ public class TagSearchCriteria
     public string? NameContains { get; }
 }
 
-public record TagOrder(OrderDirection Direction, TagOrderField Field);
+public record TagOrder(OrderDirection Direction, OrganizationTagOrderField Field);
 
-public enum TagOrderField
+public enum OrganizationTagOrderField
 {
     Name,
     Description,
